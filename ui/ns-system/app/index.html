@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css(.) styles/vendor.css -->
+  <!-- bower:css -->
+  <!-- endbower -->
+  <!-- endbuild -->
+  <link href="../base1/patternfly.css" rel="stylesheet">
+  <link href="../../static/branding.css" rel="stylesheet">
+  <!-- build:css(.tmp) styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
+</head>
+
+<body ng-app="systemAngularApp">
+  <!--[if lte IE 8]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+  <!-- Add your site or application content here -->
+  <div class="header">
+    <h2 ng-bind="'System' | translate"></h2>
+  </div>
+
+  <div class="cont">
+    <div ng-view=""></div>
+  </div>
+
+  <div class="footer">
+    <span class="footer-span">Running tasks: <a href="">2</a></span>
+    <span class="footer-span">Updates available: <a href="">4</a></span>
+    <span class="footer-span">Logs errors: <a href="">15</a></span>
+  </div>
+
+  <!-- build:js(.) scripts/vendor.js -->
+  <!-- bower:js -->
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <script src="../base1/jquery.min.js"></script>
+  <script src="../base1/cockpit.min.js"></script>
+  <script src="../ns-base1/nethserver.js"></script>
+  <!-- <script src="../*/po.js"></script> -->
+
+  <!-- build:js({.tmp,app}) scripts/scripts.js -->
+  <script src="scripts/app.js"></script>
+  <script src="scripts/controllers/main.js"></script>
+  <script src="scripts/services/moduleservice.js"></script>
+  <script src="scripts/directives/mydirective.js"></script>
+  <script src="scripts/filters/translate.js"></script>
+  <script src="scripts/controllers/disk-usage.js"></script>
+  <script src="scripts/controllers/services.js"></script>
+  <script src="scripts/controllers/users-groups.js"></script>
+  <script src="scripts/controllers/dns.js"></script>
+  <script src="scripts/controllers/network.js"></script>
+  <script src="scripts/controllers/organization.js"></script>
+  <script src="scripts/controllers/certificates.js"></script>
+  <!-- endbuild -->
+</body>
+
+</html>

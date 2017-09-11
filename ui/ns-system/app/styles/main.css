@@ -1,0 +1,41 @@
+body {
+  padding: 20px;
+  background: #f5f5f5;
+}
+
+.header {
+  margin-top: -20px;
+}
+
+.footer {
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  padding-bottom: 5px;
+  padding-top: 0px;
+  width: 100%;
+  padding-left: 10px;
+  background: #030303;
+  color: #e5e5e5;
+  border-top: 2px solid #39a5dc;
+}
+
+.no-input {
+  padding-top: 2px;
+}
+
+.footer-span {
+  margin-right: 10px;
+}
+
+.card-pf:hover {
+  box-shadow: 0 1px 6px rgba(3,3,3,.35);
+}
+
+.route-card:hover {
+  cursor: pointer;
+}
+
+.compact {
+  margin-bottom: 0px;
+}

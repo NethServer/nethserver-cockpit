@@ -1,0 +1,100 @@
+<div ng-show="!isLoaded" class="spinner spinner-lg"></div>
+<div ng-show="isLoaded">
+  <h3>{{'Summary' | translate}}</h3>
+  <div class="row">
+    <div class="col-lg-6">
+      <form class="form-horizontal">
+        <div class="form-group compact">
+          <label class="col-sm-2 control-label">{{'Hardware' | translate}}</label>
+          <div class="col-sm-10 no-input">
+            <p>{{localSystem.hardware}}</p>
+          </div>
+        </div>
+        <div class="form-group compact">
+          <label class="col-sm-2 control-label">{{'Machine ID' | translate}}</label>
+          <div class="col-sm-10 no-input">
+            <p>{{localSystem.machineId}}</p>
+          </div>
+        </div>
+        <div class="form-group compact">
+          <label class="col-sm-2 control-label">{{'Operating System' | translate}}</label>
+          <div class="col-sm-10 no-input">
+            <p>{{localSystem.osRelease}}</p>
+          </div>
+        </div>
+        <div class="form-group compact">
+          <label class="col-sm-2 control-label">{{'Host Name' | translate}}</label>
+          <div class="col-sm-10 no-input">
+            <p><a ng-click="openChangeHostname()" data-toggle="modal" data-target="#hostnameChangeModal" href="">{{localSystem.hostname}}</a></p>
+          </div>
+        </div>
+        <div class="form-group compact">
+          <label class="col-sm-2 control-label">{{'System Time' | translate}}</label>
+          <div class="col-sm-10 no-input">
+            <p><a href="#!/date-time">{{localSystem.datetime}}</a></p>
+          </div>
+        </div>
+        <div class="form-group compact">
+          <label class="col-sm-2 control-label">{{'Power' | translate}}</label>
+          <div class="col-sm-10">
+            <div class="btn-group">
+              <button ng-click="powerActions('restart')" class="btn btn-default btn-danger shutdown-privileged" data-action="restart" data-container="body">{{'Restart' | translate}}</button>
+              <button data-toggle="dropdown" class="btn btn-default dropdown-toggle shutdown-privileged">
+                      <span class="caret"></span>
+                  </button>
+              <ul role="menu" class="dropdown-menu">
+                <li class="presentation">
+                  <a ng-click="powerActions('restart')" role="menuitem" data-action="restart">{{'Restart' | translate}}</a>
+                </li>
+                <li class="presentation">
+                  <a ng-click="powerActions('shutdown')" role="menuitem" data-action="shutdown">{{'Shut Down' | translate}}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <h3>{{'Settings' | translate}}</h3>
+  <div class="cards-pf">
+      <div class="row row-cards-pf">
+        <div ng-repeat="r in allRoutes" ng-click="goTo(r.id)" class="col-xs-6 col-sm-4 col-md-3 col-lg-2 route-card">
+          <div class="card-pf card-pf-accented">
+            <h2 class="card-pf-title">
+              <span class="{{r.value.icon}}"></span> {{r.value.name}}
+            </h2>
+            <div class="card-pf-body">
+              <p>{{r.value.description}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+<div class="modal fade" id="hostnameChangeModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{'Change host name' | translate}}</h4>
+      </div>
+      <form class="form-horizontal" ng-submit="changeHostname(localSystem.newHostname)">
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'FQDN' | translate}}</label>
+            <div class="col-sm-9">
+              <input required type="text" ng-model="localSystem.newHostname" class="form-control"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-default" data-dismiss="modal">{{'Cancel' | translate}}</button>
+          <button class="btn btn-primary" type="submit">{{'Save' | translate}}</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

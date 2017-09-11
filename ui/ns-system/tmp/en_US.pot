@@ -1,0 +1,61 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: \n"
+
+msgctxt ""
+msgid "Cancel"
+msgstr ""
+
+msgctxt ""
+msgid "Change host name"
+msgstr ""
+
+msgctxt ""
+msgid "FQDN"
+msgstr ""
+
+msgctxt ""
+msgid "Hardware"
+msgstr ""
+
+msgctxt ""
+msgid "Host Name"
+msgstr ""
+
+msgctxt ""
+msgid "Machine ID"
+msgstr ""
+
+msgctxt ""
+msgid "Operating System"
+msgstr ""
+
+msgctxt ""
+msgid "Power"
+msgstr ""
+
+msgctxt ""
+msgid "Restart"
+msgstr ""
+
+msgctxt ""
+msgid "Save"
+msgstr ""
+
+msgctxt ""
+msgid "Settings"
+msgstr ""
+
+msgctxt ""
+msgid "Shut Down"
+msgstr ""
+
+msgctxt ""
+msgid "Summary"
+msgstr ""
+
+msgctxt ""
+msgid "System Time"
+msgstr ""
