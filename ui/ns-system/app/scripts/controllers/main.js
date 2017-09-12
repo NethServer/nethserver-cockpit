@@ -57,15 +57,12 @@ angular.module('systemAngularApp')
       cockpit.file("/etc/nethserver-release").close();
     });
     // -- Hostname --
-    cockpit.file("/etc/hostname").read().done(function (content) {
-      $scope.localSystem.hostname = content;
-      // applying scope
-      $scope.$apply();
-    }).fail(function (ex) {
-      console.error("Error reading hostname", ex);
-    }).always(function () {
-      cockpit.file("/etc/hostname").close();
+    nethserver.System.summary.getHostname(function(hostname) {
+      $scope.localSystem.hostname = hostname;
+    }, function(err) {
+      console.error(err);
     });
+
     // -- Datetime --
     cockpit.spawn(['date', '+%F %H:%M'], {
         'superuser': 'require'
@@ -100,20 +97,12 @@ angular.module('systemAngularApp')
       $scope.localSystem.newHostname = $scope.localSystem.hostname;
     };
     $scope.changeHostname = function (hostname) {
-      var hostnameService = cockpit.dbus('org.freedesktop.hostname1');
-      var hcdb = hostnameService.proxy();
-      hcdb.wait(function () {
-        hcdb.SetStaticHostname(hostname, false).done(function(res) {
-          nethserver.signalEvent('hostname-modify', function(res) {
-            $('#hostnameChangeModal').modal('hide');
-            $scope.localSystem.hostname = hostname;
-            $scope.$apply();
-          }, function(err) {
-            console.error(err);
-          });
-        }).fail(function(err) {
-          console.error(err);
-        });
+      nethserver.System.summary.setHostname(hostname, function() {
+        $('#hostnameChangeModal').modal('hide');
+        $scope.localSystem.hostname = hostname;
+        $scope.$apply();
+      }, function(err) {
+        console.error(err);
       });
     };
 

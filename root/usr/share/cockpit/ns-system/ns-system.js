@@ -1,0 +1,2 @@
+
+nethserver.System = {};

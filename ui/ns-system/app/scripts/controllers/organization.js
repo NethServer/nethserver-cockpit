@@ -9,9 +9,4 @@
  */
 angular.module('systemAngularApp')
   .controller('OrganizationCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
   });
