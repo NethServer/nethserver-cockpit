@@ -100,7 +100,21 @@ angular.module('systemAngularApp')
       $scope.localSystem.newHostname = $scope.localSystem.hostname;
     };
     $scope.changeHostname = function (hostname) {
-
+      var hostnameService = cockpit.dbus('org.freedesktop.hostname1');
+      var hcdb = hostnameService.proxy();
+      hcdb.wait(function () {
+        hcdb.SetStaticHostname(hostname, false).done(function(res) {
+          nethserver.signalEvent('hostname-modify', function(res) {
+            $('#hostnameChangeModal').modal('hide');
+            $scope.localSystem.hostname = hostname;
+            $scope.$apply();
+          }, function(err) {
+            console.error(err);
+          });
+        }).fail(function(err) {
+          console.error(err);
+        });
+      });
     };
 
     $scope.powerActions = function (action) {
