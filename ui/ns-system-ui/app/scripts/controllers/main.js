@@ -67,7 +67,6 @@ angular.module('systemAngularApp')
       console.error("couldn't read datetime: " + err);
     });
 
-    // -- System time zone --
     nethserver.System.summary.getSystemTimezone(function (timezone) {
       $scope.localSystem.timezone = timezone;
 
@@ -78,9 +77,8 @@ angular.module('systemAngularApp')
     });
 
     // -- Time zones --
-    nethserver.System.summary.getTimezones(function (info) {
-      var lines = info.split('\n');
-      $scope.localSystem.timezones = lines;
+    nethserver.System.summary.getTimezones(function (timezones) {
+      $scope.localSystem.timezones = timezones;
 
       // applying scope
       $scope.$apply();
@@ -89,21 +87,25 @@ angular.module('systemAngularApp')
       console.error("couldn't read timezones: " + err);
     });
 
-    /* cockpit.spawn(["/usr/bin/timedatectl", "list-timezones"])
-      .done(function (content) {
-        var lines = content.split('\n');
-        $scope.localSystem.timezone = 'Africa/Freetown';
-        $scope.localSystem.timeMode = 'manually';
-        $scope.localSystem.ntpServer = 'pool.ntp.org';
-        $scope.localSystem.timezones = lines;
+    // -- Time mode --
+    nethserver.System.summary.getTimeMode(function (timeMode) {
+      $scope.localSystem.timeMode = timeMode;
 
-        // applying scope
-        $scope.$apply();
-        $('.combobox').combobox();
-      }).fail(function (ex) {
-        console.error("couldn't read time zones: " + ex);
-      }); */
-    // -------------------------
+      // applying scope
+      $scope.$apply();
+    }, function (err) {
+      console.error("couldn't read time mode: " + err);
+    });
+
+    // -- NTP server --
+    nethserver.System.summary.getNtpServer(function (ntpServer) {
+      $scope.localSystem.ntpServer = ntpServer;
+
+      // applying scope
+      $scope.$apply();
+    }, function (err) {
+      console.error("couldn't read ntp server: " + err);
+    });
 
     $scope.goTo = function (route) {
       $location.path(route);

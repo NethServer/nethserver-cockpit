@@ -47,7 +47,29 @@ nethserver.System.summary = {
 
   getTimezones : function(successCb, errorCb) {
     cockpit.spawn(["/usr/bin/timedatectl", "list-timezones"])
-    .done(successCb).fail(errorCb);
+    .done(function(res) {
+      successCb(res.split("\n"));
+    }).fail(errorCb);
+  },
+
+  getSystemTimezone : function(successCb, errorCb) {
+    var timeDateService = cockpit.dbus('org.freedesktop.timedate1');
+    var hcdb = timeDateService.proxy();
+    hcdb.wait(function () {
+      if (hcdb.Timezone) {
+        successCb(hcdb.Timezone)
+      } else {
+        errorCb();
+      }
+    });
+  },
+
+  getTimeMode : function(successCb, errorCb) {
+    //TODO
+  },
+
+  getNtpServer : function(successCb, errorCb) {
+    //TODO
   },
 
   getSystemTime : function(successCb, errorCb) {
