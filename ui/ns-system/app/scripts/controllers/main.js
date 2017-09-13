@@ -22,40 +22,35 @@ angular.module('systemAngularApp')
 
     // retrieve base system info
     // -- Hardware --
-    cockpit.spawn(["grep", "\\w", "sys_vendor", "product_name"], {
-        directory: "/sys/devices/virtual/dmi/id",
-        err: "ignore"
-      })
-      .done(function (output) {
-        var fields = nethserver.parseLines(output);
-        $scope.localSystem.hardware = fields.sys_vendor + " " + fields.product_name;
+    nethserver.System.summary.getHardware(function(info) {
+      $scope.localSystem.hardware = info;
 
-        // applying scope
-        $scope.$apply();
-      })
-      .fail(function (ex) {
-        console.error("couldn't read dmi info: " + ex);
-      });
+      // applying scope
+      $scope.$apply();
+    }, function(err) {
+      console.error("couldn't read dmi info: " + err);
+    });
+
     // -- Machine ID --
-    cockpit.file("/etc/machine-id").read().done(function (content) {
-      $scope.localSystem.machineId = content;
+    nethserver.System.summary.getMachineId(function(info) {
+      $scope.localSystem.machineId = info;
+
       // applying scope
       $scope.$apply();
-    }).fail(function (ex) {
-      console.error("Error reading machine id", ex);
-    }).always(function () {
-      cockpit.file("/etc/machine-id").close();
+    }, function(err) {
+      console.error("Error reading machine id", err);
     });
+
     // -- Operating system --
-    cockpit.file("/etc/nethserver-release").read().done(function (content) {
-      $scope.localSystem.osRelease = content;
+    nethserver.System.summary.getOS(function(info) {
+      $scope.localSystem.osRelease = info;
+
       // applying scope
       $scope.$apply();
-    }).fail(function (ex) {
-      console.error("Error reading os release", ex);
-    }).always(function () {
-      cockpit.file("/etc/nethserver-release").close();
+    }, function(err) {
+      console.error("Error reading os release", err);
     });
+
     // -- Hostname --
     nethserver.System.summary.getHostname(function(hostname) {
       $scope.localSystem.hostname = hostname;
@@ -64,17 +59,15 @@ angular.module('systemAngularApp')
     });
 
     // -- Datetime --
-    cockpit.spawn(['date', '+%F %H:%M'], {
-        'superuser': 'require'
-      }).done(function (output) {
-        $scope.localSystem.datetime = output;
+    nethserver.System.summary.getSystemTime(function(info) {
+      $scope.localSystem.datetime = info;
 
-        // applying scope
-        $scope.$apply();
-      })
-      .fail(function (ex) {
-        console.error("couldn't read datetime: " + ex);
-      });
+      // applying scope
+      $scope.$apply();
+    }, function(err) {
+      console.error("couldn't read datetime: " + err);
+    });
+
     // -------------------------
 
     $scope.goTo = function (route) {
