@@ -45,6 +45,11 @@ nethserver.System.summary = {
     });
   },
 
+  getTimezones : function(successCb, errorCb) {
+    cockpit.spawn(["/usr/bin/timedatectl", "list-timezones"])
+    .done(successCb).fail(errorCb);
+  },
+
   getSystemTime : function(successCb, errorCb) {
     cockpit.spawn(['date', '+%F %H:%M'], {
         'superuser': 'require'

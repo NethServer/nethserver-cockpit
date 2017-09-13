@@ -29,6 +29,17 @@ body.login-pf {
     min-height: 50px;
 }
 
+#navbar-dropdown {
+    height: 58px;
+    line-height: 40px;
+    font-size: 15px;
+    padding-left: 35px;
+}
+
+#navbar-dropdown > span {
+    line-height: 40px;
+}
+
 .navbar-brand {
     line-height: 50px;
     font-size: 20px;

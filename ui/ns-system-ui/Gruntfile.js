@@ -393,7 +393,7 @@ module.exports = function (grunt) {
       default_options: {
         src: ['app/**/*.html'],
         lang: ['en_US'],
-        dest: 'tmp',
+        dest: 'pots',
         prefix: 'en_US',
         adapter: 'pot'
       }
