@@ -16,6 +16,7 @@ angular.module('systemAngularApp')
       'ntp': 'Using NTP server',
     };
     $scope.localSystem = {};
+    $scope.localSystem.aliases = [{name:'alias.test1'},{name:'alias.test2'},{name:'alias.test3'}];
 
     // retrieve base system info
     // -- Hardware --
@@ -107,27 +108,30 @@ angular.module('systemAngularApp')
       console.error("couldn't read ntp server: " + err);
     });
 
+    // -- Aliases --
+
+
     $scope.goTo = function (route) {
       $location.path(route);
     };
 
     $scope.initGraphics = function () {
-      $('#date-2').datepicker({
+      $('#date-picker').datepicker({
         autoclose: true,
         todayBtn: "linked",
         todayHighlight: true,
         format: 'yyyy-mm-dd'
       });
-      $('#time-picker-2').datetimepicker({
+      $('#time-picker').datetimepicker({
         format: 'LT',
         keyBinds: {
           enter: function () {
-            $('#time-picker-2').find('input').trigger('change');
+            $('#time-picker').find('input').trigger('change');
             this.hide();
           }
         }
       }).on('dp.change', function (e) {
-        var time = $('#time-picker-2').data().date.split(' ')[0];
+        var time = $('#time-picker').data().date.split(' ')[0];
         $scope.localSystem.newTime = time;
       });
     };
@@ -148,6 +152,8 @@ angular.module('systemAngularApp')
       $scope.localSystem.newHostname = $scope.localSystem.hostname;
     };
     $scope.changeHostname = function (hostname) {
+      console.log($scope.localSystem.aliases);
+
       nethserver.System.summary.setHostname(hostname, function () {
         $('#hostnameChangeModal').modal('hide');
         $scope.localSystem.hostname = hostname;
@@ -155,6 +161,15 @@ angular.module('systemAngularApp')
       }, function (err) {
         console.error(err);
       });
+    };
+
+    $scope.addAlias = function(alias) {
+      $scope.localSystem.aliases.push({
+        name: alias
+      });
+    };
+    $scope.removeAlias = function(aliasIndex) {
+      $scope.localSystem.aliases.splice(aliasIndex, 1);
     };
 
     $scope.openChangeSystime = function () {

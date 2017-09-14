@@ -20,6 +20,15 @@ select {
   border-radius: 1px;
 }
 
+a:focus,
+a:hover {
+  text-decoration: none;
+}
+
+textarea {
+  resize: vertical;
+}
+
 .header {
   margin-top: -20px;
 }
@@ -63,6 +72,10 @@ select {
 
 .card-icon-def {
   font-family: 'PatternFlyIcons-webfont';
+}
+
+.blank-slate-pf {
+  border: none;
 }
 
 .route-card:hover {
