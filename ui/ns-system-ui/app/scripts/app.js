@@ -20,7 +20,7 @@ angular
         templateUrl: 'views/main.html',
         controller: 'MainCtrl',
         controllerAs: 'main',
-        name: 'Main',
+        name: 'System',
         description: 'Main system view',
         icon: 'pficon pficon-home',
       })

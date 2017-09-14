@@ -8,7 +8,7 @@
  * Controller of the systemAngularApp
  */
 angular.module('systemAngularApp')
-  .controller('InitCtrl', function ($scope) {
+  .controller('InitCtrl', function ($scope, $route, $location) {
     $('body').show();
 
     $scope.stats = {
@@ -16,6 +16,8 @@ angular.module('systemAngularApp')
       updates: [],
       errors: []
     };
+
+    $scope.crumbs = [];
 
     $scope.iconMap = {
       'info' : 'info',
@@ -33,6 +35,14 @@ angular.module('systemAngularApp')
     $scope.removeNotification = function (index) {
       $scope.notifications.splice(index, 1);
     }
+
+    $scope.$on('$routeChangeSuccess', function(next, current) {
+      var name = $route.routes[$location.path()];
+      var crumbs = name.originalPath.split('/');
+      $scope.crumbs = crumbs.map(v => ({ name: $route.routes['/' + v].name, url: '/' + v }));
+
+      console.log($scope.crumbs);
+    });
 
     // $scope.addNotification({ message: 'test1', status: 'info', action: 'check',  url: 'http://www.patternfly.org' });
   });
