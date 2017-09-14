@@ -1,1 +1,39 @@
-<p>This is the organization view.</p>
+<p>Organization contacts</p>
+
+<form class="form-horizontal" name="organizationForm" ng-submit="saveOrganization()">
+  <div class="form-group">
+    <label class="col-sm-1 control-label" for="company">Company</label>
+    <div class="col-sm-5">
+      <input name="company" type="text" class="form-control" ng-model="organization.company" pattern="[A-z0-9]+" required>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-1 control-label" for="city">City</label>
+    <div class="col-sm-5">
+      <input name="city" type="text" class="form-control" ng-model="organization.city">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-1 control-label" for="department">Department</label>
+    <div class="col-sm-5">
+      <input type="text" class="form-control" ng-model="organization.department">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-1 control-label" for="phone">Phone</label>
+    <div class="col-sm-5">
+      <input type="text" class="form-control" ng-model="organization.phone" pattern="[0-9\+]+">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-1 control-label" for="address">Address</label>
+    <div class="col-sm-5">
+      <input type="text" class="form-control" ng-model="organization.address">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-7 submitButton">
+      <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+  </div>
+</form>
