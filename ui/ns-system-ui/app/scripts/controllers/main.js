@@ -73,7 +73,7 @@ angular.module('systemAngularApp')
       // applying scope
       $scope.$apply();
     }, function (err) {
-      console.error("couldn't read timezones: " + err);
+      console.error("couldn't read system timezone: " + err);
     });
 
     // -- Time zones --
@@ -92,7 +92,7 @@ angular.module('systemAngularApp')
       $scope.localSystem.timeMode = timeMode;
 
       // applying scope
-      $scope.$apply();
+      //$scope.$apply();
     }, function (err) {
       console.error("couldn't read time mode: " + err);
     });
@@ -102,7 +102,7 @@ angular.module('systemAngularApp')
       $scope.localSystem.ntpServer = ntpServer;
 
       // applying scope
-      $scope.$apply();
+      //$scope.$apply();
     }, function (err) {
       console.error("couldn't read ntp server: " + err);
     });
@@ -158,7 +158,7 @@ angular.module('systemAngularApp')
     };
 
     $scope.openChangeSystime = function () {
-      $scope.localSystem.oldTimezone = $scope.localSystem.timezone;
+      //$scope.localSystem.oldTimezone = $scope.localSystem.timezone;
       $scope.localSystem.newTimeMode = $scope.localSystem.timeMode;
       $scope.localSystem.newDate = $scope.localSystem.date;
       $scope.localSystem.newTime = $scope.localSystem.time;
@@ -168,6 +168,12 @@ angular.module('systemAngularApp')
     };
     $scope.saveSystime = function () {
       console.log($scope.localSystem);
+      $('#systimeChangeModal').modal('hide');
+      /* $scope.localSystem.date = '';
+      $scope.localSystem.time = '';
+      $scope.localSystem.timeMode = '';
+      $scope.localSystem.timezone = '';
+      $scope.$apply(); */
     };
     $scope.resetDateTime = function () {
       $scope.localSystem.timezone = $scope.localSystem.oldTimezone;

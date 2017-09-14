@@ -31,7 +31,7 @@
   <!-- endbuild -->
 </head>
 
-<body ng-app="systemAngularApp">
+<body ng-app="systemAngularApp" ng-controller="InitCtrl">
   <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -46,9 +46,9 @@
   </div>
 
   <div class="footer">
-    <span class="footer-span">Running tasks: <a href="">2</a></span>
-    <span class="footer-span">Updates available: <a href="">4</a></span>
-    <span class="footer-span">Logs errors: <a href="">15</a></span>
+    <span ng-bind="'Running tasks:' | translate"></span><a class="footer-span" ng-bind="stats.tasks.length" href=""></a>
+    <span ng-bind="'Updates available:' | translate"></span><a class="footer-span" ng-bind="stats.updates.length" href=""></a>
+    <span ng-bind="'Errors:' | translate"></span><a class="footer-span" ng-bind="stats.errors.length" href=""></a>
   </div>
 
   <!-- build:js(.) scripts/vendor.js -->
@@ -92,6 +92,7 @@
 
   <!-- build:js({.tmp,app}) scripts/scripts.js -->
   <script src="scripts/app.js"></script>
+  <script src="scripts/controllers/init.js"></script>
   <script src="scripts/controllers/main.js"></script>
   <script src="scripts/services/moduleservice.js"></script>
   <script src="scripts/directives/mydirective.js"></script>
@@ -103,6 +104,7 @@
   <script src="scripts/controllers/network.js"></script>
   <script src="scripts/controllers/organization.js"></script>
   <script src="scripts/controllers/certificates.js"></script>
+  <script src="scripts/controllers/init.js"></script>
   <!-- endbuild -->
 </body>
 

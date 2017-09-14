@@ -25,13 +25,15 @@ nethserver.System.summary = {
       })
       .done(function(output) {
         var fields = nethserver.parseLines(output);
-        successCb(fields.sys_vendor + " " + fields.product_name);
+        successCb(fields.sys_vendor.trim() + " " + fields.product_name.trim());
       })
       .fail(errorCb);
   },
 
   getMachineId : function(successCb, errorCb) {
-    cockpit.file("/etc/machine-id").read().done(successCb)
+    cockpit.file("/etc/machine-id").read().done(function (content) {
+      successCb(content.trim());
+    })
     .fail(errorCb)
     .always(function () {
       cockpit.file("/etc/machine-id").close();
@@ -39,7 +41,9 @@ nethserver.System.summary = {
   },
 
   getOS : function(successCb, errorCb) {
-    cockpit.file("/etc/nethserver-release").read().done(successCb)
+    cockpit.file("/etc/nethserver-release").read().done(function (content) {
+      successCb(content.trim());
+    })
     .fail(errorCb).always(function () {
       cockpit.file("/etc/nethserver-release").close();
     });
@@ -48,7 +52,7 @@ nethserver.System.summary = {
   getTimezones : function(successCb, errorCb) {
     cockpit.spawn(["/usr/bin/timedatectl", "list-timezones"])
     .done(function(res) {
-      successCb(res.split("\n"));
+      successCb(res.trim().split("\n"));
     }).fail(errorCb);
   },
 
@@ -66,10 +70,12 @@ nethserver.System.summary = {
 
   getTimeMode : function(successCb, errorCb) {
     //TODO
+    successCb('manually');
   },
 
   getNtpServer : function(successCb, errorCb) {
     //TODO
+    successCb('ntp.pool.org');
   },
 
   getSystemTime : function(successCb, errorCb) {
