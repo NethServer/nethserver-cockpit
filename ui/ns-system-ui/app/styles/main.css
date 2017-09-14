@@ -37,6 +37,17 @@ select {
   border-top: 2px solid #39a5dc;
 }
 
+.crumb {
+  line-height: 1.1;
+  color: inherit;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 22px;
+  font-weight: 300;
+  display: inline-block;
+  margin-right: 6px;
+}
+
 .no-input {
   padding-top: 2px;
 }

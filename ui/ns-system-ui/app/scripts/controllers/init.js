@@ -20,10 +20,10 @@ angular.module('systemAngularApp')
     $scope.crumbs = [];
 
     $scope.iconMap = {
-      'info' : 'info',
-      'error' : 'error-circle-o',
-      'success' : 'ok',
-      'warning' : 'warning-triangle-o'
+      'info': 'info',
+      'error': 'error-circle-o',
+      'success': 'ok',
+      'warning': 'warning-triangle-o'
     };
 
     $scope.notifications = [];
@@ -36,12 +36,13 @@ angular.module('systemAngularApp')
       $scope.notifications.splice(index, 1);
     }
 
-    $scope.$on('$routeChangeSuccess', function(next, current) {
+    $scope.$on('$routeChangeSuccess', function (next, current) {
       var name = $route.routes[$location.path()];
-      var crumbs = name.originalPath.split('/');
-      $scope.crumbs = crumbs.map(v => ({ name: $route.routes['/' + v].name, url: '/' + v }));
-
-      console.log($scope.crumbs);
+      var crumbs = name.originalPath === '/' ? [""] : name.originalPath.split('/');
+      $scope.crumbs = crumbs.map(v => ({
+        name: $route.routes['/' + v].name,
+        url: '/' + v
+      }));
     });
 
     // $scope.addNotification({ message: 'test1', status: 'info', action: 'check',  url: 'http://www.patternfly.org' });

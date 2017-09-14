@@ -17,7 +17,8 @@
   <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.css" />
   <link rel="stylesheet" href="bower_components/datatables-colvis/css/dataTables.colVis.css" />
   <link rel="stylesheet" href="bower_components/google-code-prettify/bin/prettify.min.css" />
-  <link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+  <link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css"
+  />
   <link rel="stylesheet" href="bower_components/patternfly-bootstrap-combobox/css/bootstrap-combobox.css" />
   <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly.css" />
   <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly-additions.css" />
@@ -32,15 +33,15 @@
 </head>
 
 <body ng-app="systemAngularApp" ng-controller="InitCtrl">
-  <div class="toast-pf alert alert-{{n.status}} alert-dismissable toast-pf-top-right toast-pf-min-width" ng-repeat="n in notifications" style="margin-top:{{$index*4}}em;">
+  <div class="toast-pf alert alert-{{n.status}} alert-dismissable toast-pf-top-right toast-pf-min-width" ng-repeat="n in notifications"
+    style="margin-top:{{$index*4}}em;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="removeNotification($index)">
       <span class="pficon pficon-close"></span>
     </button>
     <div class="pull-right toast-pf-action">
       <a href="{{n.url}}">{{n.action}}</a>
     </div>
-    <span class="pficon pficon-{{iconMap[n.status]}}"></span>
-    {{n.message}}
+    <span class="pficon pficon-{{iconMap[n.status]}}"></span> {{n.message}}
   </div>
   <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -48,7 +49,8 @@
 
   <!-- Add your site or application content here -->
   <div class="header">
-    <h2 ng-bind="'System' | translate"></h2>
+    <a href="#!{{c.url}}" ng-repeat="c in crumbs" class="crumb">{{c.name | translate}} <span class="fa fa-angle-right" ng-if="crumbs.length > 1 && !$last"></span></a>
+
   </div>
 
   <div class="cont">
