@@ -76,3 +76,11 @@ select {
 .right-align {
   text-align: right;
 }
+
+.green {
+  color: green;
+}
+
+.red {
+  color: red;
+}
