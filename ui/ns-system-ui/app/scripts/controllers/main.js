@@ -108,6 +108,9 @@ angular.module('systemAngularApp')
       console.error("couldn't read ntp server: " + err);
     });
 
+    // -- Aliases --
+
+
     $scope.goTo = function (route) {
       $location.path(route);
     };
@@ -149,6 +152,8 @@ angular.module('systemAngularApp')
       $scope.localSystem.newHostname = $scope.localSystem.hostname;
     };
     $scope.changeHostname = function (hostname) {
+      console.log($scope.localSystem.aliases);
+
       nethserver.System.summary.setHostname(hostname, function () {
         $('#hostnameChangeModal').modal('hide');
         $scope.localSystem.hostname = hostname;
@@ -156,6 +161,15 @@ angular.module('systemAngularApp')
       }, function (err) {
         console.error(err);
       });
+    };
+
+    $scope.addAlias = function(alias) {
+      $scope.localSystem.aliases.push({
+        name: alias
+      });
+    };
+    $scope.removeAlias = function(aliasIndex) {
+      $scope.localSystem.aliases.splice(aliasIndex, 1);
     };
 
     $scope.openChangeSystime = function () {

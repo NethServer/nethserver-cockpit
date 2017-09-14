@@ -90,13 +90,17 @@
             </div>
           </div>
           <div ng-repeat="a in localSystem.aliases" class="form-group">
-            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$first ? 'Alias' : '' | translate}}</label>
-            <div class="col-sm-7">
-              <input required type="text" ng-model="a.name" class="form-control">
+            <label class="col-xs-12 col-sm-3 control-label" for="textInput-modal-markup">{{$first ? 'Alias' : '' | translate}}</label>
+            <div class="col-xs-7 col-sm-6">
+              <input type="text" ng-model="a.name" class="form-control">
             </div>
-            <div class="col-sm-1">
-              <button ng-if="$last" class="btn btn-default" type="button"><span class="fa fa-plus card-icon-def"></span></button>
-              <button ng-if="!$last" class="btn btn-default" type="button"><span class="fa fa-minus card-icon-def"></span></button>
+            <div class="col-xs-5 col-sm-2">
+              <button ng-click="removeAlias($index)" class="btn btn-default" type="button">
+                <span class="fa fa-minus card-icon-def"></span>
+              </button>
+              <button ng-click="addAlias()" ng-if="$last" class="btn btn-default" type="button">
+              <span class="fa fa-plus card-icon-def"></span>
+            </button>
             </div>
           </div>
         </div>
