@@ -23,7 +23,7 @@
           </div>
         </div>
         <div class="form-group compact">
-          <label class="col-sm-2 control-label">{{'Host Name' | translate}}</label>
+          <label class="col-sm-2 control-label">{{'Hostname' | translate}}</label>
           <div class="col-sm-10 no-input">
             <p><a ng-click="openChangeHostname()" data-toggle="modal" data-target="#hostnameChangeModal" href="">{{localSystem.hostname}}</a></p>
           </div>
@@ -89,13 +89,23 @@
               <input required type="text" ng-model="localSystem.newHostname" class="form-control">
             </div>
           </div>
+          <div ng-repeat="a in localSystem.aliases" class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$first ? 'Alias' : '' | translate}}</label>
+            <div class="col-sm-7">
+              <input required type="text" ng-model="a.name" class="form-control">
+            </div>
+            <div class="col-sm-1">
+              <button ng-if="$last" class="btn btn-default" type="button"><span class="fa fa-plus card-icon-def"></span></button>
+              <button ng-if="!$last" class="btn btn-default" type="button"><span class="fa fa-minus card-icon-def"></span></button>
+            </div>
+          </div>
         </div>
-        <div class="modal-footer">
-          <button class="btn btn-default" data-dismiss="modal">{{'Cancel' | translate}}</button>
-          <button class="btn btn-primary" type="submit">{{'Save' | translate}}</button>
+        <div class="modal-footer submit">
+          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
+          <button class="btn btn-primary" value="submit" type="submit">{{'Save' | translate}}</button>
         </div>
-      </form>
 
+      </form>
     </div>
   </div>
 </div>
@@ -136,7 +146,7 @@
           <div ng-show="localSystem.newTimeMode == 'manually'" class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Date and Time' | translate}}</label>
             <div class="col-sm-6">
-              <div id="date-2" class="input-group date">
+              <div id="date-picker" class="input-group date">
                 <input required ng-model="localSystem.newDate" type="text" class="form-control bootstrap-datepicker">
                 <span class="input-group-addon">
                   <span class="fa fa-calendar"></span>
@@ -144,7 +154,7 @@
               </div>
             </div>
             <div class="col-sm-3">
-              <div class="input-group time-picker-pf" id="time-picker-2">
+              <div class="input-group time-picker-pf" id="time-picker">
                 <input required ng-model="localSystem.newTime" type="text" class="form-control">
                 <span class="input-group-addon btn btn-default">
                   <span class="fa fa-clock-o"></span>
@@ -161,7 +171,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-default" data-dismiss="modal" ng-click="resetDateTime()">{{'Cancel' | translate}}</button>
+          <button class="btn btn-default" type="button" data-dismiss="modal" ng-click="resetDateTime()">{{'Cancel' | translate}}</button>
           <button class="btn btn-primary" type="submit">{{'Save' | translate}}</button>
         </div>
       </form>

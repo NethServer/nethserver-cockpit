@@ -16,6 +16,7 @@ angular.module('systemAngularApp')
       'ntp': 'Using NTP server',
     };
     $scope.localSystem = {};
+    $scope.localSystem.aliases = [{name:'alias.test1'},{name:'alias.test2'},{name:'alias.test3'}];
 
     // retrieve base system info
     // -- Hardware --
@@ -112,22 +113,22 @@ angular.module('systemAngularApp')
     };
 
     $scope.initGraphics = function () {
-      $('#date-2').datepicker({
+      $('#date-picker').datepicker({
         autoclose: true,
         todayBtn: "linked",
         todayHighlight: true,
         format: 'yyyy-mm-dd'
       });
-      $('#time-picker-2').datetimepicker({
+      $('#time-picker').datetimepicker({
         format: 'LT',
         keyBinds: {
           enter: function () {
-            $('#time-picker-2').find('input').trigger('change');
+            $('#time-picker').find('input').trigger('change');
             this.hide();
           }
         }
       }).on('dp.change', function (e) {
-        var time = $('#time-picker-2').data().date.split(' ')[0];
+        var time = $('#time-picker').data().date.split(' ')[0];
         $scope.localSystem.newTime = time;
       });
     };
