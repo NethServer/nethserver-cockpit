@@ -9,6 +9,7 @@
  */
 angular.module('systemAngularApp')
   .controller('DnsCtrl', function ($scope) {
+    $scope.dnsSearchString = '';
     $scope.dnss = [{
       hostname: 'test.neth.eu',
       ip: '78.45.12.6',

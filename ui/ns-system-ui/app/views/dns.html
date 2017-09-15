@@ -17,8 +17,18 @@
 
 <div ng-if="dnss.length > 0">
   <h3>{{'Configured DNS' | translate}}</h3>
+  <form role="form" class="search-pf has-button search">
+    <div class="form-group has-clear">
+      <div class="search-pf-input-group">
+        <input ng-model="dnsSearchString" type="text" class="form-control input-lg" placeholder="{{'Search' | translate}}...">
+      </div>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-default btn-lg" type="submit"><span class="fa fa-search"></span></button>
+    </div>
+  </form>
   <div class="list-group list-view-pf">
-    <div ng-repeat="d in dnss" class="list-group-item">
+    <div ng-repeat="d in dnss | filter:dnsSearchString" class="list-group-item">
       <div class="list-view-pf-checkbox">
         <input type="checkbox">
       </div>
@@ -87,7 +97,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-default" type="button"  data-dismiss="modal">{{'Cancel' | translate}}</button>
+          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
           <button class="btn btn-primary" type="submit">{{'Save' | translate}}</button>
         </div>
 

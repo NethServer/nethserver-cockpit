@@ -29,6 +29,10 @@ textarea {
   resize: vertical;
 }
 
+dl {
+  margin-bottom: 0px;
+}
+
 .header {
   margin-top: -20px;
 }
@@ -57,6 +61,14 @@ textarea {
   margin-right: 6px;
 }
 
+.search {
+  margin-bottom: 8px;
+}
+
+.fixed {
+  position: fixed;
+}
+
 .no-input {
   padding-top: 2px;
 }
@@ -72,6 +84,30 @@ textarea {
 
 .card-icon-def {
   font-family: 'PatternFlyIcons-webfont';
+}
+
+.list-group-item-container {
+  border-top: none;
+  border: 1px solid #eeeeee;
+  margin-bottom: 15px;
+}
+
+.button-minimum {
+  min-width: 56px;
+}
+
+.list-view-pf .list-group-item-heading {
+  flex: 1 0 calc(40% - 20px);
+}
+
+@media (min-width: 992px) {
+  .list-view-pf .list-group-item-text {
+    width: calc(75% - 80px);
+  }
+}
+
+.list-view-pf-additional-info {
+  width: initial;
 }
 
 .blank-slate-pf {
@@ -90,10 +126,34 @@ textarea {
   text-align: right;
 }
 
+.progress-description {
+  max-width: 100%;
+}
+
+.task-adjust {
+  width: 150px;
+  margin-top: 8px;
+}
+.action-adjust {
+
+}
+.info-adjust {
+
+}
+
 .green {
-  color: green;
+  color: #3f9c35;
 }
 
 .red {
-  color: red;
+  color: #a30000;
+}
+
+.span-right-margin {
+  margin-right: 4px;
+}
+
+.strongless {
+  font-size: 16px;
+  margin-right: 5px;
 }

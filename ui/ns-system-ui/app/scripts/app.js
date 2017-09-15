@@ -12,7 +12,8 @@ angular
   .module('systemAngularApp', [
     'ngResource',
     'ngRoute',
-    'ngSanitize'
+    'ngSanitize',
+    'ngTable'
   ])
   .config(function ($routeProvider) {
     $routeProvider

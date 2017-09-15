@@ -8,7 +8,8 @@
     "angular-sanitize": "^1.4.0",
     "bootstrap-combobox": "^1.1.8",
     "bootstrap-select": "^1.12.4",
-    "angular-patternfly": "3.15.0"
+    "angular-patternfly": "3.15.0",
+    "ng-table": "0.8.3"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.0"

@@ -21,7 +21,7 @@ angular.module('systemAngularApp')
 
     $scope.iconMap = {
       'info': 'info',
-      'error': 'error-circle-o',
+      'danger': 'error-circle-o',
       'success': 'ok',
       'warning': 'warning-triangle-o'
     };
@@ -45,5 +45,26 @@ angular.module('systemAngularApp')
       }));
     });
 
-    // $scope.addNotification({ message: 'test1', status: 'info', action: 'check',  url: 'http://www.patternfly.org' });
+    $scope.addNotification({
+      type: 'task',
+      message: 'Expand-template /etc/hosts',
+      status: 'warning',
+      action: 'check',
+      progress: 76,
+      url: 'http://www.patternfly.org'
+    });
+    $scope.addNotification({
+      type: 'action',
+      message: 'sshd is stopped',
+      status: 'danger',
+      action: 'Restart',
+      url: 'http://www.patternfly.org'
+    });
+    $scope.addNotification({
+      type: 'info',
+      message: 'DNS server saved with success',
+      status: 'success',
+      action: 'check',
+      url: 'http://www.patternfly.org'
+    });
   });

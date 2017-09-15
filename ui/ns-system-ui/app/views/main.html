@@ -95,10 +95,10 @@
               <input type="text" ng-model="a.name" class="form-control">
             </div>
             <div class="col-xs-5 col-sm-2">
-              <button ng-click="removeAlias($index)" class="btn btn-default" type="button">
+              <button ng-if="!$first" ng-click="removeAlias($index)" class="btn btn-default" type="button">
                 <span class="fa fa-minus card-icon-def"></span>
               </button>
-              <button ng-click="addAlias()" ng-if="$last" class="btn btn-default" type="button">
+              <button ng-click="addAlias()" ng-if="$first" class="btn btn-default" type="button">
               <span class="fa fa-plus card-icon-def"></span>
             </button>
             </div>

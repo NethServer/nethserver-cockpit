@@ -17,12 +17,12 @@
   <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.css" />
   <link rel="stylesheet" href="bower_components/datatables-colvis/css/dataTables.colVis.css" />
   <link rel="stylesheet" href="bower_components/google-code-prettify/bin/prettify.min.css" />
-  <link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css"
-  />
+  <link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
   <link rel="stylesheet" href="bower_components/patternfly-bootstrap-combobox/css/bootstrap-combobox.css" />
   <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly.css" />
   <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly-additions.css" />
   <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.css" />
+  <link rel="stylesheet" href="bower_components/ng-table/dist/ng-table.min.css" />
   <!-- endbower -->
   <!-- endbuild -->
   <link href="../base1/patternfly.css" rel="stylesheet">
@@ -33,15 +33,20 @@
 </head>
 
 <body ng-app="systemAngularApp" ng-controller="InitCtrl">
-  <div class="toast-pf alert alert-{{n.status}} alert-dismissable toast-pf-top-right toast-pf-min-width" ng-repeat="n in notifications"
-    style="margin-top:{{$index*4}}em;">
+  <div class="toast-pf alert alert-{{n.status}} alert-dismissable toast-pf-top-right fixed" ng-repeat="n in notifications"
+    style="margin-top:{{$index*5}}em;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="removeNotification($index)">
       <span class="pficon pficon-close"></span>
     </button>
-    <div class="pull-right toast-pf-action">
-      <a href="{{n.url}}">{{n.action}}</a>
+    <div class="pull-right toast-pf-action {{n.type}}-adjust">
+      <a ng-if="n.type == 'action'" href="{{n.url}}">{{n.action}}</a>
+      <div ng-if="n.type == 'task'" class="progress progress-xs progress-label-left">
+        <div class="progress-bar" role="progressbar" aria-valuenow="{{n.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{n.progress}}%;">
+          <span>{{n.progress}}%</span>
+        </div>
+      </div>
     </div>
-    <span class="pficon pficon-{{iconMap[n.status]}}"></span> {{n.message}}
+    <span class="pficon pficon-{{iconMap[n.status]}}"></span> <strong>Event</strong> {{n.message}}
   </div>
   <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -92,6 +97,7 @@
   <script src="bower_components/patternfly-bootstrap-treeview/dist/bootstrap-treeview.js"></script>
   <script src="bower_components/patternfly/dist/js/patternfly.js"></script>
   <script src="bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
+  <script src="bower_components/ng-table/dist/ng-table.min.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
 
@@ -118,6 +124,7 @@
   <script src="scripts/controllers/organization.js"></script>
   <script src="scripts/controllers/certificates.js"></script>
   <script src="scripts/controllers/init.js"></script>
+  <script src="scripts/filters/capitalize.js"></script>
   <!-- endbuild -->
 </body>
 

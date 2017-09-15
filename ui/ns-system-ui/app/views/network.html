@@ -1,1 +1,229 @@
-<p>This is the network view.</p>
+<div class="list-group list-view-pf list-view-pf-view">
+  <div class="list-group-item">
+    <div class="list-view-pf-checkbox">
+      <input type="checkbox">
+    </div>
+    <div class="list-view-pf-actions">
+      <button class="btn btn-default">Action</button>
+      <div class="dropdown pull-right dropdown-kebab-pf">
+        <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight1" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="true">
+          <span class="fa fa-ellipsis-v"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight1">
+          <li><a href="#">Action</a></li>
+          <li><a href="#">Another Action</a></li>
+          <li><a href="#">Something Else Here</a></li>
+          <li role="separator" class="divider"></li>
+          <li><a href="#">Separated Link</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="list-view-pf-main-info">
+      <div class="list-view-pf-left">
+        <span class="fa fa-plane list-view-pf-icon-sm"></span>
+      </div>
+      <div class="list-view-pf-body">
+        <div class="list-view-pf-description">
+          <div class="list-group-item-heading">
+            Event One
+          </div>
+          <div class="list-group-item-text">
+            The following snippet of text is <a href="#">rendered as link text</a>.
+          </div>
+        </div>
+        <div class="list-view-pf-additional-info">
+          <div class="list-view-pf-additional-info-item">
+            <div ng-click="toggleDetails($event)" class="list-view-pf-expand">
+              <span class="fa fa-angle-right"></span>
+              <span class="pficon pficon-screen"></span>
+              <strong>8</strong> Hosts
+            </div>
+          </div>
+          <div class="list-view-pf-additional-info-item">
+            <div class="list-view-pf-expand">
+              <span class="fa fa-angle-right"></span>
+              <span class="pficon pficon-cluster"></span>
+              <strong>6</strong> Clusters
+            </div>
+          </div>
+          <div class="list-view-pf-additional-info-item">
+            <div class="list-view-pf-expand">
+              <span class="fa fa-angle-right"></span>
+              <span class="pficon pficon-container-node"></span>
+              <strong>10</strong> Nodes
+            </div>
+          </div>
+          <div class="list-view-pf-additional-info-item">
+            <div class="list-view-pf-expand">
+              <span class="fa fa-angle-right"></span>
+              <span class="pficon pficon-image"></span>
+              <strong>8</strong> Images
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="list-group-item-container container-fluid hidden">
+      <div class="close">
+        <span class="pficon pficon-close"></span>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <ul>
+            <li>Host 1</li>
+            <li>Host 2</li>
+            <li>Host 3</li>
+            <li>Host 4</li>
+            <li>Host 5</li>
+            <li>Host 6</li>
+            <li>Host 7</li>
+            <li>Host 8</li>
+            <li>Host 9</li>
+          </ul>
+        </div>
+        <div class="col-md-9">
+          <dl class="dl-horizontal">
+            <dt>Host Name</dt>
+            <dd>file1.nay.redhat.com</dd>
+            <dt>Device Path</dt>
+            <dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd>
+            <dt>Time</dt>
+            <dd>January 15, 2016 10:45:11 AM</dd>
+            <dt>Severity</dt>
+            <dd>Warning</dd>
+            <dt>Cluster</dt>
+            <dd>Cluster 1</dd>
+          </dl>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
+            aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+            occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="list-group-item-container container-fluid hidden">
+      <div class="close">
+        <span class="pficon pficon-close"></span>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <ul>
+            <li>Cluster 1</li>
+            <li>Cluster 2</li>
+            <li>Cluster 3</li>
+            <li>Cluster 4</li>
+            <li>Cluster 5</li>
+            <li>Cluster 6</li>
+            <li>Cluster 7</li>
+            <li>Cluster 8</li>
+            <li>Cluster 9</li>
+          </ul>
+        </div>
+        <div class="col-md-9">
+          <dl class="dl-horizontal">
+            <dt>Cluster Name</dt>
+            <dd>file2.nay.redhat.com</dd>
+            <dt>Device Path</dt>
+            <dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd>
+            <dt>Time</dt>
+            <dd>January 15, 2016 10:45:11 AM</dd>
+            <dt>Severity</dt>
+            <dd>Warning</dd>
+            <dt>Cluster</dt>
+            <dd>Cluster 1</dd>
+          </dl>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
+            aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+            occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="list-group-item-container container-fluid hidden">
+      <div class="close">
+        <span class="pficon pficon-close"></span>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <ul>
+            <li>Nodes 1</li>
+            <li>Nodes 2</li>
+            <li>Nodes 3</li>
+            <li>Nodes 4</li>
+            <li>Nodes 5</li>
+            <li>Nodes 6</li>
+            <li>Nodes 7</li>
+            <li>Nodes 8</li>
+            <li>Nodes 9</li>
+          </ul>
+        </div>
+        <div class="col-md-9">
+          <dl class="dl-horizontal">
+            <dt>Node Name</dt>
+            <dd>file3.nay.redhat.com</dd>
+            <dt>Device Path</dt>
+            <dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd>
+            <dt>Time</dt>
+            <dd>January 15, 2016 10:45:11 AM</dd>
+            <dt>Severity</dt>
+            <dd>Warning</dd>
+            <dt>Cluster</dt>
+            <dd>Cluster 1</dd>
+          </dl>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
+            aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+            occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="list-group-item-container container-fluid hidden">
+      <div class="close">
+        <span class="pficon pficon-close"></span>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <ul>
+            <li>Image 1</li>
+            <li>Image 2</li>
+            <li>Image 3</li>
+            <li>Image 4</li>
+            <li>Image 5</li>
+            <li>Image 6</li>
+            <li>Image 7</li>
+            <li>Image 8</li>
+            <li>Image 9</li>
+          </ul>
+        </div>
+        <div class="col-md-9">
+          <dl class="dl-horizontal">
+            <dt>Image Name</dt>
+            <dd>file4.nay.redhat.com</dd>
+            <dt>Device Path</dt>
+            <dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd>
+            <dt>Time</dt>
+            <dd>January 15, 2016 10:45:11 AM</dd>
+            <dt>Severity</dt>
+            <dd>Warning</dd>
+            <dt>Cluster</dt>
+            <dd>Cluster 1</dd>
+          </dl>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
+            aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+            occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
