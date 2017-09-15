@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2017 Nethesis S.r.l.
  * http://www.nethesis.it - nethserver@nethesis.it
@@ -19,68 +18,90 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-(function($){
+(function ($) {
     nethserver.System.summary = {
-        getHostname : function() {
-            var fh = cockpit.file("/etc/hostname", {syntax: nethserver.Syntax.trimWhitespace});
-            return fh.read().always(function(){fh.close()});
+        getHostname: function () {
+            var fh = cockpit.file("/etc/hostname", {
+                syntax: nethserver.Syntax.trimWhitespace
+            });
+            return fh.read().always(function () {
+                fh.close()
+            });
         },
 
-        setHostname : function(hostname) {
+        setHostname: function (hostname) {
             return cockpit.dbus('org.freedesktop.hostname1').proxy().wait(function () {
-                return $.Deferred(function(dfr) {
+                return $.Deferred(function (dfr) {
                     hcdb.SetStaticHostname(hostname, false).
-                        done(function() {
-                            nethserver.signalEvent('hostname-modify').finally(dfr.resolve);
-                        });
+                    done(function () {
+                        nethserver.signalEvent('hostname-modify').finally(dfr.resolve);
+                    });
                 });
             });
         },
 
-        getHardware: function() {
-            return $.Deferred(function(dfr) {
+        getHardware: function () {
+            return $.Deferred(function (dfr) {
                 cockpit.spawn(["grep", "\\w", "sys_vendor", "product_name"], {
                     directory: "/sys/devices/virtual/dmi/id",
-                    err: "ignore",
-                    syntax: nethserver.Syntax.grepToObject
+                    err: "ignore"
                 }).
-                    done(function(fields) {
-                        dfr.resolve(fields.sys_vendor + " " + fields.product_name);
-                    }).
-                    fail(function() {
-                        dfr.reject();
-                    });
+                done(function (fields) {
+                    fields = nethserver.Syntax.grepToObject.parse(fields);
+                    dfr.resolve(fields.sys_vendor + " " + fields.product_name);
+                }).
+                fail(function () {
+                    dfr.reject();
+                });
             });
         },
 
-        getMachineId : function() {
-            var fh = cockpit.file("/etc/machine-id", {syntax: nethserver.Syntax.trimWhitespace});
-            return fh.read().always(function () { fh.close(); });
+        getMachineId: function () {
+            var fh = cockpit.file("/etc/machine-id", {
+                syntax: nethserver.Syntax.trimWhitespace
+            });
+            return fh.read().always(function () {
+                fh.close();
+            });
         },
 
-        getOs : function() {
+        getOS: function () {
             var fh = cockpit.file("/etc/nethserver-release");
-            return fh.read().always(function(){fh.close();});
+            return fh.read().always(function () {
+                fh.close();
+            });
         },
 
-        getTimezones : function() {
-            return cockpit.spawn(["/usr/bin/timedatectl", "list-timezones"]);
-        },
-
-        getSystemTime : function() {
+        getNTPServer: function () {
             return cockpit.spawn(['date', '+%F %H:%M']);
         },
 
-        setSystemTime : function(val) {
+        getSystemTimeMode: function () {
+            return cockpit.spawn(['date', '+%F %H:%M']);
+        },
+
+        getSystemTimeZone: function () {
+            return cockpit.spawn(['date', '+%F %H:%M']);
+        },
+
+        getTimezones: function () {
+            return cockpit.spawn(["/usr/bin/timedatectl", "list-timezones"]);
+        },
+
+        getSystemTime: function () {
+            return cockpit.spawn(['date', '+%F %H:%M']);
+        },
+
+        setSystemTime: function (val) {
             // Validate argument
-            return $.Deferred(function(dfr) {
+            return $.Deferred(function (dfr) {
                 cockpit.spawn(['date', val]).
-                    done(function(out){
-                        nethserver.signalEvent('nethserver-ntp-save', val).
-                            done(dfr.resolve).
-                            fail(dfr.reject);
-                    }).
+                done(function (out) {
+                    nethserver.signalEvent('nethserver-ntp-save', val).
+                    done(dfr.resolve).
                     fail(dfr.reject);
+                }).
+                fail(dfr.reject);
             });
         }
     };

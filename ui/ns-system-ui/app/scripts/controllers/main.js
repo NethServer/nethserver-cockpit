@@ -20,91 +20,94 @@ angular.module('systemAngularApp')
 
     // retrieve base system info
     // -- Hardware --
-    nethserver.System.summary.getHardware(function (info) {
+    nethserver.System.summary.getHardware().done(function (info) {
       $scope.localSystem.hardware = info;
 
       // applying scope
       $scope.$apply();
-    }, function (err) {
+    }).fail(function (err) {
       console.error("couldn't read dmi info: " + err);
     });
 
     // -- Machine ID --
-    nethserver.System.summary.getMachineId(function (info) {
+    nethserver.System.summary.getMachineId().done(function (info) {
       $scope.localSystem.machineId = info;
 
       // applying scope
       $scope.$apply();
-    }, function (err) {
+    }).fail(function (err) {
       console.error("Error reading machine id", err);
     });
 
     // -- Operating system --
-    nethserver.System.summary.getOS(function (info) {
+    nethserver.System.summary.getOS().done(function (info) {
       $scope.localSystem.osRelease = info;
 
       // applying scope
       $scope.$apply();
-    }, function (err) {
+    }).fail(function (err) {
       console.error("Error reading os release", err);
     });
 
     // -- Hostname --
-    nethserver.System.summary.getHostname(function (hostname) {
+    nethserver.System.summary.getHostname().done(function (hostname) {
       $scope.localSystem.hostname = hostname;
-    }, function (err) {
+
+      // applying scope
+      $scope.$apply();
+    }).fail(function (err) {
       console.error(err);
     });
 
     // -- Datetime --
-    nethserver.System.summary.getSystemTime(function (info) {
+    nethserver.System.summary.getSystemTime().done(function (info) {
       var datetime = info.trim().split(' ');
       $scope.localSystem.date = datetime[0];
       $scope.localSystem.time = datetime[1];
 
       // applying scope
       $scope.$apply();
-    }, function (err) {
+    }).fail(function (err) {
       console.error("couldn't read datetime: " + err);
     });
 
-    nethserver.System.summary.getSystemTimezone(function (timezone) {
+    nethserver.System.summary.getSystemTimeZone().done(function (timezone) {
       $scope.localSystem.timezone = timezone;
 
       // applying scope
       $scope.$apply();
-    }, function (err) {
+    }).fail(function (err) {
       console.error("couldn't read system timezone: " + err);
     });
 
     // -- Time zones --
-    nethserver.System.summary.getTimezones(function (timezones) {
+    nethserver.System.summary.getTimezones().done(function (timezones) {
       $scope.localSystem.timezones = timezones;
 
       // applying scope
       $scope.$apply();
       $('.combobox').combobox();
-    }, function (err) {
+    }).fail(function (err) {
       console.error("couldn't read timezones: " + err);
     });
 
     // -- Time mode --
-    nethserver.System.summary.getTimeMode(function (timeMode) {
+    nethserver.System.summary.getSystemTimeMode().done(function (timeMode) {
       $scope.localSystem.timeMode = timeMode;
 
       // applying scope
       //$scope.$apply();
-    }, function (err) {
+    }).fail(function (err) {
       console.error("couldn't read time mode: " + err);
     });
 
     // -- NTP server --
-    nethserver.System.summary.getNtpServer(function (ntpServer) {
+    nethserver.System.summary.getNTPServer().done(function (ntpServer) {
       $scope.localSystem.ntpServer = ntpServer;
 
       // applying scope
       //$scope.$apply();
-    }, function (err) {
+    }).fail(function (err) {
       console.error("couldn't read ntp server: " + err);
     });
 
