@@ -57,19 +57,20 @@ describe('nethserver.Syntax.grepToObject', function() {
     });
 });
 
+
+
 describe('nethserver.signalEvent()...', function() {
-    jQuery(document).on('taskprogress.nethserver', function(e, value){console.log('taskprogress', value)});
-    it('runs test-success in 5 secs', function(){
+    it('succeedes', function(){
         return nethserver.signalEvent('test-success');
     });
-    it('runs test-fail in 5 secs', function(done){
+    it('fails', function(done){
         nethserver.signalEvent('test-failure').fail(function(){
             done();
         }).done(function(){
             done('must fail');
         });
     });
-    it('catches a non-existing event error', function(done){
+    it('catches non-existing event', function(done){
         nethserver.signalEvent('test-nonexisting-event').fail(function(){
             done();
         }).done(function(){
@@ -78,6 +79,11 @@ describe('nethserver.signalEvent()...', function() {
     });
 });
 
+
+
+describe('nethserver.Esdb', function() {
+
+});
 
 mocha.checkLeaks();
 mocha.globals(['jQuery', 'cockpit']);

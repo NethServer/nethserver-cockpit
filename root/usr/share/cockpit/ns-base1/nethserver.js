@@ -56,11 +56,15 @@ var nethserver = {};
     /*
      * Exec a signal event action:
      */
-    nethserver.signalEvent = function (esEvent) {
-        var args = ['systemd-run', '--service-type', 'simple', '/sbin/e-smith/signal-event'];
+    nethserver.signalEvent = function (nsEvent) {
+        var args = ['systemd-run', '/sbin/e-smith/signal-event'];
         args.push.apply(args, Array.prototype.slice.call(arguments));
+        var unitName = 'unknown';
+        var client = cockpit.dbus('org.freedesktop.systemd1');
+        var manager = client.proxy('org.freedesktop.systemd1.Manager', '/org/freedesktop/systemd1');
+        var dfr = $.Deferred();
         var taskProgress = {
-            'event': esEvent,
+            'event': nsEvent,
             'args': args.slice(3),
             'exitCode': null,
             'unitName': null,
@@ -69,84 +73,106 @@ var nethserver = {};
             'status': null,
         };
 
-        function notifyTaskProgress() {
-            $(document).trigger('taskprogress.nethserver', [taskProgress]);
-        };
+        dfr.always(function(){ client.close(); });
 
-        function waitEvent(unitName, dfr) {
-            var client = cockpit.dbus('org.freedesktop.systemd1');
-            taskProgress = $.extend({}, taskProgress, {
-                unitName: unitName,
-                progress: 0.0,
-                message: '',
-                status: 'starting'
+        manager.wait(initHandlers).
+            done(spawnUnit).
+            fail(function(){
+                dfr.reject('Failed to connect /org/freedesktop/systemd1 DBus object');
             });
-            dfr.notify(esEvent + ' starting');
 
-            // A failed service unit remains on filesystem: we can query its
-            // properties at any time.
-            // A running unit can send properites change events, too.
-            client.call('/org/freedesktop/systemd1', 'org.freedesktop.systemd1.Manager', 'GetUnit', [unitName]).
-                done(function(unitPath){
-                    client.proxy('org.freedesktop.systemd1.Service', unitPath).addEventListener('changed', function(ev, properties){
-                        if(properties.Result === 'exit-code') {
-                            client.close();
-                            taskProgress = $.extend({}, taskProgress, {
-                                progress: 1.0,
-                                message: '',
-                                status: 'failed',
-                                exitCode: properties.ExecMainStatus
-                            });
-                            dfr.reject(esEvent + ' failed');
-                        }
+        function initHandlers() {
+            // Generate a unique event identifier:
+            unitName = 'nsevent-' + parseInt(manager.NInstalledJobs) + '.service';
+
+            manager.addEventListener('UnitNew', function(ev, uName, uPath) {
+                if(uName === unitName) {
+                    registerUnitChangeHandler();
+                    taskProgress = $.extend({}, taskProgress, {
+                        progress: 1.0,
+                        message: '',
+                        status: 'started',
+                        exitCode: 0
                     });
-                });
+                    dfr.notify(taskProgress);
+                }
+            });
 
             // Successful service unit is removed automatically. Here we catch
-            // the UnitRemoved event, in case it completes before properites event handler
+            // the UnitRemoved event, in case it completes before properties event handler
             // is ready to receive events.
-            client.subscribe({
-                'interface': 'org.freedesktop.systemd1.Manager',
-                'path': '/org/freedesktop/systemd1',
-                'member': 'UnitRemoved',
-            }, function(path, interface_, signal, args) {
-                if($.isArray(args) && args[0] === unitName) {
+            manager.addEventListener('UnitRemoved', function(ev, uName, uPath) {
+                if(uName === unitName) {
                     taskProgress = $.extend({}, taskProgress, {
                         progress: 1.0,
                         message: '',
                         status: 'success',
                         exitCode: 0
                     });
-                    client.close();
                     dfr.resolve();
                 }
             });
 
         };
 
-        return $.Deferred(function(dfr){
+        function spawnUnit() {
+            taskProgress = $.extend({}, taskProgress, {
+                unitName: unitName,
+                progress: 0.0,
+                message: '',
+                status: 'starting'
+            });
+            dfr.notify(taskProgress);
+
+            args.splice(1, 0, '--unit', unitName);
+
             var process = cockpit.spawn(args, {
                 superuser: 'require',
                 err: 'message'
             }).
-                done(function(out, err){
-                    // Sample err contents: "Running as unit run-12915.service.\n"
-                    var matches = err.match(/^Running as unit (run-\d+\.service)\./);
-                    if($.isArray(matches)) {
-                        waitEvent(matches[1], dfr);
-                    } else {
-                        dfr.reject(err);
-                    }
-                }).
                 fail(function(ex){
                     dfr.reject(ex.message);
                 }).
                 always(function(){
                     process.close();
                 });
-        }).
-            then(notifyTaskProgress, notifyTaskProgress, notifyTaskProgress).
-            promise();
+        };
+
+        function registerUnitChangeHandler() {
+
+            // A failed service unit remains on filesystem: we can query its
+            // properties at any time.
+            // A running unit can send properties change events, too.
+            manager.GetUnit(unitName).
+                done(function(unitPath){
+                    var serviceUnit = client.proxy('org.freedesktop.systemd1.Service', unitPath);
+                    serviceUnit.wait(function() {
+                        serviceUnit.addEventListener('changed', function(ev, properties) {
+                            checkFailedUnit(properties);
+                        });
+                        checkFailedUnit(serviceUnit);
+                    });
+                }).
+                fail(function(){
+                    dfr.reject(unitName);
+                });
+        };
+
+        function checkFailedUnit (properties) {
+            if(properties.Result === 'exit-code') {
+                taskProgress = $.extend({}, taskProgress, {
+                    progress: 1.0,
+                    message: '',
+                    status: 'failed',
+                    exitCode: properties.ExecMainStatus
+                });
+                dfr.reject(nsEvent + ' failed');
+            } else {
+                // Still waiting, ignore...
+            }
+        };
+
+        return dfr.promise();
     };
 
     nethserver.Esdb = function() {
