@@ -1,5 +1,5 @@
-<div ng-show="!isLoaded" class="spinner spinner-lg"></div>
-<div ng-show="isLoaded">
+<div ng-show="!view.isLoaded" class="spinner spinner-lg"></div>
+<div ng-show="view.isLoaded">
   <h3>{{'Summary' | translate}}</h3>
   <div class="row">
     <div class="col-lg-6">
@@ -7,31 +7,31 @@
         <div class="form-group compact">
           <label class="col-sm-2 control-label">{{'Hardware' | translate}}</label>
           <div class="col-sm-10 no-input">
-            <p>{{localSystem.hardware}}</p>
+            <p>{{localSystem.summary.hardware}}</p>
           </div>
         </div>
         <div class="form-group compact">
           <label class="col-sm-2 control-label">{{'Machine ID' | translate}}</label>
           <div class="col-sm-10 no-input">
-            <p>{{localSystem.machineId}}</p>
+            <p>{{localSystem.summary.machineId}}</p>
           </div>
         </div>
         <div class="form-group compact">
           <label class="col-sm-2 control-label">{{'Operating System' | translate}}</label>
           <div class="col-sm-10 no-input">
-            <p>{{localSystem.osRelease}}</p>
+            <p>{{localSystem.summary.osRelease}}</p>
           </div>
         </div>
         <div class="form-group compact">
           <label class="col-sm-2 control-label">{{'Hostname' | translate}}</label>
           <div class="col-sm-10 no-input">
-            <p><a ng-click="openChangeHostname()" data-toggle="modal" data-target="#hostnameChangeModal" href="">{{localSystem.hostname}}</a></p>
+            <p><a ng-click="openChangeHostname()" data-toggle="modal" data-target="#hostnameChangeModal" href="">{{localSystem.summary.hostname}}</a></p>
           </div>
         </div>
         <div class="form-group compact">
           <label class="col-sm-2 control-label">{{'System Time' | translate}}</label>
           <div class="col-sm-10 no-input">
-            <p><a ng-click="openChangeSystime()" data-toggle="modal" data-target="#systimeChangeModal" href="">{{localSystem.date}} {{localSystem.time}}</a></p>
+            <p><a ng-click="openChangeSystime()" data-toggle="modal" data-target="#systimeChangeModal" href="">{{localSystem.summary.date}} {{localSystem.summary.time}}</a></p>
           </div>
         </div>
         <div class="form-group compact">
@@ -60,7 +60,7 @@
   <h3>{{'Settings' | translate}}</h3>
   <div class="cards-pf">
     <div class="row row-cards-pf">
-      <div ng-repeat="r in allRoutes | orderBy:'value.name'" ng-click="goTo(r.id)" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 route-card">
+      <div ng-repeat="r in objects.allRoutes | orderBy:'value.name'" ng-click="goTo(r.id)" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 route-card">
         <div class="card-pf card-pf-accented">
           <h2 class="card-pf-title">
             <span class="{{r.value.icon}} card-icon-def"></span> {{r.value.name}}
@@ -80,16 +80,16 @@
       <div class="modal-header">
         <h4 class="modal-title">{{'Change hostname' | translate}}</h4>
       </div>
-      <form class="form-horizontal" ng-submit="changeHostname(localSystem.newHostname)">
+      <form class="form-horizontal" ng-submit="changeHostname(localSystem.summary.newHostname)">
 
         <div class="modal-body">
           <div class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'FQDN' | translate}}</label>
             <div class="col-sm-9">
-              <input required type="text" ng-model="localSystem.newHostname" class="form-control">
+              <input required type="text" ng-model="localSystem.summary.newHostname" class="form-control">
             </div>
           </div>
-          <div ng-repeat="a in localSystem.aliases" class="form-group">
+          <div ng-repeat="a in localSystem.summary.aliases" class="form-group">
             <label class="col-xs-12 col-sm-3 control-label" for="textInput-modal-markup">{{$first ? 'Alias' : '' | translate}}</label>
             <div class="col-xs-7 col-sm-6">
               <input type="text" ng-model="a.name" class="form-control">
@@ -124,9 +124,9 @@
 
         <div class="modal-body">
           <div class="form-group">
-            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Time Zone' | translate}} {{localSystem.newTimezone}}</label>
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Time Zone' | translate}} {{localSystem.summary.newTimezone}}</label>
             <div class="col-sm-9">
-              <select required ng-options="t as t for t in localSystem.timezones" ng-model="localSystem.timezone" class="combobox form-control">
+              <select required ng-options="t as t for t in localSystem.summary.timezones" ng-model="localSystem.summary.timezone" class="combobox form-control">
               </select>
             </div>
           </div>
@@ -136,7 +136,7 @@
             <div class="col-sm-9">
               <div class="dropdown">
                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                  {{systimeTypes[localSystem.newTimeMode]}}
+                  {{systimeTypes[localSystem.summary.newTimeMode]}}
                   <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -147,11 +147,11 @@
             </div>
           </div>
 
-          <div ng-show="localSystem.newTimeMode == 'manually'" class="form-group">
+          <div ng-show="localSystem.summary.newTimeMode == 'manually'" class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Date and Time' | translate}}</label>
             <div class="col-sm-6">
               <div id="date-picker" class="input-group date">
-                <input required ng-model="localSystem.newDate" type="text" class="form-control bootstrap-datepicker">
+                <input required ng-model="localSystem.summary.newDate" type="text" class="form-control bootstrap-datepicker">
                 <span class="input-group-addon">
                   <span class="fa fa-calendar"></span>
                 </span>
@@ -159,7 +159,7 @@
             </div>
             <div class="col-sm-3">
               <div class="input-group time-picker-pf" id="time-picker">
-                <input required ng-model="localSystem.newTime" type="text" class="form-control">
+                <input required ng-model="localSystem.summary.newTime" type="text" class="form-control">
                 <span class="input-group-addon btn btn-default">
                   <span class="fa fa-clock-o"></span>
                 </span>
@@ -167,10 +167,10 @@
             </div>
           </div>
 
-          <div ng-show="localSystem.newTimeMode == 'ntp'" class="form-group">
+          <div ng-show="localSystem.summary.newTimeMode == 'ntp'" class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">NTP server</label>
             <div class="col-sm-9">
-              <input required type="text" ng-model="localSystem.ntpServer" class="form-control">
+              <input required type="text" ng-model="localSystem.summary.ntpServer" class="form-control">
             </div>
           </div>
         </div>

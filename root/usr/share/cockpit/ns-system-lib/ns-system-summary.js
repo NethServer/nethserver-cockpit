@@ -29,6 +29,10 @@
             });
         },
 
+        getSystemAliases: function () {
+            return cockpit.spawn(['date', '+%F %H:%M']);
+        },
+
         setHostname: function (hostname) {
             return cockpit.dbus('org.freedesktop.hostname1').proxy().wait(function () {
                 return $.Deferred(function (dfr) {
@@ -93,7 +97,6 @@
         },
 
         setSystemTime: function (val) {
-            // Validate argument
             return $.Deferred(function (dfr) {
                 cockpit.spawn(['date', val]).
                 done(function (out) {

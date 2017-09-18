@@ -9,21 +9,34 @@
  */
 angular.module('systemAngularApp')
   .controller('MainCtrl', function ($scope, $route, $location) {
-    $scope.isLoaded = false;
-    $scope.allRoutes = [];
-    $scope.systimeTypes = {
-      'manually': 'Manually',
-      'ntp': 'Using NTP server',
+    // view object
+    $scope.view = {
+      isLoaded: false
     };
-    $scope.localSystem = {};
-    $scope.localSystem.aliases = [{name:'alias.test1'},{name:'alias.test2'},{name:'alias.test3'}];
+
+    // controller objects
+    $scope.objects = {
+      allRoutes: [],
+      systimeTypes: {
+        'manually': 'Manually',
+        'ntp': 'Using NTP server',
+      }
+    };
+
+    $scope.localSystem.summary = {};
+    $scope.localSystem.summary.aliases = [{
+      name: 'alias.test1'
+    }, {
+      name: 'alias.test2'
+    }, {
+      name: 'alias.test3'
+    }];
 
     // retrieve base system info
     // -- Hardware --
     nethserver.System.summary.getHardware().done(function (info) {
-      $scope.localSystem.hardware = info;
+      $scope.localSystem.summary.hardware = info;
 
-      // applying scope
       $scope.$apply();
     }).fail(function (err) {
       console.error("couldn't read dmi info: " + err);
@@ -31,9 +44,8 @@ angular.module('systemAngularApp')
 
     // -- Machine ID --
     nethserver.System.summary.getMachineId().done(function (info) {
-      $scope.localSystem.machineId = info;
+      $scope.localSystem.summary.machineId = info;
 
-      // applying scope
       $scope.$apply();
     }).fail(function (err) {
       console.error("Error reading machine id", err);
@@ -41,9 +53,8 @@ angular.module('systemAngularApp')
 
     // -- Operating system --
     nethserver.System.summary.getOS().done(function (info) {
-      $scope.localSystem.osRelease = info;
+      $scope.localSystem.summary.osRelease = info;
 
-      // applying scope
       $scope.$apply();
     }).fail(function (err) {
       console.error("Error reading os release", err);
@@ -51,9 +62,8 @@ angular.module('systemAngularApp')
 
     // -- Hostname --
     nethserver.System.summary.getHostname().done(function (hostname) {
-      $scope.localSystem.hostname = hostname;
+      $scope.localSystem.summary.hostname = hostname;
 
-      // applying scope
       $scope.$apply();
     }).fail(function (err) {
       console.error(err);
@@ -62,19 +72,18 @@ angular.module('systemAngularApp')
     // -- Datetime --
     nethserver.System.summary.getSystemTime().done(function (info) {
       var datetime = info.trim().split(' ');
-      $scope.localSystem.date = datetime[0];
-      $scope.localSystem.time = datetime[1];
+      $scope.localSystem.summary.date = datetime[0];
+      $scope.localSystem.summary.time = datetime[1];
 
-      // applying scope
       $scope.$apply();
     }).fail(function (err) {
       console.error("couldn't read datetime: " + err);
     });
 
+    // -- System timezone --
     nethserver.System.summary.getSystemTimeZone().done(function (timezone) {
-      $scope.localSystem.timezone = timezone;
+      $scope.localSystem.summary.timezone = timezone;
 
-      // applying scope
       $scope.$apply();
     }).fail(function (err) {
       console.error("couldn't read system timezone: " + err);
@@ -82,9 +91,8 @@ angular.module('systemAngularApp')
 
     // -- Time zones --
     nethserver.System.summary.getTimezones().done(function (timezones) {
-      $scope.localSystem.timezones = timezones;
+      $scope.localSystem.summary.timezones = timezones;
 
-      // applying scope
       $scope.$apply();
       $('.combobox').combobox();
     }).fail(function (err) {
@@ -93,9 +101,8 @@ angular.module('systemAngularApp')
 
     // -- Time mode --
     nethserver.System.summary.getSystemTimeMode().done(function (timeMode) {
-      $scope.localSystem.timeMode = timeMode;
+      $scope.localSystem.summary.timeMode = timeMode;
 
-      // applying scope
       //$scope.$apply();
     }).fail(function (err) {
       console.error("couldn't read time mode: " + err);
@@ -103,21 +110,23 @@ angular.module('systemAngularApp')
 
     // -- NTP server --
     nethserver.System.summary.getNTPServer().done(function (ntpServer) {
-      $scope.localSystem.ntpServer = ntpServer;
+      $scope.localSystem.summary.ntpServer = ntpServer;
 
-      // applying scope
       //$scope.$apply();
     }).fail(function (err) {
       console.error("couldn't read ntp server: " + err);
     });
 
     // -- Aliases --
+    nethserver.System.summary.getSystemAliases().done(function (ntpServer) {
+      $scope.localSystem.summary.ntpServer = ntpServer;
 
+      //$scope.$apply();
+    }).fail(function (err) {
+      console.error("couldn't read ntp server: " + err);
+    });
 
-    $scope.goTo = function (route) {
-      $location.path(route);
-    };
-
+    // init graphics method
     $scope.initGraphics = function () {
       $('#date-picker').datepicker({
         autoclose: true,
@@ -135,66 +144,63 @@ angular.module('systemAngularApp')
         }
       }).on('dp.change', function (e) {
         var time = $('#time-picker').data().date.split(' ')[0];
-        $scope.localSystem.newTime = time;
+        $scope.localSystem.summary.newTime = time;
       });
     };
 
     $scope.initRoutes = function () {
       for (var i in $route.routes) {
         if (i !== 'null' && i.match(/.+[^/]$/)) {
-          $scope.allRoutes.push({
+          $scope.objects.allRoutes.push({
             id: i,
             value: $route.routes[i]
           });
         }
       }
-      $scope.isLoaded = true;
+      $scope.view.isLoaded = true;
     };
 
     $scope.openChangeHostname = function () {
-      $scope.localSystem.newHostname = $scope.localSystem.hostname;
+      $scope.localSystem.summary.newHostname = $scope.localSystem.summary.hostname;
     };
     $scope.changeHostname = function (hostname) {
-      console.log($scope.localSystem.aliases);
-
       nethserver.System.summary.setHostname(hostname, function () {
         $('#hostnameChangeModal').modal('hide');
-        $scope.localSystem.hostname = hostname;
+        $scope.localSystem.summary.hostname = hostname;
         $scope.$apply();
       }, function (err) {
         console.error(err);
       });
     };
 
-    $scope.addAlias = function(alias) {
-      $scope.localSystem.aliases.push({
+    $scope.addAlias = function (alias) {
+      $scope.localSystem.summary.aliases.push({
         name: alias
       });
     };
-    $scope.removeAlias = function(aliasIndex) {
-      $scope.localSystem.aliases.splice(aliasIndex, 1);
+    $scope.removeAlias = function (aliasIndex) {
+      $scope.localSystem.summary.aliases.splice(aliasIndex, 1);
     };
 
     $scope.openChangeSystime = function () {
-      //$scope.localSystem.oldTimezone = $scope.localSystem.timezone;
-      $scope.localSystem.newTimeMode = $scope.localSystem.timeMode;
-      $scope.localSystem.newDate = $scope.localSystem.date;
-      $scope.localSystem.newTime = $scope.localSystem.time;
+      //$scope.localSystem.summary.oldTimezone = $scope.localSystem.summary.timezone;
+      $scope.localSystem.summary.newTimeMode = $scope.localSystem.summary.timeMode;
+      $scope.localSystem.summary.newDate = $scope.localSystem.summary.date;
+      $scope.localSystem.summary.newTime = $scope.localSystem.summary.time;
     };
     $scope.changeSystime = function (value) {
-      $scope.localSystem.newTimeMode = value;
+      $scope.localSystem.summary.newTimeMode = value;
     };
     $scope.saveSystime = function () {
-      console.log($scope.localSystem);
       $('#systimeChangeModal').modal('hide');
-      /* $scope.localSystem.date = '';
-      $scope.localSystem.time = '';
-      $scope.localSystem.timeMode = '';
-      $scope.localSystem.timezone = '';
+      /* $scope.localSystem.summary.date = '';
+      $scope.localSystem.summary.time = '';
+      $scope.localSystem.summary.timeMode = '';
+      $scope.localSystem.summary.timezone = '';
       $scope.$apply(); */
     };
     $scope.resetDateTime = function () {
-      $scope.localSystem.timezone = $scope.localSystem.oldTimezone;
+      $scope.localSystem.summary.timezone = $scope.localSystem.summary.oldTimezone;
     };
 
     $scope.powerActions = function (action) {

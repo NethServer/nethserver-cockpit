@@ -1,35 +1,62 @@
+/*
+ * Copyright (C) 2017 Nethesis S.r.l.
+ * http://www.nethesis.it - nethserver@nethesis.it
+ *
+ * This script is part of NethServer.
+ *
+ * NethServer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License,
+ * or any later version.
+ *
+ * NethServer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NethServer.  If not, see COPYING.
+ */
 
-nethserver.System.services = {
-    getAllServices : function(successCb, errorCb) {
-      var arr = [
-        { name: 'chronyd', description: 'Network time protocol', status: 'enabled', running: true, ports: { udp: [123] } },
-        { name: 'collectd', description: 'System performance statistics collector', status: 'disabled', running: false },
-        { name: 'dnsmasq', description: 'DNS and DHCP', status: 'enabled', running: true, ports: { udp: [53,67,69], tcp: [53] } },
-        { name: 'asterisk', description: 'VoIP PBX', status: 'disabled', running: true, ports: { udp: [123] } },
-        { name: 'janus-gateway', description: 'WebRTC daemon gateway', status: 'disabled', running: false },
-        { name: 'postfix', description: 'SMTP', status: 'enabled', running: true, ports: { udp: [53,67,69], tcp: [53] } }
-      ];
+/*
+ * Copyright (C) 2017 Nethesis S.r.l.
+ * http://www.nethesis.it - nethserver@nethesis.it
+ *
+ * This script is part of NethServer.
+ *
+ * NethServer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License,
+ * or any later version.
+ *
+ * NethServer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NethServer.  If not, see COPYING.
+ */
 
-      successCb(arr);
+(function ($) {
+  nethserver.System.services = {
+    getAllServices: function () {
+      return cockpit.spawn(['date', '+%F %H:%M']);
     },
-
-    enableService : function(successCb, errorCb) {
-      //TODO
+    enableService: function (service) {
+      return cockpit.spawn(['date', '+%F %H:%M']);
     },
-
-    disableService : function(successCb, errorCb) {
-      //TODO
+    disableService: function (service) {
+      return cockpit.spawn(['date', '+%F %H:%M']);
     },
-
-    startService : function(successCb, errorCb) {
-      //TODO
+    startService: function (service) {
+      return cockpit.spawn(['date', '+%F %H:%M']);
     },
-
-    stopService : function(successCb, errorCb) {
-      //TODO
+    stopService: function (service) {
+      return cockpit.spawn(['date', '+%F %H:%M']);
     },
-
-    restartService : function(successCb, errorCb) {
-      //TODO
-    }
+    restartService: function (service) {
+      return cockpit.spawn(['date', '+%F %H:%M']);
+    },
   };
+})(jQuery);

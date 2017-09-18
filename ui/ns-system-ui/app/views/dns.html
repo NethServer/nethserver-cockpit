@@ -1,4 +1,4 @@
-<div ng-if="dnss.length == 0" class="blank-slate-pf">
+<div ng-if="localSystem.dns.hosts.length == 0" class="blank-slate-pf">
   <div class="blank-slate-pf-icon">
     <span class="pficon pficon-regions"></span>
   </div>
@@ -6,21 +6,21 @@
     {{'No DNS servers found' | translate}}
   </h1>
   <div class="blank-slate-pf-main-action">
-    <button ng-click="newDNSServer()" class="btn btn-primary btn-lg">{{'Add DNS server' | translate}}</button>
+    <button ng-click="editDNS()" class="btn btn-primary btn-lg">{{'Add DNS server' | translate}}</button>
   </div>
 </div>
 
-<div ng-if="dnss.length > 0">
+<div ng-if="localSystem.dns.hosts.length > 0">
   <h3>{{'New DNS' | translate}}</h3>
-  <button ng-click="newDNSServer()" class="btn btn-primary btn-lg " type="button">{{'Add DNS server'}}</button>
+  <button ng-click="editDNS()" class="btn btn-primary btn-lg " type="button">{{'Add DNS server'}}</button>
 </div>
 
-<div ng-if="dnss.length > 0">
+<div ng-if="localSystem.dns.hosts.length > 0">
   <h3>{{'Configured DNS' | translate}}</h3>
   <form role="form" class="search-pf has-button search">
     <div class="form-group has-clear">
       <div class="search-pf-input-group">
-        <input ng-model="dnsSearchString" type="text" class="form-control input-lg" placeholder="{{'Search' | translate}}...">
+        <input ng-model="objects.searchString" type="text" class="form-control input-lg" placeholder="{{'Search' | translate}}...">
       </div>
     </div>
     <div class="form-group">
@@ -28,12 +28,12 @@
     </div>
   </form>
   <div class="list-group list-view-pf">
-    <div ng-repeat="d in dnss | filter:dnsSearchString" class="list-group-item">
+    <div ng-repeat="d in localSystem.dns.hosts | filter:objects.searchString" class="list-group-item">
       <div class="list-view-pf-checkbox">
         <input type="checkbox">
       </div>
       <div class="list-view-pf-actions">
-        <button ng-click="editDNSServer(d)" class="btn btn-default">{{'Edit' | translate}}</button>
+        <button ng-click="editDNS(d)" class="btn btn-default">{{'Edit' | translate}}</button>
         <div class="dropdown pull-right dropdown-kebab-pf">
           <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <span class="fa fa-ellipsis-v"></span>
@@ -49,7 +49,7 @@
         </div>
         <div class="list-view-pf-body">
           <div class="list-view-pf-description">
-            <div ng-click="editDNSServer(d)" class="list-group-item-heading">
+            <div ng-click="editDNS(d)" class="list-group-item-heading">
               <a href="">{{d.hostname}}</a>
             </div>
             <div class="list-group-item-text">
@@ -72,27 +72,27 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">{{'New DNS server' | translate}}</h4>
+        <h4 class="modal-title">{{objects.newDNS.hostname ? 'Edit' + ' '+ objects.newDNS.hostname : 'New DNS server' | translate}}</h4>
       </div>
-      <form class="form-horizontal" ng-submit="saveDNSServer(newDNS)">
+      <form class="form-horizontal" ng-submit="saveDNS(objects.newDNS)">
 
         <div class="modal-body">
           <div class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Hostname' | translate}}</label>
             <div class="col-sm-9">
-              <input required type="text" ng-model="newDNS.hostname" class="form-control">
+              <input required type="text" ng-model="objects.newDNS.hostname" class="form-control">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'IP Address' | translate}}</label>
             <div class="col-sm-9">
-              <input required type="text" ng-model="newDNS.ip" class="form-control">
+              <input required type="text" ng-model="objects.newDNS.ip" class="form-control">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Description' | translate}}</label>
             <div class="col-sm-9">
-              <input type="text" ng-model="newDNS.description" class="form-control">
+              <input type="text" ng-model="objects.newDNS.description" class="form-control">
             </div>
           </div>
         </div>
@@ -110,9 +110,9 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">{{'Delete DNS' | translate}} {{DNSToDelete.hostname}}</h4>
+        <h4 class="modal-title">{{'Delete DNS' | translate}} {{toDeleteDNS.hostname}}</h4>
       </div>
-      <form class="form-horizontal" ng-submit="deleteDNSServer(DNSToDelete)">
+      <form class="form-horizontal" ng-submit="deleteDNS(toDeleteDNS)">
 
         <div class="modal-body">
           <div class="form-group">

@@ -9,54 +9,110 @@
  */
 angular.module('systemAngularApp')
   .controller('ServicesCtrl', function ($scope) {
-    $scope.servicesSearchString = '';
+    // controller objects
+    $scope.objects = {
+      searchString: ''
+    };
 
-    nethserver.System.services.getAllServices(function (services) {
-      $scope.allServices = services;
+    $scope.localSystem.services = {};
+    $scope.localSystem.services.list = [{
+        name: 'chronyd',
+        description: 'Network time protocol',
+        status: 'enabled',
+        running: true,
+        ports: {
+          udp: [123]
+        }
+      },
+      {
+        name: 'collectd',
+        description: 'System performance statistics collector',
+        status: 'disabled',
+        running: false
+      },
+      {
+        name: 'dnsmasq',
+        description: 'DNS and DHCP',
+        status: 'enabled',
+        running: true,
+        ports: {
+          udp: [53, 67, 69],
+          tcp: [53]
+        }
+      },
+      {
+        name: 'asterisk',
+        description: 'VoIP PBX',
+        status: 'disabled',
+        running: true,
+        ports: {
+          udp: [123]
+        }
+      },
+      {
+        name: 'janus-gateway',
+        description: 'WebRTC daemon gateway',
+        status: 'disabled',
+        running: false
+      },
+      {
+        name: 'postfix',
+        description: 'SMTP',
+        status: 'enabled',
+        running: true,
+        ports: {
+          udp: [53, 67, 69],
+          tcp: [53]
+        }
+      }
+    ];
 
-      // applying scope
-      // $scope.$apply();
-    }, function (err) {
+    // methods
+    nethserver.System.services.getAllServices().done(function (services) {
+      $scope.localSystem.services.list = services;
+
+      //$scope.$apply();
+    }).fail(function (err) {
       console.error("couldn't read services: " + err);
     });
 
-    $scope.enable = function () {
-      nethserver.System.services.enableService(function () {
 
-      }, function (err) {
+    $scope.enableService = function () {
+      nethserver.System.services.enableService().done(function (services) {
+
+      }).fail(function (err) {
         console.error(err);
       });
     }
 
-    $scope.disable = function () {
-      nethserver.System.services.disableService(function () {
+    $scope.disableService = function () {
+      nethserver.System.services.disableService().done(function () {
 
-      }, function (err) {
+      }).fail(function (err) {
         console.error(err);
       });
     }
 
-    $scope.start = function () {
-      nethserver.System.services.startService(function () {
+    $scope.startService = function () {
+      nethserver.System.services.startService().done(function () {
 
-      }, function (err) {
+      }).fail(function (err) {
         console.error(err);
       });
     }
 
-    $scope.stop = function () {
-      nethserver.System.services.stopService(function () {
+    $scope.stopService = function () {
+      nethserver.System.services.stopService().done(function () {
 
-      }, function (err) {
+      }).fail(function (err) {
         console.error(err);
       });
     }
 
-    $scope.restart = function () {
-      console.log('restart');
-      nethserver.System.services.restartService(function () {
+    $scope.restartService = function () {
+      nethserver.System.services.restartService().done(function () {
 
-      }, function (err) {
+      }).fail(function (err) {
         console.error(err);
       });
     }

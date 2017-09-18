@@ -1,4 +1,4 @@
-<div ng-if="allServices.length == 0" class="blank-slate-pf">
+<div ng-if="localSystem.services.list.length == 0" class="blank-slate-pf">
   <div class="blank-slate-pf-icon">
     <span class="pficon pficon-regions"></span>
   </div>
@@ -7,12 +7,12 @@
   </h1>
 </div>
 
-<div ng-if="allServices.length > 0">
+<div ng-if="localSystem.services.list.length > 0">
   <h3>{{'Services list' | translate}}</h3>
   <form role="form" class="search-pf has-button search">
     <div class="form-group has-clear">
       <div class="search-pf-input-group">
-        <input ng-model="servicesSearchString" type="text" class="form-control input-lg" placeholder="{{'Search' | translate}}...">
+        <input ng-model="objects.searchString" type="text" class="form-control input-lg" placeholder="{{'Search' | translate}}...">
       </div>
     </div>
     <div class="form-group">
@@ -20,7 +20,7 @@
     </div>
   </form>
   <div class="list-group list-view-pf">
-    <div ng-repeat="s in allServices | filter:servicesSearchString" class="list-group-item">
+    <div ng-repeat="s in localSystem.services.list | filter:objects.searchString" class="list-group-item">
       <div class="list-view-pf-checkbox">
         <input type="checkbox">
       </div>
@@ -103,7 +103,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="s in allServices">
+        <tr ng-repeat="s in localSystem.services.list">
           <td>{{s.name}}</td>
           <td class="col-sm-2 {{s.status === 'disabled' ? 'red fa-power-off' : 'green fa-bolt'}}">
             {{s.status | uppercase}}

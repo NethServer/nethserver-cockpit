@@ -9,7 +9,12 @@
  */
 angular.module('systemAngularApp')
   .controller('InitCtrl', function ($scope, $route, $location) {
+    // show body when angular is fully loaded
     $('body').show();
+
+    // variables declaration
+    $scope.notifications = [];
+    $scope.localSystem = {};
 
     $scope.stats = {
       tasks: [{}],
@@ -26,24 +31,18 @@ angular.module('systemAngularApp')
       'warning': 'warning-triangle-o'
     };
 
-    $scope.notifications = [];
+    // methods declaration
+    $scope.goTo = function (route) {
+      $location.path(route);
+    };
 
     $scope.addNotification = function (notification) {
       $scope.notifications.push(notification);
-    }
+    };
 
     $scope.removeNotification = function (index) {
       $scope.notifications.splice(index, 1);
-    }
-
-    $scope.$on('$routeChangeSuccess', function (next, current) {
-      var name = $route.routes[$location.path()];
-      var crumbs = name.originalPath === '/' ? [""] : name.originalPath.split('/');
-      $scope.crumbs = crumbs.map(v => ({
-        name: $route.routes['/' + v].name,
-        url: '/' + v
-      }));
-    });
+    };
 
     $scope.addNotification({
       type: 'task',
@@ -69,5 +68,15 @@ angular.module('systemAngularApp')
       status: 'success',
       action: 'check',
       url: 'http://www.patternfly.org'
+    });
+
+    // events listeners
+    $scope.$on('$routeChangeSuccess', function (next, current) {
+      var name = $route.routes[$location.path()];
+      var crumbs = name.originalPath === '/' ? [""] : name.originalPath.split('/');
+      $scope.crumbs = crumbs.map(v => ({
+        name: $route.routes['/' + v].name,
+        url: '/' + v
+      }));
     });
   });

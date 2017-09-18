@@ -34,7 +34,7 @@
 
 <body ng-app="systemAngularApp" ng-controller="InitCtrl">
   <div class="toast-pf alert alert-{{n.status}} alert-dismissable toast-pf-top-right" ng-repeat="n in notifications"
-    style="margin-top:{{$index*5}}em;">
+    style="margin-top:{{$index*4.5}}em;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="removeNotification($index)">
       <span class="pficon pficon-close"></span>
     </button>
@@ -108,6 +108,7 @@
   <script src="../ns-system-lib/ns-system-summary.js"></script>
   <script src="../ns-system-lib/ns-system-organization.js"></script>
   <script src="../ns-system-lib/ns-system-services.js"></script>
+  <script src="../ns-system-lib/ns-system-dns.js"></script>
 
   <!-- build:js({.tmp,app}) scripts/scripts.js -->
   <script src="scripts/app.js"></script>
