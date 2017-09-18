@@ -61,14 +61,6 @@ angular.module('systemAngularApp')
       action: 'Restart',
       url: 'http://www.patternfly.org'
     });
-    $scope.addNotification({
-      type: 'info',
-      title: 'Saved',
-      message: 'DNS server saved with success',
-      status: 'success',
-      action: 'check',
-      url: 'http://www.patternfly.org'
-    });
 
     // events listeners
     $scope.$on('$routeChangeSuccess', function (next, current) {

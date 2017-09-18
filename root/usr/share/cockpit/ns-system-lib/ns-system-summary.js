@@ -88,7 +88,7 @@
             return cockpit.spawn(['date', '+%F %H:%M']);
         },
 
-        getTimezones: function () {
+        getTimeZones: function () {
             return cockpit.spawn(["/usr/bin/timedatectl", "list-timezones"]);
         },
 

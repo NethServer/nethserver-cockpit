@@ -90,7 +90,7 @@ angular.module('systemAngularApp')
     });
 
     // -- Time zones --
-    nethserver.System.summary.getTimezones().done(function (timezones) {
+    nethserver.System.summary.getTimeZones().done(function (timezones) {
       $scope.localSystem.summary.timezones = timezones;
 
       $scope.$apply();
