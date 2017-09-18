@@ -47,6 +47,7 @@ angular.module('systemAngularApp')
 
     $scope.addNotification({
       type: 'task',
+      title: 'Event',
       message: 'Expand-template /etc/hosts',
       status: 'warning',
       action: 'check',
@@ -55,6 +56,7 @@ angular.module('systemAngularApp')
     });
     $scope.addNotification({
       type: 'action',
+      title: 'Service',
       message: 'sshd is stopped',
       status: 'danger',
       action: 'Restart',
@@ -62,6 +64,7 @@ angular.module('systemAngularApp')
     });
     $scope.addNotification({
       type: 'info',
+      title: 'Saved',
       message: 'DNS server saved with success',
       status: 'success',
       action: 'check',
