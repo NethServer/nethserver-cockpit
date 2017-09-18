@@ -5,20 +5,15 @@ QUnit.test( "hello test", function( assert ) {
 */
 
 
-mocha.setup('bdd')
+mocha.setup('bdd');
 
 describe('nethserver namespace', function () {
     it('is defined', function() {
-        should(typeof nethserver === 'object').be.ok;
+        should(typeof nethserver === 'object').be.ok();
     });
     describe('.Syntax namespace', function () {
         it('is defined', function () {
-            should(typeof nethserver.Syntax === 'object').be.ok;
-        });
-    });
-    describe('.Esdb class', function () {
-        it('is defined', function () {
-            should(typeof nethserver.Esdb === 'function').be.ok;
+            should(typeof nethserver.Syntax === 'object').be.ok();
         });
     });
 });
@@ -35,7 +30,7 @@ describe('nethserver.Syntax.trimWhitespace', function() {
     });
     describe('#stringify()', function() {
         it('is not implemented', function() {
-            (function(){nethserver.Syntax.trimWhitespace.stringify(0)}).should.throw('Not implemented');
+            (function(){nethserver.Syntax.trimWhitespace.stringify(0);}).should.throw('Not implemented');
         });
     });
 });
@@ -52,7 +47,7 @@ describe('nethserver.Syntax.grepToObject', function() {
     });
     describe('#stringify()', function() {
         it('is not implemented', function() {
-            (function(){nethserver.Syntax.grepToObject.stringify(0)}).should.throw('Not implemented');
+            (function(){nethserver.Syntax.grepToObject.stringify(0);}).should.throw('Not implemented');
         });
     });
 });
@@ -60,8 +55,10 @@ describe('nethserver.Syntax.grepToObject', function() {
 
 
 describe('nethserver.signalEvent()...', function() {
-    it('succeedes', function(){
-        return nethserver.signalEvent('test-success');
+    it('succeedes', function(done){
+        nethserver.signalEvent('test-success').
+            done(function() { done(); }).
+            fail(function() { done('error'); });
     });
     it('fails', function(done){
         nethserver.signalEvent('test-failure').fail(function(){
@@ -79,10 +76,29 @@ describe('nethserver.signalEvent()...', function() {
     });
 });
 
-
-
-describe('nethserver.Esdb', function() {
-
+describe('nethserver.getDatabase()', function() {
+    it('is defined', function () {
+        should(typeof nethserver.getDatabase === 'function').be.ok();
+    });
+    it('returns Nsdb instance', function () {
+        var cdb = nethserver.getDatabase('configuration');
+        should(typeof cdb.getProp === 'function').be.ok();
+    });
+    it('db.getProp()', function(done) {
+        var cdb = nethserver.getDatabase('configuration');
+        cdb.read(function(){
+            cdb.getProp('dnsmasq', 'status').should.be.equal('enabled');
+            done();
+        }).fail(done);
+    });
+    it('db.getType()', function(done) {
+        var cdb = nethserver.getDatabase('configuration');
+        cdb.read(function(){
+            cdb.get('MinUid').should.be.equal('5000');
+            cdb.getType('MinUid').should.be.equal('5000');
+            done();
+        }).fail(done);
+    });
 });
 
 mocha.checkLeaks();
