@@ -113,7 +113,7 @@ var nethserver = {};
                 }
             });
 
-        };
+        }
 
         function spawnUnit() {
             taskProgress = $.extend({}, taskProgress, {
@@ -136,7 +136,7 @@ var nethserver = {};
                 always(function(){
                     process.close();
                 });
-        };
+        }
 
         function registerUnitChangeHandler() {
 
@@ -156,7 +156,7 @@ var nethserver = {};
                 fail(function(){
                     dfr.reject(unitName);
                 });
-        };
+        }
 
         function checkFailedUnit (properties) {
             if(properties.Result === 'exit-code') {
@@ -170,7 +170,7 @@ var nethserver = {};
             } else {
                 // Still waiting, ignore...
             }
-        };
+        }
 
         return dfr.promise();
     };

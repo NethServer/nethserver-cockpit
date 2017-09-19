@@ -66,9 +66,11 @@ angular.module('systemAngularApp')
     $scope.$on('$routeChangeSuccess', function (next, current) {
       var name = $route.routes[$location.path()];
       var crumbs = name.originalPath === '/' ? [""] : name.originalPath.split('/');
-      $scope.crumbs = crumbs.map(v => ({
-        name: $route.routes['/' + v].name,
-        url: '/' + v
-      }));
+      $scope.crumbs = crumbs.map(function (v) {
+        return {
+          name: $route.routes['/' + v].name,
+          url: '/' + v
+        }
+      });
     });
   });
