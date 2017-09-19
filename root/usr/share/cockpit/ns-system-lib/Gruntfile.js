@@ -4,32 +4,33 @@ module.exports = function (grunt) {
     pkg: grunt.file.readJSON('package.json'),
     concat: {
       options: {
-        separator: ''
+        separator: '\n'
       },
       dist: {
-        src: ['nethserver.js', 'nethserver-*.js'],
-        dest: 'dist/nethserver.js'
+        src: ['ns-system.js', 'ns-system-*.js'],
+        dest: 'dist/<%= pkg.name %>.js'
       }
     },
     uglify: {
       options: {
-        banner: '/*! nethserver <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
       },
       dist: {
         files: {
-          'dist/nethserver.min.js': ['<%= concat.dist.dest %>']
+          'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
         }
       }
     },
     jshint: {
-      files: ['Gruntfile.js', 'nethserver.js', 'nethserver-*.js'],
+      files: ['Gruntfile.js', 'ns-system.js', 'ns-system-*.js'],
       options: {
         // options here to override JSHint defaults
         globals: {
           jQuery: true,
           console: true,
           module: true,
-          document: true
+          document: true,
+          cockpit: true
         }
       }
     },

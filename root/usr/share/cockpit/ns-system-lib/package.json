@@ -1,7 +1,7 @@
 {
-  "name": "ns-base1",
+  "name": "ns-system-lib",
   "version": "1.0.0",
-  "description": "Grunt task runner to concat and minify all nethserver libs",
+  "description": "Grunt task runner to concat and minify all libs",
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-contrib-concat": "^1.0.1",

@@ -25,7 +25,7 @@
                 syntax: nethserver.Syntax.trimWhitespace
             });
             return fh.read().always(function () {
-                fh.close()
+                fh.close();
             });
         },
 
