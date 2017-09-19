@@ -44,7 +44,7 @@ angular.module('systemAngularApp')
       $scope.notifications.splice(index, 1);
     };
 
-    $scope.addNotification({
+    /* $scope.addNotification({
       type: 'task',
       title: 'Event',
       message: 'Expand-template /etc/hosts',
@@ -60,7 +60,7 @@ angular.module('systemAngularApp')
       status: 'danger',
       action: 'Restart',
       url: 'http://www.patternfly.org'
-    });
+    }); */
 
     // events listeners
     $scope.$on('$routeChangeSuccess', function (next, current) {

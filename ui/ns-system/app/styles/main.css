@@ -68,6 +68,10 @@ dl {
   position: fixed;
 }
 
+.empty {
+  min-width: 15px;
+}
+
 .no-input {
   padding-top: 2px;
 }
@@ -91,8 +95,12 @@ dl {
   margin-bottom: 15px;
 }
 
+.list-selected {
+  background: #d6eaf6;
+}
+
 .button-minimum {
-  min-width: 56px;
+  min-width: 74px;
 }
 
 .list-view-pf .list-group-item-heading {
@@ -133,12 +141,10 @@ dl {
   width: 150px;
   margin-top: 8px;
 }
-.action-adjust {
 
-}
-.info-adjust {
+.action-adjust {}
 
-}
+.info-adjust {}
 
 .green {
   color: #3f9c35;
@@ -150,6 +156,9 @@ dl {
 
 .span-right-margin {
   margin-right: 4px;
+}
+.span-right-margin-lg {
+  margin-right: 8px;
 }
 
 .strongless {

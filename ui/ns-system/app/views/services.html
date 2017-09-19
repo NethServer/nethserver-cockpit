@@ -18,22 +18,73 @@
     <div class="form-group">
       <button class="btn btn-default btn-lg" type="submit"><span class="fa fa-search"></span></button>
     </div>
+    <div ng-if="objects.selectedServices.length > 1" class="form-group empty">
+
+    </div>
+    <div ng-if="objects.selectedServices.length > 1" class="dropdown form-group">
+      <button class="btn btn-default btn-lg dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+          {{objects.selectedServices.length}} {{'services' | translate}}
+          <span class="caret"></span>
+        </button>
+      <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
+        <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="enableService(objects.selectedServices)" href="">
+          <span class="fa fa-check span-right-margin-lg"></span>{{'Enable' | translate}}</a>
+        </li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="disableService(objects.selectedServices)" href="">
+          <span class="fa fa-times span-right-margin-lg"></span>{{'Disable' | translate}}</a>
+        </li>
+        <li role="presentation" class="divider"></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="startService(objects.selectedServices)" href="">
+          <span class="fa fa-play span-right-margin-lg"></span>{{'Start' | translate}}</a>
+        </li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="stopService(objects.selectedServices)" href="">
+          <span class="fa fa-refresh span-right-margin-lg"></span>{{'Restart' | translate}}</a>
+        </li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="restartService(objects.selectedServices)" href="">
+          <span class="fa fa-power-off span-right-margin-lg"></span>{{'Stop' | translate}}</a>
+        </li>
+        <li role="presentation" class="divider"></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="openDeleteService(objects.selectedServices)" href="">
+          <span class="fa fa-trash span-right-margin-lg"></span>{{'Delete' | translate}}</a>
+        </li>
+      </ul>
+    </div>
   </form>
   <div class="list-group list-view-pf">
-    <div ng-repeat="s in localSystem.services.list | filter:objects.searchString" class="list-group-item">
+    <div ng-repeat="s in localSystem.services.list | filter:objects.searchString" class="list-group-item {{s.checked ? 'list-selected' : ''}}">
       <div class="list-view-pf-checkbox">
-        <input type="checkbox">
+        <input ng-click="addToSelected(s)" ng-model="s.checked" type="checkbox">
       </div>
       <div class="list-view-pf-actions">
-        <button ng-click="editDNSServer(d)" class="btn btn-default button-minimum">{{s.running ? 'Restart' : 'Start' | translate}}</button>
+        <button ng-click="s.running ? restartService[s] : startService[s]" class="btn btn-default button-minimum">
+            <span class="fa fa-{{s.running ? 'refresh' : 'play'}} span-right-margin"></span>
+            {{s.running ? 'Restart' : 'Start' | translate}}
+        </button>
         <div class="dropdown pull-right dropdown-kebab-pf">
           <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span class="fa fa-ellipsis-v"></span>
           </button>
           <ul class="dropdown-menu dropdown-menu-right">
-            <li><a ng-click="openDeleteDNSModal(d)" href="">{{s.status == 'enabled' ? 'Disable' : 'Enable' | translate}}</a></li>
+            <li>
+              <a ng-click="s.status == 'enabled' ?  disableService([s]) : enableService([s])" href="">
+                <span class="fa fa-{{s.status == 'enabled' ? 'times' : 'check'}} span-right-margin"></span>
+                {{s.status == 'enabled' ? 'Disable' : 'Enable' | translate}}
+              </a>
+            </li>
             <li ng-if="s.running" role="separator" class="divider"></li>
-            <li ng-if="s.running"><a href="#">{{'Stop' | translate}}</a></li>
+            <li ng-if="s.running">
+              <a ng-click="stopService([s])" href="">
+                <span class="fa fa-power-off span-right-margin"></span>
+                {{'Stop' | translate}}
+              </a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li>
+              <a ng-click="openDeleteService([s])" href="">
+                <span class="fa fa-trash span-right-margin"></span>
+                {{'Delete' | translate}}
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -86,6 +137,29 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="deleteServiceModal" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{objects.toDeleteServices > 1 ? 'Delete services' : 'Delete service' | translate}}</h4>
+      </div>
+      <form class="form-horizontal" ng-submit="deleteService(objects.toDeleteServices)">
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Are you sure' | translate}}?</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
+          <button class="btn btn-danger" type="submit">{{'Delete' | translate}}</button>
+        </div>
+
+      </form>
     </div>
   </div>
 </div>

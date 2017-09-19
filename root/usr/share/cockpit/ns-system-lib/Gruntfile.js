@@ -7,7 +7,7 @@ module.exports = function (grunt) {
         separator: '\n'
       },
       dist: {
-        src: ['ns-system.js', 'ns-system-*.js'],
+        src: ['src/ns-system.js', 'src/ns-system-*.js'],
         dest: 'dist/<%= pkg.name %>.js'
       }
     },
@@ -22,16 +22,23 @@ module.exports = function (grunt) {
       }
     },
     jshint: {
-      files: ['Gruntfile.js', 'ns-system.js', 'ns-system-*.js'],
+      files: ['src/ns-system.js', 'src/ns-system-*.js'],
       options: {
         // options here to override JSHint defaults
         globals: {
-          jQuery: true,
-          console: true,
-          module: true,
-          document: true,
-          cockpit: true
+          'jQuery': true,
+          'console': true,
+          'module': true,
+          'document': true,
+          'cockpit': true
         }
+      }
+    },
+    shell: {
+      rsync: {
+        command: function (login, port, source, dest) {
+          return "rsync -aiz -e 'ssh -p " + port + "' " + source + " " + login + ':' + dest;
+        },
       }
     },
   });
@@ -39,7 +46,19 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-shell');
 
   grunt.registerTask('build', ['jshint', 'concat', 'uglify']);
+  grunt.registerTask('rsync', 'Sync folder with remote host', function (login, port, dest) {
+    if (port === undefined) {
+      port = 22;
+    }
+    if (dest === undefined) {
+      dest = '~/.local/share/cockpit/ns-base1';
+    }
+    grunt.task.run([
+      ['shell:rsync', login, port, 'dist/', dest].join(':'),
+    ]);
+  });
 
 };

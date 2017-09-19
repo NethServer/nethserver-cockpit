@@ -11,7 +11,9 @@ angular.module('systemAngularApp')
   .controller('ServicesCtrl', function ($scope) {
     // controller objects
     $scope.objects = {
-      searchString: ''
+      searchString: '',
+      selectedServices: [],
+      toDeleteServices: []
     };
 
     $scope.localSystem.services = {};
@@ -22,13 +24,13 @@ angular.module('systemAngularApp')
         running: true,
         ports: {
           udp: [123]
-        }
+        },
       },
       {
         name: 'collectd',
         description: 'System performance statistics collector',
         status: 'disabled',
-        running: false
+        running: false,
       },
       {
         name: 'dnsmasq',
@@ -38,7 +40,7 @@ angular.module('systemAngularApp')
         ports: {
           udp: [53, 67, 69],
           tcp: [53]
-        }
+        },
       },
       {
         name: 'asterisk',
@@ -69,7 +71,7 @@ angular.module('systemAngularApp')
 
     // methods
     nethserver.System.services.getAllServices().done(function (services) {
-      $scope.localSystem.services.list = services;
+      //$scope.localSystem.services.list = services;
 
       //$scope.$apply();
     }).fail(function (err) {
@@ -77,44 +79,57 @@ angular.module('systemAngularApp')
     });
 
 
-    $scope.enableService = function () {
-      nethserver.System.services.enableService().done(function (services) {
+    $scope.enableService = function (services) {
+      nethserver.System.services.enableServices().done(function (services) {
 
       }).fail(function (err) {
         console.error(err);
       });
     }
 
-    $scope.disableService = function () {
-      nethserver.System.services.disableService().done(function () {
+    $scope.disableService = function (services) {
+      nethserver.System.services.disableServices().done(function () {
 
       }).fail(function (err) {
         console.error(err);
       });
     }
 
-    $scope.startService = function () {
-      nethserver.System.services.startService().done(function () {
+    $scope.startService = function (services) {
+      nethserver.System.services.startServices().done(function () {
 
       }).fail(function (err) {
         console.error(err);
       });
     }
 
-    $scope.stopService = function () {
-      nethserver.System.services.stopService().done(function () {
+    $scope.stopService = function (services) {
+      nethserver.System.services.stopServices().done(function () {
 
       }).fail(function (err) {
         console.error(err);
       });
     }
 
-    $scope.restartService = function () {
-      nethserver.System.services.restartService().done(function () {
+    $scope.restartService = function (services) {
+      nethserver.System.services.restartServices().done(function () {
 
       }).fail(function (err) {
         console.error(err);
       });
+    }
+
+    $scope.deleteService = function (services) {
+      nethserver.System.services.deleteServices().done(function () {
+
+      }).fail(function (err) {
+        console.error(err);
+      });
+    }
+
+    $scope.openDeleteService = function (services) {
+      $scope.objects.toDeleteServices = services;
+      $('#deleteServiceModal').modal('show');
     }
 
     $scope.toggleDetails = function (event) {
@@ -139,6 +154,19 @@ angular.module('systemAngularApp')
         $heading.find(".list-view-pf-expand.active").find(".fa-angle-right").removeClass("fa-angle-down")
           .end().removeClass("active")
           .end();
+      }
+    };
+
+    $scope.addToSelected = function (service) {
+      if (service.checked) {
+        $scope.objects.selectedServices.push(service);
+      } else {
+        // delete item for array
+        for (var s in $scope.objects.selectedServices) {
+          if ($scope.objects.selectedServices[s].name == service.name) {
+            $scope.objects.selectedServices.splice(s, 1);
+          };
+        }
       }
     };
   });

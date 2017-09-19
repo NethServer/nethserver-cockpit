@@ -23,19 +23,22 @@
     getAllServices: function () {
       return cockpit.spawn(['date', '+%F %H:%M']);
     },
-    enableService: function (service) {
+    enableServices: function (services) {
       return cockpit.spawn(['date', '+%F %H:%M']);
     },
-    disableService: function (service) {
+    disableServices: function (services) {
       return cockpit.spawn(['date', '+%F %H:%M']);
     },
-    startService: function (service) {
+    startServices: function (services) {
       return cockpit.spawn(['date', '+%F %H:%M']);
     },
-    stopService: function (service) {
+    stopServices: function (services) {
       return cockpit.spawn(['date', '+%F %H:%M']);
     },
-    restartService: function (service) {
+    restartServices: function (services) {
+      return cockpit.spawn(['date', '+%F %H:%M']);
+    },
+    deleteServices: function (services) {
       return cockpit.spawn(['date', '+%F %H:%M']);
     },
   };
