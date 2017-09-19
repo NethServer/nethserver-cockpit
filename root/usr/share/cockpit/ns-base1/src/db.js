@@ -86,6 +86,11 @@ var dfa1 = {
     },
 };
 
+var dbHeader = "# DO NOT MODIFY THIS FILE.\n" +
+    "# This file is automatically maintained by NethServer\n" +
+    "# configuration software.  Manually editing this file may put your\n" +
+    "# system in an unknown state.\n";
+
 function string2nsdb(payload) {
     var data = {};
     var line = 1;
@@ -147,8 +152,27 @@ function string2nsdb(payload) {
     return data;
 }
 
+function nsdbEscape(val) {
+    // TODO: escape the pipe "|", equal "=", newline "\n" signs
+    return val;
+}
+
 function nsdb2string(data) {
-    return "";
+    var out = dbHeader;
+    for(var key in data) {
+        if(! data.hasOwnProperty(key)) {
+            continue;
+        }
+        out += nsdbEscape(key) + '=' + nsdbEscape(data[key][TYPE]);
+        for(var prop in data[key][PROP]) {
+            if(! data[key][PROP].hasOwnProperty(prop)) {
+                continue;
+            }
+            out += '|' + nsdbEscape(prop) + '|' + nsdbEscape(data[key][PROP][prop]);
+        }
+        out += '\n';
+    }
+    return out;
 }
 
 ns.Syntax = {
@@ -192,49 +216,148 @@ function Nsdb(path) {
     this.path = canonicalizeDbPath(path);
     this.data = null;
     this.tag = null;
+    this.modified = false;
 }
 
 Nsdb.prototype = {
+
+    /**
+     * @param {String} key
+     * @return {String} the type of the given key or empty string if key does not exist
+     */
     get: function(key) {
         return this.getType(key);
     },
+
+    /**
+     * @param {String} key
+     * @return {String} the type of the given key or empty string if key does not exist
+     */
     getType: function(key) {
         if(! (key in this.data)) {
             return '';
         }
         return this.data[key][TYPE];
     },
+
+    /**
+     * @param {String} key 
+     * @param {String} prop
+     * @return {String} the prop value or empty string if key or prop does not exist
+     */
     getProp: function(key, prop) {
         if(! (key in this.data) || ! (prop in this.data[key][PROP])) {
             return '';
         }
         return this.data[key][PROP][prop];
     },
+
+    /**
+     * @param {String} key
+     * @param {String} type
+     * @param {Object} props
+     * @return {Object} the DB object itself
+     */
     set: function(key, type, props) {
-
+        this.setType(key, type);
+        this.setProps(key, props);
+        return this;
     },
+
+    /**
+     * @param {String} key
+     * @param {String} type
+     * @return {Object} the DB object itself
+     */
     setType: function(key, type) {
-
+        this.modified = true;
+        if(! (key in this.data)) {
+            this.data[key] = [null, null];
+            this.data[key][TYPE] = String(type);
+            this.data[key][PROP] = {};
+        }
+        this.data[key][TYPE] = type;
+        return this;
     },
+
+    /**
+     * @param {String} key
+     * @param {String} prop
+     * @param {String} value
+     * @return {Object} the DB object itself
+     */
     setProp: function(key, prop, value) {
-
+        if(! (key in this.data)) {
+            return this;
+        }
+        this.modified = true;
+        this.data[key][PROP][prop] = String(value);
+        return this;
     },
+
+    /**
+     * @param {String} key
+     * @param {Object} props
+     * @return {Object} the DB object itself
+     */
     setProps: function(key, props) {
-
+        if(! (key in this.data)) {
+            return this;
+        }
+        this.modified = true;
+        $.extend(this.data[key][PROP], props);
+        return this;
     },
+
+    /**
+     * @param {String} key
+     * @return {Object} the DB object itself
+     */
     delete: function(key) {
-
+        this.modified = true;
+        delete this.data[key];
+        return this;
     },
+
+    /**
+     * @param {String} key
+     * @param {String} prop
+     * @return {Object} the DB object itself
+     */
     delProp: function(key, prop) {
-
+        if(! (key in this.data)) {
+            return this;
+        }
+        this.modified = true;
+        delete this.data[key][PROP][prop];
+        return this;
     },
+
+    /**
+     * @param {String} key
+     * @param {Array} props
+     * @return {Object} the DB object itself
+     */
     delProps: function(key, props) {
-
+        for(var p in props) {
+            this.delProp(key, p);
+        }
+        return this;
     },
+    
+    /**
+     * @param {Object} props
+     * @return {Array} the keys in DB
+     */
     keys: function() {
         return Object.keys(this.data);
     },
-    read: function(handler) {
+    
+    /**
+     * @param {Function} [handler] added to Promise as done(handler)
+     * @return {Promise}
+     */
+    open: function(handler) {
         var dfr = $.Deferred();
         var self = this;
         var fh = cockpit.file(this.path, {
@@ -245,8 +368,7 @@ Nsdb.prototype = {
             done(function(data, tag) {
                 if(data === null && tag === '-') {
                     // non-existing file
-                    dfr.reject(Error('not-found'));
-                    return;
+                    data = {};
                 }
                 self.data = data;
                 self.tag = tag;
@@ -264,8 +386,47 @@ Nsdb.prototype = {
         }
         return dfr.promise();
     },
-    write: function() {
+
+    /**
+     * @param {Function} [handler] added to Promise as done(handler)
+     * @return {Promise}
+     */
+    save: function(handler) {
+        var dfr = $.Deferred();
         
+        if(this.modified === false) {
+            dfr.done(handler).resolve();
+            return dfr;
+        }
+        
+        var self = this;
+        var fh = cockpit.file(this.path, {
+            syntax: nsdbSyntax,
+            superuser: 'try'
+        });
+        fh.modify(function(tag){
+            if(tag !== self.tag) {
+                dfr.reject(new Error('write-conflict'));
+                return null;
+            }
+            return self.data;
+        }, this.tag).
+            done(function(data, tag){
+                self.data = data;
+                self.tag = tag;
+                self.modified = false;
+                dfr.resolve();
+            }).
+            fail(function(error){
+                dfr.reject(error);
+            }).
+            always(function(){
+                fh.close();
+            });
+        if(handler !== undefined) {
+            dfr.done(handler);
+        }
+        return dfr.promise();
     },
 };
 

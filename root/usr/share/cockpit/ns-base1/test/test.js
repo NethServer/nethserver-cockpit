@@ -76,7 +76,7 @@ describe('nethserver.signalEvent()...', function() {
     });
 });
 
-describe('nethserver.getDatabase()', function() {
+describe('nethserver.getDatabase()', function() {    
     it('is defined', function () {
         should(typeof nethserver.getDatabase === 'function').be.ok();
     });
@@ -86,18 +86,41 @@ describe('nethserver.getDatabase()', function() {
     });
     it('db.getProp()', function(done) {
         var cdb = nethserver.getDatabase('configuration');
-        cdb.read(function(){
+        cdb.open(function(){
             cdb.getProp('dnsmasq', 'status').should.be.equal('enabled');
             done();
         }).fail(done);
     });
     it('db.getType()', function(done) {
         var cdb = nethserver.getDatabase('configuration');
-        cdb.read(function(){
+        cdb.open(function(){
             cdb.get('MinUid').should.be.equal('5000');
             cdb.getType('MinUid').should.be.equal('5000');
             done();
         }).fail(done);
+    });
+    it('db.set()', function (done) {
+        var tdb = nethserver.getDatabase('/tmp/testdb');
+        tdb.open(function(){
+            tdb.delete('keytest');
+            tdb.set('keytest', 'typeofkey', {'p1':'v1', 'p2': 'v2'});
+            tdb.setProp('keytest', 'p1', 'v1mod');
+            tdb.delProp('keytest', 'p2');
+            tdb.delProp('keytest', 'p2');
+            tdb.setType('kdel', 'deleteme'); tdb.setType('kdel', 'deleteme');
+            tdb.delete('kdel'); tdb.delete('kdel');
+            tdb.save(function(){
+                tdb.getProp('keytest', 'p1').should.be.equal('v1mod');
+                tdb.getType('keytest').should.be.equal('typeofkey');
+                tdb.getType('kdel').should.be.equal('');
+                tdb.getProp('keytest', 'p2').should.be.equal('');
+                done();
+            }).fail(function(error){
+                done(Error('write ' + error));
+            });
+        }).fail(function(error){
+            done(Error('read ' + error));
+        });
     });
 });
 

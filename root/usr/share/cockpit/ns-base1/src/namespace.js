@@ -18,5 +18,8 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-// Main namespace declaration:
+/**
+ * The nethserver module defines the API to access a NethServer system
+ * @module nethserver
+ */
 var nethserver = {}; 
