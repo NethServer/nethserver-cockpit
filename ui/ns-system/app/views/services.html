@@ -43,10 +43,6 @@
         <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="restartService(objects.selectedServices)" href="">
           <span class="fa fa-power-off span-right-margin-lg"></span>{{'Stop' | translate}}</a>
         </li>
-        <li role="presentation" class="divider"></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="openDeleteService(objects.selectedServices)" href="">
-          <span class="fa fa-trash span-right-margin-lg"></span>{{'Delete' | translate}}</a>
-        </li>
       </ul>
     </div>
   </form>
@@ -76,13 +72,6 @@
               <a ng-click="stopService([s])" href="">
                 <span class="fa fa-power-off span-right-margin"></span>
                 {{'Stop' | translate}}
-              </a>
-            </li>
-            <li role="separator" class="divider"></li>
-            <li>
-              <a ng-click="openDeleteService([s])" href="">
-                <span class="fa fa-trash span-right-margin"></span>
-                {{'Delete' | translate}}
               </a>
             </li>
           </ul>
@@ -137,29 +126,6 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="deleteServiceModal" tabindex="-1" role="dialog" data-backdrop="static">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">{{objects.toDeleteServices > 1 ? 'Delete services' : 'Delete service' | translate}}</h4>
-      </div>
-      <form class="form-horizontal" ng-submit="deleteService(objects.toDeleteServices)">
-
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Are you sure' | translate}}?</label>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
-          <button class="btn btn-danger" type="submit">{{'Delete' | translate}}</button>
-        </div>
-
-      </form>
     </div>
   </div>
 </div>

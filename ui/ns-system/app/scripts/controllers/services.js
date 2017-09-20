@@ -12,8 +12,7 @@ angular.module('systemAngularApp')
     // controller objects
     $scope.objects = {
       searchString: '',
-      selectedServices: [],
-      toDeleteServices: []
+      selectedServices: []
     };
 
     $scope.localSystem.services = {};
@@ -117,19 +116,6 @@ angular.module('systemAngularApp')
       }).fail(function (err) {
         console.error(err);
       });
-    }
-
-    $scope.deleteService = function (services) {
-      nethserver.System.services.deleteServices().done(function () {
-
-      }).fail(function (err) {
-        console.error(err);
-      });
-    }
-
-    $scope.openDeleteService = function (services) {
-      $scope.objects.toDeleteServices = services;
-      $('#deleteServiceModal').modal('show');
     }
 
     $scope.toggleDetails = function (event) {

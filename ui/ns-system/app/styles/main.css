@@ -94,6 +94,23 @@ input[type="file"] {
   margin-left: 4px;
 }
 
+.no-padding {
+  padding: 0px;
+}
+
+.margin-top-md {
+  margin-top: 60px !important;
+}
+
+.margin-top-lg {
+  margin-top: 80px !important;
+}
+
+.status-icon {
+  margin-left: 6px;
+  font-size: 16px;
+}
+
 .card-pf:hover {
   box-shadow: 0 1px 6px rgba(3, 3, 3, .35);
 }

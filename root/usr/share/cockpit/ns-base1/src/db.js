@@ -241,7 +241,7 @@ Nsdb.prototype = {
     },
 
     /**
-     * @param {String} key 
+     * @param {String} key
      * @param {String} prop
      * @return {String} the prop value or empty string if key or prop does not exist
      */
@@ -344,7 +344,7 @@ Nsdb.prototype = {
         }
         return this;
     },
-    
+
     /**
      * @param {Object} props
      * @return {Array} the keys in DB
@@ -352,7 +352,7 @@ Nsdb.prototype = {
     keys: function() {
         return Object.keys(this.data);
     },
-    
+
     /**
      * @param {Function} [handler] added to Promise as done(handler)
      * @return {Promise}
@@ -393,12 +393,12 @@ Nsdb.prototype = {
      */
     save: function(handler) {
         var dfr = $.Deferred();
-        
+
         if(this.modified === false) {
             dfr.done(handler).resolve();
             return dfr;
         }
-        
+
         var self = this;
         var fh = cockpit.file(this.path, {
             syntax: nsdbSyntax,

@@ -50,6 +50,10 @@ body.login-pf {
     border-top: 2px solid #39a5dc;
 }
 
+.navbar-pf .navbar-toggle {
+    padding: 18px 10px;
+}
+
 .navbar-pf .navbar-header {
     min-height: 58px;
     background: #171717;

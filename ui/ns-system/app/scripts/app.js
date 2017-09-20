@@ -54,17 +54,17 @@ angular
         controller: 'DnsCtrl',
         controllerAs: 'dns',
         name: 'DNS',
-        description: 'Manage your DNS servers',
+        description: 'Manage your DNS service',
         icon: 'pficon pficon-regions',
       })
-      .when('/network', {
+      /* .when('/network', {
         templateUrl: 'views/network.html',
         controller: 'NetworkCtrl',
         controllerAs: 'network',
         name: 'Network',
         description: 'Network settings',
         icon: 'pficon pficon-network',
-      })
+      }) */
       .when('/organization', {
         templateUrl: 'views/organization.html',
         controller: 'OrganizationCtrl',
