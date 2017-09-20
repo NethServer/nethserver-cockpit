@@ -20,6 +20,10 @@
 
 (function ($) {
     nethserver.System.summary = {
+        /**
+         * Retrieve the static host by reading /etc/hostname
+         * @return {Promise} from cockpit.file
+         */
         getHostname: function () {
             var fh = cockpit.file("/etc/hostname", {
                 syntax: nethserver.Syntax.trimWhitespace
@@ -30,17 +34,35 @@
         },
 
         getSystemAliases: function () {
-            return cockpit.spawn(['date', '+%F %H:%M']);
+            console.warn('deprecated');
+            var dfr = $.Deferred();
+            dfr.resolve();
+            return dfr;
         },
 
+        /**
+         * Set the system host name
+         * @return {Promise}
+         */
         setHostname: function (hostname) {
-            return cockpit.dbus('org.freedesktop.hostname1').proxy().wait(function () {
-                return $.Deferred(function (dfr) {
-                    hcdb.SetStaticHostname(hostname, false).
-                    done(function () {
-                        nethserver.signalEvent('hostname-modify').finally(dfr.resolve);
-                    });
-                });
+            var client = cockpit.dbus('org.freedesktop.hostname1', {
+                'superuser': 'require'
+            });
+            var dfr = $.Deferred();
+
+            client.wait(function(){
+                client.call('/org/freedesktop/hostname1', 'org.freedesktop.hostname1',
+                            'SetStaticHostname', [hostname, false]).
+                done(function(){
+                    nethserver.signalEvent('hostname-modify').
+                    done(dfr.resolve).
+                    fail(dfr.reject);
+                }).
+                fail(dfr.reject);
+            });
+
+            return dfr.always(function(){
+                client.close();
             });
         },
 
