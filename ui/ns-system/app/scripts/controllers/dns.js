@@ -24,7 +24,7 @@ angular.module('systemAngularApp')
     }];
 
     // methods
-    nethserver.System.dns.getAllDNSs(function (hosts) {
+    nethserver.System.dns.getAll(function (hosts) {
       $scope.localSystem.dns.hosts = hosts;
 
       // $scope.$apply();

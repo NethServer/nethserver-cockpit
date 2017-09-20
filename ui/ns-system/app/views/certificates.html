@@ -1,1 +1,271 @@
-<p>This is the certificates view.</p>
+<div ng-if="localSystem.certificates.length == 0" class="blank-slate-pf">
+  <div class="blank-slate-pf-icon">
+    <span class="fa fa-key"></span>
+  </div>
+  <h1>
+    {{'No certificates found' | translate}}
+  </h1>
+  <div class="blank-slate-pf-main-action">
+    <button ng-click="openUploadCertificate()" class="btn btn-primary btn-lg">{{'Upload certificate' | translate}}</button>
+  </div>
+</div>
+
+<div ng-if="localSystem.certificates.length > 0">
+  <h3>{{'Actions' | translate}}</h3>
+  <div class="btn-group">
+    <button ng-click="openUploadCertificate()" class="btn btn-primary btn-lg shutdown-privileged" data-action="restart" data-container="body">{{'Upload certificate' | translate}}</button>
+    <button data-toggle="dropdown" class="btn btn-primary btn-lg dropdown-toggle shutdown-privileged">
+        <span class="caret"></span>
+    </button>
+    <ul role="menu" class="dropdown-menu">
+      <li class="presentation">
+        <a href="" ng-click="openUploadCertificate()" role="menuitem" data-action="restart">{{'Upload certificate' | translate}}</a>
+      </li>
+      <li class="presentation">
+        <a href="" ng-click="openEditCertificate()" role="menuitem" data-action="shutdown">{{'Edit self-signed certificate' | translate}}</a>
+      </li>
+      <li class="presentation">
+        <a href="" ng-click="openRequestLetsEncrypt()" role="menuitem" data-action="restart">{{'Request Let\'s Encrypt certificate' | translate}}</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div ng-if="localSystem.certificates.length > 0">
+  <h3>{{'Certificates list' | translate}}</h3>
+  <form role="form" class="search-pf has-button search">
+    <div class="form-group has-clear">
+      <div class="search-pf-input-group">
+        <input ng-model="objects.searchString" type="text" class="form-control input-lg" placeholder="{{'Search' | translate}}...">
+      </div>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-default btn-lg" type="submit"><span class="fa fa-search"></span></button>
+    </div>
+  </form>
+  <div class="list-group list-view-pf">
+    <div ng-repeat="c in localSystem.certificates | filter:objects.searchString" class="list-group-item">
+      <div class="list-view-pf-actions">
+        <button ng-click="showCertificate(c)" class="btn btn-default">{{'Show' | translate}}</button>
+        <div class="dropdown pull-right dropdown-kebab-pf">
+          <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <span class="fa fa-ellipsis-v"></span>
+              </button>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a ng-click="setDefault(c)" href="">{{'Set as Default' | translate}}</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="list-view-pf-main-info">
+        <div class="list-view-pf-left">
+          <span class="fa fa-key list-view-pf-icon-sm"></span>
+        </div>
+        <div class="list-view-pf-body">
+          <div class="list-view-pf-description">
+            <div ng-click="showCertificate(c)" class="list-group-item-heading">
+              <a href="">{{c.name}}</a>
+            </div>
+            <div class="list-group-item-text">
+              {{c.issuer}}
+            </div>
+          </div>
+          <div class="list-view-pf-additional-info">
+            <div class="list-view-pf-additional-info-item">
+              <span class="fa fa-clock-o"></span>
+              <strong>{{'Expires' | translate}}:</strong> {{c.expires}}
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <strong>{{'Default' | translate}}:</strong> <span class="fa fa-{{c.default ? 'check' : 'times'}}"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="uploadCertificateModal" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{'Upload certificate' | translate}}</h4>
+      </div>
+      <form class="form-horizontal" ng-submit="uploadCertificate(objects.newCertificate)">
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Name' | translate}}</label>
+            <div class="col-sm-9">
+              <input required type="text" ng-model="objects.newCertificate.name" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Certificate' | translate}}</label>
+            <div class="col-sm-9">
+              <label for="file-upload-cert" class="custom-file-upload">
+                <i class="fa fa-cloud-upload span-right-margin"></i> {{'Choose file' | translate}} {{objects.newCertificate.certificate}}
+              </label>
+              <input class="inputfile" required id="file-upload-cert" name="file-upload-cert" type="file" ng-model="objects.newCertificate.certificate"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Private key' | translate}}</label>
+            <div class="col-sm-9">
+              <label for="file-upload-key" class="custom-file-upload">
+                <i class="fa fa-cloud-upload span-right-margin"></i> {{'Choose file' | translate}}
+              </label>
+              <input class="inputfile" required id="file-upload-key" name="file-upload-key" type="file" ng-model="objects.newCertificate.privateKey"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Chain file' | translate}}</label>
+            <div class="col-sm-9">
+              <label for="file-upload-chain" class="custom-file-upload">
+                <i class="fa fa-cloud-upload span-right-margin"></i> {{'Choose file' | translate}}
+              </label>
+              <input class="inputfile" id="file-upload-chain" name="file-upload-chain" type="file" ng-model="objects.newCertificate.chainFile"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
+          <button class="btn btn-primary" type="submit">{{'Upload' | translate}}</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editCertificateModal" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{'Edit certificate' | translate}}</h4>
+      </div>
+      <form class="form-horizontal" ng-submit="editCertificate(objects.selfSignedCertificate)">
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Country Code' | translate}}</label>
+            <div class="col-sm-9">
+              <input required type="text" ng-model="objects.selfSignedCertificate.countryCode" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'State' | translate}}</label>
+            <div class="col-sm-9">
+              <input required type="text" ng-model="objects.selfSignedCertificate.state" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Locality' | translate}}</label>
+            <div class="col-sm-9">
+              <input required type="text" ng-model="objects.selfSignedCertificate.locality" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Organization' | translate}}</label>
+            <div class="col-sm-9">
+              <input required type="text" ng-model="objects.selfSignedCertificate.organization" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Organization unit' | translate}}</label>
+            <div class="col-sm-9">
+              <input required type="text" ng-model="objects.selfSignedCertificate.organizationUnit" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Common name' | translate}}</label>
+            <div class="col-sm-9">
+              <input required type="text" ng-model="objects.selfSignedCertificate.commonName" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Email address' | translate}}</label>
+            <div class="col-sm-9">
+              <input type="text" ng-model="objects.selfSignedCertificate.emailAddress" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Alternative names' | translate}}</label>
+            <div class="col-sm-9">
+              <textarea required type="text" ng-model="objects.selfSignedCertificate.alternativeNames" class="form-control"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Certificate validity (days)' | translate}}</label>
+            <div class="col-sm-9">
+              <input required type="text" ng-model="objects.selfSignedCertificate.certificateValidity" class="form-control">
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
+          <button class="btn btn-primary" type="submit">{{'Save' | translate}}</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="requestLetsEncryptModal" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{'Request Let\'s Encrypt certificate' | translate}}</h4>
+      </div>
+      <form class="form-horizontal" ng-submit="requestLetsEncrypt(objects.letsEncryptCertificate)">
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Notification email' | translate}}</label>
+            <div class="col-sm-9">
+              <input required type="text" ng-model="objects.letsEncryptCertificate.notificationEmail" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Domains' | translate}}</label>
+            <div class="col-sm-9">
+              <textarea required type="text" ng-model="objects.letsEncryptCertificate.domains" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
+          <button class="btn btn-primary" type="submit">{{'Request' | translate}}</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="showCertificateModal" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{'View certificate' | translate}}</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Certificate' | translate}}</label>
+          <div class="col-sm-9">
+            <pre class="prettyprint">{{objects.showedCertificate.certificate}}</pre>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
+      </div>
+
+    </div>
+  </div>
+</div>

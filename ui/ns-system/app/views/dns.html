@@ -29,9 +29,6 @@
   </form>
   <div class="list-group list-view-pf">
     <div ng-repeat="d in localSystem.dns.hosts | filter:objects.searchString" class="list-group-item">
-      <div class="list-view-pf-checkbox">
-        <input type="checkbox">
-      </div>
       <div class="list-view-pf-actions">
         <button ng-click="editDNS(d)" class="btn btn-default">{{'Edit' | translate}}</button>
         <div class="dropdown pull-right dropdown-kebab-pf">
@@ -59,7 +56,7 @@
           <div class="list-view-pf-additional-info">
             <div class="list-view-pf-additional-info-item">
               <span class="pficon pficon-cluster"></span>
-              <strong>{{d.ip}}</strong>
+              <strong>IP:</strong> {{d.ip}}
             </div>
           </div>
         </div>

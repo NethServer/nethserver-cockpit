@@ -20,7 +20,7 @@
 
 (function ($) {
   nethserver.System.services = {
-    getAllServices: function () {
+    getAll: function () {
       return cockpit.spawn(['date', '+%F %H:%M']);
     },
     enableServices: function (services) {
