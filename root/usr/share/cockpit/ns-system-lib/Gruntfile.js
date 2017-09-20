@@ -34,6 +34,12 @@ module.exports = function (grunt) {
         }
       }
     },
+    copy: {
+      manifest: {
+        src: 'manifest.json',
+        dest: 'dist/manifest.json',
+      }
+    },
     shell: {
       rsync: {
         command: function (login, port, source, dest) {
@@ -47,14 +53,15 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-shell');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
-  grunt.registerTask('build', ['jshint', 'concat', 'uglify']);
+  grunt.registerTask('build', ['jshint', 'concat', 'uglify', 'copy:manifest']);
   grunt.registerTask('rsync', 'Sync folder with remote host', function (login, port, dest) {
     if (port === undefined) {
       port = 22;
     }
     if (dest === undefined) {
-      dest = '~/.local/share/cockpit/ns-base1';
+      dest = '~/.local/share/cockpit/ns-system-lib';
     }
     grunt.task.run([
       ['shell:rsync', login, port, 'dist/', dest].join(':'),
