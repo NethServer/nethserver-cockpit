@@ -21,5 +21,5 @@
 
 use esmith::Build::CreateLinks  qw(:all);
 
-safe_symlink('/bin/true', 'root/etc/e-smith/events/test-success');
-safe_symlink('/bin/fail', 'root/etc/e-smith/events/test-failure');
+safe_symlink('/bin/true', 'root/etc/e-smith/events/test-success/S20true');
+safe_symlink('/bin/false', 'root/etc/e-smith/events/test-failure/S20false');
