@@ -375,18 +375,16 @@ module.exports = function (grunt) {
     },
 
     shell: {
-      sync: {
-        //command: (login, path, port) => "watch -n1 rsync -avz --delete -e 'ssh -p " + (port ? port : '22') + "' app/* " + login + ':' + path
-        command: function (login, port, path, all) {
-          var commands = [];
-          commands.push("rsync -avz --delete -e 'ssh -p " + (port ? port : '22') + "' manifest.json app/* " + login + ':' + path);
-          // copy also the bower_components...only for developing
-          if (all !== "undefined") {
-            commands.push("rsync -avz --delete -e 'ssh -p " + (port ? port : '22') + "' bower_components " + login + ':' + path);
-          }
-          return commands.join(';');
-        }
-      }
+      rsync: {
+        command: function (login, port, source, dest) {
+          return "rsync -aiz -e 'ssh -p " + port + "' " + source + " " + login + ':' + dest;
+        },
+      },
+      manifest: {
+        command: function () {
+          return "ln -sf /usr/share/cockpit/nethserver/manifest.json app/manifest.json";
+        },
+      },
     },
 
     i18nextract: {
@@ -419,9 +417,21 @@ module.exports = function (grunt) {
     'htmlmin'
   ]);
 
-  grunt.registerTask('sync', 'Sync folder with remote host', function (login, port, path, all) {
+  /*   grunt.registerTask('rsync', 'Sync folder with remote host', function (login, port, path, all) {
+      grunt.task.run([
+        'shell:sync:' + login + ':' + port + ':' + path + ':' + all
+      ]);
+    }); */
+
+  grunt.registerTask('rsync', 'Sync folder with remote host', function (login, port, dest) {
+    if (port === undefined) {
+      port = 22;
+    }
+    if (dest === undefined) {
+      dest = '~/.local/share/cockpit/nethserver';
+    }
     grunt.task.run([
-      'shell:sync:' + login + ':' + port + ':' + path + ':' + all
+      'shell:manifest', ['shell:rsync', login, port, 'app/', dest].join(':'), ['shell:rsync', login, port, 'bower_components', dest].join(':'),
     ]);
   });
 };
