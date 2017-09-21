@@ -46,13 +46,21 @@
   <div class="list-group list-view-pf">
     <div ng-repeat="c in localSystem.certificates | filter:objects.searchString" class="list-group-item">
       <div class="list-view-pf-actions">
-        <button ng-click="showCertificate(c)" class="btn btn-default">{{'Show' | translate}}</button>
+        <button ng-click="showCertificate(c)" class="btn btn-default">
+          <span class="fa fa-search span-right-margin"></span>
+          {{'Show' | translate}}
+        </button>
         <div class="dropdown pull-right dropdown-kebab-pf">
           <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <span class="fa fa-ellipsis-v"></span>
               </button>
           <ul class="dropdown-menu dropdown-menu-right">
-            <li><a ng-click="setDefault(c)" href="">{{'Set as Default' | translate}}</a></li>
+            <li>
+              <a ng-click="setDefault(c)" href="">
+                <span class="fa fa-check span-right-margin"></span>
+                {{'Set as Default' | translate}}
+              </a>
+            </li>
           </ul>
         </div>
       </div>

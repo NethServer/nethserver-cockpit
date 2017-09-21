@@ -175,6 +175,14 @@ input[type="file"] {
   max-width: 100%;
 }
 
+.full-width {
+  width: 100%;
+}
+
+.adjust-filter-search {
+  margin-right: -2px !important;
+}
+
 .task-adjust {
   width: 150px;
   margin-top: 8px;

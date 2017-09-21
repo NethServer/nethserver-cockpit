@@ -45,7 +45,7 @@ angular
         templateUrl: 'views/users-groups.html',
         controller: 'UsersGroupsCtrl',
         controllerAs: 'usersGroups',
-        name: 'User and Groups',
+        name: 'Users and Groups',
         description: 'Manage your users and groups',
         icon: 'pficon pficon-users',
       })

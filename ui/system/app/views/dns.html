@@ -30,13 +30,21 @@
   <div class="list-group list-view-pf">
     <div ng-repeat="d in localSystem.dns.hosts | filter:objects.searchString" class="list-group-item">
       <div class="list-view-pf-actions">
-        <button ng-click="editDNS(d)" class="btn btn-default">{{'Edit' | translate}}</button>
+        <button ng-click="editDNS(d)" class="btn btn-default">
+            <span class="pficon pficon-edit span-right-margin"></span>
+            {{'Edit' | translate}}
+        </button>
         <div class="dropdown pull-right dropdown-kebab-pf">
           <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <span class="fa fa-ellipsis-v"></span>
         </button>
           <ul class="dropdown-menu dropdown-menu-right">
-            <li><a ng-click="openDeleteDNSModal(d)" href="">{{'Delete' | translate}}</a></li>
+            <li>
+              <a ng-click="openDeleteDNSModal(d)" href="">
+                <span class="fa fa-times span-right-margin"></span>
+                {{'Delete' | translate}}
+              </a>
+            </li>
           </ul>
         </div>
       </div>
