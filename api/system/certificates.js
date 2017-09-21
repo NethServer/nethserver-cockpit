@@ -19,7 +19,7 @@
  */
 
 (function ($) {
-    nethserver.System.certificates = {
+    nethserver.system.certificates = {
         getAll: function () {
             return cockpit.spawn(['date', '+%F %H:%M']);
         },

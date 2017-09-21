@@ -19,7 +19,7 @@
  */
 
 (function ($) {
-    nethserver.System.summary = {
+    nethserver.system.summary = {
         /**
          * Retrieve the static host by reading /etc/hostname
          * @return {Promise} from cockpit.file
@@ -34,35 +34,38 @@
         },
 
         getSystemAliases: function () {
-            console.warn('deprecated');
-            var dfr = $.Deferred();
-            dfr.resolve();
-            return dfr;
+            return Promise.resolve('deprecated');
         },
 
         /**
          * Set the system host name
+         * @param {String} hostname the new host name
+         * @param {Bool} [runEvent=true] signalEvent(hostname-modify)
          * @return {Promise}
          */
-        setHostname: function (hostname) {
-            var client = cockpit.dbus('org.freedesktop.hostname1', {
-                'superuser': 'require'
-            });
-            var dfr = $.Deferred();
-
-            client.wait(function(){
-                client.call('/org/freedesktop/hostname1', 'org.freedesktop.hostname1',
-                            'SetStaticHostname', [hostname, false]).
-                done(function(){
-                    nethserver.signalEvent('hostname-modify').
-                    done(dfr.resolve).
-                    fail(dfr.reject);
-                }).
-                fail(dfr.reject);
-            });
-
-            return dfr.always(function(){
-                client.close();
+        setHostname: function (hostname, runEvent) {
+            if(runEvent === undefined) {
+                runEvent = true;
+            }
+            return new Promise(function(fulfill, reject){
+                var client = cockpit.dbus('org.freedesktop.hostname1', {
+                    'superuser': 'require'
+                });
+                client.wait(function(){
+                    client.call('/org/freedesktop/hostname1', 'org.freedesktop.hostname1',
+                                'SetStaticHostname', [hostname, false]).
+                    done(function(){
+                        if(runEvent === true) {
+                            nethserver.signalEvent('hostname-modify').then(fulfill, reject);
+                        } else {
+                            fulfill();
+                        }
+                    }).
+                    fail(reject).
+                    always(function(){
+                        client.close();
+                    });
+                });
             });
         },
 

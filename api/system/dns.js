@@ -19,7 +19,7 @@
  */
 
 (function ($) {
-    nethserver.System.dns = {
+    nethserver.system.dns = {
         getAll: function () {
             return cockpit.spawn(['date', '+%F %H:%M']);
         },

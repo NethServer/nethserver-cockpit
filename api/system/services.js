@@ -19,7 +19,7 @@
  */
 
 (function ($) {
-  nethserver.System.services = {
+  nethserver.system.services = {
     getAll: function () {
       return cockpit.spawn(['date', '+%F %H:%M']);
     },
