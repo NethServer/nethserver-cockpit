@@ -1,0 +1,6 @@
+TEMPLATE_PATH="certificate/pem"
+OUTPUT_FILENAME="/etc/cockpit/ws-certs.d/99-nethserver.cert"
+PERMS=0640
+UID="root"
+GID="cockpit-ws"
+

@@ -32,11 +32,25 @@ event_actions('nethserver-cockpit-update', qw(
 
 event_templates('nethserver-cockpit-update', qw(
     /etc/os-release
+    /etc/cockpit/ws-certs.d/99-nethserver.cert
 ));
 
 event_services('nethserver-cockpit-update', qw(
     cockpit restart
 ));
+
+#
+# certificate-update event
+#
+
+event_templates('certificate-update', qw(
+    /etc/cockpit/ws-certs.d/99-nethserver.cert
+));
+
+event_services('certificate-update', qw(
+    cockpit restart
+));
+
 
 #
 # Test events for development
