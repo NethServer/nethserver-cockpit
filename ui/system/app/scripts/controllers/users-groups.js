@@ -20,7 +20,7 @@ angular.module('systemAngularApp')
 
     // methods
     $scope.selectProvider = function (provider) {
-      $scope.localSystem.users.provider = provider;
+      $scope.localSystem.users.chooseProvider = provider;
     };
 
     $scope.openBindToRemote = function () {

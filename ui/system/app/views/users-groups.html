@@ -1,4 +1,4 @@
-<div ng-if="localSystem.users.provider == null" class="blank-slate-pf " id="">
+<div ng-if="localSystem.users.provider == null && localSystem.users.chooseProvider == null" class="blank-slate-pf " id="">
   <div class="blank-slate-pf-icon">
     <span class="pficon pficon-users"></span>
   </div>
@@ -11,8 +11,8 @@
   </p>
   <div class="blank-slate-pf-main-action">
 
-    <div class="cards-pf col-sm-6 col-md-6">
-      <div class="blank-slate-pf no-padding margin-top-md" id="">
+    <div class="col-sm-6 col-md-6 card-pf card-pf-accented margin-right-md">
+      <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
         <div class="blank-slate-pf-icon">
           <span class="fa fa-database"></span>
         </div>
@@ -27,8 +27,8 @@
         </div>
       </div>
     </div>
-    <div class="cards-pf col-sm-6  col-md-6">
-      <div class="blank-slate-pf no-padding margin-top-md" id="">
+    <div class="col-sm-6 col-md-6 card-pf card-pf-accented margin-left-md">
+      <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
         <div class="blank-slate-pf-icon">
           <span class="pficon pficon-repository"></span>
         </div>
@@ -47,7 +47,7 @@
   </div>
 </div>
 
-<div ng-if="localSystem.users.provider == 'ldap'" class="blank-slate-pf " id="">
+<div ng-if="localSystem.users.provider == null && localSystem.users.chooseProvider == 'ldap'" class="blank-slate-pf " id="">
   <div class="blank-slate-pf-icon">
     <span class="fa fa-database"></span>
   </div>
@@ -59,8 +59,8 @@
   </p>
   <div class="blank-slate-pf-main-action">
 
-    <div class="cards-pf col-sm-6 col-md-6">
-      <div class="blank-slate-pf no-padding margin-top-md" id="">
+    <div class="col-sm-6 col-md-6 card-pf card-pf-accented margin-right-md">
+      <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
         <div class="blank-slate-pf-icon">
           <span class="fa fa-cloud"></span>
         </div>
@@ -72,8 +72,8 @@
         </div>
       </div>
     </div>
-    <div class="cards-pf col-sm-6  col-md-6">
-      <div class="blank-slate-pf no-padding margin-top-md" id="">
+    <div class="col-sm-6 col-md-6 card-pf card-pf-accented margin-left-md">
+      <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
         <div class="blank-slate-pf-icon">
           <span class="fa fa-download"></span>
         </div>
@@ -89,7 +89,7 @@
   </div>
 </div>
 
-<div ng-if="localSystem.users.provider == 'directory'" class="blank-slate-pf " id="">
+<div ng-if="localSystem.users.provider == null && localSystem.users.chooseProvider == 'directory'" class="blank-slate-pf " id="">
   <div class="blank-slate-pf-icon">
     <span class="pficon pficon-repository"></span>
   </div>
@@ -101,8 +101,8 @@
   </p>
   <div class="blank-slate-pf-main-action">
 
-    <div class="cards-pf col-sm-6 col-md-6">
-      <div class="blank-slate-pf no-padding margin-top-md" id="">
+    <div class="col-sm-6 col-md-6 card-pf card-pf-accented margin-right-md">
+      <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
         <div class="blank-slate-pf-icon">
           <span class="fa fa-graduation-cap"></span>
         </div>
@@ -114,8 +114,8 @@
         </div>
       </div>
     </div>
-    <div class="cards-pf col-sm-6  col-md-6">
-      <div class="blank-slate-pf no-padding margin-top-md" id="">
+    <div class="col-sm-6 col-md-6 card-pf card-pf-accented margin-left-md">
+      <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
         <div class="blank-slate-pf-icon">
           <span class="fa fa-magic"></span>
         </div>
