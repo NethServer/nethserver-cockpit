@@ -27,7 +27,7 @@ perl createlinks
 
 %files -f filelist
 %license COPYING
-%doc README.md
+%doc README.rst
 
 %changelog
 * Fri Sep 15 2017 Davide Principi <davide.principi@nethesis.it> - 0.0.0-1.ns7
