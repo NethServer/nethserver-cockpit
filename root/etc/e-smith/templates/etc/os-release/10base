@@ -1,0 +1,17 @@
+NAME="{{ $sysconfig{'ProductName'} }}"
+VERSION="{{ $sysconfig{'Version'} }}"
+VERSION_ID="{{ substr($sysconfig{'Version'},0,1) }}"
+PRETTY_NAME="{{ $sysconfig{'ProductName'}." ".$sysconfig{'Version'}  }}"
+ID="{{ lc($sysconfig{'ProductName'}) }}"
+HOME_URL="{{ $sysconfig{'Url'} || "http://www.nethserver.org" }}"
+
+ID_LIKE="rhel fedora centos"
+ANSI_COLOR="0;31"
+CPE_NAME="cpe:/o:centos:centos:7"
+BUG_REPORT_URL="https://community.nethserver.org/"
+
+CENTOS_MANTISBT_PROJECT="CentOS-7"
+CENTOS_MANTISBT_PROJECT_VERSION="7"
+REDHAT_SUPPORT_PRODUCT="centos"
+REDHAT_SUPPORT_PRODUCT_VERSION="7"
+

@@ -30,8 +30,9 @@ event_actions('nethserver-cockpit-update', qw(
     initialize-default-databases   00
 ));
 
-#event_templates('nethserver-cockpit-update', qw(
-#));
+event_templates('nethserver-cockpit-update', qw(
+    /etc/os-release
+));
 
 event_services('nethserver-cockpit-update', qw(
     cockpit restart
