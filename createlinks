@@ -21,5 +21,25 @@
 
 use esmith::Build::CreateLinks  qw(:all);
 
+
+#
+# nethserver-cockpit-update event
+#
+
+event_actions('nethserver-cockpit-update', qw(
+    initialize-default-databases   00
+));
+
+#event_templates('nethserver-cockpit-update', qw(
+#));
+
+event_services('nethserver-cockpit-update', qw(
+    cockpit restart
+));
+
+#
+# Test events for development
+#
+
 safe_symlink('/bin/true', 'root/etc/e-smith/events/test-success/S20true');
 safe_symlink('/bin/false', 'root/etc/e-smith/events/test-failure/S20false');

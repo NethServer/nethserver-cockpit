@@ -1,0 +1,1 @@
+ACCEPT  -  $FW  tcp  {${'cockpit.socket'}{'TCPPort'}}
