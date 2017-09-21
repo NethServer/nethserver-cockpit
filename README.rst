@@ -97,3 +97,7 @@ Use the following commands: ::
   cd api/ && grunt rsync:root@192.168.1.20:22:~/.local/share/cockpit/nethserver
   cd ui/system && grunt rsync:root@192.168.1.20:22:~/.local/share/cockpit/nethserver
 
+Code style guideline
+====================
+
+Please use configuration from EditorConfig: http://editorconfig.org
