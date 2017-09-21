@@ -25,6 +25,10 @@ body.login-pf {
     text-transform: none;
 }
 
+#content-user-name {
+    margin-left: 8px;
+}
+
 .navbar {
     min-height: 50px;
 }
