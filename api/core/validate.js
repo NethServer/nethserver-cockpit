@@ -18,16 +18,25 @@
  * along with NethServer.  If not, see COPYING.
  */
 
- (function (ns, $) {
-     ns.system.users = {};
-
-     /**
-      * Generate a random password
-      * @param {number} required password length
-      * @return {Promise.<string>}
-      */
-     ns.system.users.mkpasswd = function(length) {
-         // TODO
-         return Promise.resolve('Nethesis,1234');
-     };
+(function(ns, $){
+    /**
+     * Launch the "validate" command. The exit code can be:
+     *
+     * * 0 - success
+     * * 1 - generic failure condition
+     * * N - specific error code
+     *
+     * @memberof nethserver
+     * @param {String} validator Validation procedure name
+     *
+     * @return {Promise.<number>} The exit code of "validate" command
+     */
+    ns.validate = function(validator) {
+        var args = ['/sbin/e-smith/validate'];
+        args.push.apply(args, Array.prototype.slice.call(arguments));
+        var proc = cockpit.spawn(args, {superuser: 'required', err: 'message'});
+        var r = Promise.resolve(proc);
+        proc.always(proc.close);
+        return r;
+    };
 }(nethserver, jQuery));

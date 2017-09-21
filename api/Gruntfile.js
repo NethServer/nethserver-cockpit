@@ -4,7 +4,7 @@ module.exports = function (grunt) {
     clean: ['dist/**'],
     concat: {
       core: {
-        src: 'core/*.js',
+        src: ['lib/*.js', 'core/*.js'],
         dest: 'dist/core.js'
       },
       system: {

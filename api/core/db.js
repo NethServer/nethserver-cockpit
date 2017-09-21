@@ -354,49 +354,34 @@ Nsdb.prototype = {
     },
 
     /**
-     * @param {Function} [handler] added to Promise as done(handler)
      * @return {Promise}
      */
-    open: function(handler) {
-        var dfr = $.Deferred();
+    open: function() {
         var self = this;
         var fh = cockpit.file(this.path, {
             syntax: nsdbSyntax,
             superuser: 'try'
         });
-        fh.read().
-            done(function(data, tag) {
+        var p = Promise.resolve(fh.read().done(function(data, tag) {
                 if(data === null && tag === '-') {
                     // non-existing file
                     data = {};
                 }
                 self.data = data;
                 self.tag = tag;
-                dfr.resolve();
-            }).
-            fail(function(error) {
-                dfr.reject(error);
-            }).
-            always(function() {
-                fh.close();
-            });
+            })).
+            then(fh.close, fh.close);
 
-        if(handler !== undefined) {
-            dfr.done(handler);
-        }
-        return dfr.promise();
+        return p;
     },
 
     /**
-     * @param {Function} [handler] added to Promise as done(handler)
      * @return {Promise}
      */
-    save: function(handler) {
-        var dfr = $.Deferred();
+    save: function() {
 
         if(this.modified === false) {
-            dfr.done(handler).resolve();
-            return dfr;
+            return Promise.resolve();
         }
 
         var self = this;
@@ -404,29 +389,14 @@ Nsdb.prototype = {
             syntax: nsdbSyntax,
             superuser: 'try'
         });
-        fh.modify(function(tag){
-            if(tag !== self.tag) {
-                dfr.reject(new Error('write-conflict'));
-                return null;
-            }
-            return self.data;
-        }, this.tag).
-            done(function(data, tag){
-                self.data = data;
-                self.tag = tag;
-                self.modified = false;
-                dfr.resolve();
-            }).
-            fail(function(error){
-                dfr.reject(error);
-            }).
-            always(function(){
-                fh.close();
-            });
-        if(handler !== undefined) {
-            dfr.done(handler);
-        }
-        return dfr.promise();
+
+        return Promise.resolve(fh.modify(function(){}, self.data, self.tag).
+                done(function(newdata, newtag){
+                    self.data = newdata;
+                    self.tag = newtag;
+                    self.modified = false;
+                }).
+                always(fh.close));
     },
 };
 

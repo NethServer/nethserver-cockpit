@@ -29,7 +29,9 @@ ns.signalEvent = function (nsEvent) {
     var unitName = 'unknown';
     var client = cockpit.dbus('org.freedesktop.systemd1');
     var manager = client.proxy('org.freedesktop.systemd1.Manager', '/org/freedesktop/systemd1');
-    var dfr = $.Deferred();
+
+    var progressCallback = function(taskProgress) {};
+
     var taskProgress = {
         'event': nsEvent,
         'args': args.slice(3),
@@ -40,108 +42,105 @@ ns.signalEvent = function (nsEvent) {
         'status': null,
     };
 
-    dfr.always(function(){ client.close(); });
+    var prom = new Promise(function(fulfill, reject){
+        manager.wait(initHandlers).done(spawnUnit);
 
-    manager.wait(initHandlers).
-        done(spawnUnit).
-        fail(function(){
-            dfr.reject('Failed to connect /org/freedesktop/systemd1 DBus object');
-        });
+        function initHandlers() {
+            // Generate a unique event identifier:
+            unitName = 'nsevent-' + parseInt(manager.NInstalledJobs) + '.service';
 
-    function initHandlers() {
-        // Generate a unique event identifier:
-        unitName = 'nsevent-' + parseInt(manager.NInstalledJobs) + '.service';
-
-        manager.addEventListener('UnitNew', function(ev, uName, uPath) {
-            if(uName === unitName) {
-                registerUnitChangeHandler();
-                taskProgress = $.extend({}, taskProgress, {
-                    progress: 1.0,
-                    message: '',
-                    status: 'started',
-                    exitCode: 0
-                });
-                dfr.notify(taskProgress);
-            }
-        });
-
-        // Successful service unit is removed automatically. Here we catch
-        // the UnitRemoved event, in case it completes before properties event handler
-        // is ready to receive events.
-        manager.addEventListener('UnitRemoved', function(ev, uName, uPath) {
-            if(uName === unitName) {
-                taskProgress = $.extend({}, taskProgress, {
-                    progress: 1.0,
-                    message: '',
-                    status: 'success',
-                    exitCode: 0
-                });
-                dfr.resolve();
-            }
-        });
-
-    }
-
-    function spawnUnit() {
-        taskProgress = $.extend({}, taskProgress, {
-            unitName: unitName,
-            progress: 0.0,
-            message: '',
-            status: 'starting'
-        });
-        dfr.notify(taskProgress);
-
-        args.splice(1, 0, '--unit', unitName);
-
-        var process = cockpit.spawn(args, {
-            superuser: 'require',
-            err: 'message'
-        }).
-            fail(function(ex){
-                dfr.reject(ex.message);
-            }).
-            always(function(){
-                process.close();
-            });
-    }
-
-    function registerUnitChangeHandler() {
-
-        // A failed service unit remains on filesystem: we can query its
-        // properties at any time.
-        // A running unit can send properties change events, too.
-        manager.GetUnit(unitName).
-            done(function(unitPath){
-                var serviceUnit = client.proxy('org.freedesktop.systemd1.Service', unitPath);
-                serviceUnit.wait(function() {
-                    serviceUnit.addEventListener('changed', function(ev, properties) {
-                        checkFailedUnit(properties);
+            manager.addEventListener('UnitNew', function(ev, uName, uPath) {
+                if(uName === unitName) {
+                    registerUnitChangeHandler();
+                    taskProgress = $.extend({}, taskProgress, {
+                        progress: 1.0,
+                        message: '',
+                        status: 'started',
+                        exitCode: 0
                     });
-                    checkFailedUnit(serviceUnit);
-                });
-            }).
-            fail(function(){
-                dfr.reject(unitName);
+                    progressCallback(taskProgress);
+                }
             });
-    }
 
-    function checkFailedUnit (properties) {
-        if(properties.Result === 'exit-code') {
-            taskProgress = $.extend({}, taskProgress, {
-                progress: 1.0,
-                message: '',
-                status: 'failed',
-                exitCode: properties.ExecMainStatus
+            // Successful service unit is removed automatically. Here we catch
+            // the UnitRemoved event, in case it completes before properties event handler
+            // is ready to receive events.
+            manager.addEventListener('UnitRemoved', function(ev, uName, uPath) {
+                if(uName === unitName) {
+                    taskProgress = $.extend({}, taskProgress, {
+                        progress: 1.0,
+                        message: '',
+                        status: 'success',
+                        exitCode: 0
+                    });
+                    fulfill();
+                }
             });
-            dfr.reject(nsEvent + ' failed');
-        } else {
-            // Still waiting, ignore...
+
         }
-    }
 
-    return dfr.promise();
+        function spawnUnit() {
+            taskProgress = $.extend({}, taskProgress, {
+                unitName: unitName,
+                progress: 0.0,
+                message: '',
+                status: 'starting'
+            });
+            progressCallback(taskProgress);
+
+            args.splice(1, 0, '--unit', unitName);
+
+            var process = cockpit.spawn(args, {
+                superuser: 'require',
+                err: 'message'
+            }).
+                fail(function(ex){
+                    reject(ex.message);
+                }).
+                always(function(){
+                    process.close();
+                });
+        }
+
+        function registerUnitChangeHandler() {
+
+            // A failed service unit remains on filesystem: we can query its
+            // properties at any time.
+            // A running unit can send properties change events, too.
+            manager.GetUnit(unitName).
+                done(function(unitPath){
+                    var serviceUnit = client.proxy('org.freedesktop.systemd1.Service', unitPath);
+                    serviceUnit.wait(function() {
+                        serviceUnit.addEventListener('changed', function(ev, properties) {
+                            checkFailedUnit(properties);
+                        });
+                        checkFailedUnit(serviceUnit);
+                    });
+                }).
+                fail(function(){
+                    reject(unitName);
+                });
+        }
+
+        function checkFailedUnit (properties) {
+            if(properties.Result === 'exit-code') {
+                taskProgress = $.extend({}, taskProgress, {
+                    progress: 1.0,
+                    message: '',
+                    status: 'failed',
+                    exitCode: properties.ExecMainStatus
+                });
+                reject(nsEvent + ' failed');
+            } else {
+                // Still waiting, ignore...
+            }
+        }
+
+    });
+
+    return prom.then(function(){
+            client.close();
+        });
 };
 
 })(nethserver, jQuery);
-
-
