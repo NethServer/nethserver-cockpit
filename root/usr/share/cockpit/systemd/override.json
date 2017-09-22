@@ -1,0 +1,8 @@
+{
+  "menu": {
+    "logs": null,
+    "index": null,
+    "services": null
+  },
+  "content-security-policy": "default-src 'self' 'unsafe-inline' 'unsafe-eval'"
+}
