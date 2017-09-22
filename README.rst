@@ -37,9 +37,9 @@ Prepare the environment
 
     cd nethserver-cockpit/
 
-    cd api/system/ && npm install
+    cd api/ && npm install
     cd ..
-    cd ui/ && npm install && bower install
+    cd ui/system/ && npm install && bower install
 
 Build API and UI
 ================
@@ -91,7 +91,7 @@ API and UI
 
 Files can be copied using rsync.
 Use the following commands: ::
-  
+
   ssh root@192.168.1.20  "mkdir -p ~/.local/share/cockpit/nethserver"
 
   cd api/ && grunt rsync:root@192.168.1.20:22:~/.local/share/cockpit/nethserver
