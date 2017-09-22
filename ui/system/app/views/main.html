@@ -59,6 +59,35 @@
     </div>
   </div>
 
+  <h3>{{'Management' | translate}}</h3>
+  <div class="cards-pf">
+    <div class="row row-cards-pf">
+
+      <div ng-click="goTo('/system/logs',true)" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 route-card">
+        <div class="card-pf card-pf-accented">
+          <h2 class="card-pf-title">
+            <span class="fa fa-book card-icon-def"></span> {{'Logs' | translate}}
+          </h2>
+          <div class="card-pf-body">
+            <div>{{'View system logs' | translate}}</div>
+          </div>
+        </div>
+      </div>
+      <div ng-click="goTo('/storage',true)" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 route-card">
+        <div class="card-pf card-pf-accented">
+          <h2 class="card-pf-title">
+            <span class="fa fa-hdd-o card-icon-def"></span> {{'Storage' | translate}}
+          </h2>
+          <div class="card-pf-body">
+            <div>{{'Mange LVM, RAID and partitions' | translate}}</div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
   <h3>{{'Settings' | translate}}</h3>
   <div class="cards-pf">
     <div class="row row-cards-pf">

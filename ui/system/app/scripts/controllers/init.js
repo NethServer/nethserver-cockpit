@@ -57,8 +57,12 @@ angular.module('systemAngularApp')
     };
 
     // methods declaration
-    $scope.goTo = function (route) {
-      $location.path(route);
+    $scope.goTo = function (route, isJumping) {
+      if (isJumping) {
+        cockpit.jump(route);
+      } else {
+        $location.path(route);
+      }
     };
 
     $scope.addNotification = function (notification) {

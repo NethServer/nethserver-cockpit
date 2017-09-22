@@ -12,7 +12,7 @@ Source2:        nethserver-cockpit-ui.tar.gz
 BuildArch:      noarch
 
 BuildRequires:  nethserver-devtools
-Requires:       cockpit
+Requires:       cockpit, cockpit-storaged, cockpit-packagekit
 
 %description
 NethServer Server Manager Web UI based on Cockpit
