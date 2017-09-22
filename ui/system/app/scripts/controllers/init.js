@@ -44,7 +44,19 @@ angular.module('systemAngularApp')
       $scope.notifications.splice(index, 1);
     };
 
-    /* $scope.addNotification({
+    $scope.progressBarWidth = function(percent) {
+      return {
+        "width": percent + '%',
+      };
+    };
+
+    $scope.offsetNotification = function(offset) {
+      return {
+        "margin-top": offset*4.5 + 'em',
+      };
+    };
+
+    $scope.addNotification({
       type: 'task',
       title: 'Event',
       message: 'Expand-template /etc/hosts',
@@ -60,7 +72,7 @@ angular.module('systemAngularApp')
       status: 'danger',
       action: 'Restart',
       url: 'http://www.patternfly.org'
-    }); */
+    });
 
     // events listeners
     $scope.$on('$routeChangeSuccess', function (next, current) {
