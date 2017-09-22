@@ -29,6 +29,22 @@ body.login-pf {
     margin-left: 8px;
 }
 
+.credential-lock.credential-locked>*:first-child {
+    height: 58px;
+    line-height: 40px;
+    font-size: 15px;
+}
+
+#navbar-oops>*:first-child {
+    height: 58px;
+    line-height: 40px;
+    font-size: 15px;
+}
+
+li.credential-lock span {
+    padding-left: 10px;
+}
+
 .navbar {
     min-height: 50px;
 }

@@ -352,6 +352,11 @@ module.exports = function (grunt) {
           cwd: './',
           src: ['manifest.json'],
           dest: '<%= yeoman.dist %>/',
+        }, {
+          expand: true,
+          cwd: 'bower_components/patternfly/dist',
+          src: ['fonts/PatternFlyIcons-webfont.{eot,woff,woff2,ttf}'],
+          dest: '<%= yeoman.dist %>',
         }]
       },
       styles: {

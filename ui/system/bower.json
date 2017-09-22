@@ -21,6 +21,12 @@
       "main": [
         "js/bootstrap-combobox.js"
       ]
+    },
+    "angular": {
+      "main": [
+        "angular.js",
+        "angular-csp.css"
+      ]
     }
   },
   "resolutions": {
