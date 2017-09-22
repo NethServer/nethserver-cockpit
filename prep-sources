@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Prepare source for RPM build
+# Check for js utils: npm, grunt, bower
+
+set -e
+
+which npm >/dev/null
+
+if [ $? -gt 1 ]; then
+    echo "[ERROR] Install 'npm' package: 'dnf install npm'"
+    exit 1
+fi
+
+which grunt >/dev/null
+
+if [ $? -gt 1 ]; then
+    echo "[ERROR] Install 'grunt' package: 'npm install -g grunt-cli'"
+    exit 1
+fi
+
+
+which bower >/dev/null
+
+if [ $? -gt 1 ]; then
+    echo "[ERROR] Install 'grunt' package: 'npm install -g bower'"
+    exit 1
+fi
+
+# Cleanup existing releae
+rm -f api/nethserver-cockpit-api-*.tar.gz
+rm -f ui/system/nethserver-cockpit-ui-*.tar.gz
+
+# Cleanup current sources
+rm -f nethserver-cockpit-{ui,api}-*.tar.gz
+
+# Install dependecies and build UI and API
+pushd api/ && npm install && grunt build && grunt release
+popd
+pushd ui/system/ && npm install && bower install && grunt build && grunt release
+popd
+
+# Copy API and UI tar.gz releases
+find -name nethserver-cockpit-ui-*.tar.gz  -exec cp "{}" nethserver-cockpit-ui.tar.gz \;
+find -name nethserver-cockpit-api-*.tar.gz  -exec cp "{}" nethserver-cockpit-api.tar.gz \;

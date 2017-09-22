@@ -51,6 +51,22 @@ module.exports = function (grunt) {
           return "ln -sf /usr/share/cockpit/nethserver/manifest.json dist/manifest.json";
         },
       },
+      describe: {
+        command: function () {
+          return "git describe --tags";
+        },
+        options: {
+          callback: function (err, stdout, stderr, cb) {
+            global.gitDescribe = stdout.trim();
+            cb();
+          }
+        }
+      },
+      compress: {
+        command: function () {
+          return "tar cvzf nethserver-cockpit-api-"+global.gitDescribe+".tar.gz -C dist/ .";
+        }
+      }
     },
   });
 
@@ -76,4 +92,7 @@ module.exports = function (grunt) {
       ['shell:rsync', login, port, 'node_modules/should/should.js', dest].join(':'),
     ]);
   });
+
+  grunt.registerTask('release', 'Create release file', ['shell:describe','shell:compress']);
+
 };

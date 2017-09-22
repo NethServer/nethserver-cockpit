@@ -390,6 +390,22 @@ module.exports = function (grunt) {
           return "ln -sf /usr/share/cockpit/nethserver/manifest.json app/manifest.json";
         },
       },
+      describe: {
+        command: function () {
+          return "git describe --tags";
+        },
+        options: {
+          callback: function (err, stdout, stderr, cb) {
+            global.gitDescribe = stdout.trim();
+            cb();
+          }
+        }
+      },
+      compress: {
+        command: function () {
+          return "tar cvzf nethserver-cockpit-ui-"+global.gitDescribe+".tar.gz -C dist/ .";
+        }
+      }
     },
 
     i18nextract: {
@@ -439,4 +455,7 @@ module.exports = function (grunt) {
       'shell:manifest', ['shell:rsync', login, port, 'app/', dest].join(':'), ['shell:rsync', login, port, 'bower_components', dest].join(':'),
     ]);
   });
+
+  grunt.registerTask('release', 'Create release file', ['shell:describe','shell:compress']);
+
 };
