@@ -65,28 +65,29 @@ describe('nethserver.Syntax.grepToObject', function() {
     });
 });
 
-
-
 describe('nethserver.signalEvent()...', function() {
-    it('succeedes', function(done){
-        nethserver.signalEvent('test-success').then(done, done);
+    it('succeedes', function() {
+        return nethserver.signalEvent('test-success');
     });
-    it('fails', function(done){
-        nethserver.signalEvent('test-failure').then(
+    it('fails', function(){
+        return nethserver.signalEvent('test-failure').then(
             function(){
-                done('must fail');
+                return Promise.reject('must fail');
             },
-            function(){
-                done();
+            function(ex){
+                return Promise.resolve(ex);
+                //ex.should.be.Object();
+                //ex.should.have.property('unitName');
+                //ex.unitName.should.match(/^nsevent-/);
             });
     });
-    it('catches non-existing event', function(done){
-        nethserver.signalEvent('test-nonexisting-event').then(
+    it('catches non-existing event', function(){
+        return nethserver.signalEvent('test-nonexisting-event').then(
             function(){
-                done('must fail');
+                return Promise.reject('must fail');
             },
-            function(){
-                done();
+            function(err){
+                return Promise.resolve(err);
             });
     });
 });
@@ -102,44 +103,48 @@ describe('The object returned by getDatabase()', function() {
         var cdb = nethserver.getDatabase('configuration');
         should(typeof cdb.getProp === 'function').be.ok();
     });
-    it('reads prop with getProp()', function(done) {
+    it('reads prop with getProp()', function() {
         var cdb = nethserver.getDatabase('configuration');
-        cdb.open(function(){
+        return cdb.open().then(function(){
             cdb.getProp('dnsmasq', 'status').should.be.equal('enabled');
-        }).done(done, done);
+        });
     });
-    it('returns record type with getType()', function(done) {
+    it('returns record type with getType()', function() {
         var cdb = nethserver.getDatabase('configuration');
-        cdb.open(function(){
+        return cdb.open().then(function(){
             cdb.get('MinUid').should.be.equal('5000');
             cdb.getType('MinUid').should.be.equal('5000');
-        }).done(done, done);
+        });
     });
 });
 
 describe('Also, the object returned by getDatabase()', function() {
     beforeEach(function(done) {
         cockpit.spawn(['/usr/bin/rm', '-f', '/tmp/testdb'], {err:'message', superuser:'required'}).
-            done(done).fail(function(err) { done(new Error(err.message)); });
+            done(function() {
+                done();
+            }).
+            fail(function(err) {
+                done(new Error(err.message));
+            });
     });
 
-    it('opens with non-existing file', function (done) {
+    it('opens with non-existing file', function () {
         var tdb = nethserver.getDatabase('/tmp/testdb');
-        tdb.open().done(done);
+        return tdb.open();
     });
 
-    it('creates an empty db', function (done) {
+    it('creates an empty db', function () {
         var tdb = nethserver.getDatabase('/tmp/testdb');
-        tdb.open().
+        return tdb.open().
             then(function(){
                 tdb.save();
-            }).
-            done(done);
+            });
     });
 
-    it('writes changes to a new file', function (done) {
+    it('writes changes to a new file', function () {
         var tdb = nethserver.getDatabase('/tmp/testdb');
-        tdb.open().
+        return tdb.open().
             then(function(){
                 tdb.delete('keytest');
                 tdb.set('keytest', 'typeofkey', {'p1':'v1', 'p2': 'v2'});
@@ -150,23 +155,23 @@ describe('Also, the object returned by getDatabase()', function() {
                 tdb.delete('kdel'); tdb.delete('kdel');
             }).
             then(function(){
-                tdb.save();
+                return tdb.save();
             }).
             then(function(){
                 tdb.getProp('keytest', 'p1').should.be.equal('v1mod');
                 tdb.getType('keytest').should.be.equal('typeofkey');
                 tdb.getType('kdel').should.be.equal('');
                 tdb.getProp('keytest', 'p2').should.be.equal('');
-            }).
-            done(done);
+            });
+
     });
 
 
 });
 
 describe('nethserver.validate()', function() {
-    it('succeedes', function(done) {
-        nethserver.validate('myhostname', 'test').then(done, done);
+    it('succeedes', function() {
+        return nethserver.validate('myhostname', 'test');
     });
 });
 

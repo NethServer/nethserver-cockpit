@@ -23,9 +23,14 @@
 /*
  * Exec a signal event action:
  */
-ns.signalEvent = function (nsEvent) {
-    var args = ['systemd-run', '/sbin/e-smith/signal-event'];
-    args.push.apply(args, Array.prototype.slice.call(arguments));
+ns.signalEvent = function (nsEvent, args) {
+    if( ! Array.isArray(args)) {
+        args = [];
+    } else {
+        args = args.slice();
+    }
+    args.unshift('systemd-run', '/sbin/e-smith/signal-event', nsEvent);
+
     var unitName = 'unknown';
     var client = cockpit.dbus('org.freedesktop.systemd1');
     var manager = client.proxy('org.freedesktop.systemd1.Manager', '/org/freedesktop/systemd1');
@@ -117,8 +122,8 @@ ns.signalEvent = function (nsEvent) {
                         checkFailedUnit(serviceUnit);
                     });
                 }).
-                fail(function(){
-                    reject(unitName);
+                fail(function(ex){
+                    throw ex;
                 });
         }
 
@@ -130,7 +135,8 @@ ns.signalEvent = function (nsEvent) {
                     status: 'failed',
                     exitCode: properties.ExecMainStatus
                 });
-                reject(nsEvent + ' failed');
+                progressCallback(taskProgress);
+                reject(new Error(unitName + ' exit with non-zero code'));
             } else {
                 // Still waiting, ignore...
             }
