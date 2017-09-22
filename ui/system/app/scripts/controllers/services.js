@@ -69,51 +69,51 @@ angular.module('systemAngularApp')
     ];
 
     // methods
-    nethserver.System.services.getAll().done(function (services) {
+    nethserver.System.services.getAll().then(function (services) {
       //$scope.localSystem.services.list = services;
 
       //$scope.$apply();
-    }).fail(function (err) {
+    }, function (err) {
       console.error("couldn't read services: " + err);
     });
 
 
     $scope.enableService = function (services) {
-      nethserver.System.services.enableServices().done(function (services) {
+      nethserver.System.services.enableServices().then(function (services) {
 
-      }).fail(function (err) {
+      }, function (err) {
         console.error(err);
       });
     }
 
     $scope.disableService = function (services) {
-      nethserver.System.services.disableServices().done(function () {
+      nethserver.System.services.disableServices().then(function () {
 
-      }).fail(function (err) {
+      }, function (err) {
         console.error(err);
       });
     }
 
     $scope.startService = function (services) {
-      nethserver.System.services.startServices().done(function () {
+      nethserver.System.services.startServices().then(function () {
 
-      }).fail(function (err) {
+      }, function (err) {
         console.error(err);
       });
     }
 
     $scope.stopService = function (services) {
-      nethserver.System.services.stopServices().done(function () {
+      nethserver.System.services.stopServices().then(function () {
 
-      }).fail(function (err) {
+      }, function (err) {
         console.error(err);
       });
     }
 
     $scope.restartService = function (services) {
-      nethserver.System.services.restartServices().done(function () {
+      nethserver.System.services.restartServices().then(function () {
 
-      }).fail(function (err) {
+      }, function (err) {
         console.error(err);
       });
     }

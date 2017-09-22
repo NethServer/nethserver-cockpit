@@ -56,6 +56,7 @@ angular.module('systemAngularApp')
       };
     };
 
+/*
     $scope.addNotification({
       type: 'task',
       title: 'Event',
@@ -73,7 +74,7 @@ angular.module('systemAngularApp')
       action: 'Restart',
       url: 'http://www.patternfly.org'
     });
-
+*/
     // events listeners
     $scope.$on('$routeChangeSuccess', function (next, current) {
       var name = $route.routes[$location.path()];

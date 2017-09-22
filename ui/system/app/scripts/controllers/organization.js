@@ -12,16 +12,16 @@ angular.module('systemAngularApp')
 
     $scope.localSystem.organization = {};
 
-    nethserver.System.organization.getInfo().done(function (organization) {
+    nethserver.System.organization.getInfo().then(function (organization) {
       $scope.localSystem.organization = organization;
 
       // $scope.$apply();
-    }).fail(function (err) {
+    }, function (err) {
       console.error(err);
     });
 
     $scope.saveOrganization = function () {
-      nethserver.System.organization.saveInfo(organization).done(function () {
+      nethserver.System.organization.saveInfo(organization).then(function () {
 
         // notify saving success
         $scope.addNotification({
@@ -30,7 +30,7 @@ angular.module('systemAngularApp')
           message: _('Organization info saved with success'),
           status: 'success',
         });
-      }).fail(function (err) {
+      }, function (err) {
         console.error(err);
         // notify saving error
         $scope.addNotification({
