@@ -4,10 +4,25 @@ nethserver-cockpit
 
 NethServer Cockpit UI and new Server Manager.
 
-The document describe how to prepare an environemnt to develop
+The document describe how to prepare an environemnt to develop nethserver-cockpit.
 
-Prepare the environment
+Development environment
 =======================
+
+The development environment can be prepared on a Fedora or CentOS 7 machine.
+
+Follow these steps:
+
+- prepare the enviroment
+
+- do your modification to API or UI
+
+- sync your modification to the server where cockpit is running
+
+Install requirements
+--------------------
+
+Prepare the development environment:
 
 - Install developer tools: npm and git
 
@@ -42,7 +57,7 @@ Prepare the environment
     cd ui/system/ && npm install && bower install
 
 Build API and UI
-================
+----------------
 
 Enter API directory and build using grunt: ::
 
@@ -59,43 +74,35 @@ You can ignore ignore warnings like this: ::
   npm WARN api@1.0.0 No license field.
 
 
-Build RPM
-=========
-
-Move to the root directory of clone repository and
-use standard ``make-rpms`` NethServer tool: ::
-
-  make-rpms
-
-Install
-=======
-
-Install all built files inside the NetServer machine.
-Let's assume the machine has IP ``192.168.1.20``.
-
-RPM
----
-
-Access the NethServer, then download COPR repository: ::
-
-  wget https://copr.fedorainfracloud.org/coprs/g/cockpit/cockpit-preview/repo/epel-7/group_cockpit-cockpit-preview-epel-7.repo -O /etc/yum.repos.d/cockpit.repo
-
-Copy ``nethserver-cockpit`` rpm to the machine and install it: ::
-
-
-  scp nethserver-cockpit-*.noarch.rpm root@192.168.1.20:
-  ssh root@192.168.1.20 "yum install nethserver-cockpit*noarch.rpm"
-
-API and UI
-----------
+Sync API and UI
+----------------
 
 Files can be copied using rsync.
 Use the following commands: ::
 
   ssh root@192.168.1.20  "mkdir -p ~/.local/share/cockpit/nethserver"
 
-  cd api/ && grunt rsync:root@192.168.1.20:22:~/.local/share/cockpit/nethserver
-  cd ui/system && grunt rsync:root@192.168.1.20:22:~/.local/share/cockpit/nethserver
+  cd api/ && grunt rsync:root@192.168.1.20:22
+  cd ui/system && grunt rsync:root@192.168.1.20:22
+
+
+Build RPM
+=========
+
+Move to the root directory of clone repository and
+use standard ``make-rpms`` NethServer tool: ::
+
+  ./prep-sources && make-rpms
+
+Install RPM
+-----------
+
+1. Copy the rpm to the NethServer
+
+2. Access the NethServer, then download COPR repository: ::
+
+     wget https://copr.fedorainfracloud.org/coprs/g/cockpit/cockpit-preview/repo/epel-7/group_cockpit-cockpit-preview-epel-7.repo -O /etc/yum.repos.d/cockpit.repo
+     yum install nethserver-cockpit*rpm
 
 Code style guideline
 ====================
