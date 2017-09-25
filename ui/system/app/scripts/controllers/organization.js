@@ -12,7 +12,7 @@ angular.module('systemAngularApp')
 
     $scope.localSystem.organization = {};
 
-    nethserver.System.organization.getInfo().then(function (organization) {
+    nethserver.system.organization.getInfo().then(function (organization) {
       $scope.localSystem.organization = organization;
 
       // $scope.$apply();
@@ -21,7 +21,7 @@ angular.module('systemAngularApp')
     });
 
     $scope.saveOrganization = function () {
-      nethserver.System.organization.saveInfo(organization).then(function () {
+      nethserver.system.organization.saveInfo(organization).then(function () {
 
         // notify saving success
         $scope.addNotification({

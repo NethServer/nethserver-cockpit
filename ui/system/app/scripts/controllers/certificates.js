@@ -48,7 +48,7 @@ angular.module('systemAngularApp')
       });
     };
 
-    nethserver.System.certificates.getAll(function (certificates) {
+    nethserver.system.certificates.getAll(function (certificates) {
       $scope.localSystem.certificates = certificates;
 
       // $scope.$apply();
@@ -61,7 +61,7 @@ angular.module('systemAngularApp')
       $('#uploadCertificateModal').modal('show');
     };
     $scope.uploadCertificate = function (certificate) {
-      nethserver.System.certificates.uploadCertificate(certificate).then(function () {
+      nethserver.system.certificates.uploadCertificate(certificate).then(function () {
 
       }, function (err) {
         console.error(err);
@@ -73,7 +73,7 @@ angular.module('systemAngularApp')
       $('#editCertificateModal').modal('show');
     };
     $scope.editCertificate = function (certificate) {
-      nethserver.System.certificates.editCertificate(certificate).then(function () {
+      nethserver.system.certificates.editCertificate(certificate).then(function () {
 
       }, function (err) {
         console.error(err);
@@ -84,7 +84,7 @@ angular.module('systemAngularApp')
       $('#requestLetsEncryptModal').modal('show');
     };
     $scope.requestLetsEncrypt = function (certificate) {
-      nethserver.System.certificates.requestLetsEncrypt(certificate).then(function () {
+      nethserver.system.certificates.requestLetsEncrypt(certificate).then(function () {
 
       }, function (err) {
         console.error(err);
@@ -92,7 +92,7 @@ angular.module('systemAngularApp')
     };
 
     $scope.setDefault = function () {
-      nethserver.System.certificates.setDefault(certificate).then(function () {
+      nethserver.system.certificates.setDefault(certificate).then(function () {
 
       }, function (err) {
         console.error(err);

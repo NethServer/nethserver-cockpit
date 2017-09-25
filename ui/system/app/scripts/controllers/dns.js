@@ -24,7 +24,7 @@ angular.module('systemAngularApp')
     }];
 
     // methods
-    nethserver.System.dns.getAll(function (hosts) {
+    nethserver.system.dns.getAll(function (hosts) {
       $scope.localSystem.dns.hosts = hosts;
 
       // $scope.$apply();
@@ -33,7 +33,7 @@ angular.module('systemAngularApp')
     });
 
     $scope.saveDNS = function (dnsServer) {
-      nethserver.System.dns.saveDNS(dnsServer).then(function () {
+      nethserver.system.dns.saveDNS(dnsServer).then(function () {
 
       }, function (err) {
         console.error(err);
@@ -48,7 +48,7 @@ angular.module('systemAngularApp')
       $('#deleteDNSModal').modal('show');
     };
     $scope.deleteDNS = function (dnsServer) {
-      nethserver.System.dns.deleteDNS(dnsServer).then(function () {
+      nethserver.system.dns.deleteDNS(dnsServer).then(function () {
 
       }, function (err) {
         console.error(err);
