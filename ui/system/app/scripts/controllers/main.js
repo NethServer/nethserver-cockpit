@@ -191,7 +191,7 @@ angular.module('systemAngularApp')
           status: 'danger',
         });
         $scope.$apply();
-      }).then(function(){
+      }).then(function () {
         // XXX: $scope.taskNotification.close()
         $scope.addNotification({
           type: 'info',

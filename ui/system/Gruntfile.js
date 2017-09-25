@@ -438,12 +438,6 @@ module.exports = function (grunt) {
     'htmlmin'
   ]);
 
-  /*   grunt.registerTask('rsync', 'Sync folder with remote host', function (login, port, path, all) {
-      grunt.task.run([
-        'shell:sync:' + login + ':' + port + ':' + path + ':' + all
-      ]);
-    }); */
-
   grunt.registerTask('rsync', 'Sync folder with remote host', function (login, port, dest) {
     if (port === undefined) {
       port = 22;

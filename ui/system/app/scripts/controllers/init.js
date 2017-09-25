@@ -13,11 +13,36 @@ angular.module('systemAngularApp')
     $('body').show();
 
     // variables declaration
-    $scope.notifications = [];
+    $scope.notifications = {
+      list: [],
+      task: {
+        isShown: false,
+        title: 'Event',
+        message: 'Expand /etc/hosts',
+        progress: 60,
+        show: function () {
+          this.isShown = true;
+        },
+        hide: function () {
+          this.isShown = false;
+        },
+        getData: function () {
+          return {
+            title: this.title,
+            message: this.message,
+            progress: this.progress
+          }
+        },
+        setData: function (data) {
+          this.title = data.title || this.title;
+          this.message = data.message || this.message;
+          this.progress = data.progress || this.progress;
+        }
+      }
+    };
     $scope.localSystem = {};
 
     $scope.stats = {
-      tasks: [{}],
       updates: [],
       errors: []
     };
@@ -37,44 +62,42 @@ angular.module('systemAngularApp')
     };
 
     $scope.addNotification = function (notification) {
-      $scope.notifications.push(notification);
+      $scope.notifications.list.push(notification);
     };
 
     $scope.removeNotification = function (index) {
-      $scope.notifications.splice(index, 1);
+      $scope.notifications.list.splice(index, 1);
     };
 
-    $scope.progressBarWidth = function(percent) {
+    $scope.progressBarWidth = function (percent) {
       return {
         "width": percent + '%',
       };
     };
 
-    $scope.offsetNotification = function(offset) {
+    $scope.offsetNotification = function (offset) {
       return {
-        "margin-top": offset*4.5 + 'em',
+        "margin-top": $scope.notifications.task.isShown ? (offset + 1) * 4.5 + 'em' : offset * 4.5 + 'em',
       };
     };
 
-/*
-    $scope.addNotification({
-      type: 'task',
-      title: 'Event',
-      message: 'Expand-template /etc/hosts',
-      status: 'warning',
-      action: 'check',
-      progress: 76,
-      url: 'http://www.patternfly.org'
-    });
-    $scope.addNotification({
-      type: 'action',
-      title: 'Service',
-      message: 'sshd is stopped',
-      status: 'danger',
-      action: 'Restart',
-      url: 'http://www.patternfly.org'
-    });
-*/
+
+    /*  $scope.notifications.task.show();
+     $scope.addNotification({
+       type: 'action',
+       title: 'Service',
+       message: 'sshd is stopped',
+       status: 'danger',
+       action: 'Restart',
+       url: 'http://www.patternfly.org'
+     });
+     $scope.addNotification({
+       type: 'info',
+       title: 'Service',
+       message: 'sshd is stopped',
+       status: 'success',
+     }); */
+
     // events listeners
     $scope.$on('$routeChangeSuccess', function (next, current) {
       var name = $route.routes[$location.path()];

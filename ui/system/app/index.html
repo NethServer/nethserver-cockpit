@@ -34,18 +34,25 @@
 </head>
 
 <body ng-app="systemAngularApp" ng-controller="InitCtrl" ng-csp>
-  <div class="toast-pf alert alert-{{n.status}} alert-dismissable toast-pf-top-right" ng-repeat="n in notifications"
-    ng-style="offsetNotification($index)">
+
+  <div ng-if="notifications.task.isShown" class="toast-pf alert alert-warning alert-dismissable toast-pf-top-right">
+    <div class="pull-right toast-pf-action task-adjust">
+      <div class="progress progress-xs progress-label-left">
+        <div class="progress-bar" role="progressbar" aria-valuenow="{{notifications.task.progress}}" aria-valuemin="0" aria-valuemax="100"
+          ng-style="progressBarWidth(notifications.task.progress)">
+          <span>{{notifications.task.progress}}%</span>
+        </div>
+      </div>
+    </div>
+    <span class="pficon pficon-warning-triangle-o"></span> <strong>{{notifications.task.title}}</strong>. {{notifications.task.message}}
+  </div>
+
+  <div class="toast-pf alert alert-{{n.status}} alert-dismissable toast-pf-top-right" ng-repeat="n in notifications.list" ng-style="offsetNotification($index)">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="removeNotification($index)">
       <span class="pficon pficon-close"></span>
     </button>
     <div class="pull-right toast-pf-action {{n.type}}-adjust">
       <a ng-if="n.type == 'action'" href="{{n.url}}">{{n.action}}</a>
-      <div ng-if="n.type == 'task'" class="progress progress-xs progress-label-left">
-        <div class="progress-bar" role="progressbar" aria-valuenow="{{n.progress}}" aria-valuemin="0" aria-valuemax="100" ng-style="progressBarWidth(n.progress)">
-          <span>{{n.progress}}%</span>
-        </div>
-      </div>
     </div>
     <span class="pficon pficon-{{iconMap[n.status]}}"></span> <strong>{{n.title}}</strong>. {{n.message}}
   </div>
@@ -55,8 +62,8 @@
 
   <!-- Add your site or application content here -->
   <div class="header">
-    <a href="#!{{c.url}}" ng-repeat="c in crumbs" class="crumb">{{c.name | translate}}
-      <span class="fa fa-angle-right gray" ng-if="crumbs.length > 1 && !$last"></span>
+    <a href="#!{{c.url}}" ng-repeat="c in crumbs" ng-if="crumbs.length > 1" class="crumb">{{c.name | translate}}
+      <span class="fa fa-angle-double-right gray" ng-if="crumbs.length > 1 && !$last"></span>
     </a>
 
   </div>
@@ -66,7 +73,6 @@
   </div>
 
   <div class="footer">
-    <span ng-bind="'Running tasks:' | translate"></span><a class="footer-span" ng-bind="stats.tasks.length" href=""></a>
     <span ng-bind="'Updates available:' | translate"></span><a class="footer-span" ng-bind="stats.updates.length" href=""></a>
     <span ng-bind="'Log errors:' | translate"></span><a class="footer-span" ng-bind="stats.errors.length" href=""></a>
   </div>
