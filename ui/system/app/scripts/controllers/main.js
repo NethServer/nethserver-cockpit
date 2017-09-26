@@ -17,6 +17,7 @@ angular.module('systemAngularApp')
     // controller objects
     $scope.objects = {
       allRoutes: [],
+      blacklistRoutes: ['/disk-usage'],
       systimeTypes: {
         'manually': 'Manually',
         'ntp': 'Using NTP server',
@@ -42,13 +43,13 @@ angular.module('systemAngularApp')
       console.error("couldn't read dmi info: " + err);
     });
 
-    // -- Machine ID --
-    nethserver.system.summary.getMachineId().then(function (info) {
-      $scope.localSystem.summary.machineId = info;
+    // -- kernel release --
+    nethserver.system.summary.getKernelRelease().then(function (kernel) {
+      $scope.localSystem.summary.kernelRelease = kernel;
 
       $scope.$apply();
     }, function (err) {
-      console.error("Error reading machine id", err);
+      console.error("Error reading kernel release", err);
     });
 
     // -- Operating system --
@@ -126,6 +127,18 @@ angular.module('systemAngularApp')
       console.error("couldn't read ntp server: " + err);
     });
 
+    // -- Company info --
+    nethserver.system.organization.getInfo().then(function (organization) {
+      $scope.localSystem.organization = {};
+
+      $scope.localSystem.organization.company = 'ciaone srl';
+
+      $scope.$apply();
+    }, function (err) {
+      console.error("couldn't read organization info: " + err);
+    });
+
+
     // init graphics method
     $scope.initGraphics = function () {
       $('#date-picker').datepicker({
@@ -150,7 +163,7 @@ angular.module('systemAngularApp')
 
     $scope.initRoutes = function () {
       for (var i in $route.routes) {
-        if (i !== 'null' && i.match(/.+[^/]$/)) {
+        if (i !== 'null' && $scope.objects.blacklistRoutes.indexOf(i) == -1 && i.match(/.+[^/]$/)) {
           $scope.objects.allRoutes.push({
             id: i,
             value: $route.routes[i]
@@ -162,6 +175,7 @@ angular.module('systemAngularApp')
 
     $scope.openChangeHostname = function () {
       $scope.localSystem.summary.newHostname = $scope.localSystem.summary.hostname;
+      $('#hostnameChangeModal').modal('show');
     };
     $scope.changeHostname = function (hostname) {
       $('#hostnameChangeModal').modal('hide');
@@ -216,6 +230,7 @@ angular.module('systemAngularApp')
       $scope.localSystem.summary.newTimeMode = $scope.localSystem.summary.timeMode;
       $scope.localSystem.summary.newDate = $scope.localSystem.summary.date;
       $scope.localSystem.summary.newTime = $scope.localSystem.summary.time;
+      $('#systimeChangeModal').modal('show');
     };
     $scope.changeSystime = function (value) {
       $scope.localSystem.summary.newTimeMode = value;
@@ -230,6 +245,20 @@ angular.module('systemAngularApp')
     };
     $scope.resetDateTime = function () {
       $scope.localSystem.summary.timezone = $scope.localSystem.summary.oldTimezone;
+    };
+
+    $scope.openChangeCompany = function () {
+      $('#companyChangeModal').modal('show');
+      $scope.localSystem.newOrganization = angular.copy($scope.localSystem.organization);
+    };
+    $scope.changeCompany = function (organization) {
+      nethserver.system.organization.saveInfo(organization).then(function () {
+        $scope.localSystem.organization = organization;
+        $('#companyChangeModal').modal('hide');
+      }, function (err) {
+        console.error(err);
+
+      });
     };
 
     $scope.powerActions = function (action) {

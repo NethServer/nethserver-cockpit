@@ -44,25 +44,25 @@
          * @return {Promise}
          */
         setHostname: function (hostname, runEvent) {
-            if(runEvent === undefined) {
+            if (runEvent === undefined) {
                 runEvent = true;
             }
-            return new Promise(function(fulfill, reject){
+            return new Promise(function (fulfill, reject) {
                 var client = cockpit.dbus('org.freedesktop.hostname1', {
                     'superuser': 'require'
                 });
-                client.wait(function(){
+                client.wait(function () {
                     client.call('/org/freedesktop/hostname1', 'org.freedesktop.hostname1',
-                                'SetStaticHostname', [hostname, false]).
-                    done(function(){
-                        if(runEvent === true) {
+                        'SetStaticHostname', [hostname, false]).
+                    done(function () {
+                        if (runEvent === true) {
                             nethserver.signalEvent('hostname-modify').then(fulfill, reject);
                         } else {
                             fulfill();
                         }
                     }).
                     fail(reject).
-                    always(function(){
+                    always(function () {
                         client.close();
                     });
                 });
@@ -92,6 +92,10 @@
             return fh.read().always(function () {
                 fh.close();
             });
+        },
+
+        getKernelRelease: function () {
+            return cockpit.spawn(["/usr/bin/uname", "-r"]);
         },
 
         getOS: function () {

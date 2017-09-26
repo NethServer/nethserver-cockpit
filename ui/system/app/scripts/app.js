@@ -13,7 +13,8 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTable'
+    'ngTable',
+    'ngPasswordMeter'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -65,14 +66,6 @@ angular
         description: 'Network settings',
         icon: 'pficon pficon-network',
       }) */
-      .when('/organization', {
-        templateUrl: 'views/organization.html',
-        controller: 'OrganizationCtrl',
-        controllerAs: 'organization',
-        name: 'Organization',
-        description: 'Manage your organization information',
-        icon: 'fa fa-building',
-      })
       .when('/certificates', {
         templateUrl: 'views/certificates.html',
         controller: 'CertificatesCtrl',

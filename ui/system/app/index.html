@@ -18,12 +18,14 @@
   <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.css" />
   <link rel="stylesheet" href="bower_components/datatables-colvis/css/dataTables.colVis.css" />
   <link rel="stylesheet" href="bower_components/google-code-prettify/bin/prettify.min.css" />
-  <link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+  <link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css"
+  />
   <link rel="stylesheet" href="bower_components/patternfly-bootstrap-combobox/css/bootstrap-combobox.css" />
   <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly.css" />
   <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly-additions.css" />
   <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.css" />
   <link rel="stylesheet" href="bower_components/ng-table/dist/ng-table.min.css" />
+  <link rel="stylesheet" href="bower_components/ng-password-meter/dist/ng-password-meter.css" />
   <!-- endbower -->
   <!-- endbuild -->
   <link href="../base1/patternfly.css" rel="stylesheet">
@@ -62,8 +64,8 @@
 
   <!-- Add your site or application content here -->
   <div class="header">
-    <a href="#!{{c.url}}" ng-repeat="c in crumbs" ng-if="crumbs.length > 1" class="crumb">{{c.name | translate}}
-      <span class="fa fa-angle-double-right gray" ng-if="crumbs.length > 1 && !$last"></span>
+    <a href="#!{{c.url}}" ng-repeat="c in crumbs" ng-if="crumbs.length > 1" class="{{$last ? 'crumb crumb-none' : 'crumb'}}">{{c.name | translate}}
+      <span class="fa fa-angle-double-right gray crumb-space" ng-if="crumbs.length > 1 && !$last"></span>
     </a>
 
   </div>
@@ -107,6 +109,7 @@
   <script src="bower_components/patternfly/dist/js/patternfly.js"></script>
   <script src="bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
   <script src="bower_components/ng-table/dist/ng-table.min.js"></script>
+  <script src="bower_components/ng-password-meter/dist/ng-password-meter.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
 

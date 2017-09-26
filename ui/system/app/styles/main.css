@@ -19,11 +19,6 @@ select {
   border-radius: 1px;
 }
 
-a:focus,
-a:hover {
-  text-decoration: none;
-}
-
 textarea {
   resize: vertical;
 }
@@ -64,13 +59,26 @@ input[type="file"] {
 
 .crumb {
   line-height: 1.1;
-  color: inherit;
   margin-top: 20px;
   margin-bottom: 10px;
-  font-size: 22px;
-  font-weight: 300;
+  font-size: 12px;
   display: inline-block;
-  margin-right: 6px;
+  margin-right: 9px;
+}
+
+.crumb-none {
+  color: inherit;
+  cursor: text;
+}
+
+.crumb-space {
+  margin-left: 7px;
+}
+
+.crumb-none:focus,
+.crumb-none:hover {
+  color: inherit;
+  text-decoration: none;
 }
 
 .search {
@@ -219,4 +227,16 @@ input[type="file"] {
 .strongless {
   font-size: 16px;
   margin-right: 5px;
+}
+
+.pass-meter {
+  padding-top: 8px;
+}
+
+.pass-meter .pass-meter-message {
+  display: none;
+}
+
+.pass-meter.hidden {
+  display: block !important;
 }

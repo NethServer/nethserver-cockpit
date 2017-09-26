@@ -11,9 +11,9 @@
           </div>
         </div>
         <div class="form-group compact">
-          <label class="col-sm-2 control-label">{{'Machine ID' | translate}}</label>
+          <label class="col-sm-2 control-label">{{'Kernel Release' | translate}}</label>
           <div class="col-sm-10 no-input">
-            <p>{{localSystem.summary.machineId}}</p>
+            <p>{{localSystem.summary.kernelRelease}}</p>
           </div>
         </div>
         <div class="form-group compact">
@@ -25,13 +25,19 @@
         <div class="form-group compact">
           <label class="col-sm-2 control-label">{{'Hostname' | translate}}</label>
           <div class="col-sm-10 no-input">
-            <p><a ng-click="openChangeHostname()" data-toggle="modal" data-target="#hostnameChangeModal" href="">{{localSystem.summary.hostname}}</a></p>
+            <p><a ng-click="openChangeHostname()" href="">{{localSystem.summary.hostname}}</a></p>
           </div>
         </div>
         <div class="form-group compact">
           <label class="col-sm-2 control-label">{{'System Time' | translate}}</label>
           <div class="col-sm-10 no-input">
-            <p><a ng-click="openChangeSystime()" data-toggle="modal" data-target="#systimeChangeModal" href="">{{localSystem.summary.date}} {{localSystem.summary.time}}</a></p>
+            <p><a ng-click="openChangeSystime()" href="">{{localSystem.summary.date}} {{localSystem.summary.time}}</a></p>
+          </div>
+        </div>
+        <div class="form-group compact">
+          <label class="col-sm-2 control-label">{{'Company' | translate}}</label>
+          <div class="col-sm-10 no-input">
+            <p><a ng-click="openChangeCompany()" href="">{{localSystem.organization.company}}</a></p>
           </div>
         </div>
         <div class="form-group compact">
@@ -80,6 +86,17 @@
           </h2>
           <div class="card-pf-body">
             <div>{{'Mange LVM, RAID and partitions' | translate}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div ng-click="goTo('/disk-usage')" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 route-card">
+        <div class="card-pf card-pf-accented">
+          <h2 class="card-pf-title">
+            <span class="pficon pficon-volume card-icon-def"></span> {{'Disk usage' | translate}}
+          </h2>
+          <div class="card-pf-body">
+            <div>{{'Check usage of your disk' | translate}}</div>
           </div>
         </div>
       </div>
@@ -209,6 +226,56 @@
           <button class="btn btn-default" type="button" data-dismiss="modal" ng-click="resetDateTime()">{{'Cancel' | translate}}</button>
           <button class="btn btn-primary" type="submit">{{'Save' | translate}}</button>
         </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="companyChangeModal" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{'Change company info' | translate}}</h4>
+      </div>
+      <form class="form-horizontal" ng-submit="changeCompany(localSystem.newOrganization)">
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Company' | translate}}</label>
+            <div class="col-sm-9">
+              <input required type="text" ng-model="localSystem.newOrganization.company" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'City' | translate}}</label>
+            <div class="col-sm-9">
+              <input type="text" ng-model="localSystem.newOrganization.city" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Department' | translate}}</label>
+            <div class="col-sm-9">
+              <input type="text" ng-model="localSystem.newOrganization.department" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Phone' | translate}}</label>
+            <div class="col-sm-9">
+              <input type="text" ng-model="localSystem.newOrganization.phone" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Address' | translate}}</label>
+            <div class="col-sm-9">
+              <input type="text" ng-model="localSystem.newOrganization.address" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer submit">
+          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
+          <button class="btn btn-primary" value="submit" type="submit">{{'Save' | translate}}</button>
+        </div>
+
       </form>
     </div>
   </div>

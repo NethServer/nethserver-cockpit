@@ -19,7 +19,9 @@ angular.module('systemAngularApp')
       },
       newUser: {
         selectedGroup: null,
-        groups: []
+        groups: [],
+        password: '',
+        passwordStrength: 0
       },
       newGroup: {
         selectedUser: null,
@@ -94,14 +96,16 @@ angular.module('systemAngularApp')
     $scope.generatePassword = function () {
       $scope.objects.newUser.isPassGenerated = true;
       // nethserver.Syste.Users.genPass();
-      $scope.objects.newUser.password = 'asdf5asrfa';
-      $scope.objects.newUser.confirmPassword = 'asdf5asrfa';
+      $scope.objects.newUser.password = 'Nethesis,1234';
+      $scope.objects.newUser.confirmPassword = 'Nethesis,1234';
     };
 
     $scope.openCreateUser = function () {
       $scope.objects.newUser = {
         selectedGroup: null,
-        groups: []
+        groups: [],
+        password: '',
+        passwordStrength: 0
       };
       $('#createUserModal').modal('show');
     };

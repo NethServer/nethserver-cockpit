@@ -510,6 +510,12 @@
                 class="form-control">
             </div>
           </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Strength' | translate}}</label>
+            <div class="col-sm-7">
+              <ng-password-meter strength="objects.newUser.passwordStrength" password="objects.newUser.password"></ng-password-meter>
+            </div>
+          </div>
           <p ng-if="!objects.newUser.isPassEdit">{{'Advanced options' | translate}}</p>
           <div ng-if="!objects.newUser.isPassEdit" class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Password expiration' | translate}}</label>
@@ -526,7 +532,7 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
-          <button class="btn btn-primary" type="submit">{{objects.newUser.isEdit ? objects.newUser.isPassEdit ? 'Change' : 'Edit' : 'Create' | translate}}</button>
+          <button ng-disabled="objects.newUser.passwordStrength <= 75 || objects.newUser.password !== objects.newUser.confirmPassword" class="btn btn-primary" type="submit">{{objects.newUser.isEdit ? objects.newUser.isPassEdit ? 'Change' : 'Edit' : 'Create' | translate}}</button>
         </div>
 
       </form>
