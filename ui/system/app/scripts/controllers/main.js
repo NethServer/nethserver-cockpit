@@ -129,10 +129,7 @@ angular.module('systemAngularApp')
 
     // -- Company info --
     nethserver.system.organization.getInfo().then(function (organization) {
-      $scope.localSystem.organization = {};
-
-      $scope.localSystem.organization.company = 'ciaone srl';
-
+      $scope.localSystem.organization = organization;
       $scope.$apply();
     }, function (err) {
       console.error("couldn't read organization info: " + err);
