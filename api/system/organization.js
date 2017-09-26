@@ -21,10 +21,27 @@
 (function ($) {
     nethserver.system.organization = {
         getInfo: function () {
-            return cockpit.spawn(['date', '+%F %H:%M']);
+            var db = nethserver.getDatabase('configuration');
+            return db.open().then(function() {
+                return {
+                    'City': db.getProp('OrganizationContact', 'City'),
+                    'Company': db.getProp('OrganizationContact', 'Company'),
+                    'Department': db.getProp('OrganizationContact', 'Department'),
+                    'PhoneNumber': db.getProp('OrganizationContact', 'PhoneNumber'),
+                    'Street': db.getProp('OrganizationContact', 'Street'),
+                };
+            });
         },
         saveInfo: function (organization) {
-            return cockpit.spawn(['date', '+%F %H:%M']);
+            var db = nethserver.getDatabase('configuration');
+            return db.open().then(function() {
+                db.setProp('OrganizationContact', 'City', organization.City);
+                db.setProp('OrganizationContact', 'Company', organization.Company);
+                db.setProp('OrganizationContact', 'Department', organization.Department);
+                db.setProp('OrganizationContact', 'PhoneNumber', organization.PhoneNumber);
+                db.setProp('OrganizationContact', 'Street', organization.Street);
+                return db.save();
+            });
         },
     };
 })(jQuery);

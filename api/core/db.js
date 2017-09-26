@@ -362,6 +362,11 @@ Nsdb.prototype = {
             syntax: nsdbSyntax,
             superuser: 'try'
         });
+
+        function closeFile() {
+            fh.close();
+        }
+
         var p = Promise.resolve(fh.read().done(function(data, tag) {
                 if(data === null && tag === '-') {
                     // non-existing file
@@ -370,7 +375,7 @@ Nsdb.prototype = {
                 self.data = data;
                 self.tag = tag;
             })).
-            then(fh.close, fh.close);
+            then(closeFile, closeFile);
 
         return p;
     },
