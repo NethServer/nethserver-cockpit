@@ -66,13 +66,15 @@ describe('nethserver.Syntax.grepToObject', function() {
 });
 
 describe('nethserver.signalEvent()...', function() {
+    //nethserver.eventMonitor.addEventListener('nsevent.succeeded', console.log);
+    //nethserver.eventMonitor.addEventListener('nsevent.failed', console.log);
     it('succeedes', function() {
         return nethserver.signalEvent('test-success');
     });
     it('fails', function(){
         return nethserver.signalEvent('test-failure').then(
             function(){
-                return Promise.reject('must fail');
+                return Promise.reject(new Error('must fail'));
             },
             function(ex){
                 return Promise.resolve(ex);
@@ -84,7 +86,7 @@ describe('nethserver.signalEvent()...', function() {
     it('catches non-existing event', function(){
         return nethserver.signalEvent('test-nonexisting-event').then(
             function(){
-                return Promise.reject('must fail');
+                return Promise.reject(new Error('must fail'));
             },
             function(err){
                 return Promise.resolve(err);

@@ -20,8 +20,94 @@
 
 (function(ns, $){
 
-/*
- * Exec a signal event action:
+var NSEVENT_PREFIX = 'nsevent-';
+var NSEVENT_MATCH = /^nsevent-/;
+
+function EventMonitor() {
+    var self = this;
+    self.handlers = [];
+    self.units = {};
+    self.manager = cockpit.dbus('org.freedesktop.systemd1').
+        proxy('org.freedesktop.systemd1.Manager', '/org/freedesktop/systemd1');
+
+    function dispatchUnitEvent(eventType, unit, uName) {
+        if( ! unit.valid) {
+            console.log(unit.path + ' is still not ready');
+        } else if(eventType == 'removed' && unit.Result == 'success') {
+            self.dispatchEvent('nsevent.succeeded', {
+                'unitName': uName,
+                'exitCode': unit.ExecMainCode,
+                'mainPid': unit.ExecMainPID,
+            });
+        } else if(unit.Result == 'exit-code') {
+            self.dispatchEvent('nsevent.failed', {
+                'unitName': uName,
+                'exitCode': unit.ExecMainCode,
+                'mainPid': unit.ExecMainPID,
+            });
+        }
+        return unit;
+    }
+
+    function addUnitWatch(uPath, uName) {
+        var unit = self.manager.client.proxy('org.freedesktop.systemd1.Service', uPath);
+        unit.addEventListener('changed', function(ev, properties) {
+            dispatchUnitEvent('changed', unit, uName);
+        });
+        return Promise.resolve(unit.wait().then(function() {
+            return unit;
+        }));
+    }
+
+    function updateUnitState(eventType, uPath, uName) {
+        if( ! (uPath in self.units)) {
+            self.units[uPath] = addUnitWatch(uPath, uName);
+        }
+
+        self.units[uPath].then(function(unit){
+            dispatchUnitEvent(eventType, unit, uName);
+        });
+    }
+
+    // Bind event listeners: unit creation and removal
+    this.manager.addEventListener('UnitNew', function(ev, uName, uPath) {
+        if(uName.match(NSEVENT_MATCH) !== null) {
+            updateUnitState('created', uPath, uName);
+        }
+    });
+    this.manager.addEventListener('UnitRemoved', function(ev, uName, uPath) {
+        if(uName.match(NSEVENT_MATCH) !== null) {
+            updateUnitState('removed', uPath, uName);
+        }
+    });
+
+}
+
+EventMonitor.prototype.wait = function() {
+    var self = this;
+    return Promise.resolve(self.manager.wait().then(function(){
+        return self;
+    }));
+};
+
+EventMonitor.prototype.getNextEventName = function() {
+    return Promise.resolve(cockpit.spawn(['uuidgen'], {
+            superuser: 'require',
+            err: 'message'
+        })).then(function(data) {
+            return NSEVENT_PREFIX + data.trim();
+        });
+};
+
+/**
+ * The EventMonitor object implements an EventTarget-like interface
+ */
+ns.eventMonitor = new EventMonitor();
+cockpit.event_target(ns.eventMonitor);
+
+/**
+ * Calls signal-event:
+ * @return {Promise}
  */
 ns.signalEvent = function (nsEvent, args) {
     if( ! Array.isArray(args)) {
@@ -29,124 +115,41 @@ ns.signalEvent = function (nsEvent, args) {
     } else {
         args = args.slice();
     }
-    args.unshift('systemd-run', '/sbin/e-smith/signal-event', nsEvent);
 
-    var unitName = 'unknown';
-    var client = cockpit.dbus('org.freedesktop.systemd1');
-    var manager = client.proxy('org.freedesktop.systemd1.Manager', '/org/freedesktop/systemd1');
+    var unitName;
+    var handlers;
 
-    var progressCallback = function(taskProgress) {};
+    function handlersCleanup() {
+        ns.eventMonitor.removeEventListener('nsevent.succeeded', handlers[0]);
+        ns.eventMonitor.removeEventListener('nsevent.failed', handlers[1]);
+    }
 
-    var taskProgress = {
-        'event': nsEvent,
-        'args': args.slice(3),
-        'exitCode': null,
-        'unitName': null,
-        'message': null,
-        'progress': null,
-        'status': null,
-    };
-
-    var prom = new Promise(function(fulfill, reject){
-        manager.wait(initHandlers).done(spawnUnit);
-
-        function initHandlers() {
-            // Generate a unique event identifier:
-            unitName = 'nsevent-' + parseInt(manager.NInstalledJobs) + '.service';
-
-            manager.addEventListener('UnitNew', function(ev, uName, uPath) {
-                if(uName === unitName) {
-                    registerUnitChangeHandler();
-                    taskProgress = $.extend({}, taskProgress, {
-                        progress: 1.0,
-                        message: '',
-                        status: 'started',
-                        exitCode: 0
+    return new Promise(function(fulfill, reject) {
+        handlers = [function(ev){
+            fulfill(ev);
+        }, function(ev) {
+            reject(ev.detail.unitName);
+        }];
+        ns.eventMonitor.addEventListener('nsevent.succeeded', handlers[0]);
+        ns.eventMonitor.addEventListener('nsevent.failed', handlers[1]);
+        ns.eventMonitor.getNextEventName().then(function(unitName) {
+            ns.eventMonitor.wait().then(function(){
+                args.unshift('systemd-run', '--unit', unitName, '/sbin/e-smith/signal-event', nsEvent);
+                cockpit.spawn(args, {
+                        superuser: 'require',
+                        err: 'message'
+                    }).fail(function(ex, data){
+                        reject(ex.message);
                     });
-                    progressCallback(taskProgress);
-                }
             });
-
-            // Successful service unit is removed automatically. Here we catch
-            // the UnitRemoved event, in case it completes before properties event handler
-            // is ready to receive events.
-            manager.addEventListener('UnitRemoved', function(ev, uName, uPath) {
-                if(uName === unitName) {
-                    taskProgress = $.extend({}, taskProgress, {
-                        progress: 1.0,
-                        message: '',
-                        status: 'success',
-                        exitCode: 0
-                    });
-                    fulfill();
-                }
-            });
-
-        }
-
-        function spawnUnit() {
-            taskProgress = $.extend({}, taskProgress, {
-                unitName: unitName,
-                progress: 0.0,
-                message: '',
-                status: 'starting'
-            });
-            progressCallback(taskProgress);
-
-            args.splice(1, 0, '--unit', unitName);
-
-            var process = cockpit.spawn(args, {
-                superuser: 'require',
-                err: 'message'
-            }).
-                fail(function(ex){
-                    reject(ex.message);
-                }).
-                always(function(){
-                    process.close();
-                });
-        }
-
-        function registerUnitChangeHandler() {
-
-            // A failed service unit remains on filesystem: we can query its
-            // properties at any time.
-            // A running unit can send properties change events, too.
-            manager.GetUnit(unitName).
-                done(function(unitPath){
-                    var serviceUnit = client.proxy('org.freedesktop.systemd1.Service', unitPath);
-                    serviceUnit.wait(function() {
-                        serviceUnit.addEventListener('changed', function(ev, properties) {
-                            checkFailedUnit(properties);
-                        });
-                        checkFailedUnit(serviceUnit);
-                    });
-                }).
-                fail(function(ex){
-                    throw ex;
-                });
-        }
-
-        function checkFailedUnit (properties) {
-            if(properties.Result === 'exit-code') {
-                taskProgress = $.extend({}, taskProgress, {
-                    progress: 1.0,
-                    message: '',
-                    status: 'failed',
-                    exitCode: properties.ExecMainStatus
-                });
-                progressCallback(taskProgress);
-                reject(new Error(unitName + ' exit with non-zero code'));
-            } else {
-                // Still waiting, ignore...
-            }
-        }
-
-    });
-
-    return prom.then(function(){
-            client.close();
         });
+    }).then(function(ev) {
+        handlersCleanup();
+        return ev;
+    }, function(ev) {
+        handlersCleanup();
+        throw new Error(ev);
+    });
 };
 
 })(nethserver, jQuery);
