@@ -17,7 +17,7 @@ angular.module('systemAngularApp')
     // controller objects
     $scope.objects = {
       allRoutes: [],
-      blacklistRoutes: ['/disk-usage'],
+      blacklistRoutes: ['/disk-usage', '/logs', '/storage'],
       systimeTypes: {
         'manually': 'Manually',
         'ntp': 'Using NTP server',
@@ -248,10 +248,25 @@ angular.module('systemAngularApp')
     $scope.changeCompany = function (organization) {
       nethserver.system.organization.saveInfo(organization).then(function () {
         $scope.localSystem.organization = organization;
+
         $('#companyChangeModal').modal('hide');
+
+        $scope.addNotification({
+          type: 'info',
+          title: 'Saved',
+          message: 'Company info saved with success',
+          status: 'success',
+        });
+
+        $scope.$apply();
       }, function (err) {
         console.error(err);
-
+        $scope.addNotification({
+          type: 'info',
+          title: 'Error',
+          message: err,
+          status: 'danger',
+        });
       });
     };
 

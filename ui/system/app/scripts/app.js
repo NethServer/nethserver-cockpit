@@ -74,6 +74,18 @@ angular
         description: 'Manage your server certificates',
         icon: 'fa fa-key',
       })
+      .when('/logs', {
+        templateUrl: 'views/logs.html',
+        controller: 'LogsCtrl',
+        controllerAs: 'logs',
+        name: 'Logs'
+      })
+      .when('/storage', {
+        templateUrl: 'views/storage.html',
+        controller: 'StorageCtrl',
+        controllerAs: 'storage',
+        name: 'Storage'
+      })
       .otherwise({
         redirectTo: '/'
       });

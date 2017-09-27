@@ -47,6 +47,10 @@ angular.module('systemAngularApp')
       errors: []
     };
 
+    $scope.initObjects = {
+      isFake: false
+    };
+
     $scope.crumbs = [];
 
     $scope.iconMap = {
@@ -86,7 +90,7 @@ angular.module('systemAngularApp')
     };
 
 
-     $scope.notifications.task.show();
+    /*  $scope.notifications.task.show();
      $scope.addNotification({
        type: 'action',
        title: 'Service',
@@ -100,7 +104,7 @@ angular.module('systemAngularApp')
        title: 'Service',
        message: 'sshd is stopped',
        status: 'success',
-     });
+     }); */
 
     // events listeners
     $scope.$on('$routeChangeSuccess', function (next, current) {

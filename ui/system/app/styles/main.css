@@ -57,6 +57,31 @@ input[type="file"] {
   border-top: 2px solid #39a5dc;
 }
 
+iframe>.breadcrumb {
+  display: none;
+}
+
+.iframe-embedded {
+  position: absolute;
+  width: 98%;
+  height: 95%;
+  border: none;
+  padding-bottom: 40px;
+  z-index: 1;
+}
+
+.fake-modal-backdrop {
+  position: fixed;
+  z-index: 1040;
+  background-color: #000;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: .5;
+  z-index: 0;
+}
+
 .crumb {
   line-height: 1.1;
   margin-top: 20px;
