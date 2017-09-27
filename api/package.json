@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Grunt task runner to concat and minify all nethserver libs",
   "devDependencies": {
+    "cryptojs": "^2.5.3",
     "grunt": "^1.0.1",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-concat": "^1.0.1",

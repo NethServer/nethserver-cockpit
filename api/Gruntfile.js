@@ -4,7 +4,7 @@ module.exports = function (grunt) {
     clean: ['dist/**'],
     concat: {
       core: {
-        src: ['node_modules/promise-polyfill/promise.min.js', 'core/*.js'],
+        src: ['node_modules/cryptojs/lib/Crypto.js', 'node_modules/cryptojs/lib/MD5.js', 'node_modules/promise-polyfill/promise.min.js', 'core/*.js'],
         dest: 'dist/core.js'
       },
       system: {

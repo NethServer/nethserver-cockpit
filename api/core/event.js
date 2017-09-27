@@ -134,7 +134,11 @@ ns.signalEvent = function (nsEvent, args) {
         ns.eventMonitor.addEventListener('nsevent.failed', handlers[1]);
         ns.eventMonitor.getNextEventName().then(function(unitName) {
             ns.eventMonitor.wait().then(function(){
-                args.unshift('systemd-run', '--unit', unitName, '/sbin/e-smith/signal-event', nsEvent);
+                var socketPath = '/var/run/ptrack/%h.sock'.replace('%h', Crypto.MD5(unitName).substr(0, 16));
+                var dumpPath = "/var/spool/ptrack/%h.dump".replace('%h', Crypto.MD5(socketPath).substr(0, 16));
+                args.unshift('/usr/bin/systemd-run', '--uid', 'srvmgr', '--gid', 'srvmgr', '--unit', unitName,
+                    '/usr/libexec/nethserver/ptrack', '-s', socketPath, '-d', dumpPath, '--',
+                    '/usr/bin/sudo', '/sbin/e-smith/signal-event', nsEvent);
                 cockpit.spawn(args, {
                         superuser: 'require',
                         err: 'message'
