@@ -104,6 +104,14 @@ Install RPM
      wget https://copr.fedorainfracloud.org/coprs/g/cockpit/cockpit-preview/repo/epel-7/group_cockpit-cockpit-preview-epel-7.repo -O /etc/yum.repos.d/cockpit.repo
      yum install nethserver-cockpit*rpm
 
+Creating new cockpit-module
+===========================
+
+Before starting the development of new module:
+
+- read upstream documentation: http://cockpit-project.org/guide/latest/
+- scaffold your module using ``generator-cockpit``: https://github.com/edospadoni/generator-cockpit
+
 Code style guideline
 ====================
 
