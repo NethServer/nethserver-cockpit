@@ -41,6 +41,8 @@
                 db.setProp('OrganizationContact', 'PhoneNumber', organization.PhoneNumber);
                 db.setProp('OrganizationContact', 'Street', organization.Street);
                 return db.save();
+            }).then(function(){
+              return nethserver.signalEvent('organization-save');
             });
         },
     };

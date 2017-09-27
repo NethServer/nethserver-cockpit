@@ -106,34 +106,56 @@
         },
 
         getNTPServer: function () {
-            return cockpit.spawn(['date', '+%F %H:%M']);
+            var db = nethserver.getDatabase('configuration');
+            return db.open().then(function() {
+                return db.getProp('chronyd', 'NTPServer');
+            });
         },
 
+        /**
+         * Tell how the system clock is synchronized
+         * @return {Promise.<string>} "ntp" or "manual"
+         */
         getSystemTimeMode: function () {
-            return cockpit.spawn(['date', '+%F %H:%M']);
+            var db = nethserver.getDatabase('configuration');
+            return db.open().then(function() {
+                if(db.getProp('chronyd', 'status') == 'enabled') {
+                    return 'ntp';
+                }
+                return 'manual';
+            });
         },
 
+        /**
+         * Get the system time zone
+         * @return {Promise.<string>} the current system time zone
+         */
         getSystemTimeZone: function () {
-            return cockpit.spawn(['date', '+%F %H:%M']);
+            var timedated = cockpit.dbus("org.freedesktop.timedate1").proxy("org.freedesktop.timedate1", "/org/freedesktop/timedate1");
+            return Promise.resolve(timedated.wait()).then(function(){
+                var tz = String(timedated.Timezone);
+                timedated.client.close();
+                return tz;
+            });
         },
 
+        /**
+         * Tell how the system clock is synchronized
+         * @return {Promise.<string>}
+         */
         getTimeZones: function () {
-            return cockpit.spawn(["/usr/bin/timedatectl", "list-timezones"]);
+            return Promise.resolve(cockpit.spawn(["/usr/bin/timedatectl", "list-timezones"])).then(function(output){
+                return output.split("\n");
+            });
         },
 
         getSystemTime: function () {
-            return cockpit.spawn(['date', '+%F %H:%M']);
+            return Promise.resolve(cockpit.spawn(['date', '+%F %H:%M']));
         },
 
         setSystemTime: function (val) {
-            return $.Deferred(function (dfr) {
-                cockpit.spawn(['date', val]).
-                done(function (out) {
-                    nethserver.signalEvent('nethserver-ntp-save', val).
-                    done(dfr.resolve).
-                    fail(dfr.reject);
-                }).
-                fail(dfr.reject);
+            return Promise.resolve(cockpit.spawn(['date', val])).then(function(){
+                return nethserver.signalEvent('nethserver-ntp-save', val);
             });
         }
     };

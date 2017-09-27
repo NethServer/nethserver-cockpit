@@ -85,20 +85,17 @@ angular.module('systemAngularApp')
     nethserver.system.summary.getSystemTimeZone().then(function (timezone) {
       $scope.localSystem.summary.timezone = timezone;
 
-      $scope.$apply();
-    }, function (err) {
-      console.error("couldn't read system timezone: " + err);
+      // -- Time zones --
+      return nethserver.system.summary.getTimeZones().then(function (timezones) {
+        $scope.localSystem.summary.timezones = timezones;
+
+        $scope.$apply();
+        $('.combobox').combobox();
+      });
+
     });
 
-    // -- Time zones --
-    nethserver.system.summary.getTimeZones().then(function (timezones) {
-      $scope.localSystem.summary.timezones = timezones;
 
-      $scope.$apply();
-      $('.combobox').combobox();
-    }, function (err) {
-      console.error("couldn't read timezones: " + err);
-    });
 
     // -- Time mode --
     nethserver.system.summary.getSystemTimeMode().then(function (timeMode) {
