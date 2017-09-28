@@ -14,7 +14,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTable',
-    'ngPasswordMeter'
+    'ngPasswordMeter',
+    'ngAnimate'
   ])
   .config(function ($routeProvider) {
     $routeProvider

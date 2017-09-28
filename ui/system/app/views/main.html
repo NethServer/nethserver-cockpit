@@ -166,7 +166,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" translate>{{'Change System time' | translate}}</h4>
+        <h4 class="modal-title">{{'Change System time' | translate}}</h4>
       </div>
       <form class="form-horizontal" ng-submit="saveSystime()">
 
@@ -174,7 +174,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Time Zone' | translate}}</label>
             <div class="col-sm-9">
-              <select required ng-options="t as t for t in localSystem.summary.timezones" ng-model="localSystem.summary.timezone" class="combobox form-control">
+              <select required ng-options="t as t for t in localSystem.summary.timezones" ng-model="localSystem.summary.newTimezone" class="combobox form-control">
               </select>
             </div>
           </div>
@@ -184,18 +184,18 @@
             <div class="col-sm-9">
               <div class="dropdown">
                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                  {{systimeTypes[localSystem.summary.newTimeMode]}}
+                  {{objects.systimeTypes[localSystem.summary.newTimeMode]}}
                   <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                  <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="changeSystime('manually')" href="">{{'Manually' | translate}}</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="changeSystime('manual')" href="">{{'Manual' | translate}}</a></li>
                   <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="changeSystime('ntp')" href="">{{'Using NTP server' | translate}}</a></li>
                 </ul>
               </div>
             </div>
           </div>
 
-          <div ng-show="localSystem.summary.newTimeMode == 'manually'" class="form-group">
+          <div ng-show="localSystem.summary.newTimeMode == 'manual'" class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Date and Time' | translate}}</label>
             <div class="col-sm-6">
               <div id="date-picker" class="input-group date">
@@ -218,7 +218,7 @@
           <div ng-show="localSystem.summary.newTimeMode == 'ntp'" class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">NTP server</label>
             <div class="col-sm-9">
-              <input required type="text" ng-model="localSystem.summary.ntpServer" class="form-control">
+              <input required type="text" ng-model="localSystem.summary.newNtpServer" class="form-control">
             </div>
           </div>
         </div>

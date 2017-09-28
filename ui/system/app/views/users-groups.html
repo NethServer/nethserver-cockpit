@@ -429,8 +429,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">{{objects.toDelete.isGroup ? 'Delete group' : 'Delete user' | translate}} {{objects.toDelete[objects.toDelete.isGroup
-          ? 'name' : 'username']}}</h4>
+        <h4 class="modal-title">{{objects.toDelete.isGroup ? 'Delete group' : 'Delete user' | translate}} {{objects.toDelete.isGroup ? objects.toDelete.name
+          : objects.toDelete.username}}</h4>
       </div>
       <form class="form-horizontal" ng-submit="objects.toDelete.isGroup ? deleteGroup(toDelete) : deleteUser(toDelete)">
 
@@ -453,8 +453,12 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">{{objects.newUser.isEdit ? objects.newUser.isPassEdit ? 'Change password to' +' '+ objects.newUser.username : 'Edit'
-          + ' ' + objects.newUser.username : 'Create a new user' | translate}}</h4>
+        <h4 ng-if="!objects.newUser.isPassEdit" class="modal-title">{{objects.newUser.isEdit ? 'Edit' : 'Create a new user' | translate}}
+          <span>{{objects.newUser.username}}</span>
+        </h4>
+        <h4 ng-if="objects.newUser.isPassEdit" class="modal-title">{{objects.newUser.isPassEdit ? 'Change password to' : 'Create a new user' | translate}}
+          <span>{{objects.newUser.username}}</span>
+        </h4>
       </div>
       <form class="form-horizontal" ng-submit="objects.newUser.isEdit ? objects.newUser.isPassEdit ? changePassword(objects.newUser) : editUser(objects.newUser) : createUser(objects.newUser)">
 
@@ -532,7 +536,8 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
-          <button ng-disabled="objects.newUser.passwordStrength <= 75 || objects.newUser.password !== objects.newUser.confirmPassword" class="btn btn-primary" type="submit">{{objects.newUser.isEdit ? objects.newUser.isPassEdit ? 'Change' : 'Edit' : 'Create' | translate}}</button>
+          <button ng-disabled="objects.newUser.passwordStrength <= 75 || objects.newUser.password !== objects.newUser.confirmPassword"
+            class="btn btn-primary" type="submit">{{objects.newUser.isEdit ? objects.newUser.isPassEdit ? 'Change' : 'Edit' : 'Create' | translate}}</button>
         </div>
 
       </form>
@@ -544,7 +549,9 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">{{objects.newGroup.isEdit ? 'Edit' + ' ' + objects.newGroup.name : 'Create a new group' | translate}}</h4>
+        <h4 class="modal-title">{{objects.newGroup.isEdit ? 'Edit' : 'Create a new group' | translate}}
+          <span ng-show="objects.newGroup.isEdit">{{objects.newGroup.name}}</span>
+        </h4>
       </div>
       <form class="form-horizontal" ng-submit="objects.newGroup.isEdit ? editGroup(objects.newGroup) : createGroup(objects.newGroup)">
 

@@ -19,7 +19,7 @@ angular.module('systemAngularApp')
       allRoutes: [],
       blacklistRoutes: ['/disk-usage', '/logs', '/storage'],
       systimeTypes: {
-        'manually': 'Manually',
+        'manual': 'Manual',
         'ntp': 'Using NTP server',
       }
     };
@@ -84,6 +84,7 @@ angular.module('systemAngularApp')
     // -- System timezone --
     nethserver.system.summary.getSystemTimeZone().then(function (timezone) {
       $scope.localSystem.summary.timezone = timezone;
+      $scope.localSystem.summary.newTimezone = timezone;
 
       // -- Time zones --
       return nethserver.system.summary.getTimeZones().then(function (timezones) {
@@ -94,8 +95,6 @@ angular.module('systemAngularApp')
       });
 
     });
-
-
 
     // -- Time mode --
     nethserver.system.summary.getSystemTimeMode().then(function (timeMode) {
@@ -132,6 +131,157 @@ angular.module('systemAngularApp')
       console.error("couldn't read organization info: " + err);
     });
 
+    $scope.openChangeHostname = function () {
+      $scope.localSystem.summary.newHostname = $scope.localSystem.summary.hostname;
+      $('#hostnameChangeModal').modal('show');
+    };
+    $scope.changeHostname = function (hostname) {
+      $('#hostnameChangeModal').modal('hide');
+
+      nethserver.system.summary.setHostname(hostname).then(function () {
+        $scope.localSystem.summary.hostname = hostname;
+        $scope.notifications.add({
+          type: 'info',
+          title: 'Host name changed',
+          status: 'success',
+        });
+        $scope.$apply();
+      }, function (err) {
+        $scope.notifications.add({
+          type: 'info',
+          title: 'Error',
+          message: 'Event failed',
+          status: 'danger',
+        });
+        $scope.$apply();
+      });
+    };
+
+    $scope.addAlias = function (alias) {
+      $scope.localSystem.summary.aliases.push({
+        name: alias
+      });
+    };
+    $scope.removeAlias = function (aliasIndex) {
+      $scope.localSystem.summary.aliases.splice(aliasIndex, 1);
+    };
+
+    $scope.openChangeSystime = function () {
+      $scope.localSystem.summary.newTimezone = $scope.localSystem.summary.timezone;
+      $scope.localSystem.summary.newTimeMode = $scope.localSystem.summary.timeMode;
+      $scope.localSystem.summary.newDate = $scope.localSystem.summary.date;
+      $scope.localSystem.summary.newTime = $scope.localSystem.summary.time;
+      $scope.localSystem.summary.newNtpServer = $scope.localSystem.summary.ntpServer;
+      $('#systimeChangeModal').modal('show');
+    };
+    $scope.changeSystime = function (value) {
+      $scope.localSystem.summary.newTimeMode = value;
+    };
+    $scope.saveSystime = function () {
+      console.log($scope.localSystem.summary);
+      $('#systimeChangeModal').modal('hide');
+
+      /* nethserver.system.summary.setSystemTimeZone($scope.localSystem.summary.newTimezone).then(function () {
+        $scope.notifications.add({
+          type: 'info',
+          title: 'Saved',
+          message: 'System timezone saved with success',
+          status: 'success',
+        });
+        $scope.$apply();
+      }, function (err) {
+        console.error("couldn't save system time: " + err);
+        $scope.notifications.add({
+          type: 'info',
+          title: 'Error',
+          message: 'System timezone not saved',
+          status: 'danger',
+        });
+        $scope.$apply();
+      }); */
+
+      if ($scope.localSystem.summary.newTimeMode == 'manual') {
+        var timestamp = new Date($scope.localSystem.summary.newDate + ' ' + $scope.localSystem.summary.newTime).getTime();
+        nethserver.system.summary.setSystemTime(timestamp).then(function () {
+          $scope.notifications.add({
+            type: 'info',
+            title: 'Saved',
+            message: 'System time saved with success',
+            status: 'success',
+          });
+          $scope.$apply();
+        }, function (err) {
+          console.error("couldn't save system time: " + err);
+          $scope.notifications.add({
+            type: 'info',
+            title: 'Error',
+            message: 'System time not saved',
+            status: 'danger',
+          });
+          $scope.$apply();
+        });
+      } else {
+        nethserver.system.summary.setNTPServer($scope.localSystem.summary.ntpServer).then(function () {
+          $scope.notifications.add({
+            type: 'info',
+            title: 'Saved',
+            message: 'System time saved with success',
+            status: 'success',
+          });
+          $scope.$apply();
+        }, function (err) {
+          console.error("couldn't save system time: " + err);
+          $scope.notifications.add({
+            type: 'info',
+            title: 'Error',
+            message: 'System time not saved',
+            status: 'danger',
+          });
+          $scope.$apply();
+        });
+      }
+
+    };
+    $scope.resetDateTime = function () {
+      $scope.localSystem.summary.timezone = $scope.localSystem.summary.oldTimezone;
+    };
+
+    $scope.openChangeCompany = function () {
+      $('#companyChangeModal').modal('show');
+      $scope.localSystem.newOrganization = angular.copy($scope.localSystem.organization);
+    };
+    $scope.changeCompany = function (organization) {
+      $('#companyChangeModal').modal('hide');
+
+      nethserver.system.organization.saveInfo(organization).then(function () {
+        $scope.localSystem.organization = organization;
+        $scope.notifications.add({
+          type: 'info',
+          title: 'Saved',
+          message: 'Company info saved with success',
+          status: 'success',
+        });
+        $scope.$apply();
+      }, function (err) {
+        console.error(err);
+        $scope.notifications.add({
+          type: 'info',
+          title: 'Error',
+          message: err,
+          status: 'danger',
+        });
+      });
+    };
+
+    $scope.powerActions = function (action) {
+      switch (action) {
+        case 'restart':
+          break;
+
+        case 'shutdown':
+          break;
+      }
+    };
 
     // init graphics method
     $scope.initGraphics = function () {
@@ -165,119 +315,6 @@ angular.module('systemAngularApp')
         }
       }
       $scope.view.isLoaded = true;
-    };
-
-    $scope.openChangeHostname = function () {
-      $scope.localSystem.summary.newHostname = $scope.localSystem.summary.hostname;
-      $('#hostnameChangeModal').modal('show');
-    };
-    $scope.changeHostname = function (hostname) {
-      $('#hostnameChangeModal').modal('hide');
-
-      // TODO: define $scope.taskNotification singleton
-      var taskNotification = $scope.addNotification({
-        type: 'task',
-        title: 'Event hostname-modify',
-        message: 'Applying new host name',
-        status: 'warning',
-        action: 'check',
-        progress: 10,
-      });
-
-      nethserver.system.summary.setHostname(hostname).then(function () {
-        $scope.localSystem.summary.hostname = hostname;
-        $scope.$apply();
-      }, function (err) {
-        // TODO: define err as an object containing the unitName
-        // TODO: define an API to retrieve error details from "journalctl -u unitName"
-
-        // XXX: $scope.taskNotification.close()
-        $scope.addNotification({
-          type: 'info',
-          title: 'Error',
-          message: 'Event failed',
-          status: 'danger',
-        });
-        $scope.$apply();
-      }).then(function () {
-        // XXX: $scope.taskNotification.close()
-        $scope.addNotification({
-          type: 'info',
-          title: 'Host name changed',
-          status: 'success',
-        });
-        $scope.$apply();
-      });
-    };
-
-    $scope.addAlias = function (alias) {
-      $scope.localSystem.summary.aliases.push({
-        name: alias
-      });
-    };
-    $scope.removeAlias = function (aliasIndex) {
-      $scope.localSystem.summary.aliases.splice(aliasIndex, 1);
-    };
-
-    $scope.openChangeSystime = function () {
-      //$scope.localSystem.summary.oldTimezone = $scope.localSystem.summary.timezone;
-      $scope.localSystem.summary.newTimeMode = $scope.localSystem.summary.timeMode;
-      $scope.localSystem.summary.newDate = $scope.localSystem.summary.date;
-      $scope.localSystem.summary.newTime = $scope.localSystem.summary.time;
-      $('#systimeChangeModal').modal('show');
-    };
-    $scope.changeSystime = function (value) {
-      $scope.localSystem.summary.newTimeMode = value;
-    };
-    $scope.saveSystime = function () {
-      $('#systimeChangeModal').modal('hide');
-      /* $scope.localSystem.summary.date = '';
-      $scope.localSystem.summary.time = '';
-      $scope.localSystem.summary.timeMode = '';
-      $scope.localSystem.summary.timezone = '';
-      $scope.$apply(); */
-    };
-    $scope.resetDateTime = function () {
-      $scope.localSystem.summary.timezone = $scope.localSystem.summary.oldTimezone;
-    };
-
-    $scope.openChangeCompany = function () {
-      $('#companyChangeModal').modal('show');
-      $scope.localSystem.newOrganization = angular.copy($scope.localSystem.organization);
-    };
-    $scope.changeCompany = function (organization) {
-      nethserver.system.organization.saveInfo(organization).then(function () {
-        $scope.localSystem.organization = organization;
-
-        $('#companyChangeModal').modal('hide');
-
-        $scope.addNotification({
-          type: 'info',
-          title: 'Saved',
-          message: 'Company info saved with success',
-          status: 'success',
-        });
-
-        $scope.$apply();
-      }, function (err) {
-        console.error(err);
-        $scope.addNotification({
-          type: 'info',
-          title: 'Error',
-          message: err,
-          status: 'danger',
-        });
-      });
-    };
-
-    $scope.powerActions = function (action) {
-      switch (action) {
-        case 'restart':
-          break;
-
-        case 'shutdown':
-          break;
-      }
     };
 
     $scope.initGraphics();
