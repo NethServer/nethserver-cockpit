@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Build and publish API documentation
+# Check for js utils: npm, grunt, bower
+
+set -e
+
+which npm >/dev/null
+
+if [ $? -gt 1 ]; then
+    echo "[ERROR] Install 'npm' package: 'dnf install npm'"
+    exit 1
+fi
+
+which grunt >/dev/null
+
+if [ $? -gt 1 ]; then
+    echo "[ERROR] Install 'grunt' package: 'npm install -g grunt-cli'"
+    exit 1
+fi
+
+
+which bower >/dev/null
+
+if [ $? -gt 1 ]; then
+    echo "[ERROR] Install 'grunt' package: 'npm install -g bower'"
+    exit 1
+fi
+
+# Install dependecies and build UI and API
+pushd api/ && npm install && grunt docma
+popd
+
+
+HEAD=$(git rev-parse HEAD)
+git add docs/
+TREE=$(git write-tree --prefix=docs)
+git rm -rf docs/
+COMMIT=$(git commit-tree -m "site at ${HEAD}" ${TREE})
+git branch -f gh-pages ${COMMIT}
+
+echo
+echo "To publish the latest changes execute:"
+echo
+echo "    git push origin gh-pages --force"
+echo
+

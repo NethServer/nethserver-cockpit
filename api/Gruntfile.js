@@ -68,6 +68,59 @@ module.exports = function (grunt) {
         }
       }
     },
+    docma: {
+      options: {
+        traceFatal: true,
+        config: {
+          jsdoc: {
+            encoding: 'utf8',
+            recurse: true,
+            pedantic: false,
+            access: null, // ['public', 'protected'],
+            package: null,
+            module: true,
+            undocumented: true,
+            undescribed: true,
+            hierarchy: true,
+            sort: 'alphabetic',
+            filter: null,
+            plugins: ['markdown']
+          },
+          debug: 1
+        }
+      },
+      code: {
+        options: {
+          config: {
+            template: {
+              path: 'default',
+              options: {
+                sidebar: true,
+                collapsed: false,
+                badges: true,
+                outline: "flat",
+                symbolMeta: false,
+                search: true,
+                navbar: true
+              }
+            },
+            app: {
+              title: 'NethServer Cockpit',
+              routing: 'path',
+              base: '/nethserver-cockpit',
+              entrance: "content:readme"
+            }
+          }
+        },
+        src: [
+              "./core/*.js",
+              "./system/*.js",
+              "./tutorial/*md",
+              "README.md",
+        ],
+        dest: '../docs'
+      },
+    }
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -75,6 +128,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-docma');
 
   grunt.registerTask('build', 'Make .js files in under dist/', ['clean', 'jshint', 'concat', 'uglify']);
   grunt.registerTask('rsync', 'Sync folder with remote host', function (login, port, dest) {

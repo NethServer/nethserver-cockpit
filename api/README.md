@@ -1,33 +1,21 @@
-# NethServer API
+# NethServer Cockpit developer guide
 
-## Core
+This guide describes how Cockpit is used inside NethServer and how to develop
+a new NethServer Cockpit module.
 
-* signalEvent
-* getDatabase
-* validate
+## Pages
 
-## System
+* [API](./api)
+* [Building RPM](./build_rpm)
 
-* getHostname
-* setHostname
-* ...
+## Creating new cockpit-module
 
-## Development
+If you haven't used Cockpit before, be sure to check out the [Cockpit Guide](http://cockpit-project.org/guide/latest/), 
+as it explains Cockpit foundamentals. Once you're familiar with that process, you may proceede with this guide.
 
-Run build task on ``src/`` contents and output the resulting files under  ``dist/``:
+Before starting the development of new module:
 
-```
-grunt build
-```
+1. Read project [Guidelines](./guidelines)
+2. Prepare the [Environment](./environment)
+3. Scaffold your module using [generator-cockpit](https://github.com/edospadoni/generator-cockpit)
 
-Transfer files to ``~/.local/share/cockpit/ns-base1/``:
-
-```
-grunt rsync:root@192.168.122.7
-```
-
-Transfer files to other directory/port:
-
-```
-grunt rsync:root@192.168.122.7:2222:/usr/local/share/custom/
-```
