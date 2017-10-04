@@ -104,10 +104,14 @@ module.exports = function (grunt) {
                 navbar: true,
                 "navItems": [
                   {
+                    "iconClass": "ico-embed",
+                    "label": "Home",
+                    "href": "./"
+                  },
+                  {
                     "iconClass": "ico-book",
                     "label": "Building Docs",
                     "items": [
-                      { "label": "Guide", "href": "./" },
                       { "label": "API", "href": "./api" },
                       { "separator": true },
                       { "label": "Build RPM", "href": "./build_rpm" },
