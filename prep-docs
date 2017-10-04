@@ -31,12 +31,13 @@ fi
 pushd api/ && npm install && grunt docma
 popd
 
-
+PARENT=$(git rev-parse origin/gh-pages)
 HEAD=$(git rev-parse HEAD)
+echo $PARENT > docs/.git_parent
 git add docs/
 TREE=$(git write-tree --prefix=docs)
 git rm -rf docs/
-COMMIT=$(git commit-tree -m "site at ${HEAD}" ${TREE})
+COMMIT=$(git commit-tree ${PARENT:+-p ${PARENT}} -m "site at ${HEAD}" ${TREE})
 git branch -f gh-pages ${COMMIT}
 
 echo
