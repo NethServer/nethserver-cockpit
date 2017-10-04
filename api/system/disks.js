@@ -17,3 +17,34 @@
  * You should have received a copy of the GNU General Public License
  * along with NethServer.  If not, see COPYING.
  */
+
+(function ($) {
+    nethserver.system.disks = {
+        /**
+         * Retrieve the json data in /var/cache/duc/duc.json
+         * @return {Promise} from cockpit.file
+         */
+        getJSONUsage: function () {
+            var fh = cockpit.file("/var/cache/duc/duc.json", {
+                syntax: nethserver.Syntax.trimWhitespace
+            });
+            return fh.read().always(function () {
+                fh.close();
+            });
+        },
+        /**
+         * Get date of last updated of disk usage
+         * @return {Promise} from cockpit.file
+         */
+        getUpdatedUsage: function () {
+            return cockpit.spawn(['date', '+%F %H:%M']);
+        },
+        /**
+         * Launch update of disk usage using duc
+         * @return {Promise} from cockpit.file with json data and updated time
+         */
+        updateJSONUsage: function () {
+            return cockpit.spawn(['date', '+%F %H:%M']);
+        },
+    };
+})(jQuery);

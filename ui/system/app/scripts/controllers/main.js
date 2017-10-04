@@ -270,6 +270,7 @@ angular.module('systemAngularApp')
           message: err,
           status: 'danger',
         });
+        $scope.$apply();
       });
     };
 

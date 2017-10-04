@@ -1,3 +1,13 @@
-<div>
-  Disk Usage <a href="#!/">vai </a>
+<h3>{{'Updated at' | translate}} {{objects.updatedAt}}</h3>
+<button ng-click="updateJSONUsage()" class="btn btn-primary btn-lg " type="button">{{'Update' | translate}}</button>
+
+<div id="baseContainer"><a href="" onclick="$.reset();" id="baseBread">/</a></div>
+<div id="sequence"></div>
+
+<div id="explanation">
+  <p id="nameFolder">/</p>
+  <p id="sizeFolder"></p>
+</div>
+
+<div id="chart">
 </div>

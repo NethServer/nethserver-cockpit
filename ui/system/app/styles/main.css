@@ -292,3 +292,72 @@ iframe>.breadcrumb {
 .animate-repeat.ng-enter.ng-enter-active {
   opacity: 1;
 }
+
+circle {
+  fill: none;
+  pointer-events: all;
+}
+
+#baseContainer {
+  margin-top: 20px;
+  z-index: 1;
+}
+
+#baseBread {
+  float: left;
+  background: rgb(103, 102, 102);
+  width: 90px;
+  text-align: center;
+  color: white;
+  text-decoration: none;
+  z-index: 1;
+}
+
+#sequence {
+  height: 20px;
+  position: fixed;
+  left: 112px;
+}
+
+#sequence text {
+  font-weight: 600;
+  fill: #fff;
+}
+
+#chart {
+  top: 120px;
+  bottom: 25px;
+  position: fixed;
+  z-index: -1;
+}
+
+#chart path {
+  stroke: #fff;
+}
+
+#explanation {
+  color: #666;
+  z-index: 10;
+  top: 165px;
+  position: fixed;
+}
+
+#totalSize {
+  font-size: 2.5em;
+  color: #666;
+}
+
+#nameFolder {
+  font-size: 20px;
+  margin-bottom: -5px;
+}
+
+#sizeFolder {
+  font-size: 20px;
+}
+
+#updateInfo div.TextLabel {
+  font-size: 14px;
+  color: #666;
+  font-weight: 600;
+}

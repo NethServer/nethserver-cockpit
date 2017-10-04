@@ -355,7 +355,7 @@ module.exports = function (grunt) {
         }, {
           expand: true,
           cwd: 'bower_components/patternfly/dist',
-          src: ['fonts/PatternFlyIcons-webfont.{eot,woff,woff2,ttf}'],
+          src: ['fonts/*.{eot,woff,woff2,ttf}'],
           dest: '<%= yeoman.dist %>',
         }]
       },
@@ -403,7 +403,7 @@ module.exports = function (grunt) {
       },
       compress: {
         command: function () {
-          return "tar cvzf nethserver-cockpit-ui-"+global.gitDescribe+".tar.gz -C dist/ .";
+          return "tar cvzf nethserver-cockpit-ui-" + global.gitDescribe + ".tar.gz -C dist/ .";
         }
       }
     },
@@ -450,6 +450,6 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('release', 'Create release file', ['shell:describe','shell:compress']);
+  grunt.registerTask('release', 'Create release file', ['shell:describe', 'shell:compress']);
 
 };
