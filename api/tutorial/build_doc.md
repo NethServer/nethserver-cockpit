@@ -1,6 +1,6 @@
 # Building documentation
 
-This guide has been built using (Docma)[http://onury.io/docma/] and (Grunt)[https://gruntjs.com/].
+This guide has been built using [Docma](http://onury.io/docma/) and [Grunt](https://gruntjs.com/).
 
 To build the documentation during the development use:
 ```
