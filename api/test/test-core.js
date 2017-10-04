@@ -173,7 +173,14 @@ describe('Also, the object returned by getDatabase()', function() {
 
 describe('nethserver.validate()', function() {
     it('succeedes', function() {
-        return nethserver.validate('myhostname', 'test');
+        return nethserver.validate('myhostname', ['test']).then(function(val){
+            val.should.be.equal(0);
+        });
+    });
+    it('fails', function () {
+        return nethserver.validate('myhostname', ['...']).then(function(val){
+            val.should.be.not.equal(0);
+        });
     });
 });
 

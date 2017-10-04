@@ -27,16 +27,18 @@
      * * N - specific error code
      *
      * @memberof nethserver
-     * @param {String} validator Validation procedure name
-     *
+     * @param {String} validator - Validation procedure name
+     * @param {Array} args - Arguments to validation procedure
      * @return {Promise.<number>} The exit code of "validate" command
      */
-    ns.validate = function(validator) {
-        var args = ['/sbin/e-smith/validate'];
-        args.push.apply(args, Array.prototype.slice.call(arguments));
-        var proc = cockpit.spawn(args, {superuser: 'required', err: 'message'});
-        var r = Promise.resolve(proc);
-        proc.always(proc.close);
-        return r;
+    ns.validate = function(validator, args) {
+        args = args.slice();
+        args.unshift('/sbin/e-smith/validate', validator);
+
+        return Promise.resolve(cockpit.spawn(args, {superuser: 'required', err: 'message'})).then(function(){
+            return 0;
+        }, function(err) {
+            return err.exit_status;
+        });
     };
 }(nethserver, jQuery));
