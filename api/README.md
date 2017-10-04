@@ -1,5 +1,21 @@
 # NethServer Cockpit developer guide
 
+This guide describes how Cockpit is used inside NethServer and how to develop
+a new NethServer Cockpit module.
+
+## Pages
+
 * [API](./api)
-* [Guidelines](./guidelines)
+* [Building RPM](./build_rpm)
+
+## Creating new cockpit-module
+
+If you haven't used Cockpit before, be sure to check out the [Cockpit Guide](http://cockpit-project.org/guide/latest/), 
+as it explains Cockpit foundamentals. Once you're familiar with that process, you may proceede with this guide.
+
+Before starting the development of new module:
+
+1. Read project [Guidelines](./guidelines)
+2. Prepare the [Environment](./environment)
+3. Scaffold your module using [generator-cockpit](https://github.com/edospadoni/generator-cockpit)
 
