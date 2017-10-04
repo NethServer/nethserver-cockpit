@@ -29,6 +29,8 @@ function EventMonitor() {
     self.units = {};
     self.manager = cockpit.dbus('org.freedesktop.systemd1').
         proxy('org.freedesktop.systemd1.Manager', '/org/freedesktop/systemd1');
+    self.progress = 0.0;
+    self.fakeProgressInterval = null;
 
     function dispatchUnitEvent(eventType, unit, uName) {
         if( ! unit.valid) {
@@ -39,12 +41,31 @@ function EventMonitor() {
                 'exitCode': unit.ExecMainCode,
                 'mainPid': unit.ExecMainPID,
             });
+            if(self.fakeProgressInterval) {
+                clearInterval(self.fakeProgressInterval);
+                self.fakeProgressInterval = null;
+            }
         } else if(unit.Result == 'exit-code') {
             self.dispatchEvent('nsevent.failed', {
                 'unitName': uName,
                 'exitCode': unit.ExecMainCode,
                 'mainPid': unit.ExecMainPID,
             });
+            if(self.fakeProgressInterval) {
+                clearInterval(self.fakeProgressInterval);
+                self.fakeProgressInterval = null;
+            }
+        } else if(eventType == 'created') {
+            self.progress = 0.0;
+            self.dispatchEvent('nsevent.progress', {
+                'unitName': uName,
+                'progress': self.progress,
+                'title': 'event title',
+                'message': 'event message',
+            });
+            self.fakeProgressInterval = setInterval(function(){
+                self.progress += 0.02;
+            }, 1000);
         }
         return unit;
     }

@@ -94,6 +94,57 @@ describe('nethserver.signalEvent()...', function() {
     });
 });
 
+describe('nethserver.eventMonitor', function () {
+    it('tracks the event progress', function(){
+        return new Promise(function(fulfill, reject){
+
+            var progressCaught = false;
+            var succeededCaught = false;
+            var failedCaught = false;
+
+            function handler(ev) {
+                try{
+                    ev.should.have.property('detail');
+                    ev.detail.should.have.property('unitName');
+                    ev.type.should.startWith('nsevent.');
+                    if(ev.type == 'nsevent.progress') {
+                        ev.detail.should.have.property('progress');
+                        ev.detail.progress.should.be.Number();
+                        progressCaught = true;
+                    } else if(ev.type == 'nsevent.failed') {
+                        ev.detail.should.have.property('exitCode');
+                        ev.detail.exitCode.should.be.Number();
+                        ev.detail.exitCode.should.not.be.equal(0);
+                        failedCaught = true;
+                    } else if(ev.type == 'nsevent.succeeded') {
+                        ev.detail.should.have.property('exitCode');
+                        ev.detail.exitCode.should.be.Number();
+                        ev.detail.exitCode.should.be.equal(0);
+                        succeededCaught = true;
+                    }
+                } catch(ex) {
+                    reject(ex);
+                }
+            }
+
+            nethserver.eventMonitor.addEventListener('nsevent.succeeded', handler);
+            nethserver.eventMonitor.addEventListener('nsevent.failed', handler);
+            nethserver.eventMonitor.addEventListener('nsevent.progress', handler);
+
+            nethserver.signalEvent('test-success').then(function(){
+                try {
+                    progressCaught.should.be.true();
+                    failedCaught.should.be.false();
+                    succeededCaught.should.be.true();
+                } catch(ex) {
+                    reject(ex);
+                }
+                fulfill();
+            });
+        });
+    });
+});
+
 describe('nethserver.getDatabase()', function() {
     it('is defined', function () {
         should(typeof nethserver.getDatabase === 'function').be.ok();
