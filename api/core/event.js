@@ -23,6 +23,35 @@
 var NSEVENT_PREFIX = 'nsevent-';
 var NSEVENT_MATCH = /^nsevent-/;
 
+/**
+ * An object of type TaskCompleted is attached to a CustomEvent as "detail"
+ *
+ * @typedef {Object} TaskCompleted
+ * @param {String} unitName the systemd unit name where the event was run
+ * @param {Number} exitCode exit code of the signal-event command
+ * @param {Number} mainPid the process PID number
+ */
+
+/**
+ * An object of type TaskProgress is attached to a CustomEvent as "detail"
+ *
+ * @typedef {Object} TaskProgress
+ * @param {String} unitName the systemd unit name where the event was run
+ * @param {Number} progress A number between 0 and 1 (percent of task completion)
+ * @param {String} title The title of the running task
+ * @param {String} message Last message emitted by the task
+ */
+
+/**
+ * The EventMonitor object implements the EventTarget interface as defined by
+ * DOM. You don't need to create an instance of this class: the "nethserver"
+ * namespace has a singleton instance of this class.
+ *
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/EventTarget|EventTarget}
+ * @constructor
+ * @name nethserver.EventMonitor
+ * @protected
+ */
 function EventMonitor() {
     var self = this;
     self.handlers = [];
@@ -104,6 +133,12 @@ function EventMonitor() {
 
 }
 
+/**
+ * Waits until the object is ready to dispatch events
+ * @function
+ * @name nethserver.EventMonitor.wait
+ * @return {Promise} resolved when the object is ready
+ */
 EventMonitor.prototype.wait = function() {
     var self = this;
     return Promise.resolve(self.manager.wait().then(function(){
@@ -111,6 +146,13 @@ EventMonitor.prototype.wait = function() {
     }));
 };
 
+/**
+ * Generates a random event name
+ * @function
+ * @private
+ * @name nethserver.EventMonitor.getNextEventName
+ * @return {Promise.<String>} the generated random event name
+ */
 EventMonitor.prototype.getNextEventName = function() {
     return Promise.resolve(cockpit.spawn(['uuidgen'], {
             superuser: 'require',
@@ -121,14 +163,54 @@ EventMonitor.prototype.getNextEventName = function() {
 };
 
 /**
- * The EventMonitor object implements an EventTarget-like interface
+ * This is a singleton instance of EventMonitor
+ * @see {@link #EventMonitor}
+ * @name nethserver.eventMonitor
+ * @instance
  */
 ns.eventMonitor = new EventMonitor();
+
+/**
+ * Attach a callback to the EventMonitor object
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener}
+ * @see {@link #TaskProgress}
+ * @see {@link #TaskCompleted}
+ * @function
+ * @name nethserver.EventMonitor.addEventListener
+ * @param {String} eventName - actually "nsevent.succeeded", "nsevent.failed", "nsevent.progress"
+ * @param {EventListener} eventListener
+ * @example
+ * nethserver.eventMonitor.addEventListener('nsevent.succeeded', handler);
+ * nethserver.eventMonitor.addEventListener('nsevent.failed', handler);
+ * nethserver.eventMonitor.addEventListener('nsevent.progress', handler);
+ */
 cockpit.event_target(ns.eventMonitor);
 
 /**
- * Calls signal-event:
- * @return {Promise}
+ * The standard DOM CustomEvent object
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent}
+ * @typedef {Event} CustomEvent
+ * @param {String} type - the event type identifier
+ * @param {TaskCompleted|TaskProgress} detail - an object with the event details
+ */
+
+/**
+ * This is an event listener callback definition, specified by DOM EventTarget
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/EventTarget}
+ * @see {@link #TaskProgress}
+ * @see {@link #TaskCompleted}
+ * @callback EventListener
+ * @param {CustomEvent} ev
+ */
+
+/**
+ * Call signal-event command with given arguments
+ * @function
+ * @name nethserver.signalEvent
+ * @see {@link #TaskCompleted}
+ * @param {String} nsEvent event name
+ * @param {Array} [args=[]] event arguments
+ * @return {Promise.<TaskCompleted|String>}
  */
 ns.signalEvent = function (nsEvent, args) {
     if( ! Array.isArray(args)) {

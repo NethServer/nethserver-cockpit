@@ -21,12 +21,13 @@
 (function(ns, $){
     /**
      * Launch the "validate" command. The exit code can be:
+     * <ul>
+     * <li> 0 - success
+     * <li> 1 - generic failure condition
+     * <li> N - specific error code
+     * </ul>
      *
-     * * 0 - success
-     * * 1 - generic failure condition
-     * * N - specific error code
-     *
-     * @memberof nethserver
+     * @name nethserver.validate
      * @param {String} validator - Validation procedure name
      * @param {Array} args - Arguments to validation procedure
      * @return {Promise.<number>} The exit code of "validate" command

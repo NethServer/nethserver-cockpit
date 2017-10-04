@@ -23,8 +23,11 @@
 
      /**
       * Generate a random password
-      * @param {number} required password length
-      * @return {Promise.<string>}
+      *
+      * @function
+      * @name nethserver.system.users.mkpasswd
+      * @param {Number} length password length
+      * @return {Promise.<string>} Randomly generated password of given $length
       */
      ns.system.users.mkpasswd = function(length) {
          // TODO
