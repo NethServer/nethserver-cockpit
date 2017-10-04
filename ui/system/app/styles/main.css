@@ -33,6 +33,10 @@ input[type="file"] {
   width: 105px;
 }
 
+.view-spinner {
+  margin-top: 50px;
+}
+
 .custom-file-upload {
   border: 1px solid #bbb;
   display: inline-block;
