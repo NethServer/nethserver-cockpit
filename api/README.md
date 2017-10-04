@@ -7,11 +7,13 @@ a new NethServer Cockpit module.
 
 * [API](./api)
 * [Building RPM](./build_rpm)
+* [Building documentation](./build_doc)
 
-## Creating new cockpit-module
+## Creating new Cockpit module
 
 If you haven't used Cockpit before, be sure to check out the [Cockpit Guide](http://cockpit-project.org/guide/latest/), 
-as it explains Cockpit foundamentals. Once you're familiar with that process, you may proceede with this guide.
+as it explains Cockpit foundamentals. 
+Once you're familiar with that process, you may proceed with this guide.
 
 Before starting the development of new module:
 
