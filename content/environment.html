@@ -1,0 +1,66 @@
+
+<html><head></head><body><h1 id="development-environment">Development environment</h1>
+<hr />
+<p>The development environment can be prepared on a Fedora or CentOS 7 machine.</p>
+<p>Follow these steps:</p>
+<ul>
+<li><p>prepare the enviroment</p>
+</li>
+<li><p>do your modification to API or UI</p>
+</li>
+<li><p>sync your modification to the server where cockpit is running</p>
+</li>
+</ul>
+<h2 id="install-requirements">Install requirements</h2>
+<p>Prepare the development environment:</p>
+<ul>
+<li><p>Install developer tools: npm and git</p>
+<p>On Fedora:</p>
+<pre><code>dnf install npm git
+</code></pre><p>On CentOS:</p>
+<pre><code>yum install npm git
+</code></pre></li>
+<li><p>Clone the repository:</p>
+<pre><code>git clone git@github.com:NethServer/nethserver-cockpit
+</code></pre></li>
+<li><p>Install grunt globally:</p>
+<pre><code>npm install -g grunt-cli bower generator-angular yo
+</code></pre><p>You can ignore warnings like this:</p>
+<pre><code>WARN generator-angular@0.16.0 requires a peer of generator-karma@&gt;=0.9.0 but none was installed.
+</code></pre></li>
+</ul>
+<ul>
+<li><p>Enter inside the cloned repository and install all dependencies:</p>
+<pre><code>cd nethserver-cockpit/
+
+cd api/ &amp;&amp; npm install
+cd ..
+cd ui/system/ &amp;&amp; npm install &amp;&amp; bower install
+</code></pre></li>
+</ul>
+<h2 id="build-api-and-ui">Build API and UI</h2>
+<p>Enter API directory and build using grunt:</p>
+<pre><code>cd api/system/ &amp;&amp; grunt build
+</code></pre><p>Enter UI directory and build using grunt:</p>
+<pre><code>cd ui/ &amp;&amp; grunt build
+</code></pre><p>You can ignore ignore warnings like this:</p>
+<pre><code>npm WARN api@1.0.0 No repository field.
+npm WARN api@1.0.0 No license field.
+</code></pre><h2 id="sync-api-and-ui">Sync API and UI</h2>
+<p>Files can be copied using rsync.
+Use the following commands:</p>
+<pre><code>ssh root@192.168.1.20  "mkdir -p ~/.local/share/cockpit/nethserver"
+
+cd api/ &amp;&amp; grunt rsync:root@192.168.1.20:22
+cd ui/system &amp;&amp; grunt rsync:root@192.168.1.20:22
+</code></pre><h1 id="creating-new-cockpit-module">Creating new cockpit-module</h1>
+<hr />
+<p>Before starting the development of new module:</p>
+<ul>
+<li>read upstream documentation: <a href="http://cockpit-project.org/guide/latest/">http://cockpit-project.org/guide/latest/</a></li>
+<li>scaffold your module using <code>generator-cockpit</code>: <a href="https://github.com/edospadoni/generator-cockpit">https://github.com/edospadoni/generator-cockpit</a></li>
+</ul>
+<h1 id="code-style-guideline">Code style guideline</h1>
+<hr />
+<p>Please use configuration from EditorConfig: <a href="http://editorconfig.org">http://editorconfig.org</a></p>
+</body></html>

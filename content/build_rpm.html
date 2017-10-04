@@ -1,0 +1,16 @@
+
+<html><head></head><body><h1 id="building-rpm">Building RPM</h1>
+<hr />
+<p>Move to the root directory of cloned repository and
+use standard <code>make-rpms</code> NethServer tool:</p>
+<pre><code>  ./prep-sources &amp;&amp; make-rpms
+</code></pre><h2 id="install-rpm">Install RPM</h2>
+<ol>
+<li><p>Copy the rpm to the NethServer</p>
+</li>
+<li><p>Access the NethServer, then download COPR repository:</p>
+<pre><code>wget https://copr.fedorainfracloud.org/coprs/g/cockpit/cockpit-preview/repo/epel-7/group_cockpit-cockpit-preview-epel-7.repo -O /etc/yum.repos.d/cockpit.repo
+yum install nethserver-cockpit*rpm
+</code></pre></li>
+</ol>
+</body></html>
