@@ -107,6 +107,7 @@ module.exports = function (grunt) {
             app: {
               title: 'NethServer Cockpit',
               routing: 'path',
+              base: '/nethserver-cockpit',
               entrance: "content:readme"
             }
           }
