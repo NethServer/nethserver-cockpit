@@ -101,7 +101,37 @@ module.exports = function (grunt) {
                 outline: "flat",
                 symbolMeta: false,
                 search: true,
-                navbar: true
+                navbar: true,
+                "navItems": [
+                  {
+                    "iconClass": "ico-book",
+                    "label": "Building Docs",
+                    "items": [
+                      { "label": "Guide", "href": "./" },
+                      { "label": "API", "href": "./api" },
+                      { "separator": true },
+                      { "label": "Build RPM", "href": "./build_rpm" },
+                      { "label": "Build documentation", "href": "./build_doc" },
+                    ]
+                  },
+                  {
+                    "iconClass": "ico-mouse-pointer",
+                    "label": "Manuals",
+                    "items": [
+                      { "label": "NethServer Developer manual", "href": "http://docs.nethserver.org/projects/nethserver-devel", "target": "_blank" },
+                      { "label": "NethServer Administrator manual", "href": "http://docs.nethserver.org/projects/nethserver-devel", "target": "_blank" },
+                      { "separator": true },
+                      { "label": "Cockpit Guide", "href": "http://cockpit-project.org/guide/latest/", "target": "_blank" }
+                    ]
+                  },
+
+                  {
+                    "iconClass": "ico-md ico-github",
+                    "label": "GitHub",
+                    "href": "https://github.com/NethServer/nethserver-cockpit",
+                    "target": "_blank"
+                  }
+                ]
               }
             },
             app: {
