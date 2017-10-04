@@ -26,7 +26,7 @@
          */
         getJSONUsage: function () {
             var fh = cockpit.file("/var/cache/duc/duc.json", {
-                syntax: nethserver.Syntax.trimWhitespace
+                syntax: nethserver.syntax.trimWhitespace
             });
             return fh.read().always(function () {
                 fh.close();

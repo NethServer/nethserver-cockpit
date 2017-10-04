@@ -26,7 +26,7 @@
          */
         getHostname: function () {
             var fh = cockpit.file("/etc/hostname", {
-                syntax: nethserver.Syntax.trimWhitespace
+                syntax: nethserver.syntax.trimWhitespace
             });
             return fh.read().always(function () {
                 fh.close();
@@ -76,7 +76,7 @@
                     err: "ignore"
                 }).
                 done(function (fields) {
-                    fields = nethserver.Syntax.grepToObject.parse(fields);
+                    fields = nethserver.syntax.grepToObject.parse(fields);
                     dfr.resolve(fields.sys_vendor + " " + fields.product_name);
                 }).
                 fail(function () {
@@ -87,7 +87,7 @@
 
         getMachineId: function () {
             var fh = cockpit.file("/etc/machine-id", {
-                syntax: nethserver.Syntax.trimWhitespace
+                syntax: nethserver.syntax.trimWhitespace
             });
             return fh.read().always(function () {
                 fh.close();

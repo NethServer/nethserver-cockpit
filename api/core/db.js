@@ -175,7 +175,11 @@ function nsdb2string(data) {
     return out;
 }
 
-ns.Syntax = {
+
+/**
+ * @namespace nethserver.syntax
+ */
+ns.syntax = {
     trimWhitespace: {
         parse: function(data) {
             return String(data).trim();
