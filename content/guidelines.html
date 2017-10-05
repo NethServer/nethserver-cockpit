@@ -1,6 +1,176 @@
 
 <html><head></head><body><h1 id="guidelines">Guidelines</h1>
 <hr />
-<h2 id="code-style-guideline">Code style guideline</h2>
+<p><strong>Index</strong></p>
+<ul>
+<li><a href="#api-design">API design</a><ul>
+<li><a href="#add">add</a></li>
+<li><a href="#edit">edit</a></li>
+<li><a href="#delete">delete</a></li>
+<li><a href="#get-all">getAll</a></li>
+<li><a href="#get-one">getOne</a></li>
+</ul>
+</li>
+<li><a href="#ui-design">UI design</a><ul>
+<li><a href="#left-menu">Left menu</a></li>
+<li><a href="#applications">Applications</a></li>
+<li><a href="#forms">Forms</a></li>
+<li><a href="#notifications">Notifications</a></li>
+</ul>
+</li>
+<li><a href="#accessibility">Accessibility</a></li>
+<li><a href="#code-style">Code style</a></li>
+</ul>
+<h2 id="api-design">API design</h2>
+<p>Each API should always return a JavaScript promise in case of success or error.</p>
+<p>Any functions which modifies system configuration must take care of semantic validation
+of input values, like checking if a record already exists or deny to set an option which
+can cause errors on other modules (eg. using the same IP address on multiple network interfaces).</p>
+<p>Objects returned by APIs must reflect esmith db format and respect the upper/lower case notation
+of property names.</p>
+<h4 id="example">Example</h4>
+<p>Host <code>goofy</code> inside the <code>hosts</code> database.</p>
+<p>Original esmith db notation:</p>
+<pre><code>goofy=local
+    Description=Goofy workstation
+    IpAddress=192.168.1.22
+</code></pre><p>Equivalent JavaScript object notation:</p>
+<pre><code>var goofy = {
+  id: "goofy", 
+  Description: "Goofy workstation",
+  IpAddress: "192.168.1.22",
+}
+</code></pre><p>Please note that:</p>
+<ul>
+<li>record type is not exposed in JS notation</li>
+<li>the key is always contained inside the <code>id</code> field</li>
+</ul>
+<p>APIs implementing CRUD operations, should declare these actions:</p>
+<ul>
+<li><a href="#add">add</a></li>
+<li><a href="#edit">edit</a></li>
+<li><a href="#delete">delete</a></li>
+<li><a href="#get-all">getAll</a></li>
+<li><a href="#get-one">getOne</a></li>
+</ul>
+<h3 id="add">Add</h3>
+<p>On success returns a success promise along with the created object, on error returns a failure promise along with a description of the error.</p>
+<p><em>Parameter</em>: object to be addedd</p>
+<p>The API developer should provide one typed <code>add</code> method for each record type managed by the module.</p>
+<h4 id="example">Example</h4>
+<p>DNS module, which saves records inside the <code>hosts</code> database, defines two methods: <code>addDnsRecord</code>,  <code>addSelfAlias</code>.</p>
+<pre><code>   var goofy = { id: "goofy", Description: "Goofy workstation", IpAddress: "192.168.1.22" };
+
+   nethserver.system.dns.addDnsRecord(goofy).then(function () {
+     ...
+     // success
+     ...
+   }, function (err) {
+     ...
+     // error
+     ...
+   });
+</code></pre><h3 id="edit">Edit</h3>
+<p>On success returns a success promise along with the modified object, on error returns a failure promise along with a description of the error.</p>
+<p><em>Parameter</em>: object to be modified</p>
+<p>The API developer should provide one typed <code>edit</code> method for each record type managed by the module.</p>
+<h4 id="example">Example</h4>
+<p>DNS module, which saves records inside the <code>hosts</code> database; define two methods named <code>editDnsRecord</code> and <code>editSelfAlias</code>.</p>
+<pre><code>var goofy = { id: "goofy", Description: "Goofy workstation", IpAddress: "192.168.1.22" };
+
+nethserver.system.dns.editDnsRecord(goofy).then(function () {
+  ...
+  // success
+  ...
+}, function (err) {
+  ...
+  // error
+  ...
+});
+</code></pre><h3 id="delete">Delete</h3>
+<p>On success returns a success promise along with an optional message, on error returns a failure promise along with a description of the error.</p>
+<p><em>Parameter</em>: id to be deleted</p>
+<h4 id="example">Example</h4>
+<p>DNS module, which saves records inside the <code>`hosts</code>, defines one method <code>delete</code>.</p>
+<pre><code>nethserver.system.dns.delete('goofy').then(function () {
+  ...
+  // success
+  ...
+}, function (err) {
+  ...
+  // error
+ ...
+});
+</code></pre><h3 id="get-all">Get all</h3>
+<p>On success returns a success promise along with a list of all requested objects, on error returns a failure promise along with a description of the error.</p>
+<p>The API developer should provide one typed <code>getAll</code> method for each record type managed by the module.</p>
+<h4 id="example">Example</h4>
+<p>DNS module, which saves records inside the <code>`hosts</code>, defines two typed methods: <code>getAllDnsRecords</code>, <code>getAllSelfAliases</code>.</p>
+<pre><code>nethserver.system.dns.getAllRecords().then(function () {
+  ...
+  // success
+  ...
+}, function (err) {
+  ...
+  // error
+ ...
+});
+</code></pre><h3 id="get-one">Get one</h3>
+<p>On success returns a success promise along with the requested object, on error returns a failure promise along with a description of the error.</p>
+<p><em>Parameter</em>: id to be retrieved.</p>
+<h4 id="example">Example</h4>
+<p>DNS module, which saves records inside the <code>`hosts</code>, defines one method: <code>getOne</code>.</p>
+<pre><code>nethserver.system.dns.getOne('goofy').then(function () {
+  ...
+  // success
+  ...
+}, function (err) {
+  ...
+  // error
+ ...
+});
+</code></pre><h2 id="ui-design">UI design</h2>
+<p>The whole web UI is designed following <a href="http://www.patternfly.org/">PatternFly</a> patterns.
+Please, read carefully PatternFly documentation before starting the design of a new web page.</p>
+<p>The main goal is to have a consistent design and behavior across all modules.</p>
+<p>All web page should guide the user to well-defined and specific task like:</p>
+<ul>
+<li>bad task example: "The user must choose the correct account provider"</li>
+<li>good task example: "The user must choose Active Directory provider if ACLs on shared folders are a functional requirements"</li>
+</ul>
+<h3 id="left-menu">Left menu</h3>
+<p>The left menu should be considered fixed: modules shouldn't add items inside the left menu.
+When a module needs to add a new feature, the web page should be added inside exiting sections like "System".</p>
+<h3 id="applications">Applications</h3>
+<p>The Applications page is a container of each new module which implements new features, like mail server, nextcloud, etc.
+Each new application web page should display:</p>
+<ul>
+<li>the status of the application status on the top</li>
+<li>a list of common actions just below the status</li>
+<li>all configuration parameters (forms, table, etc.) in the center</li>
+</ul>
+<p>On first run, the application <strong>must</strong> display a modal wizard if the module can't be configured with a reasonable defaults.</p>
+<p>Also the web page should display suggestions to help the user to follow best practices.
+For example, inside the "Certificate page", the interface should display a suggestion to enable Let's Encrypt if 
+a self-signed certificate is used as default.</p>
+<p>Each application must be described by a <a href="./application_manifest">JSON manifest</a> inspired to AppData freedesktop.org format.</p>
+<h3 id="forms">Forms</h3>
+<p>A configuration form should always display the minimum number of fields needed to configure the feature.
+Extra parameters should be hidden inside an <a href="http://www.patternfly.org/pattern-library/forms-and-controls/expand-collapse-section/">Advanced</a>
+panel with reasonable defaults.</p>
+<p>For example, when creating a user you need at least the user name, the full name and the password;
+but you could hide extra details like street address or phone number.</p>
+<p>Also it is a good practice to add a "Description" when creating records inside tables.</p>
+<h3 id="notifications">Notifications</h3>
+<p>NethServer Cockpit provides 3 types of <a href="http://www.patternfly.org/pattern-library/communication/toast-notifications/">toast notification</a>:</p>
+<ul>
+<li><strong>success</strong>: transient, it stays on the screen for 8 seconds</li>
+<li><strong>task</strong>: transient, it stays on the screen until the task has been completed</li>
+<li><strong>error</strong>: not transient, it stays on the screen until the user explicitly close it</li>
+</ul>
+<h2 id="accessibility">Accessibility</h2>
+<p>We need to evaluate how PatternFly copes with people suffering of low vision, who need to access most features
+using the keyboard shortcuts.</p>
+<h2 id="code-style">Code style</h2>
 <p>Please use configuration from EditorConfig: <a href="http://editorconfig.org">http://editorconfig.org</a></p>
 </body></html>
