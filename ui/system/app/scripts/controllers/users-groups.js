@@ -31,7 +31,7 @@ angular.module('systemAngularApp')
     };
 
     $scope.localSystem.users = {};
-    $scope.localSystem.users.provider = null;
+    $scope.localSystem.users.provider = 'ldap';
     $scope.localSystem.users.domain = '@' + 'nethesis.it';
     $scope.localSystem.users.list = [{
       username: 'alessandro',
