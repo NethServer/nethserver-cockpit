@@ -56,6 +56,7 @@ function EventMonitor() {
     var self = this;
     self.handlers = [];
     self.units = {};
+    self.isSystemdReloading = false;
     self.manager = cockpit.dbus('org.freedesktop.systemd1').
         proxy('org.freedesktop.systemd1.Manager', '/org/freedesktop/systemd1');
     self.progress = 0.0;
@@ -63,7 +64,7 @@ function EventMonitor() {
 
     function dispatchUnitEvent(eventType, unit, uName) {
         if( ! unit.valid) {
-            console.log(unit.path + ' is still not ready');
+            console.warn(unit.path + ' is still not ready');
         } else if(eventType == 'removed' && unit.Result == 'success') {
             self.dispatchEvent('nsevent.succeeded', {
                 'unitName': uName,
@@ -86,17 +87,22 @@ function EventMonitor() {
             }
         } else if(eventType == 'created') {
             self.progress = 0.0;
-            self.dispatchEvent('nsevent.progress', {
-                'unitName': uName,
-                'progress': self.progress,
-                'title': 'event title',
-                'message': 'event message',
-            });
             self.fakeProgressInterval = setInterval(function(){
-                self.progress += 0.02;
-            }, 1000);
+                if(self.progress < 1.0) {
+                    self.progress += 0.02;
+                    self.dispatchEvent('nsevent.progress', {
+                        'unitName': uName,
+                        'progress': self.progress,
+                        'title': 'event title',
+                        'message': 'event message',
+                    });
+                } else {
+                    clearInterval(self.fakeProgressInterval);
+                    self.fakeProgressInterval = null;
+                    self.progress = 0.0;
+                }
+            }, 750);
         }
-        return unit;
     }
 
     function addUnitWatch(uPath, uName) {
@@ -104,9 +110,9 @@ function EventMonitor() {
         unit.addEventListener('changed', function(ev, properties) {
             dispatchUnitEvent('changed', unit, uName);
         });
-        return Promise.resolve(unit.wait().then(function() {
+        return Promise.resolve(unit.wait()).then(function() {
             return unit;
-        }));
+        });
     }
 
     function updateUnitState(eventType, uPath, uName) {
@@ -116,17 +122,21 @@ function EventMonitor() {
 
         self.units[uPath].then(function(unit){
             dispatchUnitEvent(eventType, unit, uName);
+            return unit;
         });
     }
 
     // Bind event listeners: unit creation and removal
+    this.manager.addEventListener('Reloading', function(ev, active) {
+        self.isSystemdReloading = active;
+    });
     this.manager.addEventListener('UnitNew', function(ev, uName, uPath) {
-        if(uName.match(NSEVENT_MATCH) !== null) {
+        if(self.isSystemdReloading === false && uName.match(NSEVENT_MATCH) !== null) {
             updateUnitState('created', uPath, uName);
         }
     });
     this.manager.addEventListener('UnitRemoved', function(ev, uName, uPath) {
-        if(uName.match(NSEVENT_MATCH) !== null) {
+        if(self.isSystemdReloading === false && uName.match(NSEVENT_MATCH) !== null) {
             updateUnitState('removed', uPath, uName);
         }
     });
