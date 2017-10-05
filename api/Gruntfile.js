@@ -123,8 +123,8 @@ module.exports = function (grunt) {
                     "iconClass": "ico-mouse-pointer",
                     "label": "Manuals",
                     "items": [
-                      { "label": "NethServer Developer manual", "href": "http://docs.nethserver.org/projects/nethserver-devel", "target": "_blank" },
-                      { "label": "NethServer Administrator manual", "href": "http://docs.nethserver.org/projects/nethserver-devel", "target": "_blank" },
+                      { "label": "Developer manual", "href": "http://docs.nethserver.org/projects/nethserver-devel", "target": "_blank" },
+                      { "label": "Administrator manual", "href": "http://docs.nethserver.org", "target": "_blank" },
                       { "separator": true },
                       { "label": "Cockpit Guide", "href": "http://cockpit-project.org/guide/latest/", "target": "_blank" }
                     ]
