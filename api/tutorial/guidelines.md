@@ -25,13 +25,18 @@ goofy=local
 
 Equivalent JavaScript object notation:
 ```
-var goofy = { 
-  type: "local",
+var goofy = {
+  id: "goofy", 
   Description: "Goofy workstation",
   IpAddress: "192.168.1.22",
   MacAddress: "xx:xx:xx:xx:xx:xx"
 }
 ```
+
+Please note that:
+
+- record type is not exposed in JS notation
+- the key is always contained inside the `id` field
 
 
 ### CRUD
@@ -48,6 +53,8 @@ APIs implementing CRUD operations, should declare these actions:
 
 The whole web UI is designed following [PatternFly](http://www.patternfly.org/) patterns.
 Please, read carefully PatternFly documentation before starting the design of a new web page.
+
+The main goal is to have a consistent design and behavior across all modules.
 
 All web page should guide the user to well-defined and specific task like:
 
@@ -68,11 +75,13 @@ Each new application web page should display:
 - a list of common actions just below the status
 - all configuration parameters (forms, table, etc.) in the center
 
-On first run, the application **must** display a wizard if the module can't be configured with a reasonable defaults.
+On first run, the application **must** display a modal wizard if the module can't be configured with a reasonable defaults.
 
 Also the web page should display suggestions to help the user to follow best practices.
 For example, inside the "Certificate page", the interface should display a suggestion to enable Let's Encrypt if 
 a self-signed certificate is used as default.
+
+Each application must be described by a [JSON manifest](./application_manifest) inspired to AppData freedesktop.org format.
 
 ### Forms
 
