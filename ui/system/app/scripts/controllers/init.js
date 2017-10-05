@@ -128,7 +128,7 @@ angular.module('systemAngularApp')
     nethserver.eventMonitor.addEventListener('nsevent.progress', function (progress) {
       $scope.notifications.task.show();
       $scope.notifications.task.setData({
-        progress: progress.detail.progress,
+        progress: Math.round(progress.detail.progress * 100),
         title: progress.detail.title,
         message: progress.detail.message,
       });
