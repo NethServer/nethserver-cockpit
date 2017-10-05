@@ -1,6 +1,22 @@
 # Guidelines
 
-## API
+**Index**
+
+* [API design](#api-design)
+  * [add](#add)
+  * [edit](#edit)
+  * [delete](#delete)
+  * [getAll](#get-all)
+  * [getOne](#get-one)
+* [UI design](#ui-design)
+  * [Left menu](#left-menu)
+  * [Applications](#applications)
+  * [Forms](#forms)
+  * [Notifications](#notifications)
+* [Accessibility](#accessibility)
+* [Code style](#code-style)
+
+## API design
 
 Each API should always return a JavaScript promise in case of success or error.
 
@@ -20,7 +36,6 @@ Original esmith db notation:
 goofy=local
     Description=Goofy workstation
     IpAddress=192.168.1.22
-    MacAddress=xx:xx:xx:xx:xx:xx
 ```
 
 Equivalent JavaScript object notation:
@@ -29,7 +44,6 @@ var goofy = {
   id: "goofy", 
   Description: "Goofy workstation",
   IpAddress: "192.168.1.22",
-  MacAddress: "xx:xx:xx:xx:xx:xx"
 }
 ```
 
@@ -38,17 +52,132 @@ Please note that:
 - record type is not exposed in JS notation
 - the key is always contained inside the `id` field
 
-
-### CRUD
-
 APIs implementing CRUD operations, should declare these actions:
 
-- **add**: on success returns a success promise along with the created object, on error returns a failure promise along with a description of the error
-- **edit**: on success returns a success promise along with the modified object, on error returns a failure promise along with a description of the error
-- **delete**: on success returns a success promise along with an optional message, on error returns a failure promise along with a description of the error
-- **getAll**: on success returns a success promise along with a list of all requested objects, on error returns a failure promise along with a description of the error
-- **getOne**: on success returns a success promise along with the requested object, on error returns a failure promise along with a description of the error
+* [add](#add)
+* [edit](#edit)
+* [delete](#delete)
+* [getAll](#get-all)
+* [getOne](#get-one)
 
+### Add
+
+On success returns a success promise along with the created object, on error returns a failure promise along with a description of the error.
+
+*Parameter*: object to be addedd
+
+The API developer should provide one typed `add` method for each record type managed by the module.
+
+#### Example
+
+DNS module, which saves records inside the ``hosts`` database, defines two methods: `addDnsRecord`,  `addSelfAlias`.
+
+```
+   var goofy = { id: "goofy", Description: "Goofy workstation", IpAddress: "192.168.1.22" };
+   
+   nethserver.system.dns.addDnsRecord(goofy).then(function () {
+     ...
+     // success
+     ...
+   }, function (err) {
+     ...
+     // error
+     ...
+   });
+```
+
+### Edit
+
+On success returns a success promise along with the modified object, on error returns a failure promise along with a description of the error.
+
+*Parameter*: object to be modified
+
+The API developer should provide one typed `edit` method for each record type managed by the module.
+
+#### Example
+
+DNS module, which saves records inside the ``hosts`` database; define two methods named `editDnsRecord` and `editSelfAlias`.
+
+```
+var goofy = { id: "goofy", Description: "Goofy workstation", IpAddress: "192.168.1.22" };
+   
+nethserver.system.dns.editDnsRecord(goofy).then(function () {
+  ...
+  // success
+  ...
+}, function (err) {
+  ...
+  // error
+  ...
+});
+```
+
+### Delete
+
+On success returns a success promise along with an optional message, on error returns a failure promise along with a description of the error.
+
+*Parameter*: id to be deleted
+
+#### Example
+
+DNS module, which saves records inside the ``hosts`, defines one method `delete`.
+
+```
+nethserver.system.dns.delete('goofy').then(function () {
+  ...
+  // success
+  ...
+}, function (err) {
+  ...
+  // error
+ ...
+});
+```
+
+### Get all
+
+On success returns a success promise along with a list of all requested objects, on error returns a failure promise along with a description of the error.
+
+The API developer should provide one typed `getAll` method for each record type managed by the module.
+
+#### Example
+
+DNS module, which saves records inside the ``hosts`, defines two typed methods: `getAllDnsRecords`, `getAllSelfAliases`.
+
+```
+nethserver.system.dns.getAllRecords().then(function () {
+  ...
+  // success
+  ...
+}, function (err) {
+  ...
+  // error
+ ...
+});
+```
+
+### Get one
+
+On success returns a success promise along with the requested object, on error returns a failure promise along with a description of the error.
+
+*Parameter*: id to be retrieved.
+
+#### Example
+
+DNS module, which saves records inside the ``hosts`, defines one method: `getOne`.
+
+```
+nethserver.system.dns.getOne('goofy').then(function () {
+  ...
+  // success
+  ...
+}, function (err) {
+  ...
+  // error
+ ...
+});
+
+```
 ## UI design
 
 The whole web UI is designed following [PatternFly](http://www.patternfly.org/) patterns.
