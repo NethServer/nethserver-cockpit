@@ -34,7 +34,12 @@ input[type="file"] {
 }
 
 .view-spinner {
-  margin-top: 50px;
+  margin: auto;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  z-index: 2;
 }
 
 .custom-file-upload {
@@ -67,10 +72,10 @@ iframe>.breadcrumb {
 
 .iframe-embedded {
   position: absolute;
-  width: 98%;
-  height: 95%;
+  width: 95%;
+  height: 100%;
   border: none;
-  padding-bottom: 40px;
+  padding-bottom: 70px;
   z-index: 1;
 }
 

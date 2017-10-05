@@ -26,9 +26,9 @@ angular.module('systemAngularApp')
       },
       task: {
         isShown: false,
-        title: 'Event',
-        message: '...',
-        progress: 60,
+        title: '',
+        message: '',
+        progress: 0,
         show: function () {
           this.isShown = true;
         },
@@ -54,12 +54,12 @@ angular.module('systemAngularApp')
     setInterval(function () {
       for (var n in $scope.notifications.list) {
         var notification = $scope.notifications.list[n];
-        if (notification.status == 'success' && notification.timeAdded < (new Date().getTime() - 5000)) {
+        if (notification.status == 'success' && notification.timeAdded < (new Date().getTime() - 2500)) {
           $scope.notifications.remove(n);
           $scope.$apply();
         }
       }
-    }, 5000);
+    }, 2500);
 
     $scope.localSystem = {};
 
@@ -110,27 +110,37 @@ angular.module('systemAngularApp')
       };
     };
 
-    $scope.notifications.task.show();
-    setTimeout(function () {
+    // events listeners
+    nethserver.eventMonitor.addEventListener('nsevent.succeeded', function (success) {
       $scope.notifications.task.setData({
         progress: 100
       });
-
+      setTimeout(function () {
+        $scope.notifications.task.hide();
+        $scope.$apply();
+      }, 1500);
+      $scope.$apply();
+    });
+    nethserver.eventMonitor.addEventListener('nsevent.failed', function (fail) {
+      console.log(fail);
       $scope.notifications.add({
-        type: 'action',
-        title: 'Service',
-        message: 'sshd is stopped',
+        type: 'info',
+        title: fail.detail.title,
+        message: fail.detail.message,
         status: 'danger',
-        action: 'Restart',
-        method: function () {
-          console.log("asd");
-        }
       });
       $scope.$apply();
-    }, 2000);
+    });
+    nethserver.eventMonitor.addEventListener('nsevent.progress', function (progress) {
+      $scope.notifications.task.show();
+      $scope.notifications.task.setData({
+        progress: progress.detail.progress,
+        title: progress.detail.title,
+        message: progress.detail.message,
+      });
+      $scope.$apply();
+    });
 
-
-    // events listeners
     $scope.$on('$routeChangeSuccess', function (next, current) {
       var name = $route.routes[$location.path()];
       var crumbs = name.originalPath === '/' ? [""] : name.originalPath.split('/');

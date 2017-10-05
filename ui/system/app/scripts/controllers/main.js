@@ -142,7 +142,8 @@ angular.module('systemAngularApp')
         $scope.localSystem.summary.hostname = hostname;
         $scope.notifications.add({
           type: 'info',
-          title: 'Host name changed',
+          title: 'Hostname changed',
+          message: 'Hostname changed with success',
           status: 'success',
         });
         $scope.$apply();
