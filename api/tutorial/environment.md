@@ -4,7 +4,7 @@ The development environment can be prepared on a Fedora or CentOS 7 machine.
 
 Follow these steps:
 
-- prepare the enviroment
+- prepare the environment
 
 - do your modification to API or UI
 
@@ -83,18 +83,3 @@ ssh root@192.168.1.20  "mkdir -p ~/.local/share/cockpit/nethserver"
 cd api/ && grunt rsync:root@192.168.1.20:22
 cd ui/system && grunt rsync:root@192.168.1.20:22
 ```
-
-
-
-Creating new cockpit-module
-===========================
-
-Before starting the development of new module:
-
-- read upstream documentation: http://cockpit-project.org/guide/latest/
-- scaffold your module using ``generator-cockpit``: https://github.com/edospadoni/generator-cockpit
-
-Code style guideline
-====================
-
-Please use configuration from EditorConfig: http://editorconfig.org

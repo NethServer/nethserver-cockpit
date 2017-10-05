@@ -112,6 +112,7 @@ module.exports = function (grunt) {
                     "iconClass": "ico-book",
                     "label": "Building Docs",
                     "items": [
+                      { "label": "Guidelines", "href": "./guidelines" },
                       { "label": "API", "href": "./api" },
                       { "separator": true },
                       { "label": "Build RPM", "href": "./build_rpm" },
