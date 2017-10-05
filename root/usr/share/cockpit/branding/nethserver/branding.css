@@ -49,11 +49,22 @@ li.credential-lock span {
     min-height: 50px;
 }
 
+li.credential-lock>a:first-child {
+    height: 58px;
+    line-height: 40px;
+    font-size: 15px;
+}
+
+.credential-lock.credential-unlocked>*:last-child {
+    height: 58px;
+    line-height: 40px;
+    font-size: 15px;
+}
+
 #navbar-dropdown {
     height: 58px;
     line-height: 40px;
     font-size: 15px;
-    padding-left: 35px;
 }
 
 #navbar-dropdown>span {
