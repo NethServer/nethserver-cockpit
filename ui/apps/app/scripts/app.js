@@ -12,7 +12,8 @@ angular
   .module('appsAngularApp', [
     'ngResource',
     'ngRoute',
-    'ngSanitize'
+    'ngSanitize',
+    'ngAnimate'
   ])
   .config(function ($routeProvider) {
     $routeProvider

@@ -54,12 +54,12 @@ angular.module('appsAngularApp')
     setInterval(function () {
       for (var n in $scope.notifications.list) {
         var notification = $scope.notifications.list[n];
-        if (notification.status == 'success' && notification.timeAdded < (new Date().getTime() - 5000)) {
+        if (notification.status == 'success' && notification.timeAdded < (new Date().getTime() - 2500)) {
           $scope.notifications.remove(n);
           $scope.$apply();
         }
       }
-    }, 5000);
+    }, 2500);
 
     $scope.applications = [{
       id: 'nethserver-squid',
