@@ -30,6 +30,7 @@ fi
 # Cleanup existing releae
 rm -f api/nethserver-cockpit-api-*.tar.gz
 rm -f ui/system/nethserver-cockpit-ui-*.tar.gz
+rm -f ui/apps/nethserver-cockpit-ui-*.tar.gz
 
 # Cleanup current sources
 rm -f nethserver-cockpit-{ui,api}-*.tar.gz
@@ -39,7 +40,15 @@ pushd api/ && npm install && grunt build && grunt release
 popd
 pushd ui/system/ && npm install && bower install && grunt build && grunt release
 popd
+pushd ui/apps/ && npm install && bower install && grunt build && grunt release
+popd
 
 # Copy API and UI tar.gz releases
-find -name nethserver-cockpit-ui-*.tar.gz  -exec cp "{}" nethserver-cockpit-ui.tar.gz \;
-find -name nethserver-cockpit-api-*.tar.gz  -exec cp "{}" nethserver-cockpit-api.tar.gz \;
+cp ui/system/nethserver-cockpit-ui-*.tar.gz nethserver-cockpit-ui-system.tar.gz
+cp ui/apps/nethserver-cockpit-ui-*.tar.gz nethserver-cockpit-ui-apps.tar.gz
+cp api/nethserver-cockpit-api-*.tar.gz nethserver-cockpit-api.tar.gz
+
+# Print sha1sum output
+sha1sum nethserver-cockpit-api.tar.gz > SHA1SUM
+sha1sum nethserver-cockpit-ui-system.tar.gz >> SHA1SUM
+sha1sum nethserver-cockpit-ui-apps.tar.gz >> SHA1SUM

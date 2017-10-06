@@ -1,0 +1,39 @@
+<div ng-show="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
+<div ng-show="view.isLoaded">
+  <h3>{{'Applications' | translate}}</h3>
+  <form role="form" class="search-pf has-button search">
+    <div class="form-group has-clear">
+      <div class="search-pf-input-group">
+        <input ng-model="objects.searchString" type="text" class="form-control input-lg" placeholder="{{'Search' | translate}}...">
+      </div>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-default btn-lg" type="submit"><span class="fa fa-search"></span></button>
+    </div>
+  </form>
+  <div class="container-fluid container-cards-pf">
+    <div class="row row-cards-pf">
+      <div ng-repeat="a in applications | orderBy:'name' | filter:objects.searchString" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="card-pf card-pf-accented">
+          <span class="fa fa-{{a.icon}} app-icon"></span>
+          <h2 class="card-pf-title">
+            {{a.name}}
+          </h2>
+          <div class="card-pf-body">
+            <p>{{a.summary}}</p>
+          </div>
+          <div class="card-pf-footer">
+            <button ng-click="goToExternal(a.url)" ng-if="a.url" class="btn btn-primary card-pf-time-frame-filter" type="button">
+              <span class="fa fa-external-link"></span> {{'Open' | translate}}
+            </button>
+            <p>
+              <a ng-if="a.settings" href="" ng-click="goTo('/details/' + a.id)" class="card-pf-link-with-icon">
+                <span class="pficon pficon-settings"></span>{{'Settings' | translate}}
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

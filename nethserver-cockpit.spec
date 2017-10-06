@@ -8,7 +8,8 @@ URL:            %{url_prefix}/%{name}
 Source0:        %{name}-%{version}.tar.gz
 # Execute prep-sources to create Source1 and Source2
 Source1:        nethserver-cockpit-api.tar.gz
-Source2:        nethserver-cockpit-ui.tar.gz
+Source2:        nethserver-cockpit-ui-system.tar.gz
+Source3:        nethserver-cockpit-ui-apps.tar.gz
 BuildArch:      noarch
 
 BuildRequires:  nethserver-devtools
@@ -29,6 +30,7 @@ perl createlinks
 mkdir -p %{buildroot}/usr/share/cockpit/nethserver/
 tar xvf %{SOURCE1} -C %{buildroot}/usr/share/cockpit/nethserver/
 tar xvf %{SOURCE2} -C %{buildroot}/usr/share/cockpit/nethserver/
+tar xvf %{SOURCE3} -C %{buildroot}/usr/share/cockpit/nethserver/
 %{genfilelist} %{buildroot} > filelist
 
 %files -f filelist

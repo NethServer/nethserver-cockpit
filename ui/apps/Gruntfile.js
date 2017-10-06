@@ -298,7 +298,7 @@ module.exports = function (grunt) {
     ngtemplates: {
       dist: {
         options: {
-          module: 'systemAngularApp',
+          module: 'appsAngularApp',
           htmlmin: '<%= htmlmin.dist.options %>',
           usemin: 'scripts/scripts.js'
         },
@@ -401,9 +401,14 @@ module.exports = function (grunt) {
           }
         }
       },
+      rename: {
+        command: function () {
+          return "mv dist/index.html dist/apps.html";
+        }
+      },
       compress: {
         command: function () {
-          return "tar cvzf nethserver-cockpit-ui-system-" + global.gitDescribe + ".tar.gz -C dist/ .";
+          return "tar cvzf nethserver-cockpit-ui-apps-" + global.gitDescribe + ".tar.gz -C dist/ .";
         }
       }
     },
@@ -450,6 +455,6 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('release', 'Create release file', ['shell:describe', 'shell:compress']);
+  grunt.registerTask('release', 'Create release file', ['shell:describe', 'shell:rename', 'shell:compress']);
 
 };
