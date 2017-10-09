@@ -114,6 +114,7 @@ module.exports = function (grunt) {
                     "items": [
                       { "label": "Guidelines", "href": "./guidelines" },
                       { "label": "API", "href": "./api" },
+                      { "label": "Application manifest", "href": "./application_manifest" },
                       { "separator": true },
                       { "label": "Build RPM", "href": "./build_rpm" },
                       { "label": "Build documentation", "href": "./build_doc" },
