@@ -226,7 +226,15 @@ function Nsdb(path) {
 Nsdb.prototype = {
 
     /**
-     * @param {String} key
+     * Return the given key
+     *
+     * @example
+     * var db = nethserver.getDatabase('configuration');
+     * return db.open().then(function() {
+     *   var muid = db.get('MinUid');
+     * });
+     *
+     * @param {String} key - Key name
      * @return {String} the type of the given key or empty string if key does not exist
      */
     get: function(key) {
@@ -234,7 +242,15 @@ Nsdb.prototype = {
     },
 
     /**
-     * @param {String} key
+     * Return the type of given key
+     *
+     * @example
+     * var db = nethserver.getDatabase('configuration');
+     * return db.open().then(function() {
+     *   var type = db.getType('OrganizationContact'); //return "configuration"
+     * });
+     *
+     * @param {String} key - Key name
      * @return {String} the type of the given key or empty string if key does not exist
      */
     getType: function(key) {
@@ -245,8 +261,16 @@ Nsdb.prototype = {
     },
 
     /**
-     * @param {String} key
-     * @param {String} prop
+     * Return the selected prop of given key
+     *
+     * @example
+     * var db = nethserver.getDatabase('configuration');
+     * return db.open().then(function() {
+     *   var city = db.getProp('OrganizationContact', 'City');
+     * });
+     *
+     * @param {String} key - Key name
+     * @param {String} prop - Property name
      * @return {String} the prop value or empty string if key or prop does not exist
      */
     getProp: function(key, prop) {
@@ -257,9 +281,22 @@ Nsdb.prototype = {
     },
 
     /**
-     * @param {String} key
-     * @param {String} type
-     * @param {Object} props
+     * Create a key if not exists, or ad edit an existing one.
+     * Set key type and the value of selected props inside the given key
+     *
+     * @example
+     * var db = nethserver.getDatabase('configuration');
+     * return db.open().then(function() {
+     *   db.set('OrganizationContact', 'configuration', {Street: "my street", City: "Bigapple"});
+     *   return db.save();
+     * }).then(function(){
+     *   return nethserver.signalEvent('organization-save');
+     * });
+     *
+     *
+     * @param {String} key - Key name
+     * @param {String} type - Type of the key
+     * @param {Object} props - Object with properties map name => value
      * @return {Object} the DB object itself
      */
     set: function(key, type, props) {
@@ -269,8 +306,17 @@ Nsdb.prototype = {
     },
 
     /**
-     * @param {String} key
-     * @param {String} type
+     * Set the type of given key
+     *
+     * @example
+     * var db = nethserver.getDatabase('configuration');
+     * return db.open().then(function() {
+     *   db.set('MinUid', "5000");
+     *   return db.save();
+     * });
+     *
+     * @param {String} key - Key name
+     * @param {String} type - Type of the key
      * @return {Object} the DB object itself
      */
     setType: function(key, type) {
@@ -285,9 +331,22 @@ Nsdb.prototype = {
     },
 
     /**
-     * @param {String} key
-     * @param {String} prop
-     * @param {String} value
+     * Set the value of selected prop inside the given key.
+     * Key type is not changed.
+     *
+     * @example
+     * var db = nethserver.getDatabase('configuration');
+     * return db.open().then(function() {
+     *   db.setProp('OrganizationContact', 'Street', 'my street');
+     *   return db.save();
+     * }).then(function(){
+     *   return nethserver.signalEvent('organization-save');
+     * });
+     *
+     *
+     * @param {String} key - Key name
+     * @param {String} prop - Property name
+     * @param {String} value - Value of the property
      * @return {Object} the DB object itself
      */
     setProp: function(key, prop, value) {
@@ -300,8 +359,20 @@ Nsdb.prototype = {
     },
 
     /**
-     * @param {String} key
-     * @param {Object} props
+     * Set the value of selected props inside the giben key
+     * Key type is not changed.
+     *
+     * @example
+     * var db = nethserver.getDatabase('configuration');
+     * return db.open().then(function() {
+     *   db.setProps('OrganizationContact', {Street: "my street", City: "Bigapple"});
+     *   return db.save();
+     * }).then(function(){
+     *   return nethserver.signalEvent('organization-save');
+     * });
+     *
+     * @param {String} key - Key name
+     * @param {Object} props - Object with properties map name => value
      * @return {Object} the DB object itself
      */
     setProps: function(key, props) {
@@ -314,7 +385,13 @@ Nsdb.prototype = {
     },
 
     /**
-     * @param {String} key
+     * Delete the given key
+     *
+     * @example
+     * var db = nethserver.getDatabase('configuration');
+     * db.delete('OrganizationContact');
+     *
+     * @param {String} key - Key name
      * @return {Object} the DB object itself
      */
     delete: function(key) {
@@ -324,8 +401,14 @@ Nsdb.prototype = {
     },
 
     /**
-     * @param {String} key
-     * @param {String} prop
+     * Delete selected prop inside given key
+     *
+     * @example
+     * var db = nethserver.getDatabase('configuration');
+     * db.delProp('OrganizationContact','City');
+     *
+     * @param {String} key - Key name
+     * @param {String} prop - Property name
      * @return {Object} the DB object itself
      */
     delProp: function(key, prop) {
@@ -338,8 +421,14 @@ Nsdb.prototype = {
     },
 
     /**
-     * @param {String} key
-     * @param {Array} props
+     * Delete selected props inside the given keys
+     *
+     * @example
+     * var db = nethserver.getDatabase('configuration');
+     * db.delProp('OrganizationContact',['City','Street']);
+     *
+     * @param {String} key - Key name
+     * @param {Array} props - List of property names to be removed
      * @return {Object} the DB object itself
      */
     delProps: function(key, props) {
@@ -350,7 +439,13 @@ Nsdb.prototype = {
     },
 
     /**
-     * @param {Object} props
+     * Return a list of keys inside the current DB
+     *
+     *
+     * @example
+     * var db = nethserver.getDatabase('configuration');
+     * var keys = db.keys();
+     *
      * @return {Array} the keys in DB
      */
     keys: function() {
@@ -358,6 +453,14 @@ Nsdb.prototype = {
     },
 
     /**
+     * Open the database
+     *
+     * @example
+     * var db = nethserver.getDatabase('configuration');
+     * return db.open().then(function() {
+     *   // do something like db.getProp(...)
+     * })
+     *
      * @return {Promise}
      */
     open: function() {
@@ -385,6 +488,17 @@ Nsdb.prototype = {
     },
 
     /**
+     * Commit changes to the database
+     *
+     * @example
+     * var db = nethserver.getDatabase('configuration');
+     * return db.open().then(function() {
+     *   // do setProp
+     *   return db.save();
+     * }).then(function(){
+     *   // execute signal event
+     * });
+     *
      * @return {Promise}
      */
     save: function() {
