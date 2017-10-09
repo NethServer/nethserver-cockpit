@@ -51,10 +51,6 @@ Please note that:
 
 - record type is not exposed in JS notation
 - the key is always contained inside the `id` field
-<<<<<<< HEAD
-=======
-
->>>>>>> doc: document application manifests
 
 APIs implementing CRUD operations, should declare these actions:
 
