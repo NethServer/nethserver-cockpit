@@ -2,7 +2,8 @@
 <html><head></head><body><h1 id="application-manifest">Application manifest</h1>
 <hr />
 <p>Applications are described by a JSON manifest inspired to <a href="https://www.freedesktop.org/software/appstream/docs/chap-Quickstart.html">AppData</a>
-metadata format.</p>
+and <a href="https://docs.npmjs.com/files/package.json">NPM package.json</a> formats.</p>
+<p>The manifest is used both for generating the "Applications" page and for a future App store.</p>
 <p>Manifest must be placed under <code>/usr/share/cockpit/nethserver/applications</code> directory and named with the application id like <code>&lt;id&gt;.json</code>;</p>
 <h2 id="format">Format</h2>
 <ul>
@@ -15,6 +16,10 @@ metadata format.</p>
 <li><strong>homepage</strong>: this is a recommended tag for link project official site (optional)</li>
 <li><strong>release</strong>: define the version and release date of this application (recommended)</li>
 <li><strong>provides</strong>: list of provided RPM packages (optional)</li>
+<li><strong>tags</strong>: list of keywords to help people discover content of the application (optional)</li>
+<li><strong>license</strong>: license of the application, please pick one from <a href="https://spdx.org/licenses/">SPDX list</a> (recommended)</li>
+<li><strong>bugs</strong>: the url of project's issue tracker and / or the email address to which issues should be reported (optional)</li>
+<li><strong>author</strong>: the name of of the author with optional email and urls fields. (recommended)</li>
 </ul>
 <h3 id="example">Example</h3>
 <p>File  <code>/usr/share/cockpit/nethserver/applications/nextcloud.json</code></p>
@@ -33,6 +38,10 @@ metadata format.</p>
   "url": "/nextcloud",
   "homepage": "http://www.nextcloud.org"
   "provides": { ["nextcloud", "nethserver-nextcloud"] }
-  "release": { "version": "12.0.2" }
+  "release": { "version": "12.0.2" },
+  "tags": { "cloud", "files", "share" },
+  "license" : "GPL-3.0",
+  "bugs": { "url": "https://github.com/owner/project/issues", "email" : "project@hostname.com" },
+  "author": { "name": "Nextcloud", "url" : "https://nextcloud.com", "email": "info@nextcloud.com" }
 }
 </code></pre></body></html>
