@@ -28,25 +28,38 @@ Manifest must be placed under `/usr/share/cockpit/nethserver/applications` direc
 File  `/usr/share/cockpit/nethserver/applications/nextcloud.json`
 ```
 {
-  "id": "netxtcloud",
-  "name": "NextCloud"
-  "summary": "Share your data",
-  "description": { 
-    ["Access, **share** and protect your files, calendars, contacts, communication & more at home and in your enterprise."],
-    ["Nextcloud puts your data at your fingertips, under your control."]
-  },
-  "screenshots": { 
-     ["caption" : "Login", "image" : "http://my.screenshot.org/login.png" ] 
-     ["caption" : "Share data", "image" : "http://my.screenshot.org/data.png" ] 
-  },
-  "url": "/nextcloud",
-  "homepage": "http://www.nextcloud.org"
-  "provides": { ["nextcloud", "nethserver-nextcloud"] }
-  "release": { "version": "12.0.2" },
-  "tags": { "cloud", "files", "share" },
-  "license" : "GPL-3.0",
-  "bugs": { "url": "https://github.com/owner/project/issues", "email" : "project@hostname.com" },
-  "author": { "name": "Nextcloud", "url" : "https://nextcloud.com", "email": "info@nextcloud.com" }
+    "id": "netxtcloud",
+    "name": "NextCloud",
+    "summary": "Share your data",
+    "description": [
+        ["Access, **share** and protect your files, calendars, contacts, communication & more at home and in your enterprise."],
+        ["Nextcloud puts your data at your fingertips, under your control."]
+    ],
+    "screenshots": [
+        { "caption": "Login", "image": "http://my.screenshot.org/login.png" },
+        { "caption": "Share data", "image": "http://my.screenshot.org/data.png" }
+    ],
+    "url": "/nextcloud",
+    "homepage": "http://www.nextcloud.org",
+    "provides": ["nextcloud", "nethserver-nextcloud"],
+    "release": {
+        "version": "12.0.2"
+    },
+    "tags": [
+        "cloud",
+        "files",
+        "share"
+    ],
+    "license": "GPL-3.0",
+    "bugs": {
+        "url": "https://github.com/owner/project/issues",
+        "email": "project@hostname.com"
+    },
+    "author": {
+        "name": "Nextcloud",
+        "url": "https://nextcloud.com",
+        "email": "info@nextcloud.com"
+    }
 }
 ```
 
