@@ -235,6 +235,11 @@ NethServer Cockpit provides 3 types of [toast notification](http://www.patternfl
 - **task**: transient, it stays on the screen until the task has been completed
 - **error**: not transient, it stays on the screen until the user explicitly close it
 
+### Modals
+
+Modal overlay should be provided any time the user needs to enter data on a form and press "Save" button to change system configuration.
+
+See also [Modal Overlay](http://www.patternfly.org/pattern-library/forms-and-controls/modal-overlay/) for extra use cases.
 
 ## Accessibility
 
