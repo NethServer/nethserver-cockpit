@@ -310,7 +310,6 @@ describe('Also, the object returned by getDatabase()', function() {
             }).
             then(function(){
                 var o = tdb.getObject('keytest2');
-                console.log(o);
                 should(o).be.an.instanceOf(Object);
             });
     });
