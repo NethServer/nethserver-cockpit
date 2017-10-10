@@ -219,8 +219,127 @@ describe('Also, the object returned by getDatabase()', function() {
 
     });
 
+    it('getProps', function () {
+        var tdb = nethserver.getDatabase('/tmp/testdb');
+        return tdb.open().
+            then(function(){
+                tdb.delete('keytest');
+                tdb.set('keytest', 'typeofkey', {'p1':'v1', 'p2': 'v2'});
+            }).
+            then(function(){
+                return tdb.save();
+            }).
+            then(function(){
+                var p = tdb.getProps('keytest');
+                p.should.have.property('p1');
+                p.should.have.property('p2');
+                p.p1.should.be.equal('v1');
+                p.p2.should.be.equal('v2');
+            });
+    });
+
+    it('getProps on a key without props', function () {
+        var tdb = nethserver.getDatabase('/tmp/testdb');
+        return tdb.open().
+            then(function(){
+                tdb.delete('keytest');
+                tdb.set('keytest', 'typeofkey');
+            }).
+            then(function(){
+                return tdb.save();
+            }).
+            then(function(){
+                var p = tdb.getProps('keytest');
+                p.should.not.have.property('p1');
+            });
+    });
+
+
+    it('getObject', function () {
+        var tdb = nethserver.getDatabase('/tmp/testdb');
+        return tdb.open().
+            then(function(){
+                tdb.delete('keytest');
+                tdb.set('keytest', 'typeofkey', {'p1':'v1', 'p2': 'v2'});
+            }).
+            then(function(){
+                return tdb.save();
+            }).
+            then(function(){
+                var o = tdb.getObject('keytest');
+                o.should.have.property('key');
+                o.should.have.property('type');
+                o.should.have.property('p1');
+                o.should.have.property('p2');
+                o.key.should.be.equal('keytest');
+                o.type.should.be.equal('typeofkey');
+                o.p1.should.be.equal('v1');
+                o.p2.should.be.equal('v2');
+            });
+    });
+
+    it('getObject on a key without properties', function () {
+        var tdb = nethserver.getDatabase('/tmp/testdb');
+        return tdb.open().
+            then(function(){
+                tdb.delete('keytest');
+                tdb.set('keytest2', 'typeofkey2');
+            }).
+            then(function(){
+                return tdb.save();
+            }).
+            then(function(){
+                var o = tdb.getObject('keytest2');
+
+                o.should.have.property('key');
+                o.should.have.property('type');
+                o.should.not.have.property('p1');
+                o.key.should.be.equal('keytest2');
+                o.type.should.be.equal('typeofkey2');
+            });
+    });
+
+    it('getObject on a non-existing key', function () {
+        var tdb = nethserver.getDatabase('/tmp/testdb');
+        return tdb.open().
+            then(function(){
+                tdb.delete('keytest');
+            }).
+            then(function(){
+                return tdb.save();
+            }).
+            then(function(){
+                var o = tdb.getObject('keytest2');
+                console.log(o);
+                should(o).be.an.instanceOf(Object);
+            });
+    });
+
+    it('setObject', function () {
+        var tdb = nethserver.getDatabase('/tmp/testdb');
+        return tdb.open().
+            then(function(){
+                tdb.delete('keytest');
+                tdb.setObject({key: 'keytest', type: 'typeofkey', 'p1':'v1', 'p2': 'v2'});
+            }).
+            then(function(){
+                return tdb.save();
+            }).
+            then(function(){
+                var o = tdb.getObject('keytest');
+                o.should.have.property('key');
+                o.should.have.property('type');
+                o.should.have.property('p1');
+                o.should.have.property('p2');
+                o.key.should.be.equal('keytest');
+                o.type.should.be.equal('typeofkey');
+                o.p1.should.be.equal('v1');
+                o.p2.should.be.equal('v2');
+            });
+    });
 
 });
+
 
 describe('nethserver.validate()', function() {
     it('succeedes', function() {

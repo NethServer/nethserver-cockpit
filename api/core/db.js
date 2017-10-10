@@ -226,6 +226,112 @@ function Nsdb(path) {
 Nsdb.prototype = {
 
     /**
+     * Return the object corresponding to the given key
+     *
+     * @example
+     * var db = nethserver.getDatabase('configuration');
+     * return db.open().then(function() {
+     *   console.log(db.getObject('OrganizationContact'));
+     * });
+     * //Output:
+     * {
+     *   key: 'OrganizationContact',
+     *   type: 'configuration',
+     *   ...
+     *   Company: 'Example Org',
+     *   CountryCode: '',
+     *   ...
+     * }
+     *
+     * @param {String} key - Key name
+     * @return {Object.<Record>} an object which represent the record, an empty object if the key is not inside the db.
+     * Valid objects must have **key** and **type** fields, also each property is mapped on a field with
+     * the same name of the property itself.
+     *
+     */
+    getObject: function(key) {
+        var ret = {};
+        var type = this.getType(key);
+        if (!type) {
+            return ret;
+        }
+        ret.key = key;
+        ret.type = this.getType(key);
+        var props = this.getProps(key);
+        if (!$.isEmptyObject(props)) {
+            for (var p in props) {
+                ret[p] = props[p];
+            }
+        }
+        return ret;
+    },
+
+    /**
+     * Save and object inside the db.
+     *
+     * @example
+     * var db = nethserver.getDatabase('configuration');
+     * return db.open().then(function() {
+     *   db.setProp({key: 'OrganizationContact', type: 'configuration', Company: 'Example Org', CountryCode: ''});
+     * });
+     * //Output:
+     * {
+     *   key: 'OrganizationContact',
+     *   type: 'configuration',
+     *   ...
+     *   Company: 'Example Org',
+     *   CountryCode: '',
+     *   ...
+     * }
+     *
+     * @param {Object.<Record>} obj - Object to be saved. The object must contains at least **key** and **type** fields
+     * @return {Object.<Record>} on success the DB itself, or undefined on error
+     *
+     */
+    setObject: function(obj) {
+        if (jQuery.type(obj.key) == "undefined" || jQuery.type(obj.type) == "undefined") {
+            return undefined;
+        }
+        var key = obj.key;
+        var type = obj.type;
+        delete obj.key;
+        delete obj.type;
+        return this.set(key, type, obj);
+    },
+
+    /**
+     * Return the properties of the given key
+     *
+     * @example
+     * var db = nethserver.getDatabase('configuration');
+     * return db.open().then(function() {
+     *   console.log(db.getProps('OrganizationContact'));
+     * });
+     * //Output:
+     * {
+     *   ...
+     *   Company: 'Example Org',
+     *   CountryCode: '',
+     *   ...
+     * }
+     *
+     * @param {String} key - Key name
+     * @return {Object.<Record>} an object which represent all the properties of the record, an empty object if the key is not inside the db.
+     * Each property is mapped on a field with the same name of the property itself.
+     *
+     */
+    getProps: function(key) {
+        var props = {};
+        var type = this.getType(key);
+        if(type) {
+            for (var k in this.data[key][PROP]) {
+                props[k] = this.data[key][PROP][k];
+            }
+        }
+        return props;
+    },
+
+    /**
      * Return the given key
      *
      * @example
