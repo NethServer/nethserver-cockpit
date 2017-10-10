@@ -31,15 +31,4 @@ var app = {};
     a.showNotification = function (notification) {
         parent.$('body').trigger('showNotification', notification);
     };
-
-    /**
-     * Trigger events when any modal is shown or hidden
-     */
-    $('.modal').on('show.bs.modal', function () {
-        parent.$('body').trigger('modalShow');
-    });
-
-    $('.modal').on('hide.bs.modal', function () {
-        parent.$('body').trigger('modalHide');
-    });
 })(app, jQuery);

@@ -150,3 +150,11 @@ li.credential-lock>a:first-child {
         margin-left: 23px;
     }
 }
+
+#go-account>a {
+    display: none;
+}
+
+#credentials-item {
+    display: none;
+}

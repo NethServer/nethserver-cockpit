@@ -12,8 +12,6 @@ angular.module('appsAngularApp')
     // show body when angular is fully loaded
     $('body').show();
 
-    cockpit.locale('en_US.json');
-
     // variables declaration
     $scope.notifications = {
       list: [],
@@ -62,9 +60,9 @@ angular.module('appsAngularApp')
     }, 2500);
 
     $scope.applications = [{
-      id: 'nethserver-squid',
+      id: 'nethserver-dummy',
       name: "Proxy",
-      summary: 'Proxy configuration module',
+      summary: 'Configuration Proxy configuration module',
       description: '',
       icon: 'fire',
       url: 'http://google.com',
@@ -82,8 +80,7 @@ angular.module('appsAngularApp')
     }]
 
     $scope.stats = {
-      updates: [],
-      errors: []
+      updates: []
     };
 
     $scope.initObjects = {
@@ -131,37 +128,8 @@ angular.module('appsAngularApp')
       };
     };
 
-    /* $scope.notifications.task.show();
-    setTimeout(function () {
-      $scope.notifications.task.setData({
-        progress: 100
-      });
-
-      $scope.notifications.add({
-        type: 'action',
-        title: 'Service',
-        message: 'sshd is stopped',
-        status: 'danger',
-        action: 'Restart',
-        method: function () {
-          console.log("asd");
-        }
-      });
-      $scope.$apply();
-    }, 2000); */
-
     // events listeners
     $scope.$on('$routeChangeSuccess', function (next, current) {
-      /* var path = $location.path();
-      var name = $route.routes[path.replace(/details\/[A-Za-z0-9-_]+/, 'details\/:app')];
-      var crumbs = name.originalPath === '/' ? [""] : path.split('/').splice(2,3);
-      $scope.crumbs = crumbs.map(function (v) {
-        console.log(v, $route.routes['/' + v], $route.routes['/' + v].name);
-        return {
-          name: $route.routes['/' + v].name,
-          url: '/details/' + v
-        }
-      }); */
       $scope.crumbs = [];
     });
   });

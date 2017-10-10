@@ -1,57 +1,28 @@
 .app-summary {
-    min-height: 125px;
+    padding: 0;
 }
 
-.app-actions {
-    border-left: 1px solid #dddddd;
-}
-
-@media screen and (max-width: 768px) {
-    .app-actions {
-        border-left: 0px;
-        border-top: 1px solid #dddddd;
-        padding-top: 10px;
-    }
+.app-settings {
+    padding: 0;
 }
 
 .app-header {
     margin-top: 0px;
 }
 
-.app-settings {
-    border-top: 1px solid #dddddd;
-}
-
-.app-icon {
+.app-icon-details {
     font-size: 60px;
     float: right;
 }
 
-.app-short-descpription {
-    max-width: 165px;
-    margin-top: 10px;
-}
-
-.app-version {
-    color: #667;
-}
-
-.app-list-group {
-    margin-bottom: 0px;
-}
-
-.no-padding {
-    padding: 0px !important;
-}
-
-.app-list-group-item {
-    background: #f5f5f5;
-    padding: 10px 0px;
-    border: 1px solid #eeeeee;
-    border-left: 0;
-    border-right: 0;
-}
-
 .card-pf:hover {
     box-shadow: 0 1px 6px rgba(3, 3, 3, .35);
+}
+
+.container,
+.container-fluid {
+}
+
+.container-cards-pf {
+    margin-top: 10px;
 }

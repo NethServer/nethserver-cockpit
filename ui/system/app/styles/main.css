@@ -82,7 +82,6 @@ iframe>.breadcrumb {
 
 .fake-modal-backdrop {
   position: fixed;
-  z-index: 1040;
   background-color: #000;
   top: 0;
   right: 0;
@@ -108,6 +107,7 @@ iframe>.breadcrumb {
 
 .crumb-space {
   margin-left: 7px;
+  font-size: 11px;
 }
 
 .crumb-none:focus,
@@ -244,7 +244,7 @@ iframe>.breadcrumb {
 }
 
 .gray {
-  color: #bbbbbb;
+  color: #9c9c9c;
 }
 
 .white-background {

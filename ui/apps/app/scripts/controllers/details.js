@@ -9,16 +9,15 @@
  */
 angular.module('appsAngularApp')
   .controller('DetailsCtrl', function ($scope, $routeParams) {
-    // view object
     $scope.view = {
       isLoaded: false
     };
 
     // retrieve app name
     $scope.appNameRaw = $routeParams.app;
-    $scope.appNameFull = $scope.applications.filter(function (a) {
+    $scope.app = $scope.applications.filter(function (a) {
       return a.id == $scope.appNameRaw;
-    })[0].name;
+    })[0];
     $scope.appURL = '/cockpit/@localhost/' + $scope.appNameRaw + '/index.html';
 
     // add crumb path
@@ -27,20 +26,11 @@ angular.module('appsAngularApp')
       url: '/'
     })
     $scope.crumbs.push({
-      name: $scope.appNameFull,
+      name: $scope.app.name,
       url: $scope.appURL
     });
 
     // events listeners
-    $('body').on('modalShow', function (e) {
-      $scope.initObjects.isFake = true;
-      $scope.$apply();
-    });
-    $('body').on('modalHide', function (e) {
-      $scope.initObjects.isFake = false;
-      $scope.$apply();
-    });
-
     $('body').on('showNotification', function (e, notification) {
       $scope.notifications.add({
         type: notification.type,
@@ -51,8 +41,38 @@ angular.module('appsAngularApp')
       $scope.$apply();
     });
 
+    // show fake backdrop when modal is open
     $('#app-frame').load(function () {
       $scope.view.isLoaded = true;
+
+      // calculate height
+      $('#app-frame').css('height', window.innerHeight - 50);
+
+      // select the target node
+      var target = document.querySelector('#app-frame').contentDocument.body;
+
+      // create an observer instance
+      var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+          if ($(mutation.target).hasClass("modal-open")) {
+            $scope.initObjects.isFake = true;
+          } else {
+            $scope.initObjects.isFake = false;
+          }
+          $scope.$apply();
+        });
+      });
+
+      // configuration of the observer:
+      var config = {
+        attributes: true,
+        childList: true,
+        characterData: true
+      }
+
+      // pass in the target node, as well as the observer options
+      observer.observe(target, config);
+
       $scope.$apply();
     });
   });
