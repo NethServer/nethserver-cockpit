@@ -17,39 +17,35 @@ angular.module('systemAngularApp')
     };
 
     $scope.localSystem.dns = {};
-    $scope.localSystem.dns.hosts = [{
-      hostname: 'test.neth.eu',
-      ip: '78.45.12.6',
-      description: 'Server dns di test'
-    }];
+    $scope.localSystem.dns.hosts = {};
 
     // methods
-    nethserver.system.dns.getAll(function (hosts) {
+    nethserver.system.dns.getAllRemoteHosts().then(function (hosts) {
       $scope.localSystem.dns.hosts = hosts;
 
-      // $scope.$apply();
+      $scope.$apply();
     }, function (err) {
-      console.error("couldn't read dnss: " + err);
+      console.error("couldn't read remote hosts db: " + err);
     });
 
-    $scope.saveDNS = function (dnsServer) {
-      nethserver.system.dns.saveDNS(dnsServer).then(function () {
-
+    $scope.saveDNS = function (host) {
+      nethserver.system.dns.addRemoteHost(host).then(function () {
+      $('#newDNSModal').modal('hide');
       }, function (err) {
         console.error(err);
       });
     };
-    $scope.editDNS = function (dnsServer) {
-      $scope.objects.newDNS = angular.copy(dnsServer) || {};
+    $scope.editDNS = function (host) {
+      $scope.objects.newDNS = angular.copy(host) || {};
       $('#newDNSModal').modal('show');
     };
-    $scope.openDeleteDNS = function (dnsServer) {
-      $scope.objects.toDeleteDNS = angular.copy(dnsServer);
+    $scope.openDeleteDNS = function (host) {
+      $scope.objects.toDeleteDNS = angular.copy(host);
       $('#deleteDNSModal').modal('show');
     };
-    $scope.deleteDNS = function (dnsServer) {
-      nethserver.system.dns.deleteDNS(dnsServer).then(function () {
-
+    $scope.deleteDNS = function (host) {
+      nethserver.system.dns.deleteRemoteHost(host.key).then(function () {
+        $('#deleteDNSModal').modal('hide');
       }, function (err) {
         console.error(err);
       });
