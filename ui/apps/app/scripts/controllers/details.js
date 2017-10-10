@@ -31,7 +31,7 @@ angular.module('appsAngularApp')
     });
 
     // events listeners
-    $('body').on('showNotification', function (e, notification) {
+    nethserver.notificationMonitor.addEventListener('nsnotification', function (notification) {
       $scope.notifications.add({
         type: notification.type,
         title: notification.title,

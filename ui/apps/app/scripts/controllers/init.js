@@ -129,6 +129,29 @@ angular.module('appsAngularApp')
     };
 
     // events listeners
+    nethserver.eventMonitor.addEventListener('nsevent.succeeded', function (success) {
+      $scope.notifications.task.hide();
+      $scope.$apply();
+    });
+    nethserver.eventMonitor.addEventListener('nsevent.failed', function (fail) {
+      $scope.notifications.add({
+        type: 'info',
+        title: fail.detail.title,
+        message: fail.detail.message,
+        status: 'danger',
+      });
+      $scope.$apply();
+    });
+    nethserver.eventMonitor.addEventListener('nsevent.progress', function (progress) {
+      $scope.notifications.task.show();
+      $scope.notifications.task.setData({
+        progress: Math.round(progress.detail.progress * 100),
+        title: progress.detail.title,
+        message: progress.detail.message,
+      });
+      $scope.$apply();
+    });
+
     $scope.$on('$routeChangeSuccess', function (next, current) {
       $scope.crumbs = [];
     });
