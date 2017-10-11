@@ -589,6 +589,7 @@ Nsdb.prototype = {
 
         function closeFile() {
             fh.close();
+            return self;
         }
 
         var p = Promise.resolve(fh.read().done(function(data, tag) {
