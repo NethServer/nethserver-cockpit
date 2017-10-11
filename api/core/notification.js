@@ -28,7 +28,7 @@
      * @param {string} status the status of notification (info|danger|success|warning)
      * @param {string} action the label of action, es. "Restart"
      * @param {Function} method the method to invoke
-     * @param {string} [type="info"] the type of notification, default. info
+     * @param {string} [type="info"] the type of notification, (info|action)
      *
      */
 

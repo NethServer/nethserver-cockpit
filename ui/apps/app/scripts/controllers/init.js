@@ -52,12 +52,12 @@ angular.module('appsAngularApp')
     setInterval(function () {
       for (var n in $scope.notifications.list) {
         var notification = $scope.notifications.list[n];
-        if (notification.status == 'success' && notification.timeAdded < (new Date().getTime() - 2500)) {
+        if (notification.status == 'success' && notification.timeAdded < (new Date().getTime() - 5000)) {
           $scope.notifications.remove(n);
           $scope.$apply();
         }
       }
-    }, 2500);
+    }, 5000);
 
     $scope.applications = [{
       id: 'nethserver-dummy',

@@ -32,11 +32,14 @@ angular.module('appsAngularApp')
 
     // events listeners
     nethserver.notificationMonitor.addEventListener('nsnotification', function (notification) {
+      var notification = notification.detail;
       $scope.notifications.add({
         type: notification.type,
         title: notification.title,
         message: notification.message,
         status: notification.status,
+        action: notification.action,
+        method: notification.method,
       });
       $scope.$apply();
     });
