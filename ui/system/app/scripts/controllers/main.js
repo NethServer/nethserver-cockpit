@@ -8,7 +8,7 @@
  * Controller of the systemAngularApp
  */
 angular.module('systemAngularApp')
-  .controller('MainCtrl', function ($scope, $route, $location) {
+  .controller('MainCtrl', function ($scope, $route, $location, $filter) {
     // view object
     $scope.view = {
       isLoaded: false
@@ -19,19 +19,12 @@ angular.module('systemAngularApp')
       allRoutes: [],
       blacklistRoutes: ['/disk-usage', '/logs', '/storage'],
       systimeTypes: {
-        'manual': 'Manual',
-        'ntp': 'Using NTP server',
+        'manual': $filter('translate')('Manual'),
+        'ntp': $filter('translate')('Using NTP server'),
       }
     };
 
     $scope.localSystem.summary = {};
-    $scope.localSystem.summary.aliases = [{
-      name: 'alias.test1'
-    }, {
-      name: 'alias.test2'
-    }, {
-      name: 'alias.test3'
-    }];
 
     // retrieve base system info
     // -- Hardware --
@@ -131,6 +124,7 @@ angular.module('systemAngularApp')
       console.error("couldn't read organization info: " + err);
     });
 
+    // modal actions
     $scope.openChangeHostname = function () {
       $scope.localSystem.summary.newHostname = $scope.localSystem.summary.hostname;
       $('#hostnameChangeModal').modal('show');
@@ -142,16 +136,16 @@ angular.module('systemAngularApp')
         $scope.localSystem.summary.hostname = hostname;
         $scope.notifications.add({
           type: 'info',
-          title: 'Hostname changed',
-          message: 'Hostname changed with success',
+          title: $filter('translate')('Hostname changed'),
+          message: $filter('translate')('Hostname changed with success'),
           status: 'success',
         });
         $scope.$apply();
       }, function (err) {
         $scope.notifications.add({
           type: 'info',
-          title: 'Error',
-          message: 'Event failed',
+          title: $filter('translate')('Error'),
+          message: $filter('translate')('Event failed'),
           status: 'danger',
         });
         $scope.$apply();
@@ -206,8 +200,8 @@ angular.module('systemAngularApp')
         nethserver.system.summary.setSystemTime(timestamp).then(function () {
           $scope.notifications.add({
             type: 'info',
-            title: 'Saved',
-            message: 'System time saved with success',
+            title: $filter('translate')('Saved'),
+            message: $filter('translate')('System time saved with success'),
             status: 'success',
           });
           $scope.$apply();
@@ -215,8 +209,8 @@ angular.module('systemAngularApp')
           console.error("couldn't save system time: " + err);
           $scope.notifications.add({
             type: 'info',
-            title: 'Error',
-            message: 'System time not saved',
+            title: $filter('translate')('Error'),
+            message: $filter('translate')('System time not saved'),
             status: 'danger',
           });
           $scope.$apply();
@@ -225,8 +219,8 @@ angular.module('systemAngularApp')
         nethserver.system.summary.setNTPServer($scope.localSystem.summary.ntpServer).then(function () {
           $scope.notifications.add({
             type: 'info',
-            title: 'Saved',
-            message: 'System time saved with success',
+            title: $filter('translate')('Saved'),
+            message: $filter('translate')('System time saved with success'),
             status: 'success',
           });
           $scope.$apply();
@@ -234,8 +228,8 @@ angular.module('systemAngularApp')
           console.error("couldn't save system time: " + err);
           $scope.notifications.add({
             type: 'info',
-            title: 'Error',
-            message: 'System time not saved',
+            title: $filter('translate')('Error'),
+            message: $filter('translate')('System time not saved'),
             status: 'danger',
           });
           $scope.$apply();
@@ -258,8 +252,8 @@ angular.module('systemAngularApp')
         $scope.localSystem.organization = organization;
         $scope.notifications.add({
           type: 'info',
-          title: 'Saved',
-          message: 'Company info saved with success',
+          title: $filter('translate')('Saved'),
+          message: $filter('translate')('Company info saved with success'),
           status: 'success',
         });
         $scope.$apply();
@@ -267,8 +261,8 @@ angular.module('systemAngularApp')
         console.error(err);
         $scope.notifications.add({
           type: 'info',
-          title: 'Error',
-          message: err,
+          title: $filter('translate')('Error'),
+          message: $filter('translate')('Company info not saved'),
           status: 'danger',
         });
         $scope.$apply();

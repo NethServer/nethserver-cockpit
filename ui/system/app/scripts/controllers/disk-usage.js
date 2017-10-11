@@ -39,8 +39,8 @@ angular.module('systemAngularApp')
         // notification
         $scope.notifications.add({
           type: 'info',
-          title: 'Updated',
-          message: 'Disk usage data updated with success',
+          title: $filter('translate')('Updated'),
+          message: $filter('translate')('Disk usage data updated with success'),
           status: 'success',
         });
         $scope.$apply();
@@ -50,8 +50,8 @@ angular.module('systemAngularApp')
         // notification
         $scope.notifications.add({
           type: 'info',
-          title: 'Error',
-          message: err,
+          title: $filter('translate')('Error'),
+          message: $filter('translate')('Disk udage data not updated'),
           status: 'danger',
         });
         $scope.$apply();
