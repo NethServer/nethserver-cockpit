@@ -63,6 +63,15 @@ angular.module('systemAngularApp')
       console.error(err);
     });
 
+    // -- DNS --
+    /* nethserver.system.summary.getDNS().then(function (dns) {
+      $scope.localSystem.summary.dns = dns;
+
+      $scope.$apply();
+    }, function (err) {
+      console.error(err);
+    }); */
+
     // -- Datetime --
     nethserver.system.summary.getSystemTime().then(function (info) {
       var datetime = info.trim().split(' ');
@@ -102,19 +111,21 @@ angular.module('systemAngularApp')
     nethserver.system.summary.getNTPServer().then(function (ntpServer) {
       $scope.localSystem.summary.ntpServer = ntpServer;
 
-      //$scope.$apply();
+      $scope.$apply();
     }, function (err) {
       console.error("couldn't read ntp server: " + err);
     });
 
     // -- Aliases --
-    nethserver.system.summary.getSystemAliases().then(function (ntpServer) {
-      $scope.localSystem.summary.ntpServer = ntpServer;
-
-      //$scope.$apply();
-    }, function (err) {
-      console.error("couldn't read ntp server: " + err);
-    });
+    $scope.getAllAliases = function () {
+      nethserver.system.dns.getAllAliases().then(function (aliases) {
+        $scope.localSystem.summary.aliases = aliases;
+        $scope.$apply();
+      }, function (err) {
+        console.error("couldn't read aliases info: " + err);
+      });
+    };
+    $scope.getAllAliases();
 
     // -- Company info --
     nethserver.system.organization.getInfo().then(function (organization) {
@@ -154,11 +165,54 @@ angular.module('systemAngularApp')
 
     $scope.addAlias = function (alias) {
       $scope.localSystem.summary.aliases.push({
-        name: alias
+        isNew: true
       });
     };
-    $scope.removeAlias = function (aliasIndex) {
-      $scope.localSystem.summary.aliases.splice(aliasIndex, 1);
+    $scope.saveAlias = function (alias) {
+      nethserver.system.dns.addAlias({
+        key: alias
+      }).then(function () {
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Saved'),
+          message: $filter('translate')('Alias saved with success'),
+          status: 'success',
+        });
+        $scope.getAllAliases();
+      }, function (err) {
+        console.error(err);
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Error'),
+          message: $filter('translate')('Alias not saved'),
+          status: 'danger',
+        });
+        $scope.$apply();
+      });
+    };
+    $scope.removeAlias = function (alias, index) {
+      if (alias.isNew) {
+        $scope.localSystem.summary.aliases.splice(index, 1);
+      } else {
+        nethserver.system.dns.deleteAlias(alias.key).then(function () {
+          $scope.notifications.add({
+            type: 'info',
+            title: $filter('translate')('Removed'),
+            message: $filter('translate')('Alias removed with success'),
+            status: 'success',
+          });
+          $scope.getAllAliases();
+        }, function (err) {
+          console.error(err);
+          $scope.notifications.add({
+            type: 'info',
+            title: $filter('translate')('Error'),
+            message: $filter('translate')('Alias not saved'),
+            status: 'danger',
+          });
+          $scope.$apply();
+        });
+      }
     };
 
     $scope.openChangeSystime = function () {
