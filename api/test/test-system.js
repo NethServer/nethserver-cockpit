@@ -57,6 +57,36 @@ describe('nethserver.system.summary namespace', function () {
     });
 });
 
+describe('nethserver.system.date namespace', function () {
+    it('is defined', function() {
+        should(typeof nethserver.system.date === 'object').be.ok();
+    });
+    describe('date API', function(){
+        it('gets the current system date information', function(){
+            return nethserver.system.date.getDate().then(function(o){
+                o.DateTime.should.be.type('string');
+                o.TimeZone.should.be.type('string');
+            });
+        });
+        it('catches invalid dates', function(done){
+            nethserver.system.date.setDate({
+                'DateTime': 'invalid',
+                'TimeZone': 'Europe/Rome',
+                'NTPServer': false,
+            }).then(function(){
+                done(new Error('Should not be successful'));
+            }, function(err){
+                console.log(err);
+                if(err.type == 'NotValid') {
+                    done();
+                } else {
+                    done(new Error(err.message));
+                }
+            });
+        });
+    });
+});
+
 describe('nethserver.system.dns()', function() {
     var tdb = nethserver.getDatabase('hosts');
     it('getAllRemoteHost', function() {
