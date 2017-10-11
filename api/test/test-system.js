@@ -137,6 +137,7 @@ describe('nethserver.system.dns()', function() {
 
 
     it('getAllAliases', function() {
+        var tdb = nethserver.getDatabase('hosts');
         return tdb.open().then(function() {
             tdb.setObject({ key: 'myifirstalias.mydomain.org', type: 'self', Description: 'myfirstalias' });
             tdb.setObject({ key: 'remote.mydomain.org', type: 'remote', IpAddress: '1.2.3.4', Description: 'my remote desc' });
@@ -184,6 +185,22 @@ describe('nethserver.system.dns()', function() {
 
     it('getAlias musth throw error', function() {
        nethserver.system.dns.getAlias('myalias.domain.org').should.be.rejectedWith(Error);
+    });
+
+    it('setDns', function() {
+       var db = nethserver.getDatabase('configuration');
+       nethserver.system.dns.setDns(['208.67.222.222','208.67.220.220']).then(function() {
+          db.getProp('dns', 'NameServers').then(function(val) {
+              val.should.be.equal('208.67.222.222,208.67.220.220');
+          });
+       });
+    });
+
+    it('getDns', function() {
+       nethserver.system.dns.getDns().then(function(val) {
+           val[0].should.be.equal('208.67.222.222');
+           val[1].should.be.equal('208.67.220.220');
+       });
     });
 
 

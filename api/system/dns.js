@@ -148,7 +148,7 @@
          *
          * @param {String} hostKey - Host name to search
          *
-         * @return {Promise.<Host>} - If found a promise with a remote host record, throws an error otherwise.
+         * @return {Promise.<Host>} - If hostKey is found, return a promise with a remote host record, throws an error otherwise.
          */
         getRemoteHost: function (hostKey) {
             return getRecord(hostKey);
@@ -166,8 +166,7 @@
          * }
          *
          * @param {String} hostKey - Host name to search
-         *
-         * @return {Promise.<Alias>} - If found a promise with a alias record, throws an error otherwise.
+         * @return {Promise.<Alias>} - If hostKey is found, return a promise with an alias record, throws an error otherwise.
          */
         getAlias: function (hostKey) {
             return getRecord(hostKey);
@@ -228,7 +227,7 @@
          *
          *
          * @param {Object} hostKey - host name to be deleted
-         * @return {Promise.<Host>} On succes a promise with a db object, throws an error otherwise.
+         * @return {Promise.<DB>} On succes a promise with a db object, throws an error otherwise.
          */
         deleteRemoteHost: function(hostKey) {
             return deleteRecord(hostKey);
@@ -243,7 +242,7 @@
          * @param {Object} alias - DNS host name
          * @param {string} alias.key - Host name in FQDN format
          * @param {string} alias.Description - Optional description
-         * @returns {Promise.<Host|string>} On success promise object representing new DNS record, promise error
+         * @returns {Promise.<DB>} On success a promise with a db object, otherwise throws an error
          */
         addAlias: function(alias) {
             return addRecord(alias, 'self');
@@ -263,13 +262,13 @@
          * @param {Object} alias - DNS host name
          * @param {string} alias.key - Host name in FQDN format
          * @param {string} alias.Description - Optional description
-         * @returns {Promise.<Host|string>} On success promise object representing new DNS record, promise error
+         * @returns {Promise.<DB>} On success a promise with a db object, otherwise throws an error
          */
         editAlias: function(alias) {
             return editRecord(alias, 'self');
         },
 
-        /*
+        /**
          * Delete an existing DNS alias record
          *
          * @example
@@ -281,11 +280,57 @@
          *
          *
          * @param {Object} hostKey - host name to be deleted
+         * @return {Promise.<DB>} On succes a promise with a db object, throws an error otherwise.
          */
         deleteAlias: function(hostKey) {
             return deleteRecord(hostKey);
         },
 
+        /**
+         * Set upstream DNS servers by updating "NameServers" property inside "dns" key
+         *
+         * @example
+         * nethserver.system.dns.setDns(['1.2.3.4','5.6.7.8']).then(function () {
+         *   // do something
+         * }, function (err) {
+         *    console.error(err);
+         * });
+         *
+         *
+         * @param {Array} dnsServers - Array of DNS IP addresses
+         * @return {Promise.<DB>} On succes a promise with a db object, throws an error otherwise.
+         */
+        setDns: function(dnsServers) {
+            var db = nethserver.getDatabase('configuration');
+            return db.open().then(function() {
+                db.setProp('dns', 'NameServers', dnsServers.join(','));
+                return db.save();
+            }).then(function(){
+                nethserver.signalEvent('nethserver-hosts-save');
+            });
+        },
+
+        /**
+         * Get a list of configured upstream DNS servers: "NameServers" property inside "dns" key
+         *
+         * @example
+         * nethserver.system.dns.getDns().then(function (val) {
+         *   // do something with val
+         * }, function (err) {
+         *    console.error(err);
+         * });
+         *
+         * @param {Array} dnsServers - Array of DNS IP addresses
+         * @return {Promise.<DB>} On succes a promise with a db object, throws an error otherwise.
+         */
+        getDns: function() {
+            var db = nethserver.getDatabase('configuration');
+            return db.open().then(function() {
+                return db.getProp('dns', 'NameServers').then(function(val) {
+                    return val.split(',');
+                });
+            });
+        }
 
 
     };
