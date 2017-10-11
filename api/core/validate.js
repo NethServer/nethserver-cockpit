@@ -33,6 +33,7 @@
      * <li> N - specific error code
      * </ul>
      *
+     * @function
      * @name nethserver.validate
      * @param {String} validator - Validation procedure name
      * @param {Array} args - Arguments to validation procedure

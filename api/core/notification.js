@@ -39,9 +39,11 @@
      */
 
     /**
-     * This is a singleton instance of NotificationMonitor
-     * @see {@link #NotificationMonitor}
-     * @name nethserver.eventMonitor
+     * This is a singleton instance of NotificationMonitor, an object implementing
+     * the EventTarget interface
+     *
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/EventTarget}
+     * @name nethserver.notificationMonitor
      * @instance
      */
     ns.notificationMonitor = {};
