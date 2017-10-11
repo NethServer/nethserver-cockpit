@@ -1,6 +1,13 @@
 
 <html><head></head><body><h1 id="development-environment">Development environment</h1>
 <hr />
+<p><strong>Index</strong></p>
+<ul>
+<li><a href="#install-requirements">Install requirements</a></li>
+<li><a href="#code-style">Code style</a></li>
+<li><a href="#build-api-and-ui">Build API and UI</a></li>
+<li><a href="#sync-api-and-ui">Sync API and UI</a></li>
+</ul>
 <p>The development environment can be prepared on a Fedora or CentOS 7 machine.</p>
 <p>Follow these steps:</p>
 <ul>
@@ -47,10 +54,14 @@ cd ui/system/ &amp;&amp; npm install &amp;&amp; bower install
 <pre><code>npm WARN api@1.0.0 No repository field.
 npm WARN api@1.0.0 No license field.
 </code></pre><h2 id="sync-api-and-ui">Sync API and UI</h2>
-<p>Files can be copied using rsync.
-Use the following commands:</p>
+<p>Files can be copied using rsync.</p>
+<p>While UI could be synced without executing the <code>build</code> task each time,
+make sure API is always built before sync.</p>
+<p>Use the following commands:</p>
 <pre><code>ssh root@192.168.1.20  "mkdir -p ~/.local/share/cockpit/nethserver"
 
-cd api/ &amp;&amp; grunt rsync:root@192.168.1.20:22
-cd ui/system &amp;&amp; grunt rsync:root@192.168.1.20:22
-</code></pre></body></html>
+cd api/ &amp;&amp; grunt build rsync:root@192.168.1.20
+cd ui/system &amp;&amp; grunt rsync:root@192.168.1.20
+</code></pre><h2 id="code-style">Code style</h2>
+<p>Please use configuration from EditorConfig: <a href="http://editorconfig.org">http://editorconfig.org</a></p>
+</body></html>
