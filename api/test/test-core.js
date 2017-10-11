@@ -309,8 +309,7 @@ describe('Also, the object returned by getDatabase()', function() {
                 return tdb.save();
             }).
             then(function(){
-                var o = tdb.getObject('keytest2');
-                should(o).be.an.instanceOf(Object);
+                (function(){tdb.getObject('keytest2');}).should.throw('NotFound');
             });
     });
 

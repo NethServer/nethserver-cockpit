@@ -244,7 +244,7 @@ Nsdb.prototype = {
      * }
      *
      * @param {String} key - Key name
-     * @return {Object.<Record>} an object which represent the record, an empty object if the key is not inside the db.
+     * @return {Object.<Record>} an object which represents the record, throws a NotFound error if the key is not inside the db.
      * Valid objects must have **key** and **type** fields, also each property is mapped on a field with
      * the same name of the property itself.
      *
@@ -253,7 +253,7 @@ Nsdb.prototype = {
         var ret = {};
         var type = this.getType(key);
         if (!type) {
-            return ret;
+            throw Error('NotFound', 'Object "'+key+'" not found');
         }
         ret.key = key;
         ret.type = this.getType(key);
