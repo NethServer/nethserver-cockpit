@@ -93,7 +93,7 @@ angular.module('systemAngularApp')
     nethserver.system.summary.getSystemTimeMode().then(function (timeMode) {
       $scope.localSystem.summary.timeMode = timeMode;
 
-      //$scope.$apply();
+      $scope.$apply();
     }, function (err) {
       console.error("couldn't read time mode: " + err);
     });
