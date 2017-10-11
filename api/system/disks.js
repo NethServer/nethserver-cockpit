@@ -32,6 +32,7 @@
     ns.system.disks = {
         /**
          * Retrieve the json data in /var/cache/duc/duc.json
+         *
          * @return {Promise} from cockpit.file
          */
         getJSONUsage: function () {
@@ -44,17 +45,20 @@
         },
         /**
          * Get date of last updated of disk usage
-         * @return {Promise} from cockpit.file
+         * @return {Promise.<String>} a promise with the date formatted in UTC time zone
          */
         getUpdatedUsage: function () {
-            return cockpit.spawn(['date', '+%F %H:%M']);
+            return cockpit.spawn(['stat', '-c', '%Z', '/var/cache/duc/duc.json']).then(function(val) {
+                var d = new Date(val*1000);
+                return d.toLocaleDateString('en-US', { timeZone: 'UTC' }) + " " + d.toLocaleTimeString('en-US', { timeZone: 'UTC', timeZoneName: 'short' });
+            });
         },
         /**
          * Launch update of disk usage using duc
-         * @return {Promise} from cockpit.file with json data and updated time
+         * @return {Promise.<Event>} a promise of nethserver-duc-save event, at the end the UI should call again getJSONUsage and getUpdatedUsage
          */
         updateJSONUsage: function () {
-            return cockpit.spawn(['date', '+%F %H:%M']);
+            return nethserver.signalEvent('nethserver-duc-save');
         },
     };
 })(nethserver);
