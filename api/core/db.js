@@ -304,11 +304,10 @@ Nsdb.prototype = {
         if (jQuery.type(obj.key) == "undefined" || jQuery.type(obj.type) == "undefined") {
             return undefined;
         }
-        var key = obj.key;
-        var type = obj.type;
-        delete obj.key;
-        delete obj.type;
-        return this.set(key, type, obj);
+        var tmp = Object.assign({}, obj);
+        delete tmp.key;
+        delete tmp.type;
+        return this.set(obj.key, obj.type, tmp);
     },
 
     /**
