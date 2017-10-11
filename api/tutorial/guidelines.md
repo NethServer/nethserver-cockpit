@@ -3,6 +3,8 @@
 **Index**
 
 * [API design](#api-design)
+  * [Object format](#object-format)
+  * [Errors](#errors)
   * [add](#add)
   * [edit](#edit)
   * [delete](#delete)
@@ -24,10 +26,13 @@ Any functions which modifies system configuration must take care of semantic val
 of input values, like checking if a record already exists or deny to set an option which
 can cause errors on other modules (eg. using the same IP address on multiple network interfaces).
 
+On success an API function returns a success promise, on error throws an error.
+It's responsability of each API function to signal an event just after returning the promise.
+
+### Object format
+
 Objects returned by APIs must reflect esmith db format and respect the upper/lower case notation
 of property names.
-
-#### Example
 
 Host `goofy` inside the `hosts` database.
 
@@ -41,18 +46,16 @@ goofy=local
 Equivalent JavaScript object notation:
 ```
 var goofy = {
-  id: "goofy", 
+  key: "goofy",
+  type: "local",
   Description: "Goofy workstation",
   IpAddress: "192.168.1.22",
 }
 ```
 
-Please note that:
+Please note that **key** and **type** field are reserved.
 
-- record type is not exposed in JS notation
-- the key is always contained inside the `id` field
-
-APIs implementing CRUD operations, should declare these actions:
+APIs implementing CRUD operations, should declare these types of actions:
 
 * [add](#add)
 * [edit](#edit)
@@ -60,124 +63,145 @@ APIs implementing CRUD operations, should declare these actions:
 * [getAll](#get-all)
 * [getOne](#get-one)
 
+### Errors
+
+If something goes wrong, APIs should raise one of the following errors:
+
+- Validation error: **NotValid**
+  ```
+  throw new Error("NotValid", "Descriptive validation error");
+  ```
+
+- Not found error: **NotFound**
+  ```
+  throw new Error("NotFound", "Descriptive not found error");
+  ```
+
 ### Add
-
-On success returns a success promise along with the created object, on error returns a failure promise along with a description of the error.
-
-*Parameter*: object to be addedd
 
 The API developer should provide one typed `add` method for each record type managed by the module.
 
+*Parameter*: object to be addedd
+
 #### Example
 
-DNS module, which saves records inside the ``hosts`` database, defines two methods: `addDnsRecord`,  `addSelfAlias`.
+DNS module, which saves records inside the ``hosts`` database, defines two methods: `addRemoteHost`,  `addAlias`.
 
 ```
-   var goofy = { id: "goofy", Description: "Goofy workstation", IpAddress: "192.168.1.22" };
-   
-   nethserver.system.dns.addDnsRecord(goofy).then(function () {
-     ...
-     // success
-     ...
-   }, function (err) {
-     ...
-     // error
-     ...
-   });
+addRemoteHost: function(host) {
+  var db = nethserver.getDatabase('configuration');
+  return db.open().then(function() {
+      ...
+      if ( //not validate ) {
+          throw new Error("NotValid", "Describe validation error here");
+      }
+      ...
+      db.setObject(obj)
+      return db.save();
+  }).then(function(){
+      nethserver.signalEvent('event', argument);
+  });
+}
 ```
 
 ### Edit
 
-On success returns a success promise along with the modified object, on error returns a failure promise along with a description of the error.
+The API developer should provide one typed `edit` method for each record type managed by the module.
 
 *Parameter*: object to be modified
 
-The API developer should provide one typed `edit` method for each record type managed by the module.
-
 #### Example
 
-DNS module, which saves records inside the ``hosts`` database; define two methods named `editDnsRecord` and `editSelfAlias`.
+DNS module, which saves records inside the ``hosts`` database; define two methods named `editRemoteHost` and `editAlias`.
 
 ```
-var goofy = { id: "goofy", Description: "Goofy workstation", IpAddress: "192.168.1.22" };
-   
-nethserver.system.dns.editDnsRecord(goofy).then(function () {
-  ...
-  // success
-  ...
-}, function (err) {
-  ...
-  // error
-  ...
-});
+editRemoteHost: function(host) {
+  var db = nethserver.getDatabase('hosts');
+  return db.open().then(function() {
+      ...
+      if ( //object not found ) {
+          throw new Error("not found", "Describe not found error here");
+      }
+      ...
+      db.setObject(obj)
+      return db.save();
+  }).then(function(){
+      nethserver.signalEvent('event', argument);
+  });
+}
 ```
 
 ### Delete
 
-On success returns a success promise along with an optional message, on error returns a failure promise along with a description of the error.
-
-*Parameter*: id to be deleted
+*Parameter*: key to be deleted
 
 #### Example
 
-DNS module, which saves records inside the ``hosts`, defines one method `delete`.
+DNS module, which saves records inside the ``hosts`, can define one or more methods. 
 
 ```
-nethserver.system.dns.delete('goofy').then(function () {
-  ...
-  // success
-  ...
-}, function (err) {
-  ...
-  // error
- ...
-});
+deleteRemoteHost: function(hostKey) {
+  var db = nethserver.getDatabase('hosts');
+  return db.open().then(function() {
+      ...
+      if ( //object not found) {
+        throw new Error("error", "Describe not found error here");
+      }
+      ...
+      db.delete(hostKey);
+      return db.save();
+  }).then(function(){
+       nethserver.signalEvent('host-delete', hostKey);
+  });
+};
 ```
 
 ### Get all
 
-On success returns a success promise along with a list of all requested objects, on error returns a failure promise along with a description of the error.
+On success returns a success promise along with a list of all requested objects, on error throws an exception.
 
 The API developer should provide one typed `getAll` method for each record type managed by the module.
 
 #### Example
 
-DNS module, which saves records inside the ``hosts`, defines two typed methods: `getAllDnsRecords`, `getAllSelfAliases`.
+DNS module, which saves records inside the ``hosts`, defines two typed methods: `getAllRemoteHosts`, `getAllAliases`.
 
 ```
-nethserver.system.dns.getAllRecords().then(function () {
-  ...
-  // success
-  ...
-}, function (err) {
-  ...
-  // error
- ...
-});
+getAllRemoteHost: function() {
+    var ret = [];
+    var db = nethserver.getDatabase('hosts');
+    return db.open().then(function() {
+        var keys = db.keys();
+        for (var k in keys) {
+            var o = db.getObject(keys[k]);
+            ...
+            ret.push(o);
+        }
+        ...
+        return ret;
+    });
+}
 ```
 
 ### Get one
 
-On success returns a success promise along with the requested object, on error returns a failure promise along with a description of the error.
+On success returns a success promise along with the requested object, on error throws an exception.
 
 *Parameter*: id to be retrieved.
 
 #### Example
 
-DNS module, which saves records inside the ``hosts`, defines one method: `getOne`.
+DNS module, which saves records inside the ``hosts`, can define one or methos: `getOne`.
 
 ```
-nethserver.system.dns.getOne('goofy').then(function () {
-  ...
-  // success
-  ...
-}, function (err) {
-  ...
-  // error
- ...
-});
-
+getOne: function(hostKey) {
+    var db = nethserver.getDatabase('hosts');
+    return db.open().then(function() {
+        return db.getObject(hostKey);
+    });
+}
 ```
+
 ## UI design
 
 The whole web UI is designed following [PatternFly](http://www.patternfly.org/) patterns.
