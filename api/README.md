@@ -3,11 +3,18 @@
 This guide describes how Cockpit is used inside NethServer and how to develop
 a new NethServer Cockpit module.
 
-## API
+## Guidelines
+
+* [Developer environment](./environment)
+* [API guidelines](./api_guidelines)
+* [UI guidelines](/ui_guidelines)
+
+### References
 
 * [Server Manager API](./api)
+* [Application manifest](./application_manifest)
 
-## Building Docs
+### Building 
 
 * [Building RPM](./build_rpm)
 * [Building documentation](./build_doc)

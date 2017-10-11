@@ -1,5 +1,13 @@
 # Development environment
 
+**Index**
+
+* [Install requirements](#install-requirements)
+* [Code style](#code-style)
+* [Build API and UI](#build-api-and-ui)
+* [Sync API and UI](#sync-api-and-ui)
+
+
 The development environment can be prepared on a Fedora or CentOS 7 machine.
 
 Follow these steps:
@@ -75,11 +83,21 @@ npm WARN api@1.0.0 No license field.
 ## Sync API and UI
 
 Files can be copied using rsync.
+
+While UI could be synced without executing the `build` task each time,
+make sure API is always built before sync.
+
 Use the following commands:
 
 ```
 ssh root@192.168.1.20  "mkdir -p ~/.local/share/cockpit/nethserver"
 
-cd api/ && grunt rsync:root@192.168.1.20:22
-cd ui/system && grunt rsync:root@192.168.1.20:22
+cd api/ && grunt build rsync:root@192.168.1.20
+cd ui/system && grunt rsync:root@192.168.1.20
 ```
+
+
+## Code style
+
+Please use configuration from EditorConfig: http://editorconfig.org
+
