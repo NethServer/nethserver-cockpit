@@ -221,6 +221,13 @@ function canonicalizeDbPath(path) {
     return '/var/lib/nethserver/db/' + path;
 }
 
+/**
+ * A nethserver database instance
+ * @see {@link #nethserver.getDatabase}
+ * @class
+ * @name Nsdb
+ * @protected
+ */
 function Nsdb(path) {
     this.path = canonicalizeDbPath(path);
     this.data = null;
@@ -636,7 +643,15 @@ Nsdb.prototype = {
 
 var nsdbCache = {};
 /**
- *
+ * Retrieve a database object
+ * @name nethserver.getDatabase
+ * @function
+ * @param {string} path The absolute file system path of the DB, or a DB name
+ * @returns {Nsdb}
+ * @example
+ * var db = nethserver.getDatabase('configuration');
+ * @example
+ * var tmpdb = nethserver.getDatabase('/tmp/db.temporary');
  */
 ns.getDatabase = function(path) {
     if(nsdbCache[path] === undefined) {
