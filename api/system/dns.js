@@ -29,7 +29,12 @@
         var key = host.key;
         return db.open().then(function() {
             if (db.keys().indexOf(key) > -1) {
-                throw new Error("NotValid", "This hostname is already used");
+                throw new nethserver.Error({
+                    type: 'NotValid',
+                    message: 'This hostname is already used',
+                    attribute: 'key',
+                    id: 1507726223244
+                });
             }
             host.type = type;
             db.setObject(host);
