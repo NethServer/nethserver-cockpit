@@ -18,9 +18,18 @@
  * along with NethServer.  If not, see COPYING.
  */
 
- (function (ns, $) {
+/**
+ * Namespace definition
+ *
+ *
+ * @namespace nethserver.system.users
+ */
+(function(ns){
+     // Avoid double-inclusion from sub frames
+     if(ns.system.users) {
+         return;
+     }
      ns.system.users = {};
-
      /**
       * Generate a random password
       *
@@ -33,4 +42,4 @@
          // TODO
          return Promise.resolve('Nethesis,1234');
      };
-}(nethserver, jQuery));
+}(nethserver));

@@ -20,6 +20,11 @@
 
 (function(ns, $){
 
+// Avoid double-inclusion from sub frames
+if(ns.getDatabase) {
+    return;
+}
+
 var TYPE = 0;
 var PROP = 1;
 
@@ -630,6 +635,9 @@ Nsdb.prototype = {
 };
 
 var nsdbCache = {};
+/**
+ *
+ */
 ns.getDatabase = function(path) {
     if(nsdbCache[path] === undefined) {
         nsdbCache[path] = new Nsdb(path);

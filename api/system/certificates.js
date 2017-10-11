@@ -18,8 +18,12 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-(function ($) {
-    nethserver.system.certificates = {
+(function (ns) {
+    // Avoid double-inclusion from sub frames
+    if(ns.system.certificates) {
+        return;
+    }
+    ns.system.certificates = {
         getAll: function () {
             return cockpit.spawn(['date', '+%F %H:%M']);
         },
@@ -36,4 +40,4 @@
             return cockpit.spawn(['date', '+%F %H:%M']);
         },
     };
-})(jQuery);
+})(nethserver);

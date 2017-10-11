@@ -18,7 +18,11 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-(function ($) {
+(function (nethserver) {
+    // Avoid double-inclusion from sub frames
+    if(nethserver.system.dns) {
+        return;
+    }
 
     function addRecord(host, type) {
         var db = nethserver.getDatabase('hosts');
@@ -280,4 +284,4 @@
 
 
     };
-})(jQuery);
+})(nethserver);

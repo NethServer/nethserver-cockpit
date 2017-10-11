@@ -18,8 +18,18 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-(function ($) {
-    nethserver.system.organization = {
+/**
+ * Namespace definition
+ *
+ *
+ * @namespace nethserver.system.organization
+ */
+(function(ns){
+    // Avoid double-inclusion from sub frames
+    if(ns.system.organization) {
+        return;
+    }
+    ns.system.organization = {
         getInfo: function () {
             var db = nethserver.getDatabase('configuration');
             return db.open().then(function() {
@@ -46,4 +56,4 @@
             });
         },
     };
-})(jQuery);
+})(nethserver);

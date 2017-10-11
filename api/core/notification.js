@@ -18,7 +18,13 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-(function (ns, $) {
+(function (ns) {
+
+    // Avoid double-inclusion from sub frames
+    if(ns.notificationMonitor) {
+        return;
+    }
+
     /**
      * An object of type TaskProgress is attached to a CustomEvent as "detail"
      *
@@ -73,4 +79,4 @@
      */
     var dummy = 0;
 
-})(nethserver, jQuery);
+})(nethserver);

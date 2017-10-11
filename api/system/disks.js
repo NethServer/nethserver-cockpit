@@ -18,8 +18,18 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-(function ($) {
-    nethserver.system.disks = {
+/**
+ * Namespace definition
+ *
+ *
+ * @namespace nethserver.system.disks
+ */
+(function(ns){
+    // Avoid double-inclusion from sub frames
+    if(ns.system.disks) {
+        return;
+    }
+    ns.system.disks = {
         /**
          * Retrieve the json data in /var/cache/duc/duc.json
          * @return {Promise} from cockpit.file
@@ -47,4 +57,4 @@
             return cockpit.spawn(['date', '+%F %H:%M']);
         },
     };
-})(jQuery);
+})(nethserver);

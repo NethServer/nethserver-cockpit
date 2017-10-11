@@ -20,6 +20,20 @@
 
 /**
  * The nethserver module defines the API to access a NethServer system
+ *
+ * Namespace definition
+ *
+ *
  * @namespace nethserver
  */
 var nethserver = {};
+
+if(window && window.top) {
+    if(window.top.nethserver) {
+        // bind to the already-defined object
+        nethserver = window.top.nethserver;
+    } else {
+        // Create the namespace for the first time
+        window.top.nethserver = nethserver;
+    }
+}

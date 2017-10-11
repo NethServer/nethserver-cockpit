@@ -18,7 +18,13 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-(function(ns, $){
+(function(ns){
+
+    // Avoid double-inclusion from sub frames
+    if(ns.validate) {
+        return;
+    }
+
     /**
      * Launch the "validate" command. The exit code can be:
      * <ul>
@@ -42,4 +48,4 @@
             return err.exit_status;
         });
     };
-}(nethserver, jQuery));
+}(nethserver));

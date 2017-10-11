@@ -18,8 +18,18 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-(function ($) {
-    nethserver.system.summary = {
+/**
+ * Namespace definition
+ *
+ *
+ * @namespace nethserver.system.summary
+ */
+(function(ns){
+    // Avoid double-inclusion from sub frames
+    if(ns.system.summary) {
+        return;
+    }
+    ns.system.summary = {
         /**
          * Retrieve the static host by reading /etc/hostname
          * @return {Promise} from cockpit.file
@@ -159,4 +169,4 @@
             });
         }
     };
-})(jQuery);
+})(nethserver);

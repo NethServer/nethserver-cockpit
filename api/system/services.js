@@ -18,8 +18,18 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-(function ($) {
-  nethserver.system.services = {
+/**
+ * Namespace definition
+ *
+ *
+ * @namespace nethserver.system.services
+ */
+(function(ns){
+  // Avoid double-inclusion from sub frames
+  if(ns.system.services) {
+    return;
+  }
+  ns.system.services = {
     getAll: function () {
       return cockpit.spawn(['date', '+%F %H:%M']);
     },
@@ -42,4 +52,4 @@
       return cockpit.spawn(['date', '+%F %H:%M']);
     },
   };
-})(jQuery);
+})(nethserver);

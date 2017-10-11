@@ -18,7 +18,12 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-(function(ns, $){
+(function(ns){
+
+// Avoid double-inclusion from sub frames
+if(ns.eventMonitor) {
+    return;
+}
 
 var NSEVENT_PREFIX = 'nsevent-';
 var NSEVENT_MATCH = /^nsevent-/;
@@ -269,4 +274,4 @@ ns.signalEvent = function (nsEvent, args) {
     });
 };
 
-})(nethserver, jQuery);
+})(nethserver);
