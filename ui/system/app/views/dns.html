@@ -77,7 +77,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">{{objects.newDNS.isEdit ? 'Edit' + ' '+ objects.newDNS.key : 'New DNS server' | translate}}</h4>
+        <h4 class="modal-title">{{objects.newDNS.isEdit ? 'Edit DNS record' + ' '+ objects.newDNS.key : 'Add DNS record' | translate}}</h4>
       </div>
       <form class="form-horizontal" ng-submit="saveDNS(objects.newDNS)">
 
@@ -123,7 +123,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">{{'Delete DNS' | translate}} {{objects.toDeleteDNS.key}}</h4>
+        <h4 class="modal-title">{{'Delete DNS record' | translate}} {{objects.toDeleteDNS.key}}</h4>
       </div>
       <form class="form-horizontal" ng-submit="deleteDNS(objects.toDeleteDNS)">
 

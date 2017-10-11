@@ -371,3 +371,9 @@ circle {
   color: #666;
   font-weight: 600;
 }
+
+.disk-usage-loader {
+  position: fixed;
+  margin-top: -30px;
+  left: 105px;
+}

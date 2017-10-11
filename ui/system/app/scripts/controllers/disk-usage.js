@@ -8,33 +8,39 @@
  * Controller of the systemAngularApp
  */
 angular.module('systemAngularApp')
-  .controller('DiskUsageCtrl', function ($scope) {
+  .controller('DiskUsageCtrl', function ($scope, $filter) {
     // controller objects
     $scope.objects = {
       updatedAt: '',
+      onLoad: false
     };
 
-    nethserver.system.disks.getUpdatedUsage().then(function (updated) {
-      $scope.objects.updatedAt = updated;
-      $scope.$apply();
-    }, function (err) {
-      console.error(err);
-    });
+    $scope.diskUpdateAt = function () {
+      nethserver.system.disks.getUpdatedUsage().then(function (updated) {
+        $scope.objects.updatedAt = updated;
+        $scope.$apply();
+      }, function (err) {
+        console.error(err);
+      });
+    };
+    $scope.diskUpdateAt();
 
-    nethserver.system.disks.getJSONUsage().then(function (json) {
-      // draw widget
-      var cv = $.duc();
-      cv(JSON.parse(json));
-    }, function (err) {
-      console.error(err);
-    });
+    $scope.getJSONUsage = function () {
+      nethserver.system.disks.getJSONUsage().then(function (json) {
+        var cv = $.duc();
+        cv(JSON.parse(json));
+      }, function (err) {
+        console.error(err);
+      });
+    };
+    $scope.getJSONUsage();
 
     $scope.updateJSONUsage = function () {
+      $scope.objects.onLoad = true;
       nethserver.system.disks.updateJSONUsage().then(function (result) {
-        $scope.objects.updatedAt = result.updated;
-
-        var cv = $.duc();
-        cv(JSON.parse(result.json));
+        $scope.diskUpdateAt();
+        $scope.getJSONUsage();
+        $scope.objects.onLoad = false;
 
         // notification
         $scope.notifications.add({
