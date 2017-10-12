@@ -188,7 +188,7 @@
          * @param {string} host.key - Host name in FQDN format
          * @param {string} host.IpAddress - Local or remote IP address
          * @param {string} [host.Description] - Optional description
-         * @return {Promise.<DB>} On succes a promise with a db object, throws an error otherwise.
+         * @return {Promise} A promise on succes, throws an error otherwise.
          */
         addRemoteHost: function(host) {
             return addRecord(host, 'remote');
@@ -209,7 +209,7 @@
          * @param {string} host.key - Host name in FQDN format
          * @param {string} host.IpAddress - Local or remote IP address
          * @param {string} [host.Description] - Optional description
-         * @return {Promise.<DB>} On succes a promise with a db object, throws an error otherwise.
+         * @return {Promise} A promise on succes, throws an error otherwise.
          */
         editRemoteHost: function(host) {
             return editRecord(host, 'remote');
@@ -227,10 +227,46 @@
          *
          *
          * @param {Object} hostKey - host name to be deleted
-         * @return {Promise.<DB>} On succes a promise with a db object, throws an error otherwise.
+         * @return {Promise} A promise on succes, throws an error otherwise.
          */
         deleteRemoteHost: function(hostKey) {
             return deleteRecord(hostKey);
+        },
+
+        /**
+         * Remove all 'self' records from 'hosts' db and replace it with given list
+         *
+         * Since all host-{delete,modify,edit} events are basically the same thing, thi API will
+         * always execute host-modify event.
+         *
+         * @example
+         * nethserver.system.dns.setAliases({["myalias.domain.org","myalias2.domain2.org"})
+         *
+         * @param {Array.<String>} aliases - Array of alias names
+         * @return {Promise} A promise on succes, throws an error otherwise.
+         */
+        setAliases: function(aliases) {
+            var db = nethserver.getDatabase('hosts');
+            return db.open().then(function() {
+
+                // Remove all 'self' records
+                var keys = db.keys();
+                for (var k in keys) {
+                    var type = db.getType(keys[k]);
+                    if (type == 'self') {
+                        db.delete(keys[k]);
+                    }
+                }
+
+                // Set new records
+                for (var i in aliases) {
+                    db.set(aliases[i], 'self', { Description: ''});
+                }
+
+                return db.save();
+            }).then(function() {
+                nethserver.signalEvent('host-modify', 'bulk');
+            });
         },
 
         /**
@@ -242,7 +278,7 @@
          * @param {Object} alias - DNS host name
          * @param {string} alias.key - Host name in FQDN format
          * @param {string} alias.Description - Optional description
-         * @returns {Promise.<DB>} On success a promise with a db object, otherwise throws an error
+         * @return {Promise} A promise on succes, throws an error otherwise.
          */
         addAlias: function(alias) {
             return addRecord(alias, 'self');
@@ -262,7 +298,7 @@
          * @param {Object} alias - DNS host name
          * @param {string} alias.key - Host name in FQDN format
          * @param {string} alias.Description - Optional description
-         * @returns {Promise.<DB>} On success a promise with a db object, otherwise throws an error
+         * @return {Promise} A promise on succes, throws an error otherwise.
          */
         editAlias: function(alias) {
             return editRecord(alias, 'self');
@@ -280,7 +316,7 @@
          *
          *
          * @param {Object} hostKey - host name to be deleted
-         * @return {Promise.<DB>} On succes a promise with a db object, throws an error otherwise.
+         * @return {Promise} A promise on succes, throws an error otherwise.
          */
         deleteAlias: function(hostKey) {
             return deleteRecord(hostKey);
@@ -298,9 +334,9 @@
          *
          *
          * @param {Array} dnsServers - Array of DNS IP addresses
-         * @return {Promise.<DB>} On succes a promise with a db object, throws an error otherwise.
+         * @return {Promise} A promise on succes, throws an error otherwise.
          */
-        setDns: function(dnsServers) {
+        setDNS: function(dnsServers) {
             var db = nethserver.getDatabase('configuration');
             return db.open().then(function() {
                 db.setProp('dns', 'NameServers', dnsServers.join(','));
@@ -321,14 +357,13 @@
          * });
          *
          * @param {Array} dnsServers - Array of DNS IP addresses
-         * @return {Promise.<DB>} On succes a promise with a db object, throws an error otherwise.
+         * @return {Promise.<Array>} On succes a promise with an array of DNS servers, throws an error otherwise.
          */
-        getDns: function() {
+        getDNS: function() {
             var db = nethserver.getDatabase('configuration');
             return db.open().then(function() {
-                return db.getProp('dns', 'NameServers').then(function(val) {
-                    return val.split(',');
-                });
+                var ns = db.getProp('dns', 'NameServers') || '';
+                return ns.split(',');
             });
         }
 

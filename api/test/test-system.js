@@ -144,9 +144,7 @@ describe('nethserver.system.dns()', function() {
 
     it('deleteRemoteHost', function(done) {
         nethserver.system.dns.deleteRemoteHost('myhost2.domain.org').then(function () {
-            var h = nethserver.system.dns.getRemoteHost('myhost2.domain.org').then(function(val) {
-                val.should.not.have.property('IpAddress');
-            });
+            var h = nethserver.system.dns.getRemoteHost('myhost2.domain.org').should.be.rejectedWith(Error);
             done();
         }, done);
     });
@@ -192,28 +190,36 @@ describe('nethserver.system.dns()', function() {
 
     it('deleteAlias', function(done) {
         nethserver.system.dns.deleteAlias('myalias.domain.org').then(function () {
-            var h = nethserver.system.dns.getAlias('myalias.domain.org').then(function(val) {
-                val.should.not.have.property('Description');
-            });
+            var h = nethserver.system.dns.getAlias('myalias.domain.org').should.be.rejectedWith(Error);
             done();
         }, done);
     });
 
     it('getAlias musth throw error', function() {
-       nethserver.system.dns.getAlias('myalias.domain.org').should.be.rejectedWith(Error);
+        nethserver.system.dns.getAlias('myalias.domain.org').should.be.rejectedWith(Error);
     });
 
-    it('setDns', function() {
+    it('setAliases', function() {
+        var tdb = nethserver.getDatabase('hosts');
+        return nethserver.system.dns.setAliases(['a1.domain.org', 'a2.domain2.org']).then(function() {
+            tdb.open().then(function() {
+                tdb.get('a1.domain.org').should.be.ok();
+                tdb.get('a2.domain.org').should.be.ok();
+             });
+        });
+    });
+
+
+    it('setDNS', function() {
        var db = nethserver.getDatabase('configuration');
-       nethserver.system.dns.setDns(['208.67.222.222','208.67.220.220']).then(function() {
-          db.getProp('dns', 'NameServers').then(function(val) {
-              val.should.be.equal('208.67.222.222,208.67.220.220');
-          });
+       nethserver.system.dns.setDNS(['208.67.222.222','208.67.220.220']).then(function() {
+          val = db.getProp('dns', 'NameServers');
+          return val.should.be.equal('208.67.222.222,208.67.220.220');
        });
     });
 
-    it('getDns', function() {
-       nethserver.system.dns.getDns().then(function(val) {
+    it('getDNS', function() {
+       nethserver.system.dns.getDNS().then(function(val) {
            val[0].should.be.equal('208.67.222.222');
            val[1].should.be.equal('208.67.220.220');
        });
