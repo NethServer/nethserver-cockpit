@@ -58,3 +58,5 @@ event_services('certificate-update', qw(
 
 safe_symlink('/bin/true', 'root/etc/e-smith/events/test-success/S20true');
 safe_symlink('/bin/false', 'root/etc/e-smith/events/test-failure/S20false');
+safe_symlink('/bin/true', 'root/etc/e-smith/validators/test-success/S20true');
+safe_symlink('/bin/false', 'root/etc/e-smith/validators/test-failure/S20false');

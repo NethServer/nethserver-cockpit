@@ -36,11 +36,15 @@
      * @function
      * @name nethserver.validate
      * @param {String} validator - Validation procedure name
-     * @param {Array} args - Arguments to validation procedure
+     * @param {Array} [args] - Arguments to validation procedure
      * @return {Promise.<number>} The exit code of "validate" command
      */
     ns.validate = function(validator, args) {
-        args = args.slice();
+        if( ! Array.isArray(args)) {
+            args = [];
+        } else {
+            args = args.slice();
+        }
         args.unshift('/sbin/e-smith/validate', validator);
 
         return Promise.resolve(cockpit.spawn(args, {superuser: 'required', err: 'message'})).then(function(){
