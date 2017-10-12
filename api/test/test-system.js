@@ -61,11 +61,15 @@ describe('nethserver.system.date namespace', function () {
     it('is defined', function() {
         should(typeof nethserver.system.date === 'object').be.ok();
     });
+
+    var currentDateSettings;
+
     describe('date API', function(){
         it('gets the current system date information', function(){
             return nethserver.system.date.getDate().then(function(o){
                 o.DateTime.should.be.type('string');
                 o.TimeZone.should.be.type('string');
+                currentDateSettings = o;
             });
         });
         it('catches invalid dates', function(done){
@@ -81,6 +85,19 @@ describe('nethserver.system.date namespace', function () {
                 } else {
                     done(new Error(err.message));
                 }
+            });
+        });
+        it('sets date manually', function(){
+            var curDate = new Date(currentDateSettings.DateTime);
+            var newDate = new Date(curDate + (120 * 1000));
+            return nethserver.system.date.setDate({
+                'DateTime': newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate() + ' ' + newDate.getHours() + ':' + newDate.getMinutes(),
+                'TimeZone': 'Europe/Amsterdam',
+            }).then(function(){
+                return nethserver.system.date.setDate({
+                    'DateTime': curDate.getFullYear() + '-' + (curDate.getMonth() + 1) + '-' + curDate.getDate() + ' ' + curDate.getHours() + ':' + curDate.getMinutes(),
+                    'TimeZone': currentDateSettings.TimeZone,
+                });
             });
         });
     });
