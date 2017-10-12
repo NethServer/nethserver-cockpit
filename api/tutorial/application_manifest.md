@@ -13,6 +13,7 @@ Manifest must be placed under `/usr/share/cockpit/nethserver/applications` direc
 - **name**: descriptive name of the application (required)
 - **summary**: describe what is the purpose of the application in few words (required)
 - **description**: include 2-3 paragraphs describing any important features. Each line should be an element of the array. Supports markdown format. (recommended)
+- **icon**: name of the icon file; the icon should be 256x256px (recommended)
 - **screenshots**: a list of screenshots; all screenshots should have a 16:9 aspect ratio, and should have a width that is no smaller than 620px (optional)
 - **url**: link to local application installation. (required for web applications)
 - **homepage**: this is a recommended tag for link project official site (optional)
@@ -23,21 +24,24 @@ Manifest must be placed under `/usr/share/cockpit/nethserver/applications` direc
 - **bugs**: the url of project's issue tracker and / or the email address to which issues should be reported (optional)
 - **author**: the name of of the author with optional email and urls fields. (recommended)
 
+Images like screenshots and icons must be placed under `/usr/share/cockpit/<application-id>/assets` directory.
+
 ### Example
 
-File  `/usr/share/cockpit/nethserver/applications/nextcloud.json`
+File `/usr/share/cockpit/nethserver/applications/nextcloud.json`:
 ```
 {
-    "id": "netxtcloud",
+    "id": "nethserver-netxtcloud",
     "name": "NextCloud",
     "summary": "Share your data",
     "description": [
         "Access, **share** and protect your files, calendars, contacts, communication & more at home and in your enterprise.",
         "Nextcloud puts your data at your fingertips, under your control."
     ],
+    "icon": "icon.png",
     "screenshots": [
-        { "caption": "Login", "image": "http://my.screenshot.org/login.png" },
-        { "caption": "Share data", "image": "http://my.screenshot.org/data.png" }
+        { "caption": "Login", "image": "login.png" },
+        { "caption": "Share data", "image": "data.png" }
     ],
     "url": "/nextcloud",
     "homepage": "http://www.nextcloud.org",
