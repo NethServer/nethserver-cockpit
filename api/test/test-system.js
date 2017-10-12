@@ -76,7 +76,6 @@ describe('nethserver.system.date namespace', function () {
             }).then(function(){
                 done(new Error('Should not be successful'));
             }, function(err){
-                console.log(err);
                 if(err.type == 'NotValid') {
                     done();
                 } else {
