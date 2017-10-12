@@ -11,6 +11,10 @@ module.exports = function (grunt) {
         src: 'system/*.js',
         dest: 'dist/system.js',
       },
+      applications: {
+        src: 'applications/*.js',
+        dest: 'dist/applications.js',
+      }
     },
     uglify: {
       options: {
@@ -26,9 +30,14 @@ module.exports = function (grunt) {
           'dist/system.min.js': ['<%= concat.system.dest %>']
         }
       },
+      applications: {
+        files: {
+          'dist/applications.min.js': ['<%= concat.applications.dest %>']
+        }
+      },
     },
     jshint: {
-      files: ['core/*.js', 'system/*.js', 'test/*.js', 'Gruntfile.js'],
+      files: ['core/*.js', 'system/*.js', 'test/*.js', 'applications/*.js', 'Gruntfile.js'],
       options: {
         // options here to override JSHint defaults
         globals: {
@@ -155,6 +164,7 @@ module.exports = function (grunt) {
         src: [
               "./core/*.js",
               "./system/*.js",
+              "./applications/*.js",
               "./tutorial/*md",
               "README.md",
         ],
