@@ -228,6 +228,49 @@ describe('nethserver.system.dns()', function() {
 
 });
 
+describe('nethserver.system.certificates', function() {
+    it('namespace is defined', function(){
+        should(nethserver.system.certificates).be.Object();
+    });
+    var certKey;
+    it('getAllCertificates', function() {
+        return nethserver.system.certificates.getAllCertificates().then(function(certs){
+            should(certs).be.Array();
+            should(certs.length).above(0);
+            certKey = certs[0].key;
+            return certs;
+        });
+    });
+    it('showCertificate existing', function() {
+        return nethserver.system.certificates.showCertificate(certKey).then(function(certText){
+            should(certText).be.String();
+            should(certText).match(/^Certificate.*/);
+            return certText;
+        });
+    });
+    it('showCertificate notfound', function() {
+        return nethserver.system.certificates.showCertificate('non-existing-certificate').then(function(certText){
+            throw new Error('Should not happen');
+        }, function(err){
+            should(err).be.Object();
+            should(err).have.property('type');
+            should(err.type).be.equal('NotFound');
+        });
+    });
+    it('selectDefaultCertificate', function() {
+        return nethserver.system.certificates.selectDefaultCertificate('/etc/pki/tls/certs/NSRV.crt');
+    });
+    it('selectDefaultCertificate notfound', function() {
+        return nethserver.system.certificates.selectDefaultCertificate('non-existing-certificate').then(function(){
+            throw new Error('Should not happen');
+        }, function(err){
+            should(err).be.Object();
+            should(err).have.property('type');
+            should(err.type).be.equal('NotValid');
+        });
+    });
+});
+
 
 mocha.checkLeaks();
 mocha.globals(['jQuery', 'cockpit']);
