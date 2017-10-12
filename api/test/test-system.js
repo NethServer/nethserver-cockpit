@@ -204,7 +204,7 @@ describe('nethserver.system.dns()', function() {
         return nethserver.system.dns.setAliases(['a1.domain.org', 'a2.domain2.org']).then(function() {
             tdb.open().then(function() {
                 tdb.get('a1.domain.org').should.be.ok();
-                tdb.get('a2.domain.org').should.be.ok();
+                tdb.get('a2.domain2.org').should.be.ok();
              });
         });
     });
@@ -213,7 +213,7 @@ describe('nethserver.system.dns()', function() {
     it('setDNS', function() {
        var db = nethserver.getDatabase('configuration');
        nethserver.system.dns.setDNS(['208.67.222.222','208.67.220.220']).then(function() {
-          val = db.getProp('dns', 'NameServers');
+          var val = db.getProp('dns', 'NameServers');
           return val.should.be.equal('208.67.222.222,208.67.220.220');
        });
     });
