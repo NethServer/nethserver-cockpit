@@ -21,7 +21,8 @@ angular.module('systemAngularApp')
       systimeTypes: {
         'manual': $filter('translate')('Manual'),
         'ntp': $filter('translate')('Using NTP server'),
-      }
+      },
+      actualPower: ''
     };
 
     $scope.localSystem.summary = {};
@@ -282,12 +283,38 @@ angular.module('systemAngularApp')
     };
 
     // -- power actions
+    $scope.openPowerModal = function (action) {
+      $scope.objects.actualPower = action;
+      $('#powerModal').modal('show');
+    };
     $scope.powerActions = function (action) {
       switch (action) {
-        case 'restart':
+        case 'reboot':
+          nethserver.system.power.reboot().then(function () {
+            $scope.notifications.add({
+              type: 'info',
+              title: $filter('translate')('Reboot'),
+              message: $filter('translate')('Rebooting the system...'),
+              status: 'warning',
+            });
+            $scope.$apply();
+          }, function (err) {
+            console.error("couldn't read organization info: " + err);
+          });
           break;
 
-        case 'shutdown':
+        case 'poweroff':
+          nethserver.system.power.poweroff().then(function () {
+            $scope.notifications.add({
+              type: 'info',
+              title: $filter('translate')('Power off'),
+              message: $filter('translate')('Shutting down the system...'),
+              status: 'warning',
+            });
+            $scope.$apply();
+          }, function (err) {
+            console.error("couldn't read organization info: " + err);
+          });
           break;
       }
     };

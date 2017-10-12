@@ -61,16 +61,16 @@
           <label class="col-sm-2 control-label">{{'Power' | translate}}</label>
           <div class="col-sm-10">
             <div class="btn-group">
-              <button ng-click="powerActions('restart')" class="btn btn-default btn-danger shutdown-privileged" data-action="restart" data-container="body">{{'Restart' | translate}}</button>
+              <button ng-click="openPowerModal('reboot')" class="btn btn-default btn-danger shutdown-privileged" data-action="restart" data-container="body">{{'Reboot' | translate}}</button>
               <button data-toggle="dropdown" class="btn btn-default dropdown-toggle shutdown-privileged">
                 <span class="caret"></span>
               </button>
               <ul role="menu" class="dropdown-menu">
                 <li class="presentation">
-                  <a ng-click="powerActions('restart')" role="menuitem" data-action="restart">{{'Restart' | translate}}</a>
+                  <a href="" ng-click="openPowerModal('reboot')" role="menuitem" data-action="restart">{{'Reboot' | translate}}</a>
                 </li>
                 <li class="presentation">
-                  <a ng-click="powerActions('shutdown')" role="menuitem" data-action="shutdown">{{'Shut Down' | translate}}</a>
+                  <a href="" ng-click="openPowerModal('poweroff')" role="menuitem" data-action="shutdown">{{'Power Off' | translate}}</a>
                 </li>
               </ul>
             </div>
@@ -194,7 +194,7 @@
 
         <div class="modal-body">
           <div ng-repeat="d in localSystem.summary.dns" class="form-group">
-            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'DNS' | translate}} {{$index+1}}</label>
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$index+1}}° {{'DNS' | translate}}</label>
             <div class="col-sm-9">
               <input required type="text" ng-model="d.dns" class="form-control">
             </div>
@@ -326,6 +326,29 @@
         <div class="modal-footer submit">
           <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
           <button class="btn btn-primary" value="submit" type="submit">{{'Save' | translate}}</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="powerModal" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{objects.actualPower == 'reboot' ? 'Rebooting the system' : 'Shutting down the system' | translate}}</h4>
+      </div>
+      <form class="form-horizontal" ng-submit="powerActions(objects.actualPower)">
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Are you sure' | translate}}?</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
+          <button class="btn btn-danger" type="submit">{{objects.actualPower == 'reboot' ? 'Reboot' : 'Power Off' | translate}}</button>
         </div>
 
       </form>
