@@ -190,15 +190,21 @@ describe('Also, the object returned by getDatabase()', function() {
     it('creates an empty db', function () {
         var tdb = nethserver.getDatabase('/tmp/testdb');
         return tdb.open().
-            then(function(){
-                tdb.save();
+            then(function(db){
+                should.strictEqual(db, tdb);
+                return tdb.save();
+            }).
+            then(function(db){
+                should.strictEqual(db, tdb);
+                return Promise.resolve(db);
             });
     });
 
     it('writes changes to a new file', function () {
         var tdb = nethserver.getDatabase('/tmp/testdb');
         return tdb.open().
-            then(function(){
+            then(function(db){
+                should.strictEqual(db, tdb);
                 tdb.delete('keytest');
                 tdb.set('keytest', 'typeofkey', {'p1':'v1', 'p2': 'v2'});
                 tdb.setProp('keytest', 'p1', 'v1mod');
@@ -210,7 +216,8 @@ describe('Also, the object returned by getDatabase()', function() {
             then(function(){
                 return tdb.save();
             }).
-            then(function(){
+            then(function(db){
+                should.strictEqual(db, tdb);
                 tdb.getProp('keytest', 'p1').should.be.equal('v1mod');
                 tdb.getType('keytest').should.be.equal('typeofkey');
                 tdb.getType('kdel').should.be.equal('');

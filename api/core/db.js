@@ -620,12 +620,12 @@ Nsdb.prototype = {
      * @return {Promise}
      */
     save: function() {
+        var self = this;
 
         if(this.modified === false) {
-            return Promise.resolve();
+            return Promise.resolve(self);
         }
 
-        var self = this;
         var fh = cockpit.file(this.path, {
             syntax: nsdbSyntax,
             superuser: 'try'
@@ -637,7 +637,12 @@ Nsdb.prototype = {
                     self.tag = newtag;
                     self.modified = false;
                 }).
-                always(fh.close));
+                always(function() {
+                    fh.close();
+                })).
+                then(function(){
+                    return self;
+                });
     },
 };
 
