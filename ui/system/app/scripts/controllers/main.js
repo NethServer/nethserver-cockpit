@@ -118,11 +118,12 @@ angular.module('systemAngularApp')
     });
 
     // modal actions
+    // -- hostname and alias
     $scope.openChangeHostname = function () {
       $scope.localSystem.summary.newHostname = $scope.localSystem.summary.hostname;
       $('#hostnameChangeModal').modal('show');
     };
-    $scope.changeHostname = function (hostname) {
+    $scope.saveHostname = function (hostname) {
       $('#hostnameChangeModal').modal('hide');
 
       // set hostname
@@ -179,6 +180,7 @@ angular.module('systemAngularApp')
       $scope.localSystem.summary.aliases.splice(index, 1);
     };
 
+    // -- dns
     $scope.openChangeDNS = function () {
       $('#dnsChangeModal').modal('show');
     };
@@ -212,6 +214,7 @@ angular.module('systemAngularApp')
       });
     };
 
+    // -- system time
     $scope.openChangeSystime = function () {
       $scope.localSystem.summary.newTimeMode = $scope.localSystem.summary.timeMode;
       $scope.localSystem.summary.newDate = $scope.localSystem.summary.date;
@@ -248,15 +251,13 @@ angular.module('systemAngularApp')
       });
 
     };
-    $scope.resetDateTime = function () {
-      $scope.localSystem.summary.timezone = $scope.localSystem.summary.oldTimezone;
-    };
 
+    // -- company info
     $scope.openChangeCompany = function () {
       $('#companyChangeModal').modal('show');
       $scope.localSystem.newOrganization = angular.copy($scope.localSystem.organization);
     };
-    $scope.changeCompany = function (organization) {
+    $scope.saveCompany = function (organization) {
       $('#companyChangeModal').modal('hide');
 
       nethserver.system.organization.saveInfo(organization).then(function () {
@@ -280,6 +281,7 @@ angular.module('systemAngularApp')
       });
     };
 
+    // -- power actions
     $scope.powerActions = function (action) {
       switch (action) {
         case 'restart':
@@ -311,7 +313,6 @@ angular.module('systemAngularApp')
         $scope.localSystem.summary.newTime = time;
       });
     };
-
     $scope.initRoutes = function () {
       for (var i in $route.routes) {
         if (i !== 'null' && $scope.objects.blacklistRoutes.indexOf(i) == -1 && i.match(/.+[^/]$/)) {

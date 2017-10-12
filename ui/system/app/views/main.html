@@ -142,7 +142,7 @@
       <div class="modal-header">
         <h4 class="modal-title">{{'Change hostname' | translate}}</h4>
       </div>
-      <form class="form-horizontal" ng-submit="changeHostname(localSystem.summary.newHostname)">
+      <form class="form-horizontal" ng-submit="saveHostname(localSystem.summary.newHostname)">
 
         <div class="modal-body">
           <div class="form-group">
@@ -272,7 +272,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-default" type="button" data-dismiss="modal" ng-click="resetDateTime()">{{'Cancel' | translate}}</button>
+          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
           <button class="btn btn-primary" type="submit">{{'Save' | translate}}</button>
         </div>
       </form>
@@ -286,7 +286,7 @@
       <div class="modal-header">
         <h4 class="modal-title">{{'Change company info' | translate}}</h4>
       </div>
-      <form class="form-horizontal" ng-submit="changeCompany(localSystem.newOrganization)">
+      <form class="form-horizontal" ng-submit="saveCompany(localSystem.newOrganization)">
 
         <div class="modal-body">
           <div class="form-group">
