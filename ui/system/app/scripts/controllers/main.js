@@ -64,56 +64,38 @@ angular.module('systemAngularApp')
     });
 
     // -- DNS --
-    /* nethserver.system.summary.getDNS().then(function (dns) {
-      $scope.localSystem.summary.dns = dns;
+    nethserver.system.dns.getDNS().then(function (dns) {
+      $scope.localSystem.summary.dns = dns.map(function (val) {
+        return {
+          readDns: val,
+          dns: val
+        }
+      });
 
       $scope.$apply();
     }, function (err) {
       console.error(err);
-    }); */
+    });
 
     // -- Datetime --
-    nethserver.system.summary.getSystemTime().then(function (info) {
-      var datetime = info.trim().split(' ');
+    nethserver.system.date.getDate().then(function (info) {
+      var datetime = info.DateTime.trim().split(' ');
       $scope.localSystem.summary.date = datetime[0];
       $scope.localSystem.summary.time = datetime[1];
 
-      $scope.$apply();
-    }, function (err) {
-      console.error("couldn't read datetime: " + err);
-    });
-
-    // -- System timezone --
-    nethserver.system.summary.getSystemTimeZone().then(function (timezone) {
-      $scope.localSystem.summary.timezone = timezone;
-      $scope.localSystem.summary.newTimezone = timezone;
+      $scope.localSystem.summary.newTimeZone = info.TimeZone;
+      $scope.localSystem.summary.ntpServer = info.NTPServer;
+      $scope.localSystem.summary.timeMode = info.NTPServer.length > 0 ? 'ntp' : 'manual'
 
       // -- Time zones --
-      return nethserver.system.summary.getTimeZones().then(function (timezones) {
-        $scope.localSystem.summary.timezones = timezones;
+      nethserver.system.date.getTimeZones().then(function (timezones) {
+        $scope.localSystem.summary.timeZones = timezones;
 
         $scope.$apply();
         $('.combobox').combobox();
       });
-
-    });
-
-    // -- Time mode --
-    nethserver.system.summary.getSystemTimeMode().then(function (timeMode) {
-      $scope.localSystem.summary.timeMode = timeMode;
-
-      $scope.$apply();
     }, function (err) {
-      console.error("couldn't read time mode: " + err);
-    });
-
-    // -- NTP server --
-    nethserver.system.summary.getNTPServer().then(function (ntpServer) {
-      $scope.localSystem.summary.ntpServer = ntpServer;
-
-      $scope.$apply();
-    }, function (err) {
-      console.error("couldn't read ntp server: " + err);
+      console.error("couldn't read datetime: " + err);
     });
 
     // -- Aliases --
@@ -143,39 +125,36 @@ angular.module('systemAngularApp')
     $scope.changeHostname = function (hostname) {
       $('#hostnameChangeModal').modal('hide');
 
-      nethserver.system.summary.setHostname(hostname).then(function () {
-        $scope.localSystem.summary.hostname = hostname;
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Hostname changed'),
-          message: $filter('translate')('Hostname changed with success'),
-          status: 'success',
+      // set hostname
+      if ($scope.localSystem.summary.hostname !== $scope.localSystem.summary.newHostname) {
+        nethserver.system.summary.setHostname(hostname).then(function () {
+          $scope.localSystem.summary.hostname = hostname;
+          $scope.notifications.add({
+            type: 'info',
+            title: $filter('translate')('Hostname changed'),
+            message: $filter('translate')('Hostname changed with success'),
+            status: 'success',
+          });
+          $scope.$apply();
+        }, function (err) {
+          $scope.notifications.add({
+            type: 'info',
+            title: $filter('translate')('Error'),
+            message: $filter('translate')('Event failed'),
+            status: 'danger',
+          });
+          $scope.$apply();
         });
-        $scope.$apply();
-      }, function (err) {
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('Event failed'),
-          status: 'danger',
-        });
-        $scope.$apply();
-      });
-    };
+      }
 
-    $scope.addAlias = function (alias) {
-      $scope.localSystem.summary.aliases.push({
-        isNew: true
-      });
-    };
-    $scope.saveAlias = function (alias) {
-      nethserver.system.dns.addAlias({
-        key: alias
-      }).then(function () {
+      // set aliases
+      nethserver.system.dns.setAliases($scope.localSystem.summary.aliases.map(function (val) {
+        return val.key;
+      })).then(function () {
         $scope.notifications.add({
           type: 'info',
           title: $filter('translate')('Saved'),
-          message: $filter('translate')('Alias saved with success'),
+          message: $filter('translate')('Aliases saved with success'),
           status: 'success',
         });
         $scope.getAllAliases();
@@ -184,39 +163,56 @@ angular.module('systemAngularApp')
         $scope.notifications.add({
           type: 'info',
           title: $filter('translate')('Error'),
-          message: $filter('translate')('Alias not saved'),
+          message: $filter('translate')('Aliases not saved'),
+          status: 'danger',
+        });
+        $scope.$apply();
+      });
+
+    };
+    $scope.addAlias = function (alias) {
+      $scope.localSystem.summary.aliases.push({
+        isNew: true
+      });
+    };
+    $scope.removeAlias = function (alias, index) {
+      $scope.localSystem.summary.aliases.splice(index, 1);
+    };
+
+    $scope.openChangeDNS = function () {
+      $('#dnsChangeModal').modal('show');
+    };
+    $scope.saveDNS = function (dns) {
+      nethserver.system.dns.setDNS(dns.map(function (item) {
+        return item.dns
+      })).then(function () {
+        $('#dnsChangeModal').modal('hide');
+        $scope.localSystem.summary.dns = dns.map(function (val) {
+          return {
+            readDns: val.dns,
+            dns: val.dns
+          }
+        });;
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Saved'),
+          message: $filter('translate')('DNS servers saved with success'),
+          status: 'success',
+        });
+        $scope.$apply();
+      }, function (err) {
+        console.error(err);
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Error'),
+          message: $filter('translate')('DNS servers not saved'),
           status: 'danger',
         });
         $scope.$apply();
       });
     };
-    $scope.removeAlias = function (alias, index) {
-      if (alias.isNew) {
-        $scope.localSystem.summary.aliases.splice(index, 1);
-      } else {
-        nethserver.system.dns.deleteAlias(alias.key).then(function () {
-          $scope.notifications.add({
-            type: 'info',
-            title: $filter('translate')('Removed'),
-            message: $filter('translate')('Alias removed with success'),
-            status: 'success',
-          });
-          $scope.getAllAliases();
-        }, function (err) {
-          console.error(err);
-          $scope.notifications.add({
-            type: 'info',
-            title: $filter('translate')('Error'),
-            message: $filter('translate')('Alias not saved'),
-            status: 'danger',
-          });
-          $scope.$apply();
-        });
-      }
-    };
 
     $scope.openChangeSystime = function () {
-      $scope.localSystem.summary.newTimezone = $scope.localSystem.summary.timezone;
       $scope.localSystem.summary.newTimeMode = $scope.localSystem.summary.timeMode;
       $scope.localSystem.summary.newDate = $scope.localSystem.summary.date;
       $scope.localSystem.summary.newTime = $scope.localSystem.summary.time;
@@ -227,68 +223,29 @@ angular.module('systemAngularApp')
       $scope.localSystem.summary.newTimeMode = value;
     };
     $scope.saveSystime = function () {
-      console.log($scope.localSystem.summary);
-      $('#systimeChangeModal').modal('hide');
-
-      /* nethserver.system.summary.setSystemTimeZone($scope.localSystem.summary.newTimezone).then(function () {
+      nethserver.system.date.setDate({
+        DateTime: $scope.localSystem.summary.newDate + ' ' + $scope.localSystem.summary.newTime,
+        TimeZone: $scope.localSystem.summary.newTimeZone,
+        NTPServer: $scope.localSystem.summary.newNtpServer
+      }).then(function (info) {
+        $('#systimeChangeModal').modal('hide');
         $scope.notifications.add({
           type: 'info',
-          title: 'Saved',
-          message: 'System timezone saved with success',
+          title: $filter('translate')('Saved'),
+          message: $filter('translate')('System date and time saved with success'),
           status: 'success',
         });
         $scope.$apply();
       }, function (err) {
-        console.error("couldn't save system time: " + err);
+        console.error(err);
         $scope.notifications.add({
           type: 'info',
-          title: 'Error',
-          message: 'System timezone not saved',
+          title: $filter('translate')('Error'),
+          message: $filter('translate')('System date and time not saved'),
           status: 'danger',
         });
         $scope.$apply();
-      }); */
-
-      if ($scope.localSystem.summary.newTimeMode == 'manual') {
-        var timestamp = new Date($scope.localSystem.summary.newDate + ' ' + $scope.localSystem.summary.newTime).getTime();
-        nethserver.system.summary.setSystemTime(timestamp).then(function () {
-          $scope.notifications.add({
-            type: 'info',
-            title: $filter('translate')('Saved'),
-            message: $filter('translate')('System time saved with success'),
-            status: 'success',
-          });
-          $scope.$apply();
-        }, function (err) {
-          console.error("couldn't save system time: " + err);
-          $scope.notifications.add({
-            type: 'info',
-            title: $filter('translate')('Error'),
-            message: $filter('translate')('System time not saved'),
-            status: 'danger',
-          });
-          $scope.$apply();
-        });
-      } else {
-        nethserver.system.summary.setNTPServer($scope.localSystem.summary.ntpServer).then(function () {
-          $scope.notifications.add({
-            type: 'info',
-            title: $filter('translate')('Saved'),
-            message: $filter('translate')('System time saved with success'),
-            status: 'success',
-          });
-          $scope.$apply();
-        }, function (err) {
-          console.error("couldn't save system time: " + err);
-          $scope.notifications.add({
-            type: 'info',
-            title: $filter('translate')('Error'),
-            message: $filter('translate')('System time not saved'),
-            status: 'danger',
-          });
-          $scope.$apply();
-        });
-      }
+      });
 
     };
     $scope.resetDateTime = function () {

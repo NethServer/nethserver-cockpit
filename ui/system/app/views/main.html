@@ -34,7 +34,7 @@
           <label class="col-sm-2 control-label">{{'DNS' | translate}}</label>
           <div class="col-sm-10 no-input">
             <p>
-              <a ng-click="openChangeDNS()" href="">{{localSystem.summary.dns}}</a>
+              <a ng-click="openChangeDNS()" href=""><span ng-repeat="d in localSystem.summary.dns">{{d.readDns}}<span ng-if="!$last">, </span></a>
             </p>
           </div>
         </div>
@@ -157,14 +157,16 @@
               <input type="text" ng-model="a.key" class="form-control">
             </div>
             <div class="col-xs-5 col-sm-2">
-              <button ng-if="!$first && a.key && a.isNew" ng-click="saveAlias(a.key)" class="btn btn-default" type="button">
-                <span class="fa fa-check card-icon-def"></span>
-              </button>
-              <button ng-if="!$first" ng-click="removeAlias(a, $index)" class="btn btn-default" type="button">
+              <button ng-click="removeAlias(a, $index)" class="btn btn-default" type="button">
                 <span class="fa fa-minus card-icon-def"></span>
               </button>
-              <button ng-click="addAlias()" ng-if="$first" class="btn btn-default" type="button">
-                <span class="fa fa-plus card-icon-def"></span>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-3 control-label"></div>
+            <div class="col-sm-9">
+              <button ng-click="addAlias()" class="btn btn-default" type="button">
+                <span class="fa fa-user-secret card-icon-def"></span> Add alias
               </button>
             </div>
           </div>
@@ -179,6 +181,32 @@
   </div>
 </div>
 
+<div class="modal fade" id="dnsChangeModal" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{'Change DNS servers' | translate}}</h4>
+        </div>
+        <form class="form-horizontal" ng-submit="saveDNS(localSystem.summary.dns)">
+
+          <div class="modal-body">
+            <div ng-repeat="d in localSystem.summary.dns" class="form-group">
+              <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'DNS' | translate}} {{$index+1}}</label>
+              <div class="col-sm-9">
+                <input required type="text" ng-model="d.dns" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer submit">
+            <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
+            <button class="btn btn-primary" value="submit" type="submit">{{'Save' | translate}}</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
 <div class="modal fade" id="systimeChangeModal" tabindex="-1" role="dialog" data-backdrop="static">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -191,7 +219,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Time Zone' | translate}}</label>
             <div class="col-sm-9">
-              <select required ng-options="t as t for t in localSystem.summary.timezones" ng-model="localSystem.summary.newTimezone" class="combobox form-control">
+              <select required ng-options="t as t for t in localSystem.summary.timeZones" ng-model="localSystem.summary.newTimeZone" class="combobox form-control">
               </select>
             </div>
           </div>
