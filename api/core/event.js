@@ -91,8 +91,7 @@ function EventMonitor() {
                 self.fakeProgressInterval = null;
             }
         } else if(eventType == 'created') {
-            self.progress = 0.0;
-            self.fakeProgressInterval = setInterval(function(){
+            var fakeProgressWorker = function () {
                 if(self.progress < 1.0) {
                     self.progress += 0.02;
                     self.dispatchEvent('nsevent.progress', {
@@ -106,7 +105,10 @@ function EventMonitor() {
                     self.fakeProgressInterval = null;
                     self.progress = 0.0;
                 }
-            }, 750);
+            };
+            self.progress = 0.0;
+            self.fakeProgressInterval = setInterval(fakeProgressWorker, 750);
+            fakeProgressWorker(); // send a message immediately
         }
     }
 

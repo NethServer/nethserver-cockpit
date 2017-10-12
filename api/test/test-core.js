@@ -107,6 +107,7 @@ describe('nethserver.eventMonitor', function () {
                     ev.should.have.property('detail');
                     ev.detail.should.have.property('unitName');
                     ev.type.should.startWith('nsevent.');
+                    console.log(ev);
                     if(ev.type == 'nsevent.progress') {
                         ev.detail.should.have.property('progress');
                         ev.detail.progress.should.be.Number();
