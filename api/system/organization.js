@@ -34,22 +34,22 @@
             var db = nethserver.getDatabase('configuration');
             return db.open().then(function() {
                 return {
-                    'city': db.getProp('OrganizationContact', 'City'),
-                    'company': db.getProp('OrganizationContact', 'Company'),
-                    'department': db.getProp('OrganizationContact', 'Department'),
-                    'phoneNumber': db.getProp('OrganizationContact', 'PhoneNumber'),
-                    'street': db.getProp('OrganizationContact', 'Street'),
+                    'City': db.getProp('OrganizationContact', 'City'),
+                    'Company': db.getProp('OrganizationContact', 'Company'),
+                    'Department': db.getProp('OrganizationContact', 'Department'),
+                    'PhoneNumber': db.getProp('OrganizationContact', 'PhoneNumber'),
+                    'Street': db.getProp('OrganizationContact', 'Street'),
                 };
             });
         },
         saveInfo: function (organization) {
             var db = nethserver.getDatabase('configuration');
             return db.open().then(function() {
-                db.setProp('OrganizationContact', 'City', organization.city);
-                db.setProp('OrganizationContact', 'Company', organization.company);
-                db.setProp('OrganizationContact', 'Department', organization.department);
-                db.setProp('OrganizationContact', 'PhoneNumber', organization.phoneNumber);
-                db.setProp('OrganizationContact', 'Street', organization.street);
+                db.setProp('OrganizationContact', 'City', organization.City);
+                db.setProp('OrganizationContact', 'Company', organization.Company);
+                db.setProp('OrganizationContact', 'Department', organization.Department);
+                db.setProp('OrganizationContact', 'PhoneNumber', organization.PhoneNumber);
+                db.setProp('OrganizationContact', 'Street', organization.Street);
                 return db.save();
             }).then(function(){
               return nethserver.signalEvent('organization-save');
