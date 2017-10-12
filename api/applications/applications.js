@@ -36,10 +36,41 @@
          * List installed applications by searching json manifests inside /usr/share/cockpit/nethserver/applications/
          * See applications manifest for the format
          *
-         * @return {Array.<Application>} a list of installed applications
+         * @return {Promise.<Array>} a promise with a list of installed applications, or undefined on error
          */
-        listApplications: function () {
-            return cockpit.spawn(['/usr/libexec/nethserver/cockpit-list-applications']);
+        getApplications: function () {
+            return Promise.resolve(
+                cockpit.spawn(['/usr/libexec/nethserver/cockpit-list-applications'])
+            ).then(function(val) {
+                return JSON.parse(val);
+            });
+        },
+
+         /**
+         * List installed applications by searching json manifests inside /usr/share/cockpit/nethserver/applications/
+         * See applications manifest for the format
+         *
+         * @return {Promise.<Application>} on success a promise with the manifest object, throws an error otherwise
+         */
+        getApplication: function(name) {
+            var path = "/usr/share/cockpit/nethserver/applications/"+name+".json";
+            var manifest = cockpit.file(path, { syntax: JSON });
+            return Promise.resolve(manifest.read().
+                done(function(content, tag) {
+                    return content; // this is already a JSON
+                }).
+                fail(function(err) {
+                    console.log(err);
+                    throw new nethserver.Error({
+                        id: 1150781304387,
+                        type: 'NotFound',
+                        message: 'Application not found: '+name,
+                    });
+                }).
+                always(function() {
+                    manifest.close();
+                })
+            );
         }
 
     };

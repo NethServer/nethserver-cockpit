@@ -28,8 +28,17 @@ describe('nethserver.applications', function () {
 
 describe('applications functions', function () {
 
-    it('listApplications', function() {
-        nethserver.applications.listApplications();
+    it('getApplications', function() {
+        nethserver.applications.getApplications().then(function(apps) {
+            apps[0].id.should.be.equal('nethserver-test');
+        });
+    });
+
+
+    it('getApplication', function() {
+        nethserver.applications.getApplication('nethserver-test').then(function(app) {
+            app.id.should.be.equal('nethserver-test');
+        });
     });
 
 });
