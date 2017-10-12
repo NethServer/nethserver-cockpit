@@ -34,7 +34,7 @@ popd
 PARENT=$(git rev-parse origin/gh-pages)
 HEAD=$(git rev-parse HEAD)
 echo $PARENT > docs/.git_parent
-git add docs/
+git add -f docs/
 TREE=$(git write-tree --prefix=docs)
 git rm -rf docs/
 COMMIT=$(git commit-tree ${PARENT:+-p ${PARENT}} -m "site at ${HEAD}" ${TREE})
@@ -45,4 +45,3 @@ echo "To publish the latest changes execute:"
 echo
 echo "    git push origin gh-pages --force"
 echo
-
