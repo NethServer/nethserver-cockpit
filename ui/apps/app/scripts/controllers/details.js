@@ -15,20 +15,28 @@ angular.module('appsAngularApp')
 
     // retrieve app name
     $scope.appNameRaw = $routeParams.app;
-    $scope.app = $scope.applications.filter(function (a) {
-      return a.id == $scope.appNameRaw;
-    })[0];
     $scope.appURL = '/cockpit/@localhost/' + $scope.appNameRaw + '/index.html';
+
+    // get app info
+    nethserver.applications.getApplication($scope.appNameRaw).then(function (application) {
+      $scope.app = application;
+
+      $scope.app.content = $scope.app.provides.join('\n');
+
+      $scope.crumbs.push({
+        name: $scope.app.name,
+        url: $scope.appURL
+      });
+      $scope.$apply();
+    }, function (err) {
+      console.error("couldn't read application info: " + err);
+    });
 
     // add crumb path
     $scope.crumbs.push({
       name: 'Applications',
       url: '/'
     })
-    $scope.crumbs.push({
-      name: $scope.app.name,
-      url: $scope.appURL
-    });
 
     // events listeners
     nethserver.notificationMonitor.addEventListener('nsnotification', function (notification) {

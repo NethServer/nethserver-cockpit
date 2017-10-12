@@ -8,26 +8,29 @@
       </div>
     </div>
     <div class="form-group">
-      <button class="btn btn-default btn-lg" type="submit"><span class="fa fa-search"></span></button>
+      <button class="btn btn-default btn-lg" type="submit">
+        <span class="fa fa-search"></span>
+      </button>
     </div>
   </form>
   <div class="container-fluid container-cards-pf">
     <div class="row row-cards-pf">
       <div ng-repeat="a in applications | orderBy:'name' | filter:objects.searchString" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
         <div class="card-pf card-pf-accented">
-          <span class="fa fa-{{a.icon}} app-icon"></span>
+          <img ng-src="../{{a.id}}/assets/{{a.icon}}" class="app-icon"></img>
           <h2 class="card-pf-title">
             {{a.name}}
           </h2>
-          <div class="card-pf-body">
+          <div class="card-pf-body no-padding">
             <p>{{a.summary}}</p>
+            <h4 class="app-version">v{{a.release.version}}</h4>
           </div>
           <div class="card-pf-footer">
             <button ng-click="goToExternal(a.url)" ng-if="a.url" class="btn btn-primary card-pf-time-frame-filter" type="button">
               <span class="fa fa-external-link"></span> {{'Open' | translate}}
             </button>
             <p>
-              <a ng-if="a.settings" href="" ng-click="goTo('/details/' + a.id)" class="card-pf-link-with-icon">
+              <a href="" ng-click="goTo('/details/' + a.id)" class="card-pf-link-with-icon">
                 <span class="pficon pficon-settings"></span>{{'Settings' | translate}}
               </a>
             </p>

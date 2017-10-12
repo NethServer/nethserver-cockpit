@@ -59,25 +59,13 @@ angular.module('appsAngularApp')
       }
     }, 5000);
 
-    $scope.applications = [{
-      id: 'nethserver-dummy',
-      name: "Proxy",
-      summary: 'Configuration Proxy configuration module',
-      description: '',
-      icon: 'fire',
-      url: 'http://google.com',
-      settings: true,
-      version: '1.0.17'
-    }, {
-      id: 'nethserver-mail-server',
-      name: "Mail server",
-      summary: 'Mail server configuration module',
-      description: '',
-      icon: 'envelope',
-      url: '',
-      settings: true,
-      version: '2.0.4'
-    }]
+    // get applications list
+    nethserver.applications.getApplications().then(function (applications) {
+      $scope.applications = applications;
+      $scope.$apply();
+    }, function (err) {
+      console.error("couldn't read oapplications list: " + err);
+    });
 
     $scope.stats = {
       updates: []
