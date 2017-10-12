@@ -24,13 +24,13 @@
  *
  * @namespace nethserver.applications
  */
-(function(ns){
+(function(nethserver){
     // Avoid double-inclusion from sub frames
-    if(ns.applications) {
+    if(nethserver.applications) {
         return;
     }
 
-    ns.applications = {
+    nethserver.applications = {
 
         /**
          * List installed applications by searching json manifests inside /usr/share/cockpit/nethserver/applications/
