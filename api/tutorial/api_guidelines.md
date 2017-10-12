@@ -311,6 +311,7 @@ Content of `test-mymodule.html`:
         <script src="mymodule.js"></script> <!-- include the implementation of you module -->
         <script src="should.js"></script>
         <script src="mocha.js"></script>
+        <script src="test-mockup.js"></script> <!-- avoid calling real events -->
         <script src="test-system.js"></script>
     </body>
 </html>

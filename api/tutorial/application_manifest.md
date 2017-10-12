@@ -12,7 +12,7 @@ Manifest must be placed under `/usr/share/cockpit/nethserver/applications` direc
 - **id**: this tag contains the unique identifier for this application (required)
 - **name**: descriptive name of the application (required)
 - **summary**: describe what is the purpose of the application in few words (required)
-- **description**: include 2-3 paragraphs describing any important features. Supports markdown format. (recommended)
+- **description**: include 2-3 paragraphs describing any important features. Each line should be an element of the array. Supports markdown format. (recommended)
 - **screenshots**: a list of screenshots; all screenshots should have a 16:9 aspect ratio, and should have a width that is no smaller than 620px (optional)
 - **url**: link to local application installation. (required for web applications)
 - **homepage**: this is a recommended tag for link project official site (optional)
@@ -32,8 +32,8 @@ File  `/usr/share/cockpit/nethserver/applications/nextcloud.json`
     "name": "NextCloud",
     "summary": "Share your data",
     "description": [
-        ["Access, **share** and protect your files, calendars, contacts, communication & more at home and in your enterprise."],
-        ["Nextcloud puts your data at your fingertips, under your control."]
+        "Access, **share** and protect your files, calendars, contacts, communication & more at home and in your enterprise.",
+        "Nextcloud puts your data at your fingertips, under your control."
     ],
     "screenshots": [
         { "caption": "Login", "image": "http://my.screenshot.org/login.png" },
