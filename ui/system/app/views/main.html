@@ -34,7 +34,10 @@
           <label class="col-sm-2 control-label">{{'DNS' | translate}}</label>
           <div class="col-sm-10 no-input">
             <p>
-              <a ng-click="openChangeDNS()" href=""><span ng-repeat="d in localSystem.summary.dns">{{d.readDns}}<span ng-if="!$last">, </span></a>
+              <a ng-click="openChangeDNS()" href="">
+                <span ng-repeat="d in localSystem.summary.dns">{{d.readDns}}
+                  <span ng-if="!$last">, </span>
+              </a>
             </p>
           </div>
         </div>
@@ -166,7 +169,7 @@
             <div class="col-sm-3 control-label"></div>
             <div class="col-sm-9">
               <button ng-click="addAlias()" class="btn btn-default" type="button">
-                <span class="fa fa-user-secret card-icon-def"></span> Add alias
+                <span class="fa fa-plus card-icon-def"></span> {{'Add alias' | translate}}
               </button>
             </div>
           </div>
@@ -182,30 +185,30 @@
 </div>
 
 <div class="modal fade" id="dnsChangeModal" tabindex="-1" role="dialog" data-backdrop="static">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">{{'Change DNS servers' | translate}}</h4>
-        </div>
-        <form class="form-horizontal" ng-submit="saveDNS(localSystem.summary.dns)">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{'Change DNS servers' | translate}}</h4>
+      </div>
+      <form class="form-horizontal" ng-submit="saveDNS(localSystem.summary.dns)">
 
-          <div class="modal-body">
-            <div ng-repeat="d in localSystem.summary.dns" class="form-group">
-              <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'DNS' | translate}} {{$index+1}}</label>
-              <div class="col-sm-9">
-                <input required type="text" ng-model="d.dns" class="form-control">
-              </div>
+        <div class="modal-body">
+          <div ng-repeat="d in localSystem.summary.dns" class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'DNS' | translate}} {{$index+1}}</label>
+            <div class="col-sm-9">
+              <input required type="text" ng-model="d.dns" class="form-control">
             </div>
           </div>
-          <div class="modal-footer submit">
-            <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
-            <button class="btn btn-primary" value="submit" type="submit">{{'Save' | translate}}</button>
-          </div>
+        </div>
+        <div class="modal-footer submit">
+          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
+          <button class="btn btn-primary" value="submit" type="submit">{{'Save' | translate}}</button>
+        </div>
 
-        </form>
-      </div>
+      </form>
     </div>
   </div>
+</div>
 
 <div class="modal fade" id="systimeChangeModal" tabindex="-1" role="dialog" data-backdrop="static">
   <div class="modal-dialog">
