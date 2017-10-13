@@ -24,32 +24,100 @@
  *
  * @namespace nethserver.system.services
  */
-(function(ns){
-  // Avoid double-inclusion from sub frames
-  if(ns.system.services) {
-    return;
-  }
-  ns.system.services = {
-    getAll: function () {
-      return cockpit.spawn(['date', '+%F %H:%M']);
-    },
-    enableServices: function (services) {
-      return cockpit.spawn(['date', '+%F %H:%M']);
-    },
-    disableServices: function (services) {
-      return cockpit.spawn(['date', '+%F %H:%M']);
-    },
-    startServices: function (services) {
-      return cockpit.spawn(['date', '+%F %H:%M']);
-    },
-    stopServices: function (services) {
-      return cockpit.spawn(['date', '+%F %H:%M']);
-    },
-    restartServices: function (services) {
-      return cockpit.spawn(['date', '+%F %H:%M']);
-    },
-    deleteServices: function (services) {
-      return cockpit.spawn(['date', '+%F %H:%M']);
-    },
-  };
+(function(nethserver){
+    // Avoid double-inclusion from sub frames
+    if(nethserver.system.services) {
+        return;
+    }
+    nethserver.system.services = {
+
+        /**
+         * Return the list of services
+         *
+         * @example
+         * nethserver.system.services.getAllServices().then(function(services) {
+         *     // services format
+         *     [
+         *       ...
+         *       {
+         *         "description": "DNS caching server.",
+         *         "name": "dnsmasq",
+         *         "ports": {
+         *           "TCP": [ "53", "67" ]
+         *           "UDP": [ "53", "67", "69" ]
+         *         },
+         *         "props": {
+         *           ...
+         *           "access": "green",
+         *           "dhcp-boot": "",
+         *           ...
+         *         },
+         *         "running": 1,
+         *         "status": 1
+         *     },
+         *     ...
+         *   ]
+         *
+         * @return {Promise} a promise with the list of services
+         *
+        */
+        getAllServices: function () {
+            return Promise.resolve(
+                cockpit.spawn(['/usr/libexec/nethserver/cockpit-list-services'])
+            ).then(function(val) {
+                return JSON.parse(val);
+            });
+        },
+
+        /**
+         * Enable the given service
+         *
+         * @param {String} service - Service name
+         * @return {Promise} a Cockpit promise
+         */
+        enableService: function (service) {
+            return cockpit.spawn(['/usr/libexec/nethserver/cockpit-control-service', service, 'enable']);
+        },
+
+        /**
+         * Enable the given service
+         *
+         * @param {String} service - Service name
+         * @return {Promise} a Cockpit promise
+         */
+        disableService: function (service) {
+            return cockpit.spawn(['/usr/libexec/nethserver/cockpit-control-service', service, 'disable']);
+        },
+
+        /**
+         * Start the given service
+         *
+         * @param {String} service - Service name
+         * @return {Promise} a Cockpit promise
+         */
+        startService: function (service) {
+            return cockpit.spawn(['/usr/libexec/nethserver/cockpit-control-service', service, 'start']);
+        },
+
+        /**
+         * Stop the given service
+         *
+         * @param {String} service - Service name
+         * @return {Promise} a Cockpit promise
+         */
+        stopService: function (service) {
+            return cockpit.spawn(['/usr/libexec/nethserver/cockpit-control-service', service, 'stop']);
+        },
+
+        /**
+         * Restart the given service
+         *
+         * @param {String} service - Service name
+         * @return {Promise} a Cockpit promise
+         */
+        restartService: function (service) {
+            return cockpit.spawn(['/usr/libexec/nethserver/cockpit-control-service', service, 'restart']);
+        },
+
+    };
 })(nethserver);

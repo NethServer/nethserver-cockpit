@@ -69,7 +69,7 @@ angular.module('systemAngularApp')
     ];
 
     // methods
-    nethserver.system.services.getAll().then(function (services) {
+    nethserver.system.services.getAllServices().then(function (services) {
       //$scope.localSystem.services.list = services;
 
       //$scope.$apply();
