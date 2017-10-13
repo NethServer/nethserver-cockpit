@@ -16,45 +16,18 @@
       </div>
     </div>
     <div class="form-group">
-      <button class="btn btn-default btn-lg" type="submit"><span class="fa fa-search"></span></button>
-    </div>
-    <div ng-if="objects.selectedServices.length > 1" class="form-group empty">
-
-    </div>
-    <div ng-if="objects.selectedServices.length > 1" class="dropdown form-group">
-      <button class="btn btn-primary btn-lg dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-          {{objects.selectedServices.length}} {{'services' | translate}}
-          <span class="caret"></span>
-        </button>
-      <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
-        <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="enableService(objects.selectedServices)" href="">
-          <span class="fa fa-check span-right-margin-lg"></span>{{'Enable' | translate}}</a>
-        </li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="disableService(objects.selectedServices)" href="">
-          <span class="fa fa-times span-right-margin-lg"></span>{{'Disable' | translate}}</a>
-        </li>
-        <li role="presentation" class="divider"></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="startService(objects.selectedServices)" href="">
-          <span class="fa fa-play span-right-margin-lg"></span>{{'Start' | translate}}</a>
-        </li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="stopService(objects.selectedServices)" href="">
-          <span class="fa fa-refresh span-right-margin-lg"></span>{{'Restart' | translate}}</a>
-        </li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="restartService(objects.selectedServices)" href="">
-          <span class="fa fa-power-off span-right-margin-lg"></span>{{'Stop' | translate}}</a>
-        </li>
-      </ul>
+      <button class="btn btn-default btn-lg" type="submit">
+        <span class="fa fa-search"></span>
+      </button>
     </div>
   </form>
-  <div class="list-group list-view-pf">
-    <div ng-repeat="s in localSystem.services.list | filter:objects.searchString" class="list-group-item {{s.checked ? 'list-selected' : ''}}">
-      <div class="list-view-pf-checkbox">
-        <input ng-click="addToSelected(s)" ng-model="s.checked" type="checkbox">
-      </div>
+  <div ng-show="!view.isLoaded" class="spinner spinner-lg"></div>
+  <div ng-show="view.isLoaded" class="list-group list-view-pf">
+    <div ng-repeat="s in localSystem.services.list | filter:objects.searchString track by $index" class="list-group-item {{s.checked ? 'list-selected' : ''}}">
       <div class="list-view-pf-actions">
-        <button ng-click="s.running ? restartService[s] : startService[s]" class="btn btn-default button-minimum">
-            <span class="fa fa-{{s.running ? 'refresh' : 'play'}} span-right-margin"></span>
-            {{s.running ? 'Restart' : 'Start' | translate}}
+        <button ng-click="s.running ? restartService(s.name) : startService(s.name)" class="btn btn-default button-minimum">
+          <span class="fa fa-{{s.running ? 'refresh' : 'play'}} span-right-margin"></span>
+          {{s.running ? 'Restart' : 'Start' | translate}}
         </button>
         <div class="dropdown pull-right dropdown-kebab-pf">
           <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -62,14 +35,14 @@
           </button>
           <ul class="dropdown-menu dropdown-menu-right">
             <li>
-              <a ng-click="s.status == 'enabled' ?  disableService([s]) : enableService([s])" href="">
-                <span class="fa fa-{{s.status == 'enabled' ? 'times' : 'check'}} span-right-margin"></span>
-                {{s.status == 'enabled' ? 'Disable' : 'Enable' | translate}}
+              <a ng-click="s.status ?  disableService(s.name) : enableService(s.name)" href="">
+                <span class="fa fa-{{s.status ? 'times' : 'check'}} span-right-margin"></span>
+                {{s.status ? 'Disable' : 'Enable' | translate}}
               </a>
             </li>
             <li ng-if="s.running" role="separator" class="divider"></li>
             <li ng-if="s.running">
-              <a ng-click="stopService([s])" href="">
+              <a ng-click="stopService(s.name)" href="">
                 <span class="fa fa-power-off span-right-margin"></span>
                 {{'Stop' | translate}}
               </a>
@@ -79,23 +52,23 @@
       </div>
       <div class="list-view-pf-main-info">
         <div class="list-view-pf-left">
-          <span class="fa fa-fighter-jet list-view-pf-icon-sm"></span>
+          <span class="fa fa-fighter-jet list-view-pf-icon-sm {{(s.status && !s.running) ? 'service-icon-problem' : ''}}"></span>
         </div>
         <div class="list-view-pf-body">
           <div class="list-view-pf-description">
             <div class="list-group-item-heading">
-              {{s.name}}
+              <span class="{{(s.status && !s.running) ? 'red' : ''}}">{{s.name}}</span>
             </div>
             <div class="list-group-item-text">
               <span>{{s.description}}</span>
             </div>
           </div>
           <div class="list-view-pf-additional-info">
-            <div class="list-view-pf-additional-info-item {{s.status == 'enabled' ? 'green' : 'red'}}">
-              <span class="fa fa-{{s.status == 'enabled' ? 'check' : 'times'}}"></span>
-              <strong>{{s.status | capitalize}}</strong>
+            <div class="list-view-pf-additional-info-item {{s.status ? 'green' : ''}}">
+              <span class="fa fa-{{s.status ? 'check' : 'times'}}"></span>
+              <strong>{{s.status ? 'Enabled' : 'Disabled' | capitalize}}</strong>
             </div>
-            <div class="list-view-pf-additional-info-item {{s.running ? 'green' : 'red'}}">
+            <div class="list-view-pf-additional-info-item {{s.running ? 'green' : s.status && !s.running ? 'red' : ''}}">
               <span class="fa fa-{{s.running ? 'bolt' : 'power-off'}}"></span>
               <strong>{{s.running ? 'Running' : 'Stopped' | translate}}</strong>
             </div>
@@ -111,17 +84,22 @@
       </div>
       <div class="list-group-item-container container-fluid hidden">
         <div class="row">
-          <div class="col-md-9">
-            <h4>Properties</h4>
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <h4>{{'Properties' | translate}}</h4>
             <dl class="dl-horizontal">
-              <dt>NTPServer</dt>
-              <dd>pool.ntp.org</dd>
-              <dt>UDPPorts</dt>
-              <dd>123 56 89</dd>
-              <dt>access</dt>
-              <dd>green</dd>
-              <dt>status</dt>
-              <dd>enabled</dd>
+              <span ng-repeat="(kp,p) in s.props">
+                <dt>{{kp}}</dt>
+                <dd>{{p || '-'}}</dd>
+              </span>
+            </dl>
+          </div>
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <h4>{{'Network' | translate}}</h4>
+            <dl class="dl-horizontal">
+              <span ng-repeat="(kp,p) in s.ports">
+                <dt>{{kp}}</dt>
+                <dd>{{p.join(', ') || '-'}}</dd>
+              </span>
             </dl>
           </div>
         </div>

@@ -377,3 +377,12 @@ iframe>.breadcrumb {
 .app-list-group-item:last-child {
   border-bottom: 0px;
 }
+
+.author-name {
+  margin-bottom: 0px;
+}
+
+.author-mail {
+  display: block;
+  margin-bottom: 10px;
+}

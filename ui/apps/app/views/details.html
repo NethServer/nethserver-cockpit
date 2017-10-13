@@ -4,7 +4,7 @@
     ng-src="{{appURL}}"></iframe>
 
   <div ng-show="view.isLoaded" class="col-xs-12 col-sm-3 col-md-3 col-lg-2 app-actions">
-      <img ng-src="../{{app.id}}/assets/{{app.icon}}" class="app-icon-details"></img>
+    <img ng-src="../{{app.id}}/assets/{{app.icon}}" class="app-icon-details"></img>
     <h3 class="app-short-descpription">{{app.summary}}</h3>
     <h4 class="app-version">v{{app.release.version}}</h4>
 
@@ -35,8 +35,8 @@
             </div>
             <div id="collapseAuthor" class="panel-collapse collapse in">
               <ul class="list-group app-list-group">
-                <h4>{{app.author.name}}</h4>
-                <p><a ng-href="mailto:{{app.author.email}}" target="_top">{{app.author.email}}</a></p>
+                <p class="author-name">{{app.author.name}}</p>
+                <a class="author-mail" ng-href="mailto:{{app.author.email}}" target="_top">{{app.author.email}}</a>
               </ul>
             </div>
           </div>
@@ -52,7 +52,7 @@
             </div>
             <div id="collapseContains" class="panel-collapse collapse in">
               <ul class="list-group app-list-group">
-                <p><pre>{{app.content}}</pre></p>
+                <pre>{{app.content}}</pre>
               </ul>
             </div>
           </div>

@@ -8,113 +8,132 @@
  * Controller of the systemAngularApp
  */
 angular.module('systemAngularApp')
-  .controller('ServicesCtrl', function ($scope) {
+  .controller('ServicesCtrl', function ($scope, $filter) {
     // controller objects
     $scope.objects = {
       searchString: '',
       selectedServices: []
     };
 
+    $scope.view = {
+      isLoaded: false
+    };
+
     $scope.localSystem.services = {};
-    $scope.localSystem.services.list = [{
-        name: 'chronyd',
-        description: 'Network time protocol',
-        status: 'enabled',
-        running: true,
-        ports: {
-          udp: [123]
-        },
-      },
-      {
-        name: 'collectd',
-        description: 'System performance statistics collector',
-        status: 'disabled',
-        running: false,
-      },
-      {
-        name: 'dnsmasq',
-        description: 'DNS and DHCP',
-        status: 'enabled',
-        running: true,
-        ports: {
-          udp: [53, 67, 69],
-          tcp: [53]
-        },
-      },
-      {
-        name: 'asterisk',
-        description: 'VoIP PBX',
-        status: 'disabled',
-        running: true,
-        ports: {
-          udp: [123]
-        }
-      },
-      {
-        name: 'janus-gateway',
-        description: 'WebRTC daemon gateway',
-        status: 'disabled',
-        running: false
-      },
-      {
-        name: 'postfix',
-        description: 'SMTP',
-        status: 'enabled',
-        running: true,
-        ports: {
-          udp: [53, 67, 69],
-          tcp: [53]
-        }
-      }
-    ];
 
     // methods
-    nethserver.system.services.getAllServices().then(function (services) {
-      //$scope.localSystem.services.list = services;
+    $scope.getAllServices = function () {
+      nethserver.system.services.getAllServices().then(function (services) {
+        $scope.localSystem.services.list = services;
+        $scope.view.isLoaded = true;
+        $scope.$apply();
+      }, function (err) {
+        console.error("couldn't read services: " + err);
+      });
+    };
 
-      //$scope.$apply();
-    }, function (err) {
-      console.error("couldn't read services: " + err);
-    });
-
-
-    $scope.enableService = function (services) {
-      nethserver.system.services.enableServices().then(function (services) {
-
+    $scope.enableService = function (service) {
+      nethserver.system.services.enableService(service).then(function (services) {
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Enabled'),
+          message: $filter('translate')('Service enabled with success'),
+          status: 'success',
+        });
+        $scope.getAllServices();
       }, function (err) {
         console.error(err);
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Error'),
+          message: $filter('translate')('Service not enabled'),
+          status: 'danger',
+        });
+        $scope.$apply();
       });
     }
 
-    $scope.disableService = function (services) {
-      nethserver.system.services.disableServices().then(function () {
-
+    $scope.disableService = function (service) {
+      nethserver.system.services.disableService(service).then(function () {
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Disabled'),
+          message: $filter('translate')('Service disabled with success'),
+          status: 'success',
+        });
+        $scope.getAllServices();
       }, function (err) {
         console.error(err);
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Error'),
+          message: $filter('translate')('Service not disabled'),
+          status: 'danger',
+        });
+        $scope.$apply();
       });
     }
 
-    $scope.startService = function (services) {
-      nethserver.system.services.startServices().then(function () {
-
+    $scope.startService = function (service) {
+      nethserver.system.services.startService(service).then(function () {
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Started'),
+          message: $filter('translate')('Service started with success'),
+          status: 'success',
+        });
+        $scope.getAllServices();
       }, function (err) {
         console.error(err);
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Error'),
+          message: $filter('translate')('Service not started'),
+          status: 'danger',
+        });
+        $scope.$apply();
       });
     }
 
-    $scope.stopService = function (services) {
-      nethserver.system.services.stopServices().then(function () {
-
+    $scope.stopService = function (service) {
+      nethserver.system.services.stopService(service).then(function () {
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Stopped'),
+          message: $filter('translate')('Service stopped with success'),
+          status: 'success',
+        });
+        $scope.getAllServices();
       }, function (err) {
         console.error(err);
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Error'),
+          message: $filter('translate')('Service not stopped'),
+          status: 'danger',
+        });
+        $scope.$apply();
       });
     }
 
-    $scope.restartService = function (services) {
-      nethserver.system.services.restartServices().then(function () {
-
+    $scope.restartService = function (service) {
+      nethserver.system.services.restartService(service).then(function () {
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Restarted'),
+          message: $filter('translate')('Service restarted with success'),
+          status: 'success',
+        });
+        $scope.getAllServices();
       }, function (err) {
         console.error(err);
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Error'),
+          message: $filter('translate')('Service not restarted'),
+          status: 'danger',
+        });
+        $scope.$apply();
       });
     }
 
@@ -143,16 +162,6 @@ angular.module('systemAngularApp')
       }
     };
 
-    $scope.addToSelected = function (service) {
-      if (service.checked) {
-        $scope.objects.selectedServices.push(service);
-      } else {
-        // delete item for array
-        for (var s in $scope.objects.selectedServices) {
-          if ($scope.objects.selectedServices[s].name == service.name) {
-            $scope.objects.selectedServices.splice(s, 1);
-          };
-        }
-      }
-    };
+    $scope.getAllServices();
+
   });

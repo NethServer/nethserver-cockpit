@@ -247,6 +247,16 @@ iframe>.breadcrumb {
   color: #9c9c9c;
 }
 
+.service-problem {
+  font-size: 16px;
+  vertical-align: sub;
+  margin-right: 4px;
+}
+
+.service-icon-problem {
+  border: 2px solid #cc0300 !important;
+}
+
 .white-background {
   background: #fff;
 }
