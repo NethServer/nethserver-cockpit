@@ -238,6 +238,12 @@ describe('nethserver.system.certificates', function() {
             should(certs).be.Array();
             should(certs.length).above(0);
             certKey = certs[0].key;
+            for(var i = 0; i < certs.length; i ++) {
+                should(certs[i]).have.property('issuer').which.is.String();
+                should(certs[i]).have.property('expired').which.is.Boolean();
+                should(certs[i]).have.property('expiration_t').which.is.Number().above(0);
+                should(certs[i]).have.property('default').which.is.Boolean();
+            }
             return certs;
         });
     });

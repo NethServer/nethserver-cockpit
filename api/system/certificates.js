@@ -20,6 +20,7 @@
 
 /**
  * @alias nethserver
+ * @name ns
  */
 (function (ns) {
     // Avoid double-inclusion from sub frames
@@ -30,9 +31,10 @@
     ns.system.certificates = {
         /**
          * @typedef Certificate
-         * @param {string} id the certificate identifier
+         * @param {string} key the certificate identifier
          * @param {string} issuer the certificate issuer
-         * @param {string} expires the certificate expiration date
+         * @param {integer} expiration_t the certificate expiration date in seconds since the Epoch
+         * @param {boolean} expired the certificate expiration date
          * @param {boolean} default true if the certificate is selected as system-wide default
          */
 
@@ -42,7 +44,7 @@
          * @return {Promise.<Certificate[]|Error>}
          */
         getAllCertificates: function () {
-            return Promise.resolve(cockpit.spawn(['/usr/libexec/nethserver/cert-list'])).then(function(content){
+            return Promise.resolve(cockpit.spawn(['/usr/libexec/nethserver/cert-list'], {'superuser': 'require'})).then(function(content){
                 var o = JSON.parse(content);
                 var list = [];
                 for (var key in o) {
@@ -53,6 +55,9 @@
                             key: key,
                             type: 'certificate',
                             issuer: o[key].issuer,
+                            expiration_t: o[key].expiration_t,
+                            expired: o[key].expired == 0 ? false : true,
+                            default: o[key].default > 0 ? true : false,
                             CrtFile: o[key].file,
                             KeyFile: o[key].key,
                             ChainFile: o[key].chain,
@@ -61,14 +66,6 @@
                 }
                 return list;
             }); //
-        },
-        /**
-         * Use getAllCertificates
-         * @deprecated
-         */
-        getAll: function() {
-            console.log('getAll is deprecated');
-            return ns.system.certificates.getAllCertificates();
         },
         /**
          * Retrieve the X.509 certificate in textual format
