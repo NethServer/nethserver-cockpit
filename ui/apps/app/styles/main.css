@@ -42,6 +42,15 @@ input[type="file"] {
   z-index: 2;
 }
 
+.view-spinner-app {
+  margin: auto;
+  position: absolute;
+  top: 100px;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+
 .app-icon {
   float: right;
   margin-top: 10px;
@@ -79,13 +88,13 @@ iframe>.breadcrumb {
 
 .iframe-embedded {
   border: none;
-  padding-bottom: 30px;
+  padding-bottom: 0px;
   z-index: 1;
 }
 
 @media screen and (max-height: 480px) {
   .iframe-embedded {
-    padding-bottom: 60px;
+    padding-bottom: 0px;
   }
 }
 
@@ -334,7 +343,7 @@ iframe>.breadcrumb {
 @media screen and (max-width: 768px) {
   .app-actions {
     border-left: 0px;
-    padding-top: 10px;
+    padding-top: 20px;
     padding-left: 20px;
   }
 }

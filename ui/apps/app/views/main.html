@@ -1,40 +1,56 @@
-<div ng-show="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
-<div ng-show="view.isLoaded">
-  <h3>{{'Applications' | translate}}</h3>
-  <form role="form" class="search-pf has-button search">
-    <div class="form-group has-clear">
-      <div class="search-pf-input-group">
-        <input ng-model="objects.searchString" type="text" class="form-control input-lg" placeholder="{{'Search' | translate}}...">
-      </div>
+<div ng-show="!view.isLoaded" class="spinner spinner-lg view-spinner-app"></div>
+
+<div ng-if="applications.length == 0 && view.isLoaded" class="blank-slate-pf " id="">
+  <div class="blank-slate-pf-icon">
+    <span class="fa fa-cubes"></span>
+  </div>
+  <h1>
+    {{'No applications found' | translate}}
+  </h1>
+  <p>
+    {{'Go to Software Center and install new applications' | translate}}
+  </p>
+  <div class="blank-slate-pf-main-action">
+    <button ng-click="goTo('store', true)" class="btn btn-primary btn-lg">{{'Software Center' | translate}}</button>
+  </div>
+</div>
+
+<h3 ng-if="applications.length > 0 && view.isLoaded">{{'Applications' | translate}}</h3>
+
+<form ng-if="applications.length > 0 && view.isLoaded" role="form" class="search-pf has-button search">
+  <div class="form-group has-clear">
+    <div class="search-pf-input-group">
+      <input ng-model="objects.searchString" type="text" class="form-control input-lg" placeholder="{{'Search' | translate}}...">
     </div>
-    <div class="form-group">
-      <button class="btn btn-default btn-lg" type="submit">
-        <span class="fa fa-search"></span>
-      </button>
-    </div>
-  </form>
-  <div class="container-fluid container-cards-pf">
-    <div class="row row-cards-pf">
-      <div ng-repeat="a in applications | orderBy:'name' | filter:objects.searchString" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        <div class="card-pf card-pf-accented">
-          <img ng-src="../{{a.id}}/assets/{{a.icon}}" class="app-icon"></img>
-          <h2 class="card-pf-title">
-            {{a.name}}
-          </h2>
-          <div class="card-pf-body no-padding">
-            <p>{{a.summary}}</p>
-            <h4 class="app-version">v{{a.release.version}}</h4>
-          </div>
-          <div class="card-pf-footer">
-            <button ng-click="goToExternal(a.url)" ng-if="a.url" class="btn btn-primary card-pf-time-frame-filter" type="button">
-              <span class="fa fa-external-link"></span> {{'Open' | translate}}
-            </button>
-            <p>
-              <a href="" ng-click="goTo('/details/' + a.id)" class="card-pf-link-with-icon">
-                <span class="pficon pficon-settings"></span>{{'Settings' | translate}}
-              </a>
-            </p>
-          </div>
+  </div>
+  <div class="form-group">
+    <button class="btn btn-default btn-lg" type="submit">
+      <span class="fa fa-search"></span>
+    </button>
+  </div>
+</form>
+
+<div ng-if="applications.length > 0 && view.isLoaded" class="container-fluid container-cards-pf">
+  <div class="row row-cards-pf">
+    <div ng-repeat="a in applications | orderBy:'name' | filter:objects.searchString" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="card-pf card-pf-accented">
+        <img ng-src="../{{a.id}}/assets/{{a.icon}}" class="app-icon"></img>
+        <h2 class="card-pf-title">
+          {{a.name}}
+        </h2>
+        <div class="card-pf-body no-padding">
+          <p>{{a.summary}}</p>
+          <h4 class="app-version">v{{a.release.version}}</h4>
+        </div>
+        <div class="card-pf-footer">
+          <button ng-click="goToExternal(a.url)" ng-if="a.url" class="btn btn-primary card-pf-time-frame-filter" type="button">
+            <span class="fa fa-external-link"></span> {{'Open' | translate}}
+          </button>
+          <p>
+            <a href="" ng-click="goTo('/details/' + a.id)" class="card-pf-link-with-icon">
+              <span class="pficon pficon-settings"></span>{{'Settings' | translate}}
+            </a>
+          </p>
         </div>
       </div>
     </div>

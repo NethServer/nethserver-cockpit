@@ -19,7 +19,15 @@ angular.module('appsAngularApp')
     };
 
     $scope.initApps = function () {
-      $scope.view.isLoaded = true;
+      $scope.applications = [];
+      nethserver.applications.getApplications().then(function (applications) {
+        $scope.view.isLoaded = true;
+
+        $scope.applications = applications;
+        $scope.$apply();
+      }, function (err) {
+        console.error("couldn't read applications list: " + err);
+      });
     };
     $scope.crumbs.push({
       name: 'Applications',

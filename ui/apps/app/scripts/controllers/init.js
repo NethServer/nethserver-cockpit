@@ -59,14 +59,6 @@ angular.module('appsAngularApp')
       }
     }, 5000);
 
-    // get applications list
-    nethserver.applications.getApplications().then(function (applications) {
-      $scope.applications = applications;
-      $scope.$apply();
-    }, function (err) {
-      console.error("couldn't read oapplications list: " + err);
-    });
-
     $scope.stats = {
       updates: []
     };

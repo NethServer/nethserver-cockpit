@@ -57,7 +57,7 @@ angular.module('appsAngularApp')
       $scope.view.isLoaded = true;
 
       // calculate height
-      $('#app-frame').css('height', window.innerHeight - 50);
+      $('#app-frame').css('height', window.innerHeight - 45);
 
       // select the target node
       var target = document.querySelector('#app-frame').contentDocument.body;
