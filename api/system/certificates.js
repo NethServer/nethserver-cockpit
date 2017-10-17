@@ -30,7 +30,7 @@
 
     ns.system.certificates = {
         /**
-         * @typedef Certificate
+         * @typedef CertificateMeta
          * @param {string} key the certificate identifier
          * @param {string} issuer the certificate issuer
          * @param {integer} expiration_t the certificate expiration date in seconds since the Epoch
@@ -38,10 +38,18 @@
          * @param {boolean} default true if the certificate is selected as system-wide default
          */
 
+         /**
+          * @typedef Certificate
+          * @param {string} key the certificate identifier that must be unique on the system
+          * @param {string} privateKey the certificate private key in PEM encoded format
+          * @param {string} certificate the X.509 certificate, PEM-encoded
+          * @param {string} chain the certificate chain file for intermediate autorities, PEM-encoded. Can be an empty.
+          */
+
         /**
          * List the X.509 certificates available on the system
          *
-         * @return {Promise.<Certificate[]|Error>}
+         * @return {Promise.<CertificateMeta[]|Error>}
          */
         getAllCertificates: function () {
             return Promise.resolve(cockpit.spawn(['/usr/libexec/nethserver/cert-list'], {'superuser': 'require'})).then(function(content){
@@ -85,8 +93,99 @@
                     });
                 });
         },
-        uploadCertificate: function (certificate) {
-            return cockpit.spawn(['date', '+%F %H:%M']);
+        /**
+         * Upload the certificate on the system and assigns it a unique indentifier
+         * @param {Certificate} upload An object containing the certificate parts
+         * @return {Promise} Success when the certificate is uploaded and configured correctly
+         */
+        uploadCertificate: function (upload) {
+            var tmpdump = "FILE=$(mktemp --tmpdir tmpupload.XXXXXXXXXX)\n" +
+             "cat - > ${FILE}\n" +
+             "echo -n ${FILE}\n";
+
+             var tmpFiles = [];
+
+             function cleanupTemp(files) {
+                 console.log('rm -vf', files);
+                 return Promise.resolve(cockpit.spawn(['/usr/bin/rm', '-vf'].concat(files)));
+             }
+
+             function cleanupErrorHandler(ex) {
+                 return cleanupTemp([ex.detail]).then(function(){ throw ex; });
+             }
+
+             function arrayHead(arr) {
+                 return arr[0];
+             }
+
+             var validators = [
+                 Promise.resolve(cockpit.spawn(['test', '-e', '/etc/pki/tls/certs/' + upload.key + '.crt'], {err: 'ignore'})).
+                     then(function(){
+                         throw new nethserver.Error({
+                             id: 1508163908910,
+                             type: 'NotValid',
+                             message: 'The given certificate key is already used',
+                             attribute: 'key'
+                         });
+                     }, function(ex){
+                         return upload.key;
+                     }),
+                 Promise.resolve(cockpit.script(tmpdump).input(upload.privateKey)).
+                     then(function(keyFile){
+                         tmpFiles.push(keyFile);
+                         return ns.validate('rsa-key', [keyFile], {
+                             id: 1508163908911,
+                             type: 'NotValid',
+                             message: 'Invalid PEM-encoded RSA key',
+                             attribute: 'privateKey',
+                             detail: keyFile,
+                         });
+                     }).
+                     then(arrayHead, cleanupErrorHandler),
+                 Promise.resolve(cockpit.script(tmpdump).input(upload.certificate)).
+                     then(function(certFile){
+                         tmpFiles.push(certFile);
+                         return ns.validate('pem-certificate', [certFile], {
+                             id: 1508163908912,
+                             type: 'NotValid',
+                             message: 'Invalid PEM-encoded X.509 certificate',
+                             attribute: 'certificate',
+                             detail: certFile,
+                         });
+                     }).
+                     then(arrayHead, cleanupErrorHandler),
+            ];
+
+            // optional validator on chain file
+            if(upload.chain) {
+                validators.push(
+                    Promise.resolve(cockpit.script(tmpdump).input(upload.chain)).
+                        then(function(chainFile){
+                            tmpFiles.push(chainFile);
+                            return ns.validate('pem-certificate', [chainFile], {
+                                id: 1508163908913,
+                                type: 'NotValid',
+                                message: 'Invalid PEM-encoded X.509 chain certificate',
+                                attribute: 'chain',
+                                detail: chainFile,
+                            });
+                        }).
+                        then(arrayHead, cleanupErrorHandler)
+                );
+            }
+
+             // spawn async validator processes, then run event if all are successful
+            return Promise.all(validators).
+                then(function(values){
+                    ns.signalEvent('certificate-upload', values).then(function(){
+                        cleanupTemp(tmpFiles);
+                    }, function(){
+                        cleanupTemp(tmpFiles);
+                    });
+                }, function(ex){
+                    cleanupTemp(tmpFiles);
+                    throw ex;
+                });
         },
         editCertificate: function (certificate) {
             return cockpit.spawn(['date', '+%F %H:%M']);
