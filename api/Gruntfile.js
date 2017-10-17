@@ -165,7 +165,7 @@ module.exports = function (grunt) {
               "./core/*.js",
               "./system/*.js",
               "./applications/*.js",
-              "./tutorial/*md",
+              "./tutorial/*.md",
               "README.md",
         ],
         dest: '../docs'

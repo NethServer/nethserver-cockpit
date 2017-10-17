@@ -9,7 +9,7 @@
 
 ## Object format
 
-Objects returned by APIs must reflect esmith db format and respect the upper/lower case notation
+Objects passed to and returned by APIs must reflect esmith db format and respect the upper/lower case notation
 of property names:
 
 ```
@@ -46,14 +46,29 @@ var goofy = {
 
 ## Errors
 
-If something goes wrong, APIs should raise a specific error.
+If something goes wrong, APIs must throw a [nethserver.Error](api#Error)
+object, which describes the error reason and possibly why the object passed to
+the API function caused the error.
 
-A `nethserver.Error` constructor takes an object with the following fields:
+For instance:
+```
+throw new nethserver.Error({
+    id: 1507721123244,
+    type: 'NotValid',
+    message: 'Generic validation error reason',
+    attributes: {
+        'MyProp1': 'field-specific error reason', 
+        'MyProp2': 'other field-specific error reason'
+    }
+});
+```
 
-- **id**: an fixed integer (usually a timestamp) which can be used to find the code which generated the error
-- **type**: a fixed string which describes the type of the error (required)
-- **message**: a descriptive error message (required)
-- **attribute**: the object field which caused the error (optional) 
+The **message** property should be used if an error is not caused by a specific
+attribute. On the other hand, there could be cases where the **attributes**
+object is empty, or undefined because the error condition does not depend on any
+of the attributes or attributes are not defined at all. 
+
+Note that the same Error object could represent multiple failure reasons.
 
 How to generate a good `id` in JavaScript:
 ```
@@ -61,8 +76,8 @@ How to generate a good `id` in JavaScript:
 ```
 
 An equivalent for Bash:
-```
-date +%s
+```text
+$ date +%s
 ```
 
 ### Well-known errors
@@ -74,9 +89,9 @@ Well-known errors are:
   throw new nethserver.Error({
       id: 1507721123244,
       type: 'NotValid',
-      message: 'Descriptive validation error',
-      attribute: 'myProp'
-  })
+      message: 'Generic validation error reason',
+      attributes: {'myProp': 'field-specific error reason'}
+  });
   ```
 
 - Not found error: **NotFound**
@@ -84,9 +99,9 @@ Well-known errors are:
   throw new nethserver.Error({
       id: 1507721155244,
       type: 'NotFound',
-      message: 'Descriptive not found error',
-      attribute: 'key'
-  })
+      message: 'Generic validation error reason',
+      attributes: {'key': 'field-specific error reason'}
+  });
   ```
 
 - Task already running error (the e-smith layer can't handle multiple running events): **TaskRun**
@@ -95,8 +110,10 @@ Well-known errors are:
       id: 1507721155255,
       type: 'TaskRun',
       message: 'Another task is already running'
-  })
+  });
  ```
+
+- type ``ValidatorFailed``: validator procedure error - the ``validate`` command failed
 
 ## API design
 
