@@ -36,21 +36,30 @@
      * @function
      * @name nethserver.validate
      * @param {String} validator - Validation procedure name
-     * @param {Array} [args] - Arguments to validation procedure
-     * @return {Promise.<number>} The exit code of "validate" command
+     * @param {Array} args - Arguments to validation procedure
+     * @param {Object} ex - Object thrown if validation fails as nethserver.Error object
+     * @return {Promise.<Array>} - args itself
+     * @see {@link #nethserver.Error}
      */
-    ns.validate = function(validator, args) {
-        if( ! Array.isArray(args)) {
-            args = [];
-        } else {
-            args = args.slice();
-        }
-        args.unshift('/sbin/e-smith/validate', validator);
-
-        return Promise.resolve(cockpit.spawn(args, {superuser: 'required', err: 'message'})).then(function(){
-            return 0;
+    ns.validate = function(validator, args, ex) {
+        return Promise.resolve(cockpit.spawn(['/sbin/e-smith/validate', validator].concat(args), {superuser: 'required', err: 'message'})).then(function(){
+            return args;
         }, function(err) {
-            return err.exit_status;
+            if(ex) {
+                throw new ns.Error(ex);
+            } else if(err.exit_status == 2) {
+                throw new ns.Error({
+                    id: 1508227553760,
+                    type: 'ValidatorFailed',
+                    message: validator + ' error:' + err.message,
+                });
+            } else {
+                throw new ns.Error({
+                    id: 1508227553759,
+                    type: 'NotValid',
+                    message: validator + ' failed',
+                });
+            }
         });
     };
 }(nethserver));

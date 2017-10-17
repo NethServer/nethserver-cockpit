@@ -348,19 +348,35 @@ describe('Also, the object returned by getDatabase()', function() {
 
 
 describe('nethserver.validate()', function() {
-    it('succeedes', function() {
-        return nethserver.validate('test-success').then(function(val){
-            val.should.be.equal(0);
+    it('succeedes on validation', function() {
+        return nethserver.validate('test-success', []).then(function(val){
+            should(val).be.Array().and.be.deepEqual([]);
         });
     });
-    it('fails', function () {
-        return nethserver.validate('test-failure').then(function(val){
-            val.should.be.not.equal(0);
+    it('fails on validation', function () {
+        return nethserver.validate('test-failure', []).then(function(val){
+            throw new Error('Should not happen');
+        }, function(ex) {
+            should(ex).be.instanceof(nethserver.Error).and.have.property('id').equal(1508227553759);
         });
     });
-    it('fails', function () {
-        return nethserver.validate('test-nonexisting-validator').then(function(val){
-            val.should.be.not.equal(0);
+    it('fails with error', function () {
+        return nethserver.validate('test-nonexisting-validator', []).then(function(val){
+            throw new Error('Should not happen');
+        }, function(ex){
+            should(ex).be.instanceof(nethserver.Error).and.have.property('id').equal(1508227553760);
+        });
+    });
+    it('fails with exception', function() {
+        return nethserver.validate('test-failure', [], {
+            id: 1508165800068,
+            type: 'NotValid',
+            message: 'Test case',
+            attribute: 'n/a'
+        }).then(function(val){
+            throw new Error('Should not happen');
+        }, function(ex){
+            should(ex).have.property('id').equal(1508165800068);
         });
     });
 });
