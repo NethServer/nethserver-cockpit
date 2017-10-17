@@ -221,12 +221,16 @@ cockpit.event_target(ns.eventMonitor);
  */
 
 /**
- * Call signal-event command with given arguments
+ * Call signal-event command with given arguments.
+ *
+ * @example
+ * nethserver.signalEvent('user-delete', [user]);
+ *
  * @function
  * @name nethserver.signalEvent
  * @see {@link #TaskCompleted}
  * @param {String} nsEvent event name
- * @param {Array} [args=[]] event arguments
+ * @param {Array} [args=[]] event arguments, must be an array or empty
  * @return {Promise.<TaskCompleted|String>}
  */
 ns.signalEvent = function (nsEvent, args) {
