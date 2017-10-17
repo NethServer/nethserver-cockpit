@@ -104,14 +104,16 @@
              "echo -n ${FILE}\n";
 
              var tmpFiles = [];
+             var validationErrors = [];
 
              function cleanupTemp(files) {
-                 console.log('rm -vf', files);
                  return Promise.resolve(cockpit.spawn(['/usr/bin/rm', '-vf'].concat(files)));
              }
 
              function cleanupErrorHandler(ex) {
-                 return cleanupTemp([ex.detail]).then(function(){ throw ex; });
+                 return cleanupTemp([ex.detail]).then(function(){
+                     validationErrors.push(ex);
+                 });
              }
 
              function arrayHead(arr) {
@@ -121,12 +123,12 @@
              var validators = [
                  Promise.resolve(cockpit.spawn(['test', '-e', '/etc/pki/tls/certs/' + upload.key + '.crt'], {err: 'ignore'})).
                      then(function(){
-                         throw new nethserver.Error({
+                         validationErrors.push(new nethserver.Error({
                              id: 1508163908910,
                              type: 'NotValid',
-                             message: 'The given certificate key is already used',
-                             attribute: 'key'
-                         });
+                             attributes: {'key': 'The given certificate key is already used'}
+                         }));
+                         return null;
                      }, function(ex){
                          return upload.key;
                      }),
@@ -136,8 +138,7 @@
                          return ns.validate('rsa-key', [keyFile], {
                              id: 1508163908911,
                              type: 'NotValid',
-                             message: 'Invalid PEM-encoded RSA key',
-                             attribute: 'privateKey',
+                             attributes: {'privateKey': 'Invalid PEM-encoded RSA key'},
                              detail: keyFile,
                          });
                      }).
@@ -148,8 +149,7 @@
                          return ns.validate('pem-certificate', [certFile], {
                              id: 1508163908912,
                              type: 'NotValid',
-                             message: 'Invalid PEM-encoded X.509 certificate',
-                             attribute: 'certificate',
+                             attributes: {'certificate': 'Invalid PEM-encoded X.509 certificate'},
                              detail: certFile,
                          });
                      }).
@@ -165,8 +165,7 @@
                             return ns.validate('pem-certificate', [chainFile], {
                                 id: 1508163908913,
                                 type: 'NotValid',
-                                message: 'Invalid PEM-encoded X.509 chain certificate',
-                                attribute: 'chain',
+                                attributes: {'chain': 'Invalid PEM-encoded X.509 chain certificate'},
                                 detail: chainFile,
                             });
                         }).
@@ -177,14 +176,30 @@
              // spawn async validator processes, then run event if all are successful
             return Promise.all(validators).
                 then(function(values){
+                    var attributes = {};
+                    if(validationErrors.length > 0) {
+                        validationErrors.forEach(function(err) {
+                            for(var prop in err.attributes) {
+                                if(err.attributes.hasOwnProperty(prop)) {
+                                    attributes[prop] = err.attributes[prop];
+                                }
+                            }
+                        });
+                        return cleanupTemp(tmpFiles).then(function(){
+                            throw new nethserver.Error({
+                                id: 1508247474551,
+                                type: 'NotValid',
+                                attributes: attributes,
+                            });
+                        });
+                    }
+
+                    // Start the event
                     ns.signalEvent('certificate-upload', values).then(function(){
                         cleanupTemp(tmpFiles);
                     }, function(){
                         cleanupTemp(tmpFiles);
                     });
-                }, function(ex){
-                    cleanupTemp(tmpFiles);
-                    throw ex;
                 });
         },
         editCertificate: function (certificate) {

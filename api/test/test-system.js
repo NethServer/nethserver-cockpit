@@ -229,6 +229,9 @@ describe('nethserver.system.dns()', function() {
 });
 
 describe('nethserver.system.certificates', function() {
+    beforeEach(function(){
+        nethserver.signalEvent = sinon.stub().returns(Promise.resolve(new CustomEvent("sinonstub-signalEventSucceeded")));
+    });
 
     var testCert = "-----BEGIN CERTIFICATE-----\n" +
         "MIIEAjCCAuqgAwIBAgIEWI9P2jANBgkqhkiG9w0BAQsFADCBmTETMBEGA1UEAwwK\n" +
@@ -318,7 +321,9 @@ describe('nethserver.system.certificates', function() {
             certificate: testCert,
             chain: testCert,
         };
-        return nethserver.system.certificates.uploadCertificate(certificate);
+        return nethserver.system.certificates.uploadCertificate(certificate).then(function(){
+            nethserver.signalEvent.should.have.calledWithMatch('certificate-upload').callCount(1);
+        });
     });
     it('uploadCertificate without chain', function() {
         var certificate = {
@@ -327,7 +332,10 @@ describe('nethserver.system.certificates', function() {
             certificate: testCert,
             chain: "",
         };
-        return nethserver.system.certificates.uploadCertificate(certificate);
+
+        return nethserver.system.certificates.uploadCertificate(certificate).then(function(){
+            nethserver.signalEvent.should.have.calledWithMatch('certificate-upload').callCount(1);
+        });
     });
     it('uploadCertificate fails (key)', function() {
         var certificate = {
@@ -341,7 +349,9 @@ describe('nethserver.system.certificates', function() {
             then(function(){
                 throw new Error('Should not happen');
             }, function(ex){
-                should(ex).have.property('attribute').be.equal('key');
+                nethserver.signalEvent.should.not.be.called();
+                should(ex).have.property('attributes').have.keys('key');
+                should(ex).have.property('attributes').not.have.keys('chain', 'privateKey', 'certificate');
             });
     });
     it('uploadCertificate fails (privateKey)', function() {
@@ -356,7 +366,9 @@ describe('nethserver.system.certificates', function() {
             then(function(){
                 throw new Error('Should not happen');
             }, function(ex){
-                should(ex).have.property('attribute').be.equal('privateKey');
+                nethserver.signalEvent.should.not.be.called();
+                should(ex).have.property('attributes').have.keys('privateKey');
+                should(ex).have.property('attributes').not.have.keys('chain', 'key', 'certificate');
             });
     });
     it('uploadCertificate fails (certificate)', function() {
@@ -371,7 +383,9 @@ describe('nethserver.system.certificates', function() {
             then(function(){
                 throw new Error('Should not happen');
             }, function(ex){
-                should(ex).have.property('attribute').be.equal('certificate');
+                nethserver.signalEvent.should.not.be.called();
+                should(ex).have.property('attributes').have.keys('certificate');
+                should(ex).have.property('attributes').not.have.keys('chain', 'key', 'privateKey');
             });
     });
     it('uploadCertificate fails (chain)', function() {
@@ -386,7 +400,9 @@ describe('nethserver.system.certificates', function() {
             then(function(){
                 throw new Error('Should not happen');
             }, function(ex){
-                should(ex).have.property('attribute').be.equal('chain');
+                nethserver.signalEvent.should.not.be.called();
+                should(ex).have.property('attributes').have.keys('chain');
+                should(ex).have.property('attributes').not.have.keys('privateKey', 'certificate', 'key');
             });
     });
     it('uploadCertificate fails (all)', function() {
@@ -401,7 +417,9 @@ describe('nethserver.system.certificates', function() {
             then(function(){
                 throw new Error('Should not happen');
             }, function(ex){
-                should(ex).have.property('attribute').and.match(/^(chain|certificate|privateKey)$/);
+                nethserver.signalEvent.should.not.be.called();
+                should(ex).have.property('attributes').have.keys('privateKey', 'certificate', 'chain');
+                should(ex).have.property('attributes').not.have.keys('key');
             });
     });
 });
