@@ -30,10 +30,11 @@
         return db.open().then(function() {
             if (db.keys().indexOf(key) > -1) {
                 throw new nethserver.Error({
+                    id: 1507726223244,
                     type: 'NotValid',
-                    message: 'This hostname is already used',
-                    attribute: 'key',
-                    id: 1507726223244
+                    attributes: {
+                        'key': 'This hostname is already used'
+                    }
                 });
             }
             host.type = type;
@@ -49,7 +50,13 @@
         var key = host.key;
         return db.open().then(function() {
             if (db.keys().indexOf(key) < 0) {
-                throw new Error("NotFound", "Host not found");
+                throw new nethserver.Error({
+                    id: 1508318512134,
+                    type: 'NotFound',
+                    attributes: {
+                        'key': 'Host not found'
+                    }
+                });
             }
             host.type = 'remote';
             db.setObject(host);
@@ -63,7 +70,13 @@
         var db = nethserver.getDatabase('hosts');
         return db.open().then(function() {
             if (db.keys().indexOf(hostKey) < 0) {
-                throw new Error("NotFound", "Host not found");
+                throw new nethserver.Error({
+                    id: 1508318577137,
+                    type: 'NotFound',
+                    attributes: {
+                        'key': 'Host not found'
+                    }
+                });
             }
             db.delete(hostKey);
             return db.save();
