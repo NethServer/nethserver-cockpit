@@ -30,52 +30,19 @@
     ns.system.summary = {
         /**
          * Retrieve the static host by reading /etc/hostname
-         * @return {Promise} from cockpit.file
+         * @deprecated
+         * @return {Promise}
          */
-        getHostname: function () {
-            var fh = cockpit.file("/etc/hostname", {
-                syntax: nethserver.syntax.trimWhitespace
-            });
-            return fh.read().always(function () {
-                fh.close();
-            });
-        },
-
-        getSystemAliases: function () {
-            return Promise.resolve('deprecated');
-        },
+        getHostname: ns.system.hostname.getFQDN,
 
         /**
          * Set the system host name
+         * @deprecated
          * @param {String} hostname the new host name
          * @param {Bool} [runEvent=true] signalEvent(hostname-modify)
          * @return {Promise}
          */
-        setHostname: function (hostname, runEvent) {
-            if (runEvent === undefined) {
-                runEvent = true;
-            }
-            return new Promise(function (fulfill, reject) {
-                var client = cockpit.dbus('org.freedesktop.hostname1', {
-                    'superuser': 'require'
-                });
-                client.wait(function () {
-                    client.call('/org/freedesktop/hostname1', 'org.freedesktop.hostname1',
-                        'SetStaticHostname', [hostname, false]).
-                    done(function () {
-                        if (runEvent === true) {
-                            nethserver.signalEvent('hostname-modify').then(fulfill, reject);
-                        } else {
-                            fulfill();
-                        }
-                    }).
-                    fail(reject).
-                    always(function () {
-                        client.close();
-                    });
-                });
-            });
-        },
+        setHostname: ns.system.hostname.setFQDN,
 
         getHardware: function () {
             return $.Deferred(function (dfr) {
