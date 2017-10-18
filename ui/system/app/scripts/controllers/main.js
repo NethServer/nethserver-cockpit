@@ -186,14 +186,19 @@ angular.module('systemAngularApp')
       $('#dnsChangeModal').modal('show');
     };
     $scope.saveDNS = function (dns) {
-      nethserver.system.dns.setDNS(dns.map(function (item) {
-        return item.dns
-      })).then(function () {
+      var dnsToSave = [];
+      if(dns[0].dns.length > 0) {
+        dnsToSave.push(dns[0].dns);
+      }
+      if(dns[1].dns.length > 0) {
+        dnsToSave.push(dns[1].dns);
+      }
+      nethserver.system.dns.setDNS(dnsToSave).then(function () {
         $('#dnsChangeModal').modal('hide');
-        $scope.localSystem.summary.dns = dns.map(function (val) {
+        $scope.localSystem.summary.dns = dnsToSave.map(function (val) {
           return {
-            readDns: val.dns,
-            dns: val.dns
+            readDns: val,
+            dns: val
           }
         });;
         $scope.notifications.add({
@@ -299,7 +304,14 @@ angular.module('systemAngularApp')
             });
             $scope.$apply();
           }, function (err) {
-            console.error("couldn't read organization info: " + err);
+            console.error(err);
+            $scope.notifications.add({
+              type: 'info',
+              title: $filter('translate')('Error'),
+              message: $filter('translate')('System not rebooted'),
+              status: 'danger',
+            });
+            $scope.$apply();
           });
           break;
 
@@ -313,7 +325,14 @@ angular.module('systemAngularApp')
             });
             $scope.$apply();
           }, function (err) {
-            console.error("couldn't read organization info: " + err);
+            console.error(err);
+            $scope.notifications.add({
+              type: 'info',
+              title: $filter('translate')('Error'),
+              message: $filter('translate')('System not shutted down'),
+              status: 'danger',
+            });
+            $scope.$apply();
           });
           break;
       }

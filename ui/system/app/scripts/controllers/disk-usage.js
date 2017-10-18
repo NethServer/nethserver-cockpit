@@ -15,6 +15,10 @@ angular.module('systemAngularApp')
       onLoad: false
     };
 
+    $scope.view = {
+      isLoaded: false
+    };
+
     $scope.diskUpdateAt = function () {
       nethserver.system.disks.getUpdatedUsage().then(function (updated) {
         $scope.objects.updatedAt = updated;
@@ -27,8 +31,10 @@ angular.module('systemAngularApp')
 
     $scope.getJSONUsage = function () {
       nethserver.system.disks.getJSONUsage().then(function (json) {
+        $scope.view.isLoaded = true;
         var cv = $.duc();
         cv(JSON.parse(json));
+        $scope.$apply();
       }, function (err) {
         console.error(err);
       });

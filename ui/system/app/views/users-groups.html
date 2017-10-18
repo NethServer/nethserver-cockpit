@@ -1,452 +1,164 @@
-<div ng-if="localSystem.users.provider == null && localSystem.users.chooseProvider == null" class="blank-slate-pf " id="">
-  <div class="blank-slate-pf-icon">
-    <span class="pficon pficon-users"></span>
-  </div>
-  <h1>
-    {{'No accounts provider configured' | translate}}
-  </h1>
-  <p>
-    {{'Users and groups are available through an accounts provider. You can connect this server to a remote accounts provider,
-    or install a local one. Some features are available depending on the accounts provider type' | translate}}
-  </p>
-  <div class="blank-slate-pf-main-action">
+<div ng-show="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
 
-    <div class="col-sm-6 col-md-6 card-pf card-pf-accented margin-right-md">
-      <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
-        <div class="blank-slate-pf-icon">
-          <span class="fa fa-database"></span>
-        </div>
-        <h1>
-          LDAP
-        </h1>
-        <p>
-          {{'Easy to configure, does not support authenticated access to shared folders' | translate}}
-        </p>
-        <div class="blank-slate-pf-main-action">
-          <button ng-click="selectProvider('ldap')" class="btn btn-primary btn-lg">{{'Use LDAP' | translate}}</button>
-        </div>
+<div ng-show="view.isLoaded">
+
+  <div ng-if="localSystem.users.provider !== null">
+    <h3>Summary</h3>
+    <div class="panel panel-default" id="provider-markup">
+      <div class="panel-heading">
+        <button id="change-provider-btn" data-toggle="modal" data-target="#changeProviderModal" class="btn btn-primary">{{'Change provider' | translate}}</button>
+        <span class="panel-title">
+          {{'Account provider' | translate}}: {{localSystem.users.provider | uppercase}}
+        </span>
+        <span class="provider-details" data-toggle="collapse" data-parent="#provider-markup" href="#providerDetails">{{'Details' | translate}}</span>
+      </div>
+      <div id="providerDetails" class="panel-collapse collapse">
+        <dl class="dl-horizontal">
+          <span ng-hide="k == 'isAD' || k == 'isLdap'" ng-repeat="(k,v) in localSystem.users.providerInfo">
+            <dt>{{k}}</dt>
+            <dd>{{v}}</dd>
+          </span>
+        </dl>
       </div>
     </div>
-    <div class="col-sm-6 col-md-6 card-pf card-pf-accented margin-left-md">
-      <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
-        <div class="blank-slate-pf-icon">
-          <span class="pficon pficon-repository"></span>
-        </div>
-        <h1>
-          Active Directory
-        </h1>
-        <p>
-          {{'Enables all shared folders features, requires advanced configuration options' | translate}}
-        </p>
-        <div class="blank-slate-pf-main-action">
-          <button ng-click="selectProvider('directory')" class="btn btn-primary btn-lg">{{'Use Active Directory' | translate}}</button>
-        </div>
-      </div>
-    </div>
-
   </div>
-</div>
 
-<div ng-if="localSystem.users.provider !== null">
-  <h3>Summary</h3>
-</div>
-
-<div ng-if="localSystem.users.provider !== null">
-  <h3>{{'Actions' | translate}}</h3>
-  <div class="btn-group">
-    <button ng-click="openCreateUser()" class="btn btn-primary btn-lg shutdown-privileged" data-action="restart" data-container="body">{{'Create user' | translate}}</button>
-    <button data-toggle="dropdown" class="btn btn-primary btn-lg dropdown-toggle shutdown-privileged">
-          <span class="caret"></span>
+  <div ng-if="localSystem.users.provider !== null">
+    <h3>{{'Actions' | translate}}</h3>
+    <div class="btn-group">
+      <button ng-if="objects.currentSearchFilter == 'user'" ng-click="openCreateUser()" class="btn btn-primary btn-lg shutdown-privileged"
+        data-action="restart" data-container="body">{{'Create user' | translate}}</button>
+      <button ng-if="objects.currentSearchFilter == 'group'" ng-click="openCreateGroup()" class="btn btn-primary btn-lg shutdown-privileged"
+        data-action="restart" data-container="body">{{'Create group' | translate}}</button>
+      <button data-toggle="dropdown" class="btn btn-primary btn-lg dropdown-toggle shutdown-privileged">
+        <span class="caret"></span>
       </button>
-    <ul role="menu" class="dropdown-menu">
-      <li class="presentation">
-        <a href="" ng-click="openCreateUser()" role="menuitem" data-action="restart">{{'Create user' | translate}}</a>
-      </li>
-      <li class="presentation">
-        <a href="" ng-click="openCreateGroup()" role="menuitem" data-action="restart">{{'Create group' | translate}}</a>
-      </li>
-    </ul>
+      <ul role="menu" class="dropdown-menu">
+        <li class="presentation">
+          <a href="" ng-click="openCreateUser()" role="menuitem" data-action="restart">{{'Create user' | translate}}</a>
+        </li>
+        <li class="presentation">
+          <a href="" ng-click="openCreateGroup()" role="menuitem" data-action="restart">{{'Create group' | translate}}</a>
+        </li>
+      </ul>
+    </div>
   </div>
-</div>
 
-<div ng-if="localSystem.users.provider !== null">
-  <h3>{{'Users and Groups list' | translate}}</h3>
-  <form role="form" class="search-pf has-button search">
-    <div class="form-group has-clear toolbar-pf-filter">
-      <label class="sr-only" for="filter">{{objects.availableSearchFilter[objects.currentSearchFilter]}}</label>
-      <div class="input-group full-width">
-        <div class="input-group-btn">
-          <button type="button" class="btn btn-default btn-lg dropdown-toggle adjust-filter-search" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">
-              {{objects.availableSearchFilter[objects.currentSearchFilter]}} <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li ng-repeat="(kf, f) in objects.availableSearchFilter" class="{{objects.currentSearchFilter == kf ? 'selected' : ''}}">
-              <a ng-click="switchFilterSearch(kf)" href="">{{f}}</a>
-            </li>
-          </ul>
+  <div ng-if="localSystem.users.provider !== null">
+    <h3>{{'Users and Groups list' | translate}}</h3>
+    <form role="form" class="search-pf has-button search">
+      <div class="form-group has-clear toolbar-pf-filter">
+        <label class="sr-only" for="filter">{{objects.availableSearchFilter[objects.currentSearchFilter]}}</label>
+        <div class="input-group full-width">
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default btn-lg dropdown-toggle adjust-filter-search" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+              {{objects.availableSearchFilter[objects.currentSearchFilter]}}
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li ng-repeat="(kf, f) in objects.availableSearchFilter" class="{{objects.currentSearchFilter == kf ? 'selected' : ''}}">
+                <a ng-click="switchFilterSearch(kf)" href="">{{f}}</a>
+              </li>
+            </ul>
+          </div>
+          <input ng-model="objects.searchString" type="text" class="form-control input-lg" id="filter" placeholder="Filter by {{objects.availableSearchFilter[objects.currentSearchFilter]}}...">
         </div>
-        <input ng-model="objects.searchString" type="text" class="form-control input-lg" id="filter" placeholder="Filter by {{objects.availableSearchFilter[objects.currentSearchFilter]}}...">
       </div>
-    </div>
-    <div class="form-group">
-      <button class="btn btn-default btn-lg" type="submit"><span class="fa fa-search"></span></button>
-    </div>
-  </form>
-
-  <div class="list-group list-view-pf">
-    <div ng-if="objects.currentSearchFilter == 'user'" ng-repeat="u in localSystem.users.list | filter:objects.searchString"
-      class="list-group-item">
-      <div class="list-view-pf-actions">
-        <button ng-click="openEditUser(u)" class="btn btn-default">
-          <span class="pficon pficon-edit span-right-margin"></span>
-          {{'Edit' | translate}}
+      <div class="form-group">
+        <button class="btn btn-default btn-lg" type="submit">
+          <span class="fa fa-search"></span>
         </button>
-        <div class="dropdown pull-right dropdown-kebab-pf">
-          <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <span class="fa fa-ellipsis-v"></span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-right">
-            <li>
-              <a ng-click="openChangePassword(u)" href="">
-                  <span class="fa fa-key span-right-margin"></span>
-                {{'Change password' | translate}}</a>
-            </li>
-            <li role="separator" class="divider"></li>
-            <li>
-              <a ng-click="openDeleteUser(u)" href="">
-                  <span class="fa fa-times span-right-margin"></span>
-                {{'Delete' | translate}}</a>
-            </li>
-          </ul>
-        </div>
       </div>
-      <div class="list-view-pf-main-info">
-        <div class="list-view-pf-left">
-          <span class="fa fa-user list-view-pf-icon-sm"></span>
-        </div>
-        <div class="list-view-pf-body">
-          <div class="list-view-pf-description">
-            <div ng-click="openEditUser(u)" class="list-group-item-heading">
-              <a href="">{{u.username}}</a>
-            </div>
-            <div class="list-group-item-text">
-              {{u.name}}
-            </div>
-          </div>
-          <div class="list-view-pf-additional-info">
-          </div>
-        </div>
-      </div>
-    </div>
+    </form>
 
-    <div ng-if="objects.currentSearchFilter == 'group'" ng-repeat="g in localSystem.groups.list | filter:objects.searchString"
-      class="list-group-item">
-      <div class="list-view-pf-actions">
-        <button ng-click="openEditGroup(g)" class="btn btn-default">
+    <div class="list-group list-view-pf">
+      <div ng-if="objects.currentSearchFilter == 'user'" ng-repeat="(ku, u) in localSystem.users.list | filterObj:objects.searchString"
+        class="list-group-item">
+        <div class="list-view-pf-actions">
+          <button ng-click="openEditUser(ku, u)" class="btn btn-default">
             <span class="pficon pficon-edit span-right-margin"></span>
             {{'Edit' | translate}}
           </button>
-        <div class="dropdown pull-right dropdown-kebab-pf">
-          <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <div class="dropdown pull-right dropdown-kebab-pf">
+            <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <span class="fa fa-ellipsis-v"></span>
             </button>
-          <ul class="dropdown-menu dropdown-menu-right">
-            <li>
-              <a ng-click="openDeleteGroup(g)" href="">
-                    <span class="fa fa-times span-right-margin"></span>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li>
+                <a ng-click="openChangePassword(u)" href="">
+                  <span class="fa fa-key span-right-margin"></span>
+                  {{'Change password' | translate}}</a>
+              </li>
+              <li role="separator" class="divider"></li>
+              <li>
+                <a ng-click="openDeleteUser(ku, u)" href="">
+                  <span class="fa fa-times span-right-margin"></span>
                   {{'Delete' | translate}}</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="list-view-pf-main-info">
-        <div class="list-view-pf-left">
-          <span class="fa fa-users list-view-pf-icon-sm"></span>
-        </div>
-        <div class="list-view-pf-body">
-          <div class="list-view-pf-description">
-            <div ng-click="openEditGroup(g)" class="list-group-item-heading">
-              <a href="">{{g.name}}</a>
-            </div>
-            <div class="list-group-item-text">
-              {{g.name}}
-            </div>
-          </div>
-          <div class="list-view-pf-additional-info">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div ng-if="localSystem.users.provider == null && localSystem.users.chooseProvider == 'ldap'" class="blank-slate-pf " id="">
-  <div class="blank-slate-pf-icon">
-    <span class="fa fa-database"></span>
-  </div>
-  <h1>
-    {{'You choose' | translate}}: <strong>LDAP</strong> <button ng-click="selectProvider(null)" class="btn btn-primary">{{'Change' | translate}}</button>
-  </h1>
-  <p>
-    {{'An LDAP database can store users, groups and passwords. It is required a RFC2307 compatible LDAP schema' | translate}}
-  </p>
-  <div class="blank-slate-pf-main-action">
-
-    <div class="col-sm-6 col-md-6 card-pf card-pf-accented margin-right-md">
-      <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
-        <div class="blank-slate-pf-icon">
-          <span class="fa fa-cloud"></span>
-        </div>
-        <h1>
-          {{'Bind to Remote' | translate}}
-        </h1>
-        <div class="blank-slate-pf-main-action">
-          <button ng-click="openBindToRemote()" class="btn btn-primary btn-lg">{{'Bind' | translate}}</button>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-6 col-md-6 card-pf card-pf-accented margin-left-md">
-      <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
-        <div class="blank-slate-pf-icon">
-          <span class="fa fa-download"></span>
-        </div>
-        <h1>
-          {{'Install an OpenLDAP Server' | translate}}
-        </h1>
-        <div class="blank-slate-pf-main-action">
-          <button ng-click="openInstallLDAP()" class="btn btn-primary btn-lg">{{'Install' | translate}}</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<div ng-if="localSystem.users.provider == null && localSystem.users.chooseProvider == 'directory'" class="blank-slate-pf "
-  id="">
-  <div class="blank-slate-pf-icon">
-    <span class="pficon pficon-repository"></span>
-  </div>
-  <h1>
-    {{'You choose' | translate}}: <strong>Active Directory</strong> <button ng-click="selectProvider(null)" class="btn btn-primary">{{'Change' | translate}}</button>
-  </h1>
-  <p>
-    {{'Computers in an Active Directory domain can be simple members or domain controllers (DC)' | translate}}
-  </p>
-  <div class="blank-slate-pf-main-action">
-
-    <div class="col-sm-6 col-md-6 card-pf card-pf-accented margin-right-md">
-      <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
-        <div class="blank-slate-pf-icon">
-          <span class="fa fa-graduation-cap"></span>
-        </div>
-        <h1>
-          {{'Join an existing domain' | translate}}
-        </h1>
-        <div class="blank-slate-pf-main-action">
-          <button ng-click="openJoinADomain()" class="btn btn-primary btn-lg">{{'Join' | translate}}</button>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-6 col-md-6 card-pf card-pf-accented margin-left-md">
-      <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
-        <div class="blank-slate-pf-icon">
-          <span class="fa fa-magic"></span>
-        </div>
-        <h1>
-          {{'Create new domain and become DC' | translate}}
-        </h1>
-        <div class="blank-slate-pf-main-action">
-          <button ng-click="openCreateDC()" class="btn btn-primary btn-lg">{{'Create' | translate}}</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<div class="modal fade" id="bindToRemoteModal" tabindex="-1" role="dialog" data-backdrop="static">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">{{'Bind to Remote LDAP Server' | translate}}</h4>
-      </div>
-      <form class="form-horizontal" ng-submit="bindToRemote(objects.newProvider)">
-
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Hostname or IP' | translate}}</label>
-            <div class="col-sm-9">
-              <input required type="text" ng-model="objects.newProvider.hostname" class="form-control">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'TCP Port' | translate}}</label>
-            <div class="col-sm-9">
-              <input required type="text" ng-model="objects.newProvider.tcpport" class="form-control">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Configuration' | translate}}</label>
-            <div class="col-sm-9">
-              <button class="btn btn-primary" ng-click="checkBindConfig(objects.newProvider)">{{'Check' | translate}}</button>
-              <span ng-if="objects.newProvider.checkedConfig" class="pficon pficon-ok status-icon"></span>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
-          <button ng-disabled="!objects.newProvider.checkedConfig" class="btn btn-primary" type="submit">{{'Bind' | translate}}</button>
-        </div>
-
-      </form>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="installLDAPModal" tabindex="-1" role="dialog" data-backdrop="static">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">{{'Install an OpenLDAP server' | translate}}</h4>
-      </div>
-      <form class="form-horizontal" ng-submit="installLDAP()">
-
-        <div class="modal-body">
-          <p>{{'Download and configure OpenLDAP server as local LDAP accounts provider' | translate}}</p>
-          <div class="progress-description">
-            <div class="spinner spinner-xs spinner-inline"></div> <strong>{{'Installing' | translate}}:</strong> {{'OpenLDAP server' | translate}}
-          </div>
-          <div class="progress progress-label-top-right">
-            <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
-              <span>40%</span>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
-          <button class="btn btn-primary" type="submit">{{'Install' | translate}}</button>
-        </div>
-
-      </form>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="joinADomainModal" tabindex="-1" role="dialog" data-backdrop="static">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">{{'Join Active Directory' | translate}}</h4>
-      </div>
-      <form class="form-horizontal" ng-submit="joinADomain(objects.newProvider)">
-
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'DNS domain name' | translate}}</label>
-            <div class="col-sm-9">
-              <input required type="text" ng-model="objects.newProvider.dnsDomainName" class="form-control">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'AD DNS Server' | translate}}</label>
-            <div class="col-sm-9">
-              <input required type="text" ng-model="objects.newProvider.adDNSServer" class="form-control">
-            </div>
-          </div>
-          <p>{{'Credentials for joining the domain' | translate}}</p>
-          <div class="form-group">
-            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Username' | translate}}</label>
-            <div class="col-sm-9">
-              <input required type="text" ng-model="objects.newProvider.credentials.username" class="form-control">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Password' | translate}}</label>
-            <div class="col-sm-9">
-              <input required type="password" ng-model="objects.newProvider.credentials.password" class="form-control">
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
-          <button class="btn btn-primary" type="submit">{{'Join' | translate}}</button>
-        </div>
-
-      </form>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="createDCModal" tabindex="-1" role="dialog" data-backdrop="static">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">{{'Create a new Active Directory domain' | translate}}</h4>
-      </div>
-      <form class="form-horizontal" ng-submit="createDC(objects.newProvider)">
-
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'DNS domain name' | translate}}</label>
-            <div class="col-sm-9">
-              <input required type="text" ng-model="objects.newProvider.dnsDomainName" class="form-control">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'NetBIOS domain name' | translate}}</label>
-            <div class="col-sm-9">
-              <input required type="text" ng-model="objects.newProvider.netbiosDomainName" class="form-control">
-            </div>
-          </div>
-          <div class="alert alert-warning alert-dismissable">
-            <span class="pficon pficon-warning-triangle-o"></span>
-            <strong>{{'The chosen IP address must satisfy all of the below conditions' | translate}}</strong>
-            <ul>
-              <li>{{'the IP address must be in the same subnet range of a green network: 192.168.5.0/24' | translate}}</li>
-              <li>{{'the IP address must be unused currently' | translate}}</li>
+              </li>
             </ul>
           </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Domain Controller IP address' | translate}}</label>
-            <div class="col-sm-9">
-              <input required type="text" ng-model="objects.newProvider.domainControllerIP" class="form-control">
+        </div>
+        <div class="list-view-pf-main-info">
+          <div class="list-view-pf-left">
+            <span class="fa fa-user list-view-pf-icon-sm"></span>
+          </div>
+          <div class="list-view-pf-body">
+            <div class="list-view-pf-description">
+              <div ng-click="openEditUser(ku, u)" class="list-group-item-heading">
+                <a href="">{{ku}}</a>
+              </div>
+              <div class="list-group-item-text">
+                {{u.gecos}}
+              </div>
+            </div>
+            <div class="list-view-pf-additional-info">
             </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
-          <button class="btn btn-primary" type="submit">{{'Create' | translate}}</button>
-        </div>
-
-      </form>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" data-backdrop="static">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">{{objects.toDelete.isGroup ? 'Delete group' : 'Delete user' | translate}} {{objects.toDelete.isGroup ? objects.toDelete.name
-          : objects.toDelete.username}}</h4>
       </div>
-      <form class="form-horizontal" ng-submit="objects.toDelete.isGroup ? deleteGroup(toDelete) : deleteUser(toDelete)">
 
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Are you sure' | translate}}?</label>
+      <div ng-if="objects.currentSearchFilter == 'group'" ng-repeat="(kg, g) in localSystem.groups.list | filterObj:objects.searchString"
+        class="list-group-item">
+        <div class="list-view-pf-actions">
+          <button ng-click="openEditGroup(kg, g)" class="btn btn-default">
+            <span class="pficon pficon-edit span-right-margin"></span>
+            {{'Edit' | translate}}
+          </button>
+          <div class="dropdown pull-right dropdown-kebab-pf">
+            <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <span class="fa fa-ellipsis-v"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li>
+                <a ng-click="openDeleteGroup(kg, g)" href="">
+                  <span class="fa fa-times span-right-margin"></span>
+                  {{'Delete' | translate}}</a>
+              </li>
+            </ul>
           </div>
         </div>
-        <div class="modal-footer">
-          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
-          <button class="btn btn-danger" type="submit">{{'Delete' | translate}}</button>
-        </div>
+        <div class="list-view-pf-main-info">
+          <div class="list-view-pf-left">
+            <span class="fa fa-users list-view-pf-icon-sm"></span>
+          </div>
+          <div class="list-view-pf-body">
+            <div class="list-view-pf-description">
+              <div ng-click="openEditGroup(kg, g)" class="list-group-item-heading">
+                <a href="">{{kg}}</a>
+              </div>
+              <div class="list-group-item-text">
 
-      </form>
+              </div>
+            </div>
+            <div class="list-view-pf-additional-info">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+
 </div>
 
 <div class="modal fade" id="createUserModal" tabindex="-1" role="dialog" data-backdrop="static">
@@ -454,37 +166,40 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 ng-if="!objects.newUser.isPassEdit" class="modal-title">{{objects.newUser.isEdit ? 'Edit' : 'Create a new user' | translate}}
-          <span>{{objects.newUser.username}}</span>
+          <span>{{objects.newUser.key}}</span>
         </h4>
         <h4 ng-if="objects.newUser.isPassEdit" class="modal-title">{{objects.newUser.isPassEdit ? 'Change password to' : 'Create a new user' | translate}}
-          <span>{{objects.newUser.username}}</span>
+          <span>{{objects.newUser.key}}</span>
         </h4>
       </div>
       <form class="form-horizontal" ng-submit="objects.newUser.isEdit ? objects.newUser.isPassEdit ? changePassword(objects.newUser) : editUser(objects.newUser) : createUser(objects.newUser)">
 
         <div class="modal-body">
-          <div ng-if="!objects.newUser.isPassEdit" class="form-group">
+          <div ng-if="!objects.newUser.isPassEdit" class="form-group {{objects.newUser.errorProps['key'] ? 'has-error' : ''}}">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Username' | translate}}</label>
             <div class="col-sm-5">
-              <input required type="text" ng-model="objects.newUser.username" class="form-control">
+              <input ng-disabled="objects.newUser.isEdit" required type="text" ng-model="objects.newUser.key" class="form-control">
+              <span ng-if="objects.newUser.errorProps['key']" class="help-block">{{objects.newUser.errorProps['key']}}</span>
             </div>
             <div class="col-sm-4">
               <input ng-disabled="true" type="text" ng-model="localSystem.users.domain" class="form-control">
             </div>
           </div>
-          <div ng-if="!objects.newUser.isPassEdit" class="form-group">
+          <div ng-if="!objects.newUser.isPassEdit" class="form-group {{objects.newUser.errorProps['gecos'] ? 'has-error' : ''}}">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Name' | translate}}</label>
             <div class="col-sm-9">
-              <input required type="text" ng-model="objects.newUser.name" class="form-control">
+              <input required type="text" ng-model="objects.newUser.gecos" class="form-control">
+              <span ng-if="objects.newUser.errorProps['gecos']" class="help-block">{{objects.newUser.errorProps['gecos']}}</span>
             </div>
           </div>
-          <div ng-if="!objects.newUser.isPassEdit" class="form-group">
+          <div ng-if="!objects.newUser.isPassEdit" class="form-group {{objects.newUser.errorProps['groups'] ? 'has-error' : ''}}">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Groups' | translate}}</label>
             <div class="col-sm-9">
               <select ng-change="addGroupToUser(objects.newUser.selectedGroup)" ng-model="objects.newUser.selectedGroup" class="combobox form-control">
                 <option></option>
-                <option ng-value="g.name" ng-repeat="g in localSystem.groups.list">{{g.name}}</option>
+                <option ng-value="kg" ng-repeat="(kg, g) in localSystem.groups.list">{{kg}}</option>
               </select>
+              <span ng-if="objects.newUser.errorProps['groups']" class="help-block">{{objects.newUser.errorProps['groups']}}</span>
             </div>
           </div>
           <div ng-if="!objects.newUser.isPassEdit" ng-repeat="g in objects.newUser.groups" class="form-group">
@@ -524,7 +239,7 @@
           <div ng-if="!objects.newUser.isPassEdit" class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Password expiration' | translate}}</label>
             <div class="col-sm-9">
-              <input type="checkbox" ng-model="objects.newUser.passwordExpiration">
+              <input type="checkbox" ng-model="objects.newUser.expires">
             </div>
           </div>
           <div ng-if="!objects.newUser.isPassEdit" class="form-group">
@@ -550,39 +265,41 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">{{objects.newGroup.isEdit ? 'Edit' : 'Create a new group' | translate}}
-          <span ng-show="objects.newGroup.isEdit">{{objects.newGroup.name}}</span>
+          <span ng-show="objects.newGroup.isEdit">{{objects.newGroup.key}}</span>
         </h4>
       </div>
-      <form class="form-horizontal" ng-submit="objects.newGroup.isEdit ? editGroup(objects.newGroup) : createGroup(objects.newGroup)">
+      <form class="form-horizontal" ng-submit="objects.newGroup.isEdit ? editGroup(objects.newGroup) : addGroup(objects.newGroup)">
 
         <div class="modal-body">
-          <div class="form-group">
+          <div class="form-group {{objects.newGroup.errorProps['key'] ? 'has-error' : ''}}">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Name' | translate}}</label>
             <div class="col-sm-5">
-              <input required type="text" ng-model="objects.newGroup.name" class="form-control">
+              <input ng-disabled="objects.newGroup.isEdit" required type="text" ng-model="objects.newGroup.key" class="form-control">
+              <span ng-if="objects.newGroup.errorProps['key']" class="help-block">{{objects.newGroup.errorProps['key']}}</span>
             </div>
             <div class="col-sm-4">
               <input ng-disabled="true" type="text" ng-model="localSystem.groups.domain" class="form-control">
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group {{objects.newGroup.errorProps['members'] ? 'has-error' : ''}}">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Users' | translate}}</label>
             <div class="col-sm-9">
               <select ng-change="addUserToGroup(objects.newGroup.selectedUser)" ng-model="objects.newGroup.selectedUser" class="combobox form-control">
                 <option></option>
-                <option ng-value="u.username" ng-repeat="u in localSystem.users.list">{{u.username}} - {{u.name}}</option>
+                <option ng-value="ku" ng-repeat="(ku, u) in localSystem.users.list">{{ku}} - {{u.gecos}}</option>
               </select>
+              <span ng-if="objects.newGroup.errorProps['members']" class="help-block">{{objects.newGroup.errorProps['members']}}</span>
             </div>
           </div>
-          <div ng-repeat="u in objects.newGroup.users" class="form-group">
+          <div ng-repeat="u in objects.newGroup.members" class="form-group">
             <label class="col-xs-12 col-sm-3 control-label" for="textInput-modal-markup"></label>
             <div class="col-xs-7 col-sm-6">
               <input type="text" ng-model="u" class="form-control">
             </div>
             <div class="col-xs-5 col-sm-2">
               <button ng-click="removeUserFromGroup($index)" class="btn btn-default" type="button">
-                  <span class="fa fa-minus card-icon-def"></span>
-                </button>
+                <span class="fa fa-minus card-icon-def"></span>
+              </button>
             </div>
           </div>
         </div>
@@ -592,6 +309,395 @@
         </div>
 
       </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{objects.toDelete.isGroup ? 'Delete group' : 'Delete user' | translate}} {{objects.toDelete.isGroup ? objects.toDelete.key
+          : objects.toDelete.key}}</h4>
+      </div>
+      <form class="form-horizontal" ng-submit="objects.toDelete.isGroup ? deleteGroup(objects.toDelete) : deleteUser(objects.toDelete)">
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Are you sure' | translate}}?</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
+          <button class="btn btn-danger" type="submit">{{'Delete' | translate}}</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="changeProviderModal" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{'Change account provider' | translate}}</h4>
+      </div>
+      <form class="form-horizontal" ng-submit="uninstallProvider()">
+
+        <div class="modal-body">
+          <div class="alert alert-warning alert-dismissable">
+            <span class="pficon pficon-warning-triangle-o"></span>
+            <strong>{{'Caution' | translate}}</strong>. {{'Before changing the Account provider, the old one must be removed' | translate}}.
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Are you sure' | translate}}?</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>
+          <button class="btn btn-danger" type="submit">{{'Remove' | translate}}</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="accountProviderWizard" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog modal-lg wizard-pf">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close wizard-pf-dismiss" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <dt class="modal-title">{{'Configure Account provider' | translate}}</dt>
+      </div>
+      <div class="modal-body wizard-pf-body clearfix">
+        <div class="wizard-pf-steps">
+          <ul class="wizard-pf-steps-indicator">
+
+            <li class="wizard-pf-step {{objects.currentStep == 1 ? 'active' : ''}}" data-tabgroup="1">
+              <a>
+                <span class="wizard-pf-step-number">1</span>
+                <span class="wizard-pf-step-title">{{'Account provider' | translate}}</span>
+              </a>
+            </li>
+
+            <li class="wizard-pf-step {{objects.currentStep == 2 ? 'active' : ''}}" data-tabgroup="2">
+              <a>
+                <span class="wizard-pf-step-number">2</span>
+                <span class="wizard-pf-step-title">{{'Local or Remote Bind' | translate}}</span>
+              </a>
+            </li>
+
+            <li class="wizard-pf-step {{objects.currentStep == 3 ? 'active' : ''}}" data-tabgroup="3">
+              <a>
+                <span class="wizard-pf-step-number">3</span>
+                <span class="wizard-pf-step-title">{{'Install' | translate}}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="wizard-pf-row">
+          <div class="wizard-pf-sidebar">
+            <ul class="list-group {{objects.currentStep == 1 ? '' : 'hidden'}}">
+              <li class="list-group-item active">
+                <a href="#">
+                  <span class="wizard-pf-substep-number">1</span>
+                  <span class="wizard-pf-substep-title">{{'Provider' | translate}}</span>
+                </a>
+              </li>
+            </ul>
+            <ul class="list-group {{objects.currentStep == 2 ? '' : 'hidden'}}">
+              <li class="list-group-item active">
+                <a href="#">
+                  <span class="wizard-pf-substep-number">2</span>
+                  <span class="wizard-pf-substep-title">{{'Bind' | translate}}</span>
+                </a>
+              </li>
+            </ul>
+            <ul class="list-group {{objects.currentStep == 3 ? '' : 'hidden'}}">
+              <li class="list-group-item active">
+                <a>
+                  <span class="wizard-pf-substep-number">3</span>
+                  <span class="wizard-pf-substep-title">{{'Install' | translate}}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <!-- /.wizard-pf-sidebar -->
+          <div class="wizard-pf-main">
+            <div class="wizard-pf-contents {{objects.currentStep == 1 ? '' : 'hidden'}}">
+              <div class="blank-slate-pf " id="">
+                <div class="blank-slate-pf-icon">
+                  <span class="pficon pficon-users"></span>
+                </div>
+                <h1>
+                  {{'No accounts provider configured' | translate}}
+                </h1>
+                <p>
+                  {{'Users and groups are available through an accounts provider. You can connect this server to a remote accounts provider,
+                  or install a local one. Some features are available depending on the accounts provider type' | translate}}
+                </p>
+                <strong>{{'Choose an Account provider below'}}:</strong>
+                <div class="blank-slate-pf-main-action">
+                  <div ng-click="selectProvider('ldap')" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 card-pf {{localSystem.users.chooseProvider == 'ldap' ? 'active-choose' : ''}}">
+                    <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
+                      <div class="blank-slate-pf-icon">
+                        <span class="fa fa-database"></span>
+                      </div>
+                      <h1>
+                        LDAP
+                      </h1>
+                      <p>
+                        {{'Easy to configure, does not support authenticated access to shared folders' | translate}}
+                      </p>
+                    </div>
+                  </div>
+                  <div ng-click="selectProvider('ad')" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 card-pf {{localSystem.users.chooseProvider == 'ad' ? 'active-choose' : ''}}">
+                    <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
+                      <div class="blank-slate-pf-icon">
+                        <span class="pficon pficon-repository"></span>
+                      </div>
+                      <h1>
+                        Active Directory
+                      </h1>
+                      <p>
+                        {{'Enables all shared folders features, requires advanced configuration options' | translate}}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="wizard-pf-contents {{objects.currentStep == 2 ? '' : 'hidden'}}">
+              <div ng-if="localSystem.users.provider == null && localSystem.users.chooseProvider == 'ldap'" class="blank-slate-pf " id="">
+                <div class="blank-slate-pf-icon">
+                  <span class="fa fa-database"></span>
+                </div>
+                <h1>
+                  {{'You choose' | translate}}:
+                  <strong>LDAP</strong>
+                </h1>
+                <p>
+                  {{'An LDAP database can store users, groups and passwords. It is required a RFC2307 compatible LDAP schema' | translate}}
+                </p>
+                <strong>{{'Choose an Bind method below'}}:</strong>
+                <div class="blank-slate-pf-main-action">
+                  <div ng-click="selectBind('remote')" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 card-pf {{localSystem.users.chooseBind == 'remote' ? 'active-choose' : ''}}">
+                    <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
+                      <div class="blank-slate-pf-icon">
+                        <span class="fa fa-cloud"></span>
+                      </div>
+                      <h1>
+                        {{'Bind to Remote LDAP' | translate}}
+                      </h1>
+                    </div>
+                  </div>
+                  <div ng-click="selectBind('local')" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 card-pf {{localSystem.users.chooseBind == 'local' ? 'active-choose' : ''}}">
+                    <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
+                      <div class="blank-slate-pf-icon">
+                        <span class="fa fa-download"></span>
+                      </div>
+                      <h1>
+                        {{'Install Local LDAP' | translate}}
+                      </h1>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div ng-if="localSystem.users.provider == null && localSystem.users.chooseProvider == 'ad'" class="blank-slate-pf " id="">
+                <div class="blank-slate-pf-icon">
+                  <span class="pficon pficon-repository"></span>
+                </div>
+                <h1>
+                  {{'You choose' | translate}}:
+                  <strong>Active Directory</strong>
+                </h1>
+                <p>
+                  {{'Computers in an Active Directory domain can be simple members or domain controllers (DC)' | translate}}
+                </p>
+                <strong>{{'Choose an Bind method below'}}:</strong>
+                <div class="blank-slate-pf-main-action">
+                  <div ng-click="selectBind('remote')" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 card-pf {{localSystem.users.chooseBind == 'remote' ? 'active-choose' : ''}}">
+                    <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
+                      <div class="blank-slate-pf-icon">
+                        <span class="fa fa-graduation-cap"></span>
+                      </div>
+                      <h1>
+                        {{'Join an existing Active Directory' | translate}}
+                      </h1>
+                    </div>
+                  </div>
+                  <div ng-click="selectBind('local')" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 card-pf {{localSystem.users.chooseBind == 'local' ? 'active-choose' : ''}}">
+                    <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
+                      <div class="blank-slate-pf-icon">
+                        <span class="fa fa-magic"></span>
+                      </div>
+                      <h1>
+                        {{'Create new domain and become DC' | translate}}
+                      </h1>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="wizard-pf-contents {{objects.currentStep == 3 ? '' : 'hidden'}}">
+              <!-- Local LDAP-->
+              <div ng-if="localSystem.users.provider == null && localSystem.users.chooseProvider == 'ldap' && localSystem.users.chooseBind == 'local'">
+                <h3 class="wizard-pf-contents-title">{{'Install local LDAP' | translate}}</h3>
+                <form class="form-horizontal" ng-submit="installLDAP()">
+                  <div class="modal-body">
+                    <p>{{'Download and configure OpenLDAP server as local LDAP accounts provider' | translate}}</p>
+                  </div>
+                </form>
+              </div>
+              <!-- Remote LDAP-->
+              <div ng-if="localSystem.users.provider == null && localSystem.users.chooseProvider == 'ldap' && localSystem.users.chooseBind == 'remote'">
+                <h3 class="wizard-pf-contents-title">{{'Bind to Remote LDAP' | translate}}</h3>
+                <form class="form-horizontal" ng-submit="checkBindConfig(objects.newProvider)">
+                  <div class="modal-body">
+                    <div ng-show="objects.newProvider.probeError" class="alert alert-danger alert-dismissable">
+                      <span class="pficon pficon-error-circle-o"></span>
+                      <strong>{{'Error' | translate}}</strong> {{'The configuration is invalid' | translate}}.
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Hostname or IP' | translate}}</label>
+                      <div class="col-sm-9">
+                        <input required type="text" ng-model="objects.newProvider.hostname" class="form-control">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Port' | translate}}</label>
+                      <div class="col-sm-9">
+                        <input type="text" placeholder="389" ng-model="objects.newProvider.tcpport" class="form-control">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Configuration' | translate}}</label>
+                      <div class="col-sm-2">
+                        <button type="submit" class="btn btn-primary">{{'Check' | translate}}</button>
+                      </div>
+                      <div ng-show="objects.newProvider.isChecking" class="col-sm-1">
+                        <div class="spinner"></div>
+                      </div>
+                    </div>
+
+                    <div ng-hide="(objects.newProvider.info.BindType == 'anonymous' && k=='BindPassword') || (objects.newProvider.info.BindType == 'anonymous' && k=='BindDN')"
+                      ng-repeat="(k,v) in objects.newProvider.info | orderObjectBy" class="form-group">
+                      <label class="col-sm-3 control-label" for="textInput-modal-markup">{{k | translate}}</label>
+                      <div class="col-sm-9">
+                        <input ng-hide="k == 'StartTls' || k == 'BindType'" type="text" ng-model="v" class="form-control">
+                        <input ng-if="k == 'StartTls'" type="checkbox" ng-model="v" ng-checked="v == 'enabled'" ng-click="changeStartTLS(v)">
+                        <label ng-if="k == 'BindType'">{{'Authenticated' | translate}}? </label>
+                        <input ng-if="k == 'BindType'" type="checkbox" ng-model="v" ng-checked="v == 'authenticated'" ng-click="changeBindType(v)">
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Local AD-->
+              <div ng-if="localSystem.users.provider == null && localSystem.users.chooseProvider == 'ad' && localSystem.users.chooseBind == 'local'">
+                <h3 class="wizard-pf-contents-title">{{'Become Domain Controller' | translate}}</h3>
+                <form class="form-horizontal">
+                  <div class="modal-body">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Domain name' | translate}}</label>
+                      <div class="col-sm-9">
+                        <input required type="text" ng-model="objects.newProvider.Realm" class="form-control">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'NetBIOS domain name' | translate}}</label>
+                      <div class="col-sm-9">
+                        <input required type="text" ng-model="objects.newProvider.Workgroup" class="form-control">
+                      </div>
+                    </div>
+                    <div class="alert alert-warning alert-dismissable">
+                      <span class="pficon pficon-warning-triangle-o"></span>
+                      <strong>{{'The chosen IP address must satisfy all of the below conditions' | translate}}</strong>
+                      <ul>
+                        <li>{{'the IP address must be in the same subnet range of a green network: 192.168.5.0/24' | translate}}</li>
+                        <li>{{'the IP address must be unused currently' | translate}}</li>
+                      </ul>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Domain Controller IP address' | translate}}</label>
+                      <div class="col-sm-9">
+                        <input required type="text" ng-model="objects.newProvider.IpAddress" class="form-control">
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!-- Remote AD-->
+              <div ng-if="localSystem.users.provider == null && localSystem.users.chooseProvider == 'ad' && localSystem.users.chooseBind == 'remote'">
+                <h3 class="wizard-pf-contents-title">{{'Join to Active Directory' | translate}}</h3>
+                <form class="form-horizontal" ng-submit="checkAdConfig(objects.newProvider)">
+                  <div class="modal-body">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Domain name' | translate}}</label>
+                      <div class="col-sm-9">
+                        <input required type="text" ng-model="objects.newProvider.Realm" class="form-control">
+                      </div>
+                    </div>
+                    <div ng-if="objects.newProvider.probeError" class="form-group">
+                      <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'AD DNS Server' | translate}}</label>
+                      <div class="col-sm-9">
+                        <input type="text" ng-model="objects.newProvider.adDNSServer" class="form-control">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Configuration' | translate}}</label>
+                      <div class="col-sm-2">
+                        <button type="submit" class="btn btn-primary">{{'Check' | translate}}</button>
+                      </div>
+                      <div ng-show="objects.newProvider.isChecking" class="col-sm-1">
+                        <div class="spinner"></div>
+                      </div>
+                    </div>
+                    <p ng-show="objects.newProvider.info" >{{'Credentials for joining the domain' | translate}}</p>
+                    <div ng-show="objects.newProvider.info" class="form-group">
+                      <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Username' | translate}}</label>
+                      <div class="col-sm-9">
+                        <input type="text" ng-model="objects.newProvider.info.BindDN" class="form-control">
+                      </div>
+                    </div>
+                    <div ng-show="objects.newProvider.info" class="form-group">
+                      <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Password' | translate}}</label>
+                      <div class="col-sm-9">
+                        <input type="password" ng-model="objects.newProvider.info.BindPassword" class="form-control">
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer wizard-pf-footer">
+        <button type="button" class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss">{{'Cancel' | translate}}</button>
+        <button ng-disabled="objects.currentStep == 1" ng-click="prevStep()" type="button" class="btn btn-default wizard-pf-back">
+          <span class="i fa fa-angle-left"></span>
+          {{'Back' | translate}}
+        </button>
+        <button ng-disabled="checkIfDisabled()" ng-click="nextStep()" type="button" class="btn btn-primary wizard-pf-next">
+          {{'Next' | translate}}
+          <span class="i fa fa-angle-right"></span>
+        </button>
+        <button type="button" class="btn btn-primary hidden wizard-pf-finish">
+          {{'Install' | translate}}
+          <span class="i fa fa-angle-right"></span>
+        </button>
+        <button type="button" class="btn btn-primary hidden wizard-pf-close wizard-pf-dismiss">{{'Close' | translate}}</button>
+
+      </div>
     </div>
   </div>
 </div>

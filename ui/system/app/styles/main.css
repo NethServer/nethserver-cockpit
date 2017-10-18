@@ -1,6 +1,7 @@
 body {
   padding: 20px;
   display: none;
+  background-color: #f5f5f5;
 }
 
 select {
@@ -25,6 +26,10 @@ textarea {
 
 dl {
   margin-bottom: 0px;
+}
+
+pre {
+  max-height: 250px;
 }
 
 input[type="file"] {
@@ -152,6 +157,7 @@ iframe>.breadcrumb {
 .status-icon {
   margin-left: 6px;
   font-size: 16px;
+  vertical-align: sub;
 }
 
 .margin-left-md {
@@ -386,4 +392,63 @@ circle {
   position: fixed;
   margin-top: -30px;
   left: 105px;
+}
+
+#providerDetails {
+  padding: 10px;
+}
+
+.provider-details {
+  color: #0088ce;
+  text-decoration: none;
+}
+
+#change-provider-btn {
+  float: right;
+}
+
+#provider-markup {
+  border: none;
+  box-shadow: none;
+}
+
+.provider-details:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.wizard-pf-main {
+  padding: 2em;
+}
+
+.wizard-pf-contents-title {
+  margin-top: 0px;
+}
+
+.wizard-pf-contents>.blank-slate-pf {
+  padding: 0;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.wizard-pf-contents>.blank-slate-pf>.blank-slate-pf-main-action>.card-pf {
+  margin: 0;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border: 1px solid #d1d1d1;
+  box-shadow: none;
+}
+
+.wizard-pf-contents>.blank-slate-pf>.blank-slate-pf-main-action>.card-pf:hover {
+  border: 2px solid #d1d1d1;
+  margin-top: -1px;
+}
+
+.active-choose {
+  border: 2px solid #3aa4dc !important;
+  margin-top: -1px !important;
+}
+
+.active-choose:hover {
+  margin-top: 0px;
 }

@@ -27,7 +27,6 @@
   <link rel="stylesheet" href="bower_components/ng-password-meter/dist/ng-password-meter.css" />
   <!-- endbower -->
   <!-- endbuild -->
-  <link href="../base1/patternfly.css" rel="stylesheet">
   <link href="../../static/branding.css" rel="stylesheet">
   <!-- build:css(.tmp) styles/main.css -->
   <link rel="stylesheet" href="styles/main.css">
@@ -75,10 +74,10 @@
     <div ng-view=""></div>
   </div>
 
-  <div class="footer">
+  <!-- <div class="footer">
     <span ng-bind="'Errors:' | translate"></span><a class="footer-span" ng-bind="stats.updates.length" href=""></a>
     <span ng-bind="'Warnings:' | translate"></span><a class="footer-span" ng-bind="stats.errors.length" href=""></a>
-  </div>
+  </div> -->
 
   <!-- build:js(.) scripts/vendor.js -->
   <!-- bower:js -->
@@ -136,6 +135,9 @@
   <script src="scripts/filters/capitalize.js"></script>
   <script src="scripts/controllers/logs.js"></script>
   <script src="scripts/controllers/storage.js"></script>
+  <script src="scripts/filters/isempty.js"></script>
+  <script src="scripts/filters/filterobj.js"></script>
+  <script src="scripts/filters/orderobjectby.js"></script>
   <!-- endbuild -->
   <div ng-show="initObjects.isFake" class="fake-modal-backdrop"></div>
 </body>

@@ -1,4 +1,6 @@
-<div ng-if="localSystem.dns.hosts.length == 0" class="blank-slate-pf">
+<div ng-show="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
+
+<div ng-show="localSystem.dns.hosts.length == 0 && view.isLoaded" class="blank-slate-pf">
   <div class="blank-slate-pf-icon">
     <span class="pficon pficon-regions"></span>
   </div>
@@ -10,12 +12,12 @@
   </div>
 </div>
 
-<div ng-if="localSystem.dns.hosts.length > 0">
+<div ng-show="localSystem.dns.hosts.length > 0 && view.isLoaded">
   <h3>{{'Actions' | translate}}</h3>
   <button ng-click="newDNS()" class="btn btn-primary btn-lg " type="button">{{'Add DNS record' | translate}}</button>
 </div>
 
-<div ng-if="localSystem.dns.hosts.length > 0">
+<div ng-show="localSystem.dns.hosts.length > 0 && view.isLoaded">
   <h3>{{'DNS records list' | translate}}</h3>
   <form role="form" class="search-pf has-button search">
     <div class="form-group has-clear">

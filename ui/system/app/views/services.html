@@ -1,4 +1,6 @@
-<div ng-if="localSystem.services.list.length == 0" class="blank-slate-pf">
+<div ng-show="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
+
+<div ng-show="localSystem.services.list.length == 0 && view.isLoaded" class="blank-slate-pf">
   <div class="blank-slate-pf-icon">
     <span class="pficon pficon-regions"></span>
   </div>
@@ -7,7 +9,7 @@
   </h1>
 </div>
 
-<div ng-if="localSystem.services.list.length > 0">
+<div ng-show="localSystem.services.list.length > 0 && view.isLoaded">
   <h3>{{'Services list' | translate}}</h3>
   <form role="form" class="search-pf has-button search">
     <div class="form-group has-clear">
@@ -21,8 +23,7 @@
       </button>
     </div>
   </form>
-  <div ng-show="!view.isLoaded" class="spinner spinner-lg"></div>
-  <div ng-show="view.isLoaded" class="list-group list-view-pf">
+  <div class="list-group list-view-pf">
     <div ng-repeat="s in localSystem.services.list | filter:objects.searchString track by $index" class="list-group-item {{s.checked ? 'list-selected' : ''}}">
       <div class="list-view-pf-actions">
         <button ng-click="s.running ? restartService(s.name) : startService(s.name)" class="btn btn-default button-minimum">
@@ -91,6 +92,10 @@
                 <dt>{{kp}}</dt>
                 <dd>{{p || '-'}}</dd>
               </span>
+              <span ng-if="s.props | isempty">
+                <dt>-</dt>
+                <dd></dd>
+              </span>
             </dl>
           </div>
           <div class="col-sm-6 col-md-6 col-lg-6">
@@ -98,7 +103,7 @@
             <dl class="dl-horizontal">
               <span ng-repeat="(kp,p) in s.ports">
                 <dt>{{kp}}</dt>
-                <dd>{{p.join(', ') || '-'}}</dd>
+                <dd>{{kp == 'access' ? (p || '-') : (p.join(', ') || '-')}}</dd>
               </span>
             </dl>
           </div>

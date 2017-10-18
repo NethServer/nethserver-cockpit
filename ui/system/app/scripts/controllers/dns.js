@@ -8,7 +8,7 @@
  * Controller of the systemAngularApp
  */
 angular.module('systemAngularApp')
-  .controller('DnsCtrl', function ($scope) {
+  .controller('DnsCtrl', function ($scope, $filter) {
     // controller objects
     $scope.objects = {
       searchString: '',
@@ -16,12 +16,17 @@ angular.module('systemAngularApp')
       toDeleteDNS: {}
     };
 
+    $scope.view = {
+      isLoaded: false
+    };
+
     $scope.localSystem.dns = {};
-    $scope.localSystem.dns.hosts = {};
+    $scope.localSystem.dns.hosts = [];
 
     // methods
     $scope.getAllRemoteHosts = function () {
       nethserver.system.dns.getAllRemoteHosts().then(function (hosts) {
+        $scope.view.isLoaded = true;
         $scope.localSystem.dns.hosts = hosts;
 
         $scope.$apply();
@@ -36,8 +41,8 @@ angular.module('systemAngularApp')
           $('#newDNSModal').modal('hide');
           $scope.notifications.add({
             type: 'info',
-            title: 'Edited',
-            message: 'DNS record edited with success',
+            title: $filter('translate')('Edited'),
+            message: $filter('translate')('DNS record edited with success'),
             status: 'success',
           });
           $scope.getAllRemoteHosts();
@@ -57,8 +62,8 @@ angular.module('systemAngularApp')
           $('#newDNSModal').modal('hide');
           $scope.notifications.add({
             type: 'info',
-            title: 'Saved',
-            message: 'DNS record added with success',
+            title: $filter('translate')('Saved'),
+            message: $filter('translate')('DNS record added with success'),
             status: 'success',
           });
           $scope.getAllRemoteHosts();
