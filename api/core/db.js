@@ -265,7 +265,13 @@ Nsdb.prototype = {
         var ret = {};
         var type = this.getType(key);
         if (!type) {
-            throw Error('NotFound', 'Object "'+key+'" not found');
+            throw new nethserver.Error({
+                id: 1508318713543,
+                type: 'NotFound',
+                attributes: {
+                    'key': 'Object not found'
+                }
+            });
         }
         ret.key = key;
         ret.type = this.getType(key);
