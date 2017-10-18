@@ -194,6 +194,8 @@ module.exports = function (grunt) {
       ['shell:rsync', login, port, 'test/', dest].join(':'),
       ['shell:rsync', login, port, 'node_modules/mocha/mocha.*', dest].join(':'),
       ['shell:rsync', login, port, 'node_modules/should/should.js', dest].join(':'),
+      ['shell:rsync', login, port, 'node_modules/should-sinon/should-sinon.js', dest].join(':'),
+      ['shell:rsync', login, port, 'node_modules/sinon/pkg/sinon.js', dest].join(':')
     ]);
   });
 

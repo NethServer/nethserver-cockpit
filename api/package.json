@@ -13,6 +13,8 @@
     "grunt-shell": "^2.1.0",
     "mocha": "^3.5.3",
     "promise-polyfill": "^6.0.2",
-    "should": "^13.0.1"
+    "should": "^13.0.1",
+    "should-sinon": "0.0.6",
+    "sinon": "^4.0.1"
   }
 }

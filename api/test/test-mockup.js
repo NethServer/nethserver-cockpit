@@ -20,14 +20,10 @@
 
 nethserver.test = {};
 nethserver.test.signalEventSucceeded = function(nsEvent, args) {
-    return new Promise(function(fulfill, reject){
-        fulfill(new CustomEvent("mockup-signalEventSucceeded"));
-    });
+    return Promise.resolve(new CustomEvent("mockup-signalEventSucceeded"));
 };
 nethserver.test.signalEventFailed = function() {
-    return new Promise(function(fulfill, reject){
-        reject("mockup-signalEventFailed");
-    });
+    return Promise.reject("mockup-signalEventFailed");
 };
 
 nethserver.signalEvent = nethserver.test.signalEventSucceeded;

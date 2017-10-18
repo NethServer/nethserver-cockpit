@@ -62,4 +62,60 @@
             }
         });
     };
+
+    /**
+     * Resolve all given validator promises in parallel catching "NotValid" errors.
+     *
+     * @name nethserver.validateAll
+     * @param {Array} validators - Each element of the array is resolved as a Promise
+     * @returns {Promise} - The failure handler receives a nethserver.Error instance representing the failed validators.
+     * @see {@link #nethserver.Error} {@link #nethserver.validate}
+     * @example
+     * validateAll([v1, v2, v3]); // v1, v2, v3 could be returned by nethserver.validate()
+     */
+    ns.validateAll = function(validators) {
+
+        var validationErrors = [];
+        var myValidators = [];
+
+        validators.forEach(function(v){
+            myValidators.push(Promise.resolve(v).catch(function(ex){
+                if(ex.type == 'NotValid') {
+                    validationErrors.push(ex);
+                } else {
+                    throw ex;
+                }
+            }));
+        });
+
+        return Promise.all(myValidators).then(function(){
+            var attributes = {};
+            var message;
+            var id = 1508256802479;
+            if(validationErrors.length === 1) {
+                throw validationErrors[0];
+            } else if(validationErrors.length > 1) {
+                validationErrors.forEach(function(err) {
+                    for(var prop in err.attributes) {
+                        if(err.attributes.hasOwnProperty(prop)) {
+                            attributes[prop] = err.attributes[prop];
+                        }
+                    }
+                    if(err.message && ! message) {
+                        message = err.message;
+                    }
+                    if(err.id && ! id) {
+                        id = err.id;
+                    }
+                });
+                throw new ns.Error({
+                    id: id,
+                    type: 'NotValid',
+                    message: message,
+                    attributes: attributes,
+                });
+            }
+        });
+
+    };
 }(nethserver));

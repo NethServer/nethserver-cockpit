@@ -228,7 +228,6 @@ describe('nethserver.system.dns()', function() {
 
 });
 
-
 mocha.checkLeaks();
 mocha.globals(['jQuery', 'cockpit']);
 mocha.run();
