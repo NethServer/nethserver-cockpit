@@ -60,15 +60,6 @@
             });
         },
 
-        getMachineId: function () {
-            var fh = cockpit.file("/etc/machine-id", {
-                syntax: nethserver.syntax.trimWhitespace
-            });
-            return fh.read().always(function () {
-                fh.close();
-            });
-        },
-
         getKernelRelease: function () {
             return cockpit.spawn(["/usr/bin/uname", "-r"]);
         },
@@ -80,58 +71,5 @@
             });
         },
 
-        getNTPServer: function () {
-            var db = nethserver.getDatabase('configuration');
-            return db.open().then(function() {
-                return db.getProp('chronyd', 'NTPServer');
-            });
-        },
-
-        /**
-         * Tell how the system clock is synchronized
-         * @return {Promise.<string>} "ntp" or "manual"
-         */
-        getSystemTimeMode: function () {
-            var db = nethserver.getDatabase('configuration');
-            return db.open().then(function() {
-                if(db.getProp('chronyd', 'status') == 'enabled') {
-                    return 'ntp';
-                }
-                return 'manual';
-            });
-        },
-
-        /**
-         * Get the system time zone
-         * @return {Promise.<string>} the current system time zone
-         */
-        getSystemTimeZone: function () {
-            var timedated = cockpit.dbus("org.freedesktop.timedate1").proxy("org.freedesktop.timedate1", "/org/freedesktop/timedate1");
-            return Promise.resolve(timedated.wait()).then(function(){
-                var tz = String(timedated.Timezone);
-                timedated.client.close();
-                return tz;
-            });
-        },
-
-        /**
-         * Tell how the system clock is synchronized
-         * @return {Promise.<string>}
-         */
-        getTimeZones: function () {
-            return Promise.resolve(cockpit.spawn(["/usr/bin/timedatectl", "list-timezones"])).then(function(output){
-                return output.split("\n");
-            });
-        },
-
-        getSystemTime: function () {
-            return Promise.resolve(cockpit.spawn(['date', '+%F %H:%M']));
-        },
-
-        setSystemTime: function (val) {
-            return Promise.resolve(cockpit.spawn(['date', val])).then(function(){
-                return nethserver.signalEvent('nethserver-ntp-save', val);
-            });
-        }
     };
 })(nethserver);
