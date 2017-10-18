@@ -19,10 +19,6 @@
  */
 
 (function(ns){
-    /**
-     * @name ns
-     * @alias nethserver
-     */
 
     // Avoid double-inclusion from sub frames
     if(ns.system.date) {
@@ -59,6 +55,10 @@
      * @see {@link #getTimeZones}
      */
 
+    /**
+     * @namespace
+     * @alias nethserver.system.date
+     */
     ns.system.date = {
         /**
          * Get the date settings

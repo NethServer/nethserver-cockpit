@@ -18,27 +18,32 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-/**
- * @alias nethserver
- * @name ns
- */
 (function (ns) {
     // Avoid double-inclusion from sub frames
     if(ns.system.certificates) {
         return;
     }
 
+    /**
+     * @namespace
+     * @alias nethserver.system.certificates
+     */
     ns.system.certificates = {
         /**
+         * Represent an SSL certificate meta data
+         *
          * @typedef CertificateMeta
          * @param {string} key the certificate identifier
          * @param {string} issuer the certificate issuer
          * @param {integer} expiration_t the certificate expiration date in seconds since the Epoch
          * @param {boolean} expired the certificate expiration date
          * @param {boolean} default true if the certificate is selected as system-wide default
+         * @see {@link #nethserver.getAllCertificates}
          */
 
          /**
+          * Represent an SSL certificate data parts
+          *
           * @typedef Certificate
           * @param {string} key the certificate identifier that must be unique on the system
           * @param {string} privateKey the certificate private key in PEM encoded format

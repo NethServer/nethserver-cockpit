@@ -107,7 +107,9 @@
         });
     }
 
-
+    /**
+     * @namespace
+     */
     nethserver.system.dns = {
 
         /**

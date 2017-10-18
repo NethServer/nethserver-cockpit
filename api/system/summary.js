@@ -18,17 +18,15 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-/**
- * Namespace definition
- *
- *
- * @namespace nethserver.system.summary
- */
 (function(ns){
     // Avoid double-inclusion from sub frames
     if(ns.system.summary) {
         return;
     }
+    /**
+     * @namespace
+     * @alias nethserver.system.summary
+     */
     ns.system.summary = {
         /**
          * Retrieve the static host by reading /etc/hostname

@@ -19,9 +19,6 @@
  */
 
 /**
- * Namespace definition
- *
- *
  * @namespace nethserver.applications
  */
 (function(nethserver){

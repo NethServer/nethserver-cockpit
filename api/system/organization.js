@@ -18,17 +18,16 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-/**
- * Namespace definition
- *
- *
- * @namespace nethserver.system.organization
- */
 (function(ns){
     // Avoid double-inclusion from sub frames
     if(ns.system.organization) {
         return;
     }
+
+    /**
+     * @namespace
+     * @alias nethserver.system.organization
+     */
     ns.system.organization = {
         getInfo: function () {
             var db = nethserver.getDatabase('configuration');

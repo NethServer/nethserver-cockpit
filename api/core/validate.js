@@ -40,6 +40,12 @@
      * @param {Object} ex - Object thrown if validation fails as nethserver.Error object
      * @return {Promise.<Array>} - args itself
      * @see {@link #nethserver.Error}
+     * @example
+     * var validatorPromise = ns.validate('rsa-key', [keyFile], {
+     *     id: 1508163908911,
+     *     type: 'NotValid',
+     *     attributes: {'privateKey': 'Invalid PEM-encoded RSA key'},
+     * });
      */
     ns.validate = function(validator, args, ex) {
         return Promise.resolve(cockpit.spawn(['/sbin/e-smith/validate', validator].concat(args), {superuser: 'required', err: 'message'})).then(function(){

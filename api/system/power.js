@@ -18,12 +18,6 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-/**
- * Namespace definition
- *
- *
- * @namespace nethserver.system.power
- */
 (function(nethserver){
     // Avoid double-inclusion from sub frames
     if(nethserver.system.power) {
@@ -35,6 +29,9 @@
         return cockpit.spawn(["shutdown", arg, "now"], { superuser: true, err: "message" });
     }
 
+    /**
+     * @namespace
+     */
     nethserver.system.power = {
 
         /**

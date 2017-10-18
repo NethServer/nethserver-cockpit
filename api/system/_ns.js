@@ -18,16 +18,14 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-/**
- * Namespace definition
- *
- *
- * @namespace nethserver.system
- */
 (function (ns) {
     // Avoid double-inclusion from sub frames
     if(ns.system) {
         return;
     }
+    /**
+     * @namespace
+     * @alias nethserver.system
+     */
     ns.system = {};
 })(nethserver);

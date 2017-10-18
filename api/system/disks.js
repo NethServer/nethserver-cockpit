@@ -18,17 +18,16 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-/**
- * Namespace definition
- *
- *
- * @namespace nethserver.system.disks
- */
 (function(ns){
     // Avoid double-inclusion from sub frames
     if(ns.system.disks) {
         return;
     }
+
+    /**
+     * @namespace
+     * @alias nethserver.system.disks
+     */
     ns.system.disks = {
         /**
          * Retrieve the json data in /var/cache/duc/duc.json
