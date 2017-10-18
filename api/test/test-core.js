@@ -107,7 +107,6 @@ describe('nethserver.eventMonitor', function () {
                     ev.should.have.property('detail');
                     ev.detail.should.have.property('unitName');
                     ev.type.should.startWith('nsevent.');
-                    console.log(ev);
                     if(ev.type == 'nsevent.progress') {
                         ev.detail.should.have.property('progress');
                         ev.detail.should.have.property('title').be.equal('test-success');
@@ -319,7 +318,7 @@ describe('Also, the object returned by getDatabase()', function() {
                 return tdb.save();
             }).
             then(function(){
-                (function(){tdb.getObject('keytest2')}).should.throw(nethserver.Error, {type: 'NotFound'});
+                (function(){tdb.getObject('keytest2');}).should.throw(nethserver.Error, {type: 'NotFound'});
             });
     });
 
