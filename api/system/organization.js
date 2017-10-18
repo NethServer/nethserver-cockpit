@@ -29,6 +29,11 @@
      * @alias nethserver.system.organization
      */
     ns.system.organization = {
+        /**
+         * Retrieve information about the organization
+         *
+         * @return {Promise} - Resolves to an object representing the OrganizationContact record in "configuration" database
+         */
         getInfo: function () {
             var db = nethserver.getDatabase('configuration');
             return db.open().then(function() {
@@ -41,6 +46,12 @@
                 };
             });
         },
+        /**
+         * Set information about the organization
+         *
+         * @param {Object} organization - The given object must have the same properties of the OrganizationContact record
+         * @return {Promise} - Saves the given
+         */
         saveInfo: function (organization) {
             var db = nethserver.getDatabase('configuration');
             return db.open().then(function() {
