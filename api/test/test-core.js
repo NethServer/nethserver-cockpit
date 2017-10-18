@@ -317,7 +317,7 @@ describe('Also, the object returned by getDatabase()', function() {
                 return tdb.save();
             }).
             then(function(){
-                (function(){tdb.getObject('keytest2');}).should.throw('NotFound');
+                (function(){tdb.getObject('keytest2')}).should.throw(nethserver.Error, {type: 'NotFound'});
             });
     });
 
