@@ -46,7 +46,7 @@ var goofy = {
 
 ## Errors
 
-If something goes wrong, APIs must throw a [nethserver.Error](api#Error)
+If something goes wrong, APIs must throw a [nethserver.Error](api#nethserver.Error)
 object, which describes the error reason and possibly why the object passed to
 the API function caused the error.
 
