@@ -110,6 +110,8 @@ describe('nethserver.eventMonitor', function () {
                     console.log(ev);
                     if(ev.type == 'nsevent.progress') {
                         ev.detail.should.have.property('progress');
+                        ev.detail.should.have.property('title').be.equal('test-success');
+                        ev.detail.should.have.property('message').and.match(/^The event is/);
                         ev.detail.progress.should.be.Number();
                         progressCaught = true;
                     } else if(ev.type == 'nsevent.failed') {

@@ -91,14 +91,23 @@ function EventMonitor() {
                 self.fakeProgressInterval = null;
             }
         } else if(eventType == 'created') {
+            var eventTitle = (function(){
+                var idx = unit.ExecStart[0][1].indexOf('/sbin/e-smith/signal-event');
+                if(idx === -1) {
+                    return unit.ExecStart[0][1][0];
+                } else {
+                    return unit.ExecStart[0][1][idx + 1];
+                }
+            })();
+
             var fakeProgressWorker = function () {
                 if(self.progress < 1.0) {
                     self.progress += 0.02;
                     self.dispatchEvent('nsevent.progress', {
                         'unitName': uName,
                         'progress': self.progress,
-                        'title': 'event title',
-                        'message': 'event message',
+                        'title': eventTitle,
+                        'message': 'The event is running...',
                     });
                 } else {
                     clearInterval(self.fakeProgressInterval);
