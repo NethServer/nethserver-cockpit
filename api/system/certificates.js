@@ -32,7 +32,7 @@
         /**
          * Represent an SSL certificate meta data
          *
-         * @typedef CertificateMeta
+         * @typedef {Object} CertificateMeta
          * @param {string} key the certificate identifier
          * @param {string} issuer the certificate issuer
          * @param {integer} expiration_t the certificate expiration date in seconds since the Epoch
@@ -44,12 +44,30 @@
          /**
           * Represent an SSL certificate data parts
           *
-          * @typedef Certificate
+          * @typedef {Object} CertificatePayload
           * @param {string} key the certificate identifier that must be unique on the system
           * @param {string} privateKey the certificate private key in PEM encoded format
           * @param {string} certificate the X.509 certificate, PEM-encoded
           * @param {string} chain the certificate chain file for intermediate autorities, PEM-encoded. Can be an empty.
           */
+
+        /**
+         * Input to self-signed certificate generator. Any missing property or
+         * any property with a falsy value is replaced with its default value.
+         *
+         * Default values come from OrganizationContact (oc), root, pki records.
+         *
+         * @typedef {Object} CertificateDetail
+         * @param {string} [CountryCode=oc.CountryCode] -
+         * @param {string} [State=oc.State] -
+         * @param {string} [Locality=oc.City] -
+         * @param {string} [Organization=oc.Company] -
+         * @param {string} [OrganizationalUnitName=oc.Department] -
+         * @param {string} [CommonName=NethServer] -
+         * @param {string} [EmailAddress=root.EmailAddress] -
+         * @param {string} [SubjectAltName=*.<DomainName>] -
+         * @param {string} [CertificateDuration=pki.CertificateDuration] -
+         */
 
         /**
          * List the X.509 certificates available on the system
@@ -100,7 +118,7 @@
         },
         /**
          * Upload the certificate on the system and assigns it a unique indentifier
-         * @param {Certificate} upload An object containing the certificate parts
+         * @param {CertificatePayload} upload An object containing the certificate parts
          * @return {Promise} Success when the certificate is uploaded and configured correctly
          */
         uploadCertificate: function (upload) {
@@ -155,8 +173,71 @@
                 });
             });
         },
-        editCertificate: function (certificate) {
-            return cockpit.spawn(['date', '+%F %H:%M']);
+        /**
+         * Retrieve the self-signed SSL certificate generation parameters
+         * @see {@link #CertificateDetail}
+         * @return {CertificateDetail} - The current self-signed certificate generation parameters
+         */
+         getSelfSignedCertificateParameters: function() {
+             return Promise.all([
+                 nethserver.getDatabase('configuration'),
+                 nethserver.system.hostname.getDomainName(),
+             ]).
+             then(function(values){
+                 var db = values.shift(),
+                     domainName = values.shift();
+                 var detail = db.getProps('pki');
+                 return {
+                     CountryCode: detail.CountryCode || db.getProp('OrganizationContact', 'CountryCode'),
+                     State: detail.State || db.getProp('OrganizationContact', 'State'),
+                     Locality: detail.Locality || db.getProp('OrganizationContact', 'Locality'),
+                     Organization: detail.Organization || db.getProp('OrganizationContact', 'Company'),
+                     OrganizationalUnitName: detail.OrganizationalUnitName || db.getProp('OrganizationContact', 'Department'),
+                     CommonName: detail.CommonName || 'NethServer', // db.getProp('sysconfig', 'ProductName'),
+                     SubjectAltName: detail.SubjectAltName.replace(",", "\n") || '*.' + domainName,
+                     CertificateDuration: detail.CertificateDuration || db.getProp('pki', 'CertificateDuration')
+                 };
+             });
+         },
+        /**
+         * Store the given parameters and generate a new self-signed SSL certificate with them
+         *
+         * @param {CertificateDetail} inputParams - An object with updated params values
+         * @see {@link #CertificateDetail}
+         * @return {Promise} Success when the certificate has been persisted correctly
+         */
+        generateSelfSignedCertificate: function (inputParams) {
+            var o = {};
+            return ns.system.certificates.getSelfSignedCertificateParameters().
+            then(function(defaultParams){
+                for(var key in defaultParams) {
+                    if(! inputParams.hasOwnProperty(key) || ! inputParams[key]) {
+                        o[key] = defaultParams[key];
+                    } else {
+                        o[key] = inputParams[key];
+                    }
+                }
+                return nethserver.getDatabase('configuration');
+            }).
+            then(function(db){
+                db.setProps('pki', {
+                    CountryCode: o.CountryCode,
+                    State: o.State,
+                    Locality: o.Locality,
+                    Organization: o.Organization,
+                    OrganizationalUnitName: o.OrganizationalUnitName,
+                    CommonaName: o.CommonName,
+                    SubjectAltName: o.SubjectAltName.trim().replace(/\s+/, ","),
+                    CertificateDuration: o.CertificateDuration,
+                });
+                return db.save();
+            }).
+            then(function(){
+                return Promise.resolve(cockpit.spawn(['/etc/e-smith/events/actions/nethserver-generate-certificate'], {superuser: 'required', err: 'message'}));
+            }).
+            then(function(){
+                ns.signalEvent('certificate-update', []);
+            });
         },
         requestLetsEncryptCertificate: function (certificate) {
             return cockpit.spawn(['date', '+%F %H:%M']);
