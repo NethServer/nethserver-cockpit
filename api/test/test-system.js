@@ -20,6 +20,12 @@
 
 mocha.setup('bdd');
 
+
+beforeEach(function(){
+    nethserver.signalEvent = sinon.stub().returns(Promise.resolve(new CustomEvent("sinonstub-signalEventSucceeded")));
+});
+
+
 describe('nethserver.system namespace', function () {
     it('is defined', function() {
         should(typeof nethserver.system === 'object').be.ok();
@@ -29,31 +35,6 @@ describe('nethserver.system namespace', function () {
 describe('nethserver.system.summary namespace', function () {
     it('is defined', function() {
         should(typeof nethserver.system.summary === 'object').be.ok();
-    });
-    describe('summary API', function() {
-
-        var oldHostname = '';
-
-        it('gets hostname', function(done) {
-            nethserver.system.summary.getHostname().then(function(hostname){
-                hostname.should.be.type('string');
-                hostname.length.should.be.greaterThan(0);
-                oldHostname = hostname;
-                done();
-            }, done);
-        });
-        it('sets hostname', function(done) {
-            nethserver.system.summary.setHostname('my.temporary.hostname', false).then(function(){
-                nethserver.system.summary.getHostname().then(function(hostname){
-                    hostname.should.be.type('string');
-                    hostname.length.should.be.greaterThan(0);
-                    hostname.should.be.equal('my.temporary.hostname');
-                    nethserver.system.summary.setHostname(oldHostname, false).then(function(){
-                        done();
-                    },done);
-                }, done);
-            }, done);
-        });
     });
 });
 
@@ -228,14 +209,44 @@ describe('nethserver.system.dns()', function() {
 
 });
 
-describe('nethserver.system.provider', function() {
-    it('getAdDefault', function() {
-        nethserver.system.provider.getAdDefault().then(function(val) {
-            console.log(val);
+describe('nethserver.system.hostname', function() {
+    var oldHostname = '';
+
+    it('getFQDN', function() {
+        return nethserver.system.hostname.getFQDN().then(function(hostname){
+            hostname.should.be.type('string');
+            hostname.length.should.be.greaterThan(0);
+            oldHostname = hostname;
+        });
+    });
+    it('setFQDN', function() {
+        return nethserver.system.hostname.setFQDN('my.temporary.hostname').
+        then(function(){
+            return nethserver.system.hostname.getFQDN();
+        }).
+        then(function(hostname){
+            hostname.should.be.type('string');
+            hostname.length.should.be.greaterThan(0);
+            hostname.should.be.equal('my.temporary.hostname');
+            return nethserver.system.hostname.setFQDN(oldHostname, false);
+        }).then(function(){
+            nethserver.signalEvent.should.be.calledTwice();
+        });
+    });
+    it('getSystemName', function(){
+        return nethserver.system.hostname.getSystemName().
+        then(function(systemName){
+            should(systemName).be.String();
+            should(systemName.length).be.greaterThan(0);
+        });
+    });
+    it('getDomainName', function(){
+        return nethserver.system.hostname.getDomainName().
+        then(function(domainName){
+            should(domainName).be.String().and.match(/\./);
         });
     });
 });
-
 
 mocha.checkLeaks();
 mocha.globals(['jQuery', 'cockpit']);
