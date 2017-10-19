@@ -86,7 +86,7 @@ angular.module('systemAngularApp')
 
       $scope.localSystem.summary.newTimeZone = info.TimeZone;
       $scope.localSystem.summary.ntpServer = info.NTPServer;
-      $scope.localSystem.summary.timeMode = info.NTPServer.length > 0 ? 'ntp' : 'manual'
+      $scope.localSystem.summary.timeMode = info.NTPServer === false ? 'manual' : 'ntp';
 
       // -- Time zones --
       nethserver.system.date.getTimeZones().then(function (timezones) {
