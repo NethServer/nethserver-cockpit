@@ -133,17 +133,20 @@
                     ns.validate('rsa-key', [keyFile], {
                         id: 1508163908911,
                         type: 'NotValid',
-                        attributes: {'privateKey': _('Invalid PEM-encoded RSA key')},
+                        message: _("Files must be in PEM encoded format"),
+                        attributes: {'privateKey': _("Private RSA key")},
                     }),
                     ns.validate('pem-certificate', [certFile], {
                         id: 1508163908912,
                         type: 'NotValid',
-                        attributes: {'certificate': _('Invalid PEM-encoded X.509 certificate')},
+                        message: _("Files must be in PEM encoded format"),
+                        attributes: {'certificate': _("X.509 certificate")},
                     }),
                     chainFile === null ? undefined : ns.validate('pem-certificate', [chainFile], {
                         id: 1508163908913,
                         type: 'NotValid',
-                        attributes: {'chain': _('Invalid PEM-encoded X.509 chain certificate')},
+                        message: _("Files must be in PEM encoded format"),
+                        attributes: {'chain': _("X.509 certificate")},
                     }),
                 ]).
                 then(function(){
