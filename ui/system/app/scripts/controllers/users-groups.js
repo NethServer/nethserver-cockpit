@@ -142,12 +142,15 @@ angular.module('systemAngularApp')
       return $scope.objects.newGroup.members.indexOf(user) > -1;
     };
 
+    $scope.cancelWizard = function () {
+      $('#accountProviderWizard').modal('hide');
+      $scope.goTo('/');
+    };
+
     $scope.getInfo = function () {
       nethserver.system.provider.getInfo().then(function (provider) {
         $scope.localSystem.users.provider = provider.isAD ? 'ad' : provider.isLdap ? 'ldap' : null;
         $scope.localSystem.users.providerInfo = provider;
-
-        //$scope.localSystem.users.provider = null;
 
         if (!$scope.localSystem.users.provider) {
           $('#accountProviderWizard').modal('show');
