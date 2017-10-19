@@ -238,7 +238,7 @@
                     Locality: o.Locality,
                     Organization: o.Organization,
                     OrganizationalUnitName: o.OrganizationalUnitName,
-                    CommonaName: o.CommonName,
+                    CommonName: o.CommonName,
                     SubjectAltName: o.SubjectAltNames.join(","), // convert to CSV string
                     CertificateDuration: String(o.CertificateDuration),
                 });
