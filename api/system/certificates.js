@@ -205,7 +205,7 @@
                      Organization: detail.Organization || db.getProp('OrganizationContact', 'Company'),
                      OrganizationalUnitName: detail.OrganizationalUnitName || db.getProp('OrganizationContact', 'Department'),
                      CommonName: detail.CommonName || 'NethServer', // XXX default proposal db.getProp('sysconfig', 'ProductName'),
-                     SubjectAltNames: detail.SubjectAltName.split(",") || ['*.' + domainName], // convert to array of strings
+                     SubjectAltNames: detail.SubjectAltName.split(",").filter(function(v){return v != '';}) || ['*.' + domainName], // convert to array of strings
                      CertificateDuration: parseInt(detail.CertificateDuration || db.getProp('pki', 'CertificateDuration')),
                      EmailAddress: db.getProp('root', 'EmailAddress') || '',
                  };
@@ -252,9 +252,31 @@
             });
         },
         /**
-         * Send a remote CSR request to LE to validate a new certificate
          *
-         * @param {Object} request -
+         * @typedef {Object} LetsEncryptRequest
+         * @param {string[]} LetsEncryptDomains - The certificate alternative DNS domains
+         * @param {string} [LetsEncryptMail] - The certificate email contact information
+         */
+
+         /**
+          * Get the currently configured parameters for LE certificate generation
+          * @returns {Promise.<LetsEncryptRequest>} - Actual values
+          */
+         getLetsEncryptCertificateParameters: function() {
+             return Promise.resolve(nethserver.getDatabase('configuration').open()).
+             then(function(db){
+                return {
+                    LetsEncryptMail: db.getProp('pki', 'LetsEncryptMail'),
+                    LetsEncryptDomains: db.getProp('pki', 'LetsEncryptDomains').split(',').filter(function(v){return v != '';}),
+                };
+             });
+         },
+
+        /**
+         * Send a remote CSR request to LE to validate a new certificate, then
+         * apply the new configuration
+         *
+         * @param {LetsEncryptRequest} request - The LE request options
          */
         requestLetsEncryptCertificate: function (request) {
             return Promise.resolve(cockpit.spawn(['/usr/libexec/nethserver/letsencrypt-certs', '-t', '-d', request.LetsEncryptDomains.join(',')], {superuser: 'require', err: 'message'})).

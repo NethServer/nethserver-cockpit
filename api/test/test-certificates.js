@@ -238,6 +238,13 @@ describe('nethserver.system.certificates', function() {
             should(nethserver.signalEvent).be.calledOnce();
         });
     });
+    it('getLetsEncryptCertificateParameters', function(){
+        return nethserver.system.certificates.getLetsEncryptCertificateParameters().
+        then(function(params){
+            should(params).have.property('LetsEncryptMail').be.String();
+            should(params).have.property('LetsEncryptDomains').be.Array();
+        });
+    });
     it('requestLetsEncryptCertificate', function(){
         sinon.stub(cockpit, 'spawn').returns(Promise.resolve());
         return nethserver.system.certificates.requestLetsEncryptCertificate({
