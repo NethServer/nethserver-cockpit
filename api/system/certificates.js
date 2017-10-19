@@ -180,7 +180,7 @@
          */
          getSelfSignedCertificateParameters: function() {
              return Promise.all([
-                 nethserver.getDatabase('configuration'),
+                 nethserver.getDatabase('configuration').open(),
                  nethserver.system.hostname.getDomainName(),
              ]).
              then(function(values){
