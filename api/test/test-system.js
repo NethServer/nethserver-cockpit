@@ -20,6 +20,12 @@
 
 mocha.setup('bdd');
 
+
+beforeEach(function(){
+    nethserver.signalEvent = sinon.stub().returns(Promise.resolve(new CustomEvent("sinonstub-signalEventSucceeded")));
+});
+
+
 describe('nethserver.system namespace', function () {
     it('is defined', function() {
         should(typeof nethserver.system === 'object').be.ok();
@@ -29,31 +35,6 @@ describe('nethserver.system namespace', function () {
 describe('nethserver.system.summary namespace', function () {
     it('is defined', function() {
         should(typeof nethserver.system.summary === 'object').be.ok();
-    });
-    describe('summary API', function() {
-
-        var oldHostname = '';
-
-        it('gets hostname', function(done) {
-            nethserver.system.summary.getHostname().then(function(hostname){
-                hostname.should.be.type('string');
-                hostname.length.should.be.greaterThan(0);
-                oldHostname = hostname;
-                done();
-            }, done);
-        });
-        it('sets hostname', function(done) {
-            nethserver.system.summary.setHostname('my.temporary.hostname', false).then(function(){
-                nethserver.system.summary.getHostname().then(function(hostname){
-                    hostname.should.be.type('string');
-                    hostname.length.should.be.greaterThan(0);
-                    hostname.should.be.equal('my.temporary.hostname');
-                    nethserver.system.summary.setHostname(oldHostname, false).then(function(){
-                        done();
-                    },done);
-                }, done);
-            }, done);
-        });
     });
 });
 
@@ -144,7 +125,7 @@ describe('nethserver.system.dns()', function() {
 
     it('deleteRemoteHost', function(done) {
         nethserver.system.dns.deleteRemoteHost('myhost2.domain.org').then(function () {
-            var h = nethserver.system.dns.getRemoteHost('myhost2.domain.org').should.be.rejectedWith(Error);
+            var h = nethserver.system.dns.getRemoteHost('myhost2.domain.org').should.be.rejectedWith(nethserver.Error);
             done();
         }, done);
     });
@@ -188,15 +169,15 @@ describe('nethserver.system.dns()', function() {
         }, done);
     });
 
-    it('deleteAlias', function(done) {
-        nethserver.system.dns.deleteAlias('myalias.domain.org').then(function () {
-            var h = nethserver.system.dns.getAlias('myalias.domain.org').should.be.rejectedWith(Error);
-            done();
-        }, done);
+    it('deleteAlias', function() {
+        return nethserver.system.dns.deleteAlias('myalias.domain.org').
+        then(function () {
+            nethserver.system.dns.getAlias('myalias.domain.org').should.be.rejectedWith(nethserver.Error);
+        });
     });
 
     it('getAlias musth throw error', function() {
-        nethserver.system.dns.getAlias('myalias.domain.org').should.be.rejectedWith(Error);
+        return nethserver.system.dns.getAlias('myalias.domain.org').should.be.rejectedWith(nethserver.Error);
     });
 
     it('setAliases', function() {
@@ -211,15 +192,17 @@ describe('nethserver.system.dns()', function() {
 
 
     it('setDNS', function() {
-       var db = nethserver.getDatabase('configuration');
-       nethserver.system.dns.setDNS(['208.67.222.222','208.67.220.220']).then(function() {
-          var val = db.getProp('dns', 'NameServers');
-          return val.should.be.equal('208.67.222.222,208.67.220.220');
-       });
+        return nethserver.system.dns.setDNS(['208.67.222.222','208.67.220.220']).
+        then(function() {
+            return nethserver.getDatabase('configuration').open();
+        }).
+        then(function(db){
+            should(db.getProp('dns', 'NameServers')).be.equal('208.67.222.222,208.67.220.220');
+        });
     });
 
     it('getDNS', function() {
-       nethserver.system.dns.getDNS().then(function(val) {
+       return nethserver.system.dns.getDNS().then(function(val) {
            val[0].should.be.equal('208.67.222.222');
            val[1].should.be.equal('208.67.220.220');
        });
@@ -228,14 +211,44 @@ describe('nethserver.system.dns()', function() {
 
 });
 
-describe('nethserver.system.provider', function() {
-    it('getAdDefault', function() {
-        nethserver.system.provider.getAdDefault().then(function(val) {
-            console.log(val);
+describe('nethserver.system.hostname', function() {
+    var oldHostname = '';
+
+    it('getFQDN', function() {
+        return nethserver.system.hostname.getFQDN().then(function(hostname){
+            hostname.should.be.type('string');
+            hostname.length.should.be.greaterThan(0);
+            oldHostname = hostname;
+        });
+    });
+    it('setFQDN', function() {
+        return nethserver.system.hostname.setFQDN('my.temporary.hostname').
+        then(function(){
+            return nethserver.system.hostname.getFQDN();
+        }).
+        then(function(hostname){
+            hostname.should.be.type('string');
+            hostname.length.should.be.greaterThan(0);
+            hostname.should.be.equal('my.temporary.hostname');
+            return nethserver.system.hostname.setFQDN(oldHostname, false);
+        }).then(function(){
+            nethserver.signalEvent.should.be.calledTwice();
+        });
+    });
+    it('getSystemName', function(){
+        return nethserver.system.hostname.getSystemName().
+        then(function(systemName){
+            should(systemName).be.String();
+            should(systemName.length).be.greaterThan(0);
+        });
+    });
+    it('getDomainName', function(){
+        return nethserver.system.hostname.getDomainName().
+        then(function(domainName){
+            should(domainName).be.String().and.match(/\./);
         });
     });
 });
-
 
 mocha.checkLeaks();
 mocha.globals(['jQuery', 'cockpit']);

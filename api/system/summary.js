@@ -30,52 +30,19 @@
     ns.system.summary = {
         /**
          * Retrieve the static host by reading /etc/hostname
-         * @return {Promise} from cockpit.file
+         * @deprecated
+         * @return {Promise}
          */
-        getHostname: function () {
-            var fh = cockpit.file("/etc/hostname", {
-                syntax: nethserver.syntax.trimWhitespace
-            });
-            return fh.read().always(function () {
-                fh.close();
-            });
-        },
-
-        getSystemAliases: function () {
-            return Promise.resolve('deprecated');
-        },
+        getHostname: ns.system.hostname.getFQDN,
 
         /**
          * Set the system host name
+         * @deprecated
          * @param {String} hostname the new host name
          * @param {Bool} [runEvent=true] signalEvent(hostname-modify)
          * @return {Promise}
          */
-        setHostname: function (hostname, runEvent) {
-            if (runEvent === undefined) {
-                runEvent = true;
-            }
-            return new Promise(function (fulfill, reject) {
-                var client = cockpit.dbus('org.freedesktop.hostname1', {
-                    'superuser': 'require'
-                });
-                client.wait(function () {
-                    client.call('/org/freedesktop/hostname1', 'org.freedesktop.hostname1',
-                        'SetStaticHostname', [hostname, false]).
-                    done(function () {
-                        if (runEvent === true) {
-                            nethserver.signalEvent('hostname-modify').then(fulfill, reject);
-                        } else {
-                            fulfill();
-                        }
-                    }).
-                    fail(reject).
-                    always(function () {
-                        client.close();
-                    });
-                });
-            });
-        },
+        setHostname: ns.system.hostname.setFQDN,
 
         getHardware: function () {
             return $.Deferred(function (dfr) {
@@ -93,15 +60,6 @@
             });
         },
 
-        getMachineId: function () {
-            var fh = cockpit.file("/etc/machine-id", {
-                syntax: nethserver.syntax.trimWhitespace
-            });
-            return fh.read().always(function () {
-                fh.close();
-            });
-        },
-
         getKernelRelease: function () {
             return cockpit.spawn(["/usr/bin/uname", "-r"]);
         },
@@ -113,58 +71,5 @@
             });
         },
 
-        getNTPServer: function () {
-            var db = nethserver.getDatabase('configuration');
-            return db.open().then(function() {
-                return db.getProp('chronyd', 'NTPServer');
-            });
-        },
-
-        /**
-         * Tell how the system clock is synchronized
-         * @return {Promise.<string>} "ntp" or "manual"
-         */
-        getSystemTimeMode: function () {
-            var db = nethserver.getDatabase('configuration');
-            return db.open().then(function() {
-                if(db.getProp('chronyd', 'status') == 'enabled') {
-                    return 'ntp';
-                }
-                return 'manual';
-            });
-        },
-
-        /**
-         * Get the system time zone
-         * @return {Promise.<string>} the current system time zone
-         */
-        getSystemTimeZone: function () {
-            var timedated = cockpit.dbus("org.freedesktop.timedate1").proxy("org.freedesktop.timedate1", "/org/freedesktop/timedate1");
-            return Promise.resolve(timedated.wait()).then(function(){
-                var tz = String(timedated.Timezone);
-                timedated.client.close();
-                return tz;
-            });
-        },
-
-        /**
-         * Tell how the system clock is synchronized
-         * @return {Promise.<string>}
-         */
-        getTimeZones: function () {
-            return Promise.resolve(cockpit.spawn(["/usr/bin/timedatectl", "list-timezones"])).then(function(output){
-                return output.split("\n");
-            });
-        },
-
-        getSystemTime: function () {
-            return Promise.resolve(cockpit.spawn(['date', '+%F %H:%M']));
-        },
-
-        setSystemTime: function (val) {
-            return Promise.resolve(cockpit.spawn(['date', val])).then(function(){
-                return nethserver.signalEvent('nethserver-ntp-save', val);
-            });
-        }
     };
 })(nethserver);

@@ -214,6 +214,25 @@ describe('nethserver.system.certificates', function() {
                 should(ex).have.property('attributes').not.have.keys('key');
             });
     });
+    it('getSelfSignedCertificateParameters', function(){
+        return nethserver.system.certificates.getSelfSignedCertificateParameters().
+        then(function(params){
+            should(params).have.property('CountryCode').be.String();
+            should(params).have.property('State').be.String();
+            should(params).have.property('Locality').be.String();
+            should(params).have.property('Organization').be.String();
+            should(params).have.property('OrganizationalUnitName').be.String();
+            should(params).have.property('CommonName').be.String();
+            should(params).have.property('SubjectAltName').be.String();
+            should(params).have.property('CertificateDuration').match(/\d+/);
+        });
+    });
+    it('generateSelfSignedCertificate', function(){
+        return nethserver.system.certificates.generateSelfSignedCertificate({}).
+        then(function(){
+            should(nethserver.signalEvent).be.calledOnce();
+        });
+    });
 });
 
 
