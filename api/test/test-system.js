@@ -228,6 +228,15 @@ describe('nethserver.system.dns()', function() {
 
 });
 
+describe('nethserver.system.provider', function() {
+    it('getAdDefault', function() {
+        nethserver.system.provider.getAdDefault().then(function(val) {
+            console.log(val);
+        });
+    });
+});
+
+
 mocha.checkLeaks();
 mocha.globals(['jQuery', 'cockpit']);
 mocha.run();
