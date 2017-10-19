@@ -243,8 +243,36 @@
                 ns.signalEvent('certificate-update', []);
             });
         },
-        requestLetsEncryptCertificate: function (certificate) {
-            return cockpit.spawn(['date', '+%F %H:%M']);
+        /**
+         * Send a remote CSR request to LE to validate a new certificate
+         *
+         * @param {Object} request -
+         */
+        requestLetsEncryptCertificate: function (request) {
+            return Promise.resolve(cockpit.spawn(['/usr/libexec/nethserver/letsencrypt-certs', '-t', '-d', request.LetsEncryptDomains.join(',')], {superuser: 'require', err: 'message'})).
+            then(function(){
+                return nethserver.getDatabase('configuration').open(); // Promise
+            }, function(ex){
+                throw new nethserver.Error({
+                    id: 1508404788602,
+                    type: 'NotValid',
+                    message: _("The Let’s Encrypt test procedure failed"),
+                    originalMessage: ex.message,
+                }); // Validation Error
+            }).
+            then(function(db){
+                db.setProps('pki', {
+                    LetsEncryptMail: request.LetsEncryptMail,
+                    LetsEncryptDomains: request.LetsEncryptDomains.join(','),
+                });
+                return db.save(); // Promise
+            }).
+            then(function(){
+                return Promise.resolve(cockpit.spawn(['/usr/libexec/nethserver/letsencrypt-certs', '-f'], {superuser: 'require', err: 'message'})); // Promise
+            }).
+            then(function(){
+                nethserver.signalEvent('certificate-update'); // Spawn event
+            });
         },
         /**
          * Select the default system certificate. An application

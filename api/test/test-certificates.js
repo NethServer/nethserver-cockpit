@@ -238,6 +238,36 @@ describe('nethserver.system.certificates', function() {
             should(nethserver.signalEvent).be.calledOnce();
         });
     });
+    it('requestLetsEncryptCertificate', function(){
+        sinon.stub(cockpit, 'spawn').returns(Promise.resolve());
+        return nethserver.system.certificates.requestLetsEncryptCertificate({
+            LetsEncryptDomains: ['my.example.com'],
+            LetsEncryptMail: 'admin@example.com',
+        }).
+        then(function(){
+            should(nethserver.signalEvent).be.calledOnce();
+            should(cockpit.spawn).be.calledTwice();
+            cockpit.spawn.restore(); // restore original cockpit.spawn() method
+        });
+    });
+    it('requestLetsEncryptCertificate LE failure', function(){
+        sinon.stub(cockpit, 'spawn').returns(Promise.reject({
+            message: 'stub exception',
+        }));
+        return nethserver.system.certificates.requestLetsEncryptCertificate({
+            LetsEncryptDomains: ['my.example.com'],
+            LetsEncryptMail: 'admin@example.com',
+        }).
+        then(function(){
+            throw new Error('Should not happen');
+        }, function(ex) {
+            should(ex).be.instanceOf(nethserver.Error);
+            should(ex.type).be.equal('NotValid');
+            should(cockpit.spawn).be.calledOnce();
+            should(nethserver.signalEvent).not.be.called();
+            cockpit.spawn.restore(); // restore original cockpit.spawn() method
+        });
+    });
 });
 
 mocha.checkLeaks();
