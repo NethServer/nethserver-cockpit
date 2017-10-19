@@ -227,6 +227,7 @@ describe('nethserver.system.certificates', function() {
             should(params).have.property('Organization').be.String();
             should(params).have.property('OrganizationalUnitName').be.String();
             should(params).have.property('CommonName').be.String();
+            should(params).have.property('EmailAddress').be.String();
             should(params).have.property('SubjectAltNames').be.Array().and.matchAny(function(v){should(v).be.String();});
             should(params).have.property('CertificateDuration').be.Number().greaterThan(0);
         });

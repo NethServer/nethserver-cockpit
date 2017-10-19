@@ -193,12 +193,13 @@
                  return {
                      CountryCode: detail.CountryCode || db.getProp('OrganizationContact', 'CountryCode'),
                      State: detail.State || db.getProp('OrganizationContact', 'State'),
-                     Locality: detail.Locality || db.getProp('OrganizationContact', 'Locality'),
+                     Locality: detail.Locality || db.getProp('OrganizationContact', 'City'),
                      Organization: detail.Organization || db.getProp('OrganizationContact', 'Company'),
                      OrganizationalUnitName: detail.OrganizationalUnitName || db.getProp('OrganizationContact', 'Department'),
                      CommonName: detail.CommonName || 'NethServer', // XXX default proposal db.getProp('sysconfig', 'ProductName'),
                      SubjectAltNames: detail.SubjectAltName.split(",") || ['*.' + domainName], // convert to array of strings
-                     CertificateDuration: parseInt(detail.CertificateDuration || db.getProp('pki', 'CertificateDuration'))
+                     CertificateDuration: parseInt(detail.CertificateDuration || db.getProp('pki', 'CertificateDuration')),
+                     EmailAddress: db.getProp('root', 'EmailAddress') || '',
                  };
              });
          },
