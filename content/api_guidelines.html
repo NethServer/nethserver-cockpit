@@ -9,7 +9,7 @@
 <li><a href="#api-tests">API tests</a></li>
 </ul>
 <h2 id="object-format">Object format</h2>
-<p>Objects returned by APIs must reflect esmith db format and respect the upper/lower case notation
+<p>Objects passed to and returned by APIs must reflect esmith db format and respect the upper/lower case notation
 of property names:</p>
 <pre><code>{
   key: 'objKey',
@@ -32,44 +32,57 @@ of property names:</p>
   IpAddress: "192.168.1.22",
 }
 </code></pre><h2 id="errors">Errors</h2>
-<p>If something goes wrong, APIs should raise a specific error.</p>
-<p>A <code>nethserver.Error</code> constructor takes an object with the following fields:</p>
-<ul>
-<li><strong>id</strong>: an fixed integer (usually a timestamp) which can be used to find the code which generated the error</li>
-<li><strong>type</strong>: a fixed string which describes the type of the error (required)</li>
-<li><strong>message</strong>: a descriptive error message (required)</li>
-<li><strong>attribute</strong>: the object field which caused the error (optional) </li>
-</ul>
+<p>If something goes wrong, APIs must throw a <a href="api#nethserver.Error">nethserver.Error</a>
+object, which describes the error reason and possibly why the object passed to
+the API function caused the error.</p>
+<p>For instance:</p>
+<pre><code>throw new nethserver.Error({
+    id: 1507721123244,
+    type: 'NotValid',
+    message: 'Generic validation error reason',
+    attributes: {
+        'MyProp1': 'field-specific error reason', 
+        'MyProp2': 'other field-specific error reason'
+    }
+});
+</code></pre><p>The <strong>message</strong> property should be used if an error is not caused by a specific
+attribute. On the other hand, there could be cases where the <strong>attributes</strong>
+object is empty, or undefined because the error condition does not depend on any
+of the attributes or attributes are not defined at all. </p>
+<p>Note that the same Error object could represent multiple failure reasons.</p>
 <p>How to generate a good <code>id</code> in JavaScript:</p>
 <pre><code>+ new Date()
 </code></pre><p>An equivalent for Bash:</p>
-<pre><code>date +%s
-</code></pre><h3 id="well-known-errors">Well-known errors</h3>
+<pre><code class="lang-text">$ date +%s
+</code></pre>
+<h3 id="well-known-errors">Well-known errors</h3>
 <p>Well-known errors are:</p>
 <ul>
 <li><p>Validation error: <strong>NotValid</strong></p>
 <pre><code>throw new nethserver.Error({
     id: 1507721123244,
     type: 'NotValid',
-    message: 'Descriptive validation error',
-    attribute: 'myProp'
-})
+    message: 'Generic validation error reason',
+    attributes: {'myProp': 'field-specific error reason'}
+});
 </code></pre></li>
 <li><p>Not found error: <strong>NotFound</strong></p>
 <pre><code>throw new nethserver.Error({
     id: 1507721155244,
     type: 'NotFound',
-    message: 'Descriptive not found error',
-    attribute: 'key'
-})
+    message: 'Generic validation error reason',
+    attributes: {'key': 'field-specific error reason'}
+});
 </code></pre></li>
 <li><p>Task already running error (the e-smith layer can't handle multiple running events): <strong>TaskRun</strong></p>
 <pre><code>throw new nethserver.Error({
     id: 1507721155255,
     type: 'TaskRun',
     message: 'Another task is already running'
-})
+});
 </code></pre></li>
+<li><p>type <code>ValidatorFailed</code>: validator procedure error - the <code>validate</code> command failed</p>
+</li>
 </ul>
 <h2 id="api-design">API design</h2>
 <p>Each API should always return a JavaScript promise in case of success or error.</p>
