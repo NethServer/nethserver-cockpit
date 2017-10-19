@@ -305,57 +305,52 @@
          * Crate a new user
          *
          * @example
-         * nethserver.system.users.addUser({
-         *     "myuser": {
-         *         "expires": "no",
-         *         "gecos": "Name Surname",
-         *         "password": "mypassword",
-         *         "shell": "/bin/false"
-         *     }
-         * }).then(function() {
-         *    nethserver.system.users.setPassword('username', 'password')
-         * }
+         * return nethserver.system.users.addUser({
+         *     "key": "myuser", // without domain suffix
+         *     "expires": "no",
+         *     "gecos": "Name Surname",
+         *     "shell": "/bin/false",
+         *     "groups": ["thisgroup", "thatgroup"],
+         * }).
+         * then(function() {
+         *    return nethserver.system.users.setPassword('myuser', 'password')
+         * });
          *
-         * @param {Object} user - User to be added
+         * @param {UserDetails} user - User to be added
          *
          * @return {Promise} - A promise on success, throws an error otherwise
          */
         addUser: function(user) {
-            return this.getUser(user).then(function(obj) {
-                if (!$.isEmptyObject(obj)) {
+            return this.getUser(user.key).then(function(obj) {
+                if(obj.hasOwnProperty(user.key)) {
                     throw new nethserver.Error({
                         id: 1150824817076,
                         type: 'NotValid',
                         attributes: {
-                            'key': 'User already exists',
+                            'key': _('User already exists'),
                         }
                     });
                 }
-            }).then(function() {
-                //TODO: create temp file and pass it to validate
-                var args = ['Users', 'tmpfile'];
-                return nethserver.validate('password-strength', args, {
-                    id: 1508250277080,
-                        type: 'NotValid',
-                        attributes: {
-                            'password': 'Password is not strong enough',
-                        }
-
+            }).
+            then(function() {
+                return nethserver.signalEvent('user-modify', [user.key, user.gecos, user.shell]);
+            }).
+            then(function() {
+                var bigPromise = Promise.resolve(); // the head of a promises chain
+                var curPromise = bigPromise;
+                user.groups.forEach(function(group){ // iterate over groups to chain promises
+                    curPromise = curPromise.
+                    then(function(){
+                        return nethserver.system.users.getGroupMembers(group);
+                    }). // appends members retriever
+                    then(function(members){
+                        return nethserver.signalEvent('group-modify', [group, user.key].concat(members));
+                    }); // appends group updater
                 });
-            }).then(function() {
-                var params = [user.key];
-                for (var key in user) {
-                    if (key == 'key') {
-                        continue;
-                    }
-                    if (user.hasOwnProperty(key)) {
-                        params.push(user[key]);
-                    }
-                }
-
-                return nethserver.signalEvent('user-modify', params);
-            }).then(function() {
-                //TODO set password
+                return bigPromise;
+            }).
+            then(function(){
+                return nethserver.signalEvent('password-policy-update', [user.key, user.expires]);
             });
         },
 
