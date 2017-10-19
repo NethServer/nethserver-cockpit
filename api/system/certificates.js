@@ -18,11 +18,13 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-(function (ns) {
+(function (ns, cockpit) {
     // Avoid double-inclusion from sub frames
     if(ns.system.certificates) {
         return;
     }
+
+    var _ = cockpit.gettext;
 
     /**
      * @namespace
@@ -93,7 +95,7 @@
                     throw new nethserver.Error({
                         id: 1507818154410,
                         type: 'NotFound',
-                        message: 'The requested certificate was not found',
+                        message: _('The requested certificate was not found'),
                         reason: ex.message
                     });
                 });
@@ -125,23 +127,23 @@
                             throw new ns.Error({
                                 id: 1508163908910,
                                 type: 'NotValid',
-                                attributes: {'key': 'The given certificate key is already used'}
+                                attributes: {'key': _('The given certificate key is already used')}
                             });
                         }),
                     ns.validate('rsa-key', [keyFile], {
                         id: 1508163908911,
                         type: 'NotValid',
-                        attributes: {'privateKey': 'Invalid PEM-encoded RSA key'},
+                        attributes: {'privateKey': _('Invalid PEM-encoded RSA key')},
                     }),
                     ns.validate('pem-certificate', [certFile], {
                         id: 1508163908912,
                         type: 'NotValid',
-                        attributes: {'certificate': 'Invalid PEM-encoded X.509 certificate'},
+                        attributes: {'certificate': _('Invalid PEM-encoded X.509 certificate')},
                     }),
                     chainFile === null ? undefined : ns.validate('pem-certificate', [chainFile], {
                         id: 1508163908913,
                         type: 'NotValid',
-                        attributes: {'chain': 'Invalid PEM-encoded X.509 chain certificate'},
+                        attributes: {'chain': _('Invalid PEM-encoded X.509 chain certificate')},
                     }),
                 ]).
                 then(function(){
@@ -264,7 +266,7 @@
                     throw new nethserver.Error({
                         id: 1507819916480,
                         type: 'NotValid',
-                        message: 'The given certificate key is not valid'
+                        message: _('The given certificate key is not valid'),
                     });
                 }).
                 then(function(db){
@@ -280,4 +282,4 @@
         },
     };
 
-})(nethserver);
+})(nethserver, cockpit);
