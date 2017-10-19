@@ -594,15 +594,23 @@
                     </div>
 
                     <div ng-hide="(objects.newProvider.info.BindType == 'anonymous' && k=='BindPassword') || (objects.newProvider.info.BindType == 'anonymous' && k=='BindDN')"
-                      ng-repeat="(k,v) in objects.newProvider.info | orderObjectBy" class="form-group">
+                      ng-repeat="(k,v) in objects.newProvider.info | orderObjectBy:true" class="form-group">
                       <label class="col-sm-3 control-label" for="textInput-modal-markup">{{k | translate}}</label>
                       <div class="col-sm-9">
-                        <input ng-hide="k == 'StartTls' || k == 'BindType'" type="text" ng-model="v" class="form-control">
+                        <input ng-hide="k == 'StartTls' || k == 'BindType'" type="text" ng-model="v" ng-change="updateValues(k,v)" class="form-control">
+
                         <input ng-if="k == 'StartTls'" type="checkbox" ng-model="v" ng-checked="v == 'enabled'" ng-click="changeStartTLS(v)">
-                        <label ng-if="k == 'BindType'">{{'Authenticated' | translate}}? </label>
-                        <input ng-if="k == 'BindType'" type="checkbox" ng-model="v" ng-checked="v == 'authenticated'" ng-click="changeBindType(v)">
+
+                        <span ng-if="k == 'BindType'">{{'Authenticated' | translate}}</span>
+                        <input ng-if="k == 'BindType'" type="radio" ng-model="objects.newProvider.info.BindType"
+                          value="authenticated" class="span-right-margin-lg">
+
+                        <span ng-if="k == 'BindType'">{{'Anonymous' | translate}}</span>
+                        <input ng-if="k == 'BindType'" type="radio" ng-model="objects.newProvider.info.BindType"
+                          value="anonymous">
                       </div>
                     </div>
+
                   </div>
                 </form>
               </div>

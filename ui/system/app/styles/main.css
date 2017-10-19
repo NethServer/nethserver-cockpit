@@ -276,7 +276,7 @@ iframe>.breadcrumb {
 }
 
 .span-right-margin-lg {
-  margin-right: 8px;
+  margin-right: 8px !important;
 }
 
 .strongless {

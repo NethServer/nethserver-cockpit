@@ -10,8 +10,9 @@
  */
 angular.module('systemAngularApp')
   .filter('orderObjectBy', function () {
-    return function (items, field) {
+    return function (items, reverse) {
       var keys = Object.keys(items || {}).sort();
+      if(reverse) keys.reverse();
       for (var ordered = {}, i = 0; keys[i]; i++) {
         ordered[keys[i]] = items[keys[i]];
       }

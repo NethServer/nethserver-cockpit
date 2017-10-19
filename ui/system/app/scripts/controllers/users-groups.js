@@ -422,6 +422,10 @@ angular.module('systemAngularApp')
       });
     };
 
+    $scope.updateValues = function(k,v) {
+      $scope.objects.newProvider.info[k] = v;
+    };
+
     $scope.uninstallProvider = function () {
       nethserver.system.provider.uninstall().then(function () {
         $('#changeProviderModal').modal('hide');
