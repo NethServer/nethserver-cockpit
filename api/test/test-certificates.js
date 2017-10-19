@@ -240,8 +240,13 @@ describe('nethserver.system.certificates', function() {
         });
     });
     it('generateSelfSignedCertificate', function(){
+        var db = nethserver.getDatabase('configuration');
+        var setPropsStub = sandbox.stub(db, 'setProps').returns(db);
+        sandbox.stub(db, 'save').returns(Promise.resolve());
         return nethserver.system.certificates.generateSelfSignedCertificate({}).
         then(function(){
+            var propsMatch = sinon.match.object;
+            should(setPropsStub).be.calledOnce().and.calledWithMatch(sinon.match.string, propsMatch);
             should(nethserver.signalEvent).be.calledOnce();
         });
     });

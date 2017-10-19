@@ -209,7 +209,7 @@ nethserver.system.certificates.getSelfSignedCertificateParameters = function() {
             CommonName: detail.CommonName || 'NethServer', // XXX default proposal db.getProp('sysconfig', 'ProductName'),
             SubjectAltNames: detail.SubjectAltName.split(",").filter(function(v){return v != '';}) || ['*.' + domainName], // convert to array of strings
             CertificateDuration: parseInt(detail.CertificateDuration || db.getProp('pki', 'CertificateDuration')),
-            EmailAddress: db.getProp('root', 'EmailAddress') || '',
+            EmailAddress: detail.EmailAddress || db.getProp('root', 'EmailAddress'),
         };
     });
 };
@@ -244,6 +244,7 @@ nethserver.system.certificates.generateSelfSignedCertificate = function (inputPa
             CommonName: o.CommonName,
             SubjectAltName: o.SubjectAltNames.join(","), // convert to CSV string
             CertificateDuration: String(o.CertificateDuration),
+            EmailAddress: o.EmailAddress,
         });
         return db.save();
     }).
