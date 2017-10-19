@@ -18,11 +18,14 @@
  * along with NethServer.  If not, see COPYING.
  */
 
-(function(nethserver){
+(function(nethserver, cockpit){
     // Avoid double-inclusion from sub frames
     if(nethserver.system.users) {
         return;
     }
+
+    var _ = cockpit.translate;
+
     /**
      * @namespace
      */
@@ -259,6 +262,46 @@
         },
 
         /**
+         * Set the password for the given user account name
+         *
+         * @param {string} user - the short user name (without domain suffix)
+         * @param {string} password - the password
+         * @returns {Promise}
+         */
+        setPassword: function(user, password) {
+            var tmpdump = "FILE=$(mktemp --tmpdir tmppass.XXXXXXXXXX)\n" +
+                "cat - > ${FILE}\n" +
+                "echo -n ${FILE}\n";
+
+            var tmpFile;
+            function cleanupTemp(files) {
+                return Promise.resolve(cockpit.spawn(['/usr/bin/rm', '-f'].concat(files)));
+            }
+
+            return Promise.resolve(cockpit.script(tmpdump).input(password)).
+            then(function(tmpf){
+                tmpFile = tmpf;
+                return nethserver.validate('password-strength', ['Users', tmpFile], {
+                    id: 1508425739146,
+                    type: 'NotValid',
+                    message: _('The given password does not meet the current policy'),
+                });
+            }).
+            then(function(){
+                return nethserver.system.hostname.getDomainName();
+            }).
+            then(function(domainName){
+                return nethserver.signalEvent('password-modify', [user + '@' + domainName, tmpFile]);
+            }).
+            then(function(){
+                cleanupTemp([tmpFile]);
+            }, function(ex){
+                cleanupTemp([tmpFile]);
+                throw ex;
+            });
+        },
+
+        /**
          * Crate a new user
          *
          * @example
@@ -372,4 +415,4 @@
             );
         }
     };
-}(nethserver));
+}(nethserver, cockpit));
