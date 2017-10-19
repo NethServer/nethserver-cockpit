@@ -118,7 +118,7 @@ describe('nethserver.system.certificates', function() {
             chain: testCert,
         };
         return nethserver.system.certificates.uploadCertificate(certificate).then(function(){
-            nethserver.signalEvent.should.have.calledWithMatch('certificate-upload').callCount(1);
+            nethserver.signalEvent.should.have.calledWithMatch('certificate-upload', sinon.match.array.startsWith(['testcert']).and(sinon.match.has('length', 4))).callCount(1);
         });
     });
     it('uploadCertificate without chain', function() {
@@ -130,7 +130,7 @@ describe('nethserver.system.certificates', function() {
         };
 
         return nethserver.system.certificates.uploadCertificate(certificate).then(function(){
-            nethserver.signalEvent.should.have.calledWithMatch('certificate-upload').callCount(1);
+            nethserver.signalEvent.should.have.calledWithMatch('certificate-upload', sinon.match.array.startsWith(['testcert']).and(sinon.match.has('length', 3))).callCount(1);
         });
     });
     it('uploadCertificate fails (key)', function() {

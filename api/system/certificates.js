@@ -150,10 +150,15 @@
                     }),
                 ]).
                 then(function(){
-                    function cleanupHandler () {
-                        cleanupTemp([keyFile, certFile, chainFile]);
+                    var tmpFiles = [keyFile, certFile];
+                    if(chainFile) {
+                        tmpFiles.push(chainFile);
                     }
-                    ns.signalEvent('certificate-upload', [upload.key, keyFile, certFile, chainFile]).then(cleanupHandler, cleanupHandler);
+
+                    function cleanupHandler () {
+                        cleanupTemp(tmpFiles);
+                    }
+                    ns.signalEvent('certificate-upload', [upload.key].concat(tmpFiles)).then(cleanupHandler, cleanupHandler);
                 },function(ex){
                     cleanupTemp([keyFile, certFile, chainFile]);
                     throw ex;
