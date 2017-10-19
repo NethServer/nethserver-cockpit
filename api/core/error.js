@@ -21,14 +21,15 @@
 (function (nethserver) {
 
     /**
-     * Represents an error condition and optionally the reason of it, if depends
-     * on the user input.
+     * Represents a localised error condition and optionally the reason of it,
+     * if depends on the user input
      *
      * @typedef {Object} NsError
      * @param {integer} id - Unique identifier used to find the code which generated the error and to troubleshoot the problem
      * @param {string} type - Describes the type of the error
-     * @param {Object} [attributes] - Each property of the object is associated to an input attribute. The corresponding value is the failure reason, caused by the attribute
-     * @param {string} [message] - Generic, end-user oriented description of the error
+     * @param {Object} [attributes] - Each property of the object is associated to an input attribute. The corresponding value is the localised failure reason, caused by the attribute
+     * @param {string} [message] - Generic, localised, end-user oriented description of the error
+     * @param {string} [originalMessage] - Textual error message from a remote procedure that further describes the error cause
      * @param {Object} [detail] - A custom object. It is useful to pass it to the error handler procedure
      * @see {@link #nethserver.Error}
      */
@@ -57,6 +58,7 @@
         this.id = o.id;
         this.type = o.type;
         this.message = o.message || undefined;
+        this.originalMessage = o.originalMessage || undefined;
         this.attributes = o.attributes || {};
         this.detail = o.detail || undefined;
     };

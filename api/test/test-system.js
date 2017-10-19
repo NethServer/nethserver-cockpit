@@ -25,6 +25,9 @@ beforeEach(function(){
     nethserver.signalEvent = sinon.stub().returns(Promise.resolve(new CustomEvent("sinonstub-signalEventSucceeded")));
 });
 
+afterEach(function(){
+    nethserver.invalidateDbCache();
+});
 
 describe('nethserver.system namespace', function () {
     it('is defined', function() {

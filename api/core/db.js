@@ -671,4 +671,8 @@ ns.getDatabase = function(path) {
     return nsdbCache[path];
 };
 
+ns.invalidateDbCache = function() {
+    nsdbCache = {};
+};
+
 })(nethserver, jQuery);

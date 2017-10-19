@@ -20,6 +20,17 @@
 
 mocha.setup('bdd');
 
+var sandbox;
+
+beforeEach(function () {
+    sandbox = sinon.sandbox.create();
+});
+
+afterEach(function(){
+    sandbox.restore();
+    nethserver.invalidateDbCache();
+});
+
 describe('nethserver.system.certificates', function() {
     beforeEach(function(){
         nethserver.signalEvent = sinon.stub().returns(Promise.resolve(new CustomEvent("sinonstub-signalEventSucceeded")));
@@ -114,7 +125,7 @@ describe('nethserver.system.certificates', function() {
             chain: testCert,
         };
         return nethserver.system.certificates.uploadCertificate(certificate).then(function(){
-            nethserver.signalEvent.should.have.calledWithMatch('certificate-upload').callCount(1);
+            nethserver.signalEvent.should.have.calledWithMatch('certificate-upload', sinon.match.array.startsWith(['testcert']).and(sinon.match.has('length', 4))).callCount(1);
         });
     });
     it('uploadCertificate without chain', function() {
@@ -126,7 +137,7 @@ describe('nethserver.system.certificates', function() {
         };
 
         return nethserver.system.certificates.uploadCertificate(certificate).then(function(){
-            nethserver.signalEvent.should.have.calledWithMatch('certificate-upload').callCount(1);
+            nethserver.signalEvent.should.have.calledWithMatch('certificate-upload', sinon.match.array.startsWith(['testcert']).and(sinon.match.has('length', 3))).callCount(1);
         });
     });
     it('uploadCertificate fails (key)', function() {
@@ -223,8 +234,9 @@ describe('nethserver.system.certificates', function() {
             should(params).have.property('Organization').be.String();
             should(params).have.property('OrganizationalUnitName').be.String();
             should(params).have.property('CommonName').be.String();
-            should(params).have.property('SubjectAltName').be.String();
-            should(params).have.property('CertificateDuration').match(/\d+/);
+            should(params).have.property('EmailAddress').be.String();
+            should(params).have.property('SubjectAltNames').be.Array().and.matchAny(function(v){should(v).be.String();});
+            should(params).have.property('CertificateDuration').be.Number().greaterThan(0);
         });
     });
     it('generateSelfSignedCertificate', function(){
@@ -233,8 +245,42 @@ describe('nethserver.system.certificates', function() {
             should(nethserver.signalEvent).be.calledOnce();
         });
     });
+    it('getLetsEncryptCertificateParameters', function(){
+        return nethserver.system.certificates.getLetsEncryptCertificateParameters().
+        then(function(params){
+            should(params).have.property('LetsEncryptMail').be.String();
+            should(params).have.property('LetsEncryptDomains').be.Array();
+        });
+    });
+    it('requestLetsEncryptCertificate', function(){
+        sandbox.stub(cockpit, 'spawn').returns(Promise.resolve());
+        return nethserver.system.certificates.requestLetsEncryptCertificate({
+            LetsEncryptDomains: ['my.example.com'],
+            LetsEncryptMail: 'admin@example.com',
+        }).
+        then(function(){
+            should(nethserver.signalEvent).be.calledOnce();
+            should(cockpit.spawn).be.calledTwice();
+        });
+    });
+    it('requestLetsEncryptCertificate LE failure', function(){
+        sandbox.stub(cockpit, 'spawn').returns(Promise.reject({
+            message: 'stub exception',
+        }));
+        return nethserver.system.certificates.requestLetsEncryptCertificate({
+            LetsEncryptDomains: ['my.example.com'],
+            LetsEncryptMail: 'admin@example.com',
+        }).
+        then(function(){
+            throw new Error('Should not happen');
+        }, function(ex) {
+            should(ex).be.instanceOf(nethserver.Error);
+            should(ex.type).be.equal('NotValid');
+            should(cockpit.spawn).be.calledOnce();
+            should(nethserver.signalEvent).not.be.called();
+        });
+    });
 });
-
 
 mocha.checkLeaks();
 mocha.globals(['jQuery', 'cockpit']);
