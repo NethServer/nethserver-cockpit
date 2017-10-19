@@ -8,7 +8,7 @@
  * Controller of the systemAngularApp
  */
 angular.module('systemAngularApp')
-  .controller('CertificatesCtrl', function ($scope) {
+  .controller('CertificatesCtrl', function ($scope, $filter) {
     // controller objects
     $scope.objects = {
       searchString: '',
@@ -18,13 +18,11 @@ angular.module('systemAngularApp')
       showedCertificate: {}
     };
 
-    $scope.localSystem.certificates = [{
-      name: '/etc/pki/tls/certs/NSRV.crt',
-      issuer: 'NethServer, O=Example Org, ST=SomeState, OU=Main',
-      expires: '2027-07-23',
-      default: true,
-      certificate: 'Certificate:\n      Data:\n          Version: 3 (0x2)\n          Serial Number: 1500968453 (0x5976f605)\n      Signature Algorithm: sha256WithRSAEncryption'
-    }];
+    $scope.view = {
+      isLoaded: false
+    };
+
+    $scope.localSystem.certificates = [];
 
     // methods
     $scope.initGraphics = function () {
@@ -34,49 +32,107 @@ angular.module('systemAngularApp')
           labelVal = label.innerHTML;
 
         input.addEventListener('change', function (e) {
-          var fileName = '';
-          if (this.files && this.files.length > 1)
-            fileName = (this.getAttribute('data-multiple-caption') || '').replace('{count}', this.files.length);
-          else
-            fileName = e.target.value.split('\\').pop();
+          var fileName = e.target.value.split('\\').pop() || '';
+          var file = e.target.files[0];
 
-          if (fileName)
+          if (fileName) {
             label.innerHTML = ' <i class="fa fa-key span-right-margin"></i> ' + fileName;
-          else
+            labelVal = label.innerHTML;
+
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+              $scope.objects.newCertificate[e.target.id.split('-')[0]] = atob(ev.target.result.split(',')[1]) || "";
+              $scope.$apply();
+            };
+            reader.readAsDataURL(file);
+          } else
             label.innerHTML = labelVal;
         });
       });
     };
 
-    nethserver.system.certificates.getAll(function (certificates) {
-      $scope.localSystem.certificates = certificates;
+    $scope.getAllCertificates = function () {
+      nethserver.system.certificates.getAllCertificates().then(function (certificates) {
+        $scope.view.isLoaded = true;
+        $scope.localSystem.certificates = certificates;
 
-      // $scope.$apply();
-    }, function (err) {
-      console.error("couldn't read certificates: " + err);
-    });
+        $scope.$apply();
+      }, function (err) {
+        console.error("couldn't read certificates: " + err);
+      });
+    };
+
+    $scope.getLetsEncryptCertificateParameters = function () {
+      nethserver.system.certificates.getLetsEncryptCertificateParameters().then(function (certificate) {
+        $scope.objects.letsEncryptCertificate = certificate;
+        $scope.objects.letsEncryptCertificate.LetsEncryptDomains = certificate.LetsEncryptDomains.join('\n');
+        $scope.$apply();
+      }, function (err) {
+        console.error("couldn't read certificate: " + err);
+      });
+    };
+
+    $scope.getSelfSignedCertificateParameters = function () {
+      nethserver.system.certificates.getSelfSignedCertificateParameters().then(function (certificate) {
+        $scope.objects.selfSignedCertificate = certificate;
+        $scope.objects.selfSignedCertificate.SubjectAltNames = certificate.SubjectAltNames.join('\n');
+        $scope.$apply();
+      }, function (err) {
+        console.error("couldn't read certificate: " + err);
+      });
+    };
+
+    $scope.cleanErrors = function () {
+      $scope.objects.newCertificate.errorMessage = null;
+      $scope.objects.newCertificate.errorProps = null;
+    };
 
     $scope.openUploadCertificate = function () {
       $scope.objects.newCertificate = {};
+      $('certificate-file').val("");
+      $('privateKey-file').val("");
+      $('chain-file').val("");
       $('#uploadCertificateModal').modal('show');
     };
     $scope.uploadCertificate = function (certificate) {
+      $scope.cleanErrors();
       nethserver.system.certificates.uploadCertificate(certificate).then(function () {
-
+        $('#uploadCertificateModal').modal('hide');
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Uploaded'),
+          message: $filter('translate')('Certificate uploaded with success'),
+          status: 'success',
+        });
+        $scope.$apply();
       }, function (err) {
         console.error(err);
+        $scope.objects.newCertificate.errorMessage = err.message;
+        $scope.objects.newCertificate.errorProps = err.attributes;
+        $scope.$apply();
       });
     };
 
     $scope.openEditCertificate = function () {
-      $scope.objects.selfSignedCertificate = {}; // get self-signed
       $('#editCertificateModal').modal('show');
     };
     $scope.editCertificate = function (certificate) {
-      nethserver.system.certificates.editCertificate(certificate).then(function () {
-
+      $scope.cleanErrors();
+      certificate.SubjectAltNames = certificate.SubjectAltNames.split(/[,\s]+/);
+      nethserver.system.certificates.generateSelfSignedCertificate(certificate).then(function () {
+        $('#editCertificateModal').modal('hide');
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Saved'),
+          message: $filter('translate')('Certificate info edited with success'),
+          status: 'success',
+        });
+        $scope.$apply();
       }, function (err) {
         console.error(err);
+        $scope.objects.newCertificate.errorMessage = err.message;
+        $scope.objects.newCertificate.errorProps = err.attributes;
+        $scope.$apply();
       });
     };
 
@@ -84,25 +140,68 @@ angular.module('systemAngularApp')
       $('#requestLetsEncryptModal').modal('show');
     };
     $scope.requestLetsEncrypt = function (certificate) {
-      nethserver.system.certificates.requestLetsEncrypt(certificate).then(function () {
-
+      $scope.cleanErrors();
+      $scope.objects.newCertificate.testLetsEncrypt = true;
+      certificate.LetsEncryptDomains = certificate.LetsEncryptDomains.split(/[,\s]+/);
+      nethserver.system.certificates.requestLetsEncryptCertificate(certificate).then(function () {
+        $('#requestLetsEncryptModal').modal('hide');
+        $scope.objects.newCertificate.testLetsEncrypt = false;
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Done'),
+          message: $filter('translate')('Let\'s encrypt certificate requested with success'),
+          status: 'success',
+        });
+        $scope.$apply();
       }, function (err) {
         console.error(err);
+        $scope.objects.newCertificate.testLetsEncrypt = false;
+        $scope.objects.newCertificate.errorMessage = err.message;
+        $scope.objects.newCertificate.errorProps = err.attributes;
+        $scope.$apply();
       });
     };
 
-    $scope.setDefault = function () {
-      nethserver.system.certificates.setDefault(certificate).then(function () {
-
+    $scope.setDefault = function (certificate) {
+      nethserver.system.certificates.selectDefaultCertificate(certificate).then(function () {
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Saved'),
+          message: $filter('translate')('Certificate set as default'),
+          status: 'success',
+        });
+        $scope.$apply();
       }, function (err) {
         console.error(err);
+        $scope.notifications.add({
+          type: 'info',
+          title: $filter('translate')('Error'),
+          message: $filter('translate')('Certificate not set as default'),
+          status: 'danger',
+        });
+        $scope.$apply();
       });
     };
 
     $scope.showCertificate = function (certificate) {
-      $scope.objects.showedCertificate = certificate;
-      $('#showCertificateModal').modal('show');
+      nethserver.system.certificates.showCertificate(certificate).then(function (certificate) {
+        $scope.objects.showedCertificate = certificate;
+        $scope.$apply();
+
+        $('#showCertificateModal').modal('show');
+      }, function (err) {
+        console.error(err);
+      });
     };
 
     $scope.initGraphics();
+    $scope.getAllCertificates();
+    $scope.getSelfSignedCertificateParameters();
+    $scope.getLetsEncryptCertificateParameters();
+
+    nethserver.eventMonitor.addEventListener('nsevent.succeeded', function (success) {
+      $scope.getAllCertificates();
+      $scope.getSelfSignedCertificateParameters();
+      $scope.getLetsEncryptCertificateParameters();
+    });
   });

@@ -56,7 +56,7 @@ input[type="file"] {
   float: right;
   margin-top: 10px;
   margin-right: -5px;
-  width: 50px;
+  width: 40px;
 }
 
 .custom-file-upload {
@@ -350,7 +350,7 @@ iframe>.breadcrumb {
 }
 
 .app-icon-details {
-  width: 50px;
+  width: 40px;
   float: right;
 }
 

@@ -17,4 +17,8 @@ angular.module('systemAngularApp')
       $scope.view.isLoaded = true;
       $scope.$apply();
     });
+
+    $scope.$on('$routeChangeStart', function (next, current) {
+      $scope.initObjects.isFake = false;
+    });
   });

@@ -161,7 +161,7 @@
 
 </div>
 
-<div class="modal fade" id="createUserModal" tabindex="-1" role="dialog" data-backdrop="static">
+<div class="modal" id="createUserModal" tabindex="-1" role="dialog" data-backdrop="static">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -179,7 +179,7 @@
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Username' | translate}}</label>
             <div class="col-sm-5">
               <input ng-disabled="objects.newUser.isEdit" required type="text" ng-model="objects.newUser.key" class="form-control">
-              <span ng-if="objects.newUser.errorProps['key']" class="help-block">{{objects.newUser.errorProps['key']}}</span>
+              <span ng-if="objects.newUser.errorProps['key']" class="help-block">{{objects.newUser.errorProps['key'] | translate}}</span>
             </div>
             <div class="col-sm-4">
               <input ng-disabled="true" type="text" ng-model="localSystem.users.domain" class="form-control">
@@ -189,7 +189,7 @@
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Name' | translate}}</label>
             <div class="col-sm-9">
               <input required type="text" ng-model="objects.newUser.gecos" class="form-control">
-              <span ng-if="objects.newUser.errorProps['gecos']" class="help-block">{{objects.newUser.errorProps['gecos']}}</span>
+              <span ng-if="objects.newUser.errorProps['gecos']" class="help-block">{{objects.newUser.errorProps['gecos'] | translate}}</span>
             </div>
           </div>
           <div ng-if="!objects.newUser.isPassEdit" class="form-group {{objects.newUser.errorProps['groups'] ? 'has-error' : ''}}">
@@ -199,7 +199,12 @@
                 <option></option>
                 <option ng-value="kg" ng-repeat="(kg, g) in localSystem.groups.list">{{kg}}</option>
               </select>
-              <span ng-if="objects.newUser.errorProps['groups']" class="help-block">{{objects.newUser.errorProps['groups']}}</span>
+              <span ng-if="objects.newUser.errorProps['groups']" class="help-block">{{objects.newUser.errorProps['groups'] | translate}}</span>
+            </div>
+          </div>
+          <div ng-if="objects.newUser.loadGroups" class="form-group">
+            <div class="col-sm-12">
+              <div class="spinner"></div>
             </div>
           </div>
           <div ng-if="!objects.newUser.isPassEdit" ng-repeat="g in objects.newUser.groups" class="form-group">
@@ -260,7 +265,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="createGroupModal" tabindex="-1" role="dialog" data-backdrop="static">
+<div class="modal" id="createGroupModal" tabindex="-1" role="dialog" data-backdrop="static">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -275,7 +280,7 @@
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Name' | translate}}</label>
             <div class="col-sm-5">
               <input ng-disabled="objects.newGroup.isEdit" required type="text" ng-model="objects.newGroup.key" class="form-control">
-              <span ng-if="objects.newGroup.errorProps['key']" class="help-block">{{objects.newGroup.errorProps['key']}}</span>
+              <span ng-if="objects.newGroup.errorProps['key']" class="help-block">{{objects.newGroup.errorProps['key'] | translate}}</span>
             </div>
             <div class="col-sm-4">
               <input ng-disabled="true" type="text" ng-model="localSystem.groups.domain" class="form-control">
@@ -288,7 +293,12 @@
                 <option></option>
                 <option ng-value="ku" ng-repeat="(ku, u) in localSystem.users.list">{{ku}} - {{u.gecos}}</option>
               </select>
-              <span ng-if="objects.newGroup.errorProps['members']" class="help-block">{{objects.newGroup.errorProps['members']}}</span>
+              <span ng-if="objects.newGroup.errorProps['members']" class="help-block">{{objects.newGroup.errorProps['members'] | translate}}</span>
+            </div>
+          </div>
+          <div ng-if="objects.newGroup.loadMembers" class="form-group">
+            <div class="col-sm-12">
+              <div class="spinner"></div>
             </div>
           </div>
           <div ng-repeat="u in objects.newGroup.members" class="form-group">
@@ -313,7 +323,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" data-backdrop="static">
+<div class="modal" id="deleteModal" tabindex="-1" role="dialog" data-backdrop="static">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -337,7 +347,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="changeProviderModal" tabindex="-1" role="dialog" data-backdrop="static">
+<div class="modal" id="changeProviderModal" tabindex="-1" role="dialog" data-backdrop="static">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -368,9 +378,6 @@
   <div class="modal-dialog modal-lg wizard-pf">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close wizard-pf-dismiss" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
         <dt class="modal-title">{{'Configure Account provider' | translate}}</dt>
       </div>
       <div class="modal-body wizard-pf-body clearfix">
@@ -484,7 +491,7 @@
                 <p>
                   {{'An LDAP database can store users, groups and passwords. It is required a RFC2307 compatible LDAP schema' | translate}}
                 </p>
-                <strong>{{'Choose an Bind method below'}}:</strong>
+                <strong>{{'Choose a Bind method below'}}:</strong>
                 <div class="blank-slate-pf-main-action">
                   <div ng-click="selectBind('remote')" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 card-pf {{localSystem.users.chooseBind == 'remote' ? 'active-choose' : ''}}">
                     <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
@@ -520,7 +527,7 @@
                 <p>
                   {{'Computers in an Active Directory domain can be simple members or domain controllers (DC)' | translate}}
                 </p>
-                <strong>{{'Choose an Bind method below'}}:</strong>
+                <strong>{{'Choose a Bind method below'}}:</strong>
                 <div class="blank-slate-pf-main-action">
                   <div ng-click="selectBind('remote')" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 card-pf {{localSystem.users.chooseBind == 'remote' ? 'active-choose' : ''}}">
                     <div class="blank-slate-pf no-padding margin-top-md white-background" id="">
@@ -558,11 +565,11 @@
               <!-- Remote LDAP-->
               <div ng-if="localSystem.users.provider == null && localSystem.users.chooseProvider == 'ldap' && localSystem.users.chooseBind == 'remote'">
                 <h3 class="wizard-pf-contents-title">{{'Bind to Remote LDAP' | translate}}</h3>
-                <form class="form-horizontal" ng-submit="checkBindConfig(objects.newProvider)">
+                <form class="form-horizontal" ng-submit="checkLdapConfig(objects.newProvider)">
                   <div class="modal-body">
                     <div ng-show="objects.newProvider.probeError" class="alert alert-danger alert-dismissable">
                       <span class="pficon pficon-error-circle-o"></span>
-                      <strong>{{'Error' | translate}}</strong> {{'The configuration is invalid' | translate}}.
+                      <strong>{{'Error' | translate}}.</strong> {{'The configuration is invalid' | translate}}.
                     </div>
                     <div class="form-group">
                       <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Hostname or IP' | translate}}</label>
@@ -639,6 +646,11 @@
                 <h3 class="wizard-pf-contents-title">{{'Join to Active Directory' | translate}}</h3>
                 <form class="form-horizontal" ng-submit="checkAdConfig(objects.newProvider)">
                   <div class="modal-body">
+                    <div ng-show="objects.newProvider.probeError" class="alert alert-danger alert-dismissable">
+                      <span class="pficon pficon-error-circle-o"></span>
+                      <strong>{{'Error' | translate}}.</strong> {{'The configuration is invalid. Try to use different AD DNS server'
+                      | translate}}.
+                    </div>
                     <div class="form-group">
                       <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Domain name' | translate}}</label>
                       <div class="col-sm-9">
@@ -660,7 +672,7 @@
                         <div class="spinner"></div>
                       </div>
                     </div>
-                    <p ng-show="objects.newProvider.info" >{{'Credentials for joining the domain' | translate}}</p>
+                    <p ng-show="objects.newProvider.info">{{'Credentials for joining the domain' | translate}}</p>
                     <div ng-show="objects.newProvider.info" class="form-group">
                       <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Username' | translate}}</label>
                       <div class="col-sm-9">
@@ -682,7 +694,6 @@
       </div>
 
       <div class="modal-footer wizard-pf-footer">
-        <button type="button" class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss">{{'Cancel' | translate}}</button>
         <button ng-disabled="objects.currentStep == 1" ng-click="prevStep()" type="button" class="btn btn-default wizard-pf-back">
           <span class="i fa fa-angle-left"></span>
           {{'Back' | translate}}

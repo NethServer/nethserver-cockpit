@@ -112,14 +112,8 @@ angular.module('systemAngularApp')
 
     // events listeners
     nethserver.eventMonitor.addEventListener('nsevent.succeeded', function (success) {
-      $scope.notifications.task.setData({
-        progress: 100,
-      });
+      $scope.notifications.task.hide();
       $scope.$apply();
-      setTimeout(function () {
-        $scope.notifications.task.hide();
-        $scope.$apply();
-      }, 1000);
     });
     nethserver.eventMonitor.addEventListener('nsevent.failed', function (fail) {
       $scope.notifications.add({
@@ -148,6 +142,10 @@ angular.module('systemAngularApp')
           name: $route.routes['/' + v].name,
           url: '/' + v
         }
+      });
+
+      $('.modal').each(function () {
+        $(this).modal('hide');
       });
     });
   });

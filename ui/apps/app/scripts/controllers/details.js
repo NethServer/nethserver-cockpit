@@ -86,4 +86,8 @@ angular.module('appsAngularApp')
 
       $scope.$apply();
     });
+
+    $scope.$on('$routeChangeStart', function (next, current) {
+      $scope.initObjects.isFake = false;
+    });
   });

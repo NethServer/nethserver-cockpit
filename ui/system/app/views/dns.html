@@ -75,7 +75,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="newDNSModal" tabindex="-1" role="dialog" data-backdrop="static">
+<div class="modal" id="newDNSModal" tabindex="-1" role="dialog" data-backdrop="static">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -86,21 +86,21 @@
         <div class="modal-body">
           <div ng-show="objects.newDNS.onTaskRunning" class="alert alert-warning alert-dismissable">
             <span class="pficon pficon-warning-triangle-o"></span>
-            <strong>{{'Running task' | translate}}.</strong> {{objects.newDNS.errorMessage}}
+            <strong>{{'Running task' | translate}}.</strong> {{objects.newDNS.errorMessage | translate}}
           </div>
 
-          <div class="form-group {{objects.newDNS.errorProp == 'key' ? 'has-error' : ''}}">
+          <div class="form-group {{objects.newDNS.errorProps['key'] ? 'has-error' : ''}}">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Hostname' | translate}}</label>
             <div class="col-sm-9">
               <input ng-disabled="objects.newDNS.isEdit" required type="text" ng-model="objects.newDNS.key" class="form-control">
-              <span ng-if="objects.newDNS.errorProp == 'key'" class="help-block">{{objects.newDNS.errorMessage}}</span>
+              <span ng-if="objects.newDNS.errorProps['key']" class="help-block">{{objects.newDNS.errorProps['key'] | translate}}</span>
             </div>
           </div>
-          <div class="form-group {{objects.newDNS.errorProp == 'IpAddress' ? 'has-error' : ''}}">
+          <div class="form-group {{objects.newDNS.errorProps['IpAddress'] ? 'has-error' : ''}}">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'IP Address' | translate}}</label>
             <div class="col-sm-9">
               <input required type="text" ng-model="objects.newDNS.IpAddress" class="form-control">
-              <span ng-if="objects.newDNS.errorProp == 'IpAddress'" class="help-block">{{objects.newDNS.errorMessage}}</span>
+              <span ng-if="objects.newDNS.errorProps['IpAddress']" class="help-block">{{objects.newDNS.errorProps['IpAddress'] | translate}}</span>
             </div>
           </div>
           <div class="form-group">
@@ -121,7 +121,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="deleteDNSModal" tabindex="-1" role="dialog" data-backdrop="static">
+<div class="modal" id="deleteDNSModal" tabindex="-1" role="dialog" data-backdrop="static">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

@@ -40,7 +40,6 @@ angular.module('systemAngularApp')
           message: $filter('translate')('Service enabled with success'),
           status: 'success',
         });
-        $scope.getAllServices();
       }, function (err) {
         console.error(err);
         $scope.notifications.add({
@@ -61,7 +60,6 @@ angular.module('systemAngularApp')
           message: $filter('translate')('Service disabled with success'),
           status: 'success',
         });
-        $scope.getAllServices();
       }, function (err) {
         console.error(err);
         $scope.notifications.add({
@@ -82,7 +80,6 @@ angular.module('systemAngularApp')
           message: $filter('translate')('Service started with success'),
           status: 'success',
         });
-        $scope.getAllServices();
       }, function (err) {
         console.error(err);
         $scope.notifications.add({
@@ -103,7 +100,6 @@ angular.module('systemAngularApp')
           message: $filter('translate')('Service stopped with success'),
           status: 'success',
         });
-        $scope.getAllServices();
       }, function (err) {
         console.error(err);
         $scope.notifications.add({
@@ -124,7 +120,6 @@ angular.module('systemAngularApp')
           message: $filter('translate')('Service restarted with success'),
           status: 'success',
         });
-        $scope.getAllServices();
       }, function (err) {
         console.error(err);
         $scope.notifications.add({
@@ -163,5 +158,9 @@ angular.module('systemAngularApp')
     };
 
     $scope.getAllServices();
+
+    nethserver.eventMonitor.addEventListener('nsevent.succeeded', function (success) {
+      $scope.getAllServices();
+    });
 
   });

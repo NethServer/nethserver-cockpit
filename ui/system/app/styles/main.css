@@ -146,6 +146,10 @@ iframe>.breadcrumb {
   padding: 0px;
 }
 
+.margin-top-small {
+  margin-top: 4px !important;
+}
+
 .margin-top-md {
   margin-top: 60px !important;
 }

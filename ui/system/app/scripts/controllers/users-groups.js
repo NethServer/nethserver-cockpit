@@ -101,7 +101,7 @@ angular.module('systemAngularApp')
           }
         }
         if ($scope.localSystem.users.chooseProvider == 'ad' && $scope.localSystem.users.chooseBind == 'remote') {
-          if ($scope.objects.newProvider.info && !$scope.objects.newProvider.probeError && $scope.objects.newProvider.info.BindPassword.length > 0) {
+          if ($scope.objects.newProvider.info && !$scope.objects.newProvider.probeError && $scope.objects.newProvider.info.BindPassword && $scope.objects.newProvider.info.BindPassword.length > 0) {
             return false;
           } else {
             return true;
@@ -147,7 +147,7 @@ angular.module('systemAngularApp')
         $scope.localSystem.users.provider = provider.isAD ? 'ad' : provider.isLdap ? 'ldap' : null;
         $scope.localSystem.users.providerInfo = provider;
 
-        $scope.localSystem.users.provider = null;
+        //$scope.localSystem.users.provider = null;
 
         if (!$scope.localSystem.users.provider) {
           $('#accountProviderWizard').modal('show');
@@ -253,11 +253,14 @@ angular.module('systemAngularApp')
       $scope.objects.newUser.key = ku;
       $scope.objects.newUser.isEdit = true;
       $scope.objects.newUser.isPassEdit = false;
+      $scope.objects.newUser.loadGroups = true;
       nethserver.system.users.getUserMembership(ku).then(function (groups) {
         $scope.objects.newUser.groups = groups;
+        $scope.objects.newUser.loadGroups = false;
         $scope.$apply();
       }, function (err) {
         console.error(err);
+        $scope.objects.newUser.loadGroups = false;
       });
       $('#createUserModal').modal('show');
     };
@@ -359,11 +362,14 @@ angular.module('systemAngularApp')
       $scope.objects.newGroup = group;
       $scope.objects.newGroup.key = kg;
       $scope.objects.newGroup.isEdit = true;
+      $scope.objects.newGroup.loadMembers = true;
       nethserver.system.users.getGroupMembers(kg).then(function (members) {
         $scope.objects.newGroup.members = members;
+        $scope.objects.newGroup.loadMembers = false;
         $scope.$apply();
       }, function (err) {
         console.error(err);
+        $scope.objects.newGroup.loadMembers = false;
       });
       $('#createGroupModal').modal('show');
     };
@@ -415,6 +421,7 @@ angular.module('systemAngularApp')
 
     $scope.uninstallProvider = function () {
       nethserver.system.provider.uninstall().then(function () {
+        $('#changeProviderModal').modal('hide');
         $scope.localSystem.users.provider = null;
         $scope.localSystem.users.chooseProvider = null;
         $scope.localSystem.users.chooseBind = null;
@@ -452,8 +459,9 @@ angular.module('systemAngularApp')
     $scope.changeStartTLS = function (v) {
       $scope.objects.newProvider.info.StartTls = v ? 'enabled' : 'disabled';
     };
-    $scope.checkBindConfig = function (newProvider) {
+    $scope.checkLdapConfig = function (newProvider) {
       $scope.objects.newProvider.isChecking = true;
+      $scope.objects.newProvider.info = {};
       nethserver.system.provider.probeLdap(newProvider.hostname, newProvider.tcpport).then(function (info) {
         $scope.objects.newProvider.info = info;
         $scope.objects.newProvider.probeError = false;
@@ -491,6 +499,7 @@ angular.module('systemAngularApp')
 
     $scope.checkAdConfig = function (newProvider) {
       $scope.objects.newProvider.isChecking = true;
+      $scope.objects.newProvider.info = {};
       nethserver.system.provider.probeAd(newProvider.Realm, newProvider.adDNSServer).then(function (info) {
         $scope.objects.newProvider.info = info;
         $scope.objects.newProvider.probeError = false;
@@ -552,6 +561,7 @@ angular.module('systemAngularApp')
     $scope.getGroups();
 
     nethserver.eventMonitor.addEventListener('nsevent.succeeded', function (success) {
+      $scope.getInfo();
       $scope.getUsers();
       $scope.getGroups();
     });

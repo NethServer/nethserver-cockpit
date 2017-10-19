@@ -35,7 +35,14 @@ angular.module('systemAngularApp')
       });
     };
 
+    $scope.cleanErrors = function() {
+      $scope.objects.newDNS.errorMessage = null;
+      $scope.objects.newDNS.errorProps = null;
+      $scope.objects.newDNS.onTaskRunning = false;
+    };
+
     $scope.saveDNS = function (host) {
+      $scope.cleanErrors();
       if (host.isEdit) {
         nethserver.system.dns.editRemoteHost(host).then(function () {
           $('#newDNSModal').modal('hide');
@@ -45,7 +52,6 @@ angular.module('systemAngularApp')
             message: $filter('translate')('DNS record edited with success'),
             status: 'success',
           });
-          $scope.getAllRemoteHosts();
         }, function (err) {
           console.log(err);
           if (err.type == 'TaskRun') {
@@ -53,7 +59,7 @@ angular.module('systemAngularApp')
           } else {
             $scope.objects.newDNS.onTaskRunning = false;
             $scope.objects.newDNS.errorMessage = err.message;
-            $scope.objects.newDNS.errorProp = err.attribute;
+            $scope.objects.newDNS.errorProps = err.attributes;
           }
           $scope.$apply();
         });
@@ -66,7 +72,6 @@ angular.module('systemAngularApp')
             message: $filter('translate')('DNS record added with success'),
             status: 'success',
           });
-          $scope.getAllRemoteHosts();
         }, function (err) {
           console.log(err);
           if (err.type == 'TaskRun') {
@@ -74,7 +79,7 @@ angular.module('systemAngularApp')
           } else {
             $scope.objects.newDNS.onTaskRunning = false;
             $scope.objects.newDNS.errorMessage = err.message;
-            $scope.objects.newDNS.errorProp = err.attribute;
+            $scope.objects.newDNS.errorProps = err.attributes;
           }
           $scope.$apply();
         });
@@ -85,9 +90,8 @@ angular.module('systemAngularApp')
       $('#newDNSModal').modal('show');
     };
     $scope.editDNS = function (host) {
+      $scope.cleanErrors();
       $scope.objects.newDNS = angular.copy(host) || {};
-      $scope.objects.newDNS.errorMessage = null;
-      $scope.objects.newDNS.errorProp = null;
       $scope.objects.newDNS.isEdit = true;
       $('#newDNSModal').modal('show');
     };
@@ -97,7 +101,6 @@ angular.module('systemAngularApp')
     };
     $scope.deleteDNS = function (host) {
       nethserver.system.dns.deleteRemoteHost(host.key).then(function () {
-        $scope.getAllRemoteHosts();
         $('#deleteDNSModal').modal('hide');
       }, function (err) {
         console.error(err);
@@ -105,4 +108,8 @@ angular.module('systemAngularApp')
     };
 
     $scope.getAllRemoteHosts();
+
+    nethserver.eventMonitor.addEventListener('nsevent.succeeded', function (success) {
+      $scope.getAllRemoteHosts();
+    });
   });

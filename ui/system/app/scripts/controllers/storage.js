@@ -44,4 +44,8 @@ angular.module('systemAngularApp')
       $scope.$apply();
     });
 
+    $scope.$on('$routeChangeStart', function (next, current) {
+      $scope.initObjects.isFake = false;
+    });
+
   });
