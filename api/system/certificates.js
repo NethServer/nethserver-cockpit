@@ -152,7 +152,7 @@ nethserver.system.certificates.uploadCertificate = function (upload) {
             }),
         ]).
         then(function(){
-            var tmpFiles = [keyFile, certFile];
+            var tmpFiles = [certFile, keyFile];
             if(chainFile) {
                 tmpFiles.push(chainFile);
             }
@@ -256,10 +256,11 @@ nethserver.system.certificates.generateSelfSignedCertificate = function (inputPa
 };
 
 /**
+ * A new certificate emission request for Let's Encrypt
  *
  * @typedef {Object} LetsEncryptRequest
  * @param {string[]} LetsEncryptDomains - The certificate alternative DNS domains
- * @param {string} [LetsEncryptMail] - The certificate email contact information
+ * @param {string} [LetsEncryptMail=''] - The certificate email contact information
  */
 
 /**
