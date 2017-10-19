@@ -223,8 +223,8 @@ describe('nethserver.system.certificates', function() {
             should(params).have.property('Organization').be.String();
             should(params).have.property('OrganizationalUnitName').be.String();
             should(params).have.property('CommonName').be.String();
-            should(params).have.property('SubjectAltName').be.String();
-            should(params).have.property('CertificateDuration').match(/\d+/);
+            should(params).have.property('SubjectAltNames').be.Array().and.matchAny(function(v){should(v).be.String();});
+            should(params).have.property('CertificateDuration').be.Number().greaterThan(0);
         });
     });
     it('generateSelfSignedCertificate', function(){
@@ -234,7 +234,6 @@ describe('nethserver.system.certificates', function() {
         });
     });
 });
-
 
 mocha.checkLeaks();
 mocha.globals(['jQuery', 'cockpit']);

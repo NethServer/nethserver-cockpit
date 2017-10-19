@@ -52,24 +52,6 @@
           */
 
         /**
-         * Input to self-signed certificate generator. Any missing property or
-         * any property with a falsy value is replaced with its default value.
-         *
-         * Default values come from OrganizationContact (oc), root, pki records.
-         *
-         * @typedef {Object} CertificateDetail
-         * @param {string} [CountryCode=oc.CountryCode] -
-         * @param {string} [State=oc.State] -
-         * @param {string} [Locality=oc.City] -
-         * @param {string} [Organization=oc.Company] -
-         * @param {string} [OrganizationalUnitName=oc.Department] -
-         * @param {string} [CommonName=NethServer] -
-         * @param {string} [EmailAddress=root.EmailAddress] -
-         * @param {string} [SubjectAltName=*.<DomainName>] -
-         * @param {string} [CertificateDuration=pki.CertificateDuration] -
-         */
-
-        /**
          * List the X.509 certificates available on the system
          *
          * @return {Promise.<CertificateMeta[]|Error>}
@@ -173,6 +155,25 @@
                 });
             });
         },
+
+        /**
+         * Input to self-signed certificate generator. Any missing property or
+         * any property with a falsy value is replaced with its default value.
+         *
+         * Default values come from OrganizationContact (oc), root, pki records.
+         *
+         * @typedef {Object} CertificateDetail
+         * @param {string} [CountryCode=oc.CountryCode] -
+         * @param {string} [State=oc.State] -
+         * @param {string} [Locality=oc.City] -
+         * @param {string} [Organization=oc.Company] -
+         * @param {string} [OrganizationalUnitName=oc.Department] -
+         * @param {string} [CommonName=NethServer] -
+         * @param {string} [EmailAddress=root.EmailAddress] -
+         * @param {string[]} [SubjectAltNames] -
+         * @param {integer} [CertificateDuration=pki.CertificateDuration] -
+         */
+
         /**
          * Retrieve the self-signed SSL certificate generation parameters
          * @see {@link #CertificateDetail}
@@ -193,9 +194,9 @@
                      Locality: detail.Locality || db.getProp('OrganizationContact', 'Locality'),
                      Organization: detail.Organization || db.getProp('OrganizationContact', 'Company'),
                      OrganizationalUnitName: detail.OrganizationalUnitName || db.getProp('OrganizationContact', 'Department'),
-                     CommonName: detail.CommonName || 'NethServer', // db.getProp('sysconfig', 'ProductName'),
-                     SubjectAltName: detail.SubjectAltName.replace(",", "\n") || '*.' + domainName,
-                     CertificateDuration: detail.CertificateDuration || db.getProp('pki', 'CertificateDuration')
+                     CommonName: detail.CommonName || 'NethServer', // XXX default proposal db.getProp('sysconfig', 'ProductName'),
+                     SubjectAltNames: detail.SubjectAltName.split(",") || ['*.' + domainName], // convert to array of strings
+                     CertificateDuration: parseInt(detail.CertificateDuration || db.getProp('pki', 'CertificateDuration'))
                  };
              });
          },
@@ -217,7 +218,7 @@
                         o[key] = inputParams[key];
                     }
                 }
-                return nethserver.getDatabase('configuration');
+                return nethserver.getDatabase('configuration').open();
             }).
             then(function(db){
                 db.setProps('pki', {
@@ -227,8 +228,8 @@
                     Organization: o.Organization,
                     OrganizationalUnitName: o.OrganizationalUnitName,
                     CommonaName: o.CommonName,
-                    SubjectAltName: o.SubjectAltName.trim().replace(/\s+/, ","),
-                    CertificateDuration: o.CertificateDuration,
+                    SubjectAltName: o.SubjectAltNames.join(","), // convert to CSV string
+                    CertificateDuration: String(o.CertificateDuration),
                 });
                 return db.save();
             }).
