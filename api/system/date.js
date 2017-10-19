@@ -50,7 +50,7 @@
      * @typedef DateSettings
      * @param {string} DateTime - A string representation of the current local date and time, like "YYYY-MM-DD HH:mm"
      * @param {string} TimeZone - The system time zone. Valid values are returned by getTimeZones()
-     * @param {string|boolean} NTPServer - The NTP server host name or false, if NTP is disabled
+     * @param {string|boolean} NTPServer - The NTP server host name, empty string or false. Empty string means "default server", false means NTP disabled.
      *
      * @see {@link #getTimeZones}
      */
@@ -73,7 +73,7 @@
                 return nethserver.getDatabase('configuration').open();
             }).then(function(db){
                 if(db.getProp('chronyd', 'status') == 'enabled') {
-                    o.NTPServer = db.getProp('chronyd', 'NTPServer');
+                    o.NTPServer = db.getProp('chronyd', 'NTPServer') || '';
                 } else {
                     o.NTPServer = false;
                 }
