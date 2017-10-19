@@ -37,7 +37,7 @@
          *    // print users
          * });
          *
-         * @param {Integer} [timeout] - Script timeout, default to 5 seconds
+         * @param {Integer} [timeout=5] - Script timeout, default to 5 seconds
          *
          * @return {Promise} - A standard promise with the list of users
          */
@@ -70,7 +70,7 @@
          * }
          *
          * @param {String} user - Name of the user
-         * @param {Integer} [timeout] - Script timeout, default to 5 seconds
+         * @param {Integer} [timeout=5] - Script timeout, default to 5 seconds
          *
          * @return {Promise.<User>} - A standard promise with the given user
          */
@@ -114,7 +114,7 @@
          *    // print grpups
          * });
          *
-         * @param {Integer} [timeout] - Script timeout, default to 5 seconds
+         * @param {Integer} [timeout=5] - Script timeout, default to 5 seconds
          *
          * @return {Promise} - A standard promise with the list of groups
          */
@@ -138,7 +138,7 @@
          * ["user1","user2", ..]
          *
          * @param {String} group - Name of the group
-         * @param {Integer} [timeout] - Script timeout, default to 5 seconds
+         * @param {Integer} [timeout=5] - Script timeout, default to 5 seconds
          *
          * @return {Promise.<Array>} - A standard promise with the list of users
          */
