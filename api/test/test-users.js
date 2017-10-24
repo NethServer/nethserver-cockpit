@@ -44,7 +44,6 @@ describe('users namespace', function(){
         });
     });
     it('setPassword invalid password', function(){
-        //sandbox.stub(cockpit, 'spawn').onFirstCall().returns(Promise.reject(new Error('stub error')));
         sandbox.stub(nethserver, 'validate').rejects();
         sandbox.stub(nethserver, 'signalEvent').resolves();
         sandbox.stub(nethserver.system.hostname, 'getDomainName').returns(Promise.resolve('fake.example.com'));
@@ -55,6 +54,32 @@ describe('users namespace', function(){
         }, function(ex){
             should(nethserver.validate).be.calledOnce();
             should(nethserver.signalEvent).not.be.called();
+        });
+    });
+    it('addUser', function(){
+        sandbox.stub(nethserver, 'signalEvent').resolves();
+        sandbox.stub(nethserver.system.users, 'getUser').resolves({});
+        sandbox.stub(nethserver.system.users, 'getGroupMembers').resolves([]);
+        sandbox.stub(nethserver.system.users, 'getUserMembership').resolves([]);
+        return nethserver.system.users.addUser({
+            key: 'dummyuser',
+            expires: 'no',
+            gecos: 'Dummy User',
+            shell: '/bin/false',
+            groups: ['g1', 'g2'],
+        });
+    });
+    it('editUser', function(){
+        sandbox.stub(nethserver, 'signalEvent').resolves();
+        sandbox.stub(nethserver.system.users, 'getUser').resolves({key: 'dummyuser'});
+        sandbox.stub(nethserver.system.users, 'getGroupMembers').resolves([]);
+        sandbox.stub(nethserver.system.users, 'getUserMembership').resolves([]);
+        return nethserver.system.users.addUser({
+            key: 'dummyuser',
+            expires: 'no',
+            gecos: 'Dummy User',
+            shell: '/bin/false',
+            groups: ['g1', 'g2'],
         });
     });
 });

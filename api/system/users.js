@@ -26,6 +26,50 @@
 
     var _ = cockpit.translate;
 
+    /*
+     * Returns the elements of a1 that are not in a2
+     */
+    function arrayDiff(a1, a2) {
+        return a1.filter(function(item){
+            if(a2.indexOf(item) >= 0) {
+                return true;
+            }
+            return false;
+        });
+    }
+
+    function saveGroups(user) {
+        return nethserver.system.users.getUserMembership(user.key).
+        then(function(curGroups){
+            var bigPromise = Promise.resolve(); // the head of a promises chain
+            var curPromise = bigPromise;
+
+            // iterate over added groups and chain promises:
+            arrayDiff(user.groups, curGroups).forEach(function(group){
+                curPromise = curPromise.
+                then(function(){
+                    return nethserver.system.users.getGroupMembers(group);
+                }). // appends members retriever
+                then(function(members){
+                    return nethserver.signalEvent('group-modify', [group, user.key].concat(members));
+                }); // appends group updater
+            });
+
+            // iterate over removed groups and chain promises:
+            arrayDiff(curGroups, user.groups).forEach(function(group){
+                curPromise = curPromise.
+                then(function(){
+                    return nethserver.system.users.getGroupMembers(group);
+                }). // appends members retriever
+                then(function(members){
+                    return nethserver.signalEvent('group-modify', [group].concat(arrayDiff(members, [user.key])));
+                }); // appends group updater
+            });
+
+            return bigPromise;
+        });
+    }
+
     /**
      * @namespace
      */
@@ -134,7 +178,7 @@
          * Get user list of the given group
          *
          * @example
-         * nethserver.system.users.getUser(mygroup).then(function(users) {
+         * nethserver.system.users.getGroupMembers(mygroup).then(function(users) {
          *    // print users of th group
          * });
          * //Output:
@@ -331,42 +375,41 @@
                         }
                     });
                 }
+                return nethserver.signalEvent('user-create', [user.key, user.gecos, user.shell]);
             }).
-            then(function() {
-                return nethserver.signalEvent('user-modify', [user.key, user.gecos, user.shell]);
-            }).
-            then(function() {
-                var bigPromise = Promise.resolve(); // the head of a promises chain
-                var curPromise = bigPromise;
-                user.groups.forEach(function(group){ // iterate over groups to chain promises
-                    curPromise = curPromise.
-                    then(function(){
-                        return nethserver.system.users.getGroupMembers(group);
-                    }). // appends members retriever
-                    then(function(members){
-                        return nethserver.signalEvent('group-modify', [group, user.key].concat(members));
-                    }); // appends group updater
-                });
-                return bigPromise;
+            then(function(){
+                return saveGroups(user);
             }).
             then(function(){
                 return nethserver.signalEvent('password-policy-update', [user.key, user.expires]);
             });
         },
 
+        /**
+         * Edit an existing user
+         *
+         * @see {@link #addUser}
+         * @param {UserDetails} user - User to be added
+         * @return {Promise} - A promise on success, throws an error otherwise
+         */
         editUser: function(user) {
             return this.getUser(user).then(function(obj) {
-                if ($.isEmptyObject(obj)) {
+                if ( ! obj.hasOwnProperty(user.key)) {
                     throw new nethserver.Error({
                         id: 1508246624788,
                         type: 'NotFound',
                         attributes: {
-                            'key': 'User not found',
+                            'key': _('User not found'),
                         }
                     });
                 }
-            }).then(function() {
-                //TODO: validate and edit the user
+                return nethserver.signalEvent('user-modify', [user.key, user.gecos, user.shell]);
+            }).
+            then(function(){
+                return saveGroups(user);
+            }).
+            then(function(){
+                return nethserver.signalEvent('password-policy-update', [user.key, user.expires]);
             });
         },
 
