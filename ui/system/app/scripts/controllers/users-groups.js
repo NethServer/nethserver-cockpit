@@ -264,6 +264,8 @@ angular.module('systemAngularApp')
       $scope.objects.newUser.isEdit = true;
       $scope.objects.newUser.isPassEdit = false;
       $scope.objects.newUser.loadGroups = true;
+      $scope.objects.newUser.expires = ($scope.objects.newUser.expires == true || $scope.objects.newUser.expires == 'yes') ? true : false;
+      $scope.objects.newUser.shell = ($scope.objects.newUser.shell == true || $scope.objects.newUser.shell == '/bin/bash') ? true : false;
       nethserver.system.users.getUserMembership(ku).then(function (groups) {
         $scope.objects.newUser.groups = groups;
         $scope.objects.newUser.loadGroups = false;
