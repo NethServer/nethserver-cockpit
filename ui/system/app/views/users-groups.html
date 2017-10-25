@@ -15,7 +15,7 @@
       <div id="providerDetails" class="panel-collapse collapse">
         <dl class="dl-horizontal">
           <span ng-hide="k == 'isAD' || k == 'isLdap'" ng-repeat="(k,v) in localSystem.users.providerInfo">
-            <dt>{{k}}</dt>
+            <dt>{{k | capitalize}}</dt>
             <dd>{{v}}</dd>
           </span>
         </dl>
@@ -86,7 +86,7 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
               <li>
-                <a ng-click="openChangePassword(u)" href="">
+                <a ng-click="openChangePassword(ku, u)" href="">
                   <span class="fa fa-key span-right-margin"></span>
                   {{'Change password' | translate}}</a>
               </li>
@@ -218,7 +218,7 @@
               </button>
             </div>
           </div>
-          <div class="form-group">
+          <div ng-if="!(objects.newUser.isEdit && !objects.newUser.isPassEdit)" class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Password' | translate}}</label>
             <div class="col-sm-7">
               <input required type="{{objects.newUser.isPassGenerated ? 'text' : 'password'}}" ng-model="objects.newUser.password" class="form-control">
@@ -227,14 +227,14 @@
               <button ng-click="generatePassword()" type="button" class="btn btn-primary">{{'Generate' | translate}}</button>
             </div>
           </div>
-          <div class="form-group">
+          <div ng-if="!(objects.newUser.isEdit && !objects.newUser.isPassEdit)" class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Confirm password' | translate}}</label>
             <div class="col-sm-7">
               <input required type="{{objects.newUser.isPassGenerated ? 'text' : 'password'}}" ng-model="objects.newUser.confirmPassword"
                 class="form-control">
             </div>
           </div>
-          <div class="form-group">
+          <div ng-if="!(objects.newUser.isEdit && !objects.newUser.isPassEdit)" class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Strength' | translate}}</label>
             <div class="col-sm-7">
               <ng-password-meter strength="objects.newUser.passwordStrength" password="objects.newUser.password"></ng-password-meter>
@@ -250,7 +250,7 @@
           <div ng-if="!objects.newUser.isPassEdit" class="form-group">
             <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Remote shell (SSH)' | translate}}</label>
             <div class="col-sm-9">
-              <input type="checkbox" ng-model="objects.newUser.remoteShell">
+              <input type="checkbox" ng-model="objects.newUser.shell">
             </div>
           </div>
         </div>
@@ -602,12 +602,10 @@
                         <input ng-if="k == 'StartTls'" type="checkbox" ng-model="v" ng-checked="v == 'enabled'" ng-click="changeStartTLS(v)">
 
                         <span ng-if="k == 'BindType'">{{'Authenticated' | translate}}</span>
-                        <input ng-if="k == 'BindType'" type="radio" ng-model="objects.newProvider.info.BindType"
-                          value="authenticated" class="span-right-margin-lg">
+                        <input ng-if="k == 'BindType'" type="radio" ng-model="objects.newProvider.info.BindType" value="authenticated" class="span-right-margin-lg">
 
                         <span ng-if="k == 'BindType'">{{'Anonymous' | translate}}</span>
-                        <input ng-if="k == 'BindType'" type="radio" ng-model="objects.newProvider.info.BindType"
-                          value="anonymous">
+                        <input ng-if="k == 'BindType'" type="radio" ng-model="objects.newProvider.info.BindType" value="anonymous">
                       </div>
                     </div>
 
