@@ -34,101 +34,36 @@ angular.module('systemAngularApp')
 
     $scope.enableService = function (service) {
       nethserver.system.services.enableService(service).then(function (services) {
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Enabled'),
-          message: $filter('translate')('Service enabled with success'),
-          status: 'success',
-        });
       }, function (err) {
         console.error(err);
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('Service not enabled'),
-          status: 'danger',
-        });
-        $scope.$apply();
       });
     }
 
     $scope.disableService = function (service) {
       nethserver.system.services.disableService(service).then(function () {
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Disabled'),
-          message: $filter('translate')('Service disabled with success'),
-          status: 'success',
-        });
       }, function (err) {
         console.error(err);
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('Service not disabled'),
-          status: 'danger',
-        });
-        $scope.$apply();
       });
     }
 
     $scope.startService = function (service) {
       nethserver.system.services.startService(service).then(function () {
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Started'),
-          message: $filter('translate')('Service started with success'),
-          status: 'success',
-        });
       }, function (err) {
         console.error(err);
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('Service not started'),
-          status: 'danger',
-        });
-        $scope.$apply();
       });
     }
 
     $scope.stopService = function (service) {
       nethserver.system.services.stopService(service).then(function () {
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Stopped'),
-          message: $filter('translate')('Service stopped with success'),
-          status: 'success',
-        });
       }, function (err) {
         console.error(err);
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('Service not stopped'),
-          status: 'danger',
-        });
-        $scope.$apply();
       });
     }
 
     $scope.restartService = function (service) {
       nethserver.system.services.restartService(service).then(function () {
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Restarted'),
-          message: $filter('translate')('Service restarted with success'),
-          status: 'success',
-        });
       }, function (err) {
         console.error(err);
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('Service not restarted'),
-          status: 'danger',
-        });
-        $scope.$apply();
       });
     }
 

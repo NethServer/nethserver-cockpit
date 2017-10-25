@@ -303,7 +303,9 @@ iframe>.breadcrumb {
   margin-top: 1px;
 }
 
-.animate-repeat {}
+.animate-repeat {
+  position: fixed;
+}
 
 .animate-repeat.ng-move,
 .animate-repeat.ng-enter,

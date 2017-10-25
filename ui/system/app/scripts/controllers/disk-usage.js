@@ -47,26 +47,9 @@ angular.module('systemAngularApp')
         $scope.diskUpdateAt();
         $scope.getJSONUsage();
         $scope.objects.onLoad = false;
-
-        // notification
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Updated'),
-          message: $filter('translate')('Disk usage data updated with success'),
-          status: 'success',
-        });
         $scope.$apply();
       }, function (err) {
         console.error(err);
-
-        // notification
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('Disk udage data not updated'),
-          status: 'danger',
-        });
-        $scope.$apply();
       });
     };
 

@@ -8,7 +8,7 @@
  * Controller of the systemAngularApp
  */
 angular.module('systemAngularApp')
-  .controller('InitCtrl', function ($scope, $route, $location) {
+  .controller('InitCtrl', function ($scope, $route, $location, $filter) {
     // show body when angular is fully loaded
     $('body').show();
 
@@ -113,13 +113,19 @@ angular.module('systemAngularApp')
     // events listeners
     nethserver.eventMonitor.addEventListener('nsevent.succeeded', function (success) {
       $scope.notifications.task.hide();
+      $scope.notifications.add({
+        type: 'info',
+        title: $filter('translate')('Saved'),
+        message: $filter('translate')('Configuration saved with success'),
+        status: 'success',
+      });
       $scope.$apply();
     });
     nethserver.eventMonitor.addEventListener('nsevent.failed', function (fail) {
       $scope.notifications.add({
         type: 'info',
-        title: fail.detail.title,
-        message: fail.detail.message,
+        title: $filter('translate')('Error'),
+        message: $filter('translate')('Configuration not saved'),
         status: 'danger',
       });
       $scope.$apply();

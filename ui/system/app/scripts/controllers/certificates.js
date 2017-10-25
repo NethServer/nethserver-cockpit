@@ -98,13 +98,6 @@ angular.module('systemAngularApp')
       $scope.cleanErrors();
       nethserver.system.certificates.uploadCertificate(certificate).then(function () {
         $('#uploadCertificateModal').modal('hide');
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Uploaded'),
-          message: $filter('translate')('Certificate uploaded with success'),
-          status: 'success',
-        });
-        $scope.$apply();
       }, function (err) {
         console.error(err);
         $scope.objects.newCertificate.errorMessage = err.message;
@@ -121,13 +114,6 @@ angular.module('systemAngularApp')
       certificate.SubjectAltNames = certificate.SubjectAltNames.split(/[,\s]+/);
       nethserver.system.certificates.generateSelfSignedCertificate(certificate).then(function () {
         $('#editCertificateModal').modal('hide');
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Saved'),
-          message: $filter('translate')('Certificate info edited with success'),
-          status: 'success',
-        });
-        $scope.$apply();
       }, function (err) {
         console.error(err);
         $scope.objects.newCertificate.errorMessage = err.message;
@@ -146,12 +132,6 @@ angular.module('systemAngularApp')
       nethserver.system.certificates.requestLetsEncryptCertificate(certificate).then(function () {
         $('#requestLetsEncryptModal').modal('hide');
         $scope.objects.newCertificate.testLetsEncrypt = false;
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Done'),
-          message: $filter('translate')('Let\'s encrypt certificate requested with success'),
-          status: 'success',
-        });
         $scope.$apply();
       }, function (err) {
         console.error(err);
@@ -164,22 +144,8 @@ angular.module('systemAngularApp')
 
     $scope.setDefault = function (certificate) {
       nethserver.system.certificates.selectDefaultCertificate(certificate).then(function () {
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Saved'),
-          message: $filter('translate')('Certificate set as default'),
-          status: 'success',
-        });
-        $scope.$apply();
       }, function (err) {
         console.error(err);
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('Certificate not set as default'),
-          status: 'danger',
-        });
-        $scope.$apply();
       });
     };
 

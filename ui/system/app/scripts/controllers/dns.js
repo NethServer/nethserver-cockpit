@@ -35,10 +35,10 @@ angular.module('systemAngularApp')
       });
     };
 
-    $scope.cleanErrors = function() {
-      $scope.objects.newDNS.errorMessage = null;
-      $scope.objects.newDNS.errorProps = null;
-      $scope.objects.newDNS.onTaskRunning = false;
+    $scope.cleanErrors = function () {
+      delete $scope.objects.newDNS.errorMessage;
+      delete $scope.objects.newDNS.errorProps;
+      delete $scope.objects.newDNS.onTaskRunning;
     };
 
     $scope.saveDNS = function (host) {
@@ -46,12 +46,6 @@ angular.module('systemAngularApp')
       if (host.isEdit) {
         nethserver.system.dns.editRemoteHost(host).then(function () {
           $('#newDNSModal').modal('hide');
-          $scope.notifications.add({
-            type: 'info',
-            title: $filter('translate')('Edited'),
-            message: $filter('translate')('DNS record edited with success'),
-            status: 'success',
-          });
         }, function (err) {
           console.log(err);
           if (err.type == 'TaskRun') {
@@ -66,12 +60,6 @@ angular.module('systemAngularApp')
       } else {
         nethserver.system.dns.addRemoteHost(host).then(function () {
           $('#newDNSModal').modal('hide');
-          $scope.notifications.add({
-            type: 'info',
-            title: $filter('translate')('Saved'),
-            message: $filter('translate')('DNS record added with success'),
-            status: 'success',
-          });
         }, function (err) {
           console.log(err);
           if (err.type == 'TaskRun') {
@@ -85,13 +73,13 @@ angular.module('systemAngularApp')
         });
       }
     };
-    $scope.newDNS = function (host) {
+    $scope.newDNS = function () {
       $scope.objects.newDNS = {};
       $('#newDNSModal').modal('show');
     };
     $scope.editDNS = function (host) {
       $scope.cleanErrors();
-      $scope.objects.newDNS = angular.copy(host) || {};
+      $scope.objects.newDNS = host;
       $scope.objects.newDNS.isEdit = true;
       $('#newDNSModal').modal('show');
     };

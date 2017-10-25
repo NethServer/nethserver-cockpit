@@ -131,21 +131,8 @@ angular.module('systemAngularApp')
       if ($scope.localSystem.summary.hostname !== $scope.localSystem.summary.newHostname) {
         nethserver.system.summary.setHostname(hostname).then(function () {
           $scope.localSystem.summary.hostname = hostname;
-          $scope.notifications.add({
-            type: 'info',
-            title: $filter('translate')('Hostname changed'),
-            message: $filter('translate')('Hostname changed with success'),
-            status: 'success',
-          });
           $scope.$apply();
         }, function (err) {
-          $scope.notifications.add({
-            type: 'info',
-            title: $filter('translate')('Error'),
-            message: $filter('translate')('Event failed'),
-            status: 'danger',
-          });
-          $scope.$apply();
         });
       }
 
@@ -153,22 +140,8 @@ angular.module('systemAngularApp')
       nethserver.system.dns.setAliases($scope.localSystem.summary.aliases.map(function (val) {
         return val.key;
       })).then(function () {
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Saved'),
-          message: $filter('translate')('Aliases saved with success'),
-          status: 'success',
-        });
-        $scope.getAllAliases();
       }, function (err) {
         console.error(err);
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('Aliases not saved'),
-          status: 'danger',
-        });
-        $scope.$apply();
       });
 
     };
@@ -200,23 +173,10 @@ angular.module('systemAngularApp')
             readDns: val,
             dns: val
           }
-        });;
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Saved'),
-          message: $filter('translate')('DNS servers saved with success'),
-          status: 'success',
         });
         $scope.$apply();
       }, function (err) {
         console.error(err);
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('DNS servers not saved'),
-          status: 'danger',
-        });
-        $scope.$apply();
       });
     };
 
@@ -238,22 +198,8 @@ angular.module('systemAngularApp')
         NTPServer: $scope.localSystem.summary.newNtpServer
       }).then(function (info) {
         $('#systimeChangeModal').modal('hide');
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Saved'),
-          message: $filter('translate')('System date and time saved with success'),
-          status: 'success',
-        });
-        $scope.$apply();
       }, function (err) {
         console.error(err);
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('System date and time not saved'),
-          status: 'danger',
-        });
-        $scope.$apply();
       });
 
     };
@@ -268,22 +214,9 @@ angular.module('systemAngularApp')
 
       nethserver.system.organization.saveInfo(organization).then(function () {
         $scope.localSystem.organization = organization;
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Saved'),
-          message: $filter('translate')('Company info saved with success'),
-          status: 'success',
-        });
         $scope.$apply();
       }, function (err) {
         console.error(err);
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('Company info not saved'),
-          status: 'danger',
-        });
-        $scope.$apply();
       });
     };
 
@@ -305,13 +238,6 @@ angular.module('systemAngularApp')
             $scope.$apply();
           }, function (err) {
             console.error(err);
-            $scope.notifications.add({
-              type: 'info',
-              title: $filter('translate')('Error'),
-              message: $filter('translate')('System not rebooted'),
-              status: 'danger',
-            });
-            $scope.$apply();
           });
           break;
 
@@ -326,13 +252,6 @@ angular.module('systemAngularApp')
             $scope.$apply();
           }, function (err) {
             console.error(err);
-            $scope.notifications.add({
-              type: 'info',
-              title: $filter('translate')('Error'),
-              message: $filter('translate')('System not shutted down'),
-              status: 'danger',
-            });
-            $scope.$apply();
           });
           break;
       }
@@ -373,4 +292,8 @@ angular.module('systemAngularApp')
 
     $scope.initGraphics();
     $scope.initRoutes();
+
+    nethserver.eventMonitor.addEventListener('nsevent.succeeded', function (success) {
+      $scope.getAllAliases();
+    });
   });

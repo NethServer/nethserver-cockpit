@@ -84,7 +84,7 @@
       <form class="form-horizontal" ng-submit="saveDNS(objects.newDNS)">
 
         <div class="modal-body">
-          <div ng-show="objects.newDNS.onTaskRunning" class="alert alert-warning alert-dismissable">
+          <div ng-if="objects.newDNS.onTaskRunning" class="alert alert-warning alert-dismissable">
             <span class="pficon pficon-warning-triangle-o"></span>
             <strong>{{'Running task' | translate}}.</strong> {{objects.newDNS.errorMessage | translate}}
           </div>
