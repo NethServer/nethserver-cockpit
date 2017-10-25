@@ -24,7 +24,7 @@
         return;
     }
 
-    var _ = cockpit.translate;
+    var _ = cockpit.gettext;
 
     /*
      * Returns the elements of a1 that are not in a2
@@ -32,17 +32,16 @@
     function arrayDiff(a1, a2) {
         return a1.filter(function(item){
             if(a2.indexOf(item) >= 0) {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         });
     }
 
     function saveGroups(user) {
         return nethserver.system.users.getUserMembership(user.key).
         then(function(curGroups){
-            var bigPromise = Promise.resolve(); // the head of a promises chain
-            var curPromise = bigPromise;
+            var curPromise = Promise.resolve(); // the head of a promises chain
 
             // iterate over added groups and chain promises:
             arrayDiff(user.groups, curGroups).forEach(function(group){
@@ -51,6 +50,9 @@
                     return nethserver.system.users.getGroupMembers(group);
                 }). // appends members retriever
                 then(function(members){
+                    if(members.indexOf(user.key) > -1) {
+                        return; // already member, skip.
+                    }
                     return nethserver.signalEvent('group-modify', [group, user.key].concat(members));
                 }); // appends group updater
             });
@@ -62,11 +64,14 @@
                     return nethserver.system.users.getGroupMembers(group);
                 }). // appends members retriever
                 then(function(members){
+                    if(members.indexOf(user.key) == -1) {
+                        return; // not member, skip.
+                    }
                     return nethserver.signalEvent('group-modify', [group].concat(arrayDiff(members, [user.key])));
                 }); // appends group updater
             });
 
-            return bigPromise;
+            return curPromise;
         });
     }
 
@@ -365,7 +370,8 @@
          * @return {Promise} - A promise on success, throws an error otherwise
          */
         addUser: function(user) {
-            return this.getUser(user.key).then(function(obj) {
+            return this.getUser(user.key).
+            then(function(obj) {
                 if(obj.hasOwnProperty(user.key)) {
                     throw new nethserver.Error({
                         id: 1150824817076,
@@ -393,7 +399,8 @@
          * @return {Promise} - A promise on success, throws an error otherwise
          */
         editUser: function(user) {
-            return this.getUser(user).then(function(obj) {
+            return this.getUser(user.key).
+            then(function(obj) {
                 if ( ! obj.hasOwnProperty(user.key)) {
                     throw new nethserver.Error({
                         id: 1508246624788,
@@ -427,7 +434,7 @@
          */
         deleteUser: function(user) {
             return this.getUser(user).then(function(obj) {
-                if ($.isEmptyObject(obj)) {
+                if ( ! obj.hasOwnProperty(user)) {
                     throw new nethserver.Error({
                         id: 1508246496389,
                         type: 'NotFound',

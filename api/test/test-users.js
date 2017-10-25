@@ -57,30 +57,67 @@ describe('users namespace', function(){
         });
     });
     it('addUser', function(){
-        sandbox.stub(nethserver, 'signalEvent').resolves();
+        function fakeGroupMembers(group) {
+            var v;
+            if(group == 'g1') {
+                v = [];
+            } else if(group == 'g2') {
+                v = ['otheruser'];
+            } else {
+                v = ['otheruser', 'fakeuser'];
+            }
+            return Promise.resolve(v);
+        }
+        var signalEventStub = sandbox.stub(nethserver, 'signalEvent').callsFake(function(){console.log(arguments); return  Promise.resolve();});
         sandbox.stub(nethserver.system.users, 'getUser').resolves({});
-        sandbox.stub(nethserver.system.users, 'getGroupMembers').resolves([]);
-        sandbox.stub(nethserver.system.users, 'getUserMembership').resolves([]);
+        sandbox.stub(nethserver.system.users, 'getGroupMembers').callsFake(fakeGroupMembers);
+        var getUserMembershipStub = sandbox.stub(nethserver.system.users, 'getUserMembership').resolves([]);
         return nethserver.system.users.addUser({
             key: 'dummyuser',
             expires: 'no',
             gecos: 'Dummy User',
             shell: '/bin/false',
             groups: ['g1', 'g2'],
+        }).then(function(){
+            getUserMembershipStub.should.be.calledOnce();
+            signalEventStub.should.be.calledWithMatch('user-create', sinon.match.array.deepEquals(['dummyuser', 'Dummy User', '/bin/false']));
+            signalEventStub.should.be.calledWithMatch('group-modify', sinon.match.array.startsWith(['g1', 'dummyuser']));
+            signalEventStub.should.be.calledWithMatch('group-modify', sinon.match.array.deepEquals(['g2', 'dummyuser', 'otheruser']));
+            signalEventStub.should.be.calledWithMatch('password-policy-update', sinon.match.array.deepEquals(['dummyuser', 'no']));
         });
     });
     it('editUser', function(){
-        sandbox.stub(nethserver, 'signalEvent').resolves();
-        sandbox.stub(nethserver.system.users, 'getUser').resolves({key: 'dummyuser'});
-        sandbox.stub(nethserver.system.users, 'getGroupMembers').resolves([]);
-        sandbox.stub(nethserver.system.users, 'getUserMembership').resolves([]);
-        return nethserver.system.users.addUser({
+        function fakeGroupMembers(group) {
+            var v;
+            if(group == 'g1') {
+                v = ['dummyuser'];
+            } else if(group == 'g2') {
+                v = ['otheruser'];
+            } else if(group == 'g3') {
+                v = ['dummyuser', 'otheruser'];
+            } else {
+                v = ['otheruser', 'fakeuser'];
+            }
+            return Promise.resolve(v);
+        }
+        var signalEventStub = sandbox.stub(nethserver, 'signalEvent').resolves();
+        sandbox.stub(nethserver.system.users, 'getUser').resolves({'dummyuser': {}});
+        sandbox.stub(nethserver.system.users, 'getGroupMembers').callsFake(fakeGroupMembers);
+        sandbox.stub(nethserver.system.users, 'getUserMembership').resolves(['g1', 'g3']);
+        return nethserver.system.users.editUser({
             key: 'dummyuser',
             expires: 'no',
             gecos: 'Dummy User',
             shell: '/bin/false',
             groups: ['g1', 'g2'],
+        }).then(function(){
+            signalEventStub.should.be.calledWith('user-modify');
+            signalEventStub.should.not.be.calledWithMatch('group-modify', sinon.match.array.deepEquals(['g1', 'dummyuser']));
+            signalEventStub.should.be.calledWithMatch('group-modify', sinon.match.array.deepEquals(['g2', 'dummyuser', 'otheruser']));
+            signalEventStub.should.be.calledWithMatch('group-modify', sinon.match.array.deepEquals(['g3', 'otheruser']));
+            signalEventStub.should.be.calledWith('password-policy-update');
         });
+
     });
 });
 
