@@ -147,6 +147,17 @@ angular.module('systemAngularApp')
       $scope.goTo('/');
     };
 
+    $scope.cleanUserErrors = function() {
+      delete $scope.objects.newUser.errorMessage;
+      delete $scope.objects.newUser.errorProps;
+      delete $scope.objects.newUser.onTaskRunning;
+    };
+    $scope.cleanGroupErrors = function() {
+      delete $scope.objects.newGroup.errorMessage;
+      delete $scope.objects.newGroup.errorProps;
+      delete $scope.objects.newGroup.onTaskRunning;
+    };
+
     $scope.getInfo = function () {
       nethserver.system.provider.getInfo().then(function (provider) {
         $scope.localSystem.users.provider = provider.isAD ? 'ad' : provider.isLdap ? 'ldap' : null;
@@ -216,8 +227,8 @@ angular.module('systemAngularApp')
     $scope.generatePassword = function () {
       $scope.objects.newUser.isPassGenerated = true;
       nethserver.system.users.mkpasswd().then(function (password) {
-        $scope.objects.newUser.password = password;
-        $scope.objects.newUser.confirmPassword = password;
+        $scope.objects.newUser.password = password.trim();
+        $scope.objects.newUser.confirmPassword = password.trim();
         $scope.$apply();
       }, function (err) {
         console.error(err);
@@ -234,15 +245,11 @@ angular.module('systemAngularApp')
       $('#createUserModal').modal('show');
     };
     $scope.createUser = function (user) {
+      user.expires = user.expires ? 'yes' : 'no';
+      user.shell = user.shell ? '/bin/bash' : '/usr/libexec/openssh/sftp-server';
+      $scope.cleanUserErrors();
       nethserver.system.users.addUser(user).then(function () {
         $('#createUserModal').modal('hide');
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Created'),
-          message: $filter('translate')('User created with success'),
-          status: 'success',
-        });
-        $scope.$apply();
       }, function (err) {
         console.error(err);
         $scope.objects.newUser.errorMessage = err.message;
@@ -257,6 +264,8 @@ angular.module('systemAngularApp')
       $scope.objects.newUser.isEdit = true;
       $scope.objects.newUser.isPassEdit = false;
       $scope.objects.newUser.loadGroups = true;
+      $scope.objects.newUser.expires = ($scope.objects.newUser.expires == true || $scope.objects.newUser.expires == 'yes') ? true : false;
+      $scope.objects.newUser.shell = ($scope.objects.newUser.shell == true || $scope.objects.newUser.shell == '/bin/bash') ? true : false;
       nethserver.system.users.getUserMembership(ku).then(function (groups) {
         $scope.objects.newUser.groups = groups;
         $scope.objects.newUser.loadGroups = false;
@@ -268,14 +277,11 @@ angular.module('systemAngularApp')
       $('#createUserModal').modal('show');
     };
     $scope.editUser = function (user) {
+      user.expires = user.expires ? 'yes' : 'no';
+      user.shell = user.shell ? '/bin/bash' : '/usr/libexec/openssh/sftp-server';
+      $scope.cleanUserErrors();
       nethserver.system.users.editUser(user).then(function () {
         $('#createUserModal').modal('hide');
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Edited'),
-          message: $filter('translate')('User edited with success'),
-          status: 'success',
-        });
         $scope.$apply();
       }, function (err) {
         console.error(err);
@@ -284,21 +290,17 @@ angular.module('systemAngularApp')
         $scope.$apply();
       });
     };
-    $scope.openChangePassword = function (user) {
+    $scope.openChangePassword = function (ku, user) {
       $scope.objects.newUser = user;
+      $scope.objects.newUser.key = ku;
       $scope.objects.newUser.isEdit = true;
       $scope.objects.newUser.isPassEdit = true;
       $('#createUserModal').modal('show');
     };
     $scope.changePassword = function (user) {
-      nethserver.system.users.changePassword(user).then(function () {
+      $scope.cleanUserErrors();
+      nethserver.system.users.setPassword(user.key, user.password).then(function () {
         $('#createUserModal').modal('hide');
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Changed'),
-          message: $filter('translate')('User password changed with success'),
-          status: 'success',
-        });
         $scope.$apply();
       }, function (err) {
         console.error(err);
@@ -315,24 +317,11 @@ angular.module('systemAngularApp')
       $('#deleteModal').modal('show');
     };
     $scope.deleteUser = function (user) {
+      $scope.cleanUserErrors();
       nethserver.system.users.deleteUser(user.key).then(function () {
         $('#deleteModal').modal('hide');
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Deleted'),
-          message: $filter('translate')('User deleted with success'),
-          status: 'success',
-        });
-        $scope.$apply();
       }, function (err) {
         console.error(err);
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('User not deleted'),
-          status: 'success',
-        });
-        $scope.$apply();
       });
     };
 
@@ -344,15 +333,9 @@ angular.module('systemAngularApp')
       $('#createGroupModal').modal('show');
     };
     $scope.addGroup = function (group) {
+      $scope.cleanGroupErrors();
       nethserver.system.users.addGroup(group).then(function () {
         $('#createGroupModal').modal('hide');
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Created'),
-          message: $filter('translate')('Group created with success'),
-          status: 'success',
-        });
-        $scope.$apply();
       }, function (err) {
         console.error(err);
         $scope.objects.newGroup.errorMessage = err.message;
@@ -377,15 +360,9 @@ angular.module('systemAngularApp')
       $('#createGroupModal').modal('show');
     };
     $scope.editGroup = function (group) {
+      $scope.cleanGroupErrors();
       nethserver.system.users.editGroup(group).then(function () {
         $('#createGroupModal').modal('hide');
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Edited'),
-          message: $filter('translate')('Group edited with success'),
-          status: 'success',
-        });
-        $scope.$apply();
       }, function (err) {
         console.error(err);
         $scope.objects.newGroup.errorMessage = err.message;
@@ -401,28 +378,15 @@ angular.module('systemAngularApp')
       $('#deleteModal').modal('show');
     };
     $scope.deleteGroup = function (group) {
+      $scope.cleanGroupErrors();
       nethserver.system.users.deleteGroup(group.key).then(function () {
         $('#deleteModal').modal('hide');
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Deleted'),
-          message: $filter('translate')('Group deleted with success'),
-          status: 'success',
-        });
-        $scope.$apply();
       }, function (err) {
         console.error(err);
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('Group not deleted'),
-          status: 'success',
-        });
-        $scope.$apply();
       });
     };
 
-    $scope.updateValues = function(k,v) {
+    $scope.updateValues = function (k, v) {
       $scope.objects.newProvider.info[k] = v;
     };
 
@@ -442,22 +406,8 @@ angular.module('systemAngularApp')
     $scope.bindToRemoteLdap = function (newProvider) {
       nethserver.system.provider.bindToRemoteLdap(newProvider.info).then(function () {
         $('#accountProviderWizard').modal('hide');
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Success'),
-          message: $filter('translate')('Bind to remote LDAP done'),
-          status: 'success',
-        });
-        $scope.$apply();
       }, function (err) {
         console.error(err);
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('Bind to remote LDAP failed'),
-          status: 'success',
-        });
-        $scope.$apply();
       });
     };
     $scope.changeBindType = function (v) {
@@ -485,22 +435,9 @@ angular.module('systemAngularApp')
     $scope.installLDAP = function () {
       nethserver.system.provider.installLocalLdap().then(function () {
         $('#accountProviderWizard').modal('hide');
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Success'),
-          message: $filter('translate')('Local LDAP installed successfully'),
-          status: 'success',
-        });
         $scope.$apply();
       }, function (err) {
         console.error(err);
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('Local LDAP installation failed'),
-          status: 'success',
-        });
-        $scope.$apply();
       });
     };
 
@@ -522,44 +459,16 @@ angular.module('systemAngularApp')
     $scope.joinADomain = function (newProvider) {
       nethserver.system.provider.joinDomain(newProvider.info).then(function () {
         $('#accountProviderWizard').modal('hide');
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Success'),
-          message: $filter('translate')('Join to Active Directory done'),
-          status: 'success',
-        });
-        $scope.$apply();
       }, function (err) {
         console.error(err);
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('Join to Active Directory failed'),
-          status: 'success',
-        });
-        $scope.$apply();
       });
     };
 
     $scope.createDC = function (newProvider) {
       nethserver.system.provider.installLocalAd(newProvider).then(function () {
         $('#accountProviderWizard').modal('hide');
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Success'),
-          message: $filter('translate')('Join to Active Directory done'),
-          status: 'success',
-        });
-        $scope.$apply();
       }, function (err) {
         console.error(err);
-        $scope.notifications.add({
-          type: 'info',
-          title: $filter('translate')('Error'),
-          message: $filter('translate')('Join to Active Directory failed'),
-          status: 'success',
-        });
-        $scope.$apply();
       });
     };
 
