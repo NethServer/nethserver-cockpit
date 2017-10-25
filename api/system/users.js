@@ -322,31 +322,29 @@
                 "cat - > ${FILE}\n" +
                 "echo -n ${FILE}\n";
 
-            var tmpFile;
-            function cleanupTemp(files) {
-                return Promise.resolve(cockpit.spawn(['/usr/bin/rm', '-f'].concat(files)));
-            }
-
             return Promise.resolve(cockpit.script(tmpdump).input(password)).
             then(function(tmpf){
-                tmpFile = tmpf;
-                return nethserver.validate('password-strength', ['Users', tmpFile], {
+                return nethserver.validate('password-strength', ['Users', tmpf], {
                     id: 1508425739146,
                     type: 'NotValid',
                     message: _('The given password does not meet the current policy'),
+                }).
+                then(function(){
+                    function cleanupTemp(files) {
+                        return Promise.resolve(cockpit.spawn(['/usr/bin/rm', '-f'].concat(files)));
+                    }
+                    var p = nethserver.system.hostname.getDomainName().
+                    then(function(domainName){
+                        return nethserver.signalEvent('password-modify', [user + '@' + domainName, tmpf]);
+                    }).
+                    then(function(){
+                        cleanupTemp([tmpf]);
+                    }, function(ex){
+                        cleanupTemp([tmpf]);
+                        throw ex;
+                    });
+                    return {promise: p};
                 });
-            }).
-            then(function(){
-                return nethserver.system.hostname.getDomainName();
-            }).
-            then(function(domainName){
-                return nethserver.signalEvent('password-modify', [user + '@' + domainName, tmpFile]);
-            }).
-            then(function(){
-                cleanupTemp([tmpFile]);
-            }, function(ex){
-                cleanupTemp([tmpFile]);
-                throw ex;
             });
         },
 
@@ -360,14 +358,14 @@
          *     "gecos": "Name Surname",
          *     "shell": "/bin/false",
          *     "groups": ["thisgroup", "thatgroup"],
+         *     "password": "S3cr3t",
          * }).
          * then(function() {
          *    return nethserver.system.users.setPassword('myuser', 'password')
          * });
          *
          * @param {UserDetails} user - User to be added
-         *
-         * @return {Promise} - A promise on success, throws an error otherwise
+         * @return {Promise}
          */
         addUser: function(user) {
             return this.getUser(user.key).
@@ -381,13 +379,19 @@
                         }
                     });
                 }
-                return nethserver.signalEvent('user-create', [user.key, user.gecos, user.shell]);
-            }).
-            then(function(){
-                return saveGroups(user);
-            }).
-            then(function(){
-                return nethserver.signalEvent('password-policy-update', [user.key, user.expires]);
+                var p = nethserver.signalEvent('user-create', [user.key, user.gecos, user.shell]).
+                then(function(){
+                    return saveGroups(user);
+                }).
+                then(function(){
+                    return nethserver.signalEvent('password-policy-update', [user.key, user.expires]);
+                });
+                if(user.password) {
+                    p = p.then(function(){
+                        return nethserver.system.users.setPassword(user.key, user.password);
+                    });
+                }
+                return {promise: p};
             });
         },
 
@@ -396,7 +400,7 @@
          *
          * @see {@link #addUser}
          * @param {UserDetails} user - User to be added
-         * @return {Promise} - A promise on success, throws an error otherwise
+         * @return {Promise}
          */
         editUser: function(user) {
             return this.getUser(user.key).
@@ -410,13 +414,14 @@
                         }
                     });
                 }
-                return nethserver.signalEvent('user-modify', [user.key, user.gecos, user.shell]);
-            }).
-            then(function(){
-                return saveGroups(user);
-            }).
-            then(function(){
-                return nethserver.signalEvent('password-policy-update', [user.key, user.expires]);
+                var p = nethserver.signalEvent('user-modify', [user.key, user.gecos, user.shell]).
+                then(function(){
+                    return saveGroups(user);
+                }).
+                then(function(){
+                    return nethserver.signalEvent('password-policy-update', [user.key, user.expires]);
+                });
+                return {promise: p};
             });
         },
 
