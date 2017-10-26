@@ -504,9 +504,9 @@ module.exports = function (grunt) {
         },
       }
       if (lang === "i18n/en_US.json") {
-        obj.dest = 'i18n/po.js';
+        obj.dest = 'dist/po/system/po.js';
       } else {
-        obj.dest = 'i18n/po.' + lang.split('/')[1].split('_')[0] + '.js';
+        obj.dest = 'dist/po/system/po.' + lang.split('/')[1].split('_')[0] + '.js';
       }
       globalObj.i18nFiles.push(obj);
     }

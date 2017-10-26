@@ -45,7 +45,8 @@
         </div>
       </div>
     </div>
-    <span class="pficon pficon-warning-triangle-o"></span> <strong>{{notifications.task.title}}</strong>. {{notifications.task.message}}
+    <span class="pficon pficon-warning-triangle-o"></span>
+    <strong>{{notifications.task.title}}</strong>. {{notifications.task.message}}
   </div>
 
   <div class="toast-pf alert alert-{{n.status}} alert-dismissable toast-pf-top-right animate-repeat" ng-repeat="n in notifications.list"
@@ -56,7 +57,8 @@
     <div class="pull-right toast-pf-action {{n.type}}-adjust">
       <a ng-if="n.type == 'action'" ng-click="n.method()">{{n.action}}</a>
     </div>
-    <span class="pficon pficon-{{iconMap[n.status]}}"></span> <strong>{{n.title}}</strong>. {{n.message}}
+    <span class="pficon pficon-{{iconMap[n.status]}}"></span>
+    <strong>{{n.title}}</strong>. {{n.message}}
   </div>
   <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -115,7 +117,8 @@
   <!-- endbuild -->
 
   <script src="../base1/cockpit.js"></script>
-  <script src="../nethserver/po.js"></script>
+  <script src="../nethserver/po/system/po.js"></script>
+  <script src="../nethserver/po/api/po.js"></script>
   <script src="../nethserver/core.js"></script>
   <script src="../nethserver/system.js"></script>
 

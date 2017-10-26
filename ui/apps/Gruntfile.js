@@ -29,7 +29,7 @@ module.exports = function (grunt) {
   var globalObj = {
     i18nFilesList: [],
     i18nFiles: []
-  }
+  };
 
   // Define the configuration for all the tasks
   grunt.initConfig({
@@ -506,11 +506,11 @@ module.exports = function (grunt) {
         data: {
           langData: JSON.stringify(JSONdata)
         },
-      }
+      };
       if (lang === "i18n/en_US.json") {
-        obj.dest = 'i18n/po.js';
+        obj.dest = 'dist/po/apps/po.js';
       } else {
-        obj.dest = 'i18n/po.' + lang.split('/')[1].split('_')[0] + '.js';
+        obj.dest = 'dist/po/apps/po.' + lang.split('/')[1].split('_')[0] + '.js';
       }
       globalObj.i18nFiles.push(obj);
     }

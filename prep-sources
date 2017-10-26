@@ -36,11 +36,11 @@ rm -f ui/apps/nethserver-cockpit-ui-*.tar.gz
 rm -f nethserver-cockpit-{ui,api}-*.tar.gz
 
 # Install dependecies and build UI and API
-pushd api/ && npm install && grunt build && grunt release
+pushd api/ && npm install && grunt build && grunt lang-compile && grunt release
 popd
-pushd ui/system/ && npm install && bower install && grunt build && grunt release
+pushd ui/system/ && npm install && bower install && grunt build && grunt lang-compile && grunt release
 popd
-pushd ui/apps/ && npm install && bower install && grunt build && grunt release
+pushd ui/apps/ && npm install && bower install && grunt build && grunt lang-compile && grunt release
 popd
 
 # Copy API and UI tar.gz releases
