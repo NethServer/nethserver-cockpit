@@ -448,10 +448,13 @@ module.exports = function (grunt) {
       }
     },
 
-    file_append: {
-      default_options: {
+    mustache_render: {
+      your_target: {
+        options: {
+          escape: false
+        },
         files: globalObj.i18nFiles
-      }
+      },
     }
 
   });
@@ -493,18 +496,20 @@ module.exports = function (grunt) {
   grunt.registerTask('lang-create', 'Generate po.js files for each supported languages', function () {
     for (var f in globalObj.i18nFilesList) {
       var lang = globalObj.i18nFilesList[f];
+      var JSONdata = grunt.file.readJSON(lang);
       var obj = {
-        append: ");",
-        prepend: "cockpit.language(",
-        input: lang
+        template: "i18n/po.tpl",
+        data: {
+          langData: JSON.stringify(JSONdata)
+        },
       }
       if (lang === "i18n/en_US.json") {
-        obj.output = 'i18n/po.js';
+        obj.dest = 'i18n/po.js';
       } else {
-        obj.output = 'i18n/po.'+lang.split('/')[1].split('_')[0]+'.js';
+        obj.dest = 'i18n/po.' + lang.split('/')[1].split('_')[0] + '.js';
       }
       globalObj.i18nFiles.push(obj);
     }
   });
-  grunt.registerTask('lang-compile', 'Extract strings and generate en_US.pot file', ['po2json', 'shell:listFiles', 'lang-create', 'file_append']);
+  grunt.registerTask('lang-compile', 'Extract strings and generate en_US.pot file', ['po2json', 'shell:listFiles', 'lang-create', 'mustache_render']);
 };
