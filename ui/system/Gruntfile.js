@@ -496,7 +496,7 @@ module.exports = function (grunt) {
       var obj = {
         append: ");",
         prepend: "cockpit.language(",
-        input: 'i18n/en_US.json'
+        input: lang
       }
       if (lang === "i18n/en_US.json") {
         obj.output = 'i18n/po.js';
