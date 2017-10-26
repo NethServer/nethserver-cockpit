@@ -12,8 +12,6 @@ angular.module('systemAngularApp')
     // show body when angular is fully loaded
     $('body').show();
 
-    cockpit.locale('en_US.json');
-
     // variables declaration
     $scope.notifications = {
       list: [],

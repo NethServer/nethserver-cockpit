@@ -73,7 +73,7 @@ module.exports = function (grunt) {
       },
       compress: {
         command: function () {
-          return "tar cvzf nethserver-cockpit-api-"+global.gitDescribe+".tar.gz -C dist/ .";
+          return "cd dist; tar cvzf ../nethserver-cockpit-api-"+global.gitDescribe+".tar.gz *.min.js";
         }
       }
     },

@@ -17,7 +17,8 @@ module.exports = function (grunt) {
     useminPrepare: 'grunt-usemin',
     ngtemplates: 'grunt-angular-templates',
     cdnify: 'grunt-google-cdn',
-    i18nextract: 'grunt-angular-translate'
+    i18nextract: 'grunt-angular-translate',
+    po2json: 'grunt-po2json'
   });
 
   // Configurable paths for the application
@@ -25,6 +26,11 @@ module.exports = function (grunt) {
     app: require('./bower.json').appPath || 'app',
     dist: 'dist'
   };
+
+  var globalObj = {
+    i18nFilesList: [],
+    i18nFiles: []
+  }
 
   // Define the configuration for all the tasks
   grunt.initConfig({
@@ -405,6 +411,17 @@ module.exports = function (grunt) {
         command: function () {
           return "tar cvzf nethserver-cockpit-ui-system-" + global.gitDescribe + ".tar.gz -C dist/ .";
         }
+      },
+      listFiles: {
+        command: function () {
+          return "ls -1 i18n/*.json";
+        },
+        options: {
+          callback: function (err, stdout, stderr, cb) {
+            globalObj.i18nFilesList = stdout.split('\n').slice(0, -1);
+            cb();
+          }
+        }
       }
     },
 
@@ -412,9 +429,28 @@ module.exports = function (grunt) {
       default_options: {
         src: ['app/**/*.html'],
         lang: ['en_US'],
-        dest: 'pots',
+        dest: 'i18n',
         prefix: 'en_US',
-        adapter: 'pot'
+        adapter: 'pot',
+        customRegex: {
+          HtmlFilterTernary: '\\{\\{\\s*(?:::)?([^?\\}]*\\?[^:]*:[^|}]*)\\s*\\|\\s*translate(:.*?)?\\s*\\}\\}'
+        }
+      }
+    },
+
+    po2json: {
+      options: {
+        format: 'raw'
+      },
+      all: {
+        src: ['i18n/**/*.po', 'i18n/**/*.pot'],
+        dest: 'i18n/'
+      }
+    },
+
+    file_append: {
+      default_options: {
+        files: globalObj.i18nFiles
       }
     }
 
@@ -452,4 +488,23 @@ module.exports = function (grunt) {
 
   grunt.registerTask('release', 'Create release file', ['shell:describe', 'shell:compress']);
 
+  grunt.registerTask('lang-extract', 'Extract strings and generate en_US.pot file', ['i18nextract']);
+
+  grunt.registerTask('lang-create', 'Generate po.js files for each supported languages', function () {
+    for (var f in globalObj.i18nFilesList) {
+      var lang = globalObj.i18nFilesList[f];
+      var obj = {
+        append: ");",
+        prepend: "cockpit.language(",
+        input: 'i18n/en_US.json'
+      }
+      if (lang === "i18n/en_US.json") {
+        obj.output = 'i18n/po.js';
+      } else {
+        obj.output = 'i18n/po.'+lang.split('/')[1].split('_')[0]+'.js';
+      }
+      globalObj.i18nFiles.push(obj);
+    }
+  });
+  grunt.registerTask('lang-compile', 'Extract strings and generate en_US.pot file', ['po2json', 'shell:listFiles', 'lang-create', 'file_append']);
 };
