@@ -35,6 +35,14 @@ rm -f ui/apps/nethserver-cockpit-ui-*.tar.gz
 # Cleanup current sources
 rm -f nethserver-cockpit-{ui,api}-*.tar.gz
 
+# pull new languages strings
+tx pull -a
+
+# copy each pos into project directory
+cp .tx/nethserver.Cockpit-api/* api/i18n/
+cp .tx/nethserver.Cockpit-apps/* ui/apps/i18n/
+cp .tx/nethserver.Cockpit-system/* ui/system/i18n/
+
 # Install dependecies and build UI and API
 pushd api/ && npm install && grunt build && grunt lang-compile && grunt release
 popd

@@ -1,0 +1,18 @@
+[main]
+host = https://www.transifex.com
+
+[nethserver.Cockpit-apps]
+source_file = ./ui/apps/i18n/en_US.pot
+source_lang = en
+type = PO
+
+[nethserver.Cockpit-system]
+source_file = ./ui/system/i18n/en_US.pot
+source_lang = en
+type = PO
+
+[nethserver.Cockpit-api]
+source_file = ./api/i18n/en_US.pot
+source_lang = en
+type = PO
+
