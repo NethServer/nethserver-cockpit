@@ -3,7 +3,7 @@
 <div ng-show="view.isLoaded">
 
   <div ng-if="localSystem.users.provider !== null">
-    <h3>Summary</h3>
+    <h3>{{'Summary' | translate}}</h3>
     <div class="panel panel-default" id="provider-markup">
       <div class="panel-heading">
         <button id="change-provider-btn" data-toggle="modal" data-target="#changeProviderModal" class="btn btn-primary">{{'Change provider' | translate}}</button>
@@ -445,8 +445,7 @@
                   {{'No accounts provider configured' | translate}}
                 </h1>
                 <p>
-                  {{'Users and groups are available through an accounts provider. You can connect this server to a remote accounts provider,
-                  or install a local one. Some features are available depending on the accounts provider type' | translate}}
+                  {{'Users and groups are available through an accounts provider. You can connect this server to a remote accounts provider, or install a local one. Some features are available depending on the accounts provider type' | translate}}
                 </p>
                 <strong>{{'Choose an Account provider below'}}:</strong>
                 <div class="blank-slate-pf-main-action">
