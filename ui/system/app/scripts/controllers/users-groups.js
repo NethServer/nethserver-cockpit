@@ -163,7 +163,10 @@ angular.module('systemAngularApp')
         $scope.localSystem.users.provider = provider.isAD ? 'ad' : provider.isLdap ? 'ldap' : null;
         $scope.localSystem.users.providerInfo = provider;
 
-        if (!$scope.localSystem.users.provider) {
+        if ($scope.localSystem.users.provider) {
+          $scope.getUsers();
+          $scope.getGroups();
+        } else {
           $('#accountProviderWizard').modal('show');
         }
         $scope.$apply();
@@ -473,13 +476,9 @@ angular.module('systemAngularApp')
     };
 
     $scope.getInfo();
-    $scope.getUsers();
-    $scope.getGroups();
 
     nethserver.eventMonitor.addEventListener('nsevent.succeeded', function (success) {
       $scope.getInfo();
-      $scope.getUsers();
-      $scope.getGroups();
     });
 
   });
