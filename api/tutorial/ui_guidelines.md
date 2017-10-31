@@ -56,11 +56,41 @@ Also it is a good practice to add a "Description" when creating records inside t
 
 ### Notifications
 
-NethServer Cockpit provides 3 types of [toast notification](http://www.patternfly.org/pattern-library/communication/toast-notifications/):
+NethServer Cockpit provides multiple [toast notification](http://www.patternfly.org/pattern-library/communication/toast-notifications/).
+Each notification can have one of these states:
 
-- **success**: transient, it stays on the screen for 8 seconds
-- **task**: transient, it stays on the screen until the task has been completed
-- **error**: not transient, it stays on the screen until the user explicitly close it
+- **success**: everything is ok. Transient: it stays on the screen for 8 seconds.
+- **danger**: something went wrong. Not transient: it stays on the screen until the user explicitly close it.
+  May require an action link.
+- **warning**: something needs attention. Not transient: it stays on the screen until the user explicitly close it.
+
+The notification can also have a type:
+
+- **info**: display only a message
+- **action**: display a message and an action link
+
+
+Finally there also is a **task** notification, it stays on the screen until the task 
+has been completed. This kind of notification can be created only by `signal-event`.
+
+
+#### Example
+
+Raise a notification after 5 seconds; add this code to `app.js`:
+```
+setTimeout(function() {
+    nethserver.notificationMonitor.dispatchEvent('nsnotification', {
+        type: 'action',
+        title: 'Failed',
+        message: 'Test failing notification',
+        status: 'danger',
+        action: 'Retry',
+        method: function() {
+            console.log("this method is called when the link is clicked!");
+        }
+    });
+}, 5000);
+```
 
 ### Modals
 

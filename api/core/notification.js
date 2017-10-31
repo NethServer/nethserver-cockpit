@@ -31,7 +31,7 @@
      * @typedef {Object} Notification
      * @param {string} title the title of notification
      * @param {string} message the message of notification
-     * @param {string} status the status of notification (info|danger|success|warning)
+     * @param {string} status the status of notification (danger|success|warning)
      * @param {string} action the label of action, es. "Restart"
      * @param {Function} method the method to invoke
      * @param {string} [type="info"] the type of notification, (info|action)
