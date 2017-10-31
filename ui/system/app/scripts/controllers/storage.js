@@ -14,11 +14,12 @@ angular.module('systemAngularApp')
     };
 
     // show fake backdrop when modal is open
-    $('#storage-frame').load(function () {
+    $('#storage-frame').on('load', function () {
       $scope.view.isLoaded = true;
 
       // select the target node
       var target = document.querySelector('#storage-frame').contentDocument.body;
+      $(target).css('background-color', '#f5f5f5');
 
       // create an observer instance
       var observer = new MutationObserver(function (mutations) {

@@ -132,15 +132,13 @@ angular.module('systemAngularApp')
         nethserver.system.summary.setHostname(hostname).then(function () {
           $scope.localSystem.summary.hostname = hostname;
           $scope.$apply();
-        }, function (err) {
-        });
+        }, function (err) {});
       }
 
       // set aliases
       nethserver.system.dns.setAliases($scope.localSystem.summary.aliases.map(function (val) {
         return val.key;
-      })).then(function () {
-      }, function (err) {
+      })).then(function () {}, function (err) {
         console.error(err);
       });
 
@@ -160,10 +158,10 @@ angular.module('systemAngularApp')
     };
     $scope.saveDNS = function (dns) {
       var dnsToSave = [];
-      if(dns[0].dns.length > 0) {
+      if (dns[0].dns.length > 0) {
         dnsToSave.push(dns[0].dns);
       }
-      if(dns[1].dns.length > 0) {
+      if (dns[1].dns.length > 0) {
         dnsToSave.push(dns[1].dns);
       }
       nethserver.system.dns.setDNS(dnsToSave).then(function () {
@@ -290,8 +288,129 @@ angular.module('systemAngularApp')
       $scope.view.isLoaded = true;
     };
 
+    $scope.initGraphs = function () {
+      var series;
+      /* CPU graph */
+      var cpu_data = {
+        direct: ["kernel.all.cpu.nice", "kernel.all.cpu.user", "kernel.all.cpu.sys"],
+        internal: ["cpu.basic.nice", "cpu.basic.user", "cpu.basic.system"],
+        units: "millisec",
+        derive: "rate",
+        factor: 0.1 // millisec / sec -> percent
+      };
+
+      var cpu_options = plotter.plot_simple_template();
+      $.extend(cpu_options.yaxis, {
+        tickFormatter: function (v) {
+          return v.toFixed(0);
+        },
+        max: 100
+      });
+      this.cpu_plot = plotter.plot($("#server_cpu_graph"), 300);
+      this.cpu_plot.set_options(cpu_options);
+      series = this.cpu_plot.add_metrics_sum_series(cpu_data, {});
+
+      /* Memory graph */
+
+      var memory_data = {
+        direct: ["mem.util.used"],
+        internal: ["memory.used"],
+        units: "bytes"
+      };
+
+      var memory_options = plotter.plot_simple_template();
+      $.extend(memory_options.yaxis, {
+        ticks: plotter.memory_ticks,
+        tickFormatter: plotter.format_bytes_tick_no_unit
+      });
+      memory_options.setup_hook = function memory_setup_hook(pl) {
+        var axes = pl.getAxes();
+        $('#server_memory_unit').text(plotter.bytes_tick_unit(axes.yaxis));
+      };
+
+      this.memory_plot = plotter.plot($("#server_memory_graph"), 300);
+      this.memory_plot.set_options(memory_options);
+      series = this.memory_plot.add_metrics_sum_series(memory_data, {});
+
+      /* Network graph */
+
+      var network_data = {
+        direct: ["network.interface.total.bytes"],
+        internal: ["network.interface.tx", "network.interface.rx"],
+        "omit-instances": ["lo"],
+        units: "bytes",
+        derive: "rate"
+      };
+
+      var network_options = plotter.plot_simple_template();
+      $.extend(network_options.yaxis, {
+        tickFormatter: plotter.format_bits_per_sec_tick_no_unit
+      });
+      network_options.setup_hook = function network_setup_hook(pl) {
+        var axes = pl.getAxes();
+        if (axes.yaxis.datamax < 100000)
+          axes.yaxis.options.max = 100000;
+        else
+          axes.yaxis.options.max = null;
+        axes.yaxis.options.min = 0;
+
+        $('#server_network_traffic_unit').text(plotter.bits_per_sec_tick_unit(axes.yaxis));
+      };
+
+      this.network_plot = plotter.plot($("#server_network_traffic_graph"), 300);
+      this.network_plot.set_options(network_options);
+      series = this.network_plot.add_metrics_sum_series(network_data, {});
+
+      /* Disk IO graph */
+
+      var disk_data = {
+        direct: ["disk.all.total_bytes"],
+        internal: ["disk.all.read", "disk.all.written"],
+        units: "bytes",
+        derive: "rate"
+      };
+
+      var disk_options = plotter.plot_simple_template();
+      $.extend(disk_options.yaxis, {
+        ticks: plotter.memory_ticks,
+        tickFormatter: plotter.format_bytes_per_sec_tick_no_unit
+      });
+      disk_options.setup_hook = function disk_setup_hook(pl) {
+        var axes = pl.getAxes();
+        if (axes.yaxis.datamax < 100000)
+          axes.yaxis.options.max = 100000;
+        else
+          axes.yaxis.options.max = null;
+        axes.yaxis.options.min = 0;
+
+        $('#server_disk_io_unit').text(plotter.bytes_per_sec_tick_unit(axes.yaxis));
+      };
+
+      this.disk_plot = plotter.plot($("#server_disk_io_graph"), 300);
+      this.disk_plot.set_options(disk_options);
+      series = this.disk_plot.add_metrics_sum_series(disk_data, {});
+
+      this.cpu_plot.start_walking();
+      this.memory_plot.start_walking();
+      this.disk_plot.start_walking();
+      this.network_plot.start_walking();
+
+      $(window).on('resize.server', {
+        c: this.cpu_plot,
+        m: this.memory_plot,
+        d: this.disk_plot,
+        n: this.network_plot
+      }, function (response) {
+        response.data.c.resize();
+        response.data.m.resize();
+        response.data.d.resize();
+        response.data.n.resize();
+      });
+    };
+
     $scope.initGraphics();
     $scope.initRoutes();
+    $scope.initGraphs();
 
     nethserver.eventMonitor.addEventListener('nsevent.succeeded', function (success) {
       $scope.getAllAliases();

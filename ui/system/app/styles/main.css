@@ -198,9 +198,33 @@ iframe>.breadcrumb {
   flex: 1 0 calc(40% - 20px);
 }
 
+.adjust-top-row {
+  margin-top: 15px;
+}
+
+.adjust-top {
+  margin-top: 0px;
+}
+
+.adjust-top-col {
+  margin-top: 0px;
+}
+
 @media (min-width: 992px) {
   .list-view-pf .list-group-item-text {
     width: calc(75% - 80px);
+  }
+}
+
+@media screen and (max-width: 1196px) {
+  .adjust-top {
+    margin-top: 15px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .adjust-top-col {
+    margin-top: 15px;
   }
 }
 
@@ -457,4 +481,8 @@ circle {
 
 .active-choose:hover {
   margin-top: 0px;
+}
+
+.graph {
+  height: 120px;
 }

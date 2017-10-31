@@ -2,7 +2,7 @@
 <div ng-show="view.isLoaded">
   <h3>{{'Summary' | translate}}</h3>
   <div class="row">
-    <div class="col-lg-6 col-md-6">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
       <form class="form-horizontal">
         <div class="form-group compact">
           <label class="col-sm-2 control-label">{{'Hardware' | translate}}</label>
@@ -35,7 +35,8 @@
           <div class="col-sm-10 no-input">
             <p>
               <a ng-click="openChangeDNS()" href="">
-                <span ng-repeat="d in localSystem.summary.dns">{{d.readDns}}<span ng-if="!$last">, </span>
+                <span ng-repeat="d in localSystem.summary.dns">{{d.readDns}}
+                  <span ng-if="!$last">, </span>
               </a>
             </p>
           </div>
@@ -60,7 +61,8 @@
           <label class="col-sm-2 control-label">{{'Power' | translate}}</label>
           <div class="col-sm-10">
             <div class="btn-group">
-              <button ng-click="openPowerModal('reboot')" class="btn btn-default btn-danger shutdown-privileged" data-action="restart" data-container="body">{{'Reboot' | translate}}</button>
+              <button ng-click="openPowerModal('reboot')" class="btn btn-default btn-danger shutdown-privileged" data-action="restart"
+                data-container="body">{{'Reboot' | translate}}</button>
               <button data-toggle="dropdown" class="btn btn-default dropdown-toggle shutdown-privileged">
                 <span class="caret"></span>
               </button>
@@ -77,7 +79,30 @@
         </div>
       </form>
     </div>
-    <div class="col-lg-6 col-md-6">
+
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+
+      <div class="row adjust-top">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <label>CPU</label> %
+          <div id="server_cpu_graph" class="graph zoomable-plot"></div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 adjust-top-col">
+          <label>{{'Memory' | translate}}</label> Gib
+          <div id="server_memory_graph" class="graph zoomable-plot"></div>
+        </div>
+      </div>
+      <div class="row adjust-top-row">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <label>{{'Disk I/O' | translate}}</label> Mib/s
+          <div id="server_disk_io_graph" class="graph zoomable-plot"></div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 adjust-top-col">
+          <label>{{'Network' | translate}}</label> Mbps
+          <div id="server_network_traffic_graph" class="graph zoomable-plot"></div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -199,11 +224,11 @@
             </div>
           </div>
           <div class="form-group">
-              <label class="col-sm-3 control-label" for="textInput-modal-markup">2° {{'DNS' | translate}}</label>
-              <div class="col-sm-9">
-                <input type="text" ng-model="localSystem.summary.dns[1].dns" class="form-control">
-              </div>
+            <label class="col-sm-3 control-label" for="textInput-modal-markup">2° {{'DNS' | translate}}</label>
+            <div class="col-sm-9">
+              <input type="text" ng-model="localSystem.summary.dns[1].dns" class="form-control">
             </div>
+          </div>
         </div>
         <div class="modal-footer submit">
           <button class="btn btn-default" type="button" data-dismiss="modal">{{'Cancel' | translate}}</button>

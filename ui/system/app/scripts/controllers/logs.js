@@ -13,8 +13,13 @@ angular.module('systemAngularApp')
       isLoaded: false
     };
 
-    $('#logs-frame').load(function () {
+    $('#logs-frame').on('load', function () {
       $scope.view.isLoaded = true;
+
+      // select the target node
+      var target = document.querySelector('#logs-frame').contentDocument.body;
+      $(target).css('background-color', '#f5f5f5');
+
       $scope.$apply();
     });
 
