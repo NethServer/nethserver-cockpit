@@ -140,6 +140,10 @@ module.exports = function (grunt) {
                         "href": "./environment"
                       },
                       {
+                        "label": "Create new module",
+                        "href": "./new_module"
+                      },
+                      {
                         "separator": true
                       },
                       {
