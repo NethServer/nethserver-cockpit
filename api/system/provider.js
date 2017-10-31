@@ -30,6 +30,7 @@
         return;
     }
 
+    var _ = cockpit.gettext;
 
     nethserver.system.provider = {
 
@@ -146,10 +147,10 @@
         /**
          * Uninstall local provider by executing "nethserver-sssd-remove-provider" event.
          *
-         * @return {Promise} - A signal-event promise
+         * @return {Promise}
          */
         uninstall: function() {
-            return signalEvent('nethserver-sssd-remove-provider');
+            return Promise.resolve({ promise: nethserver.signalEvent('nethserver-sssd-remove-provider')});
         },
 
         /**
@@ -184,9 +185,15 @@
         probeAd: function(realm, adDns) {
             var dns = adDns || '';
 
-            return Promise.resolve(
-                cockpit.spawn(['/usr/sbin/account-provider-test', 'probead', realm, dns])
-            ).then(function(val) {
+            return nethserver.validate('ad-dns', [realm, adDns], {
+                id: 1508337024232,
+                type: 'NotValid',
+                message: _('Domain controller not found'),
+            }).
+            then(function(){
+                return Promise.resolve(cockpit.spawn(['/usr/sbin/account-provider-test', 'probead', realm, dns], {superuser: 'require'}));
+            }).
+            then(function(val) {
                 var obj = JSON.parse(val);
                 obj.BindType = 'authenticated';
                 if (obj.StartTls == "1") {
@@ -207,21 +214,30 @@
          * Join an Active Directory domain
          *
          * @example
-         * nethserver.system.provider.joinDomain( { Realm: "ad.nethesis.it", BindUser: "Administrator", BindPassword: "Nethesis,1234", AdDns: "1.2.3.4" } )
-         *
-         * @param {Object} adConfig - AD configuration
+         * nethserver.system.provider.joinDomain( {
+         *   Realm: "ad.nethesis.it",
+         *   AdDns: "1.2.3.4", // optional
+         *   ...
+         *   BindDN: "Administrator",
+         *   BindPassword: "Nethesis,1234",
+         * });
+         * @see {@link #probeAd}
+         * @param {Object} adConfig - AD configuration, returned by probeAd()
          *
          * @return {Promise} - A promise on success, throws an error otherwise
          */
-        joinDomain: function(adConfigj) {
-            var db = nethserver.getDatabase('configuration');
-            return nethserver.validate('ad-dns', adConfig.Realm, {
+        joinDomain: function(adConfig) {
+            var workgroup;
+
+            return nethserver.validate('ad-dns', [adConfig.Realm, adConfig.AdDns], {
                 id: 1508337024230,
                 type: 'NotValid',
-                message: 'Domain controller not found'
-            }).then(function() {
-                return db.open();
-            }).then(function() {
+                message: _('Domain controller not found'),
+            }).
+            then(function() {
+                return nethserver.getDatabase('configuration').open();
+            }).
+            then(function(db) {
                 db.setProps('sssd', {
                     status: "disabled",
                     Realm: adConfig.Realm,
@@ -237,22 +253,90 @@
                     BindPassword: ''
                 });
                 return db.save();
-
-            }).then(function() {
-                return Promise.resolve(
-                    cockpit.spawn(['/usr/libexec/nethserver/cockpit-domain-join'])
-                );
-                // nethserver-dnsmasq-save
-                // TODO: /usr/sbin/account-provider-test probeworkgroup
-                // setprop sssd Workgroup
-                // /usr/sbin/realm join --server-software=active-directory -v -U
-                //nethserver-sssd-save
-            }).catch(function() {
-                return Promise.reject(
-                    cockpit.spawn(['/usr/libexec/nethserver/cockpit-domain-leave'])
-                );
-                // nethserver-sssd-leave
-                // nethserver-dnsmasq-save
+            }).
+            then(function(){
+                if(adConfig.AdDns) {
+                    return nethserver.signalEvent('nethserver-dnsmasq-save').
+                    then(function(){
+                        // avoid race condition with DNS resolver process:
+                        return new Promise(function(fulfill, reject){
+                            setTimeout(fulfill, 1000);
+                        });
+                    });
+                }
+            }).
+            then(function(){
+                // DNS must be up at this point
+                return Promise.resolve(cockpit.spawn(['/usr/sbin/account-provider-test', 'probeworkgroup', adConfig.Realm], {superuser: 'require', err: 'message'}));
+            }).
+            then(function(data){
+                var pr = {'Workgroup': ''};
+                try {
+                    pr = JSON.parse(data);
+                } finally {
+                    workgroup = pr.Workgroup;
+                    return nethserver.getDatabase('configuration').open();
+                }
+            }).
+            then(function(db){
+                return db.setProp('sssd', 'Workgroup', workgroup).save();
+            }).
+            then(function(){
+                return Promise.resolve(cockpit.spawn([
+                    '/usr/sbin/realm',
+                    'join',
+                    '--server-software=active-directory',
+                    '-v',
+                    '-U',
+                    adConfig.BindDN,
+                    adConfig.Realm
+                ], {superuser: 'require', err: 'message'}).
+                input(adConfig.BindPassword + "\n"));
+            }).
+            then(function(){
+                return nethserver.getDatabase('configuration').open();
+            }).
+            then(function(db){
+                return db.setProp('sssd', 'status', 'enabled').save();
+            }).
+            then(function(){
+                return {promise: nethserver.signalEvent('nethserver-sssd-save')};
+            }).
+            catch(function(ex) {
+                return nethserver.getDatabase('configuration').open().
+                then(function(db){
+                    db.setProps('sssd', {
+                        status: "disabled",
+                        Realm: '',
+                        Workgroup: '',
+                        AdDns: '',
+                        Provider: 'none',
+                        LdapURI: '',
+                        StartTls: '',
+                        UserDN: '',
+                        GroupDN: '',
+                        BaseDN: '',
+                        BindDN: '',
+                        BindPassword: '',
+                    });
+                    return db.save();
+                }).
+                then(function(){
+                    return nethserver.signalEvent('nethserver-sssd-leave').catch(function(){});
+                }).
+                then(function(){
+                    if(adConfig.AdDns) {
+                        return nethserver.signalEvent('nethserver-dnsmasq-save').catch(function(){});
+                    }
+                }).
+                then(function(){
+                    throw new nethserver.Error({
+                        id: 1509446808155,
+                        type: 'JoinError',
+                        message: _('The join operation failed'),
+                        originalMessage: '[' + ex.problem + '] ' + ex.message + ' (exit code ' + ex.exit_code + ')',
+                    });
+                });
             });
 
         },
