@@ -452,12 +452,14 @@ angular.module('systemAngularApp')
         $scope.objects.newProvider.info = info;
         $scope.objects.newProvider.probeError = false;
         $scope.objects.newProvider.isChecking = false;
+        $scope.objects.newProvider.isChecked = true;
         $scope.$apply();
       }, function (err) {
         console.error(err);
         $scope.objects.newProvider.probeError = true;
         $scope.objects.newProvider.probeErrorMessage = err.message;
         $scope.objects.newProvider.isChecking = false;
+        $scope.objects.newProvider.isChecked = false;
         $scope.$apply();
       });
     };
