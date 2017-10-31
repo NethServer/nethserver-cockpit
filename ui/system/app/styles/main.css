@@ -486,3 +486,7 @@ circle {
 .graph {
   height: 120px;
 }
+
+.progress-xs .progress-bar>span {
+  min-width: 36px;
+}

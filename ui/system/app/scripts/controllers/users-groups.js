@@ -400,6 +400,7 @@ angular.module('systemAngularApp')
         $scope.localSystem.users.chooseProvider = null;
         $scope.localSystem.users.chooseBind = null;
         $scope.localSystem.users.providerInfo = {};
+        $scope.objects.currentStep = 1;
         $scope.$apply();
       }, function (err) {
         console.error(err);
@@ -447,7 +448,7 @@ angular.module('systemAngularApp')
     $scope.checkAdConfig = function (newProvider) {
       $scope.objects.newProvider.isChecking = true;
       $scope.objects.newProvider.info = {};
-      nethserver.system.provider.probeAd(newProvider.Realm, newProvider.adDNSServer).then(function (info) {
+      nethserver.system.provider.probeAd(newProvider.Realm, newProvider.AdDns).then(function (info) {
         $scope.objects.newProvider.info = info;
         $scope.objects.newProvider.probeError = false;
         $scope.objects.newProvider.isChecking = false;
@@ -455,15 +456,22 @@ angular.module('systemAngularApp')
       }, function (err) {
         console.error(err);
         $scope.objects.newProvider.probeError = true;
+        $scope.objects.newProvider.probeErrorMessage = err.message;
         $scope.objects.newProvider.isChecking = false;
         $scope.$apply();
       });
     };
     $scope.joinADomain = function (newProvider) {
+      newProvider.info.AdDns = newProvider.AdDns;
       nethserver.system.provider.joinDomain(newProvider.info).then(function () {
         $('#accountProviderWizard').modal('hide');
       }, function (err) {
         console.error(err);
+        $scope.objects.newProvider.probeError = false;
+        $scope.objects.newProvider.joinError = true;
+        $scope.objects.newProvider.joinErrorMessage = err.message;
+        $scope.objects.newProvider.joinErrorOMessage = err.originalMessage;
+        $scope.$apply();
       });
     };
 
