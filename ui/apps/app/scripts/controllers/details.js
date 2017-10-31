@@ -61,6 +61,7 @@ angular.module('appsAngularApp')
 
       // select the target node
       var target = document.querySelector('#app-frame').contentDocument.body;
+      $(target).css('background-color', '#f5f5f5');
 
       // create an observer instance
       var observer = new MutationObserver(function (mutations) {
