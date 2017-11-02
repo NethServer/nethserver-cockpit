@@ -100,16 +100,16 @@
           </div>
         </div>
         <div class="list-view-pf-main-info">
-          <div class="list-view-pf-left">
-            <span class="fa fa-user list-view-pf-icon-sm"></span>
+          <div class="list-view-pf-left {{u.locked == 1 ? 'disabled' : ''}}">
+            <span class="fa fa-{{u.locked == 1 ? 'lock' : 'user'}} list-view-pf-icon-sm"></span>
           </div>
           <div class="list-view-pf-body">
             <div class="list-view-pf-description">
               <div ng-click="openEditUser(ku, u)" class="list-group-item-heading">
-                <a href="">{{ku}}</a>
+                <a class="{{u.locked == 1 ? 'disabled' : ''}}" href="">{{ku}}</a>
               </div>
               <div class="list-group-item-text">
-                {{u.gecos}}
+                <span class="{{u.locked == 1 ? 'disabled' : ''}}">{{u.gecos}}</span>
               </div>
             </div>
             <div class="list-view-pf-additional-info">
@@ -445,7 +445,8 @@
                   {{'No accounts provider configured' | translate}}
                 </h1>
                 <p>
-                  {{'Users and groups are available through an accounts provider. You can connect this server to a remote accounts provider, or install a local one. Some features are available depending on the accounts provider type' | translate}}
+                  {{'Users and groups are available through an accounts provider. You can connect this server to a remote accounts provider,
+                  or install a local one. Some features are available depending on the accounts provider type' | translate}}
                 </p>
                 <strong>{{'Choose an Account provider below'}}:</strong>
                 <div class="blank-slate-pf-main-action">
@@ -649,42 +650,41 @@
               <!-- Remote AD-->
               <div ng-if="localSystem.users.provider == null && localSystem.users.chooseProvider == 'ad' && localSystem.users.chooseBind == 'remote'">
                 <h3 class="wizard-pf-contents-title">{{'Join to Active Directory' | translate}}</h3>
-                <form class="form-horizontal" ng-submit="checkAdConfig(objects.newProvider)">
+                <form class="form-horizontal">
                   <div class="modal-body">
-                    <div ng-show="objects.newProvider.probeError" class="alert alert-danger alert-dismissable">
+                    <div ng-show="objects.newProvider.probeError || objects.newProvider.joinError" class="alert alert-danger alert-dismissable">
                       <span class="pficon pficon-error-circle-o"></span>
-                      <strong>{{'Error' | translate}}.</strong> {{'The configuration is invalid. Try to use different AD DNS server'
-                      | translate}}.
+                      <strong>{{'Error' | translate}}.</strong> {{objects.newProvider.probeErrorMessage || objects.newProvider.joinErrorMessage}}. {{objects.newProvider.probeErrorOMessage  || objects.newProvider.joinErrorOMessage}}
                     </div>
-                    <div class="form-group">
+                    <div ng-show="!objects.newProvider.isChecked" class="form-group">
                       <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Domain name' | translate}}</label>
                       <div class="col-sm-9">
                         <input required type="text" ng-model="objects.newProvider.Realm" class="form-control">
                       </div>
                     </div>
-                    <div ng-if="objects.newProvider.probeError" class="form-group">
+                    <div ng-show="objects.newProvider.probeError" class="form-group">
                       <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'AD DNS Server' | translate}}</label>
                       <div class="col-sm-9">
-                        <input type="text" ng-model="objects.newProvider.adDNSServer" class="form-control">
+                        <input type="text" ng-model="objects.newProvider.AdDns" class="form-control">
                       </div>
                     </div>
-                    <div class="form-group">
+                    <div ng-show="!objects.newProvider.isChecked" class="form-group">
                       <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Configuration' | translate}}</label>
                       <div class="col-sm-2">
-                        <button type="submit" class="btn btn-primary">{{'Check' | translate}}</button>
+                        <button ng-disabled="objects.newProvider.isChecking" type="button" ng-click="checkAdConfig(objects.newProvider)" class="btn btn-primary">{{'Check' | translate}}</button>
                       </div>
                       <div ng-show="objects.newProvider.isChecking" class="col-sm-1">
                         <div class="spinner"></div>
                       </div>
                     </div>
-                    <p ng-show="objects.newProvider.info">{{'Credentials for joining the domain' | translate}}</p>
-                    <div ng-show="objects.newProvider.info" class="form-group">
+                    <p ng-show="objects.newProvider.info && objects.newProvider.isChecked">{{'Credentials for joining the domain' | translate}}</p>
+                    <div ng-show="objects.newProvider.info && objects.newProvider.isChecked" class="form-group">
                       <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Username' | translate}}</label>
                       <div class="col-sm-9">
                         <input type="text" ng-model="objects.newProvider.info.BindDN" class="form-control">
                       </div>
                     </div>
-                    <div ng-show="objects.newProvider.info" class="form-group">
+                    <div ng-show="objects.newProvider.info && objects.newProvider.isChecked" class="form-group">
                       <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'Password' | translate}}</label>
                       <div class="col-sm-9">
                         <input type="password" ng-model="objects.newProvider.info.BindPassword" class="form-control">

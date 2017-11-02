@@ -349,7 +349,7 @@
         },
 
         /**
-         * Crate a new user
+         * Create a new user
          *
          * @example
          * return nethserver.system.users.addUser({
@@ -361,7 +361,7 @@
          *     "password": "S3cr3t",
          * }).
          * then(function() {
-         *    return nethserver.system.users.setPassword('myuser', 'password')
+         *    // ...
          * });
          *
          * @param {UserDetails} user - User to be added
