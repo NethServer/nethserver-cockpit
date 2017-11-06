@@ -1,0 +1,666 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: \n"
+
+msgctxt ""
+msgid ""
+msgstr ""
+
+msgctxt ""
+msgid "Account provider"
+msgstr ""
+
+msgctxt ""
+msgid "Actions"
+msgstr ""
+
+msgctxt ""
+msgid "AD DNS Server"
+msgstr ""
+
+msgctxt ""
+msgid "Add alias"
+msgstr ""
+
+msgctxt ""
+msgid "Add DNS record"
+msgstr ""
+
+msgctxt ""
+msgid "Address"
+msgstr ""
+
+msgctxt ""
+msgid "Advanced options"
+msgstr ""
+
+msgctxt ""
+msgid "Alias"
+msgstr ""
+
+msgctxt ""
+msgid "Alternative names"
+msgstr ""
+
+msgctxt ""
+msgid "An LDAP database can store users, groups and passwords. It is required a RFC2307 compatible LDAP schema"
+msgstr ""
+
+msgctxt ""
+msgid "Anonymous"
+msgstr ""
+
+msgctxt ""
+msgid "Are you sure"
+msgstr ""
+
+msgctxt ""
+msgid "Authenticated"
+msgstr ""
+
+msgctxt ""
+msgid "Back"
+msgstr ""
+
+msgctxt ""
+msgid "Become Domain Controller"
+msgstr ""
+
+msgctxt ""
+msgid "Before changing the Account provider, the old one must be removed"
+msgstr ""
+
+msgctxt ""
+msgid "Bind"
+msgstr ""
+
+msgctxt ""
+msgid "Bind to Remote LDAP"
+msgstr ""
+
+msgctxt ""
+msgid "Cancel"
+msgstr ""
+
+msgctxt ""
+msgid "Caution"
+msgstr ""
+
+msgctxt ""
+msgid "Certificate"
+msgstr ""
+
+msgctxt ""
+msgid "Certificate validity (days)"
+msgstr ""
+
+msgctxt ""
+msgid "Certificates list"
+msgstr ""
+
+msgctxt ""
+msgid "Chain file"
+msgstr ""
+
+msgctxt ""
+msgid "Change"
+msgstr ""
+
+msgctxt ""
+msgid "Change account provider"
+msgstr ""
+
+msgctxt ""
+msgid "Change company info"
+msgstr ""
+
+msgctxt ""
+msgid "Change DNS servers"
+msgstr ""
+
+msgctxt ""
+msgid "Change hostname"
+msgstr ""
+
+msgctxt ""
+msgid "Change password"
+msgstr ""
+
+msgctxt ""
+msgid "Change password to"
+msgstr ""
+
+msgctxt ""
+msgid "Change provider"
+msgstr ""
+
+msgctxt ""
+msgid "Change System time"
+msgstr ""
+
+msgctxt ""
+msgid "Check"
+msgstr ""
+
+msgctxt ""
+msgid "Check usage of your disk"
+msgstr ""
+
+msgctxt ""
+msgid "Choose file"
+msgstr ""
+
+msgctxt ""
+msgid "City"
+msgstr ""
+
+msgctxt ""
+msgid "Close"
+msgstr ""
+
+msgctxt ""
+msgid "Common name"
+msgstr ""
+
+msgctxt ""
+msgid "Company"
+msgstr ""
+
+msgctxt ""
+msgid "Computers in an Active Directory domain can be simple members or domain controllers (DC)"
+msgstr ""
+
+msgctxt ""
+msgid "Configuration"
+msgstr ""
+
+msgctxt ""
+msgid "Configure Account provider"
+msgstr ""
+
+msgctxt ""
+msgid "Confirm password"
+msgstr ""
+
+msgctxt ""
+msgid "Country Code"
+msgstr ""
+
+msgctxt ""
+msgid "Create"
+msgstr ""
+
+msgctxt ""
+msgid "Create a new group"
+msgstr ""
+
+msgctxt ""
+msgid "Create a new user"
+msgstr ""
+
+msgctxt ""
+msgid "Create group"
+msgstr ""
+
+msgctxt ""
+msgid "Create new domain and become DC"
+msgstr ""
+
+msgctxt ""
+msgid "Create user"
+msgstr ""
+
+msgctxt ""
+msgid "Credentials for joining the domain"
+msgstr ""
+
+msgctxt ""
+msgid "Date and Time"
+msgstr ""
+
+msgctxt ""
+msgid "Default"
+msgstr ""
+
+msgctxt ""
+msgid "Delete"
+msgstr ""
+
+msgctxt ""
+msgid "Delete DNS record"
+msgstr ""
+
+msgctxt ""
+msgid "Delete group"
+msgstr ""
+
+msgctxt ""
+msgid "Delete user"
+msgstr ""
+
+msgctxt ""
+msgid "Department"
+msgstr ""
+
+msgctxt ""
+msgid "Description"
+msgstr ""
+
+msgctxt ""
+msgid "Details"
+msgstr ""
+
+msgctxt ""
+msgid "Disable"
+msgstr ""
+
+msgctxt ""
+msgid "Disk I/O"
+msgstr ""
+
+msgctxt ""
+msgid "Disk usage"
+msgstr ""
+
+msgctxt ""
+msgid "DNS"
+msgstr ""
+
+msgctxt ""
+msgid "DNS records list"
+msgstr ""
+
+msgctxt ""
+msgid "Domain Controller IP address"
+msgstr ""
+
+msgctxt ""
+msgid "Domain name"
+msgstr ""
+
+msgctxt ""
+msgid "Domains"
+msgstr ""
+
+msgctxt ""
+msgid "Download and configure OpenLDAP server as local LDAP accounts provider"
+msgstr ""
+
+msgctxt ""
+msgid "Easy to configure, does not support authenticated access to shared folders"
+msgstr ""
+
+msgctxt ""
+msgid "Edit"
+msgstr ""
+
+msgctxt ""
+msgid "Edit certificate"
+msgstr ""
+
+msgctxt ""
+msgid "Edit self-signed certificate"
+msgstr ""
+
+msgctxt ""
+msgid "Email address"
+msgstr ""
+
+msgctxt ""
+msgid "Enable"
+msgstr ""
+
+msgctxt ""
+msgid "Enables all shared folders features, requires advanced configuration options"
+msgstr ""
+
+msgctxt ""
+msgid "Error"
+msgstr ""
+
+msgctxt ""
+msgid "Expired"
+msgstr ""
+
+msgctxt ""
+msgid "Expires"
+msgstr ""
+
+msgctxt ""
+msgid "FQDN"
+msgstr ""
+
+msgctxt ""
+msgid "Generate"
+msgstr ""
+
+msgctxt ""
+msgid "Groups"
+msgstr ""
+
+msgctxt ""
+msgid "Hardware"
+msgstr ""
+
+msgctxt ""
+msgid "Hostname"
+msgstr ""
+
+msgctxt ""
+msgid "Hostname or IP"
+msgstr ""
+
+msgctxt ""
+msgid "Install"
+msgstr ""
+
+msgctxt ""
+msgid "Install Local LDAP"
+msgstr ""
+
+msgctxt ""
+msgid "Install local LDAP"
+msgstr ""
+
+msgctxt ""
+msgid "IP Address"
+msgstr ""
+
+msgctxt ""
+msgid "Join an existing Active Directory"
+msgstr ""
+
+msgctxt ""
+msgid "Join to Active Directory"
+msgstr ""
+
+msgctxt ""
+msgid "Kernel Release"
+msgstr ""
+
+msgctxt ""
+msgid "Local or Remote Bind"
+msgstr ""
+
+msgctxt ""
+msgid "Locality"
+msgstr ""
+
+msgctxt ""
+msgid "Logs"
+msgstr ""
+
+msgctxt ""
+msgid "Management"
+msgstr ""
+
+msgctxt ""
+msgid "Mange LVM, RAID and partitions"
+msgstr ""
+
+msgctxt ""
+msgid "Manual"
+msgstr ""
+
+msgctxt ""
+msgid "Memory"
+msgstr ""
+
+msgctxt ""
+msgid "Name"
+msgstr ""
+
+msgctxt ""
+msgid "NetBIOS domain name"
+msgstr ""
+
+msgctxt ""
+msgid "Network"
+msgstr ""
+
+msgctxt ""
+msgid "Next"
+msgstr ""
+
+msgctxt ""
+msgid "No accounts provider configured"
+msgstr ""
+
+msgctxt ""
+msgid "No certificates found"
+msgstr ""
+
+msgctxt ""
+msgid "No DNS record found"
+msgstr ""
+
+msgctxt ""
+msgid "No services found"
+msgstr ""
+
+msgctxt ""
+msgid "Notification email"
+msgstr ""
+
+msgctxt ""
+msgid "objects.newDNS.isEdit ? 'Edit DNS record' + ' '+ objects.newDNS.key : 'Add DNS record'"
+msgstr ""
+
+msgctxt ""
+msgid "Operating System"
+msgstr ""
+
+msgctxt ""
+msgid "Organization"
+msgstr ""
+
+msgctxt ""
+msgid "Organization unit"
+msgstr ""
+
+msgctxt ""
+msgid "Password"
+msgstr ""
+
+msgctxt ""
+msgid "Password expiration"
+msgstr ""
+
+msgctxt ""
+msgid "Phone"
+msgstr ""
+
+msgctxt ""
+msgid "Port"
+msgstr ""
+
+msgctxt ""
+msgid "Power"
+msgstr ""
+
+msgctxt ""
+msgid "Power Off"
+msgstr ""
+
+msgctxt ""
+msgid "Private key"
+msgstr ""
+
+msgctxt ""
+msgid "Properties"
+msgstr ""
+
+msgctxt ""
+msgid "Provider"
+msgstr ""
+
+msgctxt ""
+msgid "Reboot"
+msgstr ""
+
+msgctxt ""
+msgid "Rebooting the system"
+msgstr ""
+
+msgctxt ""
+msgid "Remote shell (SSH)"
+msgstr ""
+
+msgctxt ""
+msgid "Remove"
+msgstr ""
+
+msgctxt ""
+msgid "Request"
+msgstr ""
+
+msgctxt ""
+msgid "Request Let's Encrypt certificate"
+msgstr ""
+
+msgctxt ""
+msgid "Restart"
+msgstr ""
+
+msgctxt ""
+msgid "Running"
+msgstr ""
+
+msgctxt ""
+msgid "Running task"
+msgstr ""
+
+msgctxt ""
+msgid "Save"
+msgstr ""
+
+msgctxt ""
+msgid "Search"
+msgstr ""
+
+msgctxt ""
+msgid "Services list"
+msgstr ""
+
+msgctxt ""
+msgid "Set as Default"
+msgstr ""
+
+msgctxt ""
+msgid "Set time"
+msgstr ""
+
+msgctxt ""
+msgid "Settings"
+msgstr ""
+
+msgctxt ""
+msgid "Show"
+msgstr ""
+
+msgctxt ""
+msgid "Shutting down the system"
+msgstr ""
+
+msgctxt ""
+msgid "Start"
+msgstr ""
+
+msgctxt ""
+msgid "State"
+msgstr ""
+
+msgctxt ""
+msgid "Stop"
+msgstr ""
+
+msgctxt ""
+msgid "Stopped"
+msgstr ""
+
+msgctxt ""
+msgid "Storage"
+msgstr ""
+
+msgctxt ""
+msgid "Strength"
+msgstr ""
+
+msgctxt ""
+msgid "Summary"
+msgstr ""
+
+msgctxt ""
+msgid "System Time"
+msgstr ""
+
+msgctxt ""
+msgid "The chosen IP address must satisfy all of the below conditions"
+msgstr ""
+
+msgctxt ""
+msgid "The configuration is invalid"
+msgstr ""
+
+msgctxt ""
+msgid "the IP address must be in the same subnet range of a green network: 192.168.5.0/24"
+msgstr ""
+
+msgctxt ""
+msgid "the IP address must be unused currently"
+msgstr ""
+
+msgctxt ""
+msgid "Time Zone"
+msgstr ""
+
+msgctxt ""
+msgid "Update"
+msgstr ""
+
+msgctxt ""
+msgid "Updated at"
+msgstr ""
+
+msgctxt ""
+msgid "Upload"
+msgstr ""
+
+msgctxt ""
+msgid "Upload certificate"
+msgstr ""
+
+msgctxt ""
+msgid "Username"
+msgstr ""
+
+msgctxt ""
+msgid "Users"
+msgstr ""
+
+msgctxt ""
+msgid "Users and groups are available through an accounts provider. You can connect this server to a remote accounts provider,
+                  or install a local one. Some features are available depending on the accounts provider type"
+msgstr ""
+
+msgctxt ""
+msgid "Users and Groups list"
+msgstr ""
+
+msgctxt ""
+msgid "Using NTP server"
+msgstr ""
+
+msgctxt ""
+msgid "View certificate"
+msgstr ""
+
+msgctxt ""
+msgid "View system logs"
+msgstr ""
+
+msgctxt ""
+msgid "You choose"
+msgstr ""

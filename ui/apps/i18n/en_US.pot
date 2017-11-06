@@ -1,0 +1,33 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: \n"
+
+msgctxt ""
+msgid "Applications"
+msgstr ""
+
+msgctxt ""
+msgid "Go to Software Center and install new applications"
+msgstr ""
+
+msgctxt ""
+msgid "No applications found"
+msgstr ""
+
+msgctxt ""
+msgid "Open"
+msgstr ""
+
+msgctxt ""
+msgid "Search"
+msgstr ""
+
+msgctxt ""
+msgid "Settings"
+msgstr ""
+
+msgctxt ""
+msgid "Software Center"
+msgstr ""
