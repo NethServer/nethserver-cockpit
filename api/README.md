@@ -7,7 +7,7 @@ a new NethServer Cockpit module.
 
 * [Developer environment](./environment)
 * [API guidelines](./api_guidelines)
-* [UI guidelines](/ui_guidelines)
+* [UI guidelines](./ui_guidelines)
 * [Internationalization](./internationalization)
 
 ## References
