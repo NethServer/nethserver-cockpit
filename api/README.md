@@ -28,7 +28,7 @@ Once you're familiar with that process, you may proceed with this guide.
 
 To start the development of new NethServer Cockpit module:
 
-1. Read project [Guidelines](./guidelines)
+1. Read project [UI guidelines](./ui_guidelines)
 2. Prepare the [Environment](./environment)
 3. [Scaffold](./new_module) your application
 
