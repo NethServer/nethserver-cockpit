@@ -44,11 +44,11 @@ cp .tx/nethserver.Cockpit-apps/* ui/apps/i18n/
 cp .tx/nethserver.Cockpit-system/* ui/system/i18n/
 
 # Install dependecies and build UI and API
-pushd api/ && npm install && grunt build && grunt lang-compile && grunt release
+pushd api/ && npm install && $(which grunt) build && $(which grunt) lang-compile && $(which grunt) release
 popd
-pushd ui/system/ && npm install && bower install && grunt build && grunt lang-compile && grunt release
+pushd ui/system/ && npm install && $(which bower) install && $(which grunt) build && $(which grunt) lang-compile && $(which grunt) release
 popd
-pushd ui/apps/ && npm install && bower install && grunt build && grunt lang-compile && grunt release
+pushd ui/apps/ && npm install && $(which bower) install && $(which grunt) build && $(which grunt) lang-compile && $(which grunt) release
 popd
 
 # Copy API and UI tar.gz releases

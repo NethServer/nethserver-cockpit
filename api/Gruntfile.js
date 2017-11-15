@@ -83,7 +83,7 @@ module.exports = function (grunt) {
       },
       listFiles: {
         command: function () {
-          return "ls -1 i18n/*.json";
+          return "mkdir dist/po && ls -1 i18n/*.json";
         },
         options: {
           callback: function (err, stdout, stderr, cb) {
