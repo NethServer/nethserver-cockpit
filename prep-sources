@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Prepare source for RPM build
-# Check for js utils: npm, grunt, bower
+# Check for js utils: npm, grunt, yarn
 
 set -e
 
@@ -20,10 +20,10 @@ if [ $? -gt 1 ]; then
 fi
 
 
-which bower >/dev/null
+which yarn >/dev/null
 
 if [ $? -gt 1 ]; then
-    echo "[ERROR] Install 'grunt' package: 'npm install -g bower'"
+    echo "[ERROR] Install 'grunt' package: 'npm install -g yarn'"
     exit 1
 fi
 
@@ -46,9 +46,9 @@ rm -f nethserver-cockpit-{ui,api}-*.tar.gz
 # Install dependecies and build UI and API
 pushd api/ && npm install && $(which grunt) build && $(which grunt) lang-compile && $(which grunt) release
 popd
-pushd ui/system/ && npm install && $(which bower) install && $(which grunt) build && $(which grunt) lang-compile && $(which grunt) release
+pushd ui/system/ && yarn --ignore-engines && $(which grunt) build && $(which grunt) lang-compile && $(which grunt) release
 popd
-pushd ui/apps/ && npm install && $(which bower) install && $(which grunt) build && $(which grunt) lang-compile && $(which grunt) release
+pushd ui/apps/ && yarn --ignore-engines && $(which grunt) build && $(which grunt) lang-compile && $(which grunt) release
 popd
 
 # Copy API and UI tar.gz releases
