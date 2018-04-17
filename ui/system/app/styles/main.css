@@ -232,6 +232,10 @@ iframe>.breadcrumb {
   border: none;
 }
 
+.route-card {
+  max-height: 119px !important;
+}
+
 .route-card:hover {
   cursor: pointer;
 }
