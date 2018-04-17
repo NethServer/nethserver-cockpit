@@ -32,7 +32,7 @@ before_install:
     - sudo apt-get install -y npm python-setuptools
     - sudo npm config set ca ""
     - sudo npm conf set strict-ssl false
-    - sudo npm install -g grunt-cli yarn
+    - sudo npm install -g grunt-cli
     - sudo easy_install pip
     - sudo pip install transifex-client
 
