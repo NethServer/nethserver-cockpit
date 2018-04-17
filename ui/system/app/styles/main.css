@@ -176,10 +176,6 @@ iframe>.breadcrumb {
   box-shadow: 0 1px 6px rgba(3, 3, 3, .35);
 }
 
-.card-icon-def {
-  font-family: 'PatternFlyIcons-webfont';
-}
-
 .list-group-item-container {
   border-top: none;
   border: 1px solid #eeeeee;
