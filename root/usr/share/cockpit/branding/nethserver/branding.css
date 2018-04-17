@@ -150,3 +150,7 @@ li.credential-lock>a:first-child {
 #credentials-item {
     display: none;
 }
+
+.modal-backdrop {
+    opacity: 0.5 !important;
+}
