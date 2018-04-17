@@ -30,7 +30,7 @@ env:
         "
 before_install:
     - sudo apt-get install -y npm python-setuptools
-    - sudo npm install -g grunt-cli bower
+    - sudo npm install -g grunt-cli yarn
     - sudo easy_install pip
     - sudo pip install transifex-client
 
