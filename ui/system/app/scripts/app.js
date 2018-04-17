@@ -49,7 +49,7 @@ angular
         controllerAs: 'usersGroups',
         name: 'Users and Groups',
         description: 'Manage your users and groups',
-        icon: 'pficon pficon-users',
+        icon: 'fa fa-users',
       })
       .when('/dns', {
         templateUrl: 'views/dns.html',
