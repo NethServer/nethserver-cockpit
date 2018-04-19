@@ -138,9 +138,14 @@ li.credential-lock>a:first-child {
         position: absolute;
         width: 100%;
     }
-    .list-group-item.active>a>span {
-        margin-left: 23px;
-    }
+}
+
+.list-group-item.active>a>span {
+    margin-left: -3px;
+}
+
+.area-ct-subnav .list-group-item.active {
+    border-left: 3px solid #39a5dd;
 }
 
 #go-account>a {
