@@ -47,6 +47,10 @@ input[type="file"] {
   z-index: 2;
 }
 
+.inline-block-div {
+  display: inline-block;
+}
+
 .custom-file-upload {
   border: 1px solid #bbb;
   display: inline-block;
