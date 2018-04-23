@@ -360,6 +360,11 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>',
           src: ['scripts/lib/plot.js'],
           dest: '<%= yeoman.dist %>',
+        }, {
+          expand: true,
+          cwd: '<%= yeoman.app %>',
+          src: ['scripts/lib/popper.js'],
+          dest: '<%= yeoman.dist %>',
         }]
       },
       styles: {
