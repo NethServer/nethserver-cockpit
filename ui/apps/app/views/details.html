@@ -10,11 +10,11 @@
 
     <ul class="list-group">
       <li class="list-group-item app-list-group-item no-padding">
-        <div id="accordion-markup">
+        <div id="accordion-markup-about">
           <div>
             <div>
-              <h4 class="accordion-title" data-toggle="collapse" data-parent="#accordion-markup" href="#collapseAbout">
-                About
+              <h4 class="accordion-title" data-toggle="collapse" data-parent="#accordion-markup-about" href="#collapseAbout">
+                {{'About' | translate}}
               </h4>
             </div>
             <div id="collapseAbout" class="panel-collapse collapse in">
@@ -26,11 +26,11 @@
         </div>
       </li>
       <li class="list-group-item app-list-group-item no-padding">
-        <div id="accordion-markup">
+        <div id="accordion-markup-author">
           <div>
             <div>
-              <h4 class="accordion-title" data-toggle="collapse" data-parent="#accordion-markup" href="#collapseAuthor">
-                Author
+              <h4 class="accordion-title" data-toggle="collapse" data-parent="#accordion-markup-author" href="#collapseAuthor">
+                {{'Author' | translate}}
               </h4>
             </div>
             <div id="collapseAuthor" class="panel-collapse collapse in">
@@ -43,11 +43,11 @@
         </div>
       </li>
       <li class="list-group-item app-list-group-item no-padding">
-        <div id="accordion-markup">
+        <div id="accordion-markup-contains">
           <div>
             <div>
-              <h4 class="accordion-title" data-toggle="collapse" data-parent="#accordion-markup" href="#collapseContains">
-                Content
+              <h4 class="accordion-title" data-toggle="collapse" data-parent="#accordion-markup-contains" href="#collapseContains">
+                {{'Content' | translate}}
               </h4>
             </div>
             <div id="collapseContains" class="panel-collapse collapse in">
@@ -60,7 +60,7 @@
       </li>
       <li ng-if="app.url" class="list-group-item app-list-group-item">
         <button ng-click="goToExternal(app.url)" class="btn btn-primary card-pf-time-frame-filter" type="button">
-          <span class="fa fa-external-link"></span> Open
+          <span class="fa fa-external-link"></span> {{'Open' | translate}}
         </button>
       </li>
       <!-- <li class="list-group-item app-list-group-item">

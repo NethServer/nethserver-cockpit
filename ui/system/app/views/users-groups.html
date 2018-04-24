@@ -23,7 +23,7 @@
     </div>
   </div>
 
-  <div ng-if="localSystem.users.provider !== null">
+  <div ng-if="localSystem.users.provider !== null" class="inline-block-div">
     <h3>{{'Actions' | translate}}</h3>
     <div class="btn-group">
       <button ng-if="objects.currentSearchFilter == 'user'" ng-click="openCreateUser()" class="btn btn-primary btn-lg shutdown-privileged"
