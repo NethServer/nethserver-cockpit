@@ -1,62 +1,32 @@
 #!/bin/bash
 
 # Prepare source for RPM build
-# Check for js utils: npm, grunt, yarn
+# Check for js utils: npm
 
 set -e
 
 which npm >/dev/null
 
 if [ $? -gt 1 ]; then
-    echo "[ERROR] Install 'npm' package: 'dnf install npm'"
+    echo "[ERROR] Install 'npm' package: 'yum/dnf install npm'"
     exit 1
 fi
 
-which grunt >/dev/null
+# Cleanup existing release
+rm -rf system/dist/
+rm -rf system/*.tar.gz
+rm -rf applications/dist/
+rm -rf applications/*.tar.gz
+rm -f *.tar.gz
+rm -f *.rpm
+rm -f *.log
 
-if [ $? -gt 1 ]; then
-    echo "[ERROR] Install 'grunt' package: 'npm install -g grunt-cli'"
-    exit 1
-fi
+# Pull new languages strings if .pot exists.
 
-
-which yarn >/dev/null
-
-if [ $? -gt 1 ]; then
-    echo "[ERROR] Install 'grunt' package: 'npm install -g yarn'"
-    exit 1
-fi
-
-# Cleanup existing releae
-rm -f api/nethserver-cockpit-api-*.tar.gz
-rm -f ui/system/nethserver-cockpit-ui-*.tar.gz
-rm -f ui/apps/nethserver-cockpit-ui-*.tar.gz
-
-# Cleanup current sources
-rm -f nethserver-cockpit-{ui,api}-*.tar.gz
-
-# pull new languages strings
-#tx pull -a
-
-# copy each pos into project directory
-#cp .tx/nethserver.Cockpit-api/* api/i18n/
-#cp .tx/nethserver.Cockpit-apps/* ui/apps/i18n/
-#cp .tx/nethserver.Cockpit-system/* ui/system/i18n/
 
 # Install dependecies and build UI and API
-pushd api/ && npm install && $(which grunt) build && $(which grunt) lang-compile && $(which grunt) release
-popd
-pushd ui/system/ && yarn --ignore-engines && $(which grunt) build && $(which grunt) lang-compile && $(which grunt) release
-popd
-pushd ui/apps/ && yarn --ignore-engines && $(which grunt) build && $(which grunt) lang-compile && $(which grunt) release
+pushd system && ./prep-sources && cd dist && tar cvzf ../../nethserver-cockpit-system.tar.gz *
 popd
 
-# Copy API and UI tar.gz releases
-cp ui/system/nethserver-cockpit-ui-*.tar.gz nethserver-cockpit-ui-system.tar.gz
-cp ui/apps/nethserver-cockpit-ui-*.tar.gz nethserver-cockpit-ui-apps.tar.gz
-cp api/nethserver-cockpit-api-*.tar.gz nethserver-cockpit-api.tar.gz
-
-# Print sha1sum output
-sha1sum nethserver-cockpit-api.tar.gz > SHA1SUM
-sha1sum nethserver-cockpit-ui-system.tar.gz >> SHA1SUM
-sha1sum nethserver-cockpit-ui-apps.tar.gz >> SHA1SUM
+pushd applications && ./prep-sources && cd dist && tar cvzf ../../nethserver-cockpit-applications.tar.gz *
+popd

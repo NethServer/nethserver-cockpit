@@ -7,9 +7,8 @@ License:        GPLv3
 URL:            %{url_prefix}/%{name}
 Source0:        %{name}-%{version}.tar.gz
 # Execute prep-sources to create Source1 and Source2
-Source1:        nethserver-cockpit-api.tar.gz
-Source2:        nethserver-cockpit-ui-system.tar.gz
-Source3:        nethserver-cockpit-ui-apps.tar.gz
+Source1:        nethserver-cockpit-system.tar.gz
+Source2:        nethserver-cockpit-applications.tar.gz
 BuildArch:      noarch
 
 BuildRequires:  nethserver-devtools
@@ -27,18 +26,18 @@ perl createlinks
 
 %install
 (cd root ; find . -depth -not -name '*.orig' -print | cpio -dump %{buildroot})
-mkdir -p %{buildroot}/usr/share/cockpit/nethserver/
-tar xvf %{SOURCE1} -C %{buildroot}/usr/share/cockpit/nethserver/
-tar xvf %{SOURCE2} -C %{buildroot}/usr/share/cockpit/nethserver/
-tar xvf %{SOURCE3} -C %{buildroot}/usr/share/cockpit/nethserver/
+mkdir -p %{buildroot}/usr/share/cockpit/nethserver-system/
+mkdir -p %{buildroot}/usr/share/cockpit/nethserver-applications/
+tar xvf %{SOURCE1} -C %{buildroot}/usr/share/cockpit/nethserver-system/
+tar xvf %{SOURCE2} -C %{buildroot}/usr/share/cockpit/nethserver-applications/
 %{genfilelist} %{buildroot} > filelist
 
 %files -f filelist
 
 %license COPYING
-%doc README.rst
+%doc README.md
 %dir %{_nseventsdir}/%{name}-update
 
 %changelog
-* Fri Sep 15 2017 Davide Principi <davide.principi@nethesis.it> - 0.0.0-1.ns7
+* Fri Sep 15 2017 Edoardo Spadoni <edoardo.spadoni@nethesis.it> - 0.0.0-1.ns7
 - Initial version

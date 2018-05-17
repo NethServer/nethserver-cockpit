@@ -16,7 +16,6 @@ body.login-pf {
 #brand {
     font-size: 18pt;
     /*text-transform: uppercase*/
-    ;
     content: "${NAME}";
 }
 
@@ -29,13 +28,13 @@ body.login-pf {
     margin-left: 8px;
 }
 
-.credential-lock.credential-locked>*:first-child {
+.credential-lock.credential-locked > *:first-child {
     height: 58px;
     line-height: 40px;
     font-size: 15px;
 }
 
-#navbar-oops>*:first-child {
+#navbar-oops > *:first-child {
     height: 58px;
     line-height: 40px;
     font-size: 15px;
@@ -45,13 +44,13 @@ li.credential-lock span {
     padding-left: 10px;
 }
 
-li.credential-lock>a:first-child {
+li.credential-lock > a:first-child {
     height: 58px;
     line-height: 40px;
     font-size: 15px;
 }
 
-.credential-lock.credential-unlocked>*:last-child {
+.credential-lock.credential-unlocked > *:last-child {
     height: 58px;
     line-height: 40px;
     font-size: 15px;
@@ -63,7 +62,7 @@ li.credential-lock>a:first-child {
     font-size: 15px;
 }
 
-#navbar-dropdown>span {
+#navbar-dropdown > span {
     line-height: 40px;
 }
 
@@ -91,13 +90,8 @@ li.credential-lock>a:first-child {
     background: #282828;
 }
 
-.nav-pf-vertical>.list-group>.list-group-item:hover>a {
-    background-color: #404040;
-}
-
-.nav-pf-vertical>.list-group>.list-group-item.active>a {
-    background-color: #404040;
-    border-left: 3px solid #39a5dc;
+.nav-pf-vertical > .list-group > .list-group-item:hover > a {
+    background-color: #4d5257;
 }
 
 .login-pf #badge {
@@ -108,7 +102,7 @@ li.credential-lock>a:first-child {
     text-align: center;
 }
 
-.nav-sidebar .list-group+.list-group {
+.nav-sidebar .list-group + .list-group {
     margin-top: 15px !important;
     border-top: 1px solid #191919 !important;
     padding-top: 0px !important;
@@ -140,7 +134,7 @@ li.credential-lock>a:first-child {
     }
 }
 
-.list-group-item.active>a>span {
+.list-group-item.active > a > span {
     margin-left: -3px;
 }
 
@@ -148,7 +142,7 @@ li.credential-lock>a:first-child {
     border-left: 3px solid #39a5dd;
 }
 
-#go-account>a {
+#go-account > a {
     display: none;
 }
 
