@@ -1,0 +1,75 @@
+#!/usr/bin/php
+<?php
+
+function readMemory()
+{
+    $fields = array();
+    $f = file('/proc/meminfo');
+    foreach ($f as $line) {
+        $tmp = explode(':',$line);
+        $tmp2 = explode(' ', trim($tmp[1]));
+        $mb = $tmp2[0] / 1024; # kB -> MB
+        $fields[trim($tmp[0])] = ceil($mb);
+    }
+    return $fields; 
+}
+
+function readUptime() {
+    $data = file_get_contents('/proc/uptime');
+    $upsecs = (int)substr($data, 0, strpos($data, ' '));
+    $uptime = array (
+        'days' => floor($data/60/60/24),
+        'hours' => $data/60/60%24,
+        'minutes' => $data/60%60,
+        'seconds' => $data%60
+    );
+    return $uptime;
+}
+
+function readCPU() 
+{
+    $ret = 0;
+    $f = file('/proc/cpuinfo');
+    foreach ($f as $line) {
+        if (strpos($line, 'processor') === 0) {
+            $ret++;
+        }
+    }
+    $tmp = explode(':',$f[4]);
+    return array('model' => trim($tmp[1]), 'n' => $ret);
+}
+
+function readLoad()
+{
+     return sys_getloadavg();
+}
+
+function readDMI()
+{
+    return trim(@file_get_contents("/sys/devices/virtual/dmi/id/sys_vendor"))." ".@trim(@file_get_contents("/sys/devices/virtual/dmi/id/product_name"));
+}
+
+function readRelease()
+{
+    return @trim(file_get_contents("/etc/nethserver-release"));
+}
+
+function readKernel()
+    {
+        $tmp = @explode(' ',file_get_contents("/proc/version"));
+        return  @trim($tmp[2]);
+    }
+
+
+print json_encode(array(
+    "status" => array(
+        "memory" => readMemory(),
+        "uptime" => readUptime(),
+        "cpu" => readCPU(),
+        "kernel" => readKernel(),
+        "hardware" => readDMI(),
+        "release" => readRelease(),
+        "load" => readLoad()
+    ),
+    "configuration" => ''
+));
