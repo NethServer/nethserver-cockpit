@@ -1,0 +1,17 @@
+#!/bin/bash
+
+. /usr/libexec/nethserver/ui/lib/helper_functions
+
+# Read JSON from stdin and set the record
+cat /dev/stdin | config setjson - 2>/dev/null
+
+if [ $? -gt 0 ]; then
+    invalid_error
+fi
+
+signal-event -j nethserver-openssh-save
+if [ $? -gt 0 ]; then
+    error "EventFailed" "See /var/log/messages"
+else
+    success
+fi
