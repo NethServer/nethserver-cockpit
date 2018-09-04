@@ -1,0 +1,43 @@
+#!/usr/bin/php
+<?php
+/*
+ * Copyright (C) 2018 Nethesis S.r.l.
+ * http://www.nethesis.it - nethserver@nethesis.it
+ *
+ * This script is part of NethServer.
+ *
+ * NethServer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License,
+ * or any later version.
+ *
+ * NethServer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NethServer.  If not, see COPYING.
+*/
+
+require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
+
+$data = readInput();
+
+$tmp = explode(",",$data['props']['NameServers']);
+$nameservers = array("dns1" => @$tmp[0], "dns2" => (string)@$tmp[1]);
+
+$v = new LegacyValidator($nameservers);
+
+$v->declareParameter('dns1',Validate::IPv4);
+$v->declareParameter('dns2', $v->createValidator()->orValidator(
+    $v->createValidator(Validate::IPv4),$v->createValidator()->maxLength(0)
+));
+
+# Validate the input
+if ($v->validate()) {
+    success();
+} else {
+    error($v);
+}
+
