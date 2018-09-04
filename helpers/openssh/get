@@ -1,0 +1,21 @@
+#!/usr/bin/perl
+
+use JSON;
+use esmith::db;
+my $db = esmith::db->open("configuration");
+my $port = $db->get_prop('sshd', 'TCPPort');
+my @connections;
+
+open(H, "ss -Hn state established '( dport = $port or sport = $port )'|");
+
+while (<H>) {
+  ($netid,$recvq,$sendq,$local,$peer) = split;
+  push(@connections, {'local' => $local, 'peer' => $peer});
+}
+close(H);
+
+my %out = (
+    'status' => { 'connections' => \@connections },
+    'configuration' => $db->prepare_json('sshd')
+);
+print to_json(\%out, {utf8 => 1, pretty => 0, allow_nonref => 1});

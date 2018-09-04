@@ -1,0 +1,53 @@
+#!/usr/bin/php
+<?php
+
+/** Include helper functions **/
+
+require_once("/usr/libexec/nethserver/ui/lib/Helpers.php");
+
+/**
+
+Read input 
+
+**/
+
+$data = readInput();
+
+/** Declare parameters reusing the old code 
+
+1. Create the validator (calling it $v)
+2. Copy all declareParamaters invocation from the old Module
+   Paramaters with ANYTHING validator could be omitted
+3. Replace all call to "$this" with "$v"
+4. Make sure the first paramater of declareParameter is the name of the prop inside the db
+5. (Optional) Remove the 3rd argument from declareParamater calls
+6. If present, copy validate function.
+   It should be enough to copy the code inside "if ($this->getRequest()->isMutation()) {" condition.
+   Replace all "$this" with "$v"
+7. Invoke the validate method 
+
+**/
+
+# Create the validator
+$v = new LegacyValidator($data['props']);
+
+# Declare all parameters
+$v->declareParameter('PasswordAuthentication', Validate::BOOLEAN);
+$v->declareParameter('PermitRootLogin', Validate::BOOLEAN);
+$v->declareParameter('TCPPort', Validate::PORTNUMBER);
+$v->declareParameter('status', Validate::SERVICESTATUS);
+
+/** Validate the input
+
+1. Validate the input calling $v->validate()
+2. Invoke success() method if validate() return true
+3. Otherwise invoke error and pass the validator object
+
+**/
+
+# Validate the input
+if ($v->validate()) {
+    success();
+} else {
+    error($v);
+}
