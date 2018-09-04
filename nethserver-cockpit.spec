@@ -27,6 +27,8 @@ perl createlinks
 (cd root ; find . -depth -not -name '*.orig' -print | cpio -dump %{buildroot})
 mkdir -p %{buildroot}/usr/share/cockpit/nethserver/
 tar xvf %{SOURCE1} -C %{buildroot}/usr/share/cockpit/nethserver/
+mkdir -p %{buildroot}/usr/libexec/nethserver/api/
+mv helpers/* %{buildroot}/usr/libexec/nethserver/api/
 %{genfilelist} %{buildroot} > filelist
 
 %files -f filelist
@@ -34,6 +36,7 @@ tar xvf %{SOURCE1} -C %{buildroot}/usr/share/cockpit/nethserver/
 %license COPYING
 %doc README.rst
 %dir %{_nseventsdir}/%{name}-update
+%dir /usr/libexec/nethserver/api/
 
 %changelog
 * Fri Sep 15 2017 Davide Principi <davide.principi@nethesis.it> - 0.0.0-1.ns7
