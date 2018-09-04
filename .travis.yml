@@ -6,9 +6,6 @@ node_js:
 
 services:
     - docker
-branches:
-    only:
-        - master
 env:
    global:
     - DEST_ID=core

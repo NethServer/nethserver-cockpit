@@ -1,0 +1,11 @@
+{
+  "version": 0,
+  "priority": 10,
+  "menu": {
+    "index": {
+      "label": "Applications",
+      "order": 20
+    }
+  },
+  "content-security-policy": "default-src 'self' 'unsafe-inline' 'unsafe-eval'"
+}

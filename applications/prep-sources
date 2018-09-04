@@ -13,10 +13,7 @@ if [ $? -gt 1 ]; then
 fi
 
 # Cleanup existing release
-rm -rf system/dist/
-rm -rf system/*.tar.gz
-rm -rf applications/dist/
-rm -rf applications/*.tar.gz
+rm -rf dist/
 rm -f *.tar.gz
 rm -f *.rpm
 rm -f *.log
@@ -25,8 +22,4 @@ rm -f *.log
 
 
 # Install dependecies and build UI and API
-pushd system && ./prep-sources && cd dist && tar cvzf ../../nethserver-cockpit-system.tar.gz *
-popd
-
-pushd applications && ./prep-sources && cd dist && tar cvzf ../../nethserver-cockpit-applications.tar.gz *
-popd
+npm install && npm run build && mv dist/static/manifest.json dist/ && mv dist/static/assets dist/
