@@ -8,8 +8,7 @@ function readMemory()
     foreach ($f as $line) {
         $tmp = explode(':',$line);
         $tmp2 = explode(' ', trim($tmp[1]));
-        $mb = $tmp2[0] / 1024; # kB -> MB
-        $fields[trim($tmp[0])] = ceil($mb);
+        $fields[trim($tmp[0])] = $tmp2[0];
     }
     return $fields; 
 }
