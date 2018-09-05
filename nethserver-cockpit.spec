@@ -12,6 +12,7 @@ BuildArch:      noarch
 
 BuildRequires:  nethserver-devtools
 Requires:       cockpit, cockpit-storaged, cockpit-packagekit
+Requires:	jq
 
 %description
 NethServer Server Manager Web UI based on Cockpit
