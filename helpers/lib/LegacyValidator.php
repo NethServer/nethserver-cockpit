@@ -1,5 +1,6 @@
 <?php
 require_once("Validator.php");
+require_once("EsmithDatabase.php");
 /*
  * Copyright (C) 2011 Nethesis S.r.l.
  * 
