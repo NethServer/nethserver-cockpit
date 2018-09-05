@@ -25,3 +25,5 @@ use esmith::Build::CreateLinks qw(:all);
 event_actions('nethserver-cockpit-update', qw(
       initialize-default-databases   00
 ));
+
+templates2events("/etc/os-release", 'nethserver-cockpit-update');

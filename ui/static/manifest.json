@@ -1,0 +1,17 @@
+{
+  "version": 0,
+  "name": "nethserver",
+
+  "menu": {
+    "index": {
+      "label": "System",
+      "order": 10
+    },
+    "/#/applications": {
+      "label": "Applications",
+      "order": 100
+    }
+  },
+
+  "content-security-policy": "default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:"
+}

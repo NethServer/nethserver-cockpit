@@ -16,25 +16,37 @@ body.login-pf {
 #brand {
     font-size: 18pt;
     /*text-transform: uppercase*/
-    content: "${NAME}";
+    content: "${NAME} ${VERSION}";
+}
+
+#brand::before {
+    content: "${NAME} ${VERSION}";
 }
 
 #index-brand {
-    content: "${NAME}";
+    content: "${NAME} ${VERSION}";
     text-transform: none;
+}
+
+#index-brand::before {
+    content: "${NAME} ${VERSION}";
+}
+
+.area-ct-content {
+    margin-left: -1px !important;
 }
 
 #content-user-name {
     margin-left: 8px;
 }
 
-.credential-lock.credential-locked > *:first-child {
+.credential-lock.credential-locked>*:first-child {
     height: 58px;
     line-height: 40px;
     font-size: 15px;
 }
 
-#navbar-oops > *:first-child {
+#navbar-oops>*:first-child {
     height: 58px;
     line-height: 40px;
     font-size: 15px;
@@ -44,13 +56,13 @@ li.credential-lock span {
     padding-left: 10px;
 }
 
-li.credential-lock > a:first-child {
+li.credential-lock>a:first-child {
     height: 58px;
     line-height: 40px;
     font-size: 15px;
 }
 
-.credential-lock.credential-unlocked > *:last-child {
+.credential-lock.credential-unlocked>*:last-child {
     height: 58px;
     line-height: 40px;
     font-size: 15px;
@@ -62,8 +74,8 @@ li.credential-lock > a:first-child {
     font-size: 15px;
 }
 
-#navbar-dropdown > span {
-    line-height: 40px;
+#navbar-dropdown>span {
+    line-height: 55px !important;
 }
 
 .navbar-brand {
@@ -77,7 +89,7 @@ li.credential-lock > a:first-child {
 }
 
 .navbar-pf .navbar-header {
-    min-height: 58px;
+    height: 58px !important;
     background: #171717;
 }
 
@@ -90,8 +102,12 @@ li.credential-lock > a:first-child {
     background: #282828;
 }
 
-.nav-pf-vertical > .list-group > .list-group-item:hover > a {
+.nav-pf-vertical>.list-group>.list-group-item:hover>a {
     background-color: #4d5257;
+}
+
+.navbar-pf-vertical .navbar-brand {
+    height: 35px !important;
 }
 
 .login-pf #badge {
@@ -102,7 +118,7 @@ li.credential-lock > a:first-child {
     text-align: center;
 }
 
-.nav-sidebar .list-group + .list-group {
+.nav-sidebar .list-group+.list-group {
     margin-top: 15px !important;
     border-top: 1px solid #191919 !important;
     padding-top: 0px !important;
@@ -112,20 +128,25 @@ li.credential-lock > a:first-child {
     .machine-color {
         border-left-width: 0px;
     }
+
     .nav-sidebar {
         width: 185px;
     }
+
     #host-nav {
         width: 200px !important;
     }
+
     .nav-sidebar a {
         width: 185px !important;
     }
+
     .login-pf #badge {
         float: right;
         margin-right: 64px;
         margin-top: 50px;
     }
+
     .login-pf .container {
         bottom: 13%;
         padding-left: 80px;
@@ -134,7 +155,7 @@ li.credential-lock > a:first-child {
     }
 }
 
-.list-group-item.active > a > span {
+.list-group-item.active>a>span {
     margin-left: -3px;
 }
 
@@ -142,7 +163,7 @@ li.credential-lock > a:first-child {
     border-left: 3px solid #39a5dd;
 }
 
-#go-account > a {
+#go-account>a {
     display: none;
 }
 
