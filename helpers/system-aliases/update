@@ -35,4 +35,4 @@ foreach ($data['configuration'] as $alias) {
     $db->setKey($alias['name'], 'self', array('Description' => $alias['props']['Description']));
 }
 
-system("signal-event -j host-modify");
+system("/sbin/e-smith/signal-event -j host-modify");

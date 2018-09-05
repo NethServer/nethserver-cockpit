@@ -29,7 +29,7 @@ if [ $? -gt 0 ]; then
     invalid_error
 fi
 
-signal-event -j hostname-modify
+/sbin/e-smith/signal-event -j hostname-modify
 if [ $? -gt 0 ]; then
     error "EventFailed" "See /var/log/messages"
 else

@@ -20,5 +20,5 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-prop=$(config getjson OrganizationContact)
+prop=$(/sbin/e-smith/config getjson OrganizationContact)
 printf '{"status":"","configuration":%s}' "$prop"

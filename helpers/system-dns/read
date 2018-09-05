@@ -1,4 +1,4 @@
 #!/bin/bash
 
-prop=$(config getjson dns)
+prop=$(/sbin/e-smith/config getjson dns)
 printf '{"status":"","configuration":%s}' "$prop"
