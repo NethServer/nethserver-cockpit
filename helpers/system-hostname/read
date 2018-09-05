@@ -1,0 +1,5 @@
+#!/bin/bash
+
+hostname=$(hostnamectl --static)
+
+printf '{"hostname":"%s"}' $hostname
