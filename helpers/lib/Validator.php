@@ -730,6 +730,28 @@ class Validator implements MandatoryValidatorInterface
         return preg_match($pattern, $value);
     }
 
+    private function prepareEscapedCommand($command, $arguments)
+    {
+        $escapedArguments = array();
+        $i = 1;
+        foreach ($arguments as $arg) {
+
+            if (is_string($arg)) {
+                $argOutput = $arg;
+            } elseif (is_callable($arg)) {
+                $argOutput = call_user_func($arg);
+            } else {
+                $argOutput = strval($arg);
+            }
+
+            $escapedArguments[sprintf('${%d}', $i)] = escapeshellarg($argOutput);
+            $i ++;
+        }
+        $escapedArguments['${@}'] = implode(' ', $escapedArguments);
+
+        return strtr($command, $escapedArguments);
+    }
+
     private function evalPlatform($value)
     {
         $args = func_get_args();
@@ -740,16 +762,16 @@ class Validator implements MandatoryValidatorInterface
         // .. append to last position
         $args[] = $value;
 
-        $process = exec('/usr/bin/sudo /sbin/e-smith/validate ${@}', $args);
+        exec($this->prepareEscapedCommand('/usr/bin/sudo /sbin/e-smith/validate ${@}', $args), $outputArray, $exitCode);
 
-        if ($process->getExitCode() !== 0) {
+        if ($exitCode !== 0) {
             $outputArray = $process->getOutputArray();
             $reason = array_pop($outputArray);
             $args['${reason}'] = substr(implode("\n", $outputArray), 0, 64);
             $this->addFailureInfo('valid_platform,' . $reason, $args);
         }
 
-        return $process->getExitCode() === 0;
+        return $exitCode === 0;
     }
 
     private function evalEmail($value)
