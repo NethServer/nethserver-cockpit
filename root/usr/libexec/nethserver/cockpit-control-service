@@ -1,0 +1,55 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2016 Nethesis S.r.l.
+# http://www.nethesis.it - support@nethesis.it
+# 
+# This script is part of NethServer.
+# 
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+# 
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+service=$1
+action=$2
+
+exists=`/sbin/e-smith/config getprop $service status 2>/dev/null`
+
+if [ "x" = "x$exists" ]; then
+    echo "Invalid service: $service"
+    exit 1
+fi
+
+if [ "x" = "x$action" ]; then
+    echo "Invalid action: $action"
+    exit 1
+fi
+
+if [ "$action" != "start" ] && [ "$action" != "stop" ] && [ "$action" != "restart" ]  && [ "$action" != "enable" ]  && [ "$action" != "disable" ]; then
+    echo "Invalid action: $action"
+    exit 1
+fi
+
+if [ "$action" == "enable" ]; then
+    /sbin/e-smith/config setprop $service status enabled
+    action="start"
+fi
+
+if [ "$action" == "disable" ]; then
+    /sbin/e-smith/config setprop $service status disabled
+    action="stop"
+fi
+
+
+logger -t control-service "$service $action"
+systemctl $action $service

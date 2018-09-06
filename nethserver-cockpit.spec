@@ -32,9 +32,9 @@ tar xvf %{SOURCE1} -C %{buildroot}/usr/share/cockpit/nethserver/
 %files -f filelist
 
 %license COPYING
-%doc README.md
+%doc README.rst
 %dir %{_nseventsdir}/%{name}-update
 
 %changelog
-* Fri Sep 15 2017 Edoardo Spadoni <edoardo.spadoni@nethesis.it> - 0.0.0-1.ns7
+* Fri Sep 15 2017 Davide Principi <davide.principi@nethesis.it> - 0.0.0-1.ns7
 - Initial version

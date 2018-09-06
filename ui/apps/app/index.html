@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css(.) styles/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/angular/angular-csp.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-select/dist/css/bootstrap-select.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-touchspin/src/jquery.bootstrap-touchspin.css" />
+  <link rel="stylesheet" href="bower_components/c3/c3.css" />
+  <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.css" />
+  <link rel="stylesheet" href="bower_components/datatables-colvis/css/dataTables.colVis.css" />
+  <link rel="stylesheet" href="bower_components/google-code-prettify/bin/prettify.min.css" />
+  <link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+  <link rel="stylesheet" href="bower_components/patternfly-bootstrap-combobox/css/bootstrap-combobox.css" />
+  <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly.css" />
+  <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly-additions.css" />
+  <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.css" />
+  <link rel="stylesheet" href="bower_components/ng-table/dist/ng-table.min.css" />
+  <link rel="stylesheet" href="bower_components/ng-password-meter/dist/ng-password-meter.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+  <link href="../base1/patternfly.css" rel="stylesheet">
+  <link href="../../static/branding.css" rel="stylesheet">
+  <!-- build:css(.tmp) styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
+</head>
+
+<body ng-app="appsAngularApp" ng-controller="InitCtrl" ng-csp>
+  <div ng-if="notifications.task.isShown" class="toast-pf alert alert-warning alert-dismissable toast-pf-top-right animate-repeat">
+    <div ng-hide="notifications.task.progress == 100" class="spinner spinner-sm task-spinner"></div>
+    <div class="pull-right toast-pf-action task-adjust">
+      <div class="progress progress-xs progress-label-left">
+        <div class="progress-bar {{notifications.task.progress == 100 ? 'progress-bar-success' : ''}}" role="progressbar" aria-valuenow="{{notifications.task.progress}}"
+          aria-valuemin="0" aria-valuemax="100" ng-style="progressBarWidth(notifications.task.progress)">
+          <span>{{notifications.task.progress}}%</span>
+        </div>
+      </div>
+    </div>
+    <span class="pficon pficon-warning-triangle-o"></span>
+    <strong>{{notifications.task.title}}</strong>. {{notifications.task.message}}
+  </div>
+
+  <div class="toast-pf alert alert-{{n.status}} alert-dismissable toast-pf-top-right animate-repeat" ng-repeat="n in notifications.list"
+    ng-style="offsetNotification($index)">
+    <button ng-if="n.status == 'danger'" type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="notifications.remove($index)">
+      <span class="pficon pficon-close"></span>
+    </button>
+    <div class="pull-right toast-pf-action {{n.type}}-adjust">
+      <a ng-if="n.type == 'action'" ng-click="n.method()">{{n.action}}</a>
+    </div>
+    <span class="pficon pficon-{{iconMap[n.status]}}"></span>
+    <strong>{{n.title}}</strong>. {{n.message}}
+  </div>
+  <!--[if lte IE 8]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+  <!-- Add your site or application content here -->
+  <div class="header">
+    <a href="#!{{c.url}}" ng-repeat="c in crumbs" ng-if="crumbs.length > 1" class="{{$last ? 'crumb crumb-none' : 'crumb'}}">{{c.name | translate}}
+      <span class="fa fa-angle-double-right gray crumb-space" ng-if="crumbs.length > 1 && !$last"></span>
+    </a>
+  </div>
+
+  <div class="cont">
+    <div ng-view=""></div>
+  </div>
+
+  <!-- <div class="footer">
+    <span ng-bind="'Total applications:' | translate"></span><a class="footer-span" ng-bind="applications.length" href=""></a>
+    <span ng-bind="'Updates available:' | translate"></span><a class="footer-span" ng-bind="stats.updates.length" href=""></a>
+  </div> -->
+
+  <!-- build:js(.) scripts/vendor.js -->
+  <!-- bower:js -->
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="bower_components/bootstrap-combobox/js/bootstrap-combobox.js"></script>
+  <script src="bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="bower_components/lodash/lodash.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+  <script src="bower_components/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
+  <script src="bower_components/bootstrap-touchspin/src/jquery.bootstrap-touchspin.js"></script>
+  <script src="bower_components/d3/d3.js"></script>
+  <script src="bower_components/c3/c3.js"></script>
+  <script src="bower_components/datatables/media/js/jquery.dataTables.js"></script>
+  <script src="bower_components/datatables-colreorder/js/dataTables.colReorder.js"></script>
+  <script src="bower_components/datatables-colvis/js/dataTables.colVis.js"></script>
+  <script src="bower_components/google-code-prettify/bin/prettify.min.js"></script>
+  <script src="bower_components/matchHeight/dist/jquery.matchHeight.js"></script>
+  <script src="bower_components/moment/moment.js"></script>
+  <script src="bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+  <script src="bower_components/patternfly-bootstrap-combobox/js/bootstrap-combobox.js"></script>
+  <script src="bower_components/patternfly-bootstrap-treeview/dist/bootstrap-treeview.js"></script>
+  <script src="bower_components/patternfly/dist/js/patternfly.js"></script>
+  <script src="bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
+  <script src="bower_components/ng-table/dist/ng-table.min.js"></script>
+  <script src="bower_components/ng-password-meter/dist/ng-password-meter.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <script src="../base1/cockpit.js"></script>
+  <script src="../nethserver/po/apps/po.js"></script>
+  <script src="../nethserver/po/api/po.js"></script>
+  <script src="../nethserver/core.js"></script>
+  <script src="../nethserver/applications.js"></script>
+
+  <!-- build:js({.tmp,app}) scripts/scripts.js -->
+  <script src="scripts/app.js"></script>
+  <script src="scripts/controllers/main.js"></script>
+  <script src="scripts/services/moduleservice.js"></script>
+  <script src="scripts/directives/mydirective.js"></script>
+  <script src="scripts/filters/translate.js"></script>
+  <script src="scripts/filters/myfilter.js"></script>
+  <script src="scripts/controllers/init.js"></script>
+  <script src="scripts/controllers/details.js"></script>
+  <!-- endbuild -->
+  <div ng-show="initObjects.isFake" class="fake-modal-backdrop"></div>
+</body>
+
+</html>

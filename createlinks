@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 #
-# Copyright (C) 2015 Nethesis S.r.l.
-# http://www.nethesis.it - support@nethesis.it
+# Copyright (C) 2017 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
 #
 # This script is part of NethServer.
 #
@@ -16,14 +16,47 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
+# along with NethServer.  If not, see COPYING.
 #
 
-use strict;
-use esmith::Build::CreateLinks qw(:all);
+use esmith::Build::CreateLinks  qw(:all);
+
+
+#
+# nethserver-cockpit-update event
+#
 
 event_actions('nethserver-cockpit-update', qw(
       initialize-default-databases   00
 ));
 
-templates2events("/etc/os-release", 'nethserver-cockpit-update');
+event_templates('nethserver-cockpit-update', qw(
+    /etc/os-release
+    /etc/cockpit/ws-certs.d/99-nethserver.cert
+));
+
+event_services('nethserver-cockpit-update', qw(
+    cockpit restart
+));
+
+#
+# certificate-update event
+#
+
+event_templates('certificate-update', qw(
+    /etc/cockpit/ws-certs.d/99-nethserver.cert
+));
+
+event_services('certificate-update', qw(
+    cockpit restart
+));
+
+
+#
+# Test events for development
+#
+
+safe_symlink('/bin/true', 'root/etc/e-smith/events/test-success/S20true');
+safe_symlink('/bin/false', 'root/etc/e-smith/events/test-failure/S20false');
+safe_symlink('/bin/true', 'root/etc/e-smith/validators/test-success/S20true');
+safe_symlink('/bin/false', 'root/etc/e-smith/validators/test-failure/S20false');

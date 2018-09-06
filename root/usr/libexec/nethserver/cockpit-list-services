@@ -1,0 +1,75 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2013 Nethesis S.r.l.
+# http://www.nethesis.it - support@nethesis.it
+# 
+# This script is part of NethServer.
+# 
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+# 
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+use strict;
+
+use esmith::ConfigDB;
+use NethServer::Service;
+use JSON;
+
+my $confDb = esmith::ConfigDB->open_ro();
+my @services = map { $_->key } $confDb->get_all_by_prop('type' => 'service');
+
+my @services;
+
+foreach ($confDb->get_all_by_prop('type' => 'service')) {
+    my $key = $_->key;
+    next if ( ! -e "/etc/e-smith/db/configuration/defaults/$key/status" );
+
+    my $s = NethServer::Service->new($key, $confDb);
+    my %props = $_->props();
+    my %ports;
+    my $desc = `systemctl show --property=Description $key`;
+    $desc =~ s/.*=//;
+    chomp $desc;
+    my $tcpPorts = $props{'TCPPorts'} || $props{'TCPPort'} || "";
+    my $udpPorts = $props{'UDPPorts'} || $props{'UDPPort'} || "";
+    $ports{'access'} = $props{'access'} || '';
+    delete($props{'status'}); 
+    delete($props{'access'}); 
+    delete($props{'type'});
+    delete($props{'TCPPort'});
+    delete($props{'UDPPort'});
+    delete($props{'UDPPorts'});
+    delete($props{'TCPPorts'});
+    
+    my @tmp = split(',',$tcpPorts);
+    $ports{'TCP'} = \@tmp;
+    @tmp = split(',',$udpPorts);
+    $ports{'UDP'} = \@tmp;
+
+    my $service = {
+        'name' => $key,
+	'status' => $s->is_enabled() ? 1 : 0,
+	'running' => $s->is_running() ? 1 : 0,
+        'description' => $desc,
+        'ports' => \%ports,
+        'props' => \%props
+    };
+   
+    #my %h = (%props, %$service) ;
+    push(@services,$service);
+}
+
+print JSON::to_json(\@services);
+exit(0);
+
