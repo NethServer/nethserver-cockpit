@@ -3,7 +3,7 @@ theme:
     name: material
     palette:
         primary: blue grey
-        accent: blue grey
+        accent: indigo
     logo:
         icon: 'build'
 site_url: https://nethserver.github.io/nethserver-cockpit
@@ -13,13 +13,14 @@ markdown_extensions:
         permalink: True
 nav:
 - Home: index.md
-- Development:
+- API:
     - api_guidelines.md
-    - application_manifest.md
+- User interface: 
     - environment.md
-    - internationalization.md
-    - new_module.md
     - ui_guidelines.md
+    - application_manifest.md
+- Tutorial: 
+    - new_module.md
 - Build:
     - build_doc.md
     - build_rpm.md
