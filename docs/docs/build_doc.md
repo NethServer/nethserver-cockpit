@@ -12,40 +12,9 @@ To serve the documentation during the development use:
 cd docs && mkdocs serve
 ```
 
-To build the documentation:
-```
-```
-
-The documentation will be generated inside the ``docs`` directory and must be served using
-an HTTP server:
-
-1. Move to the root directory of cloned repository and prepare the directory structure:
-```
-ln -s docs nethserver-cockpit
-```
-
-2. Launch an HTTP server using Python or NodeJS:
-```
-python -m SimpleHTTPServer 8080
-```
-or
-```
-http-server
-```
-
-3. Access the documentation: http://localhost:8080/nethserver-cockpit
-
 ## Publish to GitHub pages
 
-Move to the root directory of cloned repository and
-execute:
+To build and public the documentation directly to GitHub pages:
 ```
-./prep-docs
+cd docs && mkdocs gh-deploy
 ```
-
-The scripts will build the documentation and commit it to ``gh-pages`` branch.
-Generated site can be published using the following command:
-```
-git push origin gh-pages --force
-```
-
