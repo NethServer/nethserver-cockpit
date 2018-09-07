@@ -11,27 +11,22 @@
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://nethserver.github.io/nethserver-cockpit/application_manifest/</loc>
-     <lastmod>2018-09-07</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/environment/</loc>
      <lastmod>2018-09-07</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://nethserver.github.io/nethserver-cockpit/internationalization/</loc>
+     <loc>https://nethserver.github.io/nethserver-cockpit/ui_guidelines/</loc>
+     <lastmod>2018-09-07</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://nethserver.github.io/nethserver-cockpit/application_manifest/</loc>
      <lastmod>2018-09-07</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/new_module/</loc>
-     <lastmod>2018-09-07</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://nethserver.github.io/nethserver-cockpit/ui_guidelines/</loc>
      <lastmod>2018-09-07</lastmod>
      <changefreq>daily</changefreq>
     </url>

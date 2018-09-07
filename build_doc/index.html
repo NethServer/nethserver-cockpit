@@ -69,7 +69,7 @@
   
     
     
-    <body dir="ltr" data-md-color-primary="blue-grey" data-md-color-accent="blue-grey">
+    <body dir="ltr" data-md-color-primary="blue-grey" data-md-color-accent="indigo">
   
     <svg class="md-svg">
       <defs>
@@ -259,11 +259,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
     
     <label class="md-nav__link" for="nav-2">
-      Development
+      API
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-2">
-        Development
+        API
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -280,17 +280,29 @@
   </li>
 
         
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../application_manifest/" title="Application manifest" class="md-nav__link">
-      Application manifest
-    </a>
+      </ul>
+    </nav>
   </li>
 
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      User interface
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        User interface
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
         
           
           
@@ -310,11 +322,47 @@
 
 
   <li class="md-nav__item">
-    <a href="../internationalization/" title="Internationalization" class="md-nav__link">
-      Internationalization
+    <a href="../ui_guidelines/" title="UI guidelines" class="md-nav__link">
+      UI guidelines
     </a>
   </li>
 
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../application_manifest/" title="Application manifest" class="md-nav__link">
+      Application manifest
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Tutorial
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Tutorial
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
         
           
           
@@ -324,18 +372,6 @@
   <li class="md-nav__item">
     <a href="../new_module/" title="How to write a new module" class="md-nav__link">
       How to write a new module
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../ui_guidelines/" title="UI guidelines" class="md-nav__link">
-      UI guidelines
     </a>
   </li>
 
@@ -354,13 +390,13 @@
 
   <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
     
-    <label class="md-nav__link" for="nav-3">
+    <label class="md-nav__link" for="nav-5">
       Build
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-3">
+      <label class="md-nav__title" for="nav-5">
         Build
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -440,13 +476,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
     
-    <label class="md-nav__link" for="nav-4">
+    <label class="md-nav__link" for="nav-6">
       Manuals
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-4">
+      <label class="md-nav__title" for="nav-6">
         Manuals
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -549,40 +585,10 @@
 <pre><code>cd docs &amp;&amp; mkdocs serve
 </code></pre>
 
-<p>To build the documentation:</p>
-<pre><code></code></pre>
-
-<p>The documentation will be generated inside the <code>docs</code> directory and must be served using
-an HTTP server:</p>
-<ol>
-<li>Move to the root directory of cloned repository and prepare the directory structure:</li>
-</ol>
-<pre><code>ln -s docs nethserver-cockpit
-</code></pre>
-
-<ol>
-<li>Launch an HTTP server using Python or NodeJS:</li>
-</ol>
-<pre><code>python -m SimpleHTTPServer 8080
-</code></pre>
-
-<p>or</p>
-<pre><code>http-server
-</code></pre>
-
-<ol>
-<li>Access the documentation: http://localhost:8080/nethserver-cockpit</li>
-</ol>
 <h2 id="publish-to-github-pages">Publish to GitHub pages<a class="headerlink" href="#publish-to-github-pages" title="Permanent link">&para;</a></h2>
-<p>Move to the root directory of cloned repository and
-execute:</p>
-<pre><code>./prep-docs
-</code></pre>
-
-<p>The scripts will build the documentation and commit it to <code>gh-pages</code> branch.
-Generated site can be published using the following command:</p>
-<pre><code>git push origin gh-pages --force
-</code></pre>
+<p>To build and public the documentation directly to GitHub pages:
+```
+cd docs &amp;&amp; mkdocs gh-deploy</p>
                 
                   
                 
@@ -603,7 +609,7 @@ Generated site can be published using the following command:</p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../ui_guidelines/" title="UI guidelines" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../new_module/" title="How to write a new module" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -612,7 +618,7 @@ Generated site can be published using the following command:</p>
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                UI guidelines
+                How to write a new module
               </span>
             </div>
           </a>
