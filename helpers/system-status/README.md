@@ -1,17 +1,23 @@
+# system-status
+
+Return variuous information on the server.
+
 # read
 
-Return the system status:
+## Output
+
+The system status is composed by:
 
 - CPU number and type
 - kernel version
-- memory statistics
+- memory statistics (in kB)
 - uptime
 - os release
 - load
 - hardware vendor and product name
 
 Example:
-```
+```json
 {
     "configuration": "",
     "status": {

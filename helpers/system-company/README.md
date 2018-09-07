@@ -1,4 +1,12 @@
+# system-company
+
+Read ans set `OrganizationContact` record from `configuration` db.
+
 # read
+
+## Output
+
+The `configuration` key contains the `OrganizationContact` record.
 
 Output example:
 ```
@@ -21,6 +29,12 @@ Output example:
 ```
 
 # validate
+
+## Constraints
+
+No constrains defined.
+
+## Input
 
 Input: an esmith db record in JSON format.
 

@@ -1,9 +1,17 @@
+# system-alias
+
+Read and write system DNS system alias.
+
 # read
 
 List current configured aliases.
 
-Inside the `configuration` key there is a list of alias prop.
+## Output
+
+The `configuration` contains an array of alias records (type `self` from `hosts` db).
+
 Output example:
+```json
 {
   "status": "",
   "configuration": [
@@ -16,23 +24,34 @@ Output example:
     }
   ]
 }
+```
 
 # validate
 
 Validate a collection of alias records.
 
-Input: the same as read output
+## Constraints
+
+- the alias `name` must be a valid FQDN
+
+## Input
+
+Use the read output as input.
+Each record must have the type set to `self`, the `Description` field is currently not used.
 
 Example:
 ```
-echo '{ "configuration" : [{"props":{"Description":""},"name":"test3.neth.eu","type":"self"}, {"props":{"Description":""},"name":"test2.neth.eu","type":"self"}]}' | ./validate
+echo '{ "configuration" : [{"props":{"Description":""},"name":"test3.nethserver.org","type":"self"}, {"props":{"Description":""},"name":"test2.nethserver.org","type":"self"}]}' | ./validate
 ```
 
 # update
 
-Remove all existing alias and set the new ones.
+All alias are destroyed and recreated on update.
+The helper should be invoked once, after all alias has been modified.
 
-Input: the same as validate
+## Input
+
+The same from validate helper.
 
 Example:
 ```

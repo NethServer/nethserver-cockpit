@@ -1,9 +1,14 @@
+# system-dns
+
+Read and set upstream DNS servers for DNSMasq.
+
 # read
 
-Return the value of `sshd` prop value.
+## Input
 
-Example:
-```
+Return the value of `NameServers` record from `configuration` db.
+The record is inside the the `configuration` field:
+```json
 {
   "status": "",
   "configuration": {
@@ -18,7 +23,13 @@ Example:
 
 # validate
 
-Input: an esmith db record in JSON format.
+## Constraints
+
+- Nameservers must be a comma-separeted list of valid IPv4 addresses
+
+## Input
+
+The `NameServers` record from `configuration  esmith db record in JSON format.
 
 The NameServers property is a comma-separated list of IP address.
 It must contain at least one element.

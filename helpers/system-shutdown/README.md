@@ -2,7 +2,7 @@
 
 Reboot or poweroff the server.
 
-# Update
+# update
 
 ## Input
 
