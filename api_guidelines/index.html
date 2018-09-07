@@ -1,10 +1,1230 @@
+
+
+
+
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <meta http-equiv="refresh" content="0; url=../" />
-        <script>
-            sessionStorage.setItem('redirectPath', 'api_guidelines' + window.location.hash);
-        </script>
-    </head>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+        <link rel="canonical" href="https://nethserver.github.io/nethserver-cockpit/api_guidelines/">
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.3, mkdocs-material-3.0.4">
+    
+    
+      
+        <title>API guidelines - NethServer Cockpit</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/application.451f80e5.css">
+      
+        <link rel="stylesheet" href="../assets/stylesheets/application-palette.22915126.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#546e7a">
+      
+    
+    
+      <script src="../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../assets/fonts/material-icons.css">
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="blue-grey" data-md-color-accent="blue-grey">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="../#api-guidelines" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="https://nethserver.github.io/nethserver-cockpit" title="NethServer Cockpit" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon">build</i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                NethServer Cockpit
+              </span>
+              <span class="md-header-nav__topic">
+                API guidelines
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/NethServer/nethserver-cockpit/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="https://nethserver.github.io/nethserver-cockpit" title="NethServer Cockpit" class="md-nav__button md-logo">
+      
+        <i class="md-icon">build</i>
+      
+    </a>
+    NethServer Cockpit
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/NethServer/nethserver-cockpit/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+    
+    <label class="md-nav__link" for="nav-2">
+      Development
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Development
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        API guidelines
+      </label>
+    
+    <a href="./" title="API guidelines" class="md-nav__link md-nav__link--active">
+      API guidelines
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#object-format" title="Object format" class="md-nav__link">
+    Object format
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" title="Example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errors" title="Errors" class="md-nav__link">
+    Errors
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#well-known-errors" title="Well-known errors" class="md-nav__link">
+    Well-known errors
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-design" title="API design" class="md-nav__link">
+    API design
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add" title="Add" class="md-nav__link">
+    Add
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_1" title="Example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edit" title="Edit" class="md-nav__link">
+    Edit
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_2" title="Example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete" title="Delete" class="md-nav__link">
+    Delete
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_3" title="Example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-all" title="Get all" class="md-nav__link">
+    Get all
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_4" title="Example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-one" title="Get one" class="md-nav__link">
+    Get one
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_5" title="Example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-tests" title="API tests" class="md-nav__link">
+    API tests
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_6" title="Example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../application_manifest/" title="Application manifest" class="md-nav__link">
+      Application manifest
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../environment/" title="Development environment" class="md-nav__link">
+      Development environment
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../internationalization/" title="Internationalization" class="md-nav__link">
+      Internationalization
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../new_module/" title="How to write a new module" class="md-nav__link">
+      How to write a new module
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../ui_guidelines/" title="UI guidelines" class="md-nav__link">
+      UI guidelines
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Build
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Build
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../build_doc/" title="Building documentation" class="md-nav__link">
+      Building documentation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../build_rpm/" title="Building RPM" class="md-nav__link">
+      Building RPM
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Manuals
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Manuals
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="http://docs.nethserver.org/projects/nethserver-devel" title="NethServer Developer manual" class="md-nav__link">
+      NethServer Developer manual
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="http://docs.nethserver.org" title="NethServer Administrator manual" class="md-nav__link">
+      NethServer Administrator manual
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="http://cockpit-project.org/guide/latest/" title="Cockpit Guide" class="md-nav__link">
+      Cockpit Guide
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#object-format" title="Object format" class="md-nav__link">
+    Object format
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" title="Example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errors" title="Errors" class="md-nav__link">
+    Errors
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#well-known-errors" title="Well-known errors" class="md-nav__link">
+    Well-known errors
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-design" title="API design" class="md-nav__link">
+    API design
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add" title="Add" class="md-nav__link">
+    Add
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_1" title="Example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edit" title="Edit" class="md-nav__link">
+    Edit
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_2" title="Example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete" title="Delete" class="md-nav__link">
+    Delete
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_3" title="Example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-all" title="Get all" class="md-nav__link">
+    Get all
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_4" title="Example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-one" title="Get one" class="md-nav__link">
+    Get one
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_5" title="Example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-tests" title="API tests" class="md-nav__link">
+    API tests
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_6" title="Example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/api_guidelines.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="api-guidelines">API guidelines<a class="headerlink" href="#api-guidelines" title="Permanent link">&para;</a></h1>
+<p><strong>Index</strong></p>
+<ul>
+<li><a href="#object-format">Object format</a></li>
+<li><a href="#errors">Errors</a></li>
+<li><a href="#api-design">API design</a></li>
+<li><a href="#api-tests">API tests</a></li>
+</ul>
+<h2 id="object-format">Object format<a class="headerlink" href="#object-format" title="Permanent link">&para;</a></h2>
+<p>Objects passed to and returned by APIs must reflect esmith db format and respect the upper/lower case notation
+of property names:</p>
+<pre><code>{
+  key: 'objKey',
+  type: 'objType',
+  FirstProp: 'FirstPropValue',
+  ...
+}
+</code></pre>
+
+<p>Please note that <strong>key</strong> and <strong>type</strong> field are reserved.</p>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<p>Host <code>goofy</code> inside the <code>hosts</code> database.</p>
+<p>Original esmith db notation:</p>
+<pre><code>goofy=local
+    Description=Goofy workstation
+    IpAddress=192.168.1.22
+</code></pre>
+
+<p>Equivalent JavaScript object notation:</p>
+<pre><code>var goofy = {
+  key: &quot;goofy&quot;,
+  type: &quot;local&quot;,
+  Description: &quot;Goofy workstation&quot;,
+  IpAddress: &quot;192.168.1.22&quot;,
+}
+</code></pre>
+
+<h2 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h2>
+<p>If something goes wrong, APIs must throw a <a href="api#nethserver.Error">nethserver.Error</a>
+object, which describes the error reason and possibly why the object passed to
+the API function caused the error.</p>
+<p>For instance:</p>
+<pre><code>throw new nethserver.Error({
+    id: 1507721123244,
+    type: 'NotValid',
+    message: 'Generic validation error reason',
+    attributes: {
+        'MyProp1': 'field-specific error reason', 
+        'MyProp2': 'other field-specific error reason'
+    }
+});
+</code></pre>
+
+<p>The <strong>message</strong> property should be used if an error is not caused by a specific
+attribute. On the other hand, there could be cases where the <strong>attributes</strong>
+object is empty, or undefined because the error condition does not depend on any
+of the attributes or attributes are not defined at all. </p>
+<p>Note that the same Error object could represent multiple failure reasons.</p>
+<p>How to generate a good <code>id</code> in JavaScript:</p>
+<pre><code>+ new Date()
+</code></pre>
+
+<p>An equivalent for Bash:</p>
+<pre><code class="text">$ date +%s
+</code></pre>
+
+<h3 id="well-known-errors">Well-known errors<a class="headerlink" href="#well-known-errors" title="Permanent link">&para;</a></h3>
+<p>Well-known errors are:</p>
+<ul>
+<li>
+<p>Validation error: <strong>NotValid</strong>
+  <code>throw new nethserver.Error({
+      id: 1507721123244,
+      type: 'NotValid',
+      message: 'Generic validation error reason',
+      attributes: {'myProp': 'field-specific error reason'}
+  });</code></p>
+</li>
+<li>
+<p>Not found error: <strong>NotFound</strong>
+  <code>throw new nethserver.Error({
+      id: 1507721155244,
+      type: 'NotFound',
+      message: 'Generic validation error reason',
+      attributes: {'key': 'field-specific error reason'}
+  });</code></p>
+</li>
+<li>
+<p>Task already running error (the e-smith layer can't handle multiple running events): <strong>TaskRun</strong>
+ <code>throw new nethserver.Error({
+      id: 1507721155255,
+      type: 'TaskRun',
+      message: 'Another task is already running'
+  });</code></p>
+</li>
+<li>
+<p>type <code>ValidatorFailed</code>: validator procedure error - the <code>validate</code> command failed</p>
+</li>
+</ul>
+<h2 id="api-design">API design<a class="headerlink" href="#api-design" title="Permanent link">&para;</a></h2>
+<p>Each API should always return a JavaScript promise in case of success or error.</p>
+<p>Any function which modifies system configuration must take care of semantic validation
+of input values, like checking if a record already exists or deny to set an option which
+can cause errors on other modules (eg. using the same IP address on multiple network interfaces).</p>
+<p>On success an API function returns a promise which is resolved if validation is passed and the configuration
+can be saved into the system. On error, the function must throw an error.
+It's responsability of each API function to signal an event just after returning the promise.
+The framework will take care to inform the user when the event task has been terminated.</p>
+<p>APIs implementing CRUD operations, should declare these types of actions:</p>
+<ul>
+<li><a href="#add">add</a></li>
+<li><a href="#edit">edit</a></li>
+<li><a href="#delete">delete</a></li>
+<li><a href="#get-all">getAll</a></li>
+<li><a href="#get-one">getOne</a></li>
+</ul>
+<h3 id="add">Add<a class="headerlink" href="#add" title="Permanent link">&para;</a></h3>
+<p>The API developer should provide one typed <code>add</code> method for each record type managed by the module.</p>
+<p><em>Parameter</em>: object to be addedd</p>
+<h4 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h4>
+<p>DNS module, which saves records inside the <code>hosts</code> database, defines two methods: <code>addRemoteHost</code>,  <code>addAlias</code>.</p>
+<pre><code>addRemoteHost: function(host) {
+  var db = nethserver.getDatabase('configuration');
+  return db.open().then(function() {
+      ...
+      if ( //not validate ) {
+          throw new Error(&quot;NotValid&quot;, &quot;Describe validation error here&quot;);
+      }
+      ...
+      db.setObject(obj)
+      return db.save();
+  }).then(function(){
+      nethserver.signalEvent('event', argument);
+  });
+}
+</code></pre>
+
+<h3 id="edit">Edit<a class="headerlink" href="#edit" title="Permanent link">&para;</a></h3>
+<p>The API developer should provide one typed <code>edit</code> method for each record type managed by the module.</p>
+<p><em>Parameter</em>: object to be modified</p>
+<h4 id="example_2">Example<a class="headerlink" href="#example_2" title="Permanent link">&para;</a></h4>
+<p>DNS module, which saves records inside the <code>hosts</code> database; define two methods named <code>editRemoteHost</code> and <code>editAlias</code>.</p>
+<pre><code>editRemoteHost: function(host) {
+  var db = nethserver.getDatabase('hosts');
+  return db.open().then(function() {
+      ...
+      if ( //object not found ) {
+          throw new Error(&quot;not found&quot;, &quot;Describe not found error here&quot;);
+      }
+      ...
+      db.setObject(obj)
+      return db.save();
+  }).then(function(){
+      nethserver.signalEvent('event', argument);
+  });
+}
+</code></pre>
+
+<h3 id="delete">Delete<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h3>
+<p><em>Parameter</em>: key to be deleted</p>
+<h4 id="example_3">Example<a class="headerlink" href="#example_3" title="Permanent link">&para;</a></h4>
+<p>DNS module, which saves records inside the <code>`hosts</code>, can define one or more methods. </p>
+<pre><code>deleteRemoteHost: function(hostKey) {
+  var db = nethserver.getDatabase('hosts');
+  return db.open().then(function() {
+      ...
+      if ( //object not found) {
+        throw new Error(&quot;error&quot;, &quot;Describe not found error here&quot;);
+      }
+      ...
+      db.delete(hostKey);
+      return db.save();
+  }).then(function(){
+       nethserver.signalEvent('host-delete', hostKey);
+  });
+};
+</code></pre>
+
+<h3 id="get-all">Get all<a class="headerlink" href="#get-all" title="Permanent link">&para;</a></h3>
+<p>On success returns a success promise along with a list of all requested objects, on error throws an exception.</p>
+<p>The API developer should provide one typed <code>getAll</code> method for each record type managed by the module.</p>
+<h4 id="example_4">Example<a class="headerlink" href="#example_4" title="Permanent link">&para;</a></h4>
+<p>DNS module, which saves records inside the <code>`hosts</code>, defines two typed methods: <code>getAllRemoteHosts</code>, <code>getAllAliases</code>.</p>
+<pre><code>getAllRemoteHost: function() {
+    var ret = [];
+    var db = nethserver.getDatabase('hosts');
+    return db.open().then(function() {
+        var keys = db.keys();
+        for (var k in keys) {
+            var o = db.getObject(keys[k]);
+            ...
+            ret.push(o);
+        }
+        ...
+        return ret;
+    });
+}
+</code></pre>
+
+<h3 id="get-one">Get one<a class="headerlink" href="#get-one" title="Permanent link">&para;</a></h3>
+<p>On success returns a success promise along with the requested object, on error throws an exception.</p>
+<p><em>Parameter</em>: key to be retrieved.</p>
+<h4 id="example_5">Example<a class="headerlink" href="#example_5" title="Permanent link">&para;</a></h4>
+<p>DNS module, which saves records inside the <code>`hosts</code>, can define one or methos: <code>getOne</code>.</p>
+<pre><code>getOne: function(hostKey) {
+    var db = nethserver.getDatabase('hosts');
+    return db.open().then(function() {
+        return db.getObject(hostKey);
+    });
+}
+</code></pre>
+
+<h2 id="api-tests">API tests<a class="headerlink" href="#api-tests" title="Permanent link">&para;</a></h2>
+<p>When implementing a new API, the developer should take care of writing tests.
+Test should be placed undet the <code>api/test</code> directory.
+Each test is composed by two files:</p>
+<ul>
+<li>a js file which runs the tests</li>
+<li>an html file which displays test results</li>
+</ul>
+<p>Used test framework is <a href="https://mochajs.org/">Mocha</a> which uses <a href="http://shouldjs.github.io/">Should.js</a>.</p>
+<p>Test can be accessed using Cockpit interface: <code>https://&lt;server&gt;:9090/nethserver/test-&lt;module_name&gt;</code></p>
+<h3 id="example_6">Example<a class="headerlink" href="#example_6" title="Permanent link">&para;</a></h3>
+<p>Given a module named <code>mymodule</code>, create two files:</p>
+<ul>
+<li>test-mymodule.js</li>
+<li>test-mymodule.html</li>
+</ul>
+<p>Test will be accessibile at: <code>https://myserver.mydomain.org:9090/nethserver/test-mymodule</code></p>
+<p>Content of <code>test-mymodule.js</code>:</p>
+<pre><code>mocha.setup('bdd');
+
+describe('nethserver.system namespace', function () {
+    it('is defined', function() {
+        should(typeof nethserver.system === 'object').be.ok();
+    });
+});
+
+describe('MyModule testCall', function(done) {
+   return nethserver.mymodule.testCall().then(function(val) {
+       return val.should.be.equal(&quot;abcd&quot;); 
+   });
+});
+
+
+it('MyModule testCalls musth throw error', function() {
+    nethserver.system.mymodule.testCall('wrong paramater').should.be.rejectedWith(Error);
+});
+
+mocha.checkLeaks();
+mocha.globals(['jQuery', 'cockpit']);
+mocha.run();
+</code></pre>
+
+<p>Content of <code>test-mymodule.html</code>:</p>
+<pre><code>&lt;!doctype html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+      &lt;title&gt;NethServer mymodule API test&lt;/title&gt;
+      &lt;meta charset=&quot;utf-8&quot;&gt;
+      &lt;link rel=&quot;stylesheet&quot; href=&quot;mocha.css&quot;&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div id=&quot;mocha&quot;&gt;&lt;/div&gt;
+
+        &lt;script src=&quot;../base1/jquery.min.js&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;../base1/cockpit.min.js&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;core.js&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;mymodule.js&quot;&gt;&lt;/script&gt; &lt;!-- include the implementation of you module --&gt;
+        &lt;script src=&quot;should.js&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;mocha.js&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;test-mockup.js&quot;&gt;&lt;/script&gt; &lt;!-- avoid calling real events --&gt;
+        &lt;script src=&quot;test-system.js&quot;&gt;&lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href=".." title="Home" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Home
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../application_manifest/" title="Application manifest" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Application manifest
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/application.583bbe55.js"></script>
+      
+      <script>app.initialize({version:"1.0.3",url:{base:".."}})</script>
+      
+    
+    
+      
+    
+  </body>
 </html>

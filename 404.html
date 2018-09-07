@@ -11,8 +11,6 @@
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       
       
-        <link rel="canonical" href="https://nethserver.github.io/nethserver-cockpit/build_rpm/">
-      
       
       
         <meta name="lang:clipboard.copy" content="Copy to clipboard">
@@ -33,18 +31,18 @@
       
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
-      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <link rel="shortcut icon" href="/nethserver-cockpit/assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.0.3, mkdocs-material-3.0.4">
     
     
       
-        <title>Building RPM - NethServer Cockpit</title>
+        <title>NethServer Cockpit</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application.451f80e5.css">
+      <link rel="stylesheet" href="/nethserver-cockpit/assets/stylesheets/application.451f80e5.css">
       
-        <link rel="stylesheet" href="../assets/stylesheets/application-palette.22915126.css">
+        <link rel="stylesheet" href="/nethserver-cockpit/assets/stylesheets/application-palette.22915126.css">
       
       
         
@@ -53,7 +51,7 @@
       
     
     
-      <script src="../assets/javascripts/modernizr.1aa3b519.js"></script>
+      <script src="/nethserver-cockpit/assets/javascripts/modernizr.1aa3b519.js"></script>
     
     
       
@@ -62,7 +60,7 @@
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
-    <link rel="stylesheet" href="../assets/fonts/material-icons.css">
+    <link rel="stylesheet" href="/nethserver-cockpit/assets/fonts/material-icons.css">
     
     
   </head>
@@ -100,10 +98,6 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="../#building-rpm" tabindex="1" class="md-skip">
-        Skip to content
-      </a>
-    
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid">
@@ -126,7 +120,7 @@
                 NethServer Cockpit
               </span>
               <span class="md-header-nav__topic">
-                Building RPM
+                
               </span>
             
           
@@ -243,7 +237,7 @@
 
 
   <li class="md-nav__item">
-    <a href=".." title="Home" class="md-nav__link">
+    <a href="/nethserver-cockpit/." title="Home" class="md-nav__link">
       Home
     </a>
   </li>
@@ -274,7 +268,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../api_guidelines/" title="API guidelines" class="md-nav__link">
+    <a href="/nethserver-cockpit/api_guidelines/" title="API guidelines" class="md-nav__link">
       API guidelines
     </a>
   </li>
@@ -286,7 +280,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../application_manifest/" title="Application manifest" class="md-nav__link">
+    <a href="/nethserver-cockpit/application_manifest/" title="Application manifest" class="md-nav__link">
       Application manifest
     </a>
   </li>
@@ -298,7 +292,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../environment/" title="Development environment" class="md-nav__link">
+    <a href="/nethserver-cockpit/environment/" title="Development environment" class="md-nav__link">
       Development environment
     </a>
   </li>
@@ -310,7 +304,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../internationalization/" title="Internationalization" class="md-nav__link">
+    <a href="/nethserver-cockpit/internationalization/" title="Internationalization" class="md-nav__link">
       Internationalization
     </a>
   </li>
@@ -322,7 +316,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../new_module/" title="How to write a new module" class="md-nav__link">
+    <a href="/nethserver-cockpit/new_module/" title="How to write a new module" class="md-nav__link">
       How to write a new module
     </a>
   </li>
@@ -334,7 +328,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../ui_guidelines/" title="UI guidelines" class="md-nav__link">
+    <a href="/nethserver-cockpit/ui_guidelines/" title="UI guidelines" class="md-nav__link">
       UI guidelines
     </a>
   </li>
@@ -349,12 +343,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
     
     <label class="md-nav__link" for="nav-3">
       Build
@@ -372,7 +364,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../build_doc/" title="Building documentation" class="md-nav__link">
+    <a href="/nethserver-cockpit/build_doc/" title="Building documentation" class="md-nav__link">
       Building documentation
     </a>
   </li>
@@ -382,49 +374,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Building RPM
-      </label>
-    
-    <a href="./" title="Building RPM" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="/nethserver-cockpit/build_rpm/" title="Building RPM" class="md-nav__link">
       Building RPM
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#install-rpm" title="Install RPM" class="md-nav__link">
-    Install RPM
-  </a>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -500,66 +454,12 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-<nav class="md-nav md-nav--secondary">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#install-rpm" title="Install RPM" class="md-nav__link">
-    Install RPM
-  </a>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
-                
-                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/build_rpm.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
-                
-                
-                <h1 id="building-rpm">Building RPM<a class="headerlink" href="#building-rpm" title="Permanent link">&para;</a></h1>
-<p>Move to the root directory of cloned repository and
-use standard <code>make-rpms</code> NethServer tool:</p>
-<pre><code>  ./prep-sources &amp;&amp; make-rpms
-</code></pre>
+  <h1>404 - Not found</h1>
 
-<h2 id="install-rpm">Install RPM<a class="headerlink" href="#install-rpm" title="Permanent link">&para;</a></h2>
-<ol>
-<li>
-<p>Copy the rpm to the NethServer</p>
-</li>
-<li>
-<p>Access the NethServer, then download COPR repository:
-   <code>wget https://copr.fedorainfracloud.org/coprs/g/cockpit/cockpit-preview/repo/epel-7/group_cockpit-cockpit-preview-epel-7.repo -O /etc/yum.repos.d/cockpit.repo
-   yum install nethserver-cockpit*rpm</code></p>
-</li>
-</ol>
-                
-                  
-                
-              
               
                 
 
@@ -572,27 +472,6 @@ use standard <code>make-rpms</code> NethServer tool:</p>
       
         
 <footer class="md-footer">
-  
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid">
-        
-          <a href="../build_doc/" title="Building documentation" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
-            </div>
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
-                <span class="md-footer-nav__direction">
-                  Previous
-                </span>
-                Building documentation
-              </span>
-            </div>
-          </a>
-        
-        
-      </nav>
-    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -613,9 +492,9 @@ use standard <code>make-rpms</code> NethServer tool:</p>
       
     </div>
     
-      <script src="../assets/javascripts/application.583bbe55.js"></script>
+      <script src="/nethserver-cockpit/assets/javascripts/application.583bbe55.js"></script>
       
-      <script>app.initialize({version:"1.0.3",url:{base:".."}})</script>
+      <script>app.initialize({version:"1.0.3",url:{base:"/nethserver-cockpit"}})</script>
       
     
     

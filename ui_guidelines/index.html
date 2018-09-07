@@ -1,10 +1,824 @@
+
+
+
+
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <meta http-equiv="refresh" content="0; url=../" />
-        <script>
-            sessionStorage.setItem('redirectPath', 'ui_guidelines' + window.location.hash);
-        </script>
-    </head>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+        <link rel="canonical" href="https://nethserver.github.io/nethserver-cockpit/ui_guidelines/">
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.3, mkdocs-material-3.0.4">
+    
+    
+      
+        <title>UI guidelines - NethServer Cockpit</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/application.451f80e5.css">
+      
+        <link rel="stylesheet" href="../assets/stylesheets/application-palette.22915126.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#546e7a">
+      
+    
+    
+      <script src="../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../assets/fonts/material-icons.css">
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="blue-grey" data-md-color-accent="blue-grey">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="../#ui-guidelines" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="https://nethserver.github.io/nethserver-cockpit" title="NethServer Cockpit" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon">build</i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                NethServer Cockpit
+              </span>
+              <span class="md-header-nav__topic">
+                UI guidelines
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/NethServer/nethserver-cockpit/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="https://nethserver.github.io/nethserver-cockpit" title="NethServer Cockpit" class="md-nav__button md-logo">
+      
+        <i class="md-icon">build</i>
+      
+    </a>
+    NethServer Cockpit
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/NethServer/nethserver-cockpit/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+    
+    <label class="md-nav__link" for="nav-2">
+      Development
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Development
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api_guidelines/" title="API guidelines" class="md-nav__link">
+      API guidelines
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../application_manifest/" title="Application manifest" class="md-nav__link">
+      Application manifest
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../environment/" title="Development environment" class="md-nav__link">
+      Development environment
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../internationalization/" title="Internationalization" class="md-nav__link">
+      Internationalization
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../new_module/" title="How to write a new module" class="md-nav__link">
+      How to write a new module
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        UI guidelines
+      </label>
+    
+    <a href="./" title="UI guidelines" class="md-nav__link md-nav__link--active">
+      UI guidelines
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ui-design" title="UI design" class="md-nav__link">
+    UI design
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#left-menu" title="Left menu" class="md-nav__link">
+    Left menu
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applications" title="Applications" class="md-nav__link">
+    Applications
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forms" title="Forms" class="md-nav__link">
+    Forms
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notifications" title="Notifications" class="md-nav__link">
+    Notifications
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" title="Example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modals" title="Modals" class="md-nav__link">
+    Modals
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessibility" title="Accessibility" class="md-nav__link">
+    Accessibility
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Build
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Build
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../build_doc/" title="Building documentation" class="md-nav__link">
+      Building documentation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../build_rpm/" title="Building RPM" class="md-nav__link">
+      Building RPM
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Manuals
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Manuals
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="http://docs.nethserver.org/projects/nethserver-devel" title="NethServer Developer manual" class="md-nav__link">
+      NethServer Developer manual
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="http://docs.nethserver.org" title="NethServer Administrator manual" class="md-nav__link">
+      NethServer Administrator manual
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="http://cockpit-project.org/guide/latest/" title="Cockpit Guide" class="md-nav__link">
+      Cockpit Guide
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ui-design" title="UI design" class="md-nav__link">
+    UI design
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#left-menu" title="Left menu" class="md-nav__link">
+    Left menu
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applications" title="Applications" class="md-nav__link">
+    Applications
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forms" title="Forms" class="md-nav__link">
+    Forms
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notifications" title="Notifications" class="md-nav__link">
+    Notifications
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" title="Example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modals" title="Modals" class="md-nav__link">
+    Modals
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessibility" title="Accessibility" class="md-nav__link">
+    Accessibility
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/ui_guidelines.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="ui-guidelines">UI guidelines<a class="headerlink" href="#ui-guidelines" title="Permanent link">&para;</a></h1>
+<p><strong>Index</strong></p>
+<ul>
+<li><a href="#ui-design">UI design</a></li>
+<li><a href="#left-menu">Left menu</a></li>
+<li><a href="#applications">Applications</a></li>
+<li><a href="#forms">Forms</a></li>
+<li><a href="#notifications">Notifications</a></li>
+<li><a href="#accessibility">Accessibility</a></li>
+</ul>
+<h2 id="ui-design">UI design<a class="headerlink" href="#ui-design" title="Permanent link">&para;</a></h2>
+<p>The whole web UI is designed following <a href="http://www.patternfly.org/">PatternFly</a> patterns.
+Please, read carefully PatternFly documentation before starting the design of a new web page.</p>
+<p>The main goal is to have a consistent design and behavior across all modules.</p>
+<p>All web page should guide the user to well-defined and specific task like:</p>
+<ul>
+<li>bad task example: "The user must choose the correct account provider"</li>
+<li>good task example: "The user must choose Active Directory provider if ACLs on shared folders are a functional requirements"</li>
+</ul>
+<h3 id="left-menu">Left menu<a class="headerlink" href="#left-menu" title="Permanent link">&para;</a></h3>
+<p>The left menu should be considered fixed: modules shouldn't add items inside the left menu.
+When a module needs to add a new feature, the web page should be added inside exiting sections like "System".</p>
+<h3 id="applications">Applications<a class="headerlink" href="#applications" title="Permanent link">&para;</a></h3>
+<p>The Applications page is a container of each new module which implements new features, like mail server, nextcloud, etc.
+Each new application web page should display:</p>
+<ul>
+<li>the status of the application status on the top</li>
+<li>a list of common actions just below the status</li>
+<li>all configuration parameters (forms, table, etc.) in the center</li>
+</ul>
+<p>On first run, the application <strong>must</strong> display a modal wizard if the module can't be configured with a reasonable defaults.</p>
+<p>Also the web page should display suggestions to help the user to follow best practices.
+For example, inside the "Certificate page", the interface should display a suggestion to enable Let's Encrypt if 
+a self-signed certificate is used as default.</p>
+<p>Each application must be described by a <a href="./application_manifest">JSON manifest</a> inspired to AppData freedesktop.org format.</p>
+<h3 id="forms">Forms<a class="headerlink" href="#forms" title="Permanent link">&para;</a></h3>
+<p>A configuration form should always display the minimum number of fields needed to configure the feature.
+Extra parameters should be hidden inside an <a href="http://www.patternfly.org/pattern-library/forms-and-controls/expand-collapse-section/">Advanced</a>
+panel with reasonable defaults.</p>
+<p>For example, when creating a user you need at least the user name, the full name and the password;
+but you could hide extra details like street address or phone number.</p>
+<p>Also it is a good practice to add a "Description" when creating records inside tables.</p>
+<h3 id="notifications">Notifications<a class="headerlink" href="#notifications" title="Permanent link">&para;</a></h3>
+<p>NethServer Cockpit provides multiple <a href="http://www.patternfly.org/pattern-library/communication/toast-notifications/">toast notification</a>.
+Each notification can have one of these states:</p>
+<ul>
+<li><strong>success</strong>: everything is ok. Transient: it stays on the screen for 8 seconds.</li>
+<li><strong>danger</strong>: something went wrong. Not transient: it stays on the screen until the user explicitly close it.
+  May require an action link.</li>
+<li><strong>warning</strong>: something needs attention. Not transient: it stays on the screen until the user explicitly close it.</li>
+</ul>
+<p>The notification can also have a type:</p>
+<ul>
+<li><strong>info</strong>: display only a message</li>
+<li><strong>action</strong>: display a message and an action link</li>
+</ul>
+<p>Finally there also is a <strong>task</strong> notification, it stays on the screen until the task 
+has been completed. This kind of notification can be created only by <code>signal-event</code>.</p>
+<h4 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h4>
+<p>Raise a notification after 5 seconds; add this code to <code>app.js</code>:</p>
+<pre><code>setTimeout(function() {
+    nethserver.notificationMonitor.dispatchEvent('nsnotification', {
+        type: 'action',
+        title: 'Failed',
+        message: 'Test failing notification',
+        status: 'danger',
+        action: 'Retry',
+        method: function() {
+            console.log(&quot;this method is called when the link is clicked!&quot;);
+        }
+    });
+}, 5000);
+</code></pre>
+
+<h3 id="modals">Modals<a class="headerlink" href="#modals" title="Permanent link">&para;</a></h3>
+<p>Modal overlay should be provided any time the user needs to enter data on a form and press "Save" button to change system configuration.</p>
+<p>See also <a href="http://www.patternfly.org/pattern-library/forms-and-controls/modal-overlay/">Modal Overlay</a> for extra use cases.</p>
+<h2 id="accessibility">Accessibility<a class="headerlink" href="#accessibility" title="Permanent link">&para;</a></h2>
+<p>We need to evaluate how PatternFly copes with people suffering of low vision, who need to access most features
+using the keyboard shortcuts.</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../new_module/" title="How to write a new module" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                How to write a new module
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../build_doc/" title="Building documentation" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Building documentation
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/application.583bbe55.js"></script>
+      
+      <script>app.initialize({version:"1.0.3",url:{base:".."}})</script>
+      
+    
+    
+      
+    
+  </body>
 </html>
