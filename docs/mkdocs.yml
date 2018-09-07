@@ -1,0 +1,29 @@
+site_name: NethServer Cockpit
+theme:
+    name: material
+    palette:
+        primary: blue grey
+        accent: blue grey
+    logo:
+        icon: 'build'
+site_url: https://nethserver.github.io/nethserver-cockpit
+repo_url: https://github.com/NethServer/nethserver-cockpit
+markdown_extensions:
+    - toc:
+        permalink: True
+nav:
+- Home: index.md
+- Development:
+    - api_guidelines.md
+    - application_manifest.md
+    - environment.md
+    - internationalization.md
+    - new_module.md
+    - ui_guidelines.md
+- Build:
+    - build_doc.md
+    - build_rpm.md
+- Manuals:
+    - 'NethServer Developer manual': 'http://docs.nethserver.org/projects/nethserver-devel'
+    - 'NethServer Administrator manual': 'http://docs.nethserver.org'
+    - 'Cockpit Guide': 'http://cockpit-project.org/guide/latest/'

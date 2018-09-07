@@ -1,10 +1,19 @@
 # Building documentation
 
-This guide has been built using [Docma](http://onury.io/docma/) and [Grunt](https://gruntjs.com/).
+This guide has been built using [MkDocs](https://www.mkdocs.org/).
 
-To build the documentation during the development use:
+Follow [mkdocs installation instructions](https://www.mkdocs.org/#installation), or just use:
 ```
-grunt docma
+pip install --user mkdocs mkdocs-material
+```
+
+To serve the documentation during the development use:
+```
+cd docs && mkdocs serve
+```
+
+To build the documentation:
+```
 ```
 
 The documentation will be generated inside the ``docs`` directory and must be served using
