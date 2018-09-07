@@ -28,8 +28,8 @@ perl createlinks
 (cd root ; find . -depth -not -name '*.orig' -print | cpio -dump %{buildroot})
 mkdir -p %{buildroot}/usr/share/cockpit/nethserver/
 tar xvf %{SOURCE1} -C %{buildroot}/usr/share/cockpit/nethserver/
-mkdir -p %{buildroot}/usr/libexec/nethserver/api/
-mv helpers/* %{buildroot}/usr/libexec/nethserver/api/
+mkdir -p %{buildroot}/usr/libexec/nethserver/
+mv api/ %{buildroot}/usr/libexec/nethserver/
 %{genfilelist} %{buildroot} > filelist
 
 %files -f filelist
