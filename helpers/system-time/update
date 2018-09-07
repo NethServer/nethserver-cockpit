@@ -1,0 +1,38 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+data=$(cat /dev/stdin)
+timezone=$(echo $data | jq -r ".timezone")
+time=$(echo $data | jq -r ".time" | sed 's/\:/ /g')
+date=$(echo $data | jq -r ".date" | sed 's/\-/ /g')
+timestamp=$(echo "$date $time" | awk '{print $2$3$4$5$1}') # convert for date input format
+chronyd=$(echo $data | jq -cr ".chronyd")
+
+timedatectl set-timezone "$timezone"
+
+echo $data | jq -cr ".chronyd" | /sbin/e-smith/config setjson -
+
+# Try to set the same timezone for PHP
+/sbin/e-smith/config setprop php DateTimezone $timezone
+/sbin/e-smith/signal-event nethserver-php-update
+
+/sbin/e-smith/signal-event -j nethserver-ntp-save "$timestamp"
