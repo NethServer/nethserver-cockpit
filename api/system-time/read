@@ -31,8 +31,12 @@ use esmith::ConfigDB;
 use esmith::db;
 my $db = esmith::db->open("configuration");
 my $port = $db->get_prop('chronyd', 'TCPPort');
-my $time = `date`;
+my $datetime = `date`;
+chomp $datetime;
+my $time = `date +%H:%M`;
 chomp $time;
+my $date = `date +%Y-%m-%d`;
+chomp $date;
 my $chronyd = $db->prepare_json('chronyd');
 
 # Use ConfigDB to access the config via DBUS 
@@ -45,7 +49,7 @@ close(DATE);
 chomp @timezones;
 
 my %out = (
-    'status' => { 'time' => $time },
+    'status' => { 'datetime' => $datetime, 'time' => $time, 'date' => $date  },
     'configuration' => { 'chronyd' => $chronyd, 'timezones' => \@timezones, 'timezone' =>  $timezone->prop('type') }
 );
 print to_json(\%out, {utf8 => 1, pretty => 0, allow_nonref => 1});

@@ -7,7 +7,10 @@ Output example:
 ```
 {
   "status": {
-    "time": "Wed Sep  5 15:28:59 GMT 2018"
+    "datetime": "Wed Sep  5 15:28:59 GMT 2018"
+    "date": "2018-09-10",
+    "time": "10:07"
+
   },
   "configuration": {
     "chronyd": {
