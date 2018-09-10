@@ -1,0 +1,56 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+use strict;
+use warnings;
+
+require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
+
+use JSON;
+use esmith::db;
+
+my $db = esmith::db->open("configuration");
+
+my $out;
+
+# Check if input is not a pipe
+if (-t STDIN) {
+    $out->{'status'} = '';
+    my $certs = decode_json(`/usr/libexec/nethserver/cert-list`);
+    $out->{'configuration'}{'certificates'} = $certs;
+    $out->{'configuration'}{'pki'} = $db->prepare_json('pki');
+} else {
+    my $data = readInput();
+    my $name = $data->{'name'};
+    $out->{'certificate'} = `/usr/libexec/nethserver/pki-info -s $name | base64 -w 0`;
+    
+}
+
+print encode_json($out);
+#if [ -t 0 ]; then
+#    printf '{"status":"","configuration":%s}' "$(/usr/libexec/nethserver/cert-list)"
+#else
+#    name=$(cat /dev/stdin | jq -r ".name")
+#    printf '{"certificate":"%s"}' "$(/usr/libexec/nethserver/pki-info -s $name | base64 -w 0)"
+#fi
+
+

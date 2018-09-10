@@ -1,0 +1,52 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+data=$(cat /dev/stdin)
+action=$(echo $data | jq -r '.action')
+
+case $action in
+
+    "self-signed" | "set-default")
+        "set-default")
+        echo $data | jq -r '.props' | /sbin/e-smith/setjson -
+        /sbin/e-smith/signal-event -j certificate-update
+        ;;
+
+    "upload")
+       name=$(echo $data | jq -r '.files.name')
+       crt=$(mktemp)
+       echo $data | jq -r '.files.certificate' | base64 -d > $crt
+       key=$(mktemp)
+       echo $data | jq -r '.files.key' | base64 -d > $key
+       chain=$(mktemp)
+       echo $data | jq -r '.files.chain' | base64 -d > $chain
+       /sbin/e-smith/signal-event -j certificate-upload "$name" "$crt" "$key" "$chain"
+       rm -f "$crt" "$key" "$chain"
+       ;;
+
+    "lets-encrypt")
+        echo $data | jq -r '.props' | /sbin/e-smith/setjson -
+        /usr/libexec/nethserver/letsencrypt-certs -f
+        /sbin/e-smith/signal-event -j certificate-update
+       ;;
+
+esac

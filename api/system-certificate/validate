@@ -1,0 +1,165 @@
+#!/usr/bin/php
+<?php
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
+
+$data = readInput();
+
+switch($data['action']) {
+case "lets-encrypt":
+    validate_letsencrypt($data['props']);
+    break;
+case "upload":
+    validate_upload($data['files']);
+    break;
+case "self-signed":
+    validate_selfsigned($data['props']);
+    break;
+case "set-default":
+default:
+    error();
+}
+
+
+function validate_letsencrypt($props)
+{
+    $v = new LegacyValidator($props);
+    $mailValidator = $v->createValidator()->orValidator($v->createValidator(Validate::EMAIL), $v->createValidator(Validate::EMPTYSTRING));
+    $v->declareParameter('LetsEncryptMail', $mailValidator);
+
+    $hostnameValidator = $v->createValidator(Validate::HOSTNAME_FQDN);
+    $domains = array_filter(preg_split('/[,\s]+/', $props['LetsEncryptDomains']));
+    foreach ($domains as $domain){
+        if( ! $hostnameValidator->evaluate($domain)) {
+            $v->addValidationError('LetsEncryptDomains', "Domain $domain is not a valid domain FQDN");
+            error($v);
+        }
+    }
+
+    # fail before calling slow helper
+    if (!$v->validate()) {
+        error($v);
+    }
+
+    $cmd = "/usr/libexec/nethserver/letsencrypt-certs -e '".escapeshellarg($props['LetsEncryptMail'])."' -t -d ". escapeshellarg(join(",",$domains))." 2>&1";
+    exec($cmd, $output, $ret);
+    if ($ret!=0) {
+        $v->addValidationError('LetsEncryptDomains', strstr($output[0],'"<!',true));
+        error($v);
+    }
+    if ($v->validate()) {
+        success();
+    } else {
+        error($v);
+    }
+}
+
+function validate_upload($files)
+{
+    $v = new LegacyValidator($files);
+    $v->declareParameter('name', Validate::HOSTNAME_SIMPLE);
+
+    if (!$v->validate()) {
+        error();
+    }
+
+    $crt = tempnam("/tmp","crt");
+    file_put_contents($crt, base64_decode($files['certificate']));
+    exec("/sbin/e-smith/validate pem-certificate $crt",$output,$ret);
+    if ($ret!=0) {
+        $v->addValidationError('certificate','Invalid x509 certificate');
+        unlink($crt);
+        error($v);
+    }
+
+    $key = tempnam("/tmp","key");
+    file_put_contents($key, base64_decode($files['key']));
+    exec("validate rsa-key $key",$output,$ret);
+    if ($ret!=0) {
+        $v->addValidationError('key','Invalid x509 key');
+        unlink($key);
+        error($v);
+    }
+    $db = new EsmithDatabase('configuration');
+    $policy = $db->getProp('tls', 'policy');
+    exec("/sbin/e-smith/validate tlspolicy-safetyguard $key $policy");
+    if ($ret!=0) {
+        $v->addValidationError('key','cert_safetyguard');
+        unlink($key);
+        error($v);
+    }
+
+
+    if ($files['chain']) {
+        $crt = tempnam("/tmp","chain");
+        file_put_contents($crt, base64_decode($files['chain']));
+        exec("/sbin/e-smith/validate pem-certificate $crt",$output,$ret);
+        if ($ret!=0) {
+            $v->addValidationError('chain','Invalid x509 certificate');
+            unlink($crt);
+            error($v);
+        }
+    }
+
+    if ($v->validate()) {
+        success();
+    }
+}
+
+function validate_selfsigned($props)
+{
+    $v = new LegacyValidator($props);
+    $validator = $v->createValidator()->orValidator($v->createValidator()->regexp('/^[^\/,]+$/', 'valid_x509_field'), $v->createValidator(Validate::EMPTYSTRING));
+
+    $v->declareParameter('CountryCode', $v->createValidator()->orValidator($v->createValidator()->maxLength(2)->minLength(2), $v->createValidator(Validate::EMPTYSTRING)));
+    $v->declareParameter('State', $validator);
+    $v->declareParameter('Locality', $validator);
+    $v->declareParameter('Organization', $validator);
+    $v->declareParameter('OrganizationalUnitName', $validator);
+    $v->declareParameter('CommonName', $validator);
+    $v->declareParameter('EmailAddress', $v->createValidator()->orValidator($v->createValidator(Validate::EMAIL), $v->createValidator(Validate::EMPTYSTRING)));
+    $v->declareParameter('CertificateDuration', $v->createValidator()->greatThan(10));
+
+    $hostNames = array_filter(preg_split("/[,\s]+/", $props['SubjectAltName']), function ($v) {
+        return preg_match("/[a-zA-Z]/", $v);
+    });
+
+    foreach ($hostNames as $origHostName) {
+        $hostName = trim($origHostName);
+        if (substr($hostName, 0, 2) === '*.') {
+            $hostName = substr($hostName, 2);
+        }
+        if ( ! $validator->evaluate($hostName)) {
+            $v->addValidationError('SubjectAltName', 'valid_hostname_instance', array($origHostName));
+            break;
+        }
+    }
+
+    if ($v->validate()) {
+        success();
+    } else {
+        error($v);
+    }
+
+
+}
