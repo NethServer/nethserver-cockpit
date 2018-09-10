@@ -765,7 +765,6 @@ class Validator implements MandatoryValidatorInterface
         exec($this->prepareEscapedCommand('/usr/bin/sudo /sbin/e-smith/validate ${@}', $args), $outputArray, $exitCode);
 
         if ($exitCode !== 0) {
-            $outputArray = $process->getOutputArray();
             $reason = array_pop($outputArray);
             $args['${reason}'] = substr(implode("\n", $outputArray), 0, 64);
             $this->addFailureInfo('valid_platform,' . $reason, $args);
