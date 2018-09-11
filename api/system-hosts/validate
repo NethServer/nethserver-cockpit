@@ -31,6 +31,12 @@ $v->declareParameter('name', Validate::HOSTNAME_FQDN);
 $v->declareParameter('WildcardMode', Validate::SERVICESTATUS);
 $v->declareParameter('IpAddress', Validate::IPv4);
 
+$db = new EsmithDatabase('hosts');
+$keyExists = $db->getType($data['name']) != '';
+if ($data['action'] == 'create' && $keyExists) {
+    $v->addValidationError('hostname', 'Service_key_exists_message');
+}
+
 # Validate the input
 if ($v->validate()) {
     success();
