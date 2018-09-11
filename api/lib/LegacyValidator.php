@@ -240,10 +240,15 @@ class LegacyValidator
             $isValid = $validator->evaluate($value);
             $valid = $valid && $isValid;
             if ($isValid !== TRUE) {
-                $this->invalidParameters[$parameterName] = $validator->getFailureInfo(); 
+                $info = $validator->getFailureInfo();
+                $this->invalidParameters[$parameterName] = array("parameter" => $parameterName, "value" => $value, "error" => @$info[0][0]); 
             }
         }
-        return $valid;
+        if (count(array_keys($this->invalidParameters)) > 0) {
+            return false;
+        } else {
+            return $valid;
+        }
     }
 
     public function addValidationError($parameterName, $message, $args = array())
@@ -252,14 +257,8 @@ class LegacyValidator
         if ($args instanceof ValidatorInterface) {
             $this->invalidParameters[$parameterName][] = $args->getFailureInfo();
         } else {
-            $this->invalidParameters[$parameterName][] = array($message, $args);
+            $this->invalidParameters[$parameterName][] = array($message, $args, $value);
         }
-    }
-
-    // backword compatibility
-    public function addValidationErrorMessage($module, $parameterName, $message, $args = array()) {
-        // module is ignored
-        $this->addValidationError($parameterName, $message, $args);
     }
 
 }

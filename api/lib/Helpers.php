@@ -89,7 +89,7 @@ function error($arg = NULL)
             "message" => "Validation failed",
         );
         foreach ($arg->invalidParameters as $p => $v) {
-            $error["attributes"][$p] = $v;
+            $error["attributes"][] = $v;
         }
     } else {
         if (isset($arg['type']) && isset($arg['message'])) {

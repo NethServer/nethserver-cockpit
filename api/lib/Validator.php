@@ -873,7 +873,8 @@ class CollectionValidator implements MandatoryValidatorInterface
 
         foreach ($this->iterator as $e) {
             if ($this->memberValidator->evaluate($e) === FALSE) {
-                $this->failureInfo = array_merge($this->failureInfo, $this->memberValidator->getFailureInfo());
+                #$this->failureInfo = array_merge($this->failureInfo, $this->memberValidator->getFailureInfo());
+                $this->failureInfo[] = $this->memberValidator->getFailureInfo();
                 return FALSE;
             }
         }
