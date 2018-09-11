@@ -3,26 +3,26 @@
 Read and the set the system hostname.
 
 
-# read
+## read
 
 Return the system hostname.
 
-## Output
+### Output
 
 Example:
 ```json
 {"hostname":"myserver.test.local"}
 ```
 
-# validate
+## validate
 
-## Constraints
+### Constraints
 
 - Must be at least a second-level domain
 - Can't be `localhost.localdomain`
 - Validate against `myhostname` system-validator 
 
-## Input
+### Input
 
 Takes the same output from read:
 ```json
@@ -31,13 +31,13 @@ Takes the same output from read:
 }
 ```
 
-Example:
-```
+Invocation example:
+```bash
 echo '{"hostname":"localhost.localdomain"}' | ./validate
 ```
 
-# update
+## update
 
-## Input
+### Input
 
 Takes the same input from validate.

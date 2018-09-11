@@ -2,11 +2,11 @@
 
 Read and write system DNS system alias.
 
-# read
+## read
 
 List current configured aliases.
 
-## Output
+### Output
 
 The `configuration` contains an array of alias records (type `self` from `hosts` db).
 
@@ -26,34 +26,56 @@ Output example:
 }
 ```
 
-# validate
+## validate
 
 Validate a collection of alias records.
 
-## Constraints
+### Constraints
 
 - the alias `name` must be a valid FQDN
 
-## Input
+### Input
 
 Use the read output as input.
 Each record must have the type set to `self`, the `Description` field is currently not used.
 
 Example:
+```json
+{
+  "configuration": [
+    {
+      "props": {
+        "Description": ""
+      },
+      "name": "test3.nethserver.org",
+      "type": "self"
+    },
+    {
+      "props": {
+        "Description": ""
+      },
+      "name": "test2.nethserver.org",
+      "type": "self"
+    }
+  ]
+}
 ```
+
+Invocation example:
+```bash
 echo '{ "configuration" : [{"props":{"Description":""},"name":"test3.nethserver.org","type":"self"}, {"props":{"Description":""},"name":"test2.nethserver.org","type":"self"}]}' | ./validate
 ```
 
-# update
+## update
 
 All alias are destroyed and recreated on update.
 The helper should be invoked once, after all alias has been modified.
 
-## Input
+### Input
 
 The same from validate helper.
 
-Example:
-```
+Invocation example:
+```bash
 echo '{ "configuration" : [{"props":{"Description":""},"name":"test3.neth.eu","type":"self"}, {"props":{"Description":""},"name":"test2.neth.eu","type":"self"}]}' | ./update
 ```

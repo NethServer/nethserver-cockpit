@@ -2,14 +2,14 @@
 
 Read ans set `OrganizationContact` record from `configuration` db.
 
-# read
+## read
 
-## Output
+### Output
 
 The `configuration` key contains the `OrganizationContact` record.
 
 Output example:
-```
+```json
 {
   "status": "",
   "configuration": {
@@ -28,18 +28,18 @@ Output example:
 }
 ```
 
-# validate
+## validate
 
-## Constraints
+### Constraints
 
-No constrains defined.
+- Company must not empty
 
-## Input
+### Input
 
 Input: an esmith db record in JSON format.
 
 Input example from: `config getjson OrganizationContact`:
-```
+```json
 {
   "props": {
     "Department": "Main",
@@ -55,6 +55,6 @@ Input example from: `config getjson OrganizationContact`:
 }
 ```
 
-# write
+## write
 
-Input: the same of validate helper
+Same input from validate helper.

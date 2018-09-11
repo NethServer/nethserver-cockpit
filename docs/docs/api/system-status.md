@@ -2,10 +2,6 @@
 
 Return variuous information on the server.
 
-# read
-
-## Output
-
 The system status is composed by:
 
 - CPU number and type
@@ -15,6 +11,11 @@ The system status is composed by:
 - os release
 - load
 - hardware vendor and product name
+
+
+## read
+
+### Output
 
 Example:
 ```json

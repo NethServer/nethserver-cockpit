@@ -1,16 +1,19 @@
-# read
+# system-time
+
+Configure server date and time.
+
+## read
 
 Return the current date and time along with chronyd configuration.
 If chronyd status is disabled, the time configuration is manual.
 
-Output example:
-```
+Example:
+```json
 {
   "status": {
-    "datetime": "Wed Sep  5 15:28:59 GMT 2018"
+    "datetime": "Wed Sep  5 15:28:59 GMT 2018",
     "date": "2018-09-10",
     "time": "10:07"
-
   },
   "configuration": {
     "chronyd": {
@@ -34,15 +37,18 @@ Output example:
 }
 ```
 
-# validate
+## validate
 
-Input:
+### Constraints
+
 - `chronyd` and `timezone` field from read input
 - if `chronyd` status is disabled, the keys named `date` and `time` must contain the 
-  a valid time (HH:MM) and date (YYYY-MM-DD).
+  a valid time (`HH:MM`) and date (`YYYY-MM-DD`).
+
+### Input
 
 Example:
-```
+```json
 {
   "chronyd": {
     "props": {
@@ -60,15 +66,15 @@ Example:
 }
 ```
 
-Command example:
-```
+Invocation example:
+```bash
  echo '{"chronyd":{"props":{"UDPPort":"123","NTPServer":"pool.ntp.org","status":"enabled","access":"green"},"name":"chronyd","type":"service"},"timezone":"Africa/Monrovia","time":"10:33","date":"2018-09-06"}' | ./validate 
 ```
 
-# update
+## update
 
 Set current timezone and chronyd configuration.
 If chronyd is disabled, date and time is set to manual input values.
 Tries also to set PHP timezone (fails silently). 
 
-Input: same input as validate
+Same input as validate helper.

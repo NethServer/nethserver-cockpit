@@ -1,10 +1,10 @@
-# openssh
+# system-openssh
 
 Read and write configuration for nethserver-openssh package.
 
-# read
+## read
 
-## Output
+### Output
 
 A JSON object containing `configuration` and `status` fields:
 ```json
@@ -43,16 +43,16 @@ Output example:
 }
 ```
 
-# validate
+## validate
 
-## Constraints
+### Constraints
 
 - PasswordAuthentication: boolean
 - PermitRootLogin: boolean
 - TCPPort: port number
 - status: `enabled` or `disabled`
 
-## Input
+### Input
 
 An Esmith db record in JSON format:
 ```json
@@ -86,15 +86,11 @@ Input example from: `config getjson sshd`:
 }
 ```
 
-Usage example:
-```
+Invocation example:
+```bash
 echo '{"props":{"status":"enable","access":"green,red","MaxAuthTries":"6","UsePAM":"yes","PasswordAuthentication":"yes","LoginGraceTime":"2m","Protocol":"2","PermitRootLogin":"yes","TCPPort":"22"},"name":"sshd","type":"service"}' | ./validate
 ```
 
-# write
+## write
 
-Set and apply OpenSSH configuration.
-
-## Input
-
-Same from validate helper.
+Same input from validate helper.

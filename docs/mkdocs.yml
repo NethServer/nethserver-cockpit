@@ -9,12 +9,28 @@ theme:
 site_url: https://nethserver.github.io/nethserver-cockpit
 repo_url: https://github.com/NethServer/nethserver-cockpit
 markdown_extensions:
+    - codehilite
     - toc:
         permalink: True
 nav:
 - Home: index.md
 - API:
-    - api_guidelines.md
+    - General:
+      - api_guidelines.md
+      - api_protocol.md
+      - api_libraries.md
+    - Helpers:
+      - api/system-aliases.md
+      - api/system-certificate.md
+      - api/system-company.md
+      - api/system-dns.md
+      - api/system-hostname.md
+      - api/system-hosts.md
+      - api/system-openssh.md
+      - api/system-shutdown.md
+      - api/system-status.md
+      - api/system-task.md
+      - api/system-time.md
 - User interface: 
     - environment.md
     - ui_guidelines.md

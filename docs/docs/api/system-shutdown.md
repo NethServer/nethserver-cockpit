@@ -2,9 +2,9 @@
 
 Reboot or poweroff the server.
 
-# update
+## update
 
-## Input
+### Input
 
 A JSON containg an `action` field. Valid actions are: `poweroff` and `reboot`.
 

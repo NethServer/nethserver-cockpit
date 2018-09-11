@@ -3,14 +3,17 @@
 Manage system certificates.
 Supported operations:
 
-- list certificates (read)
+- list certificates
 - show certificate content
+- configure Let's Encrypt
+- configure self-signed certificate
+- set default certificate
 
-# read 
+## read 
 
 List all available certificates.
 
-## Input
+### Input
 
 If no input has been provided, the helper will return the list 
 of all available certificates.
@@ -22,9 +25,9 @@ To retrieve a certificate, use:
 }
 ```
 
-## Output
+### Output
 
-## List
+#### List
 
 Uses `/usr/libexec/nethserver/cert-list` helper.
 
@@ -47,7 +50,7 @@ Example:
 }
 ```
 
-### Certificate content
+#### Certificate content
 
 Uses `/usr/libexec/nethserver/pki-info` helper.
 
@@ -58,7 +61,9 @@ Output is base64 encoded:
 }
 ```
 
-# validate
+## validate
+
+### Constraints
 
 Validate 3 different actions:
 
@@ -95,9 +100,9 @@ Constraints for `upload`:
 - chain: valid x509 certificate
 - key: valid key for running tlspolicy
 
-## Input
+### Input
 
-### self-signed
+#### self-signed
 
 - `action` must be set to `self-signed`
 - pki record in json format
@@ -130,7 +135,7 @@ Example:
 ```
 
 
-## lets-encrypt
+#### lets-encrypt
 
 - `action` must be set to `lets-encrypt`
 - pki record in json format
@@ -164,7 +169,7 @@ Example:
 
 Warning: the UI shouldn't change the `LetsEncrypt` field.
 
-### upload
+#### upload
 
 Format:
 
@@ -186,7 +191,7 @@ Format:
 ```
 
 
-# update
+## update
 
 Available actions:
 

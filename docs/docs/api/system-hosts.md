@@ -1,10 +1,10 @@
 # system-hosts
 
-Read and set upstream DNS records for DNSMasq.
+Manage DNS records for DNSMasq.
 
-# read
+## read
 
-## Input
+### Input
 
 Return all current configured records from the `hosts` file inside the `status` field.
 Return all `remote` records  from `hosts` database inside the `configuration field.
@@ -38,17 +38,20 @@ Return all `remote` records  from `hosts` database inside the `configuration fie
 }
 ```
 
-# validate
+## validate
 
-## Constraints
+### Constraints
 
-- The key (`name field`) bust me a valid FQN
+- The key (`name field`) must be a valid FQDN and must not already exists in case of creation
 - WildcardMode can be enabled or disabled
 - IpAddress must be a valid IPv4 address
 
-## Input
+### Input
 
 A `remote` host esmith db record in JSON format.
+The record must also contain an `action` fields which can be:
+- `create` for new dns record creation
+- `update` when updating and existing record
 
 Example:
 ```json
@@ -59,21 +62,22 @@ Example:
         "WildcardMode": "disabled"
     },
     "name": "t1.net.loc",
-    "type": "remote"
+    "type": "remote",
+    "action": "create"
 }
+```
 
+## update
 
-# update
+Use the same input from validate.
 
-Use the same input of validate.
+## create
 
-# create
+Use the same input from validate.
 
-Use the same input of validate.
+## delete
 
-# delete
-
-Take the key to delete inside the `name` field.
+Pass the the key to be deleted inside the `name` field.
 
 Example:
 ```json
