@@ -273,10 +273,214 @@
           
 
 
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-1" type="checkbox" id="nav-2-1">
+    
+    <label class="md-nav__link" for="nav-2-1">
+      General
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-1">
+        General
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
   <li class="md-nav__item">
-    <a href="../api_guidelines/" title="API guidelines" class="md-nav__link">
-      API guidelines
+    <a href="../api_guidelines/" title="Design guidelines" class="md-nav__link">
+      Design guidelines
     </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api_protocol/" title="Communication protocol" class="md-nav__link">
+      Communication protocol
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api_libraries/" title="Helper libraries" class="md-nav__link">
+      Helper libraries
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2">
+    
+    <label class="md-nav__link" for="nav-2-2">
+      Helpers
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-2">
+        Helpers
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-aliases/" title="system-alias" class="md-nav__link">
+      system-alias
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-certificate/" title="system-certificate" class="md-nav__link">
+      system-certificate
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-company/" title="system-company" class="md-nav__link">
+      system-company
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-dns/" title="system-dns" class="md-nav__link">
+      system-dns
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-hostname/" title="system-hostname" class="md-nav__link">
+      system-hostname
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-hosts/" title="system-hosts" class="md-nav__link">
+      system-hosts
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-openssh/" title="system-openssh" class="md-nav__link">
+      system-openssh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-shutdown/" title="system-shutdown" class="md-nav__link">
+      system-shutdown
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-status/" title="system-status" class="md-nav__link">
+      system-status
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-task/" title="system-task" class="md-nav__link">
+      system-task
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-time/" title="system-time" class="md-nav__link">
+      system-time
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
         
@@ -757,19 +961,20 @@ Each notification can have one of these states:</p>
 has been completed. This kind of notification can be created only by <code>signal-event</code>.</p>
 <h4 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h4>
 <p>Raise a notification after 5 seconds; add this code to <code>app.js</code>:</p>
-<pre><code>setTimeout(function() {
-    nethserver.notificationMonitor.dispatchEvent('nsnotification', {
-        type: 'action',
-        title: 'Failed',
-        message: 'Test failing notification',
-        status: 'danger',
-        action: 'Retry',
+<div class="codehilite"><pre><span></span>setTimeout(function() {
+    nethserver.notificationMonitor.dispatchEvent(&#39;nsnotification&#39;, {
+        type: &#39;action&#39;,
+        title: &#39;Failed&#39;,
+        message: &#39;Test failing notification&#39;,
+        status: &#39;danger&#39;,
+        action: &#39;Retry&#39;,
         method: function() {
             console.log(&quot;this method is called when the link is clicked!&quot;);
         }
     });
 }, 5000);
-</code></pre>
+</pre></div>
+
 
 <h3 id="modals">Modals<a class="headerlink" href="#modals" title="Permanent link">&para;</a></h3>
 <p>Modal overlay should be provided any time the user needs to enter data on a form and press "Save" button to change system configuration.</p>

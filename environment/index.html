@@ -273,10 +273,214 @@
           
 
 
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-1" type="checkbox" id="nav-2-1">
+    
+    <label class="md-nav__link" for="nav-2-1">
+      General
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-1">
+        General
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
   <li class="md-nav__item">
-    <a href="../api_guidelines/" title="API guidelines" class="md-nav__link">
-      API guidelines
+    <a href="../api_guidelines/" title="Design guidelines" class="md-nav__link">
+      Design guidelines
     </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api_protocol/" title="Communication protocol" class="md-nav__link">
+      Communication protocol
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api_libraries/" title="Helper libraries" class="md-nav__link">
+      Helper libraries
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2">
+    
+    <label class="md-nav__link" for="nav-2-2">
+      Helpers
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-2">
+        Helpers
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-aliases/" title="system-alias" class="md-nav__link">
+      system-alias
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-certificate/" title="system-certificate" class="md-nav__link">
+      system-certificate
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-company/" title="system-company" class="md-nav__link">
+      system-company
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-dns/" title="system-dns" class="md-nav__link">
+      system-dns
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-hostname/" title="system-hostname" class="md-nav__link">
+      system-hostname
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-hosts/" title="system-hosts" class="md-nav__link">
+      system-hosts
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-openssh/" title="system-openssh" class="md-nav__link">
+      system-openssh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-shutdown/" title="system-shutdown" class="md-nav__link">
+      system-shutdown
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-status/" title="system-status" class="md-nav__link">
+      system-status
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-task/" title="system-task" class="md-nav__link">
+      system-task
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-time/" title="system-time" class="md-nav__link">
+      system-time
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
         
@@ -670,28 +874,32 @@
   ```</p>
 <h2 id="build-api-and-ui">Build API and UI<a class="headerlink" href="#build-api-and-ui" title="Permanent link">&para;</a></h2>
 <p>Enter API directory and build using grunt:</p>
-<pre><code>cd api/system/ &amp;&amp; grunt build
-</code></pre>
+<div class="codehilite"><pre><span></span>cd api/system/ &amp;&amp; grunt build
+</pre></div>
+
 
 <p>Enter UI directory and build using grunt:</p>
-<pre><code>cd ui/ &amp;&amp; grunt build
-</code></pre>
+<div class="codehilite"><pre><span></span>cd ui/ &amp;&amp; grunt build
+</pre></div>
+
 
 <p>You can ignore ignore warnings like this:</p>
-<pre><code>npm WARN api@1.0.0 No repository field.
-npm WARN api@1.0.0 No license field.
-</code></pre>
+<div class="codehilite"><pre><span></span><span class="n">npm</span> <span class="n">WARN</span> <span class="n">api</span><span class="mf">@1.0.0</span> <span class="n">No</span> <span class="n">repository</span> <span class="n">field</span><span class="p">.</span>
+<span class="n">npm</span> <span class="n">WARN</span> <span class="n">api</span><span class="mf">@1.0.0</span> <span class="n">No</span> <span class="n">license</span> <span class="n">field</span><span class="p">.</span>
+</pre></div>
+
 
 <h2 id="sync-api-and-ui">Sync API and UI<a class="headerlink" href="#sync-api-and-ui" title="Permanent link">&para;</a></h2>
 <p>Files can be copied using rsync.</p>
 <p>While UI could be synced without executing the <code>build</code> task each time,
 make sure API is always built before sync.</p>
 <p>Use the following commands:</p>
-<pre><code>ssh root@192.168.1.20  &quot;mkdir -p ~/.local/share/cockpit/nethserver&quot;
+<div class="codehilite"><pre><span></span><span class="n">ssh</span> <span class="n">root</span><span class="mf">@192.168.1.20</span>  <span class="s">&quot;mkdir -p ~/.local/share/cockpit/nethserver&quot;</span>
 
-cd api/ &amp;&amp; grunt build rsync:root@192.168.1.20
-cd ui/system &amp;&amp; grunt rsync:root@192.168.1.20
-</code></pre>
+<span class="n">cd</span> <span class="n">api</span><span class="o">/</span> <span class="o">&amp;&amp;</span> <span class="n">grunt</span> <span class="n">build</span> <span class="nl">rsync</span><span class="p">:</span><span class="n">root</span><span class="mf">@192.168.1.20</span>
+<span class="n">cd</span> <span class="n">ui</span><span class="o">/</span><span class="n">system</span> <span class="o">&amp;&amp;</span> <span class="n">grunt</span> <span class="nl">rsync</span><span class="p">:</span><span class="n">root</span><span class="mf">@192.168.1.20</span>
+</pre></div>
+
 
 <h2 id="code-style">Code style<a class="headerlink" href="#code-style" title="Permanent link">&para;</a></h2>
 <p>Please use configuration from EditorConfig: http://editorconfig.org</p>
@@ -715,7 +923,7 @@ cd ui/system &amp;&amp; grunt rsync:root@192.168.1.20
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../api_guidelines/" title="API guidelines" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../api/system-time/" title="system-time" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -724,7 +932,7 @@ cd ui/system &amp;&amp; grunt rsync:root@192.168.1.20
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                API guidelines
+                system-time
               </span>
             </div>
           </a>

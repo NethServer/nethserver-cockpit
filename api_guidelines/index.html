@@ -38,7 +38,7 @@
     
     
       
-        <title>API guidelines - NethServer Cockpit</title>
+        <title>Design guidelines - NethServer Cockpit</title>
       
     
     
@@ -100,7 +100,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="../#api-guidelines" tabindex="1" class="md-skip">
+      <a href="../#design-guidelines" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -126,7 +126,7 @@
                 NethServer Cockpit
               </span>
               <span class="md-header-nav__topic">
-                API guidelines
+                Design guidelines
               </span>
             
           
@@ -277,6 +277,27 @@
   
 
 
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-1" type="checkbox" id="nav-2-1" checked>
+    
+    <label class="md-nav__link" for="nav-2-1">
+      General
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-1">
+        General
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
   <li class="md-nav__item md-nav__item--active">
     
     <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
@@ -285,11 +306,11 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
-        API guidelines
+        Design guidelines
       </label>
     
-    <a href="./" title="API guidelines" class="md-nav__link md-nav__link--active">
-      API guidelines
+    <a href="./" title="Design guidelines" class="md-nav__link md-nav__link--active">
+      Design guidelines
     </a>
     
       
@@ -303,175 +324,37 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#object-format" title="Object format" class="md-nav__link">
-    Object format
+  <a href="#create" title="create" class="md-nav__link">
+    create
   </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example" title="Example" class="md-nav__link">
-    Example
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#errors" title="Errors" class="md-nav__link">
-    Errors
+  <a href="#read" title="read" class="md-nav__link">
+    read
   </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#well-known-errors" title="Well-known errors" class="md-nav__link">
-    Well-known errors
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#api-design" title="API design" class="md-nav__link">
-    API design
+  <a href="#update" title="update" class="md-nav__link">
+    update
   </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#add" title="Add" class="md-nav__link">
-    Add
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example_1" title="Example" class="md-nav__link">
-    Example
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#edit" title="Edit" class="md-nav__link">
-    Edit
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example_2" title="Example" class="md-nav__link">
-    Example
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#delete" title="Delete" class="md-nav__link">
-    Delete
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example_3" title="Example" class="md-nav__link">
-    Example
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-all" title="Get all" class="md-nav__link">
-    Get all
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example_4" title="Example" class="md-nav__link">
-    Example
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-one" title="Get one" class="md-nav__link">
-    Get one
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example_5" title="Example" class="md-nav__link">
-    Example
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#api-tests" title="API tests" class="md-nav__link">
-    API tests
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example_6" title="Example" class="md-nav__link">
-    Example
+  <a href="#delete" title="delete" class="md-nav__link">
+    delete
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#validate" title="validate" class="md-nav__link">
+    validate
+  </a>
   
 </li>
       
@@ -483,6 +366,191 @@
   
 </nav>
     
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api_protocol/" title="Communication protocol" class="md-nav__link">
+      Communication protocol
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api_libraries/" title="Helper libraries" class="md-nav__link">
+      Helper libraries
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2">
+    
+    <label class="md-nav__link" for="nav-2-2">
+      Helpers
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-2">
+        Helpers
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-aliases/" title="system-alias" class="md-nav__link">
+      system-alias
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-certificate/" title="system-certificate" class="md-nav__link">
+      system-certificate
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-company/" title="system-company" class="md-nav__link">
+      system-company
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-dns/" title="system-dns" class="md-nav__link">
+      system-dns
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-hostname/" title="system-hostname" class="md-nav__link">
+      system-hostname
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-hosts/" title="system-hosts" class="md-nav__link">
+      system-hosts
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-openssh/" title="system-openssh" class="md-nav__link">
+      system-openssh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-shutdown/" title="system-shutdown" class="md-nav__link">
+      system-shutdown
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-status/" title="system-status" class="md-nav__link">
+      system-status
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-task/" title="system-task" class="md-nav__link">
+      system-task
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-time/" title="system-time" class="md-nav__link">
+      system-time
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
         
@@ -716,175 +784,37 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#object-format" title="Object format" class="md-nav__link">
-    Object format
+  <a href="#create" title="create" class="md-nav__link">
+    create
   </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example" title="Example" class="md-nav__link">
-    Example
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#errors" title="Errors" class="md-nav__link">
-    Errors
+  <a href="#read" title="read" class="md-nav__link">
+    read
   </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#well-known-errors" title="Well-known errors" class="md-nav__link">
-    Well-known errors
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#api-design" title="API design" class="md-nav__link">
-    API design
+  <a href="#update" title="update" class="md-nav__link">
+    update
   </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#add" title="Add" class="md-nav__link">
-    Add
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example_1" title="Example" class="md-nav__link">
-    Example
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#edit" title="Edit" class="md-nav__link">
-    Edit
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example_2" title="Example" class="md-nav__link">
-    Example
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#delete" title="Delete" class="md-nav__link">
-    Delete
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example_3" title="Example" class="md-nav__link">
-    Example
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-all" title="Get all" class="md-nav__link">
-    Get all
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example_4" title="Example" class="md-nav__link">
-    Example
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-one" title="Get one" class="md-nav__link">
-    Get one
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example_5" title="Example" class="md-nav__link">
-    Example
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#api-tests" title="API tests" class="md-nav__link">
-    API tests
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example_6" title="Example" class="md-nav__link">
-    Example
+  <a href="#delete" title="delete" class="md-nav__link">
+    delete
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#validate" title="validate" class="md-nav__link">
+    validate
+  </a>
   
 </li>
       
@@ -907,282 +837,31 @@
                   <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/api_guidelines.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="api-guidelines">API guidelines<a class="headerlink" href="#api-guidelines" title="Permanent link">&para;</a></h1>
-<p><strong>Index</strong></p>
+                <h1 id="design-guidelines">Design guidelines<a class="headerlink" href="#design-guidelines" title="Permanent link">&para;</a></h1>
+<p>Each cockpit module has its own helpers implementing a set API to read and write the configuration and to execute actions. 
+All helpers are saved inside <code>/usr/libexec/nethserver/api/&lt;controller_name&gt;/</code> directory.</p>
+<p>Each helper:</p>
 <ul>
-<li><a href="#object-format">Object format</a></li>
-<li><a href="#errors">Errors</a></li>
-<li><a href="#api-design">API design</a></li>
-<li><a href="#api-tests">API tests</a></li>
+<li>must be an executable file, it can be written in any language depending on the task
+  Example: <code>/usr/libexec/nethserver/system-openssh/read</code>.</li>
+<li>uses JSON format for input and output; the JSON can must be read as input from STDIN and printed to STDOUT</li>
+<li>can use other helpers to execute multiple actions, the helpers can be placed in the same directory (eg. <code>/usr/libexec/nethserver/openssh/help1-read</code>)</li>
 </ul>
-<h2 id="object-format">Object format<a class="headerlink" href="#object-format" title="Permanent link">&para;</a></h2>
-<p>Objects passed to and returned by APIs must reflect esmith db format and respect the upper/lower case notation
-of property names:</p>
-<pre><code>{
-  key: 'objKey',
-  type: 'objType',
-  FirstProp: 'FirstPropValue',
-  ...
-}
-</code></pre>
-
-<p>Please note that <strong>key</strong> and <strong>type</strong> field are reserved.</p>
-<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
-<p>Host <code>goofy</code> inside the <code>hosts</code> database.</p>
-<p>Original esmith db notation:</p>
-<pre><code>goofy=local
-    Description=Goofy workstation
-    IpAddress=192.168.1.22
-</code></pre>
-
-<p>Equivalent JavaScript object notation:</p>
-<pre><code>var goofy = {
-  key: &quot;goofy&quot;,
-  type: &quot;local&quot;,
-  Description: &quot;Goofy workstation&quot;,
-  IpAddress: &quot;192.168.1.22&quot;,
-}
-</code></pre>
-
-<h2 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h2>
-<p>If something goes wrong, APIs must throw a <a href="api#nethserver.Error">nethserver.Error</a>
-object, which describes the error reason and possibly why the object passed to
-the API function caused the error.</p>
-<p>For instance:</p>
-<pre><code>throw new nethserver.Error({
-    id: 1507721123244,
-    type: 'NotValid',
-    message: 'Generic validation error reason',
-    attributes: {
-        'MyProp1': 'field-specific error reason', 
-        'MyProp2': 'other field-specific error reason'
-    }
-});
-</code></pre>
-
-<p>The <strong>message</strong> property should be used if an error is not caused by a specific
-attribute. On the other hand, there could be cases where the <strong>attributes</strong>
-object is empty, or undefined because the error condition does not depend on any
-of the attributes or attributes are not defined at all. </p>
-<p>Note that the same Error object could represent multiple failure reasons.</p>
-<p>How to generate a good <code>id</code> in JavaScript:</p>
-<pre><code>+ new Date()
-</code></pre>
-
-<p>An equivalent for Bash:</p>
-<pre><code class="text">$ date +%s
-</code></pre>
-
-<h3 id="well-known-errors">Well-known errors<a class="headerlink" href="#well-known-errors" title="Permanent link">&para;</a></h3>
-<p>Well-known errors are:</p>
+<p>APIs should implement classical CRUD operations, plus a validation helper:</p>
 <ul>
-<li>
-<p>Validation error: <strong>NotValid</strong>
-  <code>throw new nethserver.Error({
-      id: 1507721123244,
-      type: 'NotValid',
-      message: 'Generic validation error reason',
-      attributes: {'myProp': 'field-specific error reason'}
-  });</code></p>
-</li>
-<li>
-<p>Not found error: <strong>NotFound</strong>
-  <code>throw new nethserver.Error({
-      id: 1507721155244,
-      type: 'NotFound',
-      message: 'Generic validation error reason',
-      attributes: {'key': 'field-specific error reason'}
-  });</code></p>
-</li>
-<li>
-<p>Task already running error (the e-smith layer can't handle multiple running events): <strong>TaskRun</strong>
- <code>throw new nethserver.Error({
-      id: 1507721155255,
-      type: 'TaskRun',
-      message: 'Another task is already running'
-  });</code></p>
-</li>
-<li>
-<p>type <code>ValidatorFailed</code>: validator procedure error - the <code>validate</code> command failed</p>
-</li>
-</ul>
-<h2 id="api-design">API design<a class="headerlink" href="#api-design" title="Permanent link">&para;</a></h2>
-<p>Each API should always return a JavaScript promise in case of success or error.</p>
-<p>Any function which modifies system configuration must take care of semantic validation
-of input values, like checking if a record already exists or deny to set an option which
-can cause errors on other modules (eg. using the same IP address on multiple network interfaces).</p>
-<p>On success an API function returns a promise which is resolved if validation is passed and the configuration
-can be saved into the system. On error, the function must throw an error.
-It's responsability of each API function to signal an event just after returning the promise.
-The framework will take care to inform the user when the event task has been terminated.</p>
-<p>APIs implementing CRUD operations, should declare these types of actions:</p>
-<ul>
-<li><a href="#add">add</a></li>
-<li><a href="#edit">edit</a></li>
+<li><a href="#create">create</a></li>
+<li><a href="#read">read</a></li>
+<li><a href="#update">update</a></li>
 <li><a href="#delete">delete</a></li>
-<li><a href="#get-all">getAll</a></li>
-<li><a href="#get-one">getOne</a></li>
+<li><a href="#validate">validate</a></li>
 </ul>
-<h3 id="add">Add<a class="headerlink" href="#add" title="Permanent link">&para;</a></h3>
-<p>The API developer should provide one typed <code>add</code> method for each record type managed by the module.</p>
-<p><em>Parameter</em>: object to be addedd</p>
-<h4 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h4>
-<p>DNS module, which saves records inside the <code>hosts</code> database, defines two methods: <code>addRemoteHost</code>,  <code>addAlias</code>.</p>
-<pre><code>addRemoteHost: function(host) {
-  var db = nethserver.getDatabase('configuration');
-  return db.open().then(function() {
-      ...
-      if ( //not validate ) {
-          throw new Error(&quot;NotValid&quot;, &quot;Describe validation error here&quot;);
-      }
-      ...
-      db.setObject(obj)
-      return db.save();
-  }).then(function(){
-      nethserver.signalEvent('event', argument);
-  });
-}
-</code></pre>
-
-<h3 id="edit">Edit<a class="headerlink" href="#edit" title="Permanent link">&para;</a></h3>
-<p>The API developer should provide one typed <code>edit</code> method for each record type managed by the module.</p>
-<p><em>Parameter</em>: object to be modified</p>
-<h4 id="example_2">Example<a class="headerlink" href="#example_2" title="Permanent link">&para;</a></h4>
-<p>DNS module, which saves records inside the <code>hosts</code> database; define two methods named <code>editRemoteHost</code> and <code>editAlias</code>.</p>
-<pre><code>editRemoteHost: function(host) {
-  var db = nethserver.getDatabase('hosts');
-  return db.open().then(function() {
-      ...
-      if ( //object not found ) {
-          throw new Error(&quot;not found&quot;, &quot;Describe not found error here&quot;);
-      }
-      ...
-      db.setObject(obj)
-      return db.save();
-  }).then(function(){
-      nethserver.signalEvent('event', argument);
-  });
-}
-</code></pre>
-
-<h3 id="delete">Delete<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h3>
-<p><em>Parameter</em>: key to be deleted</p>
-<h4 id="example_3">Example<a class="headerlink" href="#example_3" title="Permanent link">&para;</a></h4>
-<p>DNS module, which saves records inside the <code>`hosts</code>, can define one or more methods. </p>
-<pre><code>deleteRemoteHost: function(hostKey) {
-  var db = nethserver.getDatabase('hosts');
-  return db.open().then(function() {
-      ...
-      if ( //object not found) {
-        throw new Error(&quot;error&quot;, &quot;Describe not found error here&quot;);
-      }
-      ...
-      db.delete(hostKey);
-      return db.save();
-  }).then(function(){
-       nethserver.signalEvent('host-delete', hostKey);
-  });
-};
-</code></pre>
-
-<h3 id="get-all">Get all<a class="headerlink" href="#get-all" title="Permanent link">&para;</a></h3>
-<p>On success returns a success promise along with a list of all requested objects, on error throws an exception.</p>
-<p>The API developer should provide one typed <code>getAll</code> method for each record type managed by the module.</p>
-<h4 id="example_4">Example<a class="headerlink" href="#example_4" title="Permanent link">&para;</a></h4>
-<p>DNS module, which saves records inside the <code>`hosts</code>, defines two typed methods: <code>getAllRemoteHosts</code>, <code>getAllAliases</code>.</p>
-<pre><code>getAllRemoteHost: function() {
-    var ret = [];
-    var db = nethserver.getDatabase('hosts');
-    return db.open().then(function() {
-        var keys = db.keys();
-        for (var k in keys) {
-            var o = db.getObject(keys[k]);
-            ...
-            ret.push(o);
-        }
-        ...
-        return ret;
-    });
-}
-</code></pre>
-
-<h3 id="get-one">Get one<a class="headerlink" href="#get-one" title="Permanent link">&para;</a></h3>
-<p>On success returns a success promise along with the requested object, on error throws an exception.</p>
-<p><em>Parameter</em>: key to be retrieved.</p>
-<h4 id="example_5">Example<a class="headerlink" href="#example_5" title="Permanent link">&para;</a></h4>
-<p>DNS module, which saves records inside the <code>`hosts</code>, can define one or methos: <code>getOne</code>.</p>
-<pre><code>getOne: function(hostKey) {
-    var db = nethserver.getDatabase('hosts');
-    return db.open().then(function() {
-        return db.getObject(hostKey);
-    });
-}
-</code></pre>
-
-<h2 id="api-tests">API tests<a class="headerlink" href="#api-tests" title="Permanent link">&para;</a></h2>
-<p>When implementing a new API, the developer should take care of writing tests.
-Test should be placed undet the <code>api/test</code> directory.
-Each test is composed by two files:</p>
-<ul>
-<li>a js file which runs the tests</li>
-<li>an html file which displays test results</li>
-</ul>
-<p>Used test framework is <a href="https://mochajs.org/">Mocha</a> which uses <a href="http://shouldjs.github.io/">Should.js</a>.</p>
-<p>Test can be accessed using Cockpit interface: <code>https://&lt;server&gt;:9090/nethserver/test-&lt;module_name&gt;</code></p>
-<h3 id="example_6">Example<a class="headerlink" href="#example_6" title="Permanent link">&para;</a></h3>
-<p>Given a module named <code>mymodule</code>, create two files:</p>
-<ul>
-<li>test-mymodule.js</li>
-<li>test-mymodule.html</li>
-</ul>
-<p>Test will be accessibile at: <code>https://myserver.mydomain.org:9090/nethserver/test-mymodule</code></p>
-<p>Content of <code>test-mymodule.js</code>:</p>
-<pre><code>mocha.setup('bdd');
-
-describe('nethserver.system namespace', function () {
-    it('is defined', function() {
-        should(typeof nethserver.system === 'object').be.ok();
-    });
-});
-
-describe('MyModule testCall', function(done) {
-   return nethserver.mymodule.testCall().then(function(val) {
-       return val.should.be.equal(&quot;abcd&quot;); 
-   });
-});
-
-
-it('MyModule testCalls musth throw error', function() {
-    nethserver.system.mymodule.testCall('wrong paramater').should.be.rejectedWith(Error);
-});
-
-mocha.checkLeaks();
-mocha.globals(['jQuery', 'cockpit']);
-mocha.run();
-</code></pre>
-
-<p>Content of <code>test-mymodule.html</code>:</p>
-<pre><code>&lt;!doctype html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-      &lt;title&gt;NethServer mymodule API test&lt;/title&gt;
-      &lt;meta charset=&quot;utf-8&quot;&gt;
-      &lt;link rel=&quot;stylesheet&quot; href=&quot;mocha.css&quot;&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;div id=&quot;mocha&quot;&gt;&lt;/div&gt;
-
-        &lt;script src=&quot;../base1/jquery.min.js&quot;&gt;&lt;/script&gt;
-        &lt;script src=&quot;../base1/cockpit.min.js&quot;&gt;&lt;/script&gt;
-        &lt;script src=&quot;core.js&quot;&gt;&lt;/script&gt;
-        &lt;script src=&quot;mymodule.js&quot;&gt;&lt;/script&gt; &lt;!-- include the implementation of you module --&gt;
-        &lt;script src=&quot;should.js&quot;&gt;&lt;/script&gt;
-        &lt;script src=&quot;mocha.js&quot;&gt;&lt;/script&gt;
-        &lt;script src=&quot;test-mockup.js&quot;&gt;&lt;/script&gt; &lt;!-- avoid calling real events --&gt;
-        &lt;script src=&quot;test-system.js&quot;&gt;&lt;/script&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
+<p>None of the above action is mandatory.</p>
+<h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">&para;</a></h3>
+<p>Usually used when managing tables, it create a new record and apply the configuration.</p>
+<h3 id="read">read<a class="headerlink" href="#read" title="Permanent link">&para;</a></h3>
+<h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h3>
+<h3 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h3>
+<h3 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h3>
                 
                   
                 
@@ -1218,13 +897,13 @@ mocha.run();
           </a>
         
         
-          <a href="../environment/" title="Development environment" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../api_protocol/" title="Communication protocol" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Development environment
+                Communication protocol
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">

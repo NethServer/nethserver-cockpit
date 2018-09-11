@@ -273,10 +273,214 @@
           
 
 
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-1" type="checkbox" id="nav-2-1">
+    
+    <label class="md-nav__link" for="nav-2-1">
+      General
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-1">
+        General
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
   <li class="md-nav__item">
-    <a href="../api_guidelines/" title="API guidelines" class="md-nav__link">
-      API guidelines
+    <a href="../api_guidelines/" title="Design guidelines" class="md-nav__link">
+      Design guidelines
     </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api_protocol/" title="Communication protocol" class="md-nav__link">
+      Communication protocol
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api_libraries/" title="Helper libraries" class="md-nav__link">
+      Helper libraries
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2">
+    
+    <label class="md-nav__link" for="nav-2-2">
+      Helpers
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-2">
+        Helpers
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-aliases/" title="system-alias" class="md-nav__link">
+      system-alias
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-certificate/" title="system-certificate" class="md-nav__link">
+      system-certificate
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-company/" title="system-company" class="md-nav__link">
+      system-company
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-dns/" title="system-dns" class="md-nav__link">
+      system-dns
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-hostname/" title="system-hostname" class="md-nav__link">
+      system-hostname
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-hosts/" title="system-hosts" class="md-nav__link">
+      system-hosts
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-openssh/" title="system-openssh" class="md-nav__link">
+      system-openssh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-shutdown/" title="system-shutdown" class="md-nav__link">
+      system-shutdown
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-status/" title="system-status" class="md-nav__link">
+      system-status
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-task/" title="system-task" class="md-nav__link">
+      system-task
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-time/" title="system-time" class="md-nav__link">
+      system-time
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
         
@@ -668,26 +872,30 @@
 <h2 id="install-required-tools">Install required tools<a class="headerlink" href="#install-required-tools" title="Permanent link">&para;</a></h2>
 <p>Let's assume you've already prepared your own <a href="./environment">development environment</a>,
 you can now proceed by installing Yeoman and <code>generator-nethserver-cockpit</code> using <a href="https://www.npmjs.com/">npm</a>:</p>
-<pre><code>npm install -g yo
+<div class="codehilite"><pre><span></span>npm install -g yo
 npm install -g generator-nethserver-cockpit
-</code></pre>
+</pre></div>
+
 
 <h2 id="create">Create<a class="headerlink" href="#create" title="Permanent link">&para;</a></h2>
 <p>When scaffolding a new module, Yeoman will create the whole structure of 
 a new NethServer Cockpit application, including all files needed for building an RPM.
 First, create a new directory for your project:</p>
-<pre><code>mkdir -p nethserver-cockpit-dummy
-</code></pre>
+<div class="codehilite"><pre><span></span>mkdir -p nethserver-cockpit-dummy
+</pre></div>
+
 
 <p>Then execute Yeoman and follow instructions on the screen specifying a meaningful project name:</p>
-<pre><code>cd nethserver-cockpit-dummy
+<div class="codehilite"><pre><span></span>cd nethserver-cockpit-dummy
 yo nethserver-cockpit
-</code></pre>
+</pre></div>
+
 
 <h2 id="customize">Customize<a class="headerlink" href="#customize" title="Permanent link">&para;</a></h2>
 <p>Edit all <a href="../application_manifest/">application metadata</a> inside the manifest:</p>
-<pre><code>root/usr/share/cockpit/nethserver/applications/nethserver-cockpit-dummy.json
-</code></pre>
+<div class="codehilite"><pre><span></span>root/usr/share/cockpit/nethserver/applications/nethserver-cockpit-dummy.json
+</pre></div>
+
 
 <p>It's now time to start implementing some nice feature, you just need to know HTML, CSS and some JavaScript basics:
 there is no need to learn a new framework, use whatever you like.</p>
@@ -709,43 +917,48 @@ Metadata will be copied inside <code>/usr/share/nethserver/applications</code> d
 <p>In case you really want to pick a JavaScript framework, just include it inside <code>index.html</code>.
 The <code>prep-sources</code> script will do all the magic for you and include all needed dependencies.</p>
 <p><strong>AngularJS</strong> (https://angularjs.org/):</p>
-<pre><code>&lt;html ng-app&gt;
+<div class="codehilite"><pre><span></span><span class="nt">&lt;html</span> <span class="err">ng-app</span><span class="nt">&gt;</span>
 ...
-&lt;script src=&quot;https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js&quot;&gt;&lt;/script&gt;
-</code></pre>
+<span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
+
 
 <p><strong>Vue</strong> (https://vuejs.org/):</p>
-<pre><code>&lt;script src=&quot;https://unpkg.com/vue&quot;&gt;&lt;/script&gt;
-</code></pre>
+<div class="codehilite"><pre><span></span><span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;https://unpkg.com/vue&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
+
 
 <p><strong>React</strong> (https://reactjs.org/):</p>
-<pre><code>&lt;script crossorigin src=&quot;https://unpkg.com/react@16/umd/react.production.min.js&quot;&gt;&lt;/script&gt;
-&lt;script crossorigin src=&quot;https://unpkg.com/react-dom@16/umd/react-dom.production.min.js&quot;&gt;&lt;/script&gt;
-</code></pre>
+<div class="codehilite"><pre><span></span><span class="o">&lt;</span><span class="n">script</span> <span class="n">crossorigin</span> <span class="n">src</span><span class="o">=</span><span class="s">&quot;https://unpkg.com/react@16/umd/react.production.min.js&quot;</span><span class="o">&gt;&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">script</span> <span class="n">crossorigin</span> <span class="n">src</span><span class="o">=</span><span class="s">&quot;https://unpkg.com/react-dom@16/umd/react-dom.production.min.js&quot;</span><span class="o">&gt;&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
+</pre></div>
+
 
 <h2 id="save-your-work">Save your work<a class="headerlink" href="#save-your-work" title="Permanent link">&para;</a></h2>
 <p>The code should always be kept under a version control system for tracking changes.
 NethServer build system assumes you're using <a href="https://git-scm.com/docs/gittutorial">git</a>,
 so commit everything on a git repository:</p>
-<pre><code>git init
+<div class="codehilite"><pre><span></span>git init
 git add *
 git commit -a -m &quot;First import&quot;
-</code></pre>
+</pre></div>
+
 
 <p>Always consider to share your code, take a look at <a href="https://github.com/">GitHub</a>.</p>
 <h2 id="build-and-test">Build and test<a class="headerlink" href="#build-and-test" title="Permanent link">&para;</a></h2>
 <p>NethServer provides a set of tool for building RPMs under CentOS or Fedora.
 <a href="http://docs.nethserver.org/projects/nethserver-devel/en/latest/building_rpms.html">Prepare the build environment</a>,
  then create the RPM for your module: </p>
-<pre><code>./prep-sources
+<div class="codehilite"><pre><span></span>./prep-sources
 make-rpms nethserver-cockpit-dummy.spec
-</code></pre>
+</pre></div>
+
 
 <p>Copy the created RPM into your machine and install it to try out your new application 
 by accessing Cockpit: <code>https://&lt;your_server&gt;:9090</code></p>
 <p>If some JavaScript or HTML part doesn't load correctly, execute:</p>
-<pre><code>systemctl restart cockpit
-</code></pre>
+<div class="codehilite"><pre><span></span>systemctl restart cockpit
+</pre></div>
                 
                   
                 

@@ -11,7 +11,7 @@
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       
       
-        <link rel="canonical" href="https://nethserver.github.io/nethserver-cockpit/build_doc/">
+        <link rel="canonical" href="https://nethserver.github.io/nethserver-cockpit/api_libraries/">
       
       
       
@@ -38,7 +38,7 @@
     
     
       
-        <title>Building documentation - NethServer Cockpit</title>
+        <title>Helper libraries - NethServer Cockpit</title>
       
     
     
@@ -100,7 +100,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="../#building-documentation" tabindex="1" class="md-skip">
+      <a href="../#helper-libraries" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -126,7 +126,7 @@
                 NethServer Cockpit
               </span>
               <span class="md-header-nav__topic">
-                Building documentation
+                Helper libraries
               </span>
             
           
@@ -253,10 +253,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
     
     <label class="md-nav__link" for="nav-2">
       API
@@ -272,10 +274,12 @@
           
           
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-1" type="checkbox" id="nav-2-1">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-1" type="checkbox" id="nav-2-1" checked>
     
     <label class="md-nav__link" for="nav-2-1">
       General
@@ -315,11 +319,20 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../api_libraries/" title="Helper libraries" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+    <a href="./" title="Helper libraries" class="md-nav__link md-nav__link--active">
       Helper libraries
     </a>
+    
   </li>
 
         
@@ -589,12 +602,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
     
     <label class="md-nav__link" for="nav-5">
       Build
@@ -610,49 +621,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Building documentation
-      </label>
-    
-    <a href="./" title="Building documentation" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../build_doc/" title="Building documentation" class="md-nav__link">
       Building documentation
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#publish-to-github-pages" title="Publish to GitHub pages" class="md-nav__link">
-    Publish to GitHub pages
-  </a>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -750,22 +723,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#publish-to-github-pages" title="Publish to GitHub pages" class="md-nav__link">
-    Publish to GitHub pages
-  </a>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -776,25 +733,11 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/build_doc.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/api_libraries.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="building-documentation">Building documentation<a class="headerlink" href="#building-documentation" title="Permanent link">&para;</a></h1>
-<p>This guide has been built using <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
-<p>Follow <a href="https://www.mkdocs.org/#installation">mkdocs installation instructions</a>, or just use:</p>
-<div class="codehilite"><pre><span></span>pip install --user mkdocs mkdocs-material
-</pre></div>
-
-
-<p>To serve the documentation during the development use:</p>
-<div class="codehilite"><pre><span></span>cd docs &amp;&amp; mkdocs serve
-</pre></div>
-
-
-<h2 id="publish-to-github-pages">Publish to GitHub pages<a class="headerlink" href="#publish-to-github-pages" title="Permanent link">&para;</a></h2>
-<p>To build and public the documentation directly to GitHub pages:</p>
-<div class="codehilite"><pre><span></span>cd docs &amp;&amp; mkdocs gh-deploy
-</pre></div>
+                <h1 id="helper-libraries">Helper libraries<a class="headerlink" href="#helper-libraries" title="Permanent link">&para;</a></h1>
+<p><strong>TODO</strong></p>
                 
                   
                 
@@ -815,7 +758,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../new_module/" title="How to write a new module" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../api_protocol/" title="Communication protocol" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -824,19 +767,19 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                How to write a new module
+                Communication protocol
               </span>
             </div>
           </a>
         
         
-          <a href="../build_rpm/" title="Building RPM" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../api/system-aliases/" title="system-alias" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Building RPM
+                system-alias
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
