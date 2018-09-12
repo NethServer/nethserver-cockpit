@@ -1233,8 +1233,18 @@ Output current <code>pki</code> configuration and the list of existing certifica
 <h3 id="self-signed-lets-encrypt-upload">self-signed, lets-encrypt, upload<a class="headerlink" href="#self-signed-lets-encrypt-upload" title="Permanent link">&para;</a></h3>
 <p>Same input from validate.</p>
 <h3 id="set-default">set-default<a class="headerlink" href="#set-default" title="Permanent link">&para;</a></h3>
-<p>Same input from self-signed, but the UI <em>must</em> set at least <code>CrtFile</code> and <code>KeyFile</code>.
-The <code>ChainFile</code> property is optional.</p>
+<p>Input must set <code>CrtFile</code>, <code>KeyFile</code> and <code>ChainFile</code> fields.
+The <code>ChainFile</code> field can be empty.</p>
+<p>Input example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;set-default&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;props&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;KeyFile&quot;</span><span class="p">:</span> <span class="s2">&quot;/etc/pki/tls/private/NSRV.key&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;CrtFile&quot;</span><span class="p">:</span> <span class="s2">&quot;/etc/pki/tls/certs/NSRV.crt&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;ChainFile&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
                 
                   
                 
