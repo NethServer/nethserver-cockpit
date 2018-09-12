@@ -13,13 +13,6 @@ Describe JSON output here:
 }
 ```
 
-Output example:
-```json
-{
-    ...
-}
-```
-
 ## validate
 
 ### Constraints
@@ -30,7 +23,7 @@ Output example:
 
 ### Input
 
-Desscribe input here.
+Describe input here.
 
 Input example:
 ```json

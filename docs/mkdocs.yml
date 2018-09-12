@@ -33,6 +33,7 @@ nav:
       - api/system-status.md
       - api/system-task.md
       - api/system-time.md
+      - api/system-tls-policy.md
 - User interface: 
     - environment.md
     - ui_guidelines.md

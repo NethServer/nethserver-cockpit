@@ -1,0 +1,44 @@
+#!/usr/bin/php
+<?php
+/*
+ * Copyright (C) 2018 Nethesis S.r.l.
+ * http://www.nethesis.it - nethserver@nethesis.it
+ *
+ * This script is part of NethServer.
+ *
+ * NethServer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License,
+ * or any later version.
+ *
+ * NethServer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NethServer.  If not, see COPYING.
+*/
+
+
+require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
+
+$data = readInput();
+
+$v = new LegacyValidator($data['props']);
+
+$v->declareParameter('policy', $v->createValidator()->memberOf('', '20180330', '20180621'));
+$db = new EsmithDatabase('configuration');
+$policy = $db->getProp('tls', 'policy');
+$key = $db->getProp('pki', 'KeyFile');
+exec("/sbin/e-smith/validate tlspolicy-safetyguard '$key' $policy", $output, $ret);
+if ($ret!=0) {
+    $v->addValidationError('policy','cert_safetyguard');
+}
+
+# Validate the input
+if ($v->validate()) {
+    success();
+} else {
+    error($v);
+}
