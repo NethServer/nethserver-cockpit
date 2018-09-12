@@ -505,8 +505,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#self-signed-lets-encrypt-upload" title="self-signed, lets-encrypt, upload" class="md-nav__link">
-    self-signed, lets-encrypt, upload
+  <a href="#self-signed_1" title="self-signed" class="md-nav__link">
+    self-signed
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lets-encrypt_1" title="lets-encrypt" class="md-nav__link">
+    lets-encrypt
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upload_1" title="upload" class="md-nav__link">
+    upload
   </a>
   
 </li>
@@ -998,8 +1012,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#self-signed-lets-encrypt-upload" title="self-signed, lets-encrypt, upload" class="md-nav__link">
-    self-signed, lets-encrypt, upload
+  <a href="#self-signed_1" title="self-signed" class="md-nav__link">
+    self-signed
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lets-encrypt_1" title="lets-encrypt" class="md-nav__link">
+    lets-encrypt
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upload_1" title="upload" class="md-nav__link">
+    upload
   </a>
   
 </li>
@@ -1060,6 +1088,7 @@ of all available certificates.</p>
 <h4 id="list">List<a class="headerlink" href="#list" title="Permanent link">&para;</a></h4>
 <p>Internally, the helper calls <code>/usr/libexec/nethserver/cert-list</code>.
 Output current <code>pki</code> configuration and the list of existing certificates.</p>
+<p>If some <code>pki</code> properties are empty, system defaults will be used to fill the returned object.</p>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -1140,6 +1169,7 @@ Output current <code>pki</code> configuration and the list of existing certifica
 <ul>
 <li>LetsEncryptMail: empty or valid mail address</li>
 <li>LetsEncryptDomains: comma-separated list of FQDNs</li>
+<li>LetsEncryptRenewDays: and integer greater than 10 and lower than 90</li>
 <li>Check all Let's Encrypt conditions are met</li>
 </ul>
 <p>Constraints for <code>upload</code>:</p>
@@ -1157,57 +1187,41 @@ Output current <code>pki</code> configuration and the list of existing certifica
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;props&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;LetsEncryptMail&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="nt">&quot;SubjectAltName&quot;</span><span class="p">:</span> <span class="s2">&quot;t1.test.net,t2.test.net&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;KeyFile&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;CrtFile&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="nt">&quot;State&quot;</span><span class="p">:</span> <span class="s2">&quot;myState&quot;</span><span class="p">,</span>
     <span class="nt">&quot;EmailAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;ChainFile&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="nt">&quot;Organization&quot;</span><span class="p">:</span> <span class="s2">&quot;My company&quot;</span><span class="p">,</span>
     <span class="nt">&quot;CertificateDuration&quot;</span><span class="p">:</span> <span class="s2">&quot;3650&quot;</span><span class="p">,</span>
     <span class="nt">&quot;Locality&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;LetsEncryptDomains&quot;</span><span class="p">:</span> <span class="s2">&quot;test.local.net&quot;</span><span class="p">,</span>
     <span class="nt">&quot;CommonName&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;LetsEncryptRenewDays&quot;</span><span class="p">:</span> <span class="s2">&quot;30&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;LetsEncrypt&quot;</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span><span class="p">,</span>
     <span class="nt">&quot;CountryCode&quot;</span><span class="p">:</span> <span class="s2">&quot;it&quot;</span><span class="p">,</span>
     <span class="nt">&quot;OrganizationalUnitName&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
   <span class="p">},</span>
-  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;pki&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;configuration&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;lets-encrypt&quot;</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;self-signed&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
 
+<p>Invocation example:</p>
+<div class="codehilite"><pre><span></span><span class="nb">echo</span> <span class="s1">&#39;{&quot;props&quot;:{&quot;SubjectAltName&quot;:&quot;t1.test.net,t2.test.net&quot;,&quot;State&quot;:&quot;myState&quot;,&quot;EmailAddress&quot;:&quot;&quot;,&quot;Organization&quot;:&quot;My company&quot;,&quot;CertificateDuration&quot;:&quot;3650&quot;,&quot;Locality&quot;:&quot;&quot;,&quot;CommonName&quot;:&quot;&quot;,&quot;CountryCode&quot;:&quot;it&quot;,&quot;OrganizationalUnitName&quot;:&quot;myoffice&quot;},&quot;action&quot;:&quot;self-signed&quot;}&#39;</span> <span class="p">|</span> ./update
+</pre></div>
+
+
 <h4 id="lets-encrypt">lets-encrypt<a class="headerlink" href="#lets-encrypt" title="Permanent link">&para;</a></h4>
+<p>Manfatory fields:</p>
 <ul>
 <li><code>action</code> must be set to <code>lets-encrypt</code></li>
-<li>pki record in json format</li>
+<li><code>LetsEncryptMail</code></li>
+<li><code>LetsEncryptDomains</code></li>
+<li><code>LetsEncryptRenewDays</code></li>
 </ul>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;props&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="nt">&quot;LetsEncryptMail&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;SubjectAltName&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;KeyFile&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;CrtFile&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;State&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;EmailAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;ChainFile&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;Organization&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;CertificateDuration&quot;</span><span class="p">:</span> <span class="s2">&quot;3650&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;Locality&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="nt">&quot;LetsEncryptDomains&quot;</span><span class="p">:</span> <span class="s2">&quot;test.local.net&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;CommonName&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="nt">&quot;LetsEncryptRenewDays&quot;</span><span class="p">:</span> <span class="s2">&quot;30&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;LetsEncrypt&quot;</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;CountryCode&quot;</span><span class="p">:</span> <span class="s2">&quot;it&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;OrganizationalUnitName&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
   <span class="p">},</span>
-  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;pki&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;configuration&quot;</span><span class="p">,</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;lets-encrypt&quot;</span>
 <span class="p">}</span>
 </pre></div>
@@ -1242,10 +1256,14 @@ Output current <code>pki</code> configuration and the list of existing certifica
 <li><code>upload</code></li>
 <li><code>set-default</code></li>
 </ul>
-<h3 id="self-signed-lets-encrypt-upload">self-signed, lets-encrypt, upload<a class="headerlink" href="#self-signed-lets-encrypt-upload" title="Permanent link">&para;</a></h3>
+<h3 id="self-signed_1">self-signed<a class="headerlink" href="#self-signed_1" title="Permanent link">&para;</a></h3>
+<p>Same input from validate.</p>
+<h3 id="lets-encrypt_1">lets-encrypt<a class="headerlink" href="#lets-encrypt_1" title="Permanent link">&para;</a></h3>
+<p>Same input from validate.</p>
+<h3 id="upload_1">upload<a class="headerlink" href="#upload_1" title="Permanent link">&para;</a></h3>
 <p>Same input from validate.</p>
 <h3 id="set-default">set-default<a class="headerlink" href="#set-default" title="Permanent link">&para;</a></h3>
-<p>Input must set <code>CrtFile</code>, <code>KeyFile</code> and <code>ChainFile</code> fields.
+<p>Mandatory fields: <code>CrtFile</code>, <code>KeyFile</code> and <code>ChainFile</code>.
 The <code>ChainFile</code> field can be empty.</p>
 <p>Input example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
