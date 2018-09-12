@@ -25,7 +25,7 @@ The record is inside the the `configuration` field:
 
 ### Constraints
 
-- Nameservers must be a comma-separeted list of valid IPv4 addresses
+- NameServers must be a comma-separated list of valid IPv4 addresses
 
 ### Input
 

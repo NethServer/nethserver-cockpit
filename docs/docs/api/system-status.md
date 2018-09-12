@@ -1,6 +1,6 @@
 # system-status
 
-Return variuous information on the server.
+Return various information on the server.
 
 The system status is composed by:
 
@@ -8,7 +8,7 @@ The system status is composed by:
 - kernel version
 - memory statistics (in kB)
 - uptime
-- os release
+- OS release
 - load
 - hardware vendor and product name
 

@@ -1,12 +1,12 @@
 # system-shutdown
 
-Reboot or poweroff the server.
+Reboot or power off the server.
 
 ## update
 
 ### Input
 
-A JSON containg an `action` field. Valid actions are: `poweroff` and `reboot`.
+A JSON containing an `action` field. Valid actions are: `poweroff` and `reboot`.
 
 Example:
 ```json

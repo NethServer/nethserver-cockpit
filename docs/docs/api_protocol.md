@@ -11,8 +11,8 @@ of property names:
 
 ```json
 {
-  "key": "objKey",
-  "type": "objType",
+  "name": "keyname",
+  "type": "typename",
   "props": {
       "FirstProp": "FirstPropValue",
       ...
@@ -20,7 +20,7 @@ of property names:
 }
 ```
 
-Please note that **key** and **type** field are reserved.
+Please note that **name** and **type** field are reserved.
 
 ### Example
 
@@ -33,33 +33,62 @@ goofy=local
     IpAddress=192.168.1.22
 ```
 
-Equivalent JavaScript object notation:
+Equivalent JSON notation:
+```json
+{
+  "name": "goofy",
+  "type": "local",
+  "props": {
+      "Description": "Goofy workstation",
+      "IpAddress": "192.168.1.22"
+  }
+}
 ```
-var goofy = {
-  key: "goofy",
-  type: "local",
-  Description: "Goofy workstation",
-  IpAddress: "192.168.1.22",
+
+## Events
+
+If invoked with `-j` option, the `signal-event` command outputs the event progress in JSON format.
+
+Example:
+```json
+{"steps":2,"pid":17354,"args":"","event":"nethserver-lsm-save"}
+{"step":1,"pid":17354,"action":"S05generic_template_expand","event":"nethserver-lsm-save","state":"running"}
+{"progress":"0.50","time":"0.21036","exit":0,"event":"nethserver-lsm-save","state":"done","step":1,"pid":17354,"action":"S05generic_template_expand"}
+{"step":2,"pid":17354,"action":"S90adjust-services","event":"nethserver-lsm-save","state":"running"}
+{"progress":"1.00","time":"0.685865","exit":0,"event":"nethserver-lsm-save","state":"done","step":2,"pid":17354,"action":"S90adjust-services"}
+{"pid":17354,"status":"success","event":"nethserver-lsm-save"}
+```
+
+Special fields:
+
+- steps: set the total number of event actions 
+- step: identify the current running step
+- progress: percentage of event completion
+- status: can be `success` or `failed` in case of failure
+
+## Success
+
+Simple success message:
+```json
+{
+    "state": "success"
 }
 ```
 
 ## Errors
 
-If something goes wrong, APIs must throw a [nethserver.Error](api#nethserver.Error)
-object, which describes the error reason and possibly why the object passed to
-the API function caused the error.
+If something goes wrong, APIs must output a JSON object which describes the error reason.
 
 For instance:
-```
-throw new nethserver.Error({
-    id: 1507721123244,
-    type: 'NotValid',
-    message: 'Generic validation error reason',
-    attributes: {
-        'MyProp1': 'field-specific error reason', 
-        'MyProp2': 'other field-specific error reason'
+```json
+{
+    "id": 1507721123244,
+    "type": "Error",
+    "message": "Generic error reason",
+    "attributes": {
+        "output": "output from the system"
     }
-});
+}
 ```
 
 The **message** property should be used if an error is not caused by a specific
@@ -69,39 +98,60 @@ of the attributes or attributes are not defined at all.
 
 Note that the same Error object could represent multiple failure reasons.
 
-How to generate a good `id` in JavaScript:
-```
-+ new Date()
-```
-
-An equivalent for Bash:
-```text
+The `id` field should be a unique identifier like a timestamp.
+Bash example:
+```bash
 $ date +%s
 ```
 
 ### Well-known errors
 
-Well-known errors are:
+The list of well-known errors includes:
 
-- Validation error: **NotValid**
-  ```
-  throw new nethserver.Error({
-      id: 1507721123244,
-      type: 'NotValid',
-      message: 'Generic validation error reason',
-      attributes: {'myProp': 'field-specific error reason'}
-  });
-  ```
+- validation
+- event failure
+- invalid input
 
-- Not found error: **NotFound**
-  ```
-  throw new nethserver.Error({
-      id: 1507721155244,
-      type: 'NotFound',
-      message: 'Generic validation error reason',
-      attributes: {'key': 'field-specific error reason'}
-  });
-  ```
 
-- type ``ValidatorFailed``: validator procedure error - the ``validate`` command failed
+#### Validation
 
+Validation error:
+
+```json
+{
+  "id": 1536738091,
+  "type": "NotValid",
+  "message": "Validation failed",
+  "attributes": [
+    {
+      "parameter": "name",
+      "value": "test4",
+      "error": "valid_hostname_fqdn"
+    }
+  ]
+}
+```
+
+#### Event failure
+
+Event has failed:
+
+```json
+{
+  "id": "1536738278",
+  "type": "EventFailed",
+  "message": "See /var/log/messages"
+} 
+```
+
+#### Invalid input
+
+Invalid JSON object input:
+
+```json
+{
+  "id": "1536738276",
+  "type": "InvalidInput",
+  "message": "No JSON data available"
+}
+```

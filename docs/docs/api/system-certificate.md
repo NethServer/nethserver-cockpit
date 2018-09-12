@@ -18,7 +18,7 @@ List all available certificates.
 If no input has been provided, the helper will return the list 
 of all available certificates.
 
-To retrieve a certificate, pass the `name` paramater to the read helper.
+To retrieve a certificate, pass the `name` parameter to the read helper.
 
 Example:
 ```bash
@@ -30,7 +30,7 @@ echo '{"name":"/etc/pki/tls/certs/NSRV.crt"}' | ./read
 #### List
 
 Internally, the helper calls `/usr/libexec/nethserver/cert-list`.
-Outout current `pki` configuration and the list of existing certificates.
+Output current `pki` configuration and the list of existing certificates.
 
 Example:
 ```json
@@ -110,13 +110,13 @@ Constraints for `self-signed`:
 
 - CountryCode: empty or 2 letters
 - State, Locality, Organization, OrganizationalUnitName, CommonName: valid x509 fields
-- EmailAddress: emptyr or valid mail address
-- SubjectAltName: comma-separeted list of FQDNs
+- EmailAddress: empty or valid mail address
+- SubjectAltName: comma-separated list of FQDNs
 
 Constraints for `lets-encrypt`:
 
 - LetsEncryptMail: empty or valid mail address
-- LetsEncryptDomains: comma-separeted list of FQDNs
+- LetsEncryptDomains: comma-separated list of FQDNs
 - Check all Let's Encrypt conditions are met
 
 Constraints for `upload`:

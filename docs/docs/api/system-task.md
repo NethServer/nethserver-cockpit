@@ -27,4 +27,4 @@ event has been terminated:
 ```
 
 If `steps` has value equal to `-1`, the system can't determinate
-the progess of the running event.
+the progress of the running event.
