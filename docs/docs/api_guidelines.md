@@ -20,6 +20,8 @@ Example:
 process = cockpit.spawn("/usr/libexec/nethserver/system-status/read", { ... }
 ```
 
+## Methods
+
 APIs should implement classical CRUD operations, plus a validation helper:
 
 * [create](#create)
@@ -29,7 +31,6 @@ APIs should implement classical CRUD operations, plus a validation helper:
 * [validate](#validate)
 
 None of the above action is mandatory.
-
 
 ### create
 
@@ -72,3 +73,19 @@ Example: [system-hosts](api/system-hosts.md#create).
 Validate the given input.
 If validation fail, raise a [validation error](api_protocol.md#validation) and exit 1.
 Otherwise return a [success](api_protocol.md#success) and exit 0.
+
+## Documentation
+
+When creating new helpers, remember to write the related documentation.
+
+1. Download the [template](https://raw.githubusercontent.com/NethServer/nethserver-cockpit/master/docs/docs/api_template.md) and edit it
+2. Add the new document inside the [docs/docs/api](https://github.com/NethServer/nethserver-cockpit/tree/master/docs/docs/api) directory
+3. Add the new document inside the [navigation menu](https://github.com/NethServer/nethserver-cockpit/blob/master/docs/mkdocs.yml#L15)
+
+Try to respect the following rules:
+
+- always use a correct header level
+- add examples to you documentation
+- enable syntax highlighting for code
+
+See also [building documementation](build_doc.md).

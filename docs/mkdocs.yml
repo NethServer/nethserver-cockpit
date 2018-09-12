@@ -8,6 +8,7 @@ theme:
         icon: 'build'
 site_url: https://nethserver.github.io/nethserver-cockpit
 repo_url: https://github.com/NethServer/nethserver-cockpit
+edit_uri: edit/master/docs/docs/
 markdown_extensions:
     - codehilite
     - toc:
@@ -27,6 +28,7 @@ nav:
       - api/system-hostname.md
       - api/system-hosts.md
       - api/system-openssh.md
+      - api/system-services.md
       - api/system-shutdown.md
       - api/system-status.md
       - api/system-task.md

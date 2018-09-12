@@ -1,6 +1,6 @@
 # Building documentation
 
-This guide has been built using [MkDocs](https://www.mkdocs.org/).
+This guide has been built using [MkDocs](https://www.mkdocs.org/) and [Material for MKDocs](https://squidfunk.github.io/mkdocs-material/).
 
 Follow [mkdocs installation instructions](https://www.mkdocs.org/#installation), or just use:
 ```

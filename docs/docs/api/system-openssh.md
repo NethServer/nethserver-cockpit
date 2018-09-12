@@ -91,6 +91,6 @@ Invocation example:
 echo '{"props":{"status":"enable","access":"green,red","MaxAuthTries":"6","UsePAM":"yes","PasswordAuthentication":"yes","LoginGraceTime":"2m","Protocol":"2","PermitRootLogin":"yes","TCPPort":"22"},"name":"sshd","type":"service"}' | ./validate
 ```
 
-## write
+## update
 
 Same input from validate helper.
