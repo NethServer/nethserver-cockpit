@@ -35,11 +35,11 @@ $data = readInput();
 /** Declare parameters reusing the old code 
 
 1. Create the validator (calling it $v)
-2. Copy all declareParamaters invocation from the old Module
-   Paramaters with ANYTHING validator could be omitted
+2. Copy all declareParameters invocation from the old Module
+   Parameters with ANYTHING validator could be omitted
 3. Replace all call to "$this" with "$v"
-4. Make sure the first paramater of declareParameter is the name of the prop inside the db
-5. (Optional) Remove the 3rd argument from declareParamater calls
+4. Make sure the first parameter of declareParameter is the name of the prop inside the db
+5. (Optional) Remove the 3rd argument from declareParameter calls
 6. If present, copy validate function.
    It should be enough to copy the code inside "if ($this->getRequest()->isMutation()) {" condition.
    Replace all "$this" with "$v"
