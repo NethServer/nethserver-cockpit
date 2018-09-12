@@ -356,6 +356,20 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#events" title="Events" class="md-nav__link">
+    Events
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#success" title="Success" class="md-nav__link">
+    Success
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#errors" title="Errors" class="md-nav__link">
     Errors
   </a>
@@ -367,6 +381,33 @@
   <a href="#well-known-errors" title="Well-known errors" class="md-nav__link">
     Well-known errors
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation" title="Validation" class="md-nav__link">
+    Validation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-failure" title="Event failure" class="md-nav__link">
+    Event failure
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invalid-input" title="Invalid input" class="md-nav__link">
+    Invalid input
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -809,6 +850,20 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#events" title="Events" class="md-nav__link">
+    Events
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#success" title="Success" class="md-nav__link">
+    Success
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#errors" title="Errors" class="md-nav__link">
     Errors
   </a>
@@ -820,6 +875,33 @@
   <a href="#well-known-errors" title="Well-known errors" class="md-nav__link">
     Well-known errors
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation" title="Validation" class="md-nav__link">
+    Validation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-failure" title="Event failure" class="md-nav__link">
+    Event failure
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invalid-input" title="Invalid input" class="md-nav__link">
+    Invalid input
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -854,8 +936,8 @@ protocol defines a set of a well-known objects.</p>
 <p>Objects passed to and returned by APIs must reflect esmith db format and respect the upper/lower case notation
 of property names:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;objKey&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;objType&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;keyname&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;typename&quot;</span><span class="p">,</span>
   <span class="nt">&quot;props&quot;</span><span class="p">:</span> <span class="p">{</span>
       <span class="nt">&quot;FirstProp&quot;</span><span class="p">:</span> <span class="s2">&quot;FirstPropValue&quot;</span><span class="p">,</span>
       <span class="err">...</span>
@@ -864,7 +946,7 @@ of property names:</p>
 </pre></div>
 
 
-<p>Please note that <strong>key</strong> and <strong>type</strong> field are reserved.</p>
+<p>Please note that <strong>name</strong> and <strong>type</strong> field are reserved.</p>
 <h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
 <p>Host <code>goofy</code> inside the <code>hosts</code> database.</p>
 <p>Original esmith db notation:</p>
@@ -874,30 +956,56 @@ of property names:</p>
 </pre></div>
 
 
-<p>Equivalent JavaScript object notation:</p>
-<div class="codehilite"><pre><span></span>var goofy = {
-  key: &quot;goofy&quot;,
-  type: &quot;local&quot;,
-  Description: &quot;Goofy workstation&quot;,
-  IpAddress: &quot;192.168.1.22&quot;,
-}
+<p>Equivalent JSON notation:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;goofy&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;local&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;props&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;Goofy workstation&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;IpAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.22&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="events">Events<a class="headerlink" href="#events" title="Permanent link">&para;</a></h2>
+<p>If invoked with <code>-j</code> option, the <code>signal-event</code> command outputs the event progress in JSON format.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;steps&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;pid&quot;</span><span class="p">:</span><span class="mi">17354</span><span class="p">,</span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="s2">&quot;nethserver-lsm-save&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;step&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;pid&quot;</span><span class="p">:</span><span class="mi">17354</span><span class="p">,</span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="s2">&quot;S05generic_template_expand&quot;</span><span class="p">,</span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="s2">&quot;nethserver-lsm-save&quot;</span><span class="p">,</span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;progress&quot;</span><span class="p">:</span><span class="s2">&quot;0.50&quot;</span><span class="p">,</span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="s2">&quot;0.21036&quot;</span><span class="p">,</span><span class="nt">&quot;exit&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="s2">&quot;nethserver-lsm-save&quot;</span><span class="p">,</span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="s2">&quot;done&quot;</span><span class="p">,</span><span class="nt">&quot;step&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;pid&quot;</span><span class="p">:</span><span class="mi">17354</span><span class="p">,</span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="s2">&quot;S05generic_template_expand&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;step&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;pid&quot;</span><span class="p">:</span><span class="mi">17354</span><span class="p">,</span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="s2">&quot;S90adjust-services&quot;</span><span class="p">,</span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="s2">&quot;nethserver-lsm-save&quot;</span><span class="p">,</span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;progress&quot;</span><span class="p">:</span><span class="s2">&quot;1.00&quot;</span><span class="p">,</span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="s2">&quot;0.685865&quot;</span><span class="p">,</span><span class="nt">&quot;exit&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="s2">&quot;nethserver-lsm-save&quot;</span><span class="p">,</span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="s2">&quot;done&quot;</span><span class="p">,</span><span class="nt">&quot;step&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;pid&quot;</span><span class="p">:</span><span class="mi">17354</span><span class="p">,</span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="s2">&quot;S90adjust-services&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;pid&quot;</span><span class="p">:</span><span class="mi">17354</span><span class="p">,</span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;success&quot;</span><span class="p">,</span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="s2">&quot;nethserver-lsm-save&quot;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>Special fields:</p>
+<ul>
+<li>steps: set the total number of event actions </li>
+<li>step: identify the current running step</li>
+<li>progress: percentage of event completion</li>
+<li>status: can be <code>success</code> or <code>failed</code> in case of failure</li>
+</ul>
+<h2 id="success">Success<a class="headerlink" href="#success" title="Permanent link">&para;</a></h2>
+<p>Simple success message:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <h2 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h2>
-<p>If something goes wrong, APIs must throw a <a href="api#nethserver.Error">nethserver.Error</a>
-object, which describes the error reason and possibly why the object passed to
-the API function caused the error.</p>
+<p>If something goes wrong, APIs must output a JSON object which describes the error reason.</p>
 <p>For instance:</p>
-<div class="codehilite"><pre><span></span>throw new nethserver.Error({
-    id: 1507721123244,
-    type: &#39;NotValid&#39;,
-    message: &#39;Generic validation error reason&#39;,
-    attributes: {
-        &#39;MyProp1&#39;: &#39;field-specific error reason&#39;, 
-        &#39;MyProp2&#39;: &#39;other field-specific error reason&#39;
-    }
-});
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1507721123244</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Error&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Generic error reason&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;attributes&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;output&quot;</span><span class="p">:</span> <span class="s2">&quot;output from the system&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -906,41 +1014,54 @@ attribute. On the other hand, there could be cases where the <strong>attributes<
 object is empty, or undefined because the error condition does not depend on any
 of the attributes or attributes are not defined at all. </p>
 <p>Note that the same Error object could represent multiple failure reasons.</p>
-<p>How to generate a good <code>id</code> in JavaScript:</p>
-<div class="codehilite"><pre><span></span>+ new Date()
-</pre></div>
-
-
-<p>An equivalent for Bash:</p>
+<p>The <code>id</code> field should be a unique identifier like a timestamp.
+Bash example:</p>
 <div class="codehilite"><pre><span></span>$ date +%s
 </pre></div>
 
 
 <h3 id="well-known-errors">Well-known errors<a class="headerlink" href="#well-known-errors" title="Permanent link">&para;</a></h3>
-<p>Well-known errors are:</p>
+<p>The list of well-known errors includes:</p>
 <ul>
-<li>
-<p>Validation error: <strong>NotValid</strong>
-  <code>throw new nethserver.Error({
-      id: 1507721123244,
-      type: 'NotValid',
-      message: 'Generic validation error reason',
-      attributes: {'myProp': 'field-specific error reason'}
-  });</code></p>
-</li>
-<li>
-<p>Not found error: <strong>NotFound</strong>
-  <code>throw new nethserver.Error({
-      id: 1507721155244,
-      type: 'NotFound',
-      message: 'Generic validation error reason',
-      attributes: {'key': 'field-specific error reason'}
-  });</code></p>
-</li>
-<li>
-<p>type <code>ValidatorFailed</code>: validator procedure error - the <code>validate</code> command failed</p>
-</li>
+<li>validation</li>
+<li>event failure</li>
+<li>invalid input</li>
 </ul>
+<h4 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h4>
+<p>Validation error:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1536738091</span><span class="p">,</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;NotValid&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Validation failed&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;attributes&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;parameter&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;test4&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;valid_hostname_fqdn&quot;</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="event-failure">Event failure<a class="headerlink" href="#event-failure" title="Permanent link">&para;</a></h4>
+<p>Event has failed:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;1536738278&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;EventFailed&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;See /var/log/messages&quot;</span>
+<span class="p">}</span> 
+</pre></div>
+
+
+<h4 id="invalid-input">Invalid input<a class="headerlink" href="#invalid-input" title="Permanent link">&para;</a></h4>
+<p>Invalid JSON object input:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;1536738276&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;InvalidInput&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No JSON data available&quot;</span>
+<span class="p">}</span>
+</pre></div>
                 
                   
                 

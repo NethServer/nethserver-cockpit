@@ -329,9 +329,112 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Helper libraries
+      </label>
+    
     <a href="./" title="Helper libraries" class="md-nav__link md-nav__link--active">
       Helper libraries
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#php" title="PHP" class="md-nav__link">
+    PHP
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-functions" title="Available functions" class="md-nav__link">
+    Available functions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#legacy-validator" title="Legacy validator" class="md-nav__link">
+    Legacy validator
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#perl" title="Perl" class="md-nav__link">
+    Perl
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-functions_1" title="Available functions" class="md-nav__link">
+    Available functions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#general-examples" title="General examples" class="md-nav__link">
+    General examples
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bash" title="BASH" class="md-nav__link">
+    BASH
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-functions_2" title="Available functions" class="md-nav__link">
+    Available functions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#general-examples_1" title="General examples" class="md-nav__link">
+    General examples
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -723,6 +826,96 @@
     
   
   
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#php" title="PHP" class="md-nav__link">
+    PHP
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-functions" title="Available functions" class="md-nav__link">
+    Available functions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#legacy-validator" title="Legacy validator" class="md-nav__link">
+    Legacy validator
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#perl" title="Perl" class="md-nav__link">
+    Perl
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-functions_1" title="Available functions" class="md-nav__link">
+    Available functions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#general-examples" title="General examples" class="md-nav__link">
+    General examples
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bash" title="BASH" class="md-nav__link">
+    BASH
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-functions_2" title="Available functions" class="md-nav__link">
+    Available functions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#general-examples_1" title="General examples" class="md-nav__link">
+    General examples
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -737,7 +930,172 @@
                 
                 
                 <h1 id="helper-libraries">Helper libraries<a class="headerlink" href="#helper-libraries" title="Permanent link">&para;</a></h1>
-<p><strong>TODO</strong></p>
+<p>The <code>nethserver-cockpit</code> RPM includes some simple libraries to ease the development of helpers.
+Usage of such libraries is not mandatory.</p>
+<h2 id="php">PHP<a class="headerlink" href="#php" title="Permanent link">&para;</a></h2>
+<p>This library includes some classes from NethGUI framework to speed up the porting of existing code.
+PHP helper library is useful to quickly adapt validation code from old Server Manager.</p>
+<p>Include the library:</p>
+<div class="codehilite"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">require_once</span><span class="p">(</span><span class="s2">&quot;/usr/libexec/nethserver/api/lib/Helpers.php&quot;</span><span class="p">);</span>
+</pre></div>
+
+
+<h3 id="available-functions">Available functions<a class="headerlink" href="#available-functions" title="Permanent link">&para;</a></h3>
+<p><strong>readInput</strong></p>
+<p>Read the JSON input and return a named array.
+Example:</p>
+<div class="codehilite"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="nv">$data</span> <span class="o">=</span> <span class="nx">readInput</span><span class="p">();</span>
+<span class="k">print</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">];</span>
+</pre></div>
+
+
+<p><strong>EsmithDatabase</strong></p>
+<p>Access the Esmith database.
+Example:</p>
+<div class="codehilite"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="nv">$db</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EsmithDatabase</span><span class="p">(</span><span class="s1">&#39;configuration&#39;</span><span class="p">);</span>
+<span class="nv">$policy</span> <span class="o">=</span> <span class="nv">$db</span><span class="o">-&gt;</span><span class="na">getProp</span><span class="p">(</span><span class="s1">&#39;tls&#39;</span><span class="p">,</span> <span class="s1">&#39;policy&#39;</span><span class="p">);</span>
+<span class="nv">$tls</span> <span class="o">=</span>  <span class="nv">$db</span><span class="o">-&gt;</span><span class="na">getKey</span><span class="p">(</span><span class="s1">&#39;tls&#39;</span><span class="p">);</span>
+<span class="nv">$records</span> <span class="o">=</span> <span class="nv">$db</span><span class="o">-&gt;</span><span class="na">getAll</span><span class="p">();</span>
+</pre></div>
+
+
+<p><strong>LegacyValidator</strong></p>
+<p>Interface to old validator code. See below.</p>
+<h3 id="legacy-validator">Legacy validator<a class="headerlink" href="#legacy-validator" title="Permanent link">&para;</a></h3>
+<p>When using the LegacyValidator class, you should follow some rules which ease
+the cut&amp;paste from legacy code.
+General workflow:</p>
+<ol>
+<li>Include the helper</li>
+<li>Read the input</li>
+<li>Create the validator (calling it <code>$v</code>)</li>
+<li>Copy all <code>declareParameter</code> invocations from the old Module
+   Parameters with ANYTHING validator could be omitted</li>
+<li>Replace all call to <code>$this</code> with <code>$v</code></li>
+<li>Make sure the first parameter of <code>declareParameter</code> is the name of the prop inside the db</li>
+<li>(Optional) Remove the 3rd argument from <code>declareParameter</code> calls</li>
+<li>If present, copy validate function.
+   It should be enough to copy the code inside <code>if ($this-&gt;getRequest()-&gt;isMutation()) {</code> condition.
+   Replace all <code>$this</code> with <code>$v</code></li>
+<li>Validate the input calling <code>$v-&gt;validate()</code>
+   Invoke <code>success()</code> method if <code>validate()</code> returns true
+   Otherwise invoke <code>error($v)</code> passing the validator object</li>
+</ol>
+<p>Full example:</p>
+<div class="codehilite"><pre><span></span><span class="cp">&lt;?php</span>
+
+<span class="c1"># Include library</span>
+<span class="k">require_once</span><span class="p">(</span><span class="s2">&quot;/usr/libexec/nethserver/api/lib/Helpers.php&quot;</span><span class="p">);</span>
+
+<span class="c1"># Read input</span>
+<span class="nv">$data</span> <span class="o">=</span> <span class="nx">readInput</span><span class="p">();</span>
+
+<span class="c1"># Create the validator</span>
+<span class="nv">$v</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LegacyValidator</span><span class="p">(</span><span class="nv">$data</span><span class="p">[</span><span class="s1">&#39;props&#39;</span><span class="p">]);</span>
+
+<span class="c1"># Declare all parameters</span>
+<span class="nv">$v</span><span class="o">-&gt;</span><span class="na">declareParameter</span><span class="p">(</span><span class="s1">&#39;PasswordAuthentication&#39;</span><span class="p">,</span> <span class="nx">Validate</span><span class="o">::</span><span class="na">BOOLEAN</span><span class="p">);</span>
+
+<span class="c1"># Validate the input</span>
+<span class="k">if</span> <span class="p">(</span><span class="nv">$v</span><span class="o">-&gt;</span><span class="na">validate</span><span class="p">())</span> <span class="p">{</span>
+    <span class="nx">success</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">error</span><span class="p">(</span><span class="nv">$v</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="perl">Perl<a class="headerlink" href="#perl" title="Permanent link">&para;</a></h2>
+<p>To write better code, always enable warnings and strict checks:</p>
+<div class="codehilite"><pre><span></span><span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
+</pre></div>
+
+
+<p>Include the library:</p>
+<div class="codehilite"><pre><span></span><span class="k">require</span> <span class="s">&#39;/usr/libexec/nethserver/api/lib/helper_functions.pl&#39;</span><span class="p">;</span>
+</pre></div>
+
+
+<h3 id="available-functions_1">Available functions<a class="headerlink" href="#available-functions_1" title="Permanent link">&para;</a></h3>
+<p><strong>success</strong></p>
+<p>Print a success JSON object and exit 0.</p>
+<p><strong>error</strong></p>
+<p>Print a JSON error and exit 1.
+Takes 2 arguments:
+ - the error type (default: GenericError)
+ - a message (default "Generic error")</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="n">error</span><span class="p">(</span><span class="s">&quot;GenericError&quot;</span><span class="p">,</span> <span class="s">&quot;System message failure&quot;</span><span class="p">);</span>
+</pre></div>
+
+
+<p><strong>readInput</strong></p>
+<p>Read JSON input from STDIN
+Exit with InvalidInput error if JSON can't be decoded.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="k">my</span> <span class="nv">$data</span> <span class="o">=</span> <span class="n">readInput</span><span class="p">();</span>
+<span class="k">print</span> <span class="nv">$data</span><span class="o">-&gt;</span><span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">};</span>
+</pre></div>
+
+
+<h3 id="general-examples">General examples<a class="headerlink" href="#general-examples" title="Permanent link">&para;</a></h3>
+<p>Output <code>sshd</code> key in json output:</p>
+<div class="codehilite"><pre><span></span><span class="k">use</span> <span class="nn">JSON</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">esmith::db</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">$db</span> <span class="o">=</span> <span class="nn">esmith::db</span><span class="o">-&gt;</span><span class="nb">open</span><span class="p">(</span><span class="s">&quot;configuration&quot;</span><span class="p">);</span>
+
+<span class="k">print</span> <span class="n">to_json</span><span class="p">(</span><span class="nv">$db</span><span class="o">-&gt;</span><span class="n">prepare_json</span><span class="p">(</span><span class="s">&#39;sshd&#39;</span><span class="p">),</span> <span class="p">{</span><span class="n">utf8</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pretty</span> <span class="o">=&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">allow_nonref</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">});</span>
+</pre></div>
+
+
+<p>Alternative implementation:</p>
+<div class="codehilite"><pre><span></span><span class="k">use</span> <span class="nn">JSON</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">esmith::ConfigDB</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">$db</span> <span class="o">=</span> <span class="nn">esmith::ConfigDB</span><span class="o">-&gt;</span><span class="n">open_ro</span><span class="p">();</span>
+<span class="k">my</span> <span class="nv">$record</span> <span class="o">=</span> <span class="nv">$db</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sshd&#39;</span><span class="p">);</span>
+<span class="k">my</span> <span class="nv">%props</span> <span class="o">=</span> <span class="nv">$record</span><span class="o">-&gt;</span><span class="n">props</span><span class="p">;</span>
+
+<span class="k">print</span> <span class="n">encode_json</span><span class="p">({</span> <span class="n">name</span><span class="o">=&gt;</span> <span class="nv">$record</span><span class="o">-&gt;</span><span class="n">key</span><span class="p">,</span> <span class="n">type</span><span class="o">=&gt;</span> <span class="nv">$record</span><span class="o">-&gt;</span><span class="n">prop</span><span class="p">(</span><span class="s">&#39;type&#39;</span><span class="p">),</span> <span class="n">props</span> <span class="o">=&gt;</span> <span class="o">\</span><span class="nv">%props</span><span class="p">});</span>
+</pre></div>
+
+
+<h2 id="bash">BASH<a class="headerlink" href="#bash" title="Permanent link">&para;</a></h2>
+<p>BASH is useful when writing simple helpers.</p>
+<p>First, include the library:</p>
+<div class="codehilite"><pre><span></span>. /usr/libexec/nethserver/api/lib/helper_functions
+</pre></div>
+
+
+<h3 id="available-functions_2">Available functions<a class="headerlink" href="#available-functions_2" title="Permanent link">&para;</a></h3>
+<p><strong>success</strong></p>
+<p>Print a success JSON object and exit 0.</p>
+<p><strong>error</strong></p>
+<p>Print a JSON error and exit 1.
+Takes 2 arguments:</p>
+<ul>
+<li>the error type (default: GenericError)</li>
+<li>a message (default "Generic error")</li>
+</ul>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span>error <span class="s2">&quot;GenericError&quot;</span> <span class="s2">&quot;System failure message&quot;</span>
+</pre></div>
+
+
+<p><strong>invalid_error</strong></p>
+<p>Print an InvalidInput error and exit 1.</p>
+<h3 id="general-examples_1">General examples<a class="headerlink" href="#general-examples_1" title="Permanent link">&para;</a></h3>
+<p>Read JSON from STDIN and set the record:</p>
+<div class="codehilite"><pre><span></span>cat /dev/stdin <span class="p">|</span> /sbin/e-smith/config setjson - <span class="m">2</span>&gt;/dev/null
+</pre></div>
+
+
+<p>Output <code>sshd</code> key in json output:</p>
+<div class="codehilite"><pre><span></span>/sbin/e-smith/config getjson sshd
+</pre></div>
                 
                   
                 

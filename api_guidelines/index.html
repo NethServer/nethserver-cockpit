@@ -847,6 +847,14 @@ All helpers are saved inside <code>/usr/libexec/nethserver/api/&lt;controller_na
 <li>uses JSON format for input and output; the JSON can must be read as input from STDIN and printed to STDOUT</li>
 <li>can use other helpers to execute multiple actions, the helpers can be placed in the same directory (eg. <code>/usr/libexec/nethserver/openssh/help1-read</code>)</li>
 </ul>
+<p>The JavaScript controller uses the <code>cockpit.spawn</code> method to communicate with the backend.
+After spawning the process, the controller gather the standard output to track the task progress.</p>
+<p>At the end, the process exit code will raise an error or a success.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="nx">process</span> <span class="o">=</span> <span class="nx">cockpit</span><span class="p">.</span><span class="nx">spawn</span><span class="p">(</span><span class="s2">&quot;/usr/libexec/nethserver/system-status/read&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+</pre></div>
+
+
 <p>APIs should implement classical CRUD operations, plus a validation helper:</p>
 <ul>
 <li><a href="#create">create</a></li>
@@ -857,11 +865,32 @@ All helpers are saved inside <code>/usr/libexec/nethserver/api/&lt;controller_na
 </ul>
 <p>None of the above action is mandatory.</p>
 <h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">&para;</a></h3>
-<p>Usually used when managing tables, it create a new record and apply the configuration.</p>
+<p>Create a new record and apply the configuration.
+It's used to handle new records inside databases to mimic a table behavior.</p>
+<p>The input should be a <a href="../api_protocol/#esmith-db-records">JSON esmith record</a>.</p>
+<p>Example: <a href="../api/system-hosts/#create">system-hosts</a>.</p>
 <h3 id="read">read<a class="headerlink" href="#read" title="Permanent link">&para;</a></h3>
+<p>Read the current system status and configuration.
+It should return an object with <code>system</code> and <code>configuration</code> field.</p>
+<p>JSON format:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;status&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="err">...</span> <span class="p">}</span>
+  <span class="s2">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="err">...</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Example: <a href="../api/system-openssh/#read">system-openssh</a>.</p>
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h3>
+<p>Update and existing record or a key inside the configuration database and apply the configuration.</p>
+<p>Example: <a href="../api/system-openssh/#update">system-openssh</a>.</p>
 <h3 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h3>
+<p>Delete and existing record and apply the configuration.</p>
+<p>Example: <a href="../api/system-hosts/#create">system-hosts</a>.</p>
 <h3 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h3>
+<p>Validate the given input.
+If validation fail, raise a <a href="../api_protocol/#validation">validation error</a> and exit 1.
+Otherwise return a <a href="../api_protocol/#success">success</a> and exit 0.</p>
                 
                   
                 
