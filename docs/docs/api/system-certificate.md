@@ -231,5 +231,17 @@ Same input from validate.
 
 ### set-default
 
-Same input from self-signed, but the UI *must* set at least `CrtFile` and `KeyFile`.
-The `ChainFile` property is optional.
+Input must set `CrtFile`, `KeyFile` and `ChainFile` fields.
+The `ChainFile` field can be empty.
+
+Input example:
+```json
+{
+  "action": "set-default",
+  "props": {
+    "KeyFile": "/etc/pki/tls/private/NSRV.key",
+    "CrtFile": "/etc/pki/tls/certs/NSRV.crt",
+    "ChainFile": ""
+  }
+}
+```

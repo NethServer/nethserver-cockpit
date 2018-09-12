@@ -25,9 +25,16 @@ action=$(echo $data | jq -r '.action')
 
 case $action in
 
-    "self-signed" | "set-default")
-        "set-default")
-        echo $data | jq -r '.props' | /sbin/e-smith/setjson -
+    "self-signed")
+        echo $data | jq -r '.props' | /sbin/e-smith/config setjson -
+        /sbin/e-smith/signal-event -j certificate-update
+        ;;
+
+    "set-default")
+        key=$(echo $data | jq -r '.props.KeyFile')
+        crt=$(echo $data | jq -r '.props.CrtFile')
+        chain=$(echo $data | jq -r '.props.ChainFile')
+        /sbin/e-smith/config setprop pki KeyFile "$key" CrtFile "$crt" ChainFile "$chain"
         /sbin/e-smith/signal-event -j certificate-update
         ;;
 
