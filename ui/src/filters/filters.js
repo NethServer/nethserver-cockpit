@@ -44,15 +44,19 @@ var Filters = {
   },
   dateFormat: function (value) {
     var moment = require("moment");
-    if (+new Date(value) > 0)
-      return moment(String(value)).format("DD MMMM YYYY, HH:mm");
-    else return "-";
+    if (+new Date(value) > 0) {
+      var converted = isNaN(value) ? String(value) : value
+      return moment(converted).format("DD MMMM YYYY, HH:mm");
+    } else return "-";
   },
   capitalize: function (value) {
     return value.charAt(0).toUpperCase() + value.slice(1);
   },
   uppercase: function (value) {
     return value.toUpperCase()
+  },
+  isEmpty: function (value) {
+    jQuery.isEmptyObject(value);
   }
 };
 

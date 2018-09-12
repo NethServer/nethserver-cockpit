@@ -112,41 +112,44 @@
       <router-view></router-view>
     </div>
 
-    <!--  <div style="min-width: 390px;" class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
+    <div v-if="notifications.success.show" style="min-width: 390px; right: 10px; z-index: 0;" class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
         <span class="fa fa-times"></span>
       </button>
       <span style="padding-top: 20px;" class="pficon fa fa-check"></span>
-      <strong>Success</strong>
-      <p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">has been added to main server group.</p>
+      <strong>{{$t('success')}}</strong>
+      <p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{{notifications.success.message || '-'}}</p>
     </div>
 
-    <div style="margin-top: 70px;min-width: 390px;" class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-danger alert-dismissable">
+    <div v-if="notifications.error.show" :style="{ marginTop: notifications.success.show ? 70+'px' : 0+'px', minWidth: 390+'px', right: 10+'px', zIndex: 0 }"
+      class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-danger alert-dismissable">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
         <span class="fa fa-times"></span>
       </button>
       <div class="pull-right toast-pf-action">
-        <a href="#">Start Server</a>
+        <a @click="notifications.error.action()">{{notifications.error.actionName}}</a>
       </div>
       <span style="padding-top: 20px;" class="pficon fa fa-times"></span>
-      <strong>Error</strong>
-      <p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">has been added to main server group.</p>
+      <strong>{{$t('error')}}</strong>
+      <p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{{notifications.error.message || '-'}}</p>
     </div>
 
-    <div style="margin-top: 140px;min-width: 390px;" class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-warning alert-dismissable">
+    <div v-if="notifications.event.show" :style="{ marginTop: (notifications.success.show && notifications.error.show) ? 140+'px' : (notifications.success.show || notifications.error.show) ? 70+'px' : 0 +'px', minWidth: 390+'px', right: 10+'px', zIndex: 0 }"
+      class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-warning alert-dismissable">
       <span style="padding-top: 25px;" class="pficon fa fa-warning"></span>
-      <strong>Event</strong>
+      <strong>{{$t('event')}}: </strong>{{notifications.event.name || '-'}} (<strong>{{notifications.event.message || '-'}}</strong>)
 
       <div style="margin-bottom:0px;" class="progress-description">
         <div class="spinner spinner-xs spinner-inline"></div>
-        <strong>50%</strong>
+        <strong>{{notifications.event.progress}}%</strong>
       </div>
       <div class="progress progress-xs progress-label-top-right">
-        <div class="progress-bar" role="progressbar" aria-valuenow="42.7" aria-valuemin="0" aria-valuemax="100" style="width: 42.7%;">
+        <div class="progress-bar" role="progressbar" :aria-valuenow="notifications.event.progress" aria-valuemin="0"
+          aria-valuemax="100" :style="{ width: notifications.event.progress+'%'}">
         </div>
       </div>
 
-    </div> -->
+    </div>
 
   </div>
 </template>
@@ -177,7 +180,25 @@ export default {
         "##  #### ##          ##    ##     ##       ## ##       ##   ##    ##   ##  ##       ##   ##   ",
         "##    ## ########    ##    ##     ##  ######  ######## ##     ##    ###    ######## ##     ## "
       ].join("\n"),
-      wizardDone: false
+      wizardDone: false,
+      notifications: {
+        success: {
+          message: "",
+          show: false
+        },
+        error: {
+          message: "",
+          action: undefined,
+          actionName: "",
+          show: false
+        },
+        event: {
+          message: "",
+          name: "",
+          progress: 0,
+          show: false
+        }
+      }
     };
   },
   methods: {

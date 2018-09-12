@@ -34,10 +34,11 @@ var moment = require("moment");
 moment.locale(langConf.locale);
 
 // init Vue app
-new Vue({
+var vm = new Vue({
   el: "#app",
   router,
   i18n,
   render: h => h(App),
   currentLocale: langConf.locale
 });
+global.vm = vm;

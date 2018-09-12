@@ -54,7 +54,8 @@
               <p>
                 <a data-toggle="modal" data-target="#dnsChangeModal" href="#">
                   <span v-for="(d,i) in system.summary.dns" v-bind:key="i">{{d.readDns}}
-                    <span v-if="!i == system.summary.dns.length - 1">, </span>
+                    <span v-if="!i == system.summary.dns.length - 1 && system.summary.dns[1].readDns.length != 0">,
+                    </span>
                   </span>
                 </a>
               </p>
@@ -64,7 +65,7 @@
             <label class="col-sm-3 control-label">{{$t('dashboard.system_time')}}</label>
             <div class="col-sm-9 adjust-li">
               <p>
-                <a @click="openChangeSystime()" href="#">{{system.summary.date}} {{system.summary.time}}</a>
+                <a @click="openChangeSystime()" href="#">{{system.summary.datetime}}</a>
               </p>
             </div>
           </div>
@@ -140,7 +141,7 @@
               <div id="ram-chart" class="text-center"></div>
               <div class="text-right ">{{$t('dashboard.size')}}:
                 <b>
-                  <span class="">{{system.memory.system.available_bytes | byteFormat}}</span>
+                  <span class="">{{system.memory.system.available_bytes * 1024 | byteFormat}}</span>
                 </b>
               </div>
             </div>
@@ -159,7 +160,7 @@
               <div id="swap-chart" class="text-center"></div>
               <div class="text-right ">{{$t('dashboard.size')}}:
                 <b>
-                  <span class="">{{system.memory.swap.available_bytes | byteFormat}}</span>
+                  <span class="">{{system.memory.swap.available_bytes * 1024 | byteFormat}}</span>
                 </b>
               </div>
             </div>
@@ -177,16 +178,19 @@
           <form class="form-horizontal" v-on:submit.prevent="saveHostname(system.summary.newHostname)">
 
             <div class="modal-body">
-              <div class="form-group">
+              <div :class="['form-group', system.errors.hostname.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.fqdn')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="system.summary.newHostname" class="form-control">
+                  <span v-if="system.errors.hostname.hasError" class="help-block">{{system.errors.hostname.message}}</span>
                 </div>
               </div>
-              <div v-for="(a, i) in system.summary.aliases" v-bind:key="i" class="form-group">
-                <label class="col-xs-12 col-sm-3 control-label" for="textInput-modal-markup">{{i == 0 ? $t('dashboard.alias') : ''}}</label>
+              <div v-for="(a, i) in system.summary.aliases" v-bind:key="i" :class="['form-group', system.summary.aliases[i].hasError ? 'has-error' : '']">
+                <label class="col-xs-12 col-sm-3 control-label" for="textInput-modal-markup">{{i == 0 ?
+                  $t('dashboard.alias') : ''}}</label>
                 <div class="col-xs-7 col-sm-6">
                   <input type="text" v-model="a.key" class="form-control">
+                  <span v-if="system.summary.aliases[i].hasError" class="help-block">{{system.summary.aliases[i].message}}</span>
                 </div>
                 <div class="col-xs-5 col-sm-2">
                   <button @click="removeAlias(a, i)" class="btn btn-default" type="button">
@@ -204,10 +208,10 @@
               </div>
             </div>
             <div class="modal-footer submit">
+              <div v-if="system.errors.aliases.isLoading || system.errors.aliases.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" value="submit" type="submit">{{$t('save')}}</button>
             </div>
-
           </form>
         </div>
       </div>
@@ -222,20 +226,23 @@
           <form class="form-horizontal" v-on:submit.prevent="saveDNS(system.summary.dns)">
 
             <div class="modal-body">
-              <div class="form-group">
+              <div :class="['form-group', system.errors.dns1.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">1° {{$t('dashboard.dns')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="system.summary.dns[0].dns" class="form-control">
+                  <span v-if="system.errors.dns1.hasError" class="help-block">{{system.errors.dns1.message}}</span>
                 </div>
               </div>
-              <div class="form-group">
+              <div :class="['form-group', system.errors.dns2.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">2° {{$t('dashboard.dns')}}</label>
                 <div class="col-sm-9">
                   <input type="text" v-model="system.summary.dns[1].dns" class="form-control">
+                  <span v-if="system.errors.dns2.hasError" class="help-block">{{system.errors.dns2.message}}</span>
                 </div>
               </div>
             </div>
             <div class="modal-footer submit">
+              <div v-if="system.errors.dns1.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" value="submit" type="submit">{{$t('save')}}</button>
             </div>
@@ -282,7 +289,7 @@
                   </div>
                 </div>
               </div>
-              <div v-if="system.summary.newTimeMode == 'manual'" class="form-group">
+              <div v-if="system.summary.newTimeMode == 'manual'" :class="['form-group', system.errors.datetime.date.hasError || system.errors.datetime.time.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.date_time')}}</label>
                 <div class="col-sm-6">
                   <div id="date-picker" class="input-group date">
@@ -291,6 +298,7 @@
                       <span class="fa fa-calendar"></span>
                     </span>
                   </div>
+                  <span v-if="system.errors.datetime.date.hasError" class="help-block">{{system.errors.datetime.date.message}}</span>
                 </div>
                 <div class="col-sm-3">
                   <div class="input-group time-picker-pf" id="time-picker">
@@ -299,17 +307,20 @@
                       <span class="fa fa-clock-o"></span>
                     </span>
                   </div>
+                  <span v-if="system.errors.datetime.time.hasError" class="help-block">{{system.errors.datetime.time.message}}</span>
                 </div>
               </div>
 
-              <div v-if="system.summary.newTimeMode == 'ntp'" class="form-group">
+              <div v-if="system.summary.newTimeMode == 'ntp'" :class="['form-group', system.errors.datetime.NTPServer.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.ntp_server')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="system.summary.newNtpServer" class="form-control">
+                  <span v-if="system.errors.datetime.NTPServer.hasError" class="help-block">{{system.errors.datetime.NTPServer.message}}</span>
                 </div>
               </div>
             </div>
             <div class="modal-footer">
+              <div v-if="system.errors.datetime.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
             </div>
@@ -336,29 +347,30 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.city')}}</label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="system.newOrganization.city" class="form-control">
+                  <input required type="text" v-model="system.newOrganization.city" class="form-control">
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.department')}}</label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="system.newOrganization.department" class="form-control">
+                  <input required type="text" v-model="system.newOrganization.department" class="form-control">
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.phone')}}</label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="system.newOrganization.phone" class="form-control">
+                  <input required type="text" v-model="system.newOrganization.phone" class="form-control">
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.address')}}</label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="system.newOrganization.address" class="form-control">
+                  <input required type="text" v-model="system.newOrganization.address" class="form-control">
                 </div>
               </div>
             </div>
             <div class="modal-footer submit">
+              <div v-if="system.errors.company.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" value="submit" type="submit">{{$t('save')}}</button>
             </div>
@@ -372,7 +384,8 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{system.summary.actualPower == 'reboot' ? $t('dashboard.reboot_the_system') : $t('dashboard.shutdown_the_system')}}</h4>
+            <h4 class="modal-title">{{system.summary.actualPower == 'reboot' ? $t('dashboard.reboot_the_system') :
+              $t('dashboard.shutdown_the_system')}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="powerActions(system.summary.actualPower)">
 
@@ -383,7 +396,8 @@
             </div>
             <div class="modal-footer">
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
-              <button class="btn btn-danger" type="submit">{{system.summary.actualPower == 'reboot' ? $t('dashboard.reboot') : $t('dashboard.power_off')}}</button>
+              <button class="btn btn-danger" type="submit">{{system.summary.actualPower == 'reboot' ?
+                $t('dashboard.reboot') : $t('dashboard.power_off')}}</button>
             </div>
 
           </form>
@@ -404,6 +418,11 @@ export default {
   name: "Dashboard",
   mounted() {
     this.getSystemSummary();
+    this.getSystemHostname();
+    this.getSystemAliases();
+    this.getSystemDns();
+    this.getSystemTime();
+    this.getSystemCompany();
     this.initSystemGraphs();
   },
   data() {
@@ -428,19 +447,19 @@ export default {
               dns: ""
             }
           ],
+          datetime: "",
           date: "",
           time: "",
           timeMode: "",
           ntpServer: "",
           timeZone: "",
-          actualPower: "",
-          newTimeMode: "",
           newTimeMode: "",
           newDate: "",
           newTime: "",
           newNtpServer: "",
           newTimeZone: "",
-          timeZones: ["", ""]
+          timeZones: ["", ""],
+          actualPower: ""
         },
         newOrganization: {},
         organization: {
@@ -463,6 +482,47 @@ export default {
         systimeTypes: {
           manual: this.$i18n.t("dashboard.manual"),
           ntp: this.$i18n.t("dashboard.using_ntp_server")
+        },
+        errors: {
+          hostname: {
+            hasError: false,
+            message: "",
+            isLoading: false
+          },
+          aliases: {
+            hasError: false,
+            message: "",
+            isLoading: false
+          },
+          dns1: {
+            hasError: false,
+            message: "",
+            isLoading: false
+          },
+          dns2: {
+            hasError: false,
+            message: ""
+          },
+          datetime: {
+            date: {
+              hasError: false,
+              message: ""
+            },
+            time: {
+              hasError: false,
+              message: ""
+            },
+            NTPServer: {
+              hasError: false,
+              message: ""
+            },
+            isLoading: false
+          },
+          company: {
+            hasError: false,
+            message: "",
+            isLoading: false
+          }
         }
       }
     };
@@ -470,10 +530,10 @@ export default {
   methods: {
     getSystemSummary() {
       var context = this;
-
-      // system status and memory
-      this.exec(
+      context.exec(
         ["system-status/read"],
+        null,
+        null,
         function(success) {
           success = JSON.parse(success);
           context.system.summary.hardware = success.status.hardware;
@@ -513,56 +573,423 @@ export default {
           console.error(error);
         }
       );
-
-      // system hostname
-      this.exec(
+    },
+    getSystemHostname() {
+      var context = this;
+      context.exec(
         ["system-hostname/read"],
+        null,
+        null,
         function(success) {
           success = JSON.parse(success);
           context.system.summary.hostname = success.hostname;
           context.system.summary.newHostname = success.hostname;
+          context.$forceUpdate();
         },
         function(error) {
           console.error(error);
         }
       );
+    },
+    saveHostname(hostname) {
+      var context = this;
 
-      // system dns
-      this.exec(
-        ["system-dns/read"],
+      // validate input promises
+      var promises = [];
+
+      // hostname
+      context.system.errors.hostname.isLoading = true;
+      promises.push(
+        new Promise(function(resolve, reject) {
+          context.exec(
+            ["system-hostname/validate"],
+            {
+              hostname: context.system.summary.newHostname
+            },
+            null,
+            function(success) {
+              context.system.errors.hostname.hasError = false;
+              resolve();
+            },
+            function(error, data) {
+              var errorData = JSON.parse(data);
+              context.system.errors.hostname.hasError = true;
+              context.system.errors.hostname.message =
+                "[" + errorData.message + "]: " + errorData.attributes[0].error;
+              reject(error);
+            }
+          );
+        })
+      );
+
+      //aliases
+      var aliasObj = {
+        configuration: []
+      };
+      for (var a in context.system.summary.aliases) {
+        var alias = context.system.summary.aliases[a];
+        aliasObj.configuration.push({
+          props: {
+            Description: ""
+          },
+          name: alias.key,
+          type: "self"
+        });
+      }
+      context.system.errors.aliases.isLoading = true;
+      promises.push(
+        new Promise(function(resolve, reject) {
+          context.exec(
+            ["system-aliases/validate"],
+            aliasObj,
+            null,
+            function(success) {
+              for (var a in context.system.summary.aliases) {
+                context.system.summary.aliases[a].hasError = false;
+              }
+              context.$forceUpdate();
+
+              resolve();
+            },
+            function(error, data) {
+              var errorData = JSON.parse(data);
+              for (var a in errorData.attributes) {
+                var attr = errorData.attributes[a];
+                var i = 0;
+                for (var l in context.system.summary.aliases) {
+                  var al = context.system.summary.aliases[l];
+                  context.system.summary.aliases[l].hasError = false;
+                  if (al.key == attr.value) {
+                    i = l;
+                  }
+                }
+
+                context.system.summary.aliases[i].hasError = true;
+                context.system.summary.aliases[i].message =
+                  "[" + errorData.message + "]: " + attr.error;
+
+                context.$forceUpdate();
+              }
+              reject(error);
+            }
+          );
+        })
+      );
+
+      Promise.all(promises)
+        .then(function(values) {
+          context.system.errors.hostname.isLoading = false;
+          context.system.errors.aliases.isLoading = false;
+          $("#hostnameChangeModal").modal("hide");
+
+          // update hostname
+          if (
+            context.system.summary.newHostname !=
+            context.system.summary.hostname
+          ) {
+            context.exec(
+              ["system-hostname/update"],
+              {
+                hostname: context.system.summary.newHostname
+              },
+              function(stream) {
+                console.info("hostname", stream);
+              },
+              function(success) {
+                // get hostname
+                context.getSystemHostname();
+
+                // notification
+                context.$parent.notifications.success.message = context.$i18n.t(
+                  "dashboard.hostname_and_aliases_save_ok"
+                );
+              },
+              function(error, data) {
+                // notification
+                context.$parent.notifications.error.message = context.$i18n.t(
+                  "dashboard.hostname_and_aliases_save_error"
+                );
+              }
+            );
+          }
+
+          // update aliases
+          context.exec(
+            ["system-aliases/update"],
+            aliasObj,
+            function(stream) {
+              console.info("aliases", stream);
+            },
+            function(success) {
+              // get aliases
+              context.getSystemAliases();
+
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "dashboard.hostname_and_aliases_save_ok"
+              );
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "dashboard.hostname_and_aliases_save_error"
+              );
+            }
+          );
+        })
+        .catch(function(error) {
+          context.system.errors.hostname.isLoading = false;
+          context.system.errors.aliases.isLoading = false;
+        });
+    },
+    getSystemAliases() {
+      var context = this;
+      context.exec(
+        ["system-aliases/read"],
+        null,
+        null,
         function(success) {
           success = JSON.parse(success);
-          context.system.summary.dns = [
-            {
+          for (var i in success.configuration) {
+            var alias = success.configuration[i].name;
+            context.system.summary.aliases.push({
+              key: alias
+            });
+          }
+          context.$forceUpdate();
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+    addAlias(alias) {
+      this.system.summary.aliases.push({
+        isNew: true
+      });
+    },
+    removeAlias(alias, index) {
+      this.system.summary.aliases.splice(index, 1);
+    },
+    getSystemDns() {
+      var context = this;
+      context.exec(
+        ["system-dns/read"],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          if (
+            success.configuration.props.NameServers.split(",")[0] !== undefined
+          ) {
+            context.system.summary.dns[0] = {
               readDns: success.configuration.props.NameServers.split(",")[0],
               dns: success.configuration.props.NameServers.split(",")[0]
-            },
-            {
+            };
+          }
+
+          if (
+            success.configuration.props.NameServers.split(",")[1] !== undefined
+          ) {
+            context.system.summary.dns[1] = {
               readDns: success.configuration.props.NameServers.split(",")[1],
               dns: success.configuration.props.NameServers.split(",")[1]
-            }
-          ];
+            };
+          }
+          context.$forceUpdate();
         },
         function(error) {
           console.error(error);
         }
       );
+    },
+    saveDNS(dns) {
+      var context = this;
+      var dnsObj = {
+        props: {
+          NameServers: dns[0].dns + "," + dns[1].dns
+        },
+        name: "dns",
+        type: "configuration"
+      };
 
-      // system time
-      this.exec(
+      // validate
+      context.system.errors.dns1.isLoading = true;
+      context.exec(
+        ["system-dns/validate"],
+        dnsObj,
+        null,
+        function(success) {
+          context.system.errors.dns1.hasError = false;
+          context.system.errors.dns2.hasError = false;
+          context.system.errors.dns1.isLoading = false;
+
+          $("#dnsChangeModal").modal("hide");
+
+          // update value
+          context.exec(
+            ["system-dns/update"],
+            dnsObj,
+            function(stream) {
+              console.info("dns", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "dashboard.dns_save_ok"
+              );
+
+              // get aliases
+              context.getSystemDns();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "dashboard.dns_save_error"
+              );
+            }
+          );
+        },
+        function(error, data) {
+          var errorData = JSON.parse(data);
+          context.system.errors.dns1.isLoading = false;
+
+          context.system.errors.dns1.hasError = false;
+          context.system.errors.dns2.hasError = false;
+
+          for (var e in errorData.attributes) {
+            var attr = errorData.attributes[e];
+            context.system.errors[attr.parameter].hasError = true;
+            context.system.errors[attr.parameter].message =
+              "[" + errorData.message + "]: " + attr.error;
+          }
+        }
+      );
+    },
+    getSystemTime() {
+      var context = this;
+      context.exec(
         ["system-time/read"],
+        null,
+        null,
         function(success) {
           success = JSON.parse(success);
-          console.log(success);
+          context.system.summary.datetime = success.status.datetime;
+          context.system.summary.date = success.status.date;
+          context.system.summary.time = success.status.time;
+          context.system.summary.timeMode =
+            success.configuration.chronyd.props.status == "enabled"
+              ? "ntp"
+              : "manual";
+          context.system.summary.ntpServer =
+            success.configuration.chronyd.props.NTPServer;
+          context.system.summary.timeZone = success.configuration.timezone;
+          context.system.summary.newTimeMode =
+            success.configuration.chronyd.props.status == "enabled"
+              ? "ntp"
+              : "manual";
+          context.system.summary.newDate = success.status.date;
+          context.system.summary.newTime = success.status.time;
+          context.system.summary.newNtpServer =
+            success.configuration.chronyd.props.NTPServer;
+          context.system.summary.newTimeZone = success.configuration.timezone;
+          context.system.summary.timeZones = success.configuration.timezones;
+
+          context.$forceUpdate();
         },
         function(error) {
           console.error(error);
         }
       );
+    },
+    openChangeSystime() {
+      this.system.summary.newTimeZone = this.system.summary.timeZone;
+      this.system.summary.newTimeMode = this.system.summary.timeMode;
+      this.system.summary.newDate = this.system.summary.date;
+      this.system.summary.newTime = this.system.summary.time;
+      this.system.summary.newNtpServer = this.system.summary.ntpServer;
+      $("#systimeChangeModal").modal("show");
+    },
+    changeSystime(value) {
+      this.system.summary.newTimeMode = value;
+    },
+    saveSystime() {
+      var context = this;
+      var timeObj = {
+        chronyd: {
+          props: {
+            NTPServer: context.system.summary.newNtpServer,
+            status:
+              context.system.summary.newTimeMode == "manual"
+                ? "disabled"
+                : "enabled"
+          },
+          name: "chronyd",
+          type: "service"
+        },
+        timezone: context.system.summary.newTimeZone,
+        time: context.system.summary.newTime,
+        date: context.system.summary.newDate
+      };
 
-      // system company
-      this.exec(
+      // validate
+      context.system.errors.datetime.isLoading = true;
+      context.exec(
+        ["system-time/validate"],
+        timeObj,
+        null,
+        function(success) {
+          context.system.errors.datetime.hasError = false;
+          context.system.errors.datetime.isLoading = false;
+
+          $("#systimeChangeModal").modal("hide");
+
+          // update value
+          context.exec(
+            ["system-time/update"],
+            timeObj,
+            function(stream) {
+              console.info("time", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "dashboard.datetime_save_ok"
+              );
+
+              // get aliases
+              context.getSystemTime();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "dashboard.datetime_save_error"
+              );
+            }
+          );
+        },
+        function(error, data) {
+          var errorData = JSON.parse(data);
+          context.system.errors.datetime.isLoading = false;
+
+          context.system.errors.datetime.date.hasError;
+          context.system.errors.datetime.time.hasError;
+          context.system.errors.datetime.NTPServer.hasError;
+          for (var a in errorData.attributes) {
+            var attr = errorData.attributes[a];
+            context.system.errors.datetime[attr.parameter].hasError = true;
+            context.system.errors.datetime[attr.parameter].message =
+              "[" + errorData.message + "]: " + attr.error;
+          }
+        }
+      );
+    },
+    getSystemCompany() {
+      var context = this;
+      context.exec(
         ["system-company/read"],
+        null,
+        null,
         function(success) {
           success = JSON.parse(success);
           context.system.organization = {
@@ -572,9 +999,98 @@ export default {
             phone: success.configuration.props.PhoneNumber,
             address: success.configuration.props.Street
           };
+          context.$forceUpdate();
         },
         function(error) {
           console.error(error);
+        }
+      );
+    },
+    openChangeCompany() {
+      $("#companyChangeModal").modal("show");
+      this.system.newOrganization = Object.assign({}, this.system.organization);
+    },
+    saveCompany(organization) {
+      var context = this;
+      var companyObj = {
+        props: {
+          Department: context.system.newOrganization.department,
+          Street: context.system.newOrganization.address,
+          PhoneNumber: context.system.newOrganization.phone,
+          City: context.system.newOrganization.city,
+          State: "",
+          CountryCode: "",
+          Company: context.system.newOrganization.company
+        },
+        name: "OrganizationContact",
+        type: "configuration"
+      };
+
+      // validate
+      context.system.errors.company.isLoading = true;
+      context.exec(
+        ["system-company/validate"],
+        companyObj,
+        null,
+        function(success) {
+          context.system.errors.company.hasError = false;
+          context.system.errors.company.isLoading = false;
+
+          $("#companyChangeModal").modal("hide");
+
+          // update value
+          context.exec(
+            ["system-company/update"],
+            companyObj,
+            function(stream) {
+              console.info("company", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "dashboard.company_save_ok"
+              );
+
+              // get aliases
+              context.getSystemCompany();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "dashboard.company_save_error"
+              );
+            }
+          );
+        },
+        function(error, data) {
+          var errorData = JSON.parse(data);
+          context.system.errors.company.isLoading = false;
+          context.system.errors.company.hasError = true;
+          context.system.errors.company.message =
+            "[" + errorData.message + "]: " + errorData.attributes.name[0][0];
+        }
+      );
+    },
+    openPowerModal(action) {
+      this.system.summary.actualPower = action;
+      $("#powerModal").modal("show");
+    },
+    powerActions(action) {
+      var context = this;
+      context.exec(
+        ["system-shutdown/update"],
+        {
+          action: action
+        },
+        null,
+        function(success) {
+          $("#powerModal").modal("hide");
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "dashboard.shutdown_error"
+          );
         }
       );
     },
@@ -584,11 +1100,12 @@ export default {
       var swapConfig = c3ChartDefaults.getDefaultDonutConfig("A");
       ramConfig.bindto = "#ram-chart";
       swapConfig.bindto = "#swap-chart";
+
       ramConfig.data = {
         type: "donut",
         columns: [
-          ["Used", this.system.memory.system.used_bytes],
-          ["Available", this.system.memory.system.available_bytes]
+          ["Used", this.system.memory.system.used_bytes * 1024],
+          ["Available", this.system.memory.system.available_bytes * 1024]
         ],
         groups: [["used", "available"]],
         order: null
@@ -596,8 +1113,8 @@ export default {
       swapConfig.data = {
         type: "donut",
         columns: [
-          ["Used", this.system.memory.swap.used_bytes],
-          ["Available", this.system.memory.swap.available_bytes]
+          ["Used", this.system.memory.swap.used_bytes * 1024],
+          ["Available", this.system.memory.swap.available_bytes * 1024]
         ],
         groups: [["used", "available"]],
         order: null
@@ -622,17 +1139,22 @@ export default {
       c3.generate(swapConfig);
       patternfly.pfSetDonutChartTitle(
         "#ram-chart",
-        this.$options.filters.byteFormat(850623),
+        this.$options.filters.byteFormat(
+          this.system.memory.system.used_bytes * 1024
+        ),
         " Used"
       );
       patternfly.pfSetDonutChartTitle(
         "#swap-chart",
-        this.$options.filters.byteFormat(850623),
+        this.$options.filters.byteFormat(
+          this.system.memory.swap.used_bytes * 1024
+        ),
         " Used"
       );
     },
     initSystemGraphs() {
       var series;
+
       /* CPU graph */
       var cpu_data = {
         direct: [
@@ -658,7 +1180,6 @@ export default {
       series = this.cpu_plot.add_metrics_sum_series(cpu_data, {});
 
       /* Memory graph */
-
       var memory_data = {
         direct: ["mem.util.used"],
         internal: ["memory.used"],
@@ -680,7 +1201,6 @@ export default {
       series = this.memory_plot.add_metrics_sum_series(memory_data, {});
 
       /* Network graph */
-
       var network_data = {
         direct: ["network.interface.total.bytes"],
         internal: ["network.interface.tx", "network.interface.rx"],
@@ -709,7 +1229,6 @@ export default {
       series = this.network_plot.add_metrics_sum_series(network_data, {});
 
       /* Disk IO graph */
-
       var disk_data = {
         direct: ["disk.all.total_bytes"],
         internal: ["disk.all.read", "disk.all.written"],
@@ -757,159 +1276,6 @@ export default {
           response.data.n.resize();
         }
       );
-    },
-    saveHostname(hostname) {
-      $("#hostnameChangeModal").modal("hide");
-
-      // set hostname
-      /* if (
-                this.system.summary.hostname !==
-                this.system.summary.newHostname
-              ) {
-                nethserver.system.summary.setHostname(hostname).then(
-                  function() {
-                    this.system.summary.hostname = hostname;
-                    $scope.$apply();
-                  },
-                  function(err) {}
-                );
-              } */
-
-      // set aliases
-      /* nethserver.system.dns
-                .setAliases(
-                  this.system.summary.aliases.map(function(val) {
-                    return val.key;
-                  })
-                )
-                .then(
-                  function() {},
-                  function(err) {
-                    console.error(err);
-                  }
-                ); */
-    },
-    addAlias(alias) {
-      this.system.summary.aliases.push({
-        isNew: true
-      });
-    },
-    removeAlias(alias, index) {
-      this.system.summary.aliases.splice(index, 1);
-    },
-    saveDNS(dns) {
-      var dnsToSave = [];
-      if (dns[0].dns.length > 0) {
-        dnsToSave.push(dns[0].dns);
-      }
-      if (dns[1].dns.length > 0) {
-        dnsToSave.push(dns[1].dns);
-      }
-      /* nethserver.system.dns.setDNS(dnsToSave).then(
-                function() {
-                  $("#dnsChangeModal").modal("hide");
-                  this.system.summary.dns = dnsToSave.map(function(val) {
-                    return {
-                      readDns: val,
-                      dns: val
-                    };
-                  });
-                  $scope.$apply();
-                },
-                function(err) {
-                  console.error(err);
-                }
-              ); */
-    },
-    openChangeSystime() {
-      this.system.summary.newTimeZone = this.system.summary.timeZone;
-      this.system.summary.newTimeMode = this.system.summary.timeMode;
-      this.system.summary.newDate = this.system.summary.date;
-      this.system.summary.newTime = this.system.summary.time;
-      this.system.summary.newNtpServer = this.system.summary.ntpServer;
-      $("#systimeChangeModal").modal("show");
-    },
-    changeSystime(value) {
-      console.log(value);
-      this.system.summary.newTimeMode = value;
-    },
-    saveSystime() {
-      $("#systimeChangeModal").modal("hide");
-
-      /* nethserver.system.date
-              .setDate({
-                DateTime:
-                  this.system.summary.newDate + " " + this.system.summary.newTime,
-                TimeZone: this.system.summary.newTimeZone,
-                NTPServer: this.system.summary.newNtpServer
-              })
-              .then(
-                function(info) {
-                  $("#systimeChangeModal").modal("hide");
-                },
-                function(err) {
-                  console.error(err);
-                }
-              ); */
-    },
-    openChangeCompany() {
-      $("#companyChangeModal").modal("show");
-      this.system.newOrganization = Object.assign({}, this.system.organization);
-    },
-    saveCompany(organization) {
-      $("#companyChangeModal").modal("hide");
-
-      /* nethserver.system.organization.saveInfo(organization).then(
-          function () {
-            this.system.organization = organization;
-            $scope.$apply();
-          },
-          function (err) {
-            console.error(err);
-          }
-        ); */
-    },
-    openPowerModal(action) {
-      this.system.summary.actualPower = action;
-      $("#powerModal").modal("show");
-    },
-    powerActions(action) {
-      $("#powerModal").modal("hide");
-      switch (action) {
-        case "reboot":
-          /* nethserver.system.power.reboot().then(
-                function() {
-                  $scope.notifications.add({
-                    type: "info",
-                    title: $filter("translate")("Reboot"),
-                    message: $filter("translate")("Rebooting the system..."),
-                    status: "warning"
-                  });
-                  $scope.$apply();
-                },
-                function(err) {
-                  console.error(err);
-                }
-              ); */
-          break;
-
-        case "poweroff":
-          /* nethserver.system.power.poweroff().then(
-                function() {
-                  $scope.notifications.add({
-                    type: "info",
-                    title: $filter("translate")("Power off"),
-                    message: $filter("translate")("Shutting down the system..."),
-                    status: "warning"
-                  });
-                  $scope.$apply();
-                },
-                function(err) {
-                  console.error(err);
-                }
-              ); */
-          break;
-      }
     }
   }
 };

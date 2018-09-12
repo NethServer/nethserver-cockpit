@@ -32,7 +32,7 @@ var UtilService = {
       }
       return retVal;
     },
-    urltoFile(dataURI, name) {
+    urlToFile(dataURI, name) {
       var byteString;
       if (dataURI.split(",")[0].indexOf("base64") >= 0)
         byteString = atob(dataURI.split(",")[1]);
@@ -56,6 +56,17 @@ var UtilService = {
         type: mimeString
       });
       return new File([blob], name);
+    },
+    getBase64(file, callback) {
+      var reader = new FileReader();
+      reader.onload = function () {
+        callback(reader.result)
+      };
+      reader.onerror = function (error) {
+        console.log('Error: ', error);
+        callback(null)
+      };
+      reader.readAsDataURL(file);
     },
     createCSV(columns, rows) {
       var cs = [];

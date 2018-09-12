@@ -8,7 +8,7 @@ import Wizard from '@/components/wizard/Wizard'
 /* SYSTEM */
 import Dashboard from '@/components/system/Dashboard'
 
-import DiskStorage from '@/components/system/DiskStorage'
+import Storage from '@/components/system/Storage'
 import DiskUsage from '@/components/system/DiskUsage'
 
 import Certificates from '@/components/system/Certificates'
@@ -44,8 +44,8 @@ export default new Router({
 
     {
       path: '/storage',
-      name: 'DiskStorage',
-      component: DiskStorage
+      name: 'Storage',
+      component: Storage
     },
     {
       path: '/disk-usage',

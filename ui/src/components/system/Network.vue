@@ -54,7 +54,7 @@ export default {
 
 <style>
 #network-frame {
-  margin-top: -20px;
+  margin-top: -8px;
 }
 
 </style>

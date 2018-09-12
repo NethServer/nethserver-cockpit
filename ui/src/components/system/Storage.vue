@@ -1,6 +1,6 @@
 <template>
   <div>
-   <h2>{{$t('disk_storage.title')}}</h2>
+   <h2>{{$t('storage.title')}}</h2>
    <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
    <iframe id="storage-frame" class="iframe-embedded" src="/cockpit/@localhost/storage/index.html"></iframe>
    <div v-if="view.modalFake" class="fake-modal-backdrop"></div>
@@ -22,7 +22,18 @@ export default {
       // create an observer instance
       var observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
+          console.log(
+            $(mutation.target)[0].children[
+              $(mutation.target)[0].children.length - 1
+            ]
+          );
           if ($(mutation.target).hasClass("modal-open")) {
+            context.view.modalFake = true;
+          } else if (
+            $(mutation.target)[0].children[
+              $(mutation.target)[0].children.length - 1
+            ].id == "cockpit_modal_dialog"
+          ) {
             context.view.modalFake = true;
           } else {
             context.view.modalFake = false;
@@ -55,6 +66,6 @@ export default {
 
 <style>
 #storage-frame {
-  margin-top: -20px;
+  margin-top: -8px;
 }
 </style>

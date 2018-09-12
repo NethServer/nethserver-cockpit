@@ -5,6 +5,7 @@
     "delete": "Delete",
     "remove": "Remove",
     "edit": "Edit",
+    "advanced": "Advanced",
     "change": "Change",
     "create": "Create",
     "action": "Action",
@@ -23,6 +24,9 @@
     "are_you_sure": "Are you sure",
     "list": "List",
     "config": "Configuration",
+    "success": "Success",
+    "error": "Error",
+    "event": "Event",
     "menu": {
       "dashboard": "Dashboard",
       "storage": "Storage",
@@ -82,13 +86,23 @@
       "city": "City",
       "department": "Department",
       "phone": "Phone",
-      "address": "Address"
+      "address": "Address",
+      "hostname_and_aliases_save_ok": "Hostname and aliases saved successfully!",
+      "hostname_and_aliases_save_error": "Hostname and aliases not saved.",
+      "dns_save_ok": "DNS saved successfully!",
+      "dns_save_error": "DNS not saved.",
+      "company_save_ok": "Company info saved successfully!",
+      "company_save_error": "Company info not saved.",
+      "datetime_save_ok": "Date and Time saved successfully!",
+      "datetime_save_error": "Date and Time not saved.",
+      "shutdown_ok": "The system is shutting down...",
+      "shutdown_error": "Shutting down error occured."
     },
     "disk_usage": {
       "title": "Disk usage",
       "update_data": "Update data"
     },
-    "disk_storage": {
+    "storage": {
       "title": "Storage"
     },
     "certificates": {
@@ -97,6 +111,7 @@
       "edit_self_signed": "Edit self-signed certificate",
       "request_lets_encrypt": "Request Let's Encrypt certificate",
       "name": "Name",
+      "file": "File",
       "issuer": "Issuer",
       "expires": "Expires",
       "default": "Default",
@@ -120,8 +135,20 @@
       "certificate_validity_days": "Certificate validity (days)",
       "notification_email": "Notification email",
       "domain": "Domain",
+      "domains": "Domains",
+      "add_domain": "Add domain",
+      "renew_days": "Renew days",
       "request": "Request",
-      "view_certificate": "View certificate"
+      "view_certificate": "View certificate",
+      "alternative_name": "Comma-separated list of FQDNs",
+      "cert_default_ok": "Certificate set as default successfully!",
+      "cert_default_error": "Certificate not set as default.",
+      "cert_upload_ok": "Certificate uploaded successfully!",
+      "cert_upload_error": "Certificate not uploaded.",
+      "cert_encrypt_ok": "Let's encrypt requested successfully!",
+      "cert_encrypt_error": "Let's encrypt not requested.",
+      "cert_self_ok": "Self-signed certificate edited successfully!",
+      "cert_self_error": "Self-signed certificate not edited."
     },
     "dns": {
       "title": "DNS",
