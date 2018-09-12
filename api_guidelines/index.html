@@ -324,36 +324,56 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#methods" title="Methods" class="md-nav__link">
+    Methods
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#create" title="create" class="md-nav__link">
     create
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#read" title="read" class="md-nav__link">
     read
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#update" title="update" class="md-nav__link">
     update
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#delete" title="delete" class="md-nav__link">
     delete
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#validate" title="validate" class="md-nav__link">
     validate
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" title="Documentation" class="md-nav__link">
+    Documentation
   </a>
   
 </li>
@@ -497,6 +517,18 @@
   <li class="md-nav__item">
     <a href="../api/system-openssh/" title="system-openssh" class="md-nav__link">
       system-openssh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-services/" title="system-services" class="md-nav__link">
+      system-services
     </a>
   </li>
 
@@ -784,36 +816,56 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#methods" title="Methods" class="md-nav__link">
+    Methods
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#create" title="create" class="md-nav__link">
     create
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#read" title="read" class="md-nav__link">
     read
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#update" title="update" class="md-nav__link">
     update
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#delete" title="delete" class="md-nav__link">
     delete
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#validate" title="validate" class="md-nav__link">
     validate
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" title="Documentation" class="md-nav__link">
+    Documentation
   </a>
   
 </li>
@@ -834,7 +886,7 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/api_guidelines.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/docs/api_guidelines.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
                 <h1 id="design-guidelines">Design guidelines<a class="headerlink" href="#design-guidelines" title="Permanent link">&para;</a></h1>
@@ -855,6 +907,7 @@ After spawning the process, the controller gather the standard output to track t
 </pre></div>
 
 
+<h2 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h2>
 <p>APIs should implement classical CRUD operations, plus a validation helper:</p>
 <ul>
 <li><a href="#create">create</a></li>
@@ -891,6 +944,20 @@ It should return an object with <code>system</code> and <code>configuration</cod
 <p>Validate the given input.
 If validation fail, raise a <a href="../api_protocol/#validation">validation error</a> and exit 1.
 Otherwise return a <a href="../api_protocol/#success">success</a> and exit 0.</p>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<p>When creating new helpers, remember to write the related documentation.</p>
+<ol>
+<li>Download the <a href="https://raw.githubusercontent.com/NethServer/nethserver-cockpit/master/docs/docs/api_template.md">template</a> and edit it</li>
+<li>Add the new document inside the <a href="https://github.com/NethServer/nethserver-cockpit/tree/master/docs/docs/api">docs/docs/api</a> directory</li>
+<li>Add the new document inside the <a href="https://github.com/NethServer/nethserver-cockpit/blob/master/docs/mkdocs.yml#L15">navigation menu</a></li>
+</ol>
+<p>Try to respect the following rules:</p>
+<ul>
+<li>always use a correct header level</li>
+<li>add examples to you documentation</li>
+<li>enable syntax highlighting for code</li>
+</ul>
+<p>See also <a href="../build_doc/">building documementation</a>.</p>
                 
                   
                 
