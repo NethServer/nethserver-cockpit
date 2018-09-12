@@ -18,41 +18,66 @@ List all available certificates.
 If no input has been provided, the helper will return the list 
 of all available certificates.
 
-To retrieve a certificate, use:
-```json
-{
-  "name": ""
-}
+To retrieve a certificate, pass the `name` paramater to the read helper.
+
+Example:
+```bash
+echo '{"name":"/etc/pki/tls/certs/NSRV.crt"}' | ./read
 ```
 
 ### Output
 
 #### List
 
-Uses `/usr/libexec/nethserver/cert-list` helper.
+Internally, the helper calls `/usr/libexec/nethserver/cert-list`.
+Outout current `pki` configuration and the list of existing certificates.
 
 Example:
 ```json
 {
   "status": "",
   "configuration": {
-    "/etc/pki/tls/certs/NSRV.crt": {
-      "cn": "NethServer, O=Example Org, ST=SomeState, OU=Main",
-      "file": "/etc/pki/tls/certs/NSRV.crt",
-      "default": 1,
-      "issuer": "NethServer, O=Example Org, ST=SomeState, OU=Main",
-      "key": "/etc/pki/tls/private/NSRV.key",
-      "chain": "",
-      "expiration_t": 1795129200,
-      "expired": 0
-    }
+    "pki": {
+      "props": {
+        "LetsEncryptMail": "",
+        "SubjectAltName": "",
+        "KeyFile": "",
+        "CrtFile": "",
+        "State": "",
+        "EmailAddress": "",
+        "ChainFile": "",
+        "Organization": "",
+        "CertificateDuration": "3650",
+        "Locality": "",
+        "LetsEncryptDomains": "",
+        "CommonName": "",
+        "LetsEncryptRenewDays": "30",
+        "LetsEncrypt": "disabled",
+        "CountryCode": "",
+        "OrganizationalUnitName": ""
+      },
+      "name": "pki",
+      "type": "configuration"
+    },
+    "certificates": [
+      {
+        "cn": "NethServer, O=Example Org, ST=SomeState, OU=Main",
+        "file": "/etc/pki/tls/certs/NSRV.crt",
+        "issuer": "NethServer, O=Example Org, ST=SomeState, OU=Main",
+        "default": 1,
+        "key": "/etc/pki/tls/private/NSRV.key",
+        "chain": "",
+        "expiration_t": 1795129200,
+        "expired": 0
+      }
+    ]
   }
 }
 ```
 
 #### Certificate content
 
-Uses `/usr/libexec/nethserver/pki-info` helper.
+Internally, the helper calls `/usr/libexec/nethserver/pki-info`.
 
 Output is base64 encoded:
 ```json

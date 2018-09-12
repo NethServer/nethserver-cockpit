@@ -35,8 +35,11 @@ my $out;
 # Check if input is not a pipe
 if (-t STDIN) {
     $out->{'status'} = '';
-    my $certs = decode_json(`/usr/libexec/nethserver/cert-list`);
-    $out->{'configuration'}{'certificates'} = $certs;
+    my @certs;
+    foreach my $crt (values decode_json(`/usr/libexec/nethserver/cert-list`)) {
+        push(@certs, $crt);
+    }
+    $out->{'configuration'}{'certificates'} = \@certs;
     $out->{'configuration'}{'pki'} = $db->prepare_json('pki');
 } else {
     my $data = readInput();
@@ -46,11 +49,3 @@ if (-t STDIN) {
 }
 
 print encode_json($out);
-#if [ -t 0 ]; then
-#    printf '{"status":"","configuration":%s}' "$(/usr/libexec/nethserver/cert-list)"
-#else
-#    name=$(cat /dev/stdin | jq -r ".name")
-#    printf '{"certificate":"%s"}' "$(/usr/libexec/nethserver/pki-info -s $name | base64 -w 0)"
-#fi
-
-
