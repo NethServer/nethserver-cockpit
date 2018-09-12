@@ -48,7 +48,7 @@ if ($data['action'] == 'create' && $keyExists) {
 $nets = shell_exec("/usr/libexec/nethserver/trusted-networks");
 foreach (json_decode($nets, TRUE) as $e) {
     list($net, $mask) = explode('/', $e['mask']);
-    if ($data['name'] == $net) {
+    if (isUsed($data['name'],$data['props']['Mask'],$net,$mask)) {
         $v->addValidationError('name', 'already_used_network', $data['name']);
     }
 }
