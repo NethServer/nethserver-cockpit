@@ -23,18 +23,24 @@
 data=$(cat /dev/stdin)
 action=$(echo $data | jq -r '.action')
 
+function _get
+{
+    field=$1
+    echo $data | jq -r ".props.$field"
+}
+
 case $action in
 
     "self-signed")
-        echo $data | jq -r '.props' | /sbin/e-smith/config setjson -
+        /sbin/e-smith/config setprop pki SubjectAltName "$(_get SubjectAltName)" State "$(_get State)" EmailAddress "$(_get EmailAddress)" \
+            Organization "$(_get Organization)" CertificateDuration "$(_get CertificateDuration)" \
+            Locality "$(_get Locality)" CommonName "$(_get CommonName)" \
+            CountryCode "$(_get CountryCode)" OrganizationalUnitName "$(_get OrganizationalUnitName)" 
         /sbin/e-smith/signal-event -j certificate-update
         ;;
 
     "set-default")
-        key=$(echo $data | jq -r '.props.KeyFile')
-        crt=$(echo $data | jq -r '.props.CrtFile')
-        chain=$(echo $data | jq -r '.props.ChainFile')
-        /sbin/e-smith/config setprop pki KeyFile "$key" CrtFile "$crt" ChainFile "$chain"
+        /sbin/e-smith/config setprop pki KeyFile "$(_get KeyFile)" CrtFile "$(_get CrtFile)" ChainFile "$(_get ChainFile)"
         /sbin/e-smith/signal-event -j certificate-update
         ;;
 
@@ -51,7 +57,7 @@ case $action in
        ;;
 
     "lets-encrypt")
-        echo $data | jq -r '.props' | /sbin/e-smith/setjson -
+        /sbin/e-smith/config setprop pki LetsEncryptMail "$(_get LetsEncryptMail)" LetsEncryptDomains "$(_get LetsEncryptDomains)" LetsEncryptRenewDays "$(_get LetsEncryptRenewDays)"
         /usr/libexec/nethserver/letsencrypt-certs -f
         /sbin/e-smith/signal-event -j certificate-update
        ;;

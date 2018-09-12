@@ -32,6 +32,8 @@ echo '{"name":"/etc/pki/tls/certs/NSRV.crt"}' | ./read
 Internally, the helper calls `/usr/libexec/nethserver/cert-list`.
 Output current `pki` configuration and the list of existing certificates.
 
+If some `pki` properties are empty, system defaults will be used to fill the returned object.
+
 Example:
 ```json
 {
@@ -117,6 +119,7 @@ Constraints for `lets-encrypt`:
 
 - LetsEncryptMail: empty or valid mail address
 - LetsEncryptDomains: comma-separated list of FQDNs
+- LetsEncryptRenewDays: and integer greater than 10 and lower than 90
 - Check all Let's Encrypt conditions are met
 
 Constraints for `upload`:
@@ -136,58 +139,42 @@ Example:
 ```json
 {
   "props": {
-    "LetsEncryptMail": "",
     "SubjectAltName": "t1.test.net,t2.test.net",
-    "KeyFile": "",
-    "CrtFile": "",
     "State": "myState",
     "EmailAddress": "",
-    "ChainFile": "",
     "Organization": "My company",
     "CertificateDuration": "3650",
     "Locality": "",
-    "LetsEncryptDomains": "test.local.net",
     "CommonName": "",
-    "LetsEncryptRenewDays": "30",
-    "LetsEncrypt": "disabled",
     "CountryCode": "it",
     "OrganizationalUnitName": ""
   },
-  "name": "pki",
-  "type": "configuration",
-  "action": "lets-encrypt"
+  "action": "self-signed"
 }
 ```
 
+Invocation example:
+```bash
+echo '{"props":{"SubjectAltName":"t1.test.net,t2.test.net","State":"myState","EmailAddress":"","Organization":"My company","CertificateDuration":"3650","Locality":"","CommonName":"","CountryCode":"it","OrganizationalUnitName":"myoffice"},"action":"self-signed"}' | ./update
+```
 
 #### lets-encrypt
 
+Manfatory fields:
+
 - `action` must be set to `lets-encrypt`
-- pki record in json format
+- `LetsEncryptMail`
+- `LetsEncryptDomains`
+- `LetsEncryptRenewDays`
 
 Example:
 ```json
 {
   "props": {
     "LetsEncryptMail": "",
-    "SubjectAltName": "",
-    "KeyFile": "",
-    "CrtFile": "",
-    "State": "",
-    "EmailAddress": "",
-    "ChainFile": "",
-    "Organization": "",
-    "CertificateDuration": "3650",
-    "Locality": "",
     "LetsEncryptDomains": "test.local.net",
-    "CommonName": "",
     "LetsEncryptRenewDays": "30",
-    "LetsEncrypt": "disabled",
-    "CountryCode": "it",
-    "OrganizationalUnitName": ""
   },
-  "name": "pki",
-  "type": "configuration",
   "action": "lets-encrypt"
 }
 ```
@@ -225,13 +212,21 @@ Available actions:
 - `upload`
 - `set-default`
 
-### self-signed, lets-encrypt, upload
+### self-signed
+
+Same input from validate.
+
+### lets-encrypt
+
+Same input from validate.
+
+### upload
 
 Same input from validate.
 
 ### set-default
 
-Input must set `CrtFile`, `KeyFile` and `ChainFile` fields.
+Mandatory fields: `CrtFile`, `KeyFile` and `ChainFile`.
 The `ChainFile` field can be empty.
 
 Input example:

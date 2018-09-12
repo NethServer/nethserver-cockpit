@@ -29,8 +29,16 @@ use JSON;
 use esmith::db;
 
 my $db = esmith::db->open("configuration");
+our $out;
 
-my $out;
+sub set_default {
+    my $field = shift;
+    my $default = shift;
+
+    if ($out->{'configuration'}{'pki'}{'props'}{$field} eq '') {
+        $out->{'configuration'}{'pki'}{'props'}{$field} = $default;
+    }
+}
 
 # Check if input is not a pipe
 if (-t STDIN) {
@@ -47,5 +55,15 @@ if (-t STDIN) {
     $out->{'certificate'} = `/usr/libexec/nethserver/pki-info -s $name | base64 -w 0`;
     
 }
+
+set_default('CountryCode','--');
+set_default('State','SomeState');
+set_default('Locality','Hometown');
+set_default('Organization','Example');
+set_default('OrganizationalUnitName','Main');
+set_default('CommonName','NethServer');
+set_default('EmailAddress',"");
+set_default('SubjectAltName',$db->get_type('DomainName'));
+
 
 print encode_json($out);
