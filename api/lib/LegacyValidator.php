@@ -241,7 +241,17 @@ class LegacyValidator
             $valid = $valid && $isValid;
             if ($isValid !== TRUE) {
                 $info = $validator->getFailureInfo();
-                $this->invalidParameters[$parameterName] = array("parameter" => $parameterName, "value" => $value, "error" => @$info[0][0]); 
+                #$this->invalidParameters[$parameterName] = array("parameter" => $parameterName, "value" => $value, "error" => @$info[0][0]);
+                if (isset($info[0][1])) {
+                    if (is_array($info[0][1])) {
+                        $error = $info[0][0]."_".implode("_",$info[0][1]);
+                    } else {
+                        $error = $info[0][0]."_".$info[0][1];
+                    }
+                } else {
+                    $error = @$info[0][0];
+                }
+                $this->invalidParameters[$parameterName] = array("parameter" => $parameterName, "value" => $value, "error" => $error); 
             }
         }
         if (count(array_keys($this->invalidParameters)) > 0) {
