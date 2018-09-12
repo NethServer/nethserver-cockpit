@@ -86,6 +86,11 @@
      <changefreq>daily</changefreq>
     </url>
     <url>
+     <loc>https://nethserver.github.io/nethserver-cockpit/api/system-trusted-networks/</loc>
+     <lastmod>2018-09-12</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/environment/</loc>
      <lastmod>2018-09-12</lastmod>
      <changefreq>daily</changefreq>
