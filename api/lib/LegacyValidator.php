@@ -251,13 +251,14 @@ class LegacyValidator
         }
     }
 
-    public function addValidationError($parameterName, $message, $args = array())
+    public function addValidationError($parameterName, $message, $value = null)
     {
         // backword compatibility
-        if ($args instanceof ValidatorInterface) {
-            $this->invalidParameters[$parameterName][] = $args->getFailureInfo();
+        if ($value instanceof ValidatorInterface) {
+            $info = $validator->getFailureInfo();
+            $this->invalidParameters[$parameterName] = array("parameter" => $parameterName, "value" => $value, "error" => @$info[0][0]);
         } else {
-            $this->invalidParameters[$parameterName][] = array($message, $args, $value);
+            $this->invalidParameters[$parameterName] = array("parameter" => $parameterName, "value" => $value, "error" => $message);
         }
     }
 
