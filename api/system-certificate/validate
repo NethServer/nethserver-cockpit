@@ -95,7 +95,7 @@ function validate_upload($files)
 
     $key = tempnam("/tmp","key");
     file_put_contents($key, base64_decode($files['key']));
-    exec("validate rsa-key $key",$output,$ret);
+    exec("/sbin/e-smith/validate rsa-key $key",$output,$ret);
     if ($ret!=0) {
         $v->addValidationError('key','Invalid x509 key');
         unlink($key);
