@@ -1,0 +1,68 @@
+#!/usr/bin/php
+<?php
+/*
+ * Copyright (C) 2018 Nethesis S.r.l.
+ * http://www.nethesis.it - nethserver@nethesis.it
+ *
+ * This script is part of NethServer.
+ *
+ * NethServer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License,
+ * or any later version.
+ *
+ * NethServer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NethServer.  If not, see COPYING.
+*/
+
+require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
+
+$data = readInput();
+
+function isUsed($net1, $mask1, $net2, $mask2)
+{
+    $lnet1 = \ip2long($net1);
+    $lmask1 = \ip2long($mask1);
+    $lnet2 = \ip2long($net2);
+    $lmask2 = \ip2long($mask2);
+    // compare the super-network addresses.
+    return (($lnet1 ^ $lnet2) & ($lmask1 & $lmask2)) === 0;
+}
+
+$data['props']['name'] = $data['name'];
+$v = new LegacyValidator($data['props']);
+
+$v->declareParameter('name', Validate::IPv4);
+$v->declareParameter('Mask', Validate::IPv4_NETMASK);
+
+$db = new EsmithDatabase('networks');
+$keyExists = $db->getType($data['name']) != '';
+if ($data['action'] == 'create' && $keyExists) {
+    $v->addValidationError('name', 'network_key_exists', $data['name']);
+}
+$nets = shell_exec("/usr/libexec/nethserver/trusted-networks");
+foreach (json_decode($nets, TRUE) as $e) {
+    list($net, $mask) = explode('/', $e['mask']);
+    if ($data['name'] == $net) {
+        $v->addValidationError('name', 'already_used_network', $data['name']);
+    }
+}
+
+// check the "network" parameter is consistent with its "Mask" (only 0-bits in tail)
+$net = long2ip(ip2long($data['name']) & ip2long($data['props']['Mask']));
+if ($net != $data['name']) {
+    $report->addValidationError('network', 'invalid_network', $data['name']);
+}
+
+# Validate the input
+if ($v->validate()) {
+    success();
+} else {
+    error($v);
+}
+

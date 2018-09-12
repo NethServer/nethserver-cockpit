@@ -34,6 +34,7 @@ nav:
       - api/system-task.md
       - api/system-time.md
       - api/system-tls-policy.md
+      - api/system-trusted-networks.md
 - User interface: 
     - environment.md
     - ui_guidelines.md
