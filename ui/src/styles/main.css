@@ -19,7 +19,7 @@ a {
 
 #navbar-left:hover+.container-fluid.container-cards-pf {
   margin-left: 180px;
-  z-index: 1;
+  z-index: 3;
 }
 
 #navbar-left:hover {
@@ -28,12 +28,12 @@ a {
   -moz-transition: width 0.25s ease-in-out;
   -o-transition: width 0.25s ease-in-out;
   transition: width 0.25s ease-in-out;
-  z-index: 1;
+  z-index: 3;
 }
 
 #navbar-left:hover ul li a .list-group-item-value {
   display: block !important;
-  z-index: 1;
+  z-index: 3;
 }
 
 #navbar-left {
@@ -345,6 +345,17 @@ iframe>.breadcrumb {
   z-index: 0;
 }
 
+.fake-modal-backdrop-event {
+  position: fixed;
+  background-color: #000;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: .5;
+  z-index: 1;
+}
+
 circle {
   fill: none;
   pointer-events: all;
@@ -608,4 +619,9 @@ input[type="checkbox"].form-control {
 
 .advanced {
   margin-bottom: 10px;
+}
+
+.pre-inline {
+  display: inline-grid !important;
+  padding: 2px !important
 }

@@ -27,6 +27,8 @@
     "success": "Success",
     "error": "Error",
     "event": "Event",
+    "check": "Check",
+    "for_more_info": "for more info",
     "menu": {
       "dashboard": "Dashboard",
       "storage": "Storage",

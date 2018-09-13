@@ -22,11 +22,6 @@ export default {
       // create an observer instance
       var observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
-          console.log(
-            $(mutation.target)[0].children[
-              $(mutation.target)[0].children.length - 1
-            ]
-          );
           if ($(mutation.target).hasClass("modal-open")) {
             context.view.modalFake = true;
           } else if (
