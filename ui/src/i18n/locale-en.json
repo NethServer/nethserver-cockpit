@@ -183,7 +183,9 @@
       "stop": "Stop",
       "network": "Network",
       "properties": "Properties",
-      "details_of": "Details of"
+      "details_of": "Details of",
+      "service_action_ok": "Action completed successfully!",
+      "service_action_error": "Action not completed."
     },
     "users_groups": {
       "title": "Users & Groups",

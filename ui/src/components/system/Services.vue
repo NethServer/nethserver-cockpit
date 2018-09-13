@@ -2,7 +2,8 @@
   <div>
     <h2>{{$t('services.title')}}</h2>
     <h3>{{$t('list')}}</h3>
-    <vue-good-table :customRowsPerPageDropdown="[25,50,100]" :perPage="25" :columns="columns" :rows="rows" :lineNumbers="false"
+    <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
+    <vue-good-table v-if="view.isLoaded" :customRowsPerPageDropdown="[25,50,100]" :perPage="25" :columns="columns" :rows="rows" :lineNumbers="false"
       :defaultSortBy="{field: 'name', type: 'asc'}" :globalSearch="true" :paginate="true" styleClass="table" :nextText="tableLangsTexts.nextText"
       :prevText="tableLangsTexts.prevText" :rowsPerPageText="tableLangsTexts.rowsPerPageText" :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
       :ofText="tableLangsTexts.ofText">
@@ -97,149 +98,272 @@
 </template>
 
 <script>
-  export default {
-    name: "Services",
-    mounted() {
-      this.getServices();
-    },
-    data() {
-      return {
-        view: {
-          isLoaded: false
+export default {
+  name: "Services",
+  mounted() {
+    this.getServices();
+  },
+  data() {
+    return {
+      view: {
+        isLoaded: false
+      },
+      tableLangsTexts: this.tableLangs(),
+      columns: [
+        {
+          label: this.$i18n.t("services.name"),
+          field: "name",
+          filterable: true
         },
-        tableLangsTexts: this.tableLangs(),
-        columns: [{
-            label: this.$i18n.t("services.name"),
-            field: "name",
-            filterable: true
-          },
-          {
-            label: this.$i18n.t("services.description"),
-            field: "name",
-            filterable: true
-          },
-          {
-            label: this.$i18n.t("services.enabled"),
-            field: "name",
-            filterable: true
-          },
-          {
-            label: this.$i18n.t("services.running"),
-            field: "name",
-            filterable: true
-          },
-          {
-            label: this.$i18n.t("details"),
-            field: "name",
-            filterable: true,
-            sortable: false
-          },
-          {
-            label: this.$i18n.t("action"),
-            field: "",
-            filterable: true,
-            sortable: false
-          }
-        ],
-        rows: [{
-            id: 1,
-            name: "amavisd",
-            description: "Amavisd-new is an interface between MTA and content checkers.",
-            enabled: true,
-            running: true,
-            props: {
-              SpamTag2Level: "5.0",
-              SenderBlackList: null
-            },
-            ports: {
-              access: "green",
-              UDP: [],
-              TCP: []
-            }
-          },
-          {
-            id: 2,
-            name: "postfix",
-            description: "Postfix Mail Transport Agent",
-            enabled: false,
-            running: false,
-            props: [],
-            ports: {
-              access: "green",
-              UDP: [],
-              TCP: []
-            }
-          }
-        ],
-        currentDetails: {
-          props: {},
-          ports: {}
+        {
+          label: this.$i18n.t("services.description"),
+          field: "name",
+          filterable: true
+        },
+        {
+          label: this.$i18n.t("services.enabled"),
+          field: "name",
+          filterable: true
+        },
+        {
+          label: this.$i18n.t("services.running"),
+          field: "name",
+          filterable: true
+        },
+        {
+          label: this.$i18n.t("details"),
+          field: "name",
+          filterable: true,
+          sortable: false
+        },
+        {
+          label: this.$i18n.t("action"),
+          field: "",
+          filterable: true,
+          sortable: false
         }
-      };
-    },
-    methods: {
-      isEmpty: function (obj) {
-        if (obj) {
-          return Object.keys(obj).lenght === 0;
-        } else return true;
-      },
-      getServices() {
-        this.view.isLoaded = true;
-      },
-      enableService(service) {
-        /* nethserver.system.services.enableService(service).then(
-          function(services) {},
-          function(err) {
-            console.error(err);
+      ],
+      rows: [
+        {
+          id: 1,
+          name: "amavisd",
+          description:
+            "Amavisd-new is an interface between MTA and content checkers.",
+          enabled: true,
+          running: true,
+          props: {
+            SpamTag2Level: "5.0",
+            SenderBlackList: null
+          },
+          ports: {
+            access: "green",
+            UDP: [],
+            TCP: []
           }
-        ); */
-      },
-
-      disableService(service) {
-        /* nethserver.system.services.disableService(service).then(
-          function() {},
-          function(err) {
-            console.error(err);
+        },
+        {
+          id: 2,
+          name: "postfix",
+          description: "Postfix Mail Transport Agent",
+          enabled: false,
+          running: false,
+          props: [],
+          ports: {
+            access: "green",
+            UDP: [],
+            TCP: []
           }
-        ); */
-      },
-
-      startService(service) {
-        /* nethserver.system.services.startService(service).then(
-          function() {},
-          function(err) {
-            console.error(err);
-          }
-        ); */
-      },
-
-      stopService(service) {
-        /* nethserver.system.services.stopService(service).then(
-          function() {},
-          function(err) {
-            console.error(err);
-          }
-        ); */
-      },
-
-      restartService(service) {
-        /* nethserver.system.services.restartService(service).then(
-          function() {},
-          function(err) {
-            console.error(err);
-          }
-        ); */
-      },
-      openDetails(obj) {
-        this.currentDetails = obj;
-        $("#detailsModal").modal("show");
+        }
+      ],
+      currentDetails: {
+        props: {},
+        ports: {}
       }
-    }
-  };
+    };
+  },
+  methods: {
+    isEmpty: function(obj) {
+      if (obj) {
+        return Object.keys(obj).lenght === 0;
+      } else return true;
+    },
+    getServices() {
+      var context = this;
+      context.exec(
+        ["system-services/read"],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.view.isLoaded = true;
+          for (var c in success.configuration) {
+            var config = success.configuration[c];
+            for (var s in success.status) {
+              var status = success.status[s];
+              if (status.name == config.name) {
+                config.running = status.running;
+                config.enabled = status.status;
+              }
+            }
+          }
+          context.rows = success.configuration;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+    enableService(service) {
+      var context = this;
+      context.exec(
+        ["system-services/update"],
+        {
+          action: "enable",
+          name: service
+        },
+        function(stream) {
+          console.info("service", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "services.service_action_ok"
+          );
 
+          // get hosts
+          context.getServices();
+        },
+        function(error) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "dns.service_action_error"
+          );
+        }
+      );
+    },
+
+    disableService(service) {
+      var context = this;
+      context.exec(
+        ["system-services/update"],
+        {
+          action: "disable",
+          name: service
+        },
+        function(stream) {
+          console.info("service", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "services.service_action_ok"
+          );
+
+          // get hosts
+          context.getServices();
+        },
+        function(error) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "dns.service_action_error"
+          );
+        }
+      );
+    },
+
+    startService(service) {
+      var context = this;
+      context.exec(
+        ["system-services/update"],
+        {
+          action: "start",
+          name: service
+        },
+        function(stream) {
+          console.info("service", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "services.service_action_ok"
+          );
+
+          // get hosts
+          context.getServices();
+        },
+        function(error) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "dns.service_action_error"
+          );
+        }
+      );
+    },
+
+    stopService(service) {
+      var context = this;
+      context.exec(
+        ["system-services/update"],
+        {
+          action: "stop",
+          name: service
+        },
+        function(stream) {
+          console.info("service", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "services.service_action_ok"
+          );
+
+          // get hosts
+          context.getServices();
+        },
+        function(error) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "dns.service_action_error"
+          );
+        }
+      );
+    },
+
+    restartService(service) {
+      var context = this;
+      context.exec(
+        ["system-services/update"],
+        {
+          action: "restart",
+          name: service
+        },
+        function(stream) {
+          console.info("service", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "services.service_action_ok"
+          );
+
+          // get hosts
+          context.getServices();
+        },
+        function(error) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "dns.service_action_error"
+          );
+        }
+      );
+    },
+    openDetails(obj) {
+      this.currentDetails = obj;
+      $("#detailsModal").modal("show");
+    }
+  }
+};
 </script>
 
 <style>
-
-
 </style>
