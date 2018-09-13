@@ -248,7 +248,9 @@
       "title": "SSH",
       "tcp_port": "TCP Port",
       "allow_root_login": "Allow root login",
-      "allow_password_auth": "Allow password authentication"
+      "allow_password_auth": "Allow password authentication",
+      "ssh_edit_ok": "SSH configuration saved successfully!",
+      "ssh_edit_error": "SSH configuration not saved."
     },
     "tls_policy": {
       "title": "TLS Policy",

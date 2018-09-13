@@ -625,3 +625,7 @@ input[type="checkbox"].form-control {
   display: inline-grid !important;
   padding: 2px !important
 }
+
+.adjust-top-loader {
+  margin-top: -4px;
+}
