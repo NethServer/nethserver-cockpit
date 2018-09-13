@@ -750,6 +750,7 @@ export default {
         null,
         function(success) {
           success = JSON.parse(success);
+          context.system.summary.aliases = []
           for (var i in success.configuration) {
             var alias = success.configuration[i].name;
             context.system.summary.aliases.push({
