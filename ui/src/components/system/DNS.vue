@@ -7,20 +7,24 @@
     </button>
 
     <h3>{{$t('list')}}</h3>
-    <vue-good-table :customRowsPerPageDropdown="[25,50,100]" :perPage="25" :columns="columns" :rows="rows" :lineNumbers="false"
+    <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
+    <vue-good-table v-if="view.isLoaded" :customRowsPerPageDropdown="[25,50,100]" :perPage="25" :columns="columns" :rows="rows" :lineNumbers="false"
       :defaultSortBy="{field: 'name', type: 'asc'}" :globalSearch="true" :paginate="true" styleClass="table" :nextText="tableLangsTexts.nextText"
       :prevText="tableLangsTexts.prevText" :rowsPerPageText="tableLangsTexts.rowsPerPageText" :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
       :ofText="tableLangsTexts.ofText">
       <template slot="table-row" slot-scope="props">
         <td class="fancy">
           <a @click="editDNS(props.row)">
-            <strong>{{ props.row.key}}</strong>
+            <strong>{{ props.row.name}}</strong>
           </a>
         </td>
-        <td class="fancy">{{ props.row.description}}</td>
+        <td class="fancy">{{ props.row.props.Description}}</td>
         <td class="fancy">
           <span class="fa fa-desktop"></span>
-          {{props.row.ip}}
+          {{props.row.props.IpAddress}}
+        </td>
+        <td class="fancy">
+          <span :class="['fa', props.row.props.WildcardMode ? 'fa-check green' : 'fa-remove red']"></span>
         </td>
         <td>
           <button @click="editDNS(props.row)" class="btn btn-default">
@@ -48,7 +52,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{newDns.isEdit ? $t('dns.edit_dns_record') + ' '+ newDns.key : $t('dns.add_dns_record')}}</h4>
+            <h4 class="modal-title">{{newDns.isEdit ? $t('dns.edit_dns_record') + ' '+ newDns.name : $t('dns.add_dns_record')}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="saveDNS(newDns)">
 
@@ -58,29 +62,38 @@
                 <strong>{{$t('dns.running_task')}}.</strong> {{newDns.errorMessage}}
               </div>
 
-              <div :class="['form-group', newDns.errorProps['key'] ? 'has-error' : '']">
+              <div :class="['form-group', newDns.errors.name.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dns.hostname')}}</label>
                 <div class="col-sm-9">
-                  <input :disabled="newDns.isEdit" required type="text" v-model="newDns.key" class="form-control">
-                  <span v-if="newDns.errorProps['key']" class="help-block">{{newDns.errorProps['key']}}</span>
+                  <input :disabled="newDns.isEdit" required type="text" v-model="newDns.name" class="form-control">
+                  <span v-if="newDns.errors.name.hasError" class="help-block">{{newDns.errors.name.message}}</span>
                 </div>
               </div>
-              <div :class="['form-group', newDns.errorProps['IpAddress'] ? 'has-error' : '']">
+              <div :class="['form-group', newDns.errors.IpAddress.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dns.ip_address')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="newDns.ip" class="form-control">
-                  <span v-if="newDns.errorProps['IpAddress']" class="help-block">{{newDns.errorProps['IpAddress']}}</span>
+                  <input required type="text" v-model="newDns.props.IpAddress" class="form-control">
+                  <span v-if="newDns.errors.IpAddress.hasError" class="help-block">{{newDns.errors.IpAddress.message}}</span>
                 </div>
               </div>
-              <div class="form-group">
+              <div :class="['form-group', newDns.errors.Description.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dns.description')}}</label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="newDns.description" class="form-control">
+                  <input type="text" v-model="newDns.props.Description" class="form-control">
+                  <span v-if="newDns.errors.Description.hasError" class="help-block">{{newDns.errors.Description.message}}</span>
+                </div>
+              </div>
+              <div :class="['form-group', newDns.errors.WildcardMode.hasError ? 'has-error' : '']">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dns.wildcard')}}</label>
+                <div class="col-sm-9">
+                  <input type="checkbox" v-value="newDns.props.WildcardMode == 'enabled'" v-model="newDns.props.WildcardMode" class="form-control">
+                  <span v-if="newDns.errors.WildcardMode.hasError" class="help-block">{{newDns.errors.WildcardMode.message}}</span>
                 </div>
               </div>
             </div>
 
             <div class="modal-footer">
+              <div v-if="newDns.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
             </div>
@@ -94,7 +107,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('dns.delete_dns')}} {{currentDns.key}}</h4>
+            <h4 class="modal-title">{{$t('dns.delete_dns')}} {{currentDns.name}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="deleteDNS(currentDns)">
 
@@ -135,12 +148,17 @@ export default {
         },
         {
           label: this.$i18n.t("dns.description"),
-          field: "name",
+          field: "props.Description",
           filterable: true
         },
         {
           label: this.$i18n.t("dns.ip_address"),
-          field: "name",
+          field: "props.IpAddress",
+          filterable: true
+        },
+        {
+          label: this.$i18n.t("dns.wildcard"),
+          field: "props.WildcardMode",
           filterable: true
         },
         {
@@ -150,97 +168,200 @@ export default {
           sortable: false
         }
       ],
-      rows: [
-        {
-          id: 1,
-          key: "h1",
-          description: "NethServer, O=Example Org, ST=SomeState, OU=Main",
-          ip: "8.8.8.8",
-        },
-        {
-          id: 2,
-          key: "h2",
-          description: "NethServer, O=Example Org, ST=SomeState, OU=Main",
-          ip: "8.8.4.4",
-        }
-      ],
+      rows: [],
       currentDns: {},
       newDns: {
-        errorProps: {},
+        isLoading: false,
         isEdit: false,
-        key: ''
+        props: {
+          IpAddress: "",
+          Description: "",
+          WildcardMode: false
+        },
+        errors: {
+          name: {
+            hasError: false,
+            message: ""
+          },
+          IpAddress: {
+            hasError: false,
+            message: ""
+          },
+          Description: {
+            hasError: false,
+            message: ""
+          },
+          WildcardMode: {
+            hasError: false,
+            message: ""
+          }
+        }
       }
     };
   },
   methods: {
     getDns() {
-      /* nethserver.system.certificates.getAllCertificates().then(
-              function(certificates) {
-                $scope.view.isLoaded = true;
-                $scope.localSystem.certificates = certificates;
-
-                $scope.$apply();
-              },
-              function(err) {
-                console.error("couldn't read certificates: " + err);
-              }
-            ); */
+      var context = this;
+      context.exec(
+        ["system-hosts/read"],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.view.isLoaded = true;
+          for (var h in success.configuration) {
+            success.configuration[h].props.WildcardMode =
+              success.configuration[h].props.WildcardMode == "enabled";
+          }
+          context.rows = success.configuration;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
     },
-    cleanErrors() {
-      delete this.newDns.errorMessage;
-      delete this.newDns.errorProps;
-      delete this.newDns.onTaskRunning;
-    },
-
     saveDNS(host) {
-      this.cleanErrors();
-      /* if (host.isEdit) {
-        nethserver.system.dns.editRemoteHost(host).then(
-          function() {
-            $("#newDNSModal").modal("hide");
-          },
-          function(err) {
-            console.log(err);
-            if (err.type == "TaskRun") {
-              this.newDns.onTaskRunning = true;
-            } else {
-              this.newDns.onTaskRunning = false;
-              this.newDns.errorMessage = err.message;
-              this.newDns.errorProps = err.attributes;
-            }
-            $scope.$apply();
+      var context = this;
+
+      var hostObj = Object.assign({}, host);
+      host.props.WildcardMode = host.props.WildcardMode
+        ? "enabled"
+        : "disabled";
+      hostObj.type = "remote";
+      hostObj.action = host.isEdit ? "update" : "create";
+
+      // validate input
+      context.newDNS.isLoading = true;
+      context.exec(
+        ["system-hosts/validate"],
+        hostObj,
+        null,
+        function(success) {
+          context.newDNS.isLoading = false;
+          $("#newDNSModal").modal("hide");
+
+          // update values
+          if (host.isEdit) {
+            context.exec(
+              ["system-hosts/update"],
+              hostObj,
+              function(stream) {
+                console.info("hosts", stream);
+              },
+              function(success) {
+                // notification
+                context.$parent.notifications.success.message = context.$i18n.t(
+                  "dns.host_edit_ok"
+                );
+
+                // get hosts
+                context.getDns();
+              },
+              function(error, data) {
+                // notification
+                context.$parent.notifications.error.message = context.$i18n.t(
+                  "dns.host_edit_error"
+                );
+              }
+            );
+          } else {
+            context.exec(
+              ["system-hosts/create"],
+              hostObj,
+              function(stream) {
+                console.info("hosts", stream);
+              },
+              function(success) {
+                // notification
+                context.$parent.notifications.success.message = context.$i18n.t(
+                  "dns.host_create_ok"
+                );
+
+                // get hosts
+                context.getDns();
+              },
+              function(error, data) {
+                // notification
+                context.$parent.notifications.error.message = context.$i18n.t(
+                  "dns.host_create_error"
+                );
+              }
+            );
           }
-        );
-      } else {
-        nethserver.system.dns.addRemoteHost(host).then(
-          function() {
-            $("#newDNSModal").modal("hide");
-          },
-          function(err) {
-            console.log(err);
-            if (err.type == "TaskRun") {
-              this.newDns.onTaskRunning = true;
-            } else {
-              this.newDns.onTaskRunning = false;
-              this.newDns.errorMessage = err.message;
-              this.newDns.errorProps = err.attributes;
-            }
-            $scope.$apply();
+        },
+        function(error, data) {
+          var errorData = JSON.parse(data);
+          context.newDns.errors.isLoading = false;
+          context.newDns.errors.name.hasError = false;
+          context.newDns.errors.IpAddress.hasError = false;
+          context.newDns.errors.Description.hasError = false;
+          context.newDns.errors.WildcardMode.hasError = false;
+
+          for (var e in errorData.attributes) {
+            var attr = errorData.attributes[e];
+            context.newDns.errors[attr.parameter].hasError = true;
+            context.newDns.errors[attr.parameter].message =
+              "[" + errorData.message + "]: " + attr.error;
           }
-        );
-      } */
+        }
+      );
     },
     newDNS() {
-      this.newDns = {};
-      this.newDns.isEdit = false;
-      this.newDns.errorProps = {};
+      this.newDns = {
+        isLoading: false,
+        isEdit: false,
+        name: "",
+        props: {
+          IpAddress: "",
+          Description: "",
+          WildcardMode: false
+        },
+        errors: {
+          name: {
+            hasError: false,
+            message: ""
+          },
+          IpAddress: {
+            hasError: false,
+            message: ""
+          },
+          Description: {
+            hasError: false,
+            message: ""
+          },
+          WildcardMode: {
+            hasError: false,
+            message: ""
+          }
+        }
+      };
       $("#newDNSModal").modal("show");
     },
     editDNS(host) {
-      this.cleanErrors();
-      this.newDns = host;
+      this.newDns.name = host.name;
+      this.newDns.props.IpAddress = host.props.IpAddress;
+      this.newDns.props.Description = host.props.Description;
+      this.newDns.props.WildcardMode = host.props.WildcardMode;
+
       this.newDns.isEdit = true;
-      this.newDns.errorProps = {};
+      this.newDns.errors = {
+        name: {
+          hasError: false,
+          message: ""
+        },
+        IpAddress: {
+          hasError: false,
+          message: ""
+        },
+        Description: {
+          hasError: false,
+          message: ""
+        },
+        WildcardMode: {
+          hasError: false,
+          message: ""
+        }
+      };
       $("#newDNSModal").modal("show");
     },
     openDeleteDNS(host) {
@@ -248,19 +369,37 @@ export default {
       $("#deleteDNSModal").modal("show");
     },
     deleteDNS(host) {
-      /* nethserver.system.dns.deleteRemoteHost(host.key).then(
-        function() {
-          $("#deleteDNSModal").modal("hide");
+      var context = this;
+
+      $("#deleteDNSModal").modal("hide");
+      context.exec(
+        ["system-hosts/delete"],
+        {
+          name: host.name
         },
-        function(err) {
-          console.error(err);
+        function(stream) {
+          console.info("hosts", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "dns.host_delete_ok"
+          );
+
+          // get hosts
+          context.getDns();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "dns.host_delete_error"
+          );
         }
-      ); */
+      );
     }
   }
 };
 </script>
 
 <style>
-
 </style>

@@ -161,7 +161,14 @@
       "hostname": "Hostname",
       "ip_address": "IP address",
       "description": "Description",
-      "running_task": "Running task"
+      "running_task": "Running task",
+      "wildcard": "Wildcard",
+      "host_edit_ok": "Host edited successfully!",
+      "host_edit_error": "Host not edited.",
+      "host_save_ok": "Host saved successfully!",
+      "host_save_error": "Host not saved.",
+      "host_delete_ok": "Host deleted successfully!",
+      "host_delete_error": "Host not deleted."
     },
     "services": {
       "title": "Services",
