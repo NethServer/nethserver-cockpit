@@ -629,3 +629,14 @@ input[type="checkbox"].form-control {
 .adjust-top-loader {
   margin-top: -4px;
 }
+
+.stats-container {
+  display: table-cell !important;
+  width: initial !important;
+  padding: 20px !important;
+  border: none !important;
+}
+
+.stats-text {
+  margin-top: 10px !important;
+}

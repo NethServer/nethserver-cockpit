@@ -28,6 +28,7 @@
     "error": "Error",
     "event": "Event",
     "check": "Check",
+    "stats": "Statistics",
     "for_more_info": "for more info",
     "menu": {
       "dashboard": "Dashboard",
@@ -174,6 +175,7 @@
       "title": "Services",
       "name": "Name",
       "description": "Description",
+      "configured": "Configured",
       "enabled": "Enabled",
       "running": "Running",
       "restart": "Restart",
@@ -250,7 +252,11 @@
       "allow_root_login": "Allow root login",
       "allow_password_auth": "Allow password authentication",
       "ssh_edit_ok": "SSH configuration saved successfully!",
-      "ssh_edit_error": "SSH configuration not saved."
+      "ssh_edit_error": "SSH configuration not saved.",
+      "connections": "Connections",
+      "connection": "Connection",
+      "peers": "Peers",
+      "peer": "Peer"
     },
     "tls_policy": {
       "title": "TLS Policy",

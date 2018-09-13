@@ -1,12 +1,35 @@
 <template>
   <div>
     <h2>{{$t('services.title')}}</h2>
+    <h3>{{$t('stats')}}</h3>
+    <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
+    <div v-if="view.isLoaded">
+      <div class="stats-container card-pf-utilization-details">
+        <span class="card-pf-utilization-card-details-count">{{stats.servicesCount}}</span>
+        <span class="card-pf-utilization-card-details-description">
+          <span class="card-pf-utilization-card-details-line-2 stats-text">{{$t('services.configured')}}</span>
+        </span>
+      </div>
+      <div class="stats-container card-pf-utilization-details">
+        <span class="card-pf-utilization-card-details-count">{{stats.servicesEnabledCount}}</span>
+        <span class="card-pf-utilization-card-details-description">
+          <span class="card-pf-utilization-card-details-line-2 stats-text">{{$t('services.enabled')}}</span>
+        </span>
+      </div>
+      <div class="stats-container card-pf-utilization-details">
+        <span class="card-pf-utilization-card-details-count">{{stats.servicesRunningCount}}</span>
+        <span class="card-pf-utilization-card-details-description">
+          <span class="card-pf-utilization-card-details-line-2 stats-text">{{$t('services.running')}}</span>
+        </span>
+      </div>
+    </div>
+
     <h3>{{$t('list')}}</h3>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
-    <vue-good-table v-if="view.isLoaded" :customRowsPerPageDropdown="[25,50,100]" :perPage="25" :columns="columns" :rows="rows" :lineNumbers="false"
-      :defaultSortBy="{field: 'name', type: 'asc'}" :globalSearch="true" :paginate="true" styleClass="table" :nextText="tableLangsTexts.nextText"
-      :prevText="tableLangsTexts.prevText" :rowsPerPageText="tableLangsTexts.rowsPerPageText" :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
-      :ofText="tableLangsTexts.ofText">
+    <vue-good-table v-if="view.isLoaded" :customRowsPerPageDropdown="[25,50,100]" :perPage="25" :columns="columns"
+      :rows="rows" :lineNumbers="false" :defaultSortBy="{field: 'name', type: 'asc'}" :globalSearch="true" :paginate="true"
+      styleClass="table" :nextText="tableLangsTexts.nextText" :prevText="tableLangsTexts.prevText" :rowsPerPageText="tableLangsTexts.rowsPerPageText"
+      :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder" :ofText="tableLangsTexts.ofText">
       <template slot="table-row" slot-scope="props">
         <td class="fancy">
           <strong>{{ props.row.name}}</strong>
@@ -29,14 +52,15 @@
             {{props.row.running ? $t('services.restart') : $t('services.start') }}
           </button>
           <div class="dropup pull-right dropdown-kebab-pf">
-            <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="true">
               <span class="fa fa-ellipsis-v"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
               <li>
-                <a @click="props.row.status ? disableService(props.row.name) : enableService(props.row.name)">
-                  <span :class="['fa', props.row.status ? 'fa-times' : 'fa-check', 'action-icon-menu']"></span>
-                  {{props.row.status ? $t('services.disable') : $t('services.enable') }}
+                <a @click="props.row.enabled ? disableService(props.row.name) : enableService(props.row.name)">
+                  <span :class="['fa', props.row.enabled ? 'fa-times' : 'fa-check', 'action-icon-menu']"></span>
+                  {{props.row.enabled ? $t('services.disable') : $t('services.enable') }}
                 </a>
               </li>
               <li ng-if="props.row.running" role="separator" class="divider"></li>
@@ -178,6 +202,11 @@ export default {
       currentDetails: {
         props: {},
         ports: {}
+      },
+      stats: {
+        servicesCount: 0,
+        servicesEnabledCount: 0,
+        servicesRunningCount: 0
       }
     };
   },
@@ -207,6 +236,18 @@ export default {
             }
           }
           context.rows = success.configuration;
+
+          context.stats.servicesCount = success.status.length;
+          context.stats.servicesEnabledCount = success.status.filter(function(
+            s
+          ) {
+            return s.status == 1;
+          }).length;
+          context.stats.servicesRunningCount = success.status.filter(function(
+            s
+          ) {
+            return s.running == 1;
+          }).length;
         },
         function(error) {
           console.error(error);
