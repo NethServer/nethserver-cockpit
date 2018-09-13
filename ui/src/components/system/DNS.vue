@@ -86,7 +86,7 @@
               <div :class="['form-group', newDns.errors.WildcardMode.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dns.wildcard')}}</label>
                 <div class="col-sm-9">
-                  <input type="checkbox" v-value="newDns.props.WildcardMode == 'enabled'" v-model="newDns.props.WildcardMode" class="form-control">
+                  <input type="checkbox" :value="newDns.props.WildcardMode == 'enabled'" v-model="newDns.props.WildcardMode" class="form-control">
                   <span v-if="newDns.errors.WildcardMode.hasError" class="help-block">{{newDns.errors.WildcardMode.message}}</span>
                 </div>
               </div>

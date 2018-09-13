@@ -8,14 +8,14 @@
         <div :class="['form-group', SSHConfig.errors.TCPPort.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('ssh.tcp_port')}}</label>
           <div class="col-sm-5">
-            <input required type="text" v-model="SSHConfig.TCPPort" class="form-control">
+            <input required type="number" v-model="SSHConfig.TCPPort" class="form-control">
             <span v-if="SSHConfig.errors.TCPPort.hasError" class="help-block">{{SSHConfig.errors.TCPPort.message}}</span>
           </div>
         </div>
         <div :class="['form-group', SSHConfig.errors.PermitRootLogin.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('ssh.allow_root_login')}}</label>
           <div class="col-sm-5">
-            <input type="checkbox" v-value="SSHConfig.PermitRootLogin == 'yes'" v-model="SSHConfig.PermitRootLogin"
+            <input type="checkbox" :value="SSHConfig.PermitRootLogin == 'yes'" v-model="SSHConfig.PermitRootLogin"
               class="form-control">
             <span v-if="SSHConfig.errors.PermitRootLogin.hasError" class="help-block">{{SSHConfig.errors.PermitRootLogin.message}}</span>
           </div>
@@ -23,7 +23,7 @@
         <div :class="['form-group', SSHConfig.errors.PasswordAuthentication.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('ssh.allow_password_auth')}}</label>
           <div class="col-sm-5">
-            <input type="checkbox" v-value="SSHConfig.PasswordAuthentication == 'yes'" v-model="SSHConfig.PasswordAuthentication"
+            <input type="checkbox" :value="SSHConfig.PasswordAuthentication == 'yes'" v-model="SSHConfig.PasswordAuthentication"
               class="form-control">
             <span v-if="SSHConfig.errors.PasswordAuthentication.hasError" class="help-block">{{SSHConfig.errors.PasswordAuthentication.message}}</span>
           </div>

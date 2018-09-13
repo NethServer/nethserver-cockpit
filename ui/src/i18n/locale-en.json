@@ -162,7 +162,7 @@
       "ip_address": "IP address",
       "description": "Description",
       "running_task": "Running task",
-      "wildcard": "Wildcard",
+      "wildcard": "Wildcard DNS record",
       "host_edit_ok": "Host edited successfully!",
       "host_edit_error": "Host not edited.",
       "host_save_ok": "Host saved successfully!",
@@ -255,7 +255,9 @@
     "tls_policy": {
       "title": "TLS Policy",
       "enforce_security": "Enforced security level",
-      "default_policy": "Default upstream policy"
+      "default_policy": "Default upstream policy",
+      "tls_policy_edit_ok": "TLS policy updated successfully!",
+      "tls_policy_edit_error": "TLS policy not updated."
     },
     "trusted_networks": {
       "title": "Trusted networks",

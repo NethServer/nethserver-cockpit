@@ -1,32 +1,29 @@
 <template>
   <div>
     <h2>{{$t('tls_policy.title')}}</h2>
-    <h3>{{$t('config')}}</h3>
-    <form class="form-horizontal" v-on:submit.prevent="saveTLSPolicy(newTLSPolicy)">
-
-      <div v-if="newTLSPolicy.onTaskRunning" class="alert alert-warning alert-dismissable">
-        <span class="pficon pficon-warning-triangle-o"></span>
-        <strong>{{$t('ssh.running_task')}}.</strong> {{newTLSPolicy.errorMessage}}
-      </div>
-
-      <div :class="['form-group', newTLSPolicy.errorProps['enforce_security'] ? 'has-error' : '']">
-        <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('tls_policy.enforce_security')}}</label>
-        <div class="col-sm-5">
-          <select :disabled="newTLSPolicy.isEdit" required type="text" v-model="newTLSPolicy.enforce_security" class="form-control">
-            <option>{{$t('tls_policy.default_policy')}}</option>
-          </select>
-          <span v-if="newTLSPolicy.errorProps['enforce_security']" class="help-block">{{newTLSPolicy.errorProps['enforce_security']}}</span>
+    <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
+    <div v-if="view.isLoaded">
+      <h3>{{$t('config')}}</h3>
+      <form class="form-horizontal" v-on:submit.prevent="saveTLSPolicy(TLSPolicy)">
+        <div :class="['form-group', TLSPolicy.errors.policy.hasError ? 'has-error' : '']">
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('tls_policy.enforce_security')}}</label>
+          <div class="col-sm-5">
+            <select required type="text" v-model="TLSPolicy.policy" class="form-control">
+              <option :value="p" v-for="p in TLSPolicy.policies" v-bind:key="p">{{p}}</option>
+            </select>
+            <span v-if="TLSPolicy.errors.policy.hasError" class="help-block">{{TLSPolicy.errors.policy.message}}</span>
+          </div>
         </div>
-      </div>
-
-      <div class="form-group">
-        <label class="col-sm-2 control-label" for="textInput-modal-markup"></label>
-        <div class="col-sm-5">
-          <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">
+            <div v-if="TLSPolicy.isLoading" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
+          </label>
+          <div class="col-sm-5">
+            <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+          </div>
         </div>
-      </div>
-
-    </form>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -34,26 +31,106 @@
 export default {
   name: "TLSPolicy",
   mounted() {
-      this.getTLSPolicyConfig()
-    },
+    this.getTLSPolicy();
+  },
   data() {
     return {
-      newTLSPolicy: {
-        errorProps: {}
+      view: {
+        isLoaded: false
+      },
+      TLSPolicy: {
+        isLoading: false,
+        errors: {
+          policy: {
+            hasError: false,
+            message: ""
+          }
+        },
+        policy: "",
+        policies: []
       }
     };
   },
   methods: {
-      getTLSPolicyConfig() {
+    getTLSPolicy() {
+      var context = this;
+      context.exec(
+        ["system-tls-policy/read"],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.view.isLoaded = true;
+          context.TLSPolicy.policies.push(
+            context.$i18n.t("tls_policy.default_policy"),
+            success.configuration.props.policy
+          );
+          context.TLSPolicy.policy = success.configuration.props.policy;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+    saveTLSPolicy(obj) {
+      var context = this;
 
-      },
-      saveTLSPolicy(obj) {
+      var tlsObj = {
+        props: {
+          policy: obj.policy
+        },
+        name: "tls",
+        type: "configuration"
+      };
+      context.TLSPolicy.isLoading = true;
+      context.exec(
+        ["system-tls-policy/validate"],
+        tlsObj,
+        null,
+        function(success) {
+          context.TLSPolicy.isLoading = false;
 
-      }
+          // update values
+          context.exec(
+            ["system-tls-policy/update"],
+            tlsObj,
+            function(stream) {
+              console.info("tls-policy", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "ssh.tls_policy_edit_ok"
+              );
+
+              // get tls policy
+              context.getTLSPolicy();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "ssh.tls_policy_edit_error"
+              );
+            }
+          );
+        },
+        function(error, data) {
+          var errorData = JSON.parse(data);
+          context.TLSPolicy.isLoading = false;
+          context.TLSPolicy.errors.policy.hasError = false;
+
+          for (var e in errorData.attributes) {
+            var attr = errorData.attributes[e];
+            context.TLSPolicy.errors[attr.parameter].hasError = true;
+            context.TLSPolicy.errors[attr.parameter].message =
+              "[" + errorData.message + "]: " + attr.error;
+          }
+        }
+      );
     }
+  }
 };
 </script>
 
 <style>
-
 </style>
