@@ -272,7 +272,14 @@
       "description": "Description",
       "network_mask": "Network mask",
       "network_address": "Network address",
-      "add_network": "Add network"
+      "add_network": "Add network",
+      "edit_network": "Edit network",
+      "network_create_ok": "Network created successfully!",
+      "network_create_error": "Network not created.",
+      "network_update_ok": "Network updated successfully!",
+      "network_update_error": "Network not updated.",
+      "network_delete_ok": "Network deleted successfully!",
+      "network_delete_error": "Network not deleted."
     },
     "logs": {
       "title": "Logs"

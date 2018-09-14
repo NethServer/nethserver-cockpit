@@ -2,28 +2,43 @@
   <div>
     <h2>{{$t('trusted_networks.title')}}</h2>
     <h3>{{$t('actions')}}</h3>
-    <button @click="addNetwork()" class="btn btn-primary btn-lg shutdown-privileged" data-action="restart" data-container="body">
+    <button @click="addNetwork()" class="btn btn-primary btn-lg shutdown-privileged" data-action="restart"
+      data-container="body">
       {{$t('trusted_networks.add_network')}}
     </button>
 
     <h3>{{$t('list')}}</h3>
-    <vue-good-table :customRowsPerPageDropdown="[25,50,100]" :perPage="25" :columns="columns" :rows="rows" :lineNumbers="false"
-      :defaultSortBy="{field: 'name', type: 'asc'}" :globalSearch="true" :paginate="true" styleClass="table" :nextText="tableLangsTexts.nextText"
-      :prevText="tableLangsTexts.prevText" :rowsPerPageText="tableLangsTexts.rowsPerPageText" :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
-      :ofText="tableLangsTexts.ofText">
+    <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
+    <vue-good-table v-if="view.isLoaded" :customRowsPerPageDropdown="[25,50,100]" :perPage="25" :columns="columns"
+      :rows="rows" :lineNumbers="false" :defaultSortBy="{field: 'name', type: 'asc'}" :globalSearch="true" :paginate="true"
+      styleClass="table" :nextText="tableLangsTexts.nextText" :prevText="tableLangsTexts.prevText" :rowsPerPageText="tableLangsTexts.rowsPerPageText"
+      :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder" :ofText="tableLangsTexts.ofText">
       <template slot="table-row" slot-scope="props">
         <td class="fancy">
-            <strong>{{ props.row.network}}</strong>
+          <strong>{{ props.row.name}}</strong>
         </td>
-        <td class="fancy">{{ props.row.network_mask}}</td>
+        <td class="fancy">{{ props.row.props.Mask}}</td>
         <td class="fancy">
-          {{props.row.description}}
+          {{props.row.props.Description}}
         </td>
         <td>
-          <button @click="openDeleteNetwork(props.row)" class="btn btn-danger">
-            <span class="fa fa-times span-right-margin"></span>
-            {{$t('delete')}}
+          <button @click="editNetwork(props.row)" class="btn btn-default">
+            <span class="fa fa-pencil span-right-margin"></span>
+            {{$t('edit')}}
           </button>
+          <div class="dropup pull-right dropdown-kebab-pf">
+            <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <span class="fa fa-ellipsis-v"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li>
+                <a @click="openDeleteNetwork(props.row)">
+                  <span class="fa fa-times span-right-margin"></span>
+                  {{$t('delete')}}
+                </a>
+              </li>
+            </ul>
+          </div>
         </td>
       </template>
     </vue-good-table>
@@ -32,43 +47,38 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('trusted_networks.add_network')}}</h4>
+            <h4 class="modal-title">{{newNetwork.isEdit ? $t('trusted_networks.edit_network') + ' '+ newNetwork.name :
+              $t('trusted_networks.add_network')}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="saveNetwork(newNetwork)">
-
             <div class="modal-body">
-              <div v-if="newNetwork.onTaskRunning" class="alert alert-warning alert-dismissable">
-                <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>{{$t('trusted_networks.running_task')}}.</strong> {{newNetwork.errorMessage}}
-              </div>
-
-              <div :class="['form-group', newNetwork.errorProps['key'] ? 'has-error' : '']">
+              <div :class="['form-group', newNetwork.errors.name.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('trusted_networks.network_address')}}</label>
                 <div class="col-sm-9">
-                  <input :disabled="newNetwork.isEdit" required type="text" v-model="newNetwork.network_address" class="form-control">
-                  <span v-if="newNetwork.errorProps['key']" class="help-block">{{newNetwork.errorProps['key']}}</span>
+                  <input required type="text" v-model="newNetwork.name" class="form-control">
+                  <span v-if="newNetwork.errors.name.hasError" class="help-block">{{newNetwork.errors.name.message}}</span>
                 </div>
               </div>
-              <div :class="['form-group', newNetwork.errorProps['network_mask'] ? 'has-error' : '']">
+              <div :class="['form-group', newNetwork.errors.Mask.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('trusted_networks.network_mask')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="newNetwork.network_mask" class="form-control">
-                  <span v-if="newNetwork.errorProps['network_mask']" class="help-block">{{newNetwork.errorProps['network_mask']}}</span>
+                  <input required type="text" v-model="newNetwork.props.Mask" class="form-control">
+                  <span v-if="newNetwork.errors.Mask.hasError" class="help-block">{{newNetwork.errors.Mask.message}}</span>
                 </div>
               </div>
-              <div class="form-group">
+              <div :class="['form-group', newNetwork.errors.Description.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('trusted_networks.description')}}</label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="newNetwork.description" class="form-control">
+                  <input type="text" v-model="newNetwork.props.Description" class="form-control">
+                  <span v-if="newNetwork.errors.Description.hasError" class="help-block">{{newNetwork.errors.Description.message}}</span>
                 </div>
               </div>
             </div>
-
             <div class="modal-footer">
+              <div v-if="newNetwork.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
             </div>
-
           </form>
         </div>
       </div>
@@ -134,110 +144,224 @@ export default {
           sortable: false
         }
       ],
-      rows: [
-        {
-          id: 1,
-          network: "192.168.5.0",
-          network_mask: "255.255.255.0",
-          description: "Prova test",
-        },
-        {
-          id: 2,
-          network: "192.168.6.0",
-          network_mask: "255.255.255.0",
-          description: "Prova test",
-        }
-      ],
+      rows: [],
       currentNetwork: {},
       newNetwork: {
-        errorProps: {},
+        errors: {
+          name: {
+            hasError: false,
+            message: ""
+          },
+          Mask: {
+            hasError: false,
+            message: ""
+          },
+          Description: {
+            hasError: false,
+            message: ""
+          }
+        },
         isEdit: false,
-        key: ''
+        isLoading: false,
+        name: "",
+        props: {
+          Mask: "",
+          Description: ""
+        }
       }
     };
   },
   methods: {
     getNetworks() {
-      /* nethserver.system.certificates.getAllCertificates().then(
-              function(certificates) {
-                $scope.view.isLoaded = true;
-                $scope.localSystem.certificates = certificates;
+      var context = this;
+      context.exec(
+        ["system-trusted-networks/read"],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.view.isLoaded = true;
+          context.rows = success.configuration;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
 
-                $scope.$apply();
+    saveNetwork(network) {
+      var context = this;
+
+      var networkObj = Object.assign({}, network);
+      networkObj.type = "network";
+      networkObj.action = network.isEdit ? "update" : "create";
+
+      // validate input
+      context.newNetwork.isLoading = true;
+      context.newNetwork.errors.name.hasError = false;
+      context.newNetwork.errors.Mask.hasError = false;
+      context.newNetwork.errors.Description.hasError = false;
+
+      context.exec(
+        ["system-trusted-networks/validate"],
+        networkObj,
+        null,
+        function(success) {
+          context.newNetwork.isLoading = false;
+          $("#newNetworkModal").modal("hide");
+
+          // update values
+          if (network.isEdit) {
+            context.exec(
+              ["system-trusted-networks/update"],
+              networkObj,
+              function(stream) {
+                console.info("trusted-networks", stream);
               },
-              function(err) {
-                console.error("couldn't read certificates: " + err);
-              }
-            ); */
-    },
-    cleanErrors() {
-      delete this.newNetwork.errorMessage;
-      delete this.newNetwork.errorProps;
-      delete this.newNetwork.onTaskRunning;
-    },
+              function(success) {
+                // notification
+                context.$parent.notifications.success.message = context.$i18n.t(
+                  "trusted_networks.network_edit_ok"
+                );
 
-    saveNetwork(host) {
-      this.cleanErrors();
-      /* if (host.isEdit) {
-        nethserver.system.dns.editRemoteHost(host).then(
-          function() {
-            $("#newNetworkModal").modal("hide");
-          },
-          function(err) {
-            console.log(err);
-            if (err.type == "TaskRun") {
-              this.newNetwork.onTaskRunning = true;
-            } else {
-              this.newNetwork.onTaskRunning = false;
-              this.newNetwork.errorMessage = err.message;
-              this.newNetwork.errorProps = err.attributes;
-            }
-            $scope.$apply();
+                // get trusted networks
+                context.getNetworks();
+              },
+              function(error, data) {
+                // notification
+                context.$parent.notifications.error.message = context.$i18n.t(
+                  "trusted_networks.network_edit_error"
+                );
+              }
+            );
+          } else {
+            context.exec(
+              ["system-trusted-networks/create"],
+              networkObj,
+              function(stream) {
+                console.info("trusted-networks", stream);
+              },
+              function(success) {
+                // notification
+                context.$parent.notifications.success.message = context.$i18n.t(
+                  "trusted_networks.network_create_ok"
+                );
+
+                // get trusted networks
+                context.getNetworks();
+              },
+              function(error, data) {
+                // notification
+                context.$parent.notifications.error.message = context.$i18n.t(
+                  "trusted_networks.network_create_error"
+                );
+              }
+            );
           }
-        );
-      } else {
-        nethserver.system.dns.addRemoteHost(host).then(
-          function() {
-            $("#newNetworkModal").modal("hide");
-          },
-          function(err) {
-            console.log(err);
-            if (err.type == "TaskRun") {
-              this.newNetwork.onTaskRunning = true;
-            } else {
-              this.newNetwork.onTaskRunning = false;
-              this.newNetwork.errorMessage = err.message;
-              this.newNetwork.errorProps = err.attributes;
+        },
+        function(error, data) {
+          var errorData = JSON.parse(data);
+          context.newNetwork.isLoading = false;
+          context.newNetwork.errors.name.hasError = false;
+          context.newNetwork.errors.Mask.hasError = false;
+          context.newNetwork.errors.Description.hasError = false;
+
+          for (var e in errorData.attributes) {
+            var attr = errorData.attributes[e];
+
+            if (context.newNetwork.errors[attr.parameter]) {
+              context.newNetwork.errors[attr.parameter].hasError = true;
+              context.newNetwork.errors[attr.parameter].message =
+                "[" + errorData.message + "]: " + attr.error;
             }
-            $scope.$apply();
           }
-        );
-      } */
+        }
+      );
     },
     addNetwork() {
-      this.newNetwork = {};
-      this.newNetwork.isEdit = false;
-      this.newNetwork.errorProps = {};
+      this.newNetwork = {
+        errors: {
+          name: {
+            hasError: false,
+            message: ""
+          },
+          Mask: {
+            hasError: false,
+            message: ""
+          },
+          Description: {
+            hasError: false,
+            message: ""
+          }
+        },
+        isEdit: false,
+        isLoading: false,
+        name: "",
+        props: {
+          Mask: "",
+          Description: ""
+        }
+      };
       $("#newNetworkModal").modal("show");
     },
-    openDeleteNetwork(host) {
-      this.currentNetwork = Object.assign({}, host);
+    editNetwork(network) {
+      this.newNetwork.name = network.name;
+      this.newNetwork.props.Mask = network.props.Mask;
+      this.newNetwork.props.Description = network.props.Description;
+
+      this.newNetwork.isEdit = true;
+      this.newNetwork.errors = {
+        name: {
+          hasError: false,
+          message: ""
+        },
+        Mask: {
+          hasError: false,
+          message: ""
+        },
+        Description: {
+          hasError: false,
+          message: ""
+        }
+      };
+      $("#newNetworkModal").modal("show");
+    },
+    openDeleteNetwork(network) {
+      this.currentNetwork = Object.assign({}, network);
       $("#deleteNetworkModal").modal("show");
     },
-    deleteNetwork(host) {
-      /* nethserver.system.dns.deleteRemoteHost(host.key).then(
-        function() {
-          $("#deleteNetworkModal").modal("hide");
+    deleteNetwork(network) {
+      var context = this;
+
+      $("#deleteNetworkModal").modal("hide");
+      context.exec(
+        ["system-trusted-networks/delete"],
+        {
+          name: network.name
         },
-        function(err) {
-          console.error(err);
+        function(stream) {
+          console.info("trusted-networks", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "trusted_networks.network_delete_ok"
+          );
+
+          // get trusted networks
+          context.getNetworks();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "trusted_networks.network_delete_error"
+          );
         }
-      ); */
+      );
     }
   }
 };
 </script>
 
 <style>
-
 </style>
