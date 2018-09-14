@@ -57,15 +57,10 @@
           <form class="form-horizontal" v-on:submit.prevent="saveDNS(newDns)">
 
             <div class="modal-body">
-              <div v-if="newDns.onTaskRunning" class="alert alert-warning alert-dismissable">
-                <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>{{$t('dns.running_task')}}.</strong> {{newDns.errorMessage}}
-              </div>
-
               <div :class="['form-group', newDns.errors.name.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dns.hostname')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="newDns.name" class="form-control">
+                  <input :disabled="newDns.isEdit" required type="text" v-model="newDns.name" class="form-control">
                   <span v-if="newDns.errors.name.hasError" class="help-block">{{newDns.errors.name.message}}</span>
                 </div>
               </div>

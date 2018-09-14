@@ -55,7 +55,7 @@
               <div :class="['form-group', newNetwork.errors.name.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('trusted_networks.network_address')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="newNetwork.name" class="form-control">
+                  <input :disabled="newNetwork.isEdit" required type="text" v-model="newNetwork.name" class="form-control">
                   <span v-if="newNetwork.errors.name.hasError" class="help-block">{{newNetwork.errors.name.message}}</span>
                 </div>
               </div>
@@ -88,7 +88,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('trusted_networks.delete_network')}} {{currentNetwork.network}}</h4>
+            <h4 class="modal-title">{{$t('trusted_networks.delete_network')}} {{currentNetwork.name}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="deleteNetwork(currentNetwork)">
 

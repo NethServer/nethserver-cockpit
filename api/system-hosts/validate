@@ -34,7 +34,7 @@ $v->declareParameter('IpAddress', Validate::IPv4);
 $db = new EsmithDatabase('hosts');
 $keyExists = $db->getType($data['name']) != '';
 if ($data['action'] == 'create' && $keyExists) {
-    $v->addValidationError('hostname', 'Service_key_exists_message');
+    $v->addValidationError('name', 'hostname_key_exists', $data['name']);
 }
 
 # Validate the input

@@ -57,7 +57,7 @@ if (!$v->validate()) {
 $nets = shell_exec("/usr/libexec/nethserver/trusted-networks");
 foreach (json_decode($nets, TRUE) as $e) {
     list($net, $mask) = explode('/', $e['mask']);
-    if (isUsed($data['name'],$data['props']['Mask'],$net,$mask)) {
+    if (isUsed($data['name'],$data['props']['Mask'],$net,$mask) && $data['action'] == 'create') {
         $v->addValidationError('name', 'already_used_network', $data['name']);
     }
 }
