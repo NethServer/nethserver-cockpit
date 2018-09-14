@@ -22,8 +22,16 @@
 
 . /usr/libexec/nethserver/api/lib/helper_functions
 
+data=$(cat /dev/stdin)
+
+function _get
+{
+    field=$1
+    echo $data | jq -r ".props.$field"
+}
+
 # Read JSON from stdin and set the record
-cat /dev/stdin | /sbin/e-smith/config setjson - 2>/dev/null
+/sbin/e-smith/config setprop sshd PasswordAuthentication "$(_get PasswordAuthentication)" PermitRootLogin "$(_get PermitRootLogin)" TCPPort "$(_get TCPPort)"
 
 if [ $? -gt 0 ]; then
     invalid_error

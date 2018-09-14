@@ -50,7 +50,6 @@ Output example:
 - PasswordAuthentication: boolean
 - PermitRootLogin: boolean
 - TCPPort: port number
-- status: `enabled` or `disabled`
 
 ### Input
 
@@ -72,15 +71,9 @@ Input example from: `config getjson sshd`:
 {
     "name": "sshd",
     "props": {
-        "LoginGraceTime": "2m",
-        "MaxAuthTries": "6",
         "PasswordAuthentication": "yes",
         "PermitRootLogin": "yes",
-        "Protocol": "2",
         "TCPPort": "22",
-        "UsePAM": "yes",
-        "access": "green,red",
-        "status": "enabled"
     },
     "type": "service"
 }
@@ -88,7 +81,7 @@ Input example from: `config getjson sshd`:
 
 Invocation example:
 ```bash
-echo '{"props":{"status":"enable","access":"green,red","MaxAuthTries":"6","UsePAM":"yes","PasswordAuthentication":"yes","LoginGraceTime":"2m","Protocol":"2","PermitRootLogin":"yes","TCPPort":"22"},"name":"sshd","type":"service"}' | ./validate
+echo '{"props":{"PasswordAuthentication":"yes","PermitRootLogin":"yes","TCPPort":"22"},"name":"sshd","type":"service"}' | ./validate
 ```
 
 ## update
