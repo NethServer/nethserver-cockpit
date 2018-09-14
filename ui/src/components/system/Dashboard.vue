@@ -1,58 +1,66 @@
 <template>
   <div>
-    <h2>{{$t('dashboard.summary')}}</h2>
+    <h2>{{$t('dashboard.title')}}</h2>
     <div class="row row-dashboard">
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
         <form class="form-horizontal">
           <div class="form-group compact">
             <label class="col-sm-3 control-label">{{$t('dashboard.hardware')}}</label>
             <div class="col-sm-9 adjust-li">
-              <p>{{system.summary.hardware}}</p>
+              <div v-if="loaders.summary" class="spinner spinner-xs list-spinner-loader"></div>
+              <p v-if="!loaders.summary">{{system.summary.hardware}}</p>
             </div>
           </div>
           <div class="form-group compact">
             <label class="col-sm-3 control-label">{{$t('dashboard.cpu')}}</label>
             <div class="col-sm-9 adjust-li">
-              <p>{{system.summary.cpu}}</p>
+              <div v-if="loaders.summary" class="spinner spinner-xs list-spinner-loader"></div>
+              <p v-if="!loaders.summary">{{system.summary.cpu}}</p>
             </div>
           </div>
           <div class="form-group compact">
             <label class="col-sm-3 control-label">{{$t('dashboard.kernel_release')}}</label>
             <div class="col-sm-9 adjust-li">
-              <p>{{system.summary.kernelRelease}}</p>
+              <div v-if="loaders.summary" class="spinner spinner-xs list-spinner-loader"></div>
+              <p v-if="!loaders.summary">{{system.summary.kernelRelease}}</p>
             </div>
           </div>
           <div class="form-group compact">
             <label class="col-sm-3 control-label">{{$t('dashboard.operating_system')}}</label>
             <div class="col-sm-9 adjust-li">
-              <p>{{system.summary.osRelease}}</p>
+              <div v-if="loaders.summary" class="spinner spinner-xs list-spinner-loader"></div>
+              <p v-if="!loaders.summary">{{system.summary.osRelease}}</p>
             </div>
           </div>
           <div class="form-group compact">
             <label class="col-sm-3 control-label">{{$t('dashboard.load')}}</label>
             <div class="col-sm-9 adjust-li">
-              <p>{{system.summary.load}}</p>
+              <div v-if="loaders.summary" class="spinner spinner-xs list-spinner-loader"></div>
+              <p v-if="!loaders.summary">{{system.summary.load}}</p>
             </div>
           </div>
           <div class="form-group compact">
             <label class="col-sm-3 control-label">{{$t('dashboard.uptime')}}</label>
             <div class="col-sm-9 adjust-li">
-              <p>{{system.summary.uptime}}</p>
+              <div v-if="loaders.summary" class="spinner spinner-xs list-spinner-loader"></div>
+              <p v-if="!loaders.summary">{{system.summary.uptime}}</p>
             </div>
           </div>
           <div class="form-group compact">
             <label class="col-sm-3 control-label">{{$t('dashboard.hostname')}}</label>
             <div class="col-sm-9 adjust-li">
+              <div v-if="loaders.hostname" class="spinner spinner-xs list-spinner-loader"></div>
               <p>
-                <a data-toggle="modal" data-target="#hostnameChangeModal" href="#">{{system.summary.hostname}}</a>
+                <a v-if="!loaders.hostname" data-toggle="modal" data-target="#hostnameChangeModal" href="#">{{system.summary.hostname}}</a>
               </p>
             </div>
           </div>
           <div class="form-group compact">
             <label class="col-sm-3 control-label">{{$t('dashboard.dns')}}</label>
             <div class="col-sm-9 adjust-li">
+              <div v-if="loaders.dns" class="spinner spinner-xs list-spinner-loader"></div>
               <p>
-                <a data-toggle="modal" data-target="#dnsChangeModal" href="#">
+                <a v-if="!loaders.dns" data-toggle="modal" data-target="#dnsChangeModal" href="#">
                   <span v-for="(d,i) in system.summary.dns" v-bind:key="i">{{d.readDns}}
                     <span v-if="!i == system.summary.dns.length - 1 && system.summary.dns[1].readDns.length != 0">,
                     </span>
@@ -64,16 +72,18 @@
           <div class="form-group compact">
             <label class="col-sm-3 control-label">{{$t('dashboard.system_time')}}</label>
             <div class="col-sm-9 adjust-li">
+              <div v-if="loaders.datetime" class="spinner spinner-xs list-spinner-loader"></div>
               <p>
-                <a @click="openChangeSystime()" href="#">{{system.summary.datetime}}</a>
+                <a v-if="!loaders.datetime" @click="openChangeSystime()" href="#">{{system.summary.datetime}}</a>
               </p>
             </div>
           </div>
           <div class="form-group compact">
             <label class="col-sm-3 control-label">{{$t('dashboard.company')}}</label>
             <div class="col-sm-9 adjust-li">
+              <div v-if="loaders.company" class="spinner spinner-xs list-spinner-loader"></div>
               <p>
-                <a @click="openChangeCompany()" href="#">{{system.organization.company}}</a>
+                <a v-if="!loaders.company" @click="openChangeCompany()" href="#">{{system.organization.company}}</a>
               </p>
             </div>
           </div>
@@ -427,6 +437,13 @@ export default {
   },
   data() {
     return {
+      loaders: {
+        summary: true,
+        hostname: true,
+        dns: true,
+        datetime: true,
+        company: true
+      },
       system: {
         summary: {
           hardware: "",
@@ -567,6 +584,7 @@ export default {
             }
           };
 
+          context.loaders.summary = false
           context.initMemoryCharts();
         },
         function(error) {
@@ -584,6 +602,8 @@ export default {
           success = JSON.parse(success);
           context.system.summary.hostname = success.hostname;
           context.system.summary.newHostname = success.hostname;
+
+          context.loaders.hostname = false
           context.$forceUpdate();
         },
         function(error) {
@@ -797,6 +817,8 @@ export default {
               dns: success.configuration.props.NameServers.split(",")[1]
             };
           }
+
+          context.loaders.dns = false
           context.$forceUpdate();
         },
         function(error) {
@@ -896,6 +918,7 @@ export default {
           context.system.summary.newTimeZone = success.configuration.timezone;
           context.system.summary.timeZones = success.configuration.timezones;
 
+          context.loaders.datetime = false
           context.$forceUpdate();
         },
         function(error) {
@@ -1000,6 +1023,8 @@ export default {
             phone: success.configuration.props.PhoneNumber,
             address: success.configuration.props.Street
           };
+
+          context.loaders.company = false
           context.$forceUpdate();
         },
         function(error) {

@@ -593,6 +593,11 @@ input[type="checkbox"].form-control {
   right: 4px;
 }
 
+.list-spinner-loader {
+  display: inline-block;
+  top: 2px;
+}
+
 @media (max-width: 992px) {
   .toast-pf-top-right {
     left: 65px;

@@ -47,6 +47,7 @@
       "wizard": "Wizard"
     },
     "dashboard": {
+      "title": "Dashboard",
       "summary": "Summary",
       "memory": "Memory",
       "partitions": "Partitions",
