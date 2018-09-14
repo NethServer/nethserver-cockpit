@@ -63,7 +63,9 @@ export default {
           context.view.isLoaded = true;
 
           context.TLSPolicy.policies = [""];
-          context.TLSPolicy.policies = context.TLSPolicy.policies.concat(success.status.available);
+          context.TLSPolicy.policies = context.TLSPolicy.policies.concat(
+            success.status.available
+          );
           context.TLSPolicy.policy = success.configuration.props.policy;
         },
         function(error) {
@@ -81,7 +83,10 @@ export default {
         name: "tls",
         type: "configuration"
       };
+
       context.TLSPolicy.isLoading = true;
+      context.TLSPolicy.errors.policy.hasError = false;
+
       context.exec(
         ["system-tls-policy/validate"],
         tlsObj,

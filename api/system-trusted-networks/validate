@@ -40,11 +40,20 @@ $v = new LegacyValidator($data['props']);
 $v->declareParameter('name', Validate::IPv4);
 $v->declareParameter('Mask', Validate::IPv4_NETMASK);
 
+if (!$v->validate()) {
+    error($v);
+}
+
 $db = new EsmithDatabase('networks');
 $keyExists = $db->getType($data['name']) != '';
 if ($data['action'] == 'create' && $keyExists) {
     $v->addValidationError('name', 'network_key_exists', $data['name']);
 }
+
+if (!$v->validate()) {
+    error($v);
+}
+
 $nets = shell_exec("/usr/libexec/nethserver/trusted-networks");
 foreach (json_decode($nets, TRUE) as $e) {
     list($net, $mask) = explode('/', $e['mask']);
@@ -53,10 +62,14 @@ foreach (json_decode($nets, TRUE) as $e) {
     }
 }
 
+if (!$v->validate()) {
+    error($v);
+}
+
 // check the "network" parameter is consistent with its "Mask" (only 0-bits in tail)
 $net = long2ip(ip2long($data['name']) & ip2long($data['props']['Mask']));
 if ($net != $data['name']) {
-    $report->addValidationError('network', 'invalid_network', $data['name']);
+    $v->addValidationError('network', 'invalid_network', $data['name']);
 }
 
 # Validate the input
