@@ -21,4 +21,4 @@
 #
 
 prop=$(/sbin/e-smith/config getjson tls)
-printf '{"status":"","configuration":%s}' "$prop"
+printf '{"status":{"available": ["20180621","20180330"]},"configuration":%s}' "$prop"

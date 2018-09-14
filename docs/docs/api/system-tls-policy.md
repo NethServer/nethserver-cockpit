@@ -10,39 +10,44 @@ The `tls` record is returned inside the `configuration` field.
 
 ```json
 {
-  "status": "",
-  "configuration": {
-    "props": {
-      "policy": "20180621"
+    "status": {
+        "available": ["20180621", "20180330"]
     },
-    "name": "tls",
-    "type": "configuration"
-  }
+    "configuration": {
+        "props": {
+            "policy": "20180621"
+        },
+        "name": "tls",
+        "type": "configuration"
+    }
 }
 ```
+
 ## validate
 
 ### Constraints
 
-- policy must be: `20180330`, `20180621`
-- if a custom ecda certificate is set, check if current policy supports it
+-   policy must be: `20180330`, `20180621`
+-   if a custom ecda certificate is set, check if current policy supports it
 
 ### Input
 
 The input must be an esmith record in JSON format.
 
 Input example:
+
 ```json
 {
-  "props": {
-    "policy": "20180621"
-  },
-  "name": "tls",
-  "type": "configuration"
+    "props": {
+        "policy": "20180621"
+    },
+    "name": "tls",
+    "type": "configuration"
 }
 ```
 
 Invocation example:
+
 ```bash
 echo '{"props":{"policy":"20180621"},"name":"tls","type":"configuration"}' | ./validate
 ```

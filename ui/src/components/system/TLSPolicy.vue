@@ -9,7 +9,7 @@
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('tls_policy.enforce_security')}}</label>
           <div class="col-sm-5">
             <select required type="text" v-model="TLSPolicy.policy" class="form-control">
-              <option :value="p" v-for="p in TLSPolicy.policies" v-bind:key="p">{{p}}</option>
+              <option :value="p" v-for="p in TLSPolicy.policies" v-bind:key="p">{{p.length > 0 ? p : $t('tls_policy.default_policy')}}</option>
             </select>
             <span v-if="TLSPolicy.errors.policy.hasError" class="help-block">{{TLSPolicy.errors.policy.message}}</span>
           </div>
@@ -61,10 +61,9 @@ export default {
         function(success) {
           success = JSON.parse(success);
           context.view.isLoaded = true;
-          context.TLSPolicy.policies.push(
-            context.$i18n.t("tls_policy.default_policy"),
-            success.configuration.props.policy
-          );
+
+          context.TLSPolicy.policies = [""];
+          context.TLSPolicy.policies = context.TLSPolicy.policies.concat(success.status.available);
           context.TLSPolicy.policy = success.configuration.props.policy;
         },
         function(error) {
@@ -100,7 +99,7 @@ export default {
             function(success) {
               // notification
               context.$parent.notifications.success.message = context.$i18n.t(
-                "ssh.tls_policy_edit_ok"
+                "tls_policy.tls_policy_edit_ok"
               );
 
               // get tls policy
@@ -109,7 +108,7 @@ export default {
             function(error, data) {
               // notification
               context.$parent.notifications.error.message = context.$i18n.t(
-                "ssh.tls_policy_edit_error"
+                "tls_policy.tls_policy_edit_error"
               );
             }
           );
