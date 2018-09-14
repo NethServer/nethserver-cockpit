@@ -112,7 +112,7 @@
       <router-view></router-view>
     </div>
 
-    <div v-if="notifications.success.show" style="min-width: 390px; right: 10px; z-index: 2;" class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
+    <div v-if="notifications.success.show" style="min-width: 390px; top: 10px; right: 10px; z-index: 2; position: fixed;" class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
         <span class="fa fa-times"></span>
       </button>
@@ -121,7 +121,7 @@
       <p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{{notifications.success.message || '-'}}</p>
     </div>
 
-    <div v-if="notifications.error.show" :style="{ marginTop: notifications.success.show ? 70+'px' : 0+'px', minWidth: 390+'px', right: 10+'px', zIndex: 2 }"
+    <div v-if="notifications.error.show" :style="{ top: notifications.success.show ? 80+'px' : 0+'px', minWidth: 390+'px', right: 10+'px', zIndex: 2, position: 'fixed' }"
       class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-danger alert-dismissable">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
         <span class="fa fa-times"></span>
@@ -136,7 +136,7 @@
       <pre>less /var/log/messages</pre>
     </div>
 
-    <div v-if="notifications.event.show" :style="{ marginTop: (notifications.success.show && notifications.error.show) ? 140+'px' : (notifications.success.show || notifications.error.show) ? 70+'px' : 0 +'px', minWidth: 390+'px', right: 10+'px', zIndex: 2 }"
+    <div v-if="notifications.event.show" :style="{ top: (notifications.success.show && notifications.error.show) ? 240+'px' : (notifications.success.show || notifications.error.show) ? 80+'px' : 10 +'px', minWidth: 390+'px', right: 10+'px', zIndex: 2, position: 'fixed' }"
       class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-warning alert-dismissable">
       <span style="padding-top: 25px;" class="pficon fa fa-warning"></span>
       <strong>{{$t('event')}}: </strong>{{notifications.event.name || '-'}} <span v-if="notifications.event.message">(<strong>{{notifications.event.message}}</strong>)</span>
@@ -231,7 +231,6 @@ export default {
         },
         function(success) {
           context.taskInProgress = false
-          console.log(success);
         },
         function(error) {
           context.taskInProgress = false
