@@ -65,7 +65,7 @@
               <div :class="['form-group', newDns.errors.name.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dns.hostname')}}</label>
                 <div class="col-sm-9">
-                  <input :disabled="newDns.isEdit" required type="text" v-model="newDns.name" class="form-control">
+                  <input required type="text" v-model="newDns.name" class="form-control">
                   <span v-if="newDns.errors.name.hasError" class="help-block">{{newDns.errors.name.message}}</span>
                 </div>
               </div>
@@ -232,6 +232,11 @@ export default {
 
       // validate input
       context.newDNS.isLoading = true;
+      context.newDns.errors.name.hasError = false;
+      context.newDns.errors.IpAddress.hasError = false;
+      context.newDns.errors.Description.hasError = false;
+      context.newDns.errors.WildcardMode.hasError = false;
+
       context.exec(
         ["system-hosts/validate"],
         hostObj,
@@ -291,7 +296,7 @@ export default {
         },
         function(error, data) {
           var errorData = JSON.parse(data);
-          context.newDns.errors.isLoading = false;
+          context.newDns.isLoading = false;
           context.newDns.errors.name.hasError = false;
           context.newDns.errors.IpAddress.hasError = false;
           context.newDns.errors.Description.hasError = false;

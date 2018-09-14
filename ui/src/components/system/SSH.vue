@@ -113,7 +113,7 @@ export default {
           context.stats.connections = success.status.connections.length;
           var peers = [];
           for (var c in success.status.connections) {
-            var peer = success.status.connections[c].peer.split(':')[0];
+            var peer = success.status.connections[c].peer.split(":")[0];
             if (peers.indexOf(peer) == -1) {
               peers.push(peer);
             }
@@ -137,7 +137,12 @@ export default {
         },
         type: "service"
       };
+
       context.SSHConfig.isLoading = true;
+      context.SSHConfig.errors.TCPPort.hasError = false;
+      context.SSHConfig.errors.PermitRootLogin.hasError = false;
+      context.SSHConfig.errors.PasswordAuthentication.hasError = false;
+
       context.exec(
         ["system-openssh/validate"],
         sshObj,

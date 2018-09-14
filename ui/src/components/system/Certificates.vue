@@ -495,21 +495,6 @@ export default {
       );
     },
 
-    getLetsEncryptCertificateParameters() {
-      /* nethserver.system.certificates.getLetsEncryptCertificateParameters().then(
-            function(certificate) {
-              $scope.objects.letsEncryptCertificate = certificate;
-              $scope.objects.letsEncryptCertificate.LetsEncryptDomains = certificate.LetsEncryptDomains.join(
-                "\n"
-              );
-              $scope.$apply();
-            },
-            function(err) {
-              console.error("couldn't read certificate: " + err);
-            }
-          ); */
-    },
-
     openUploadCertificate() {
       this.newCertificate = {
         errors: {
@@ -560,6 +545,11 @@ export default {
       };
 
       context.newCertificate.errors.isLoading = true;
+      context.newCertificate.errors.name.hasError = false;
+      context.newCertificate.errors.certificate.hasError = false;
+      context.newCertificate.errors.key.hasError = false;
+      context.newCertificate.errors.chain.hasError = false;
+
       context.exec(
         ["system-certificate/validate"],
         certObj,
@@ -634,6 +624,16 @@ export default {
       };
 
       context.selfSignedCertificate.errors.isLoading = true;
+      context.selfSignedCertificate.errors.CountryCode.hasError = false;
+      context.selfSignedCertificate.errors.State.hasError = false;
+      context.selfSignedCertificate.errors.Locality.hasError = false;
+      context.selfSignedCertificate.errors.Organization.hasError = false;
+      context.selfSignedCertificate.errors.OrganizationalUnitName.hasError = false;
+      context.selfSignedCertificate.errors.CommonName.hasError = false;
+      context.selfSignedCertificate.errors.EmailAddress.hasError = false;
+      context.selfSignedCertificate.errors.SubjectAltName.hasError = false;
+      context.selfSignedCertificate.errors.CertificateDuration.hasError = false;
+
       context.exec(
         ["system-certificate/validate"],
         certObj,
@@ -715,6 +715,10 @@ export default {
       };
 
       context.letsEncryptCertificate.errors.isLoading = true;
+      context.letsEncryptCertificate.errors.LetsEncryptMail.hasError = false;
+      context.letsEncryptCertificate.errors.LetsEncryptRenewDays.hasError = false;
+      context.letsEncryptCertificate.errors.LetsEncryptDomains.hasError = false;
+
       context.exec(
         ["system-certificate/validate"],
         encrytObj,
