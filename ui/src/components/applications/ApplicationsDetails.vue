@@ -1,6 +1,7 @@
 <template>
   <div>
-   <h2>{{application}}</h2>
+   <h2>{{info.name}}</h2>
+   <h2 class="apps-version">{{info.release.version}}</h2>
    <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
    <iframe id="app-frame" class="iframe-embedded" :src="'/cockpit/@localhost/'+application+'/index.html'"></iframe>
    <div v-if="view.modalFake" class="fake-modal-backdrop"></div>
@@ -9,7 +10,7 @@
 
 <script>
 export default {
-  name: "Storage",
+  name: "ApplicationsDetails",
   mounted() {
     var context = this;
     $("#app-frame").on("load", function() {
@@ -54,6 +55,8 @@ export default {
         "active"
       );
     }, 50);
+
+    this.getAppInfo();
   },
   data() {
     return {
@@ -62,8 +65,29 @@ export default {
         isLoaded: false,
         modalFake: false
       },
-      application: this.$route.params.name
+      application: this.$route.params.name,
+      info: {}
     };
+  },
+  methods: {
+    getAppInfo() {
+      var context = this;
+
+      context.view.isLoaded = false;
+      context.exec(
+        ["system-apps/read", context.application],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.info = success;
+          context.view.isLoaded = true;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    }
   }
 };
 </script>
@@ -72,7 +96,7 @@ export default {
 #app-frame {
   margin-top: 8px;
   width: 100%;
-  height: 100%;
+  height: calc(100% + 1px);
   border-top: 1px solid #d1d1d1;
 }
 </style>

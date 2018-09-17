@@ -662,3 +662,8 @@ input[type="checkbox"].form-control {
   right: 18px;
   z-index: 1;
 }
+
+.apps-version {
+  float: right;
+  margin-top: -34px;
+}

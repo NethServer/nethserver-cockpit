@@ -98,7 +98,6 @@ export default {
           console.error(error);
         }
       );
-      // cockpit.dbus(null, { bus: "internal" }).call("/packages", "cockpit.Packages", "Reload", [ ]);
     },
     refresh() {
       cockpit

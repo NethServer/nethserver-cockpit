@@ -112,7 +112,7 @@
       <router-view></router-view>
     </div>
 
-    <div v-if="notifications.success.show" :style="{ top: notifications.addMargin ? 72+'px' : 10+'px', minWidth: 390+'px', right: 10+'px', zIndex: 2, position: fixed}" class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
+    <div v-if="notifications.success.show" :style="{ top: notifications.addMargin ? 72+'px' : 10+'px', minWidth: 390+'px', right: 10+'px', zIndex: 2, position: 'fixed'}" class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
         <span class="fa fa-times"></span>
       </button>
@@ -132,7 +132,7 @@
       <span style="padding-top: 20px;" class="pficon fa fa-times"></span>
       <strong>{{$t('error')}}</strong>
       <p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{{notifications.error.message || '-'}}</p>
-      <p>{{$t('check')}} <pre class="pre-inline">/var/log/messages</pre> {{$t('for_more_info')}}.</p>
+      <p>{{$t('check')}} <pre class="pre-inline">logs</pre> {{$t('for_more_info')}}.</p>
       <pre>less /var/log/messages</pre>
     </div>
 
