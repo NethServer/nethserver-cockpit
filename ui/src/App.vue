@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav id="navbar-left" class="nav-pf-vertical nav-pf-vertical-with-sub-menus nav-pf-persistent-secondary">
+    <nav v-if="!getCurrentPath('applications')" id="navbar-left" class="nav-pf-vertical nav-pf-vertical-with-sub-menus nav-pf-persistent-secondary">
       <ul v-if="!wizardDone" class="list-group panel">
         <li id="dashboard-item" v-bind:class="[getCurrentPath('') ? 'active' : '', 'list-group-item']">
           <a href="#/wizard">
@@ -108,11 +108,11 @@
 
       </ul>
     </nav>
-    <div class="container-fluid container-cards-pf">
+    <div :class="['container-fluid', 'container-cards-pf'+ (getCurrentPath('applications') ? '-apps' : '')]">
       <router-view></router-view>
     </div>
 
-    <div v-if="notifications.success.show" style="min-width: 390px; top: 10px; right: 10px; z-index: 2; position: fixed;" class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
+    <div v-if="notifications.success.show" :style="{ top: notifications.addMargin ? 72+'px' : 10+'px', minWidth: 390+'px', right: 10+'px', zIndex: 2, position: fixed}" class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
         <span class="fa fa-times"></span>
       </button>
@@ -121,7 +121,7 @@
       <p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{{notifications.success.message || '-'}}</p>
     </div>
 
-    <div v-if="notifications.error.show" :style="{ top: notifications.success.show ? 80+'px' : 0+'px', minWidth: 390+'px', right: 10+'px', zIndex: 2, position: 'fixed' }"
+    <div v-if="notifications.error.show" :style="{ top: notifications.addMargin ? notifications.success.show ? 142+'px' : 72+'px' : notifications.success.show ? 80+'px' : 10+'px', minWidth: 390+'px', right: 10+'px', zIndex: 2, position: 'fixed' }"
       class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-danger alert-dismissable">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
         <span class="fa fa-times"></span>
@@ -136,7 +136,7 @@
       <pre>less /var/log/messages</pre>
     </div>
 
-    <div v-if="notifications.event.show" :style="{ top: (notifications.success.show && notifications.error.show) ? 240+'px' : (notifications.success.show || notifications.error.show) ? 80+'px' : 10 +'px', minWidth: 390+'px', right: 10+'px', zIndex: 2, position: 'fixed' }"
+    <div v-if="notifications.event.show" :style="{ top: notifications.addMargin ? (notifications.success.show && notifications.error.show) ? 300+'px' : (notifications.success.show ? 142+'px' : (notifications.error.show ? 230+'px' : 72 +'px')) : (notifications.success.show && notifications.error.show) ? 238+'px' : (notifications.success.show ? 80+'px' : (notifications.error.show ? 168+'px' : 10 +'px')), minWidth: 390+'px', right: 10+'px', zIndex: 2, position: 'fixed' }"
       class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-warning alert-dismissable">
       <span style="padding-top: 25px;" class="pficon fa fa-warning"></span>
       <strong>{{$t('event')}}: </strong>{{notifications.event.name || '-'}} <span v-if="notifications.event.message">(<strong>{{notifications.event.message}}</strong>)</span>
@@ -204,7 +204,8 @@ export default {
           progress: 0,
           show: false,
           steps: 0
-        }
+        },
+        addMargin: this.$route.path.indexOf("/applications/") < 0 ? false : true
       },
       taskInProgress: false
     };
@@ -226,14 +227,14 @@ export default {
         ["system-task/read"],
         null,
         function(stream) {
-          context.taskInProgress = true
+          context.taskInProgress = true;
           console.info("tasks", stream);
         },
         function(success) {
-          context.taskInProgress = false
+          context.taskInProgress = false;
         },
         function(error) {
-          context.taskInProgress = false
+          context.taskInProgress = false;
           console.error(error);
         }
       );

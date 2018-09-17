@@ -27,6 +27,7 @@ import About from '@/components/system/About'
 
 /* APPLICATIONS */
 import Applications from '@/components/applications/Applications'
+import ApplicationsDetails from '@/components/applications/ApplicationsDetails'
 /* */
 
 /* SOFTWARE CENTER */
@@ -116,6 +117,11 @@ export default new Router({
       path: '/applications',
       name: 'Applications',
       component: Applications
+    },
+    {
+      path: '/applications/:name',
+      name: 'ApplicationsDetails',
+      component: ApplicationsDetails
     },
 
     {

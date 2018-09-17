@@ -290,6 +290,15 @@
     },
     "wizard": {
       "title": "Wizard"
+    },
+    "applications": {
+      "title": "Applications",
+      "name": "Name",
+      "description": "Description",
+      "version": "Version",
+      "icon": "Logo",
+      "settings": "Settings",
+      "refresh": "Refresh"
     }
   }
 }
