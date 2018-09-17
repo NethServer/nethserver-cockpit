@@ -4,10 +4,12 @@
 
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <button v-if="view.isLoaded" @click="refresh()" class="btn btn-primary apps-refresh">{{$t('applications.refresh')}}</button>
-    <vue-good-table v-if="view.isLoaded" :customRowsPerPageDropdown="[25,50,100]" :perPage="25" :columns="columns"
-      :rows="rows" :lineNumbers="false" :defaultSortBy="{field: 'name', type: 'asc'}" :globalSearch="true" :paginate="true"
-      styleClass="table" :nextText="tableLangsTexts.nextText" :prevText="tableLangsTexts.prevText" :rowsPerPageText="tableLangsTexts.rowsPerPageText"
-      :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder" :ofText="tableLangsTexts.ofText">
+
+    <vue-good-table v-if="view.isLoaded" :customRowsPerPageDropdown="[25,50,100]" :perPage="25"
+      :columns="columns" :rows="rows" :lineNumbers="false" :defaultSortBy="{field: 'name', type: 'asc'}" :globalSearch="true"
+      :paginate="true" styleClass="table" :nextText="tableLangsTexts.nextText" :prevText="tableLangsTexts.prevText"
+      :rowsPerPageText="tableLangsTexts.rowsPerPageText" :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
+      :ofText="tableLangsTexts.ofText">
       <template slot="table-row" slot-scope="props">
         <td class="fancy">
           <img class="apps-icon" :src="'../'+props.row.url+'/logo.png'">
@@ -75,7 +77,7 @@ export default {
       $(parent.document.getElementById("sidebar-menu").children[0]).removeClass(
         "active"
       );
-    }, 50);
+    }, 250);
 
     // get list of installed apps
     this.getApps();
@@ -95,13 +97,15 @@ export default {
           context.view.isLoaded = true;
         },
         function(error) {
-          console.error(error);
+          context.view.isLoaded = true;
         }
       );
     },
     refresh() {
       cockpit
-        .dbus(null, { bus: "internal" })
+        .dbus(null, {
+          bus: "internal"
+        })
         .call("/packages", "cockpit.Packages", "Reload", []);
       this.getApps();
     }
