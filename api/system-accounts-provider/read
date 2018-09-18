@@ -1,0 +1,253 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+use strict;
+use JSON;
+use NethServer::SSSD;
+use Net::LDAP;
+use File::Temp;
+use Net::DNS;
+use URI;
+
+require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
+
+sub probeLdapURI
+{
+    my $realm = shift;
+    my $server = shift;
+
+    my $resolver = Net::DNS::Resolver->new(
+        $server ? (nameservers => [$server]) : ()
+    );
+
+    my $packet = $resolver->query('_ldap._tcp.dc._msdcs.' . lc($realm), 'SRV');
+    if( ! $packet) {
+        return '';
+    }
+
+    my $rr = shift [grep { $_->type eq 'SRV' } Net::DNS::rrsort("SRV", "priority", $packet->answer)];
+
+    my $port = $rr->port;
+    my $target = $rr->target;
+
+    if($port == 636) {
+        return 'ldaps://' . $target;
+    } elsif($port == 389) {
+        return 'ldap://' . $target;
+    }
+
+    return "ldap://$target:$port";
+}
+
+sub _dnsReplaceIpAddr
+{
+    my $ldapUri = shift;
+    my $server = shift;
+
+    if( ! $server) {
+        return $ldapUri;
+    }
+
+    my $ldapUriObj = URI->new($ldapUri);
+    my $resolver = Net::DNS::Resolver->new(nameservers => [$server]);
+
+    my $packet = $resolver->query($ldapUriObj->host(), 'A');
+    if( ! $packet ) {
+        warn "$!\n";
+        return $ldapUri;
+    }
+
+    my $rr = shift [$packet->answer];
+    if( ! $rr || ! $rr->address ) {
+        warn "$!\n";
+        return $ldapUri;
+    }
+
+    $ldapUriObj->host($rr->address);
+
+    return $ldapUriObj->as_string();
+}
+
+sub probeWorkgroup
+{
+    my $realm = shift;
+    my $defaultWorkgroup = substr(uc((split('\.', $realm))[0]), 0, 15);
+    my ($fh_smb, $smb) = File::Temp::tempfile('/tmp/smb.conf.XXXXXX', UNLINK => 0);
+    my ($fh_keytab, $keytab) = File::Temp::tempfile('/tmp/keytab.XXXXX', UNLINK => 0);
+    print $fh_smb "[global]\nrealm = $realm\nkerberos method = dedicated keytab\ndedicated keytab file = $keytab";
+    close $fh_smb;
+    my $workgroup = qx(net ads -s $smb workgroup 2>/dev/null);
+    chomp($workgroup);
+    $workgroup =~ s/^.*:\s+//;
+    unlink $smb;
+    unlink $keytab;
+    return $workgroup || $defaultWorkgroup;
+}
+
+sub getDefaults
+{
+    my $o = NethServer::SSSD->new(@_);
+
+    my $dump = {
+        @_,
+        'isAD' => $o->isAD(),
+        'isLdap' => $o->isLdap(),
+
+        'BaseDN' => $o->baseDN(),
+        'UserDN' => $o->userDN(),
+        'GroupDN' => $o->groupDN(),
+
+        'LdapURI' => $o->ldapURI(),
+        'LdapUriDn' => $o->ldapUriDn(),
+        'host' => $o->host(),
+        'port' => $o->port(),
+        'StartTls'=> $o->startTls(),
+
+        'BindDN' => $o->bindDN(),
+        'BindPassword' => $o->bindPassword(),
+        'DiscoverDcType' => $o->{'DiscoverDcType'},
+    };
+
+    return $dump;
+}
+
+my $input = readInput();
+
+my $cmd = $input->{'action'} || 'fetchbase';
+
+if($cmd eq 'probeldap') {
+    my $server = $input->{'server'} || die("[ERROR] missing HOSTADDR value\n");
+    my $port = $input->{'port'} || "";
+    my $timeout = 5;
+    my %attrs = ();
+    my $response;
+
+    my $ldap = Net::LDAP->new("ldaps://$server" . ($port ? ":$port" : ""), timeout => $timeout, verify => 'none')
+        || Net::LDAP->new("ldap://$server" . ($port ? ":$port" : ""), timeout => $timeout)
+    ;
+
+    if ( ! $ldap) {
+        warn "Connection failed to LDAP server $server $port\n";
+        exit(1);
+    } else {
+        $attrs{'LdapURI'} = $ldap->{'net_ldap_uri'};
+        my $dse = $ldap->root_dse();
+        my $hasStartTls = defined $dse && $dse->supported_extension(Net::LDAP::LDAP_EXTENSION_START_TLS);
+        my @contexts = defined $dse ? $dse->get_value('namingContexts') : ();
+
+        # Probe the STARTTLS support
+        if($hasStartTls && $attrs{'LdapURI'} !~ /^ldaps:/) {
+            $response = $ldap->start_tls('verify' => 'none');
+            if($response->is_error()) {
+                $attrs{'StartTls'} = 'disabled';
+            } else {
+                $attrs{'StartTls'} = 'enabled';
+            }
+        }
+
+        if(grep { $_ eq 'dc=directory,dc=nh'} @contexts) {
+            $attrs{'BaseDN'} = 'dc=directory,dc=nh';
+            $attrs{'UserDN'} = 'ou=People,dc=directory,dc=nh';
+            $attrs{'GroupDN'} = 'ou=Groups,dc=directory,dc=nh';
+        } elsif (exists $contexts[0]) {
+            $attrs{'BaseDN'} = $contexts[0];
+        }
+
+    }
+
+    print JSON->new()->pretty()->encode(getDefaults('Provider' => 'ldap', %attrs));
+    exit(0);
+
+} elsif($cmd eq 'probead') {
+    my $realm = $input->{'realm'} || die("[ERROR] missing REALM value\n");
+    my $server = $input->{'server'};
+    my $timeout = 5;
+    my %attrs = (
+        'Provider' => 'none',
+        'BindDN' => 'user@' . $realm,
+        'BindPassword' => '*****',
+    );
+
+    my $ldapUri = probeLdapURI($realm, $server);
+    if($ldapUri) {
+        $attrs{'LdapURI'} = $ldapUri;
+    }
+
+    my $ldap = Net::LDAP->new(_dnsReplaceIpAddr($ldapUri, $server), timeout => $timeout);
+
+    if (!$ldap) {
+        die "LDAP server connection failed: " . $attrs{'LdapURI'} . "\n";
+    } else {
+        my $dse = $ldap->root_dse(attrs => ['defaultNamingContext']);
+        my $defaultNamingContext = $dse->get_value('defaultNamingContext');
+
+        # Probe the STARTTLS support
+        if(defined $dse && $attrs{'LdapURI'} !~ /^ldaps:/) {
+            my $response = $ldap->start_tls('verify' => 'none');
+            if($response->is_error()) {
+                $attrs{'StartTls'} = 'disabled';
+            } else {
+                $attrs{'StartTls'} = 'enabled';
+            }
+        }
+
+        if ($defaultNamingContext) {
+            $attrs{'Provider'} = 'ad';
+            $attrs{'Realm'} = uc(join('.', grep { $_ } split(/,?dc=/i, $defaultNamingContext)));
+            $attrs{'BaseDN'} = $defaultNamingContext;
+            $attrs{'UserDN'} = $defaultNamingContext;
+            $attrs{'GroupDN'} = $defaultNamingContext;
+        } else {
+            warn "Could not find defaultNamingContext attribute\n";
+        }
+    }
+
+    print JSON->new()->pretty()->encode(getDefaults(%attrs));
+    exit(0);
+
+} elsif($cmd eq 'probeworkgroup') {
+    my $realm = shift;
+    print JSON->new()->pretty()->encode({'Workgroup' => probeWorkgroup($realm)});
+    exit(0);
+
+} elsif($cmd eq 'fetchbase') {
+    if( ! -x '/usr/bin/ldapsearch') {
+        warn "[ERROR] cannot execute /usr/bin/ldapsearch. To workaround this type:\n\n     yum install openldap-clients\n";
+        exit(1);
+    }
+    my $dump = getDefaults();
+    exec('/usr/bin/ldapsearch',
+        ($dump->{'StartTls'} ? '-ZZ' : ()),
+        '-H', $dump->{'LdapURI'},
+        '-x', '-D', $dump->{'BindDN'}, '-w', $dump->{'BindPassword'},
+        '-s', 'base', '-b', $dump->{'BaseDN'},
+        '(objectClass=*)'
+    );
+} else {
+    my $dump = getDefaults();
+    print JSON->new()->pretty()->encode($dump);
+    exit(0);
+} 
+
+#
+# unreachable point
+#
