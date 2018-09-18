@@ -1,7 +1,7 @@
 <template>
   <div>
    <h2>{{info.name}}</h2>
-   <h2 class="apps-version">{{info.release.version || ''}}</h2>
+   <h2 class="apps-version">{{info.release && info.release.version || ''}}</h2>
    <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
    <iframe id="app-frame" class="iframe-embedded" :src="'/cockpit/@localhost/'+application+'/index.html'"></iframe>
    <div v-if="view.modalFake" class="fake-modal-backdrop"></div>

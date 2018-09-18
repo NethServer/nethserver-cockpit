@@ -113,9 +113,6 @@
     </div>
 
     <div v-if="notifications.success.show" :style="{ top: notifications.addMargin ? 72+'px' : 10+'px', minWidth: 390+'px', right: 10+'px', zIndex: 2, position: 'fixed'}" class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-        <span class="fa fa-times"></span>
-      </button>
       <span style="padding-top: 20px;" class="pficon fa fa-check"></span>
       <strong>{{$t('success')}}</strong>
       <p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{{notifications.success.message || '-'}}</p>
@@ -176,6 +173,16 @@ export default {
 
     // check for running tasks
     this.checkSystemTaks();
+  },
+  watch: {
+    $route (to, from) {
+      this.notifications.success.show = false
+      this.notifications.error.show = false
+      this.notifications.event.show = false
+      this.notifications.addMargin = to.path.indexOf("/applications/") < 0 ? false : true
+
+      this.checkSystemTaks()
+    }
   },
   data() {
     return {
