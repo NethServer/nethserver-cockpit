@@ -75,8 +75,8 @@ export default {
 
       context.view.isLoaded = false;
       context.exec(
-        ["system-apps/read", context.application],
-        null,
+        ["system-apps/read"],
+        { name: context.application },
         null,
         function(success) {
           success = JSON.parse(success);

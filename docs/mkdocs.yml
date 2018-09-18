@@ -22,6 +22,7 @@ nav:
       - api_libraries.md
     - Helpers:
       - api/system-aliases.md
+      - api/system-apps.md
       - api/system-certificate.md
       - api/system-company.md
       - api/system-dns.md
@@ -35,11 +36,11 @@ nav:
       - api/system-time.md
       - api/system-tls-policy.md
       - api/system-trusted-networks.md
-- User interface: 
+- User interface:
     - environment.md
     - ui_guidelines.md
     - application_manifest.md
-- Tutorial: 
+- Tutorial:
     - new_module.md
 - Build:
     - build_doc.md

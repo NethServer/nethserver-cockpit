@@ -6,21 +6,10 @@ import glob
 import json
 
 path = '/usr/share/cockpit/nethserver/applications/'
-
 applications = []
 
-if len(sys.argv) > 1:
-    fullpath = os.path.join(path, sys.argv[1] + '.json')
-    with open(fullpath) as data_file:
-        try:
-            data = json.load(data_file)
-            print json.dumps(data)
-        except:
-            pass
-
-else:
+def list_all():
     for filename in glob.glob(path + '*.json'):
-
         fullpath = os.path.join(path, filename)
         with open(fullpath) as data_file:
             try:
@@ -30,3 +19,20 @@ else:
                 pass
 
     print json.dumps(applications)
+
+
+if not sys.stdin.isatty():
+    data = json.load(sys.stdin)
+    if data and data["name"]:
+        fullpath = os.path.join(path, data["name"] + '.json')
+        with open(fullpath) as data_file:
+            try:
+                data = json.load(data_file)
+                print json.dumps(data)
+            except:
+                pass
+    else:
+        list_all()
+
+else:
+    list_all()
