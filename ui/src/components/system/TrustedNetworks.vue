@@ -112,6 +112,11 @@
 <script>
 export default {
   name: "TrustedNetworks",
+  beforeRouteLeave(to, from, next) {
+    $("#newNetworkModal").modal("hide");
+    $("#deleteNetworkModal").modal("hide");
+    next();
+  },
   mounted() {
     this.getNetworks();
   },

@@ -126,6 +126,11 @@
 <script>
 export default {
   name: "DNS",
+  beforeRouteLeave(to, from, next) {
+    $("#newDNSModal").modal("hide");
+    $("#deleteDNSModal").modal("hide");
+    next();
+  },
   mounted() {
     this.getDns();
   },

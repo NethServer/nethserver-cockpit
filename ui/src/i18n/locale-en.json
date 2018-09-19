@@ -226,7 +226,7 @@
       "ldap_description": "An LDAP database can store users, groups and passwords. It is required a RFC2307 compatible LDAP schema",
       "dc_description": "Computers in an Active Directory domain can be simple members or domain controllers (DC)",
       "ip_warning_message_1": "The chosen IP address must satisfy all of the below conditions",
-      "ip_warning_message_2": "The IP address must be in the same subnet range of a green network: 192.168.5.0/24",
+      "ip_warning_message_2": "The IP address must be in the same subnet range of a green network: es. 192.168.1.0/24",
       "ip_warning_message_3": "The IP address must be unused currently",
       "you_choose": "You choose",
       "choose_bind_method": "Choose bind method",
@@ -242,7 +242,11 @@
       "domain_name": "Domain name",
       "became_dc": "Became DC",
       "netbios_domain_name": "NetBIOS domain name",
-      "dc_ip_address": "DC IP address"
+      "dc_ip_address": "DC IP address",
+      "configuration_invalid": "Invalid configuration",
+      "credentials_to_join_domain": "Insert credentials to join domain",
+      "ad_dns_server": "AD DNS Server",
+      "no_realm_found": "No Domain name found"
     },
     "network": {
       "title": "Network"

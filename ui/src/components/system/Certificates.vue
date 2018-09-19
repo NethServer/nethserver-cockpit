@@ -317,6 +317,13 @@
 <script>
 export default {
   name: "Certificates",
+  beforeRouteLeave(to, from, next) {
+    $("#uploadCertificateModal").modal("hide");
+    $("#editCertificateModal").modal("hide");
+    $("#requestLetsEncryptModal").modal("hide");
+    $("#showCertificateModal").modal("hide");
+    next();
+  },
   mounted() {
     this.getCertificates();
   },

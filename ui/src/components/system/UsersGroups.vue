@@ -1,7 +1,10 @@
 <template>
   <div>
     <h2>{{$t('users_groups.title')}}</h2>
-    <div v-if="users.provider !== null">
+
+    <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
+
+    <div v-if="view.isLoaded && users.provider !== null">
       <h3>{{$t('users_groups.summary')}}</h3>
       <div class="panel panel-default" id="provider-markup">
         <div class="panel-heading">
@@ -22,7 +25,7 @@
       </div>
     </div>
 
-    <div v-if="users.provider !== null" class="inline-block-div">
+    <div v-if="view.isLoaded && users.provider !== null" class="inline-block-div">
       <h3>{{$t('actions')}}</h3>
       <div class="btn-group">
         <button v-if="currentSearchFilter == 'user'" @click="openCreateUser()" class="btn btn-primary btn-lg shutdown-privileged"
@@ -43,15 +46,15 @@
       </div>
     </div>
 
-    <div v-if="users.provider !== null">
+    <div v-if="view.isLoaded && users.provider !== null">
       <h3>{{$t('list')}}</h3>
       <form role="form" class="search-pf has-button search">
         <div class="form-group has-clear toolbar-pf-filter">
           <label class="sr-only" for="filter">{{availableSearchFilter[currentSearchFilter]}}</label>
           <div class="input-group full-width">
             <div class="input-group-btn">
-              <button type="button" class="btn btn-default btn-lg dropdown-toggle adjust-filter-search" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
+              <button type="button" class="btn btn-default btn-lg dropdown-toggle adjust-filter-search" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
                 {{availableSearchFilter[currentSearchFilter]}}
                 <span class="caret"></span>
               </button>
@@ -79,7 +82,8 @@
               {{$t('edit')}}
             </button>
             <div class="dropdown pull-right dropdown-kebab-pf">
-              <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="true">
                 <span class="fa fa-ellipsis-v"></span>
               </button>
               <ul class="dropdown-menu dropdown-menu-right">
@@ -123,7 +127,8 @@
               {{$t('edit')}}
             </button>
             <div class="dropdown pull-right dropdown-kebab-pf">
-              <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="true">
                 <span class="fa fa-ellipsis-v"></span>
               </button>
               <ul class="dropdown-menu dropdown-menu-right">
@@ -160,10 +165,12 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 v-if="!newUser.isPassEdit" class="modal-title">{{newUser.isEdit ? $t('edit') : $t('users_groups.create_user')}}
+            <h4 v-if="!newUser.isPassEdit" class="modal-title">{{newUser.isEdit ? $t('edit') :
+              $t('users_groups.create_user')}}
               <span>{{newUser.key}}</span>
             </h4>
-            <h4 v-if="newUser.isPassEdit" class="modal-title">{{newUser.isPassEdit ? $t('users_groups.change_password_to') : $t('users_groups.create_user')}}
+            <h4 v-if="newUser.isPassEdit" class="modal-title">{{newUser.isPassEdit ?
+              $t('users_groups.change_password_to') : $t('users_groups.create_user')}}
               <span>{{newUser.key}}</span>
             </h4>
           </div>
@@ -216,7 +223,8 @@
               <div v-if="!(newUser.isEdit && !newUser.isPassEdit)" class="form-group">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.password')}}</label>
                 <div class="col-sm-7">
-                  <input required :type="newUser.isPassGenerated ? 'text' : 'password'" v-model="newUser.password" class="form-control">
+                  <input required :type="newUser.isPassGenerated ? 'text' : 'password'" v-model="newUser.password"
+                    class="form-control">
                 </div>
                 <div class="col-sm-2">
                   <button @click="generatePassword()" type="button" class="btn btn-primary">{{$t('users_groups.generate')}}</button>
@@ -225,7 +233,8 @@
               <div v-if="!(newUser.isEdit && !newUser.isPassEdit)" class="form-group">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.confirm_password')}}</label>
                 <div class="col-sm-7">
-                  <input required :type="newUser.isPassGenerated ? 'text' : 'password'" v-model="newUser.confirmPassword" class="form-control">
+                  <input required :type="newUser.isPassGenerated ? 'text' : 'password'" v-model="newUser.confirmPassword"
+                    class="form-control">
                 </div>
               </div>
               <div v-if="!(newUser.isEdit && !newUser.isPassEdit)" class="form-group">
@@ -321,7 +330,8 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{toDelete.isGroup ? $t('users_groups.delete_group') : $t('users_groups.delete_user')}} {{toDelete.key}}</h4>
+            <h4 class="modal-title">{{toDelete.isGroup ? $t('users_groups.delete_group') :
+              $t('users_groups.delete_user')}} {{toDelete.key}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="toDelete.isGroup ? deleteGroup(toDelete) : deleteUser(toDelete)">
 
@@ -559,7 +569,7 @@
                     <h3 class="wizard-pf-contents-title">{{$t('users_groups.bind_remote_ldap')}}</h3>
                     <form class="form-horizontal" v-on:submit.prevent="checkLdapConfig(newProvider)">
                       <div class="modal-body">
-                        <div v-if="newProvider.probeError" class="alert alert-danger alert-dismissable">
+                        <div v-if="!newProvider.isChecking && newProvider.probeError" class="alert alert-danger alert-dismissable">
                           <span class="pficon pficon-error-circle-o"></span>
                           <strong>{{$t('error')}}.</strong> {{$t('users_groups.configuration_invalid')}}.
                         </div>
@@ -578,7 +588,7 @@
                         <div class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.configuration')}}</label>
                           <div class="col-sm-2">
-                            <button type="submit" class="btn btn-primary">{{$t('users_groups.check')}}</button>
+                            <button :disabled="newProvider.isChecking" type="submit" class="btn btn-primary">{{$t('users_groups.check')}}</button>
                           </div>
                           <div v-if="newProvider.isChecking" class="col-sm-1">
                             <div class="spinner"></div>
@@ -587,14 +597,16 @@
 
                         <div v-if="!((newProvider.info.BindType == 'anonymous' && k=='BindPassword') || (newProvider.info.BindType == 'anonymous' && k=='BindDN'))"
                           v-for="(v,k) in newProvider.info" v-bind:key="k" class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{k}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{k | camelToSentence}}</label>
                           <div class="col-sm-9">
-                            <input v-if="!(k == 'StartTls' || k == 'BindType')" type="text" :value="v" @change="updateValues(k,v)" class="form-control">
+                            <input v-if="!(k == 'StartTls' || k == 'BindType')" type="text" :value="v" @change="updateValues(k,v)"
+                              class="form-control">
 
                             <input v-if="k == 'StartTls'" type="checkbox" :value="v" ng-checked="v == 'enabled'" @click="changeStartTLS(v)">
 
                             <span v-if="k == 'BindType'">{{$t('users_groups.authenticated')}}</span>
-                            <input v-if="k == 'BindType'" type="radio" v-model="newProvider.info.BindType" value="authenticated" class="span-right-margin-lg">
+                            <input v-if="k == 'BindType'" type="radio" v-model="newProvider.info.BindType" value="authenticated"
+                              class="span-right-margin-lg">
 
                             <span v-if="k == 'BindType'">{{$t('users_groups.anonymous')}}</span>
                             <input v-if="k == 'BindType'" type="radio" v-model="newProvider.info.BindType" value="anonymous">
@@ -642,12 +654,11 @@
                   <!-- Remote AD-->
                   <div v-if="users.provider == null && users.chooseProvider == 'ad' && users.chooseBind == 'remote'">
                     <h3 class="wizard-pf-contents-title">{{$t('users_groups.join_active_directory')}}</h3>
-                    <form class="form-horizontal">
+                    <form class="form-horizontal" v-on:submit.prevent="checkAdConfig(newProvider)">
                       <div class="modal-body">
-                        <div v-if="newProvider.probeError || newProvider.joinError" class="alert alert-danger alert-dismissable">
+                        <div v-if="!newProvider.isChecking && (newProvider.probeError || newProvider.joinError)" class="alert alert-danger alert-dismissable">
                           <span class="pficon pficon-error-circle-o"></span>
-                          <strong>{{$t('error')}}.</strong> {{newProvider.probeErrorMessage || newProvider.joinErrorMessage}}. {{newProvider.probeErrorOMessage
-                          || newProvider.joinErrorOMessage}}
+                          <strong>{{$t('error')}}.</strong> {{$t('users_groups.no_realm_found')}}
                         </div>
                         <div v-if="!newProvider.isChecked" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.domain_name')}}</label>
@@ -664,7 +675,7 @@
                         <div v-if="!newProvider.isChecked" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.configuration')}}</label>
                           <div class="col-sm-2">
-                            <button :disabled="newProvider.isChecking" type="button" @click="checkAdConfig(newProvider)" class="btn btn-primary">{{$t('users_groups.check')}}</button>
+                            <button :disabled="newProvider.isChecking" type="submit" class="btn btn-primary">{{$t('users_groups.check')}}</button>
                           </div>
                           <div v-if="newProvider.isChecking" class="col-sm-1">
                             <div class="spinner"></div>
@@ -716,564 +727,610 @@
 </template>
 
 <script>
-  export default {
-    name: "UsersGroups",
-    beforeRouteLeave (to, from, next) {
-      $("#accountProviderWizard").modal("hide");
-      next();
+export default {
+  name: "UsersGroups",
+  beforeRouteLeave(to, from, next) {
+    $("#accountProviderWizard").modal("hide");
+    next();
+  },
+  mounted() {
+    this.getInfo();
+  },
+  data() {
+    return {
+      view: {
+        isLoaded: false
+      },
+      searchString: "",
+      currentSearchFilter: "user",
+      availableSearchFilter: {
+        user: "Users",
+        group: "Groups"
+      },
+      users: {
+        list: {},
+        domain: "@",
+        provider: null,
+        chooseProvider: null,
+        chooseBind: null,
+        providerInfo: {
+          a: "a",
+          b: "b",
+          c: "c"
+        }
+      },
+      groups: {
+        domain: "@",
+        list: {}
+      },
+      newUser: this.initUser(),
+      newGroup: this.initGroup(),
+      toDelete: {},
+      newProvider: {},
+      currentStep: 1
+    };
+  },
+  methods: {
+    selectProvider(provider) {
+      this.users.chooseProvider = provider;
+      this.users.chooseBind = null;
+      this.newProvider = {};
     },
-    mounted() {
-      this.getInfo();
+
+    selectBind(bind) {
+      this.users.chooseBind = bind;
+      this.newProvider = {};
+      this.getAdDefault();
     },
-    data() {
-      return {
-        searchString: "",
-        currentSearchFilter: "user",
-        availableSearchFilter: {
-          user: "Users",
-          group: "Groups"
-        },
-        users: {
-          list: {},
-          domain: "@",
-          provider: null,
-          chooseProvider: null,
-          chooseBind: null,
-          providerInfo: {
-            a: "a",
-            b: "b",
-            c: "c"
+
+    checkIfDisabled() {
+      if (this.currentStep == 1) {
+        if (this.users.chooseProvider == null) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      if (this.currentStep == 2) {
+        if (this.users.chooseBind == null) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      if (this.currentStep == 3) {
+        if (
+          this.users.chooseProvider == "ldap" &&
+          this.users.chooseBind == "local"
+        ) {
+          return false;
+        }
+        if (
+          this.users.chooseProvider == "ldap" &&
+          this.users.chooseBind == "remote"
+        ) {
+          if (this.newProvider.info && !this.newProvider.probeError) {
+            return false;
+          } else {
+            return true;
           }
-        },
-        groups: {
-          domain: "@",
-          list: {}
-        },
-        newUser: this.initUser(),
-        newGroup: this.initGroup(),
-        toDelete: {},
-        newProvider: {},
-        currentStep: 1
+        }
+        if (
+          this.users.chooseProvider == "ad" &&
+          this.users.chooseBind == "local"
+        ) {
+          if (
+            this.newProvider.Realm &&
+            this.newProvider.Realm.length > 0 &&
+            this.newProvider.Workgroup &&
+            this.newProvider.Workgroup.length > 0 &&
+            this.newProvider.IpAddress &&
+            this.newProvider.IpAddress.length > 0
+          ) {
+            return false;
+          } else {
+            return true;
+          }
+        }
+        if (
+          this.users.chooseProvider == "ad" &&
+          this.users.chooseBind == "remote"
+        ) {
+          if (
+            this.newProvider.info &&
+            !this.newProvider.probeError &&
+            this.newProvider.info.BindPassword &&
+            this.newProvider.info.BindPassword.length > 0
+          ) {
+            return false;
+          } else {
+            return true;
+          }
+        }
+      }
+    },
+
+    nextStep() {
+      if (this.currentStep == 3) {
+        if (
+          this.users.chooseProvider == "ldap" &&
+          this.users.chooseBind == "local"
+        ) {
+          this.installLDAP();
+        }
+        if (
+          this.users.chooseProvider == "ldap" &&
+          this.users.chooseBind == "remote"
+        ) {
+          this.bindToRemoteLdap(this.newProvider);
+        }
+        if (
+          this.users.chooseProvider == "ad" &&
+          this.users.chooseBind == "local"
+        ) {
+          this.createDC(this.newProvider);
+        }
+        if (
+          this.users.chooseProvider == "ad" &&
+          this.users.chooseBind == "remote"
+        ) {
+          this.joinADomain(this.newProvider);
+        }
+      } else {
+        this.currentStep++;
+      }
+    },
+
+    prevStep() {
+      this.currentStep--;
+    },
+
+    switchFilterSearch(filter) {
+      this.currentSearchFilter = filter;
+    },
+
+    groupAlreadyAdded(group) {
+      return this.newUser.groups.indexOf(group) > -1;
+    },
+
+    userAlreadyAdded(user) {
+      return this.newGroup.members.indexOf(user) > -1;
+    },
+
+    cancelWizard() {
+      $("#accountProviderWizard").modal("hide");
+      this.$router.push("/");
+    },
+
+    cleanUserErrors() {
+      delete this.newUser.errorMessage;
+      delete this.newUser.errorProps;
+      delete this.newUser.onTaskRunning;
+    },
+
+    cleanGroupErrors() {
+      delete this.newGroup.errorMessage;
+      delete this.newGroup.errorProps;
+      delete this.newGroup.onTaskRunning;
+    },
+
+    initUser() {
+      return {
+        selectedGroup: null,
+        groups: [],
+        password: "",
+        isPassGenerated: false,
+        confirmPassword: false,
+        passwordStrength: 0,
+        errorProps: {},
+        isEdit: false,
+        key: "",
+        expires: false,
+        shell: false
       };
     },
-    methods: {
-      selectProvider(provider) {
-        this.users.chooseProvider = provider;
-        this.users.chooseBind = null;
-        this.newProvider = {};
-      },
+    initGroup() {
+      return {
+        selectedUser: null,
+        members: [],
+        loadMembers: false,
+        users: [],
+        isEdit: false,
+        key: "",
+        errorProps: {}
+      };
+    },
 
-      selectBind(bind) {
-        this.users.chooseBind = bind;
-        this.newProvider = {};
-        this.getAdDefault();
-      },
+    getInfo() {
+      var context = this;
+      context.exec(
+        ["system-accounts-provider/read"],
+        {
+          action: "dump"
+        },
+        null,
+        function(success) {
+          success = JSON.parse(success);
 
-      checkIfDisabled() {
-        if (this.currentStep == 1) {
-          if (this.users.chooseProvider == null) {
-            return true;
+          context.users.provider = success.isAD
+            ? "ad"
+            : success.isLdap ? "ldap" : null;
+          context.users.providerInfo = success;
+
+          if (context.users.provider) {
+            $scope.getUsers();
+            $scope.getGroups();
           } else {
-            return false;
+            $("#accountProviderWizard").modal("show");
           }
+        },
+        function(error) {
+          console.error(error);
         }
+      );
+    },
 
-        if (this.currentStep == 2) {
-          if (this.users.chooseBind == null) {
-            return true;
-          } else {
-            return false;
-          }
+    getAdDefault() {
+      /*  nethserver.system.provider.getAdDefault().then(function (defaults) {
+                 this.newProvider.Realm = defaults.Realm;
+                 this.newProvider.Workgroup = defaults.Workgroup;
+                 this.newProvider.IpAddress = "";
+                 $scope.$apply();
+               }, function (err) {
+                 console.error(err);
+               }); */
+    },
+
+    getUsers() {
+      /* nethserver.system.users.getUsers().then(function (users) {
+                this.users.list = users;
+                $scope.view.isLoaded = true;
+                $scope.$apply();
+              }, function (err) {
+                console.error(err);
+              }); */
+    },
+
+    getGroups() {
+      /* nethserver.system.users.getGroups().then(function (groups) {
+                this.groups.list = groups;
+                $scope.$apply();
+              }, function (err) {
+                console.error(err);
+              }); */
+    },
+
+    addGroupToUser(group) {
+      if (group.length > 0) {
+        if (!this.groupAlreadyAdded(group)) {
+          this.newUser.groups.push(group);
         }
-
-        if (this.currentStep == 3) {
-          if (
-            this.users.chooseProvider == "ldap" &&
-            this.users.chooseBind == "local"
-          ) {
-            return false;
-          }
-          if (
-            this.users.chooseProvider == "ldap" &&
-            this.users.chooseBind == "remote"
-          ) {
-            if (this.newProvider.info && !this.newProvider.probeError) {
-              return false;
-            } else {
-              return true;
-            }
-          }
-          if (
-            this.users.chooseProvider == "ad" &&
-            this.users.chooseBind == "local"
-          ) {
-            if (
-              this.newProvider.Realm.length > 0 &&
-              this.newProvider.Workgroup.length > 0 &&
-              this.newProvider.IpAddress.length > 0
-            ) {
-              return false;
-            } else {
-              return true;
-            }
-          }
-          if (
-            this.users.chooseProvider == "ad" &&
-            this.users.chooseBind == "remote"
-          ) {
-            if (
-              this.newProvider.info &&
-              !this.newProvider.probeError &&
-              this.newProvider.info.BindPassword &&
-              this.newProvider.info.BindPassword.length > 0
-            ) {
-              return false;
-            } else {
-              return true;
-            }
-          }
-        }
-      },
-
-      nextStep() {
-        if (this.currentStep == 3) {
-          if (
-            this.users.chooseProvider == "ldap" &&
-            this.users.chooseBind == "local"
-          ) {
-            this.installLDAP();
-          }
-          if (
-            this.users.chooseProvider == "ldap" &&
-            this.users.chooseBind == "remote"
-          ) {
-            this.bindToRemoteLdap(this.newProvider);
-          }
-          if (
-            this.users.chooseProvider == "ad" &&
-            this.users.chooseBind == "local"
-          ) {
-            this.createDC(this.newProvider);
-          }
-          if (
-            this.users.chooseProvider == "ad" &&
-            this.users.chooseBind == "remote"
-          ) {
-            this.joinADomain(this.newProvider);
-          }
-        } else {
-          this.currentStep++;
-        }
-      },
-
-      prevStep() {
-        this.currentStep--;
-      },
-
-      switchFilterSearch(filter) {
-        this.currentSearchFilter = filter;
-      },
-
-      groupAlreadyAdded(group) {
-        return this.newUser.groups.indexOf(group) > -1;
-      },
-
-      userAlreadyAdded(user) {
-        return this.newGroup.members.indexOf(user) > -1;
-      },
-
-      cancelWizard() {
-        $("#accountProviderWizard").modal("hide");
-        this.$router.push("/");
-      },
-
-      cleanUserErrors() {
-        delete this.newUser.errorMessage;
-        delete this.newUser.errorProps;
-        delete this.newUser.onTaskRunning;
-      },
-
-      cleanGroupErrors() {
-        delete this.newGroup.errorMessage;
-        delete this.newGroup.errorProps;
-        delete this.newGroup.onTaskRunning;
-      },
-
-      initUser() {
-        return {
-          selectedGroup: null,
-          groups: [],
-          password: "",
-          isPassGenerated: false,
-          confirmPassword: false,
-          passwordStrength: 0,
-          errorProps: {},
-          isEdit: false,
-          key: "",
-          expires: false,
-          shell: false
-        };
-      },
-      initGroup() {
-        return {
-          selectedUser: null,
-          members: [],
-          loadMembers: false,
-          users: [],
-          isEdit: false,
-          key: "",
-          errorProps: {}
-        };
-      },
-
-      getInfo() {
-        $("#accountProviderWizard").modal("show");
-        /* nethserver.system.provider.getInfo().then(function (provider) {
-            this.users.provider = provider.isAD ? 'ad' : provider.isLdap ? 'ldap' : null;
-            this.users.providerInfo = provider;
-
-            if (this.users.provider) {
-              $scope.getUsers();
-              $scope.getGroups();
-            } else {
-              $('#accountProviderWizard').modal('show');
-            }
-            $scope.$apply();
-          }, function (err) {
-            console.error(err);
-          }); */
-      },
-
-      getAdDefault() {
-        /*  nethserver.system.provider.getAdDefault().then(function (defaults) {
-             this.newProvider.Realm = defaults.Realm;
-             this.newProvider.Workgroup = defaults.Workgroup;
-             this.newProvider.IpAddress = "";
-             $scope.$apply();
-           }, function (err) {
-             console.error(err);
-           }); */
-      },
-
-      getUsers() {
-        /* nethserver.system.users.getUsers().then(function (users) {
-            this.users.list = users;
-            $scope.view.isLoaded = true;
-            $scope.$apply();
-          }, function (err) {
-            console.error(err);
-          }); */
-      },
-
-      getGroups() {
-        /* nethserver.system.users.getGroups().then(function (groups) {
-            this.groups.list = groups;
-            $scope.$apply();
-          }, function (err) {
-            console.error(err);
-          }); */
-      },
-
-      addGroupToUser(group) {
-        if (group.length > 0) {
-          if (!this.groupAlreadyAdded(group)) {
-            this.newUser.groups.push(group);
-          }
-        }
-      },
-
-      removeGroupFromUser(index) {
-        this.newUser.groups.splice(index, 1);
-      },
-
-      addUserToGroup(user) {
-        if (user.length > 0) {
-          if (!this.userAlreadyAdded(user)) {
-            this.newGroup.members.push(user);
-          }
-        }
-      },
-
-      removeUserFromGroup(index) {
-        this.newGroup.members.splice(index, 1);
-      },
-
-      generatePassword() {
-        this.newUser.isPassGenerated = true;
-        /* nethserver.system.users.mkpasswd().then(function (password) {
-            this.newUser.password = password.trim();
-            this.newUser.confirmPassword = password.trim();
-            $scope.$apply();
-          }, function (err) {
-            console.error(err);
-          }); */
-      },
-
-      openCreateUser() {
-        this.newUser = this.initUser();
-        $("#createUserModal").modal("show");
-      },
-
-      createUser(user) {
-        user.expires = user.expires ? "yes" : "no";
-        user.shell = user.shell ?
-          "/bin/bash" :
-          "/usr/libexec/openssh/sftp-server";
-        this.cleanUserErrors();
-        /* nethserver.system.users.addUser(user).then(function () {
-            $('#createUserModal').modal('hide');
-          }, function (err) {
-            console.error(err);
-            this.newUser.errorMessage = err.message;
-            this.newUser.errorProps = err.attributes;
-            $scope.$apply();
-          }); */
-      },
-
-      openEditUser(ku, user) {
-        this.newUser = user;
-        this.newUser.key = ku;
-        this.newUser.isEdit = true;
-        this.newUser.isPassEdit = false;
-        this.newUser.loadGroups = true;
-        this.newUser.expires =
-          this.newUser.expires == true || this.newUser.expires == "yes" ?
-          true :
-          false;
-        this.newUser.shell =
-          this.newUser.shell == true || this.newUser.shell == "/bin/bash" ?
-          true :
-          false;
-        /* nethserver.system.users.getUserMembership(ku).then(function (groups) {
-            this.newUser.groups = groups;
-            this.newUser.loadGroups = false;
-            $scope.$apply();
-          }, function (err) {
-            console.error(err);
-            this.newUser.loadGroups = false;
-          }); */
-        $("#createUserModal").modal("show");
-      },
-
-      editUser(user) {
-        user.expires = user.expires ? "yes" : "no";
-        user.shell = user.shell ?
-          "/bin/bash" :
-          "/usr/libexec/openssh/sftp-server";
-        this.cleanUserErrors();
-        /* nethserver.system.users.editUser(user).then(function () {
-            $('#createUserModal').modal('hide');
-            $scope.$apply();
-          }, function (err) {
-            console.error(err);
-            this.newUser.errorMessage = err.message;
-            this.newUser.errorProps = err.attributes;
-            $scope.$apply();
-          }); */
-      },
-
-      openChangePassword(ku, user) {
-        this.newUser = user;
-        this.newUser.key = ku;
-        this.newUser.isEdit = true;
-        this.newUser.isPassEdit = true;
-        $("#createUserModal").modal("show");
-      },
-
-      changePassword(user) {
-        this.cleanUserErrors();
-        /* nethserver.system.users.setPassword(user.key, user.password).then(function () {
-            $('#createUserModal').modal('hide');
-            $scope.$apply();
-          }, function (err) {
-            console.error(err);
-            this.newUser.errorMessage = err.message;
-            this.newUser.errorProps = err.attributes;
-            $scope.$apply();
-          }); */
-      },
-
-      openDeleteUser(ku, toDelete) {
-        this.toDelete = toDelete;
-        this.toDelete.isGroup = false;
-        this.toDelete.key = ku;
-        $("#deleteModal").modal("show");
-      },
-
-      deleteUser(user) {
-        this.cleanUserErrors();
-        /* nethserver.system.users.deleteUser(user.key).then(function () {
-            $('#deleteModal').modal('hide');
-          }, function (err) {
-            console.error(err);
-          }); */
-      },
-
-      openCreateGroup() {
-        this.newGroup = this.initGroup();
-        $("#createGroupModal").modal("show");
-      },
-
-      addGroup(group) {
-        this.cleanGroupErrors();
-        /* nethserver.system.users.addGroup(group).then(function () {
-            $('#createGroupModal').modal('hide');
-          }, function (err) {
-            console.error(err);
-            this.newGroup.errorMessage = err.message;
-            this.newGroup.errorProps = err.attributes;
-            $scope.$apply();
-          }); */
-      },
-
-      openEditGroup(kg, group) {
-        this.newGroup = group;
-        this.newGroup.key = kg;
-        this.newGroup.isEdit = true;
-        this.newGroup.loadMembers = true;
-        /* nethserver.system.users.getGroupMembers(kg).then(function (members) {
-            this.newGroup.members = members;
-            this.newGroup.loadMembers = false;
-            $scope.$apply();
-          }, function (err) {
-            console.error(err);
-            this.newGroup.loadMembers = false;
-          }); */
-        $("#createGroupModal").modal("show");
-      },
-
-      editGroup(group) {
-        this.cleanGroupErrors();
-        /* nethserver.system.users.editGroup(group).then(function () {
-            $('#createGroupModal').modal('hide');
-          }, function (err) {
-            console.error(err);
-            this.newGroup.errorMessage = err.message;
-            this.newGroup.errorProps = err.attributes;
-            $scope.$apply();
-          }); */
-      },
-
-      openDeleteGroup(kg, toDelete) {
-        this.toDelete = toDelete;
-        this.toDelete.isGroup = true;
-        this.toDelete.key = kg;
-        $("#deleteModal").modal("show");
-      },
-
-      deleteGroup(group) {
-        this.cleanGroupErrors();
-        /* nethserver.system.users.deleteGroup(group.key).then(function () {
-            $('#deleteModal').modal('hide');
-          }, function (err) {
-            console.error(err);
-          }); */
-      },
-
-      updateValues(k, v) {
-        this.newProvider.info[k] = v;
-      },
-
-      uninstallProvider() {
-        /* nethserver.system.provider.uninstall().then(function () {
-            $('#changeProviderModal').modal('hide');
-            this.users.provider = null;
-            this.users.chooseProvider = null;
-            this.users.chooseBind = null;
-            this.users.providerInfo = {};
-            this.currentStep = 1;
-            $scope.$apply();
-          }, function (err) {
-            console.error(err);
-          }); */
-      },
-
-      bindToRemoteLdap(newProvider) {
-        /* nethserver.system.provider.bindToRemoteLdap(newProvider.info).then(function () {
-            $('#accountProviderWizard').modal('hide');
-          }, function (err) {
-            console.error(err);
-          }); */
-      },
-
-      changeBindType(v) {
-        this.newProvider.info.BindType = v ? "authenticated" : "anonymous";
-      },
-
-      changeStartTLS(v) {
-        this.newProvider.info.StartTls = v ? "enabled" : "disabled";
-      },
-
-      checkLdapConfig(newProvider) {
-        this.newProvider.isChecking = true;
-        this.newProvider.info = {};
-        /* nethserver.system.provider.probeLdap(newProvider.hostname, newProvider.tcpport).then(function (info) {
-            this.newProvider.info = info;
-            this.newProvider.probeError = false;
-            this.newProvider.isChecking = false;
-            $scope.$apply();
-          }, function (err) {
-            console.error(err);
-            this.newProvider.probeError = true;
-            this.newProvider.isChecking = false;
-            $scope.$apply();
-          }); */
-      },
-
-      installLDAP() {
-        /* nethserver.system.provider.installLocalLdap().then(function () {
-            $('#accountProviderWizard').modal('hide');
-            $scope.$apply();
-          }, function (err) {
-            console.error(err);
-          }); */
-      },
-
-      checkAdConfig(newProvider) {
-        this.newProvider.isChecking = true;
-        this.newProvider.info = {};
-        /* nethserver.system.provider.probeAd(newProvider.Realm, newProvider.AdDns).then(function (info) {
-            this.newProvider.info = info;
-            this.newProvider.probeError = false;
-            this.newProvider.isChecking = false;
-            this.newProvider.isChecked = true;
-            $scope.$apply();
-          }, function (err) {
-            console.error(err);
-            this.newProvider.probeError = true;
-            this.newProvider.probeErrorMessage = err.message;
-            this.newProvider.isChecking = false;
-            this.newProvider.isChecked = false;
-            $scope.$apply();
-          }); */
-      },
-
-      joinADomain(newProvider) {
-        newProvider.info.AdDns = newProvider.AdDns;
-        /* nethserver.system.provider.joinDomain(newProvider.info).then(function () {
-            $('#accountProviderWizard').modal('hide');
-          }, function (err) {
-            console.error(err);
-            this.newProvider.probeError = false;
-            this.newProvider.joinError = true;
-            this.newProvider.joinErrorMessage = err.message;
-            this.newProvider.joinErrorOMessage = err.originalMessage;
-            $scope.$apply();
-          }); */
-      },
-
-      createDC(newProvider) {
-        /* nethserver.system.provider.installLocalAd(newProvider).then(function () {
-            $('#accountProviderWizard').modal('hide');
-          }, function (err) {
-            console.error(err);
-          }); */
       }
-    }
-  };
+    },
 
+    removeGroupFromUser(index) {
+      this.newUser.groups.splice(index, 1);
+    },
+
+    addUserToGroup(user) {
+      if (user.length > 0) {
+        if (!this.userAlreadyAdded(user)) {
+          this.newGroup.members.push(user);
+        }
+      }
+    },
+
+    removeUserFromGroup(index) {
+      this.newGroup.members.splice(index, 1);
+    },
+
+    generatePassword() {
+      this.newUser.isPassGenerated = true;
+      /* nethserver.system.users.mkpasswd().then(function (password) {
+                this.newUser.password = password.trim();
+                this.newUser.confirmPassword = password.trim();
+                $scope.$apply();
+              }, function (err) {
+                console.error(err);
+              }); */
+    },
+
+    openCreateUser() {
+      this.newUser = this.initUser();
+      $("#createUserModal").modal("show");
+    },
+
+    createUser(user) {
+      user.expires = user.expires ? "yes" : "no";
+      user.shell = user.shell
+        ? "/bin/bash"
+        : "/usr/libexec/openssh/sftp-server";
+      this.cleanUserErrors();
+      /* nethserver.system.users.addUser(user).then(function () {
+                $('#createUserModal').modal('hide');
+              }, function (err) {
+                console.error(err);
+                this.newUser.errorMessage = err.message;
+                this.newUser.errorProps = err.attributes;
+                $scope.$apply();
+              }); */
+    },
+
+    openEditUser(ku, user) {
+      this.newUser = user;
+      this.newUser.key = ku;
+      this.newUser.isEdit = true;
+      this.newUser.isPassEdit = false;
+      this.newUser.loadGroups = true;
+      this.newUser.expires =
+        this.newUser.expires == true || this.newUser.expires == "yes"
+          ? true
+          : false;
+      this.newUser.shell =
+        this.newUser.shell == true || this.newUser.shell == "/bin/bash"
+          ? true
+          : false;
+      /* nethserver.system.users.getUserMembership(ku).then(function (groups) {
+                this.newUser.groups = groups;
+                this.newUser.loadGroups = false;
+                $scope.$apply();
+              }, function (err) {
+                console.error(err);
+                this.newUser.loadGroups = false;
+              }); */
+      $("#createUserModal").modal("show");
+    },
+
+    editUser(user) {
+      user.expires = user.expires ? "yes" : "no";
+      user.shell = user.shell
+        ? "/bin/bash"
+        : "/usr/libexec/openssh/sftp-server";
+      this.cleanUserErrors();
+      /* nethserver.system.users.editUser(user).then(function () {
+                $('#createUserModal').modal('hide');
+                $scope.$apply();
+              }, function (err) {
+                console.error(err);
+                this.newUser.errorMessage = err.message;
+                this.newUser.errorProps = err.attributes;
+                $scope.$apply();
+              }); */
+    },
+
+    openChangePassword(ku, user) {
+      this.newUser = user;
+      this.newUser.key = ku;
+      this.newUser.isEdit = true;
+      this.newUser.isPassEdit = true;
+      $("#createUserModal").modal("show");
+    },
+
+    changePassword(user) {
+      this.cleanUserErrors();
+      /* nethserver.system.users.setPassword(user.key, user.password).then(function () {
+                $('#createUserModal').modal('hide');
+                $scope.$apply();
+              }, function (err) {
+                console.error(err);
+                this.newUser.errorMessage = err.message;
+                this.newUser.errorProps = err.attributes;
+                $scope.$apply();
+              }); */
+    },
+
+    openDeleteUser(ku, toDelete) {
+      this.toDelete = toDelete;
+      this.toDelete.isGroup = false;
+      this.toDelete.key = ku;
+      $("#deleteModal").modal("show");
+    },
+
+    deleteUser(user) {
+      this.cleanUserErrors();
+      /* nethserver.system.users.deleteUser(user.key).then(function () {
+                $('#deleteModal').modal('hide');
+              }, function (err) {
+                console.error(err);
+              }); */
+    },
+
+    openCreateGroup() {
+      this.newGroup = this.initGroup();
+      $("#createGroupModal").modal("show");
+    },
+
+    addGroup(group) {
+      this.cleanGroupErrors();
+      /* nethserver.system.users.addGroup(group).then(function () {
+                $('#createGroupModal').modal('hide');
+              }, function (err) {
+                console.error(err);
+                this.newGroup.errorMessage = err.message;
+                this.newGroup.errorProps = err.attributes;
+                $scope.$apply();
+              }); */
+    },
+
+    openEditGroup(kg, group) {
+      this.newGroup = group;
+      this.newGroup.key = kg;
+      this.newGroup.isEdit = true;
+      this.newGroup.loadMembers = true;
+      /* nethserver.system.users.getGroupMembers(kg).then(function (members) {
+                this.newGroup.members = members;
+                this.newGroup.loadMembers = false;
+                $scope.$apply();
+              }, function (err) {
+                console.error(err);
+                this.newGroup.loadMembers = false;
+              }); */
+      $("#createGroupModal").modal("show");
+    },
+
+    editGroup(group) {
+      this.cleanGroupErrors();
+      /* nethserver.system.users.editGroup(group).then(function () {
+                $('#createGroupModal').modal('hide');
+              }, function (err) {
+                console.error(err);
+                this.newGroup.errorMessage = err.message;
+                this.newGroup.errorProps = err.attributes;
+                $scope.$apply();
+              }); */
+    },
+
+    openDeleteGroup(kg, toDelete) {
+      this.toDelete = toDelete;
+      this.toDelete.isGroup = true;
+      this.toDelete.key = kg;
+      $("#deleteModal").modal("show");
+    },
+
+    deleteGroup(group) {
+      this.cleanGroupErrors();
+      /* nethserver.system.users.deleteGroup(group.key).then(function () {
+                $('#deleteModal').modal('hide');
+              }, function (err) {
+                console.error(err);
+              }); */
+    },
+
+    updateValues(k, v) {
+      this.newProvider.info[k] = v;
+    },
+
+    uninstallProvider() {
+      /* nethserver.system.provider.uninstall().then(function () {
+                $('#changeProviderModal').modal('hide');
+                this.users.provider = null;
+                this.users.chooseProvider = null;
+                this.users.chooseBind = null;
+                this.users.providerInfo = {};
+                this.currentStep = 1;
+                $scope.$apply();
+              }, function (err) {
+                console.error(err);
+              }); */
+    },
+
+    changeBindType(v) {
+      this.newProvider.info.BindType = v ? "authenticated" : "anonymous";
+    },
+
+    changeStartTLS(v) {
+      this.newProvider.info.StartTls = v ? "enabled" : "disabled";
+    },
+
+    checkLdapConfig(newProvider) {
+      var context = this;
+
+      context.newProvider.isChecking = true;
+      context.newProvider.info = {};
+      context.$forceUpdate();
+
+      context.exec(
+        ["system-accounts-provider/read"],
+        {
+          action: "probeldap",
+          port: newProvider.tcpport,
+          server: newProvider.hostname
+        },
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.newProvider.info = success;
+          context.newProvider.probeError = false;
+          context.newProvider.isChecking = false;
+          context.$forceUpdate();
+        },
+        function(error) {
+          context.newProvider.probeError = true;
+          context.newProvider.isChecking = false;
+          context.$forceUpdate();
+          console.error(error);
+        }
+      );
+    },
+
+    installLDAP() {
+      /* nethserver.system.provider.installLocalLdap().then(function () {
+                $('#accountProviderWizard').modal('hide');
+                $scope.$apply();
+              }, function (err) {
+                console.error(err);
+              }); */
+    },
+
+    bindToRemoteLdap(newProvider) {
+      console.log(newProvider);
+      /* nethserver.system.provider.bindToRemoteLdap(newProvider.info).then(function () {
+                $('#accountProviderWizard').modal('hide');
+              }, function (err) {
+                console.error(err);
+              }); */
+    },
+
+    checkAdConfig(newProvider) {
+      var context = this;
+
+      context.newProvider.isChecking = true;
+      context.newProvider.info = {};
+      context.$forceUpdate();
+
+      context.exec(
+        ["system-accounts-provider/read"],
+        {
+          action: "probead",
+          realm: newProvider.Realm,
+          server: newProvider.AdDns
+        },
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.newProvider.info = success;
+          context.newProvider.info.BindPassword = "";
+          context.newProvider.probeError = false;
+          context.newProvider.isChecking = false;
+          context.newProvider.isChecked = true;
+          context.$forceUpdate();
+        },
+        function(error) {
+          context.newProvider.probeError = true;
+          context.newProvider.isChecking = false;
+          context.newProvider.isChecked = false;
+          context.$forceUpdate();
+          console.error(error);
+        }
+      );
+    },
+
+    joinADomain(newProvider) {
+      newProvider.info.AdDns = newProvider.AdDns;
+      /* nethserver.system.provider.joinDomain(newProvider.info).then(function () {
+                $('#accountProviderWizard').modal('hide');
+              }, function (err) {
+                console.error(err);
+                this.newProvider.probeError = false;
+                this.newProvider.joinError = true;
+                this.newProvider.joinErrorMessage = err.message;
+                this.newProvider.joinErrorOMessage = err.originalMessage;
+                $scope.$apply();
+              }); */
+    },
+
+    createDC(newProvider) {
+      /* nethserver.system.provider.installLocalAd(newProvider).then(function () {
+                $('#accountProviderWizard').modal('hide');
+              }, function (err) {
+                console.error(err);
+              }); */
+    }
+  }
+};
 </script>
 
 <style>
-
 </style>

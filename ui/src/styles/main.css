@@ -24,7 +24,7 @@ a {
 
 #navbar-left:hover+.container-fluid.container-cards-pf {
   margin-left: 180px;
-  z-index: 3;
+  z-index: 4;
 }
 
 #navbar-left:hover {
@@ -33,12 +33,12 @@ a {
   -moz-transition: width 0.25s ease-in-out;
   -o-transition: width 0.25s ease-in-out;
   transition: width 0.25s ease-in-out;
-  z-index: 3;
+  z-index: 4;
 }
 
 #navbar-left:hover ul li a .list-group-item-value {
   display: block !important;
-  z-index: 3;
+  z-index: 4;
 }
 
 #navbar-left {
@@ -358,7 +358,7 @@ iframe>.breadcrumb {
   bottom: 0;
   left: 0;
   opacity: .5;
-  z-index: 1;
+  z-index: 3;
 }
 
 circle {
@@ -666,4 +666,12 @@ input[type="checkbox"].form-control {
 .apps-version {
   float: right;
   margin-top: -34px;
+}
+
+.modal {
+  z-index: 3;
+}
+
+.modal-backdrop {
+  z-index: 2 !important;
 }

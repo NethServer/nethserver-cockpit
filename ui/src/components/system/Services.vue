@@ -124,6 +124,10 @@
 <script>
 export default {
   name: "Services",
+  beforeRouteLeave(to, from, next) {
+    $("#detailsModal").modal("hide");
+    next();
+  },
   mounted() {
     this.getServices();
   },

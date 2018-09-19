@@ -426,6 +426,14 @@ require("jquery.flot/jquery.flot.time");
 
 export default {
   name: "Dashboard",
+  beforeRouteLeave(to, from, next) {
+    $("#hostnameChangeModal").modal("hide");
+    $("#dnsChangeModal").modal("hide");
+    $("#systimeChangeModal").modal("hide");
+    $("#companyChangeModal").modal("hide");
+    $("#powerModal").modal("hide");
+    next();
+  },
   mounted() {
     this.getSystemSummary();
     this.getSystemHostname();
