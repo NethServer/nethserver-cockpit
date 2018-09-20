@@ -33,7 +33,7 @@ Library for PHP helpers
 function readInput()
 {
     $data = NULL;
-    $str = fgets(STDIN);
+    $str = file_get_contents('php://stdin');
     $data = json_decode($str, TRUE);
 
     if (!$data) {
