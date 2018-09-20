@@ -1,0 +1,68 @@
+#!/usr/bin/php
+<?php
+/*
+ * Copyright (C) 2018 Nethesis S.r.l.
+ * http://www.nethesis.it - nethserver@nethesis.it
+ *
+ * This script is part of NethServer.
+ *
+ * NethServer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License,
+ * or any later version.
+ *
+ * NethServer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NethServer.  If not, see COPYING.
+*/
+
+/** Include helper functions **/
+
+require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
+
+function validate_remoteldap($data) {
+    $v = new LegacyValidator($data);
+    $v->declareParameter('LdapUri', Validate::ANYTHING);
+    $v->declareParameter('BindType', $v->createValidator()->memberOf('anonymous', 'authenticated'));
+    $v->declareParameter('BindDN', Validate::ANYTHING);
+    $v->declareParameter('BindPassword', Validate::ANYTHING);
+    $v->declareParameter('BaseDN', Validate::ANYTHING);
+    $v->declareParameter('UserDN', Validate::ANYTHING);
+    $v->declareParameter('GroupDN', Validate::ANYTHING);
+    $v->declareParameter('StartTls', $v->createValidator()->memberOf('', 'enabled', 'disabled'));
+
+    $errors = 0;
+
+    if($data['StartTls'] === 'enabled' && substr($data['LdapUri'], 0, 6) === 'ldaps:') {
+        $errors++;
+        $v->addValidationError('StartTls', _('StartTLS conflicts with "ldaps://" URI scheme'), 'enabled');
+    }
+
+    $credentialsValidator = $v->createValidator()->platform('ldap-credentials', $data['BaseDN'], $data['LdapUri'], $data['StartTls'] === 'enabled' ? '1' : '', $data['BindDN']);
+    if( ! $credentialsValidator->evaluate($data['BindPassword'])) {
+        $errors++;
+        $error = $credentialsValidator->getFailureInfo();
+        $errorCodes['valid_platform,ldap-credentials,ldaptestbind,49'] = _('Invalid LDAP credentials');
+        $errorCodes['valid_platform,ldap-credentials,ldaptestbind,1'] = _('LDAP connection error');
+        $errorCodes['valid_platform,ldap-credentials,ldaptestbind,32'] = _('Base DN was not found or insufficient rights');
+        $errorCodes['valid_platform,ldap-credentials,ldaptestbind,34'] = _('Invalid DN syntax');
+        $v->addValidationError('BindDN', $errorCodes[$error[0][0]] ?: 'generic error');
+    }
+
+    if (!$v->validate() || $errors > 0) {
+        error($v);
+    }
+}
+
+$data = readInput();
+
+if($data['action'] == 'remoteldap') {
+    validate_remoteldap($data);
+} else {
+    error();
+}
+
