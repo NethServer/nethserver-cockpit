@@ -670,6 +670,7 @@ input[type="checkbox"].form-control {
 
 .modal {
   z-index: 3;
+  margin-left: 55px !important;
 }
 
 .modal-backdrop {
