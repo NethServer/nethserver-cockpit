@@ -246,7 +246,17 @@
       "configuration_invalid": "Invalid configuration",
       "credentials_to_join_domain": "Insert credentials to join domain",
       "ad_dns_server": "AD DNS Server",
-      "no_realm_found": "No Domain name found"
+      "no_realm_found": "No Domain name found",
+      "authenticated": "Authenticated",
+      "anonymous": "Anonymous",
+      "local_ldap_installed_ok": "Local LDAP installed successfully!",
+      "local_ldap_installed_error": "Local LDAP not installed.",
+      "remote_ldap_installed_ok": "Remote LDAP binded successfully!",
+      "remote_ldap_installed_error": "Remote LDAP not binded.",
+      "remote_ad_installed_ok": "Remote AD joined successfully!",
+      "remote_ad_installed_error": "Remote AD not joined.",
+      "local_ad_installed_ok": "Local AD installed successfully!",
+      "local_ad_installed_error": "Local AD not installed."
     },
     "network": {
       "title": "Network"

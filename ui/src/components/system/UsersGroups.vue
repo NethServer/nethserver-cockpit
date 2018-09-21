@@ -558,7 +558,7 @@
                   <!-- Local LDAP-->
                   <div v-if="users.provider == null && users.chooseProvider == 'ldap' && users.chooseBind == 'local'">
                     <h3 class="wizard-pf-contents-title">{{$t('users_groups.install_local_ldap')}}</h3>
-                    <form class="form-horizontal" v-on:submit.prevent="installLDAP()">
+                    <form id="local-ldap" class="form-horizontal" v-on:submit.prevent="installLDAP()">
                       <div class="modal-body">
                         <p>{{$t('users_groups.description_provider_4')}}</p>
                       </div>
@@ -567,49 +567,62 @@
                   <!-- Remote LDAP-->
                   <div v-if="users.provider == null && users.chooseProvider == 'ldap' && users.chooseBind == 'remote'">
                     <h3 class="wizard-pf-contents-title">{{$t('users_groups.bind_remote_ldap')}}</h3>
-                    <form class="form-horizontal" v-on:submit.prevent="checkLdapConfig(newProvider)">
+                    <form id="remote-ldap" class="form-horizontal" v-on:submit.prevent="newProvider.isChecked ? bindToRemoteLdap('validate', newProvider) : checkLdapConfig(newProvider)">
                       <div class="modal-body">
                         <div v-if="!newProvider.isChecking && newProvider.probeError" class="alert alert-danger alert-dismissable">
                           <span class="pficon pficon-error-circle-o"></span>
                           <strong>{{$t('error')}}.</strong> {{$t('users_groups.configuration_invalid')}}.
                         </div>
-                        <div class="form-group">
+                        <div v-if="!newProvider.isChecked" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.hostname_or_ip')}}</label>
                           <div class="col-sm-9">
                             <input required type="text" v-model="newProvider.hostname" class="form-control">
                           </div>
                         </div>
-                        <div class="form-group">
+                        <div v-if="!newProvider.isChecked" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.port')}}</label>
                           <div class="col-sm-9">
                             <input type="text" placeholder="389" v-model="newProvider.tcpport" class="form-control">
                           </div>
                         </div>
-                        <div class="form-group">
+                        <!-- <div v-if="!newProvider.isChecked" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.configuration')}}</label>
                           <div class="col-sm-2">
-                            <button :disabled="newProvider.isChecking" type="submit" class="btn btn-primary">{{$t('users_groups.check')}}</button>
+                            <button :disabled="newProvider.isChecking" type="submit"
+                              class="btn btn-primary">{{$t('users_groups.check')}}</button>
                           </div>
                           <div v-if="newProvider.isChecking" class="col-sm-1">
                             <div class="spinner"></div>
                           </div>
-                        </div>
+                        </div> -->
 
-                        <div v-if="!((newProvider.info.BindType == 'anonymous' && k=='BindPassword') || (newProvider.info.BindType == 'anonymous' && k=='BindDN'))"
+                        <div v-if="newProvider.isChecked && k!='action' && k!='DiscoverDcType' && k!='port' && k!='isAD' && k!='isLdap' && k!='host' && k!='Provider' && !((newProvider.info.BindType == 'anonymous' && k=='BindPassword') || (newProvider.info.BindType == 'anonymous' && k=='BindDN'))"
                           v-for="(v,k) in newProvider.info" v-bind:key="k" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{k | camelToSentence}}</label>
                           <div class="col-sm-9">
-                            <input v-if="!(k == 'StartTls' || k == 'BindType')" type="text" :value="v" @change="updateValues(k,v)"
-                              class="form-control">
+                            <input v-if="!(k == 'StartTls' || k == 'BindType')" required type="text" v-model="newProvider.info[k]"
+                              :value="v" @change="updateValues(k,newProvider.info[k])" class="form-control">
 
-                            <input v-if="k == 'StartTls'" type="checkbox" :value="v" ng-checked="v == 'enabled'" @click="changeStartTLS(v)">
+                            <input v-if="k == 'StartTls'" type="checkbox" :value="v == 'enabled'" @click="changeStartTLS(v)">
 
-                            <span v-if="k == 'BindType'">{{$t('users_groups.authenticated')}}</span>
                             <input v-if="k == 'BindType'" type="radio" v-model="newProvider.info.BindType" value="authenticated"
-                              class="span-right-margin-lg">
+                              @click="changeBindType('authenticated')">
+                            <span class="span-right-margin-lg" v-if="k == 'BindType'">{{$t('users_groups.authenticated')}}</span>
 
+                            <input v-if="k == 'BindType'" type="radio" v-model="newProvider.info.BindType" value="anonymous"
+                              @click="changeBindType('anonymous')">
                             <span v-if="k == 'BindType'">{{$t('users_groups.anonymous')}}</span>
-                            <input v-if="k == 'BindType'" type="radio" v-model="newProvider.info.BindType" value="anonymous">
+
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.configuration')}}</label>
+                          <div class="col-sm-2">
+                            <button :disabled="newProvider.isChecking" type="submit"
+                              class="btn btn-primary">{{$t('users_groups.check')}}</button>
+                          </div>
+                          <div v-if="newProvider.isChecking" class="col-sm-1">
+                            <div class="spinner"></div>
                           </div>
                         </div>
 
@@ -620,7 +633,7 @@
                   <!-- Local AD-->
                   <div v-if="users.provider == null && users.chooseProvider == 'ad' && users.chooseBind == 'local'">
                     <h3 class="wizard-pf-contents-title">{{$t('users_groups.became_dc')}}</h3>
-                    <form class="form-horizontal">
+                    <form id="local-ad" class="form-horizontal">
                       <div class="modal-body">
                         <div class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.domain_name')}}</label>
@@ -654,9 +667,9 @@
                   <!-- Remote AD-->
                   <div v-if="users.provider == null && users.chooseProvider == 'ad' && users.chooseBind == 'remote'">
                     <h3 class="wizard-pf-contents-title">{{$t('users_groups.join_active_directory')}}</h3>
-                    <form class="form-horizontal" v-on:submit.prevent="checkAdConfig(newProvider)">
+                    <form id="remote-ad" class="form-horizontal" v-on:submit.prevent="newProvider.isChecked ? joinADomain('validate', newProvider) : checkAdConfig(newProvider)">
                       <div class="modal-body">
-                        <div v-if="!newProvider.isChecking && (newProvider.probeError || newProvider.joinError)" class="alert alert-danger alert-dismissable">
+                        <div v-if="!newProvider.isChecking && newProvider.probeError" class="alert alert-danger alert-dismissable">
                           <span class="pficon pficon-error-circle-o"></span>
                           <strong>{{$t('error')}}.</strong> {{$t('users_groups.no_realm_found')}}
                         </div>
@@ -666,13 +679,13 @@
                             <input required type="text" v-model="newProvider.Realm" class="form-control">
                           </div>
                         </div>
-                        <div v-if="newProvider.probeError" class="form-group">
+                        <div v-if="!newProvider.isChecked && newProvider.probeError" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.ad_dns_server')}}</label>
                           <div class="col-sm-9">
                             <input type="text" v-model="newProvider.AdDns" class="form-control">
                           </div>
                         </div>
-                        <div v-if="!newProvider.isChecked" class="form-group">
+                        <!-- <div v-if="!newProvider.isChecked" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.configuration')}}</label>
                           <div class="col-sm-2">
                             <button :disabled="newProvider.isChecking" type="submit" class="btn btn-primary">{{$t('users_groups.check')}}</button>
@@ -680,18 +693,28 @@
                           <div v-if="newProvider.isChecking" class="col-sm-1">
                             <div class="spinner"></div>
                           </div>
-                        </div>
+                        </div> -->
                         <p v-if="newProvider.info && newProvider.isChecked">{{$t('users_groups.credentials_to_join_domain')}}</p>
                         <div v-if="newProvider.info && newProvider.isChecked" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.username')}}</label>
                           <div class="col-sm-9">
-                            <input type="text" v-model="newProvider.info.BindDN" class="form-control">
+                            <input required type="text" v-model="newProvider.info.BindDN" class="form-control">
                           </div>
                         </div>
                         <div v-if="newProvider.info && newProvider.isChecked" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.password')}}</label>
                           <div class="col-sm-9">
-                            <input type="password" v-model="newProvider.info.BindPassword" class="form-control">
+                            <input required type="password" v-model="newProvider.info.BindPassword" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.configuration')}}</label>
+                          <div class="col-sm-2">
+                            <button :disabled="newProvider.isChecking" type="submit"
+                              class="btn btn-primary">{{$t('users_groups.check')}}</button>
+                          </div>
+                          <div v-if="newProvider.isChecking" class="col-sm-1">
+                            <div class="spinner"></div>
                           </div>
                         </div>
                       </div>
@@ -703,6 +726,7 @@
           </div>
 
           <div class="modal-footer wizard-pf-footer">
+            <div v-if="newProvider.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
             <button @click="cancelWizard()" type="button" class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss">{{$t('cancel')}}</button>
             <button :disabled="currentStep == 1" @click="prevStep()" type="button" class="btn btn-default wizard-pf-back">
               <span class="i fa fa-angle-left"></span>
@@ -811,7 +835,7 @@ export default {
           this.users.chooseProvider == "ldap" &&
           this.users.chooseBind == "remote"
         ) {
-          if (this.newProvider.info && !this.newProvider.probeError) {
+          if (this.newProvider.isValid) {
             return false;
           } else {
             return true;
@@ -838,12 +862,7 @@ export default {
           this.users.chooseProvider == "ad" &&
           this.users.chooseBind == "remote"
         ) {
-          if (
-            this.newProvider.info &&
-            !this.newProvider.probeError &&
-            this.newProvider.info.BindPassword &&
-            this.newProvider.info.BindPassword.length > 0
-          ) {
+          if (this.newProvider.isValid) {
             return false;
           } else {
             return true;
@@ -864,7 +883,7 @@ export default {
           this.users.chooseProvider == "ldap" &&
           this.users.chooseBind == "remote"
         ) {
-          this.bindToRemoteLdap(this.newProvider);
+          this.bindToRemoteLdap("update", this.newProvider);
         }
         if (
           this.users.chooseProvider == "ad" &&
@@ -876,7 +895,7 @@ export default {
           this.users.chooseProvider == "ad" &&
           this.users.chooseBind == "remote"
         ) {
-          this.joinADomain(this.newProvider);
+          this.joinADomain("update", this.newProvider);
         }
       } else {
         this.currentStep++;
@@ -974,32 +993,32 @@ export default {
 
     getAdDefault() {
       /*  nethserver.system.provider.getAdDefault().then(function (defaults) {
-                 this.newProvider.Realm = defaults.Realm;
-                 this.newProvider.Workgroup = defaults.Workgroup;
-                 this.newProvider.IpAddress = "";
-                 $scope.$apply();
-               }, function (err) {
-                 console.error(err);
-               }); */
+                     this.newProvider.Realm = defaults.Realm;
+                     this.newProvider.Workgroup = defaults.Workgroup;
+                     this.newProvider.IpAddress = "";
+                     $scope.$apply();
+                   }, function (err) {
+                     console.error(err);
+                   }); */
     },
 
     getUsers() {
       /* nethserver.system.users.getUsers().then(function (users) {
-                this.users.list = users;
-                $scope.view.isLoaded = true;
-                $scope.$apply();
-              }, function (err) {
-                console.error(err);
-              }); */
+                    this.users.list = users;
+                    $scope.view.isLoaded = true;
+                    $scope.$apply();
+                  }, function (err) {
+                    console.error(err);
+                  }); */
     },
 
     getGroups() {
       /* nethserver.system.users.getGroups().then(function (groups) {
-                this.groups.list = groups;
-                $scope.$apply();
-              }, function (err) {
-                console.error(err);
-              }); */
+                    this.groups.list = groups;
+                    $scope.$apply();
+                  }, function (err) {
+                    console.error(err);
+                  }); */
     },
 
     addGroupToUser(group) {
@@ -1028,13 +1047,9 @@ export default {
 
     generatePassword() {
       this.newUser.isPassGenerated = true;
-      /* nethserver.system.users.mkpasswd().then(function (password) {
-                this.newUser.password = password.trim();
-                this.newUser.confirmPassword = password.trim();
-                $scope.$apply();
-              }, function (err) {
-                console.error(err);
-              }); */
+      var password = this.generatePassword();
+      this.newUser.password = password.trim();
+      this.newUser.confirmPassword = password.trim();
     },
 
     openCreateUser() {
@@ -1049,13 +1064,13 @@ export default {
         : "/usr/libexec/openssh/sftp-server";
       this.cleanUserErrors();
       /* nethserver.system.users.addUser(user).then(function () {
-                $('#createUserModal').modal('hide');
-              }, function (err) {
-                console.error(err);
-                this.newUser.errorMessage = err.message;
-                this.newUser.errorProps = err.attributes;
-                $scope.$apply();
-              }); */
+                    $('#createUserModal').modal('hide');
+                  }, function (err) {
+                    console.error(err);
+                    this.newUser.errorMessage = err.message;
+                    this.newUser.errorProps = err.attributes;
+                    $scope.$apply();
+                  }); */
     },
 
     openEditUser(ku, user) {
@@ -1073,13 +1088,13 @@ export default {
           ? true
           : false;
       /* nethserver.system.users.getUserMembership(ku).then(function (groups) {
-                this.newUser.groups = groups;
-                this.newUser.loadGroups = false;
-                $scope.$apply();
-              }, function (err) {
-                console.error(err);
-                this.newUser.loadGroups = false;
-              }); */
+                    this.newUser.groups = groups;
+                    this.newUser.loadGroups = false;
+                    $scope.$apply();
+                  }, function (err) {
+                    console.error(err);
+                    this.newUser.loadGroups = false;
+                  }); */
       $("#createUserModal").modal("show");
     },
 
@@ -1090,14 +1105,14 @@ export default {
         : "/usr/libexec/openssh/sftp-server";
       this.cleanUserErrors();
       /* nethserver.system.users.editUser(user).then(function () {
-                $('#createUserModal').modal('hide');
-                $scope.$apply();
-              }, function (err) {
-                console.error(err);
-                this.newUser.errorMessage = err.message;
-                this.newUser.errorProps = err.attributes;
-                $scope.$apply();
-              }); */
+                    $('#createUserModal').modal('hide');
+                    $scope.$apply();
+                  }, function (err) {
+                    console.error(err);
+                    this.newUser.errorMessage = err.message;
+                    this.newUser.errorProps = err.attributes;
+                    $scope.$apply();
+                  }); */
     },
 
     openChangePassword(ku, user) {
@@ -1111,14 +1126,14 @@ export default {
     changePassword(user) {
       this.cleanUserErrors();
       /* nethserver.system.users.setPassword(user.key, user.password).then(function () {
-                $('#createUserModal').modal('hide');
-                $scope.$apply();
-              }, function (err) {
-                console.error(err);
-                this.newUser.errorMessage = err.message;
-                this.newUser.errorProps = err.attributes;
-                $scope.$apply();
-              }); */
+                    $('#createUserModal').modal('hide');
+                    $scope.$apply();
+                  }, function (err) {
+                    console.error(err);
+                    this.newUser.errorMessage = err.message;
+                    this.newUser.errorProps = err.attributes;
+                    $scope.$apply();
+                  }); */
     },
 
     openDeleteUser(ku, toDelete) {
@@ -1131,10 +1146,10 @@ export default {
     deleteUser(user) {
       this.cleanUserErrors();
       /* nethserver.system.users.deleteUser(user.key).then(function () {
-                $('#deleteModal').modal('hide');
-              }, function (err) {
-                console.error(err);
-              }); */
+                    $('#deleteModal').modal('hide');
+                  }, function (err) {
+                    console.error(err);
+                  }); */
     },
 
     openCreateGroup() {
@@ -1145,13 +1160,13 @@ export default {
     addGroup(group) {
       this.cleanGroupErrors();
       /* nethserver.system.users.addGroup(group).then(function () {
-                $('#createGroupModal').modal('hide');
-              }, function (err) {
-                console.error(err);
-                this.newGroup.errorMessage = err.message;
-                this.newGroup.errorProps = err.attributes;
-                $scope.$apply();
-              }); */
+                    $('#createGroupModal').modal('hide');
+                  }, function (err) {
+                    console.error(err);
+                    this.newGroup.errorMessage = err.message;
+                    this.newGroup.errorProps = err.attributes;
+                    $scope.$apply();
+                  }); */
     },
 
     openEditGroup(kg, group) {
@@ -1160,26 +1175,26 @@ export default {
       this.newGroup.isEdit = true;
       this.newGroup.loadMembers = true;
       /* nethserver.system.users.getGroupMembers(kg).then(function (members) {
-                this.newGroup.members = members;
-                this.newGroup.loadMembers = false;
-                $scope.$apply();
-              }, function (err) {
-                console.error(err);
-                this.newGroup.loadMembers = false;
-              }); */
+                    this.newGroup.members = members;
+                    this.newGroup.loadMembers = false;
+                    $scope.$apply();
+                  }, function (err) {
+                    console.error(err);
+                    this.newGroup.loadMembers = false;
+                  }); */
       $("#createGroupModal").modal("show");
     },
 
     editGroup(group) {
       this.cleanGroupErrors();
       /* nethserver.system.users.editGroup(group).then(function () {
-                $('#createGroupModal').modal('hide');
-              }, function (err) {
-                console.error(err);
-                this.newGroup.errorMessage = err.message;
-                this.newGroup.errorProps = err.attributes;
-                $scope.$apply();
-              }); */
+                    $('#createGroupModal').modal('hide');
+                  }, function (err) {
+                    console.error(err);
+                    this.newGroup.errorMessage = err.message;
+                    this.newGroup.errorProps = err.attributes;
+                    $scope.$apply();
+                  }); */
     },
 
     openDeleteGroup(kg, toDelete) {
@@ -1192,10 +1207,10 @@ export default {
     deleteGroup(group) {
       this.cleanGroupErrors();
       /* nethserver.system.users.deleteGroup(group.key).then(function () {
-                $('#deleteModal').modal('hide');
-              }, function (err) {
-                console.error(err);
-              }); */
+                    $('#deleteModal').modal('hide');
+                  }, function (err) {
+                    console.error(err);
+                  }); */
     },
 
     updateValues(k, v) {
@@ -1204,31 +1219,31 @@ export default {
 
     uninstallProvider() {
       /* nethserver.system.provider.uninstall().then(function () {
-                $('#changeProviderModal').modal('hide');
-                this.users.provider = null;
-                this.users.chooseProvider = null;
-                this.users.chooseBind = null;
-                this.users.providerInfo = {};
-                this.currentStep = 1;
-                $scope.$apply();
-              }, function (err) {
-                console.error(err);
-              }); */
+                    $('#changeProviderModal').modal('hide');
+                    this.users.provider = null;
+                    this.users.chooseProvider = null;
+                    this.users.chooseBind = null;
+                    this.users.providerInfo = {};
+                    this.currentStep = 1;
+                    $scope.$apply();
+                  }, function (err) {
+                    console.error(err);
+                  }); */
     },
 
     changeBindType(v) {
-      this.newProvider.info.BindType = v ? "authenticated" : "anonymous";
+      this.newProvider.info.BindType = v;
+      this.$forceUpdate();
     },
 
     changeStartTLS(v) {
-      this.newProvider.info.StartTls = v ? "enabled" : "disabled";
+      this.newProvider.info.StartTls = !v ? "enabled" : "disabled";
     },
 
     checkLdapConfig(newProvider) {
       var context = this;
 
       context.newProvider.isChecking = true;
-      context.newProvider.info = {};
       context.$forceUpdate();
 
       context.exec(
@@ -1242,13 +1257,20 @@ export default {
         function(success) {
           success = JSON.parse(success);
           context.newProvider.info = success;
+          context.newProvider.info.LdapUriDn = unescape(
+            context.newProvider.info.LdapUriDn
+          );
+          context.newProvider.info.BindType = "anonymous";
           context.newProvider.probeError = false;
           context.newProvider.isChecking = false;
+          context.newProvider.isChecked = true;
           context.$forceUpdate();
         },
         function(error) {
+          context.newProvider.info = null;
           context.newProvider.probeError = true;
           context.newProvider.isChecking = false;
+          context.newProvider.isChecked = true;
           context.$forceUpdate();
           console.error(error);
         }
@@ -1256,21 +1278,96 @@ export default {
     },
 
     installLDAP() {
-      /* nethserver.system.provider.installLocalLdap().then(function () {
-                $('#accountProviderWizard').modal('hide');
-                $scope.$apply();
-              }, function (err) {
-                console.error(err);
-              }); */
+      var context = this;
+
+      var ldapObj = {
+        action: "localldap"
+      };
+      context.newProvider.isLoading = true;
+      context.$forceUpdate();
+
+      $("#accountProviderWizard").modal("hide");
+
+      // update values
+      context.exec(
+        ["system-accounts-provider/update"],
+        ldapObj,
+        function(stream) {
+          console.info("accounts-provider", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "users_groups.local_ldap_installed_ok"
+          );
+
+          // get provider info
+          context.getInfo();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "users_groups.local_ldap_installed_error"
+          );
+        }
+      );
     },
 
-    bindToRemoteLdap(newProvider) {
-      console.log(newProvider);
-      /* nethserver.system.provider.bindToRemoteLdap(newProvider.info).then(function () {
-                $('#accountProviderWizard').modal('hide');
-              }, function (err) {
-                console.error(err);
-              }); */
+    bindToRemoteLdap(action, newProvider) {
+      var context = this;
+
+      var ldapObj = newProvider.info;
+      ldapObj.action = "remoteldap";
+
+      if (action == "validate") {
+        context.newProvider.isChecking = true;
+        context.$forceUpdate();
+
+        // validate
+        context.exec(
+          ["system-accounts-provider/validate"],
+          ldapObj,
+          null,
+          function(success) {
+            context.newProvider.isChecking = false;
+            context.newProvider.isValid = true;
+            context.$forceUpdate();
+          },
+          function(error, data) {
+            var errorData = JSON.parse(data);
+            context.newProvider.isChecking = false;
+            context.newProvider.isValid = false;
+            context.newProvider.probeError = true;
+            context.$forceUpdate();
+          }
+        );
+      } else {
+        // update values
+        $("#accountProviderWizard").modal("hide");
+
+        context.exec(
+          ["system-accounts-provider/update"],
+          ldapObj,
+          function(stream) {
+            console.info("accounts-provider", stream);
+          },
+          function(success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "users_groups.remote_ldap_installed_ok"
+            );
+
+            // get provider info
+            context.getInfo();
+          },
+          function(error, data) {
+            // notification
+            context.$parent.notifications.error.message = context.$i18n.t(
+              "users_groups.remote_ldap_installed_error"
+            );
+          }
+        );
+      }
     },
 
     checkAdConfig(newProvider) {
@@ -1298,6 +1395,7 @@ export default {
           context.$forceUpdate();
         },
         function(error) {
+          context.newProvider.info = null;
           context.newProvider.probeError = true;
           context.newProvider.isChecking = false;
           context.newProvider.isChecked = false;
@@ -1307,26 +1405,96 @@ export default {
       );
     },
 
-    joinADomain(newProvider) {
-      newProvider.info.AdDns = newProvider.AdDns;
-      /* nethserver.system.provider.joinDomain(newProvider.info).then(function () {
-                $('#accountProviderWizard').modal('hide');
-              }, function (err) {
-                console.error(err);
-                this.newProvider.probeError = false;
-                this.newProvider.joinError = true;
-                this.newProvider.joinErrorMessage = err.message;
-                this.newProvider.joinErrorOMessage = err.originalMessage;
-                $scope.$apply();
-              }); */
+    joinADomain(action, newProvider) {
+      var context = this;
+
+      var adObj = newProvider.info;
+      adObj.action = "remotead";
+
+      if (action == "validate") {
+        context.newProvider.isChecking = true;
+        context.$forceUpdate();
+
+        // validate
+        context.exec(
+          ["system-accounts-provider/validate"],
+          adObj,
+          null,
+          function(success) {
+            context.newProvider.isChecking = false;
+            context.newProvider.isValid = true;
+            context.$forceUpdate();
+          },
+          function(error, data) {
+            var errorData = JSON.parse(data);
+            context.newProvider.isChecking = false;
+            context.newProvider.isValid = false;
+            context.newProvider.probeError = true;
+            context.$forceUpdate();
+          }
+        );
+      } else {
+        // update values
+        $("#accountProviderWizard").modal("hide");
+
+        context.exec(
+          ["system-accounts-provider/update"],
+          adObj,
+          function(stream) {
+            console.info("accounts-provider", stream);
+          },
+          function(success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "users_groups.remote_ad_installed_ok"
+            );
+
+            // get provider info
+            context.getInfo();
+          },
+          function(error, data) {
+            // notification
+            context.$parent.notifications.error.message = context.$i18n.t(
+              "users_groups.remote_ad_installed_error"
+            );
+          }
+        );
+      }
     },
 
     createDC(newProvider) {
-      /* nethserver.system.provider.installLocalAd(newProvider).then(function () {
-                $('#accountProviderWizard').modal('hide');
-              }, function (err) {
-                console.error(err);
-              }); */
+      var context = this;
+
+      var adObj = newProvider;
+      adObj.action = "localead";
+      context.newProvider.isLoading = true;
+      context.$forceUpdate();
+
+      $("#accountProviderWizard").modal("hide");
+
+      // update values
+      context.exec(
+        ["system-accounts-provider/update"],
+        adObj,
+        function(stream) {
+          console.info("accounts-provider", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "users_groups.local_ad_installed_ok"
+          );
+
+          // get provider info
+          context.getInfo();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "users_groups.local_ad_installed_error"
+          );
+        }
+      );
     }
   }
 };
