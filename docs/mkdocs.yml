@@ -37,8 +37,9 @@ nav:
       - api/system-tls-policy.md
       - api/system-trusted-networks.md
 - User interface:
-    - environment.md
     - ui_guidelines.md
+- Development environment:
+    - environment.md
     - application_manifest.md
 - Tutorial:
     - new_module.md

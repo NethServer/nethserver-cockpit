@@ -39,44 +39,19 @@ Prepare the development environment:
   git clone git@github.com:NethServer/nethserver-cockpit
   ```
 
-- Install grunt globally:
+- Enter inside the cloned repository and install all ui dependencies:
   ```
-  npm install -g grunt-cli bower generator-angular yo
-  ```
+  cd nethserver-cockpit/ui
 
-  You can ignore warnings like this:
-  ```
-  WARN generator-angular@0.16.0 requires a peer of generator-karma@>=0.9.0 but none was installed.
+  npm install && npm run dev
   ```
 
+## Build UI
 
-- Enter inside the cloned repository and install all dependencies:
-  ```
-  cd nethserver-cockpit/
-
-  cd api/ && npm install
-  cd ..
-  cd ui/system/ && npm install && bower install
-  ```
-
-## Build API and UI
-
-Enter API directory and build using grunt:
+Enter UI directory and build using `npm`:
 
 ```
-cd api/system/ && grunt build
-```
-
-Enter UI directory and build using grunt:
-
-```
-cd ui/ && grunt build
-```
-
-You can ignore ignore warnings like this:
-```
-npm WARN api@1.0.0 No repository field.
-npm WARN api@1.0.0 No license field.
+cd ui/ && ./prep-sources
 ```
 
 
@@ -92,12 +67,10 @@ Use the following commands:
 ```
 ssh root@192.168.1.20  "mkdir -p ~/.local/share/cockpit/nethserver"
 
-cd api/ && grunt build rsync:root@192.168.1.20
-cd ui/system && grunt rsync:root@192.168.1.20
+cd api/ && rsync -avz --delete ./* root@192.168.1.20:/usr/libexec/nethserver/api/
+cd ui/ && rsync -avz --delete dist/* root@192.168.1.20:/usr/share/cockpit/nethserver/
 ```
 
-
 ## Code style
-
 Please use configuration from EditorConfig: http://editorconfig.org
 

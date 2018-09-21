@@ -38,7 +38,7 @@ Each new application web page should display:
 On first run, the application **must** display a modal wizard if the module can't be configured with a reasonable defaults.
 
 Also the web page should display suggestions to help the user to follow best practices.
-For example, inside the "Certificate page", the interface should display a suggestion to enable Let's Encrypt if 
+For example, inside the "Certificate page", the interface should display a suggestion to enable Let's Encrypt if
 a self-signed certificate is used as default.
 
 Each application must be described by a [JSON manifest](./application_manifest) inspired to AppData freedesktop.org format.
@@ -59,38 +59,14 @@ Also it is a good practice to add a "Description" when creating records inside t
 NethServer Cockpit provides multiple [toast notification](http://www.patternfly.org/pattern-library/communication/toast-notifications/).
 Each notification can have one of these states:
 
-- **success**: everything is ok. Transient: it stays on the screen for 8 seconds.
-- **danger**: something went wrong. Not transient: it stays on the screen until the user explicitly close it.
+- **success**: everything is ok. Transient: it stays on the screen for 3 seconds.
+- **error**: something went wrong. Not transient: it stays on the screen until the user explicitly close it.
   May require an action link.
-- **warning**: something needs attention. Not transient: it stays on the screen until the user explicitly close it.
-
-The notification can also have a type:
-
-- **info**: display only a message
-- **action**: display a message and an action link
 
 
-Finally there also is a **task** notification, it stays on the screen until the task 
+Finally there also is a **task** notification, it stays on the screen until the task
 has been completed. This kind of notification can be created only by `signal-event`.
 
-
-#### Example
-
-Raise a notification after 5 seconds; add this code to `app.js`:
-```
-setTimeout(function() {
-    nethserver.notificationMonitor.dispatchEvent('nsnotification', {
-        type: 'action',
-        title: 'Failed',
-        message: 'Test failing notification',
-        status: 'danger',
-        action: 'Retry',
-        method: function() {
-            console.log("this method is called when the link is clicked!");
-        }
-    });
-}, 5000);
-```
 
 ### Modals
 
