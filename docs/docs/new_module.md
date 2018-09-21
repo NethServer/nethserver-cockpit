@@ -1,6 +1,6 @@
 # How to write a new module
 
-A NethServer Cockpit module is composed by 3 main parts:
+A NethServer Cockpit module is composed by 4 parts:
 
 - UI: a mix of HTML and CSS which presents data loaded using JavaScript (Cockpit API or NethServer API)
 - API: a list of helpers to do actions: `read` - `validate` - `update`
@@ -111,7 +111,7 @@ The source code must be placed inside the `app` directory:
    - About
 - `css/style.css`: application stylesheet, customize your custom CSS but always follow [UI guidelines](./ui_guidelines)
 - `js/app.js`: JavaScript logic goes here. If you need to develop complex API, take a loot to [API guidelines](./api_guidelines)
-- `views/*.html*`: contains views for each routes defined in app.js
+- `views/*.html`: contains views for each routes defined in app.js
 
 You can ignore `manifest.json` and `override.json` files which are used for Cockpit internals (change only name inside with `your-own-module`).
 
