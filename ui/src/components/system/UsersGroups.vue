@@ -9,9 +9,7 @@
       <div class="panel panel-default" id="provider-markup">
         <div class="panel-heading">
           <button id="change-provider-btn" data-toggle="modal" data-target="#changeProviderModal" class="btn btn-primary">{{$t('users_groups.change_provider')}}</button>
-          <span class="panel-title">
-            {{$t('users_groups.account_provider')}}: {{users.provider}}
-          </span>
+          {{$t('users_groups.account_provider')}}: <span class="panel-title">{{$t('users_groups.'+users.provider)}}</span>
           <span class="provider-details" data-toggle="collapse" data-parent="#provider-markup" href="#providerDetails">{{$t('users_groups.details')}}</span>
         </div>
         <div id="providerDetails" class="panel-collapse collapse">
@@ -35,7 +33,7 @@
         <button data-toggle="dropdown" class="btn btn-primary btn-lg dropdown-toggle shutdown-privileged">
           <span class="caret"></span>
         </button>
-        <ul role="menu" class="dropdown-menu pull-right">
+        <ul role="menu" class="dropdown-menu pull-left">
           <li class="presentation">
             <a @click="openCreateUser()" role="menuitem" data-action="restart">{{$t('users_groups.create_user')}}</a>
           </li>
@@ -227,20 +225,14 @@
                     class="form-control">
                 </div>
                 <div class="col-sm-2">
-                  <button @click="generatePassword()" type="button" class="btn btn-primary">{{$t('users_groups.generate')}}</button>
+                  <button @click="genPassword()" type="button" class="btn btn-primary">{{$t('users_groups.generate')}}</button>
                 </div>
               </div>
               <div v-if="!(newUser.isEdit && !newUser.isPassEdit)" class="form-group">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.confirm_password')}}</label>
                 <div class="col-sm-7">
-                  <input required :type="newUser.isPassGenerated ? 'text' : 'password'" v-model="newUser.confirmPassword"
-                    class="form-control">
-                </div>
-              </div>
-              <div v-if="!(newUser.isEdit && !newUser.isPassEdit)" class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.strength')}}</label>
-                <div class="col-sm-7">
-                  meter password
+                  <password v-model="newUser.confirmPassword" @score="showScore" id="password-user-create" placeholder=""
+                    :showPassword="newUser.isPassGenerated" />
                 </div>
               </div>
               <p v-if="!newUser.isPassEdit">{{$t('users_groups.advanced_options')}}</p>
@@ -259,7 +251,7 @@
             </div>
             <div class="modal-footer">
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
-              <button :disabled="newUser.passwordStrength <= 75 || newUser.password !== newUser.confirmPassword" class="btn btn-primary"
+              <button :disabled="newUser.passwordStrength < 4 || newUser.password !== newUser.confirmPassword" class="btn btn-primary"
                 type="submit">{{newUser.isEdit ? newUser.isPassEdit ? $t('change') : $t('edit') : $t('create')}}</button>
             </div>
 
@@ -618,8 +610,7 @@
                         <div class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.configuration')}}</label>
                           <div class="col-sm-2">
-                            <button :disabled="newProvider.isChecking" type="submit"
-                              class="btn btn-primary">{{$t('users_groups.check')}}</button>
+                            <button :disabled="newProvider.isChecking" type="submit" class="btn btn-primary">{{$t('users_groups.check')}}</button>
                           </div>
                           <div v-if="newProvider.isChecking" class="col-sm-1">
                             <div class="spinner"></div>
@@ -673,6 +664,10 @@
                           <span class="pficon pficon-error-circle-o"></span>
                           <strong>{{$t('error')}}.</strong> {{$t('users_groups.no_realm_found')}}
                         </div>
+                        <div v-if="!newProvider.isChecking && newProvider.joinError" class="alert alert-danger alert-dismissable">
+                          <span class="pficon pficon-error-circle-o"></span>
+                          <strong>{{$t('error')}}.</strong> {{$t('users_groups.join_error')}}
+                        </div>
                         <div v-if="!newProvider.isChecked" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.domain_name')}}</label>
                           <div class="col-sm-9">
@@ -710,8 +705,7 @@
                         <div class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.configuration')}}</label>
                           <div class="col-sm-2">
-                            <button :disabled="newProvider.isChecking" type="submit"
-                              class="btn btn-primary">{{$t('users_groups.check')}}</button>
+                            <button :disabled="newProvider.isChecking" type="submit" class="btn btn-primary">{{$t('users_groups.check')}}</button>
                           </div>
                           <div v-if="newProvider.isChecking" class="col-sm-1">
                             <div class="spinner"></div>
@@ -751,8 +745,13 @@
 </template>
 
 <script>
+import Password from "vue-password-strength-meter";
+
 export default {
   name: "UsersGroups",
+  components: {
+    Password
+  },
   beforeRouteLeave(to, from, next) {
     $("#accountProviderWizard").modal("hide");
     next();
@@ -941,7 +940,7 @@ export default {
         groups: [],
         password: "",
         isPassGenerated: false,
-        confirmPassword: false,
+        confirmPassword: "",
         passwordStrength: 0,
         errorProps: {},
         isEdit: false,
@@ -979,8 +978,8 @@ export default {
           context.users.providerInfo = success;
 
           if (context.users.provider) {
-            $scope.getUsers();
-            $scope.getGroups();
+            context.getUsers();
+            context.getGroups();
           } else {
             $("#accountProviderWizard").modal("show");
           }
@@ -993,32 +992,33 @@ export default {
 
     getAdDefault() {
       /*  nethserver.system.provider.getAdDefault().then(function (defaults) {
-                     this.newProvider.Realm = defaults.Realm;
-                     this.newProvider.Workgroup = defaults.Workgroup;
-                     this.newProvider.IpAddress = "";
-                     $scope.$apply();
-                   }, function (err) {
-                     console.error(err);
-                   }); */
+                             this.newProvider.Realm = defaults.Realm;
+                             this.newProvider.Workgroup = defaults.Workgroup;
+                             this.newProvider.IpAddress = "";
+
+                           }, function (err) {
+                             console.error(err);
+                           }); */
     },
 
     getUsers() {
+      this.view.isLoaded = true;
       /* nethserver.system.users.getUsers().then(function (users) {
-                    this.users.list = users;
-                    $scope.view.isLoaded = true;
-                    $scope.$apply();
-                  }, function (err) {
-                    console.error(err);
-                  }); */
+                            this.users.list = users;
+                            context.view.isLoaded = true;
+
+                          }, function (err) {
+                            console.error(err);
+                          }); */
     },
 
     getGroups() {
       /* nethserver.system.users.getGroups().then(function (groups) {
-                    this.groups.list = groups;
-                    $scope.$apply();
-                  }, function (err) {
-                    console.error(err);
-                  }); */
+                            this.groups.list = groups;
+
+                          }, function (err) {
+                            console.error(err);
+                          }); */
     },
 
     addGroupToUser(group) {
@@ -1045,11 +1045,21 @@ export default {
       this.newGroup.members.splice(index, 1);
     },
 
-    generatePassword() {
-      this.newUser.isPassGenerated = true;
+    genPassword() {
       var password = this.generatePassword();
       this.newUser.password = password.trim();
       this.newUser.confirmPassword = password.trim();
+      this.newUser.isPassGenerated = true;
+
+      setTimeout(function() {
+        var element = document.getElementById("password-user-create");
+        var event = new Event("input");
+        element.dispatchEvent(event);
+      }, 250);
+    },
+
+    showScore(score) {
+      this.newUser.passwordStrength = score;
     },
 
     openCreateUser() {
@@ -1064,13 +1074,13 @@ export default {
         : "/usr/libexec/openssh/sftp-server";
       this.cleanUserErrors();
       /* nethserver.system.users.addUser(user).then(function () {
-                    $('#createUserModal').modal('hide');
-                  }, function (err) {
-                    console.error(err);
-                    this.newUser.errorMessage = err.message;
-                    this.newUser.errorProps = err.attributes;
-                    $scope.$apply();
-                  }); */
+                            $('#createUserModal').modal('hide');
+                          }, function (err) {
+                            console.error(err);
+                            this.newUser.errorMessage = err.message;
+                            this.newUser.errorProps = err.attributes;
+
+                          }); */
     },
 
     openEditUser(ku, user) {
@@ -1088,13 +1098,13 @@ export default {
           ? true
           : false;
       /* nethserver.system.users.getUserMembership(ku).then(function (groups) {
-                    this.newUser.groups = groups;
-                    this.newUser.loadGroups = false;
-                    $scope.$apply();
-                  }, function (err) {
-                    console.error(err);
-                    this.newUser.loadGroups = false;
-                  }); */
+                            this.newUser.groups = groups;
+                            this.newUser.loadGroups = false;
+
+                          }, function (err) {
+                            console.error(err);
+                            this.newUser.loadGroups = false;
+                          }); */
       $("#createUserModal").modal("show");
     },
 
@@ -1105,14 +1115,14 @@ export default {
         : "/usr/libexec/openssh/sftp-server";
       this.cleanUserErrors();
       /* nethserver.system.users.editUser(user).then(function () {
-                    $('#createUserModal').modal('hide');
-                    $scope.$apply();
-                  }, function (err) {
-                    console.error(err);
-                    this.newUser.errorMessage = err.message;
-                    this.newUser.errorProps = err.attributes;
-                    $scope.$apply();
-                  }); */
+                            $('#createUserModal').modal('hide');
+
+                          }, function (err) {
+                            console.error(err);
+                            this.newUser.errorMessage = err.message;
+                            this.newUser.errorProps = err.attributes;
+
+                          }); */
     },
 
     openChangePassword(ku, user) {
@@ -1126,14 +1136,14 @@ export default {
     changePassword(user) {
       this.cleanUserErrors();
       /* nethserver.system.users.setPassword(user.key, user.password).then(function () {
-                    $('#createUserModal').modal('hide');
-                    $scope.$apply();
-                  }, function (err) {
-                    console.error(err);
-                    this.newUser.errorMessage = err.message;
-                    this.newUser.errorProps = err.attributes;
-                    $scope.$apply();
-                  }); */
+                            $('#createUserModal').modal('hide');
+
+                          }, function (err) {
+                            console.error(err);
+                            this.newUser.errorMessage = err.message;
+                            this.newUser.errorProps = err.attributes;
+
+                          }); */
     },
 
     openDeleteUser(ku, toDelete) {
@@ -1146,10 +1156,10 @@ export default {
     deleteUser(user) {
       this.cleanUserErrors();
       /* nethserver.system.users.deleteUser(user.key).then(function () {
-                    $('#deleteModal').modal('hide');
-                  }, function (err) {
-                    console.error(err);
-                  }); */
+                            $('#deleteModal').modal('hide');
+                          }, function (err) {
+                            console.error(err);
+                          }); */
     },
 
     openCreateGroup() {
@@ -1160,13 +1170,13 @@ export default {
     addGroup(group) {
       this.cleanGroupErrors();
       /* nethserver.system.users.addGroup(group).then(function () {
-                    $('#createGroupModal').modal('hide');
-                  }, function (err) {
-                    console.error(err);
-                    this.newGroup.errorMessage = err.message;
-                    this.newGroup.errorProps = err.attributes;
-                    $scope.$apply();
-                  }); */
+                            $('#createGroupModal').modal('hide');
+                          }, function (err) {
+                            console.error(err);
+                            this.newGroup.errorMessage = err.message;
+                            this.newGroup.errorProps = err.attributes;
+
+                          }); */
     },
 
     openEditGroup(kg, group) {
@@ -1175,26 +1185,26 @@ export default {
       this.newGroup.isEdit = true;
       this.newGroup.loadMembers = true;
       /* nethserver.system.users.getGroupMembers(kg).then(function (members) {
-                    this.newGroup.members = members;
-                    this.newGroup.loadMembers = false;
-                    $scope.$apply();
-                  }, function (err) {
-                    console.error(err);
-                    this.newGroup.loadMembers = false;
-                  }); */
+                            this.newGroup.members = members;
+                            this.newGroup.loadMembers = false;
+
+                          }, function (err) {
+                            console.error(err);
+                            this.newGroup.loadMembers = false;
+                          }); */
       $("#createGroupModal").modal("show");
     },
 
     editGroup(group) {
       this.cleanGroupErrors();
       /* nethserver.system.users.editGroup(group).then(function () {
-                    $('#createGroupModal').modal('hide');
-                  }, function (err) {
-                    console.error(err);
-                    this.newGroup.errorMessage = err.message;
-                    this.newGroup.errorProps = err.attributes;
-                    $scope.$apply();
-                  }); */
+                            $('#createGroupModal').modal('hide');
+                          }, function (err) {
+                            console.error(err);
+                            this.newGroup.errorMessage = err.message;
+                            this.newGroup.errorProps = err.attributes;
+
+                          }); */
     },
 
     openDeleteGroup(kg, toDelete) {
@@ -1207,10 +1217,10 @@ export default {
     deleteGroup(group) {
       this.cleanGroupErrors();
       /* nethserver.system.users.deleteGroup(group.key).then(function () {
-                    $('#deleteModal').modal('hide');
-                  }, function (err) {
-                    console.error(err);
-                  }); */
+                            $('#deleteModal').modal('hide');
+                          }, function (err) {
+                            console.error(err);
+                          }); */
     },
 
     updateValues(k, v) {
@@ -1218,17 +1228,39 @@ export default {
     },
 
     uninstallProvider() {
-      /* nethserver.system.provider.uninstall().then(function () {
-                    $('#changeProviderModal').modal('hide');
-                    this.users.provider = null;
-                    this.users.chooseProvider = null;
-                    this.users.chooseBind = null;
-                    this.users.providerInfo = {};
-                    this.currentStep = 1;
-                    $scope.$apply();
-                  }, function (err) {
-                    console.error(err);
-                  }); */
+      var context = this;
+
+      var providerObj = {
+        action: "removeprovider"
+      };
+      context.newProvider.isLoading = true;
+      context.$forceUpdate();
+
+      $("#accountProviderWizard").modal("hide");
+
+      // update values
+      context.exec(
+        ["system-accounts-provider/update"],
+        providerObj,
+        function(stream) {
+          console.info("accounts-provider", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "users_groups.provider_uninstalled_ok"
+          );
+
+          // get provider info
+          context.getInfo();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "users_groups.provider_uninstalled_error"
+          );
+        }
+      );
     },
 
     changeBindType(v) {
@@ -1429,7 +1461,7 @@ export default {
             var errorData = JSON.parse(data);
             context.newProvider.isChecking = false;
             context.newProvider.isValid = false;
-            context.newProvider.probeError = true;
+            context.newProvider.joinError = true;
             context.$forceUpdate();
           }
         );
@@ -1466,7 +1498,7 @@ export default {
       var context = this;
 
       var adObj = newProvider;
-      adObj.action = "localead";
+      adObj.action = "localad";
       context.newProvider.isLoading = true;
       context.$forceUpdate();
 

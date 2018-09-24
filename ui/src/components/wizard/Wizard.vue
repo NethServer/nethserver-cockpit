@@ -250,7 +250,7 @@
                   <h4 class="adjust-top">Admin Dashboard</h4>
                   <form class="form-horizontal">
                     <div class="form-group required">
-                      <label class="col-sm-3 control-label" for="lorem">Limit access to :980 port</label>
+                      <label class="col-sm-3 control-label" for="lorem">Limit access to :9090 port</label>
                       <div class="col-sm-9">
                         <input type="checkbox" class="form-control">
                       </div>

@@ -192,6 +192,8 @@
     },
     "users_groups": {
       "title": "Users & Groups",
+      "ad": "Active Directory",
+      "ldap": "LDAP",
       "install": "Install",
       "warning_provider": "Before changing the Account provider, the old one must be removed",
       "summary": "Summary",
@@ -256,7 +258,10 @@
       "remote_ad_installed_ok": "Remote AD joined successfully!",
       "remote_ad_installed_error": "Remote AD not joined.",
       "local_ad_installed_ok": "Local AD installed successfully!",
-      "local_ad_installed_error": "Local AD not installed."
+      "local_ad_installed_error": "Local AD not installed.",
+      "join_error": "Invalid credentials to join domain.",
+      "provider_uninstalled_ok": "Account provider removed successfully!",
+      "provider_uninstalled_error": "Account provider not removed."
     },
     "network": {
       "title": "Network"
