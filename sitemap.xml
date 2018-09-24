@@ -2,122 +2,127 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api_guidelines/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api_protocol/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api_libraries/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api/system-aliases/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://nethserver.github.io/nethserver-cockpit/api/system-apps/</loc>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api/system-certificate/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api/system-company/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api/system-dns/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api/system-hostname/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api/system-hosts/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api/system-openssh/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api/system-services/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api/system-shutdown/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api/system-status/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api/system-task/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api/system-time/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api/system-tls-policy/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api/system-trusted-networks/</loc>
-     <lastmod>2018-09-12</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://nethserver.github.io/nethserver-cockpit/environment/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/ui_guidelines/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://nethserver.github.io/nethserver-cockpit/environment/</loc>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/application_manifest/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/new_module/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/build_doc/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/build_rpm/</loc>
-     <lastmod>2018-09-12</lastmod>
+     <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>

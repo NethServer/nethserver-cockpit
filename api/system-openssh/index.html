@@ -369,6 +369,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../system-apps/" title="system-apps" class="md-nav__link">
+      system-apps
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../system-certificate/" title="system-certificate" class="md-nav__link">
       system-certificate
     </a>
@@ -639,11 +651,35 @@
 
 
   <li class="md-nav__item">
-    <a href="../../environment/" title="Development environment" class="md-nav__link">
-      Development environment
+    <a href="../../ui_guidelines/" title="UI guidelines" class="md-nav__link">
+      UI guidelines
     </a>
   </li>
 
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Development environment
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Development environment
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
         
           
           
@@ -651,8 +687,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../ui_guidelines/" title="UI guidelines" class="md-nav__link">
-      UI guidelines
+    <a href="../../environment/" title="Development environment" class="md-nav__link">
+      Development environment
     </a>
   </li>
 
@@ -681,13 +717,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
     
-    <label class="md-nav__link" for="nav-4">
+    <label class="md-nav__link" for="nav-5">
       Tutorial
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-4">
+      <label class="md-nav__title" for="nav-5">
         Tutorial
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -717,13 +753,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
     
-    <label class="md-nav__link" for="nav-5">
+    <label class="md-nav__link" for="nav-6">
       Build
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-5">
+      <label class="md-nav__title" for="nav-6">
         Build
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -765,13 +801,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
     
-    <label class="md-nav__link" for="nav-6">
+    <label class="md-nav__link" for="nav-7">
       Manuals
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-6">
+      <label class="md-nav__title" for="nav-7">
         Manuals
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -958,7 +994,6 @@
 <li>PasswordAuthentication: boolean</li>
 <li>PermitRootLogin: boolean</li>
 <li>TCPPort: port number</li>
-<li>status: <code>enabled</code> or <code>disabled</code></li>
 </ul>
 <h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
 <p>An Esmith db record in JSON format:</p>
@@ -978,15 +1013,9 @@
 <div class="codehilite"><pre><span></span><span class="p">{</span>
     <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;sshd&quot;</span><span class="p">,</span>
     <span class="nt">&quot;props&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;LoginGraceTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2m&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;MaxAuthTries&quot;</span><span class="p">:</span> <span class="s2">&quot;6&quot;</span><span class="p">,</span>
         <span class="nt">&quot;PasswordAuthentication&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
         <span class="nt">&quot;PermitRootLogin&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;Protocol&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span>
         <span class="nt">&quot;TCPPort&quot;</span><span class="p">:</span> <span class="s2">&quot;22&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;UsePAM&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;access&quot;</span><span class="p">:</span> <span class="s2">&quot;green,red&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span>
     <span class="p">},</span>
     <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;service&quot;</span>
 <span class="p">}</span>
@@ -994,7 +1023,7 @@
 
 
 <p>Invocation example:</p>
-<div class="codehilite"><pre><span></span><span class="nb">echo</span> <span class="s1">&#39;{&quot;props&quot;:{&quot;status&quot;:&quot;enable&quot;,&quot;access&quot;:&quot;green,red&quot;,&quot;MaxAuthTries&quot;:&quot;6&quot;,&quot;UsePAM&quot;:&quot;yes&quot;,&quot;PasswordAuthentication&quot;:&quot;yes&quot;,&quot;LoginGraceTime&quot;:&quot;2m&quot;,&quot;Protocol&quot;:&quot;2&quot;,&quot;PermitRootLogin&quot;:&quot;yes&quot;,&quot;TCPPort&quot;:&quot;22&quot;},&quot;name&quot;:&quot;sshd&quot;,&quot;type&quot;:&quot;service&quot;}&#39;</span> <span class="p">|</span> ./validate
+<div class="codehilite"><pre><span></span><span class="nb">echo</span> <span class="s1">&#39;{&quot;props&quot;:{&quot;PasswordAuthentication&quot;:&quot;yes&quot;,&quot;PermitRootLogin&quot;:&quot;yes&quot;,&quot;TCPPort&quot;:&quot;22&quot;},&quot;name&quot;:&quot;sshd&quot;,&quot;type&quot;:&quot;service&quot;}&#39;</span> <span class="p">|</span> ./validate
 </pre></div>
 
 

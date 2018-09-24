@@ -365,6 +365,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../api/system-apps/" title="system-apps" class="md-nav__link">
+      system-apps
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../api/system-certificate/" title="system-certificate" class="md-nav__link">
       system-certificate
     </a>
@@ -550,18 +562,6 @@
           
           
 
-
-  <li class="md-nav__item">
-    <a href="../environment/" title="Development environment" class="md-nav__link">
-      Development environment
-    </a>
-  </li>
-
-        
-          
-          
-          
-
   
 
 
@@ -640,6 +640,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#call-api" title="Call API" class="md-nav__link">
+    Call API
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#modals" title="Modals" class="md-nav__link">
     Modals
   </a>
@@ -669,6 +676,42 @@
   </li>
 
         
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Development environment
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Development environment
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../environment/" title="Development environment" class="md-nav__link">
+      Development environment
+    </a>
+  </li>
+
+        
           
           
           
@@ -693,13 +736,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
     
-    <label class="md-nav__link" for="nav-4">
+    <label class="md-nav__link" for="nav-5">
       Tutorial
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-4">
+      <label class="md-nav__title" for="nav-5">
         Tutorial
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -729,13 +772,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
     
-    <label class="md-nav__link" for="nav-5">
+    <label class="md-nav__link" for="nav-6">
       Build
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-5">
+      <label class="md-nav__title" for="nav-6">
         Build
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -777,13 +820,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
     
-    <label class="md-nav__link" for="nav-6">
+    <label class="md-nav__link" for="nav-7">
       Manuals
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-6">
+      <label class="md-nav__title" for="nav-7">
         Manuals
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -900,6 +943,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#call-api" title="Call API" class="md-nav__link">
+    Call API
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#modals" title="Modals" class="md-nav__link">
     Modals
   </a>
@@ -940,11 +990,13 @@
                 <h1 id="ui-guidelines">UI guidelines<a class="headerlink" href="#ui-guidelines" title="Permanent link">&para;</a></h1>
 <p><strong>Index</strong></p>
 <ul>
-<li><a href="#ui-design">UI design</a></li>
+<li><a href="#ui-design">UI design</a><ul>
 <li><a href="#left-menu">Left menu</a></li>
 <li><a href="#applications">Applications</a></li>
 <li><a href="#forms">Forms</a></li>
 <li><a href="#notifications">Notifications</a></li>
+</ul>
+</li>
 <li><a href="#accessibility">Accessibility</a></li>
 </ul>
 <h2 id="ui-design">UI design<a class="headerlink" href="#ui-design" title="Permanent link">&para;</a></h2>
@@ -969,7 +1021,7 @@ Each new application web page should display:</p>
 </ul>
 <p>On first run, the application <strong>must</strong> display a modal wizard if the module can't be configured with a reasonable defaults.</p>
 <p>Also the web page should display suggestions to help the user to follow best practices.
-For example, inside the "Certificate page", the interface should display a suggestion to enable Let's Encrypt if 
+For example, inside the "Certificate page", the interface should display a suggestion to enable Let's Encrypt if
 a self-signed certificate is used as default.</p>
 <p>Each application must be described by a <a href="./application_manifest">JSON manifest</a> inspired to AppData freedesktop.org format.</p>
 <h3 id="forms">Forms<a class="headerlink" href="#forms" title="Permanent link">&para;</a></h3>
@@ -983,32 +1035,78 @@ but you could hide extra details like street address or phone number.</p>
 <p>NethServer Cockpit provides multiple <a href="http://www.patternfly.org/pattern-library/communication/toast-notifications/">toast notification</a>.
 Each notification can have one of these states:</p>
 <ul>
-<li><strong>success</strong>: everything is ok. Transient: it stays on the screen for 8 seconds.</li>
-<li><strong>danger</strong>: something went wrong. Not transient: it stays on the screen until the user explicitly close it.
-  May require an action link.</li>
-<li><strong>warning</strong>: something needs attention. Not transient: it stays on the screen until the user explicitly close it.</li>
+<li><strong>success</strong>: everything is ok. Transient: it stays on the screen for 3 seconds.</li>
+<li><strong>error</strong>: something went wrong. Not transient: it stays on the screen until the user explicitly close it.
+    May require an action link.</li>
 </ul>
-<p>The notification can also have a type:</p>
-<ul>
-<li><strong>info</strong>: display only a message</li>
-<li><strong>action</strong>: display a message and an action link</li>
-</ul>
-<p>Finally there also is a <strong>task</strong> notification, it stays on the screen until the task 
+<p>Finally there also is a <strong>task</strong> notification, it stays on the screen until the task
 has been completed. This kind of notification can be created only by <code>signal-event</code>.</p>
 <h4 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h4>
-<p>Raise a notification after 5 seconds; add this code to <code>app.js</code>:</p>
-<div class="codehilite"><pre><span></span>setTimeout(function() {
-    nethserver.notificationMonitor.dispatchEvent(&#39;nsnotification&#39;, {
-        type: &#39;action&#39;,
-        title: &#39;Failed&#39;,
-        message: &#39;Test failing notification&#39;,
-        status: &#39;danger&#39;,
-        action: &#39;Retry&#39;,
-        method: function() {
-            console.log(&quot;this method is called when the link is clicked!&quot;);
-        }
-    });
-}, 5000);
+<div class="codehilite"><pre><span></span><span class="c1">// success - hide notifications after 3 seconds</span>
+<span class="nx">parent</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">$children</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">notifications</span><span class="p">.</span><span class="nx">success</span><span class="p">.</span><span class="nx">show</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+<span class="nx">parent</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">$children</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">notifications</span><span class="p">.</span><span class="nx">success</span><span class="p">.</span><span class="nx">message</span> <span class="o">=</span> <span class="s2">&quot;Your success message&quot;</span><span class="p">;</span>
+<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">parent</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">$children</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">notifications</span><span class="p">.</span><span class="nx">success</span><span class="p">.</span><span class="nx">show</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+<span class="p">},</span> <span class="mi">3000</span><span class="p">);</span>
+
+<span class="c1">// error</span>
+<span class="nx">parent</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">$children</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">notifications</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">show</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+<span class="nx">parent</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">$children</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">notifications</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="o">=</span> <span class="s2">&quot;Your error message&quot;</span><span class="p">;</span>
+
+<span class="c1">// event</span>
+<span class="nx">parent</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">$children</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">notifications</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">show</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+<span class="nx">parent</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">$children</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">notifications</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;Your event name&quot;</span><span class="p">;</span>
+<span class="nx">parent</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">$children</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">notifications</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">message</span> <span class="o">=</span> <span class="s2">&quot;Your action-name&quot;</span><span class="p">;</span>
+<span class="nx">parent</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">$children</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">notifications</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">progress</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+<span class="cm">/* */</span>
+</pre></div>
+
+
+<h3 id="call-api">Call API<a class="headerlink" href="#call-api" title="Permanent link">&para;</a></h3>
+<p>Using <code>Cockpit API</code> you can easily call NethServer API or your own module API in this way:</p>
+<div class="codehilite"><pre><span></span><span class="c1">// Definition</span>
+<span class="nx">parent</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span>
+    <span class="p">[</span><span class="s2">&quot;&lt;api-name&gt;/&lt;action&gt;&quot;</span><span class="p">],</span> <span class="c1">// action can be: read | validate | update</span>
+    <span class="kc">null</span><span class="p">,</span> <span class="c1">// used for input in JSON format -&gt; { &quot;key&quot;: &quot;value&quot; }</span>
+    <span class="kc">null</span><span class="p">,</span> <span class="c1">// used for strem output, for actions the print on STDOUT</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">success</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">success</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">success</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">success</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">error</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">);</span>
+
+
+<span class="c1">// Example</span>
+<span class="c1">// define method</span>
+<span class="kd">function</span> <span class="nx">validate</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">parent</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;your-own-module/validate&quot;</span><span class="p">],</span>
+        <span class="nx">obj</span><span class="p">,</span>
+        <span class="kc">null</span><span class="p">,</span>
+        <span class="kd">function</span><span class="p">(</span><span class="nx">success</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">success</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">success</span><span class="p">);</span>
+            <span class="nx">callback</span><span class="p">(</span><span class="nx">success</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">errorData</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+            <span class="nx">callback</span><span class="p">(</span><span class="nx">errorData</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// call it</span>
+<span class="kd">var</span> <span class="nx">validateObj</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="nx">validate</span><span class="p">(</span><span class="nx">validateObj</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// check errors</span>
+        <span class="c1">// if(result) { ... }</span>
+
+        <span class="c1">// if no errors</span>
+        <span class="c1">// update value</span>
+        <span class="c1">// ...</span>
+    <span class="p">});</span>
 </pre></div>
 
 
@@ -1038,7 +1136,7 @@ using the keyboard shortcuts.</p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../environment/" title="Development environment" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../api/system-trusted-networks/" title="system-trusted-networks" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -1047,19 +1145,19 @@ using the keyboard shortcuts.</p>
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Development environment
+                system-trusted-networks
               </span>
             </div>
           </a>
         
         
-          <a href="../application_manifest/" title="Application manifest" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../environment/" title="Development environment" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Application manifest
+                Development environment
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">

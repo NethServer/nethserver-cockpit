@@ -365,6 +365,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../api/system-apps/" title="system-apps" class="md-nav__link">
+      system-apps
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../api/system-certificate/" title="system-certificate" class="md-nav__link">
       system-certificate
     </a>
@@ -529,12 +541,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
     
     <label class="md-nav__link" for="nav-3">
       User interface
@@ -542,6 +552,44 @@
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-3">
         User interface
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../ui_guidelines/" title="UI guidelines" class="md-nav__link">
+      UI guidelines
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+    
+    <label class="md-nav__link" for="nav-4">
+      Development environment
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Development environment
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -586,8 +634,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#build-api-and-ui" title="Build API and UI" class="md-nav__link">
-    Build API and UI
+  <a href="#build-ui" title="Build UI" class="md-nav__link">
+    Build UI
   </a>
   
 </li>
@@ -623,18 +671,6 @@
 
 
   <li class="md-nav__item">
-    <a href="../ui_guidelines/" title="UI guidelines" class="md-nav__link">
-      UI guidelines
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../application_manifest/" title="Application manifest" class="md-nav__link">
       Application manifest
     </a>
@@ -653,13 +689,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
     
-    <label class="md-nav__link" for="nav-4">
+    <label class="md-nav__link" for="nav-5">
       Tutorial
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-4">
+      <label class="md-nav__title" for="nav-5">
         Tutorial
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -689,13 +725,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
     
-    <label class="md-nav__link" for="nav-5">
+    <label class="md-nav__link" for="nav-6">
       Build
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-5">
+      <label class="md-nav__title" for="nav-6">
         Build
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -737,13 +773,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
     
-    <label class="md-nav__link" for="nav-6">
+    <label class="md-nav__link" for="nav-7">
       Manuals
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-6">
+      <label class="md-nav__title" for="nav-7">
         Manuals
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -818,8 +854,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#build-api-and-ui" title="Build API and UI" class="md-nav__link">
-    Build API and UI
+  <a href="#build-ui" title="Build UI" class="md-nav__link">
+    Build UI
   </a>
   
 </li>
@@ -893,35 +929,16 @@
   <code>git clone git@github.com:NethServer/nethserver-cockpit</code></p>
 </li>
 <li>
-<p>Install grunt globally:
-  <code>npm install -g grunt-cli bower generator-angular yo</code></p>
+<p>Enter inside the cloned repository and install all ui dependencies:
+  ```
+  cd nethserver-cockpit/ui</p>
 </li>
 </ul>
-<p>You can ignore warnings like this:
-  <code>WARN generator-angular@0.16.0 requires a peer of generator-karma@&gt;=0.9.0 but none was installed.</code></p>
-<ul>
-<li>Enter inside the cloned repository and install all dependencies:
-  ```
-  cd nethserver-cockpit/</li>
-</ul>
-<p>cd api/ &amp;&amp; npm install
-  cd ..
-  cd ui/system/ &amp;&amp; npm install &amp;&amp; bower install
+<p>npm install &amp;&amp; npm run dev
   ```</p>
-<h2 id="build-api-and-ui">Build API and UI<a class="headerlink" href="#build-api-and-ui" title="Permanent link">&para;</a></h2>
-<p>Enter API directory and build using grunt:</p>
-<div class="codehilite"><pre><span></span>cd api/system/ &amp;&amp; grunt build
-</pre></div>
-
-
-<p>Enter UI directory and build using grunt:</p>
-<div class="codehilite"><pre><span></span>cd ui/ &amp;&amp; grunt build
-</pre></div>
-
-
-<p>You can ignore ignore warnings like this:</p>
-<div class="codehilite"><pre><span></span><span class="n">npm</span> <span class="n">WARN</span> <span class="n">api</span><span class="mf">@1.0.0</span> <span class="n">No</span> <span class="n">repository</span> <span class="n">field</span><span class="p">.</span>
-<span class="n">npm</span> <span class="n">WARN</span> <span class="n">api</span><span class="mf">@1.0.0</span> <span class="n">No</span> <span class="n">license</span> <span class="n">field</span><span class="p">.</span>
+<h2 id="build-ui">Build UI<a class="headerlink" href="#build-ui" title="Permanent link">&para;</a></h2>
+<p>Enter UI directory and build using <code>npm</code>:</p>
+<div class="codehilite"><pre><span></span>cd ui/ &amp;&amp; ./prep-sources
 </pre></div>
 
 
@@ -932,8 +949,8 @@ make sure API is always built before sync.</p>
 <p>Use the following commands:</p>
 <div class="codehilite"><pre><span></span><span class="n">ssh</span> <span class="n">root</span><span class="mf">@192.168.1.20</span>  <span class="s">&quot;mkdir -p ~/.local/share/cockpit/nethserver&quot;</span>
 
-<span class="n">cd</span> <span class="n">api</span><span class="o">/</span> <span class="o">&amp;&amp;</span> <span class="n">grunt</span> <span class="n">build</span> <span class="nl">rsync</span><span class="p">:</span><span class="n">root</span><span class="mf">@192.168.1.20</span>
-<span class="n">cd</span> <span class="n">ui</span><span class="o">/</span><span class="n">system</span> <span class="o">&amp;&amp;</span> <span class="n">grunt</span> <span class="nl">rsync</span><span class="p">:</span><span class="n">root</span><span class="mf">@192.168.1.20</span>
+<span class="n">cd</span> <span class="n">api</span><span class="o">/</span> <span class="o">&amp;&amp;</span> <span class="n">rsync</span> <span class="o">-</span><span class="n">avz</span> <span class="o">--</span><span class="n">delete</span> <span class="p">.</span><span class="cm">/* root@192.168.1.20:/usr/libexec/nethserver/api/</span>
+<span class="cm">cd ui/ &amp;&amp; rsync -avz --delete dist/* root@192.168.1.20:/usr/share/cockpit/nethserver/</span>
 </pre></div>
 
 
@@ -959,7 +976,7 @@ make sure API is always built before sync.</p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../api/system-trusted-networks/" title="system-trusted-networks" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../ui_guidelines/" title="UI guidelines" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -968,19 +985,19 @@ make sure API is always built before sync.</p>
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                system-trusted-networks
+                UI guidelines
               </span>
             </div>
           </a>
         
         
-          <a href="../ui_guidelines/" title="UI guidelines" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../application_manifest/" title="Application manifest" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                UI guidelines
+                Application manifest
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
