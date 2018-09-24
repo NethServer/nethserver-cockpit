@@ -1,11 +1,14 @@
-# How to write a new module
+# Tutorial
 
-A NethServer Cockpit module is composed by 4 parts:
+This document describes how to create a new application from scratch.
+
+A NethServer Cockpit module is composed by 5 parts:
 
 - UI: a mix of HTML and CSS which presents data loaded using JavaScript (Cockpit API or NethServer API)
 - API: a list of helpers to do actions: `read` - `validate` - `update`
 - Package files: manifest and RPM spec file to create an installable package
 - Translation files (optional)
+- An [applicatin manifest](./application_manifest)
 
 ## Install required tools
 
