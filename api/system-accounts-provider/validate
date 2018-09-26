@@ -26,8 +26,7 @@ require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
 
 function validate_remoteldap($data) {
     $v = new LegacyValidator($data);
-    $v->declareParameter('LdapUri', Validate::ANYTHING);
-    $v->declareParameter('BindType', $v->createValidator()->memberOf('anonymous', 'authenticated'));
+    $v->declareParameter('LdapURI', Validate::ANYTHING);
     $v->declareParameter('BindDN', Validate::ANYTHING);
     $v->declareParameter('BindPassword', Validate::ANYTHING);
     $v->declareParameter('BaseDN', Validate::ANYTHING);
@@ -37,12 +36,12 @@ function validate_remoteldap($data) {
 
     $errors = 0;
 
-    if($data['StartTls'] === 'enabled' && substr($data['LdapUri'], 0, 6) === 'ldaps:') {
+    if($data['StartTls'] === 'enabled' && substr($data['LdapURI'], 0, 6) === 'ldaps:') {
         $errors++;
         $v->addValidationError('StartTls', _('StartTLS conflicts with "ldaps://" URI scheme'), 'enabled');
     }
 
-    $credentialsValidator = $v->createValidator()->platform('ldap-credentials', $data['BaseDN'], $data['LdapUri'], $data['StartTls'] === 'enabled' ? '1' : '', $data['BindDN']);
+    $credentialsValidator = $v->createValidator()->platform('ldap-credentials', $data['BaseDN'], $data['LdapURI'], $data['StartTls'] === 'enabled' ? '1' : '', $data['BindDN']);
     if( ! $credentialsValidator->evaluate($data['BindPassword'])) {
         $errors++;
         $error = $credentialsValidator->getFailureInfo();
@@ -55,6 +54,8 @@ function validate_remoteldap($data) {
 
     if (!$v->validate() || $errors > 0) {
         error($v);
+    } else {
+        success();
     }
 }
 
