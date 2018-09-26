@@ -184,7 +184,43 @@ Example:
 }
 ```
 
+`BindDN` and `BindPassword` password can be left empty if the bind is anonymous.
 
 ## update
 
-TODO
+It takes an `action` argument, supported actions are:
+
+- `removeprovider`
+- `localldap`
+
+Input example:
+```json
+{
+  "action": "removeprovider"
+}
+```
+
+### localldap
+
+Install local LDAP server.
+
+It doesn't return progress of the operation but returns the underlying error if problem occurs.
+
+Error example:
+```json
+{
+  "type": "EventFailed",
+  "id": 1535533242,
+  "message": "[YumDownloadError] [u'Errors were encountered while downloading packages.', u'nethserver-directory-3.3.0-1.ns7.noarch: [Errno 256] No more mirrors to try.', u'openldap-servers-2.4.44-15.el7_5.x86_64: [Errno 256] No more mirrors to try.']\n"
+}
+```
+
+### remoteldap
+
+Configure all the properties for remote LDAP binding, then fire `nethserver-sssd-save` event.
+
+
+### removeprovider
+
+Remove the installed local account provider using `nethserver-sssd-remove-provider` to track the progress.
+
