@@ -21,6 +21,7 @@ nav:
       - api_protocol.md
       - api_libraries.md
     - Helpers:
+      - api/system-accounts-provider.md
       - api/system-aliases.md
       - api/system-apps.md
       - api/system-certificate.md

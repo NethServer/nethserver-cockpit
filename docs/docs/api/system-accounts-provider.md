@@ -140,7 +140,50 @@ Output:
 
 ## validate
 
-TODO
+### Constraints
+
+The action must be specified inside the JSON `action` field.
+
+Example:
+```json
+{
+  "action": "remoteldap",
+  ...
+}
+```
+
+Valid actions:
+
+- `remoteldap`
+
+Constraints for `remoteldap`:
+
+- StartTls: can be enabled or disabled
+- Credentials are validate using ldap-credentials system validator
+
+### Input
+
+
+#### remoteldap
+
+- `action` must be set to `remoteldap`
+
+Example:
+```json
+{
+  "BindDN": "cn=ldapservice,dc=directory,dc=nh",
+  "LdapURI": "ldaps://192.168.1.1",
+  "DiscoverDcType": "dns",
+  "StartTls": "disabled",
+  "Provider": "ldap",
+  "UserDN": "ou=People,dc=directory,dc=nh",
+  "GroupDN": "ou=Groups,dc=directory,dc=nh",
+  "BindPassword": "xxxxxxxxxxxxxxxx",
+  "BaseDN": "dc=directory,dc=nh",
+  "action": "remoteldap"
+}
+```
+
 
 ## update
 
