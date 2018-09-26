@@ -53,7 +53,7 @@ Output:
 }
 ```
 
-See `perldoc NethServer::SSSD` for attributes descritpion.
+See `perldoc NethServer::SSSD` for attributes description.
 
 ### probeldap
 
@@ -136,7 +136,26 @@ Output:
 
 * `BindDN` and `BindPassword` fields are dummy values
 
+### probeworkgroup
 
+Suggest the best workgroup based on realm name.
+
+Input:
+
+```json
+{
+  "action": "probeworkgroup",
+  "realm": "adnethesis.it",
+}
+```
+
+Output:
+
+```json
+{
+  "Workgroup": "AD"
+}
+```
 
 ## validate
 

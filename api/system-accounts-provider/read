@@ -72,13 +72,11 @@ sub _dnsReplaceIpAddr
 
     my $packet = $resolver->query($ldapUriObj->host(), 'A');
     if( ! $packet ) {
-        warn "$!\n";
         return $ldapUri;
     }
 
     my $rr = shift [$packet->answer];
     if( ! $rr || ! $rr->address ) {
-        warn "$!\n";
         return $ldapUri;
     }
 
@@ -135,7 +133,7 @@ my $input = readInput();
 my $cmd = $input->{'action'} || 'fetchbase';
 
 if($cmd eq 'probeldap') {
-    my $server = $input->{'server'} || die("[ERROR] missing HOSTADDR value\n");
+    my $server = $input->{'server'} || error("InvalidInput", "Missing HOSTADDR value");
     my $port = $input->{'port'} || "";
     my $timeout = 5;
     my %attrs = ();
@@ -146,8 +144,7 @@ if($cmd eq 'probeldap') {
     ;
 
     if ( ! $ldap) {
-        warn "Connection failed to LDAP server $server $port\n";
-        exit(1);
+        error("NotValid", "Connection failed to LDAP server $server $port\n");
     } else {
         $attrs{'LdapURI'} = $ldap->{'net_ldap_uri'};
         my $dse = $ldap->root_dse();
@@ -174,11 +171,11 @@ if($cmd eq 'probeldap') {
 
     }
 
-    print JSON->new()->pretty()->encode(getDefaults('Provider' => 'ldap', %attrs));
+    print JSON->new()->encode(getDefaults('Provider' => 'ldap', %attrs));
     exit(0);
 
 } elsif($cmd eq 'probead') {
-    my $realm = $input->{'realm'} || die("[ERROR] missing REALM value\n");
+    my $realm = $input->{'realm'} || error("InvalidInput", "Missing REALM value");
     my $server = $input->{'server'};
     my $timeout = 5;
     my %attrs = (
@@ -195,7 +192,7 @@ if($cmd eq 'probeldap') {
     my $ldap = Net::LDAP->new(_dnsReplaceIpAddr($ldapUri, $server), timeout => $timeout);
 
     if (!$ldap) {
-        die "LDAP server connection failed: " . $attrs{'LdapURI'} . "\n";
+        error("NotValid", "LDAP server connection failed: " . $attrs{'LdapURI'});
     } else {
         my $dse = $ldap->root_dse(attrs => ['defaultNamingContext']);
         my $defaultNamingContext = $dse->get_value('defaultNamingContext');
@@ -216,38 +213,22 @@ if($cmd eq 'probeldap') {
             $attrs{'BaseDN'} = $defaultNamingContext;
             $attrs{'UserDN'} = $defaultNamingContext;
             $attrs{'GroupDN'} = $defaultNamingContext;
-        } else {
-            warn "Could not find defaultNamingContext attribute\n";
         }
     }
 
-    print JSON->new()->pretty()->encode(getDefaults(%attrs));
+    print JSON->new()->encode(getDefaults(%attrs));
     exit(0);
 
 } elsif($cmd eq 'probeworkgroup') {
-    my $realm = shift;
-    print JSON->new()->pretty()->encode({'Workgroup' => probeWorkgroup($realm)});
+    my $realm = $input->{'realm'} || error("InvalidInput", "Missing REALM value");
+    print JSON->new()->encode({'Workgroup' => probeWorkgroup($realm)});
     exit(0);
 
-} elsif($cmd eq 'fetchbase') {
-    if( ! -x '/usr/bin/ldapsearch') {
-        warn "[ERROR] cannot execute /usr/bin/ldapsearch. To workaround this type:\n\n     yum install openldap-clients\n";
-        exit(1);
-    }
+} elsif($cmd eq 'dump') {
     my $dump = getDefaults();
-    exec('/usr/bin/ldapsearch',
-        ($dump->{'StartTls'} ? '-ZZ' : ()),
-        '-H', $dump->{'LdapURI'},
-        '-x', '-D', $dump->{'BindDN'}, '-w', $dump->{'BindPassword'},
-        '-s', 'base', '-b', $dump->{'BaseDN'},
-        '(objectClass=*)'
-    );
+    print JSON->new()->encode($dump);
+    exit(0);
+
 } else {
-    my $dump = getDefaults();
-    print JSON->new()->pretty()->encode($dump);
-    exit(0);
-} 
-
-#
-# unreachable point
-#
+    error("InvalidInput","Action not supported");
+}
