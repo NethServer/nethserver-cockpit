@@ -35,16 +35,17 @@ Prepare the development environment:
   ```
 
 - Clone the repository:
-  ```
-  git clone git@github.com:NethServer/nethserver-cockpit
-  ```
+
+    ```
+    git clone git@github.com:NethServer/nethserver-cockpit
+    ```
 
 - Enter inside the cloned repository and install all ui dependencies:
-  ```
-  cd nethserver-cockpit/ui
 
-  npm install && npm run dev
-  ```
+    ```
+    cd nethserver-cockpit/ui
+    npm install && npm run dev
+    ```
 
 ## Build UI
 
