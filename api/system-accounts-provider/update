@@ -31,12 +31,8 @@ my $cmd = $input->{'action'} || 'fetchbase';
 
 if ($cmd eq 'localldap') {
 
-    my $output = `/usr/libexec/nethserver/pkgaction --install \@nethserver-directory 2>&1`;
-    if ($? > 0) {
-        error("EventFailed", $output);
-    } else {
-        success();
-    }
+    my $ret = system('/usr/libexec/nethserver/pkgaction --json --install @nethserver-directory');
+    exit($ret>>8);
 
 } elsif ($cmd eq 'removeprovider') {
 
@@ -59,4 +55,20 @@ if ($cmd eq 'localldap') {
     my $ret = system("/sbin/e-smith/signal-event -j nethserver-sssd-save");
     exit($ret>>8);
 
-}  
+  
+} elsif ($cmd eq 'localad') {
+
+    my $db = esmith::ConfigDB->open();
+    $db->set_prop('sssd', 'Realm', $input->{'Realm'});
+    $db->set_prop('sssd', 'Workgroup', $input->{'Workgroup'});
+    my $nsdc = $db->get('nsdc') || undef;
+    if (!$nsdc) {
+        $db->set_value('nsdc','service');
+    }
+    $db->set_prop('nsdc', 'status', 'enabled');
+    $db->set_prop('nsdc', 'IpAddress', $input->{'IpAddress'});
+
+    my $ret = system('/usr/libexec/nethserver/pkgaction --json --install @nethserver-dc');
+    exit($ret>>8);
+
+}

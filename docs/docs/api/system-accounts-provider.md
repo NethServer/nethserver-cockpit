@@ -174,11 +174,18 @@ Example:
 Valid actions:
 
 - `remoteldap`
+- `localad`
 
 Constraints for `remoteldap`:
 
 - StartTls: can be enabled or disabled
 - Credentials are validate using ldap-credentials system validator
+
+Constraints for `localad`:
+
+- Realm: must be a FQDN, validated using also dcrealm system validator
+- IpAddress: a valid free IP address, validated using also dcipaddr system validator
+- Workgroup: a simple hostname, maximum 15 chars
 
 ### Input
 
@@ -205,6 +212,20 @@ Example:
 
 `BindDN` and `BindPassword` password can be left empty if the bind is anonymous.
 
+#### localad
+
+- `action` must be set to `localad`
+
+Input example:
+```json
+{
+  "action": "localad",
+  "Realm": "ad.local.neth.eu",
+  "Workgroup": "LOCAL",
+  "IpAddress": "192.168.5.35"
+}
+```
+
 ## update
 
 It takes an `action` argument, supported actions are:
@@ -223,23 +244,42 @@ Input example:
 
 Install local LDAP server.
 
-It doesn't return progress of the operation but returns the underlying error if problem occurs.
+Return the output of `pkgaction` in json format.
+Output example:
+```json
+{"message": "Initialization", "state": "running"}
+{"message": "Resolving RPM dependencies", "state": "running"}
+{"message": "Downloading Packages", "state": "running"}
+{"message": "Download RPMs", "state": "running"}
+{"message": "Downloading - nethserver-net-snmp-1.1.0-1.ns7.noarch.rpm", "state": "running"}
+...
+{"message": "Check Package Signatures", "state": "running"}
+{"message": "Running Test Transaction", "state": "running"}
+{"message": "Running Transaction", "state": "running"}
+{"message": "Installing nethserver-net-snmp-1.1.0-1.ns7.noarch", "state": "running"}
+...
+{"message": "Transaction end", "exit": 0, "state": "end"}
+```
 
 Error example:
 ```json
-{
-  "type": "EventFailed",
-  "id": 1535533242,
-  "message": "[YumDownloadError] [u'Errors were encountered while downloading packages.', u'nethserver-directory-3.3.0-1.ns7.noarch: [Errno 256] No more mirrors to try.', u'openldap-servers-2.4.44-15.el7_5.x86_64: [Errno 256] No more mirrors to try.']\n"
-}
+{"message": "Initialization", "state": "running"}
+{"message": "Resolving RPM dependencies", "state": "running"}
+{"message": "Downloading Packages", "state": "running"}
+{"action": "Downloading - nethserver-net-snmp-1.1.0-1.ns7.noarch.rpm", "state": "running"}
+...
+{"action": "[YumDownloadError] [u'Errors were encountered while downloading packages.', u'nethserver-net-snmp-1.1.0-1.ns7.noarch: [Errno 256] No more mirrors to try.']", "state": "end", "exit": 1}
 ```
 
 ### remoteldap
 
 Configure all the properties for remote LDAP binding, then fire `nethserver-sssd-save` event.
 
-
 ### removeprovider
 
 Remove the installed local account provider using `nethserver-sssd-remove-provider` to track the progress.
 
+### localad
+
+Install nethserver-dc, it uses the same input from validate.
+Return the output of `pkgaction` in json format.

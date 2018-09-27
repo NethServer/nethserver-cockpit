@@ -59,10 +59,28 @@ function validate_remoteldap($data) {
     }
 }
 
+function validate_localad($data) {
+    $v = new LegacyValidator($data);
+    $workgroupValidator = $v->createValidator(Validate::HOSTNAME_SIMPLE)->maxLength(15);
+    $realmValidator = $v->createValidator(Validate::HOSTNAME_FQDN);
+    $ipAddressValidator = $v->createValidator(Validate::IP)->platform('dcipaddr');
+    $v->declareParameter('Realm', $realmValidator);
+    $v->declareParameter('Workgroup', $workgroupValidator);
+    $v->declareParameter('IpAddress', $ipAddressValidator);
+
+    if (!$v->validate()) {
+        error($v);
+    } else {
+        success();
+    }
+}
+
 $data = readInput();
 
 if($data['action'] == 'remoteldap') {
     validate_remoteldap($data);
+} else if($data['action'] == 'localad') {
+    validate_localad($data);
 } else {
     error();
 }
