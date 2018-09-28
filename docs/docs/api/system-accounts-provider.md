@@ -175,6 +175,7 @@ Valid actions:
 
 - `remoteldap`
 - `localad`
+- `remotead`
 
 Constraints for `remoteldap`:
 
@@ -187,12 +188,17 @@ Constraints for `localad`:
 - IpAddress: a valid free IP address, validated using also dcipaddr system validator
 - Workgroup: a simple hostname, maximum 15 chars
 
+
+Constraints for `remotead`:
+
+- AdDns: must be a valid IP address or empty, checked also using ad-dns system validator
+- AdRealm: must be a FQDN, checked also using ad-dns system validator
+- AdUsername and AdPassword: not empty, check if credentials are valid
+
 ### Input
 
 
 #### remoteldap
-
-- `action` must be set to `remoteldap`
 
 Example:
 ```json
@@ -214,8 +220,6 @@ Example:
 
 #### localad
 
-- `action` must be set to `localad`
-
 Input example:
 ```json
 {
@@ -225,6 +229,20 @@ Input example:
   "IpAddress": "192.168.5.35"
 }
 ```
+
+#### remotead
+
+Input example:
+```json
+{
+  "action": "remotead",
+  "AdRealm": "adnethserver.org",
+  "AdDns": "192.168.1.1",
+  "AdUsername": "administrator@adnethserver.org",
+  "AdPassword": "mypassword"
+}
+```
+
 
 ## update
 
@@ -283,3 +301,9 @@ Remove the installed local account provider using `nethserver-sssd-remove-provid
 
 Install nethserver-dc, it uses the same input from validate.
 Return the output of `pkgaction` in json format.
+
+### remotead
+
+Try to join the domain, if the join fails, rollback to previous state.
+
+Output the state of all executed events and of netherver-dc package installation (see localldap for the output).

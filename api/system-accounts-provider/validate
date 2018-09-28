@@ -75,12 +75,58 @@ function validate_localad($data) {
     }
 }
 
+function validate_remotead($data) {
+    $v = new LegacyValidator($data);
+    $workgroupValidator = $v->createValidator(Validate::HOSTNAME_SIMPLE)->maxLength(15);
+    $realmValidator = $v->createValidator(Validate::HOSTNAME_FQDN);
+    $v->declareParameter('AdDns', Validate::IP_OR_EMPTY);
+    $v->declareParameter('AdRealm', $realmValidator);
+    $v->declareParameter('AdUsername', Validate::NOTEMPTY);
+    $v->declareParameter('AdPassword', Validate::NOTEMPTY);
+    $dnsValidator = $v->createValidator()->platform('ad-dns', strtolower($data['AdRealm']));
+    if( ! $dnsValidator->evaluate($data['AdDns'])) {
+        $v->addValidationError( 'AdDns', $dnsValidator);
+    }
+
+    if (!$v->validate()) {
+        error($v);
+    }
+
+    validate_adcredentials($data);
+}
+
+
+function validate_adcredentials($data) {
+    $output = shell_exec("/usr/sbin/account-provider-test probead {$data['AdRealm']} {$data['AdDns']}");
+    if (!$output) {
+        error();
+    }
+    $probe = json_decode($output, TRUE);
+
+    $cmd = "/usr/bin/ldapsearch ";
+    if ($probe['StartTls']) {
+        $cmd .= " -ZZ ";
+    }
+    $host = parse_url($probe['LdapURI'], PHP_URL_HOST);
+    $addr = trim(shell_exec("dig -t A +short $host @{$data['AdDns']}"));
+    $uri = str_replace($host, $addr, $probe['LdapURI']);
+    $cmd .= "-H $uri -x -D {$data['AdUsername']} -w {$data['AdPassword']} -s base -b {$probe['BaseDN']} '(objectClass=*)' 2>&1";
+    exec($cmd, $output, $ret);
+    if ($ret > 0) {
+        error(array('type' => 'NotValid','message' => implode("\n",$output)));
+    } else {
+        success();
+    }
+}
+
 $data = readInput();
 
 if($data['action'] == 'remoteldap') {
     validate_remoteldap($data);
 } else if($data['action'] == 'localad') {
     validate_localad($data);
+} else if($data['action'] == 'remotead') {
+    validate_remotead($data);
 } else {
     error();
 }
