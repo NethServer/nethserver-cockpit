@@ -1,0 +1,40 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+use strict;
+use warnings;
+
+require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
+
+my $input = readInput();
+
+my $cmd = $input->{'action'};
+
+if ($cmd eq 'list-users') {
+    system("/usr/libexec/nethserver/list-users -s");
+} elsif ($cmd eq 'list-groups') {
+    system("/usr/libexec/nethserver/list-groups -s");
+} elsif ($cmd eq 'user-membership') {
+    system("/usr/libexec/nethserver/list-user-membership -s '".$input->{'user'}."'");
+} elsif ($cmd eq 'group-members') {
+    system("/usr/libexec/nethserver/list-group-members -s '".$input->{'group'}."'");
+}
