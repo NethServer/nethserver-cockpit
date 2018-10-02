@@ -201,6 +201,7 @@ Valid actions:
 - `remoteldap`
 - `localad`
 - `remotead`
+- `changeadip`
 
 Constraints for `remoteldap`:
 
@@ -213,6 +214,8 @@ Constraints for `localad`:
 - IpAddress: a valid free IP address, validated using also dcipaddr system validator
 - Workgroup: a simple hostname, maximum 15 chars
 
+Constraints for `changeadip`:
+- IpAddress: a valid free IP address, validated using also dcipaddr system validator
 
 Constraints for `remotead`:
 
@@ -251,9 +254,20 @@ Input example:
   "action": "localad",
   "Realm": "ad.local.neth.eu",
   "Workgroup": "LOCAL",
-  "IpAddress": "192.168.5.35"
+  "IpAddress": "192.168.1.35"
 }
 ```
+
+#### changeadip
+
+Input example:
+```json
+{
+  "action": "changeadip",
+  "IpAddress": "192.168.1.35"
+}
+```
+
 
 #### remotead
 
@@ -326,6 +340,10 @@ Remove the installed local account provider using `nethserver-sssd-remove-provid
 
 Install nethserver-dc, it uses the same input from validate.
 Return the output of `pkgaction` in json format.
+
+### changeadip
+
+Change nsdc container IP address.
 
 ### remotead
 

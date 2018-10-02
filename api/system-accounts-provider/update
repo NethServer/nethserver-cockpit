@@ -147,4 +147,9 @@ if ($cmd eq 'localldap') {
     my $ret = system('/usr/libexec/nethserver/pkgaction --json --install @nethserver-dc');
     exit($ret>>8);
 
+} elsif ($cmd eq 'changeadip') {
+
+    system("/sbin/e-smith/signal-event -j nethserver-dc-change-ip ".$input->{'IpAddress'});
+    exit($?>>8);
+
 }
