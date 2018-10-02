@@ -166,7 +166,7 @@ Input:
 
 ```json
 {
-  "action": "defaultad",
+  "action": "default-ad",
 }
 
 ```
@@ -190,7 +190,7 @@ The action must be specified inside the JSON `action` field.
 Example:
 ```json
 {
-  "action": "remoteldap",
+  "action": "remote-ldap",
   ...
 }
 ```
@@ -262,7 +262,7 @@ Input example:
 Input example:
 ```json
 {
-  "action": "changeadip",
+  "action": "change-ad-ip",
   "IpAddress": "192.168.1.35"
 }
 ```
@@ -273,7 +273,7 @@ Input example:
 Input example:
 ```json
 {
-  "action": "remotead",
+  "action": "remote-ad",
   "AdRealm": "adnethserver.org",
   "AdDns": "192.168.1.1",
   "AdUsername": "administrator@adnethserver.org",
@@ -286,13 +286,13 @@ Input example:
 
 It takes an `action` argument, supported actions are:
 
-- `removeprovider`
-- `localldap`
+- `remove-provider`
+- `local-ldap`
 
 Input example:
 ```json
 {
-  "action": "removeprovider"
+  "action": "remove-provider"
 }
 ```
 

@@ -4,7 +4,7 @@ Manage DNS records for DNSMasq.
 
 ## read
 
-### Input
+### Output
 
 Return all current configured records from the `hosts` file inside the `status` field.
 Return all `remote` records  from `hosts` database inside the `configuration field.
