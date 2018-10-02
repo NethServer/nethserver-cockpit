@@ -1,0 +1,1495 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+        <link rel="canonical" href="https://nethserver.github.io/nethserver-cockpit/api/system-accounts-provider/">
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.3, mkdocs-material-3.0.4">
+    
+    
+      
+        <title>system-accounts-provider - NethServer Cockpit</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
+      
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#546e7a">
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="blue-grey" data-md-color-accent="indigo">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="../../#system-accounts-provider" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="https://nethserver.github.io/nethserver-cockpit" title="NethServer Cockpit" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon">build</i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                NethServer Cockpit
+              </span>
+              <span class="md-header-nav__topic">
+                system-accounts-provider
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/NethServer/nethserver-cockpit/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="https://nethserver.github.io/nethserver-cockpit" title="NethServer Cockpit" class="md-nav__button md-logo">
+      
+        <i class="md-icon">build</i>
+      
+    </a>
+    NethServer Cockpit
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/NethServer/nethserver-cockpit/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+    
+    <label class="md-nav__link" for="nav-2">
+      API
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        API
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-1" type="checkbox" id="nav-2-1">
+    
+    <label class="md-nav__link" for="nav-2-1">
+      General
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-1">
+        General
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api_guidelines/" title="Design guidelines" class="md-nav__link">
+      Design guidelines
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api_protocol/" title="Communication protocol" class="md-nav__link">
+      Communication protocol
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api_libraries/" title="Helper libraries" class="md-nav__link">
+      Helper libraries
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2" checked>
+    
+    <label class="md-nav__link" for="nav-2-2">
+      Helpers
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-2">
+        Helpers
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        system-accounts-provider
+      </label>
+    
+    <a href="./" title="system-accounts-provider" class="md-nav__link md-nav__link--active">
+      system-accounts-provider
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#read" title="read" class="md-nav__link">
+    read
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dump" title="dump" class="md-nav__link">
+    dump
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#probeldap" title="probeldap" class="md-nav__link">
+    probeldap
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#probead" title="probead" class="md-nav__link">
+    probead
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#probeworkgroup" title="probeworkgroup" class="md-nav__link">
+    probeworkgroup
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defaultad" title="defaultad" class="md-nav__link">
+    defaultad
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate" title="validate" class="md-nav__link">
+    validate
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constraints" title="Constraints" class="md-nav__link">
+    Constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#remoteldap" title="remoteldap" class="md-nav__link">
+    remoteldap
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#localad" title="localad" class="md-nav__link">
+    localad
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changeadip" title="changeadip" class="md-nav__link">
+    changeadip
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remotead" title="remotead" class="md-nav__link">
+    remotead
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update" title="update" class="md-nav__link">
+    update
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#localldap" title="localldap" class="md-nav__link">
+    localldap
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remoteldap_1" title="remoteldap" class="md-nav__link">
+    remoteldap
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removeprovider" title="removeprovider" class="md-nav__link">
+    removeprovider
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#localad_1" title="localad" class="md-nav__link">
+    localad
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changeadip_1" title="changeadip" class="md-nav__link">
+    changeadip
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remotead_1" title="remotead" class="md-nav__link">
+    remotead
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-aliases/" title="system-alias" class="md-nav__link">
+      system-alias
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-apps/" title="system-apps" class="md-nav__link">
+      system-apps
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-certificate/" title="system-certificate" class="md-nav__link">
+      system-certificate
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-company/" title="system-company" class="md-nav__link">
+      system-company
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-dns/" title="system-dns" class="md-nav__link">
+      system-dns
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-hostname/" title="system-hostname" class="md-nav__link">
+      system-hostname
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-hosts/" title="system-hosts" class="md-nav__link">
+      system-hosts
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-openssh/" title="system-openssh" class="md-nav__link">
+      system-openssh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-services/" title="system-services" class="md-nav__link">
+      system-services
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-shutdown/" title="system-shutdown" class="md-nav__link">
+      system-shutdown
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-status/" title="system-status" class="md-nav__link">
+      system-status
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-task/" title="system-task" class="md-nav__link">
+      system-task
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-time/" title="system-time" class="md-nav__link">
+      system-time
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-tls-policy/" title="system-tls-policy" class="md-nav__link">
+      system-tls-policy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-trusted-networks/" title="system-trusted-networks" class="md-nav__link">
+      system-trusted-networks
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../ui_guidelines/" title="UI guidelines" class="md-nav__link">
+      UI guidelines
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../environment/" title="Development environment" class="md-nav__link">
+      Development environment
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../application_manifest/" title="Application manifest" class="md-nav__link">
+      Application manifest
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorial/" title="Tutorial" class="md-nav__link">
+      Tutorial
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      Build
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        Build
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../build_doc/" title="Building documentation" class="md-nav__link">
+      Building documentation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../build_rpm/" title="Building RPM" class="md-nav__link">
+      Building RPM
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
+    
+    <label class="md-nav__link" for="nav-8">
+      Manuals
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        Manuals
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="http://docs.nethserver.org/projects/nethserver-devel" title="NethServer Developer manual" class="md-nav__link">
+      NethServer Developer manual
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="http://docs.nethserver.org" title="NethServer Administrator manual" class="md-nav__link">
+      NethServer Administrator manual
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="http://cockpit-project.org/guide/latest/" title="Cockpit Guide" class="md-nav__link">
+      Cockpit Guide
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#read" title="read" class="md-nav__link">
+    read
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dump" title="dump" class="md-nav__link">
+    dump
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#probeldap" title="probeldap" class="md-nav__link">
+    probeldap
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#probead" title="probead" class="md-nav__link">
+    probead
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#probeworkgroup" title="probeworkgroup" class="md-nav__link">
+    probeworkgroup
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defaultad" title="defaultad" class="md-nav__link">
+    defaultad
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate" title="validate" class="md-nav__link">
+    validate
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constraints" title="Constraints" class="md-nav__link">
+    Constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#remoteldap" title="remoteldap" class="md-nav__link">
+    remoteldap
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#localad" title="localad" class="md-nav__link">
+    localad
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changeadip" title="changeadip" class="md-nav__link">
+    changeadip
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remotead" title="remotead" class="md-nav__link">
+    remotead
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update" title="update" class="md-nav__link">
+    update
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#localldap" title="localldap" class="md-nav__link">
+    localldap
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remoteldap_1" title="remoteldap" class="md-nav__link">
+    remoteldap
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removeprovider" title="removeprovider" class="md-nav__link">
+    removeprovider
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#localad_1" title="localad" class="md-nav__link">
+    localad
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changeadip_1" title="changeadip" class="md-nav__link">
+    changeadip
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remotead_1" title="remotead" class="md-nav__link">
+    remotead
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/docs/api/system-accounts-provider.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="system-accounts-provider">system-accounts-provider<a class="headerlink" href="#system-accounts-provider" title="Permanent link">&para;</a></h1>
+<p>Configures the system accounts provider. Supported use cases are:</p>
+<ul>
+<li>Local AD: configure, install, uninstall, change DC IP</li>
+<li>Remote AD: configure, bind, unbind</li>
+<li>Local LDAP: install, uninstall, upgrade to AD</li>
+<li>Remote LDAP: configure, bind, unbind</li>
+</ul>
+<h2 id="read">read<a class="headerlink" href="#read" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Gathers information that helps to configure the system accounts provider</li>
+<li>Gives back the current system configuration</li>
+</ul>
+<p>A JSON input object is mandatory with this schema:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="err">&lt;action&gt;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The allowed <code>action</code> values are described below.</p>
+<h3 id="dump">dump<a class="headerlink" href="#dump" title="Permanent link">&para;</a></h3>
+<p>Input:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;dump&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Output:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+   <span class="nt">&quot;BindDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;LdapURI&quot;</span> <span class="p">:</span> <span class="s2">&quot;ldap://127.0.0.1&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;DiscoverDcType&quot;</span> <span class="p">:</span> <span class="s2">&quot;dns&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;StartTls&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;port&quot;</span> <span class="p">:</span> <span class="mi">389</span><span class="p">,</span>
+   <span class="nt">&quot;host&quot;</span> <span class="p">:</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;isAD&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;isLdap&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;UserDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;dc=edo,dc=nethesis,dc=it&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;GroupDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;dc=edo,dc=nethesis,dc=it&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;BindPassword&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;BaseDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;dc=edo,dc=nethesis,dc=it&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;NsdcIp&quot;</span> <span class="p">:</span> <span class="s2">&quot;1.2.3.4&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;LdapUriDn&quot;</span> <span class="p">:</span> <span class="s2">&quot;ldap:///dc%3Dedo%2Cdc%3Dnethesis%2Cdc%3Dit&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>See <code>perldoc NethServer::SSSD</code> for attributes description.
+The <code>NsdcIp</code> can be empty if local AD is not installed.</p>
+<h3 id="probeldap">probeldap<a class="headerlink" href="#probeldap" title="Permanent link">&para;</a></h3>
+<p>Tries to contact a remote LDAP server and retrieve as much information as
+possible with a root DSE query.</p>
+<p>Input:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;probeldap&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;port&quot;</span><span class="p">:</span> <span class="mi">389</span><span class="p">,</span>
+    <span class="nt">&quot;server&quot;</span><span class="p">:</span> <span class="s2">&quot;remote.ldap.org&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<ul>
+<li>The <code>port</code> attribute is optional, can be entirely omitted or set to NULL</li>
+</ul>
+<p>Output:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+   <span class="nt">&quot;BindDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;LdapURI&quot;</span> <span class="p">:</span> <span class="s2">&quot;ldap://192.168.5.59&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;DiscoverDcType&quot;</span> <span class="p">:</span> <span class="s2">&quot;dns&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;StartTls&quot;</span> <span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;port&quot;</span> <span class="p">:</span> <span class="mi">389</span><span class="p">,</span>
+   <span class="nt">&quot;host&quot;</span> <span class="p">:</span> <span class="s2">&quot;192.168.5.59&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;isAD&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;Provider&quot;</span> <span class="p">:</span> <span class="s2">&quot;ldap&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;isLdap&quot;</span> <span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;UserDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;ou=People,dc=directory,dc=nh&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;GroupDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;ou=Groups,dc=directory,dc=nh&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;BindPassword&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;LdapUriDn&quot;</span> <span class="p">:</span> <span class="s2">&quot;ldap:///dc%3Dedo%2Cdc%3Dnethesis%2Cdc%3Dit&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;BaseDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;dc=directory,dc=nh&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<ul>
+<li><code>StartTls</code> is a boolean condition that can be the empty string <code>""</code> (false) or
+  non-empty string <code>"1"</code> (true).</li>
+</ul>
+<h3 id="probead">probead<a class="headerlink" href="#probead" title="Permanent link">&para;</a></h3>
+<p>Input:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;probead&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;realm&quot;</span><span class="p">:</span> <span class="s2">&quot;adnethesis.it&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;server&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.5.59&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<ul>
+<li>The <code>server</code> attribute is optional, can be entirely omitted or set to NULL. If
+  it has not been given, the action uses the system DNS to probe the AD configuration</li>
+<li>Ignore warnings and error messages sent to standard error, check the exit code only</li>
+</ul>
+<p>Output:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+   <span class="nt">&quot;BindDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;user@adnethesis.it&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;LdapURI&quot;</span> <span class="p">:</span> <span class="s2">&quot;ldap://w2k12.adnethesis.it&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;DiscoverDcType&quot;</span> <span class="p">:</span> <span class="s2">&quot;dns&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;StartTls&quot;</span> <span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;port&quot;</span> <span class="p">:</span> <span class="mi">389</span><span class="p">,</span>
+   <span class="nt">&quot;host&quot;</span> <span class="p">:</span> <span class="s2">&quot;w2k12.adnethesis.it&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;isAD&quot;</span> <span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;isLdap&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;Provider&quot;</span> <span class="p">:</span> <span class="s2">&quot;ad&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;UserDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;DC=adnethesis,DC=it&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;GroupDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;DC=adnethesis,DC=it&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;Realm&quot;</span> <span class="p">:</span> <span class="s2">&quot;ADNETHESIS.IT&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;LdapUriDn&quot;</span> <span class="p">:</span> <span class="s2">&quot;ldap:///dc%3Dadnethesis%2Cdc%3Dit&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;BaseDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;DC=adnethesis,DC=it&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;BindPassword&quot;</span> <span class="p">:</span> <span class="s2">&quot;*****&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<ul>
+<li><code>BindDN</code> and <code>BindPassword</code> fields are dummy values</li>
+</ul>
+<h3 id="probeworkgroup">probeworkgroup<a class="headerlink" href="#probeworkgroup" title="Permanent link">&para;</a></h3>
+<p>Suggest the best workgroup based on realm name.</p>
+<p>Input:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;probeworkgroup&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;realm&quot;</span><span class="p">:</span> <span class="s2">&quot;adnethesis.it&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Output:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;Workgroup&quot;</span><span class="p">:</span> <span class="s2">&quot;AD&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="defaultad">defaultad<a class="headerlink" href="#defaultad" title="Permanent link">&para;</a></h3>
+<p>Suggest Realm and NetBIOS name based on machine name.</p>
+<p>Input:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;defaultad&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Output:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;Workgroup&quot;</span><span class="p">:</span> <span class="s2">&quot;ADNETHSERVER&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Realm&quot;</span><span class="p">:</span> <span class="s2">&quot;ad.adnethserver.org&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h2>
+<h3 id="constraints">Constraints<a class="headerlink" href="#constraints" title="Permanent link">&para;</a></h3>
+<p>The action must be specified inside the JSON <code>action</code> field.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;remoteldap&quot;</span><span class="p">,</span>
+  <span class="err">...</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Valid actions:</p>
+<ul>
+<li><code>remoteldap</code></li>
+<li><code>localad</code></li>
+<li><code>remotead</code></li>
+<li><code>changeadip</code></li>
+</ul>
+<p>Constraints for <code>remoteldap</code>:</p>
+<ul>
+<li>StartTls: can be enabled or disabled</li>
+<li>Credentials are validate using ldap-credentials system validator</li>
+</ul>
+<p>Constraints for <code>localad</code>:</p>
+<ul>
+<li>Realm: must be a FQDN, validated using also dcrealm system validator</li>
+<li>IpAddress: a valid free IP address, validated using also dcipaddr system validator</li>
+<li>Workgroup: a simple hostname, maximum 15 chars</li>
+</ul>
+<p>Constraints for <code>changeadip</code>:
+- IpAddress: a valid free IP address, validated using also dcipaddr system validator</p>
+<p>Constraints for <code>remotead</code>:</p>
+<ul>
+<li>AdDns: must be a valid IP address or empty, checked also using ad-dns system validator</li>
+<li>AdRealm: must be a FQDN, checked also using ad-dns system validator</li>
+<li>AdUsername and AdPassword: not empty, check if credentials are valid</li>
+</ul>
+<h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
+<h4 id="remoteldap">remoteldap<a class="headerlink" href="#remoteldap" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;BindDN&quot;</span><span class="p">:</span> <span class="s2">&quot;cn=ldapservice,dc=directory,dc=nh&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;LdapURI&quot;</span><span class="p">:</span> <span class="s2">&quot;ldaps://192.168.1.1&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;DiscoverDcType&quot;</span><span class="p">:</span> <span class="s2">&quot;dns&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;StartTls&quot;</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Provider&quot;</span><span class="p">:</span> <span class="s2">&quot;ldap&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;UserDN&quot;</span><span class="p">:</span> <span class="s2">&quot;ou=People,dc=directory,dc=nh&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;GroupDN&quot;</span><span class="p">:</span> <span class="s2">&quot;ou=Groups,dc=directory,dc=nh&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;BindPassword&quot;</span><span class="p">:</span> <span class="s2">&quot;xxxxxxxxxxxxxxxx&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;BaseDN&quot;</span><span class="p">:</span> <span class="s2">&quot;dc=directory,dc=nh&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;remoteldap&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><code>BindDN</code> and <code>BindPassword</code> password can be left empty if the bind is anonymous.</p>
+<h4 id="localad">localad<a class="headerlink" href="#localad" title="Permanent link">&para;</a></h4>
+<p>Input example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;localad&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Realm&quot;</span><span class="p">:</span> <span class="s2">&quot;ad.local.neth.eu&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Workgroup&quot;</span><span class="p">:</span> <span class="s2">&quot;LOCAL&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;IpAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.35&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="changeadip">changeadip<a class="headerlink" href="#changeadip" title="Permanent link">&para;</a></h4>
+<p>Input example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;changeadip&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;IpAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.35&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="remotead">remotead<a class="headerlink" href="#remotead" title="Permanent link">&para;</a></h4>
+<p>Input example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;remotead&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;AdRealm&quot;</span><span class="p">:</span> <span class="s2">&quot;adnethserver.org&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;AdDns&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;AdUsername&quot;</span><span class="p">:</span> <span class="s2">&quot;administrator@adnethserver.org&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;AdPassword&quot;</span><span class="p">:</span> <span class="s2">&quot;mypassword&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
+<p>It takes an <code>action</code> argument, supported actions are:</p>
+<ul>
+<li><code>removeprovider</code></li>
+<li><code>localldap</code></li>
+</ul>
+<p>Input example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;removeprovider&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="localldap">localldap<a class="headerlink" href="#localldap" title="Permanent link">&para;</a></h3>
+<p>Install local LDAP server.</p>
+<p>Return the output of <code>pkgaction</code> in json format.
+Output example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Initialization&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Resolving RPM dependencies&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Downloading Packages&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Download RPMs&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Downloading - nethserver-net-snmp-1.1.0-1.ns7.noarch.rpm&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">}</span>
+<span class="err">...</span>
+<span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Check Package Signatures&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Running Test Transaction&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Running Transaction&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Installing nethserver-net-snmp-1.1.0-1.ns7.noarch&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">}</span>
+<span class="err">...</span>
+<span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Transaction end&quot;</span><span class="p">,</span> <span class="nt">&quot;exit&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;end&quot;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>Error example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Initialization&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Resolving RPM dependencies&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Downloading Packages&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;Downloading - nethserver-net-snmp-1.1.0-1.ns7.noarch.rpm&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">}</span>
+<span class="err">...</span>
+<span class="p">{</span><span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;[YumDownloadError] [u&#39;Errors were encountered while downloading packages.&#39;, u&#39;nethserver-net-snmp-1.1.0-1.ns7.noarch: [Errno 256] No more mirrors to try.&#39;]&quot;</span><span class="p">,</span> <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="nt">&quot;exit&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+</pre></div>
+
+
+<h3 id="remoteldap_1">remoteldap<a class="headerlink" href="#remoteldap_1" title="Permanent link">&para;</a></h3>
+<p>Configure all the properties for remote LDAP binding, then fire <code>nethserver-sssd-save</code> event.</p>
+<h3 id="removeprovider">removeprovider<a class="headerlink" href="#removeprovider" title="Permanent link">&para;</a></h3>
+<p>Remove the installed local account provider using <code>nethserver-sssd-remove-provider</code> to track the progress.</p>
+<h3 id="localad_1">localad<a class="headerlink" href="#localad_1" title="Permanent link">&para;</a></h3>
+<p>Install nethserver-dc, it uses the same input from validate.
+Return the output of <code>pkgaction</code> in json format.</p>
+<h3 id="changeadip_1">changeadip<a class="headerlink" href="#changeadip_1" title="Permanent link">&para;</a></h3>
+<p>Change nsdc container IP address.</p>
+<h3 id="remotead_1">remotead<a class="headerlink" href="#remotead_1" title="Permanent link">&para;</a></h3>
+<p>Try to join the domain, if the join fails, rollback to previous state.</p>
+<p>Output the state of all executed events and of netherver-dc package installation (see localldap for the output).</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../../api_libraries/" title="Helper libraries" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Helper libraries
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../system-aliases/" title="system-alias" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                system-alias
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.583bbe55.js"></script>
+      
+      <script>app.initialize({version:"1.0.3",url:{base:"../.."}})</script>
+      
+    
+    
+      
+    
+  </body>
+</html>
