@@ -20,8 +20,6 @@ A JSON input object is mandatory with this schema:
 }
 ``` 
 
-
-
 The allowed `action` values are described below.
 
 ### dump
@@ -57,7 +55,7 @@ Output:
 See `perldoc NethServer::SSSD` for attributes description.
 The `NsdcIp` can be empty if local AD is not installed.
 
-### probeldap
+### probel-dap
 
 Tries to contact a remote LDAP server and retrieve as much information as
 possible with a root DSE query.
@@ -66,7 +64,7 @@ Input:
 
 ```json
 {
-    "action": "probeldap",
+    "action": "probe-ldap",
     "port": 389,
     "server": "remote.ldap.org"
 }
@@ -98,13 +96,13 @@ Output:
 * `StartTls` is a boolean condition that can be the empty string `""` (false) or
   non-empty string `"1"` (true).
 
-### probead
+### probe-ad
 
 Input:
 
 ```json
 {
-  "action": "probead",
+  "action": "probe-ad",
   "realm": "adnethesis.it",
   "server": "192.168.5.59"
 }
@@ -138,7 +136,7 @@ Output:
 
 * `BindDN` and `BindPassword` fields are dummy values
 
-### probeworkgroup
+### probe-workgroup
 
 Suggest the best workgroup based on realm name.
 
@@ -159,7 +157,7 @@ Output:
 }
 ```
 
-### defaultad
+### default-ad
 
 Suggest Realm and NetBIOS name based on machine name.
 
@@ -198,26 +196,26 @@ Example:
 
 Valid actions:
 
-- `remoteldap`
-- `localad`
-- `remotead`
-- `changeadip`
+- `remote-ldap`
+- `local-ad`
+- `remote-ad`
+- `change-ad-ip`
 
-Constraints for `remoteldap`:
+Constraints for `remote-ldap`:
 
 - StartTls: can be enabled or disabled
 - Credentials are validate using ldap-credentials system validator
 
-Constraints for `localad`:
+Constraints for `local-ad`:
 
 - Realm: must be a FQDN, validated using also dcrealm system validator
 - IpAddress: a valid free IP address, validated using also dcipaddr system validator
 - Workgroup: a simple hostname, maximum 15 chars
 
-Constraints for `changeadip`:
+Constraints for `change-ad-ip`:
 - IpAddress: a valid free IP address, validated using also dcipaddr system validator
 
-Constraints for `remotead`:
+Constraints for `remote-ad`:
 
 - AdDns: must be a valid IP address or empty, checked also using ad-dns system validator
 - AdRealm: must be a FQDN, checked also using ad-dns system validator
@@ -226,7 +224,7 @@ Constraints for `remotead`:
 ### Input
 
 
-#### remoteldap
+#### remote-ldap
 
 Example:
 ```json
@@ -246,19 +244,19 @@ Example:
 
 `BindDN` and `BindPassword` password can be left empty if the bind is anonymous.
 
-#### localad
+#### local-ad
 
 Input example:
 ```json
 {
-  "action": "localad",
+  "action": "local-ad",
   "Realm": "ad.local.neth.eu",
   "Workgroup": "LOCAL",
   "IpAddress": "192.168.1.35"
 }
 ```
 
-#### changeadip
+#### change-ad-ip
 
 Input example:
 ```json
@@ -269,7 +267,7 @@ Input example:
 ```
 
 
-#### remotead
+#### remote-ad
 
 Input example:
 ```json
@@ -297,55 +295,49 @@ Input example:
 }
 ```
 
-### localldap
+### local-ldap
 
 Install local LDAP server.
 
 Return the output of `pkgaction` in json format.
 Output example:
 ```json
-{"message": "Initialization", "state": "running"}
-{"message": "Resolving RPM dependencies", "state": "running"}
-{"message": "Downloading Packages", "state": "running"}
-{"message": "Download RPMs", "state": "running"}
-{"message": "Downloading - nethserver-net-snmp-1.1.0-1.ns7.noarch.rpm", "state": "running"}
+{"state": "running", "steps": -1, "event": "Initialization"}
+{"state": "running", "steps": -1, "event": "Resolving RPM dependencies"}
+{"state": "running", "steps": -1, "event": "Downloading Packages"}
+{"state": "running", "steps": -1, "event": "Downloading - lm_sensors-libs-3.4.0-4.20160601gitf9185e5.el7.x86_64.rpm"}
 ...
-{"message": "Check Package Signatures", "state": "running"}
-{"message": "Running Test Transaction", "state": "running"}
-{"message": "Running Transaction", "state": "running"}
-{"message": "Installing nethserver-net-snmp-1.1.0-1.ns7.noarch", "state": "running"}
-...
-{"message": "Transaction end", "exit": 0, "state": "end"}
+{"state": "running", "steps": -1, "event": "Check Package Signatures"}
+{"state": "running", "steps": -1, "event": "Running Test Transaction"}
+{"state": "running", "steps": -1, "event": "Running Transaction"}
 ```
 
 Error example:
 ```json
-{"message": "Initialization", "state": "running"}
-{"message": "Resolving RPM dependencies", "state": "running"}
-{"message": "Downloading Packages", "state": "running"}
-{"action": "Downloading - nethserver-net-snmp-1.1.0-1.ns7.noarch.rpm", "state": "running"}
+{"state": "running", "steps": -1, "event": "Resolving RPM dependencies"}
+{"state": "running", "steps": -1, "event": "Downloading Packages"}
 ...
-{"action": "[YumDownloadError] [u'Errors were encountered while downloading packages.', u'nethserver-net-snmp-1.1.0-1.ns7.noarch: [Errno 256] No more mirrors to try.']", "state": "end", "exit": 1}
+{"status": "failed", "message": "[InstallError] No package(s) available to install", "steps": -1, "event": null}
 ```
 
-### remoteldap
+### remote-ldap
 
 Configure all the properties for remote LDAP binding, then fire `nethserver-sssd-save` event.
 
-### removeprovider
+### remove-provider
 
 Remove the installed local account provider using `nethserver-sssd-remove-provider` to track the progress.
 
-### localad
+### local-ad
 
 Install nethserver-dc, it uses the same input from validate.
 Return the output of `pkgaction` in json format.
 
-### changeadip
+### change-ad-ip
 
 Change nsdc container IP address.
 
-### remotead
+### remote-ad
 
 Try to join the domain, if the join fails, rollback to previous state.
 

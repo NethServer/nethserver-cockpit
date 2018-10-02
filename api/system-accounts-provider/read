@@ -136,7 +136,7 @@ my $input = readInput();
 
 my $cmd = $input->{'action'} || 'fetchbase';
 
-if($cmd eq 'probeldap') {
+if($cmd eq 'probe-ldap') {
     my $server = $input->{'server'} || error("InvalidInput", "Missing HOSTADDR value");
     my $port = $input->{'port'} || "";
     my $timeout = 5;
@@ -178,7 +178,7 @@ if($cmd eq 'probeldap') {
     print JSON->new()->encode(getDefaults('Provider' => 'ldap', %attrs));
     exit(0);
 
-} elsif($cmd eq 'probead') {
+} elsif($cmd eq 'probe-ad') {
     my $realm = $input->{'realm'} || error("InvalidInput", "Missing REALM value");
     my $server = $input->{'server'};
     my $timeout = 5;
@@ -223,12 +223,12 @@ if($cmd eq 'probeldap') {
     print JSON->new()->encode(getDefaults(%attrs));
     exit(0);
 
-} elsif($cmd eq 'probeworkgroup') {
+} elsif($cmd eq 'probe-workgroup') {
     my $realm = $input->{'realm'} || error("InvalidInput", "Missing REALM value");
     print JSON->new()->encode({'Workgroup' => probeWorkgroup($realm)});
     exit(0);
 
-} elsif($cmd eq 'defaultad') {
+} elsif($cmd eq 'default-ad') {
     my $db = esmith::ConfigDB->open_ro();
     my $domain = $db->get_value('DomainName');
     my $defaultRealm = "ad.".lc($domain);

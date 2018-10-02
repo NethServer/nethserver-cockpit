@@ -133,13 +133,13 @@ function validate_changeadip($data) {
 
 $data = readInput();
 
-if($data['action'] == 'remoteldap') {
+if($data['action'] == 'remote-ldap') {
     validate_remoteldap($data);
-} else if($data['action'] == 'localad') {
+} else if($data['action'] == 'local-ad') {
     validate_localad($data);
-} else if($data['action'] == 'remotead') {
+} else if($data['action'] == 'remote-ad') {
     validate_remotead($data);
-} else if($data['action'] == 'changeadip') {
+} else if($data['action'] == 'change-ad-ip') {
     validate_changeadip($data);
 } else {
     error();

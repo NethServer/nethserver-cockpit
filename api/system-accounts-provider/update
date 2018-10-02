@@ -32,17 +32,17 @@ my $input = readInput();
 
 my $cmd = $input->{'action'} || 'fetchbase';
 
-if ($cmd eq 'localldap') {
+if ($cmd eq 'local-ldap') {
 
     my $ret = system('/usr/libexec/nethserver/pkgaction --json --install @nethserver-directory');
     exit($ret>>8);
 
-} elsif ($cmd eq 'removeprovider') {
+} elsif ($cmd eq 'remove-provider') {
 
     my $ret = system("/sbin/e-smith/signal-event -j nethserver-sssd-remove-provider");
     exit($ret>>8);
 
-} elsif ($cmd eq 'remoteldap') {
+} elsif ($cmd eq 'remotel-dap') {
 
     my $db = esmith::ConfigDB->open();
     $db->set_prop('sssd', 'LdapURI', $input->{'LdapURI'});
@@ -59,7 +59,7 @@ if ($cmd eq 'localldap') {
     exit($ret>>8);
 
   
-} elsif ($cmd eq 'remotead') {
+} elsif ($cmd eq 'remote-ad') {
 
     # make sure we are not already part of a domain
     my $ret = system("/sbin/e-smith/signal-event -j nethserver-sssd-leave");
@@ -132,7 +132,7 @@ if ($cmd eq 'localldap') {
         exit($?>>8);
     }
 
-} elsif ($cmd eq 'localad') {
+} elsif ($cmd eq 'local-ad') {
 
     my $db = esmith::ConfigDB->open();
     $db->set_prop('sssd', 'Realm', $input->{'Realm'});
@@ -147,7 +147,7 @@ if ($cmd eq 'localldap') {
     my $ret = system('/usr/libexec/nethserver/pkgaction --json --install @nethserver-dc');
     exit($ret>>8);
 
-} elsif ($cmd eq 'changeadip') {
+} elsif ($cmd eq 'change-ad-ip') {
 
     system("/sbin/e-smith/signal-event -j nethserver-dc-change-ip ".$input->{'IpAddress'});
     exit($?>>8);
