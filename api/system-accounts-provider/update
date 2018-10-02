@@ -42,7 +42,7 @@ if ($cmd eq 'local-ldap') {
     my $ret = system("/sbin/e-smith/signal-event -j nethserver-sssd-remove-provider");
     exit($ret>>8);
 
-} elsif ($cmd eq 'remotel-dap') {
+} elsif ($cmd eq 'remote-ldap') {
 
     my $db = esmith::ConfigDB->open();
     $db->set_prop('sssd', 'LdapURI', $input->{'LdapURI'});
