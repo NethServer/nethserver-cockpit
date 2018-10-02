@@ -261,7 +261,11 @@
       "local_ad_installed_error": "Local AD not installed.",
       "join_error": "Invalid credentials to join domain.",
       "provider_uninstalled_ok": "Account provider removed successfully!",
-      "provider_uninstalled_error": "Account provider not removed."
+      "provider_uninstalled_error": "Account provider not removed.",
+      "nsdc_ip_address_change_ok": "NsDC Ip address changed successfully!",
+      "nsdc_ip_address_change_error": "NsDC Ip address not changed.",
+      "old_ip": "Old IP",
+      "new_ip": "New IP"
     },
     "network": {
       "title": "Network"

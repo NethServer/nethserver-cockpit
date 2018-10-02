@@ -592,7 +592,7 @@ export default {
             }
           };
 
-          context.loaders.summary = false
+          context.loaders.summary = false;
           context.initMemoryCharts();
         },
         function(error) {
@@ -611,7 +611,7 @@ export default {
           context.system.summary.hostname = success.hostname;
           context.system.summary.newHostname = success.hostname;
 
-          context.loaders.hostname = false
+          context.loaders.hostname = false;
           context.$forceUpdate();
         },
         function(error) {
@@ -710,11 +710,12 @@ export default {
           context.system.errors.aliases.isLoading = false;
           $("#hostnameChangeModal").modal("hide");
 
-          // update hostname
-          if (
+          var hostnameChanged =
             context.system.summary.newHostname !=
-            context.system.summary.hostname
-          ) {
+            context.system.summary.hostname;
+
+          // update hostname
+          if (hostnameChanged) {
             context.exec(
               ["system-hostname/update"],
               {
@@ -724,8 +725,53 @@ export default {
                 console.info("hostname", stream);
               },
               function(success) {
-                // get hostname
-                context.getSystemHostname();
+                // update aliases
+                context.exec(
+                  ["system-aliases/update"],
+                  aliasObj,
+                  function(stream) {
+                    console.info("aliases", stream);
+                  },
+                  function(success) {
+                    // get aliases
+                    context.getSystemAliases();
+
+                    // get hostname
+                    context.getSystemHostname();
+
+                    // notification
+                    context.$parent.notifications.success.message = context.$i18n.t(
+                      "dashboard.hostname_and_aliases_save_ok"
+                    );
+                  },
+                  function(error, data) {
+                    // notification
+                    context.$parent.notifications.error.message = context.$i18n.t(
+                      "dashboard.hostname_and_aliases_save_error"
+                    );
+                  }
+                );
+              },
+              function(error, data) {
+                // notification
+                context.$parent.notifications.error.message = context.$i18n.t(
+                  "dashboard.hostname_and_aliases_save_error"
+                );
+              }
+            );
+          }
+
+          // update aliases
+          if (!hostnameChanged) {
+            context.exec(
+              ["system-aliases/update"],
+              aliasObj,
+              function(stream) {
+                console.info("aliases", stream);
+              },
+              function(success) {
+                // get aliases
+                context.getSystemAliases();
 
                 // notification
                 context.$parent.notifications.success.message = context.$i18n.t(
@@ -740,30 +786,6 @@ export default {
               }
             );
           }
-
-          // update aliases
-          context.exec(
-            ["system-aliases/update"],
-            aliasObj,
-            function(stream) {
-              console.info("aliases", stream);
-            },
-            function(success) {
-              // get aliases
-              context.getSystemAliases();
-
-              // notification
-              context.$parent.notifications.success.message = context.$i18n.t(
-                "dashboard.hostname_and_aliases_save_ok"
-              );
-            },
-            function(error, data) {
-              // notification
-              context.$parent.notifications.error.message = context.$i18n.t(
-                "dashboard.hostname_and_aliases_save_error"
-              );
-            }
-          );
         })
         .catch(function(error) {
           context.system.errors.hostname.isLoading = false;
@@ -778,7 +800,7 @@ export default {
         null,
         function(success) {
           success = JSON.parse(success);
-          context.system.summary.aliases = []
+          context.system.summary.aliases = [];
           for (var i in success.configuration) {
             var alias = success.configuration[i].name;
             context.system.summary.aliases.push({
@@ -826,7 +848,7 @@ export default {
             };
           }
 
-          context.loaders.dns = false
+          context.loaders.dns = false;
           context.$forceUpdate();
         },
         function(error) {
@@ -926,7 +948,7 @@ export default {
           context.system.summary.newTimeZone = success.configuration.timezone;
           context.system.summary.timeZones = success.configuration.timezones;
 
-          context.loaders.datetime = false
+          context.loaders.datetime = false;
           context.$forceUpdate();
         },
         function(error) {
@@ -1032,7 +1054,7 @@ export default {
             address: success.configuration.props.Street
           };
 
-          context.loaders.company = false
+          context.loaders.company = false;
           context.$forceUpdate();
         },
         function(error) {

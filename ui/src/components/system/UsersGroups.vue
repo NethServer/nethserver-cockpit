@@ -15,8 +15,11 @@
         <div id="providerDetails" class="panel-collapse collapse">
           <dl class="dl-horizontal details-container">
             <span v-if="!(k == 'isAD' || k == 'isLdap')" v-for="(v,k) in users.providerInfo" v-bind:key="k">
-              <dt>{{k | capitalize}}</dt>
-              <dd>{{v}}</dd>
+              <dt v-if="k != 'oldIp' && k != 'newIp'">{{k | capitalize}}</dt>
+              <dd v-if="k != 'NsdcIp' && k != 'oldIp' && k != 'newIp'">{{v}}</dd>
+              <dd v-if="k == 'NsdcIp'">
+                <a data-toggle="modal" data-target="#nsdcIpChangeModal" href="#">{{v}}</a>
+              </dd>
             </span>
           </dl>
         </div>
@@ -362,6 +365,38 @@
             <div class="modal-footer">
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-danger" type="submit">{{$t('remove')}}</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="nsdcIpChangeModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('users_groups.change_provider')}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="changeNsdcIp()">
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.old_ip')}}</label>
+                <div class="col-sm-9">
+                  <input disabled type="text" v-model="users.providerInfo.oldIp" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.new_ip')}}</label>
+                <div class="col-sm-9">
+                  <input required type="text" v-model="users.providerInfo.newIp" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-primary" type="submit">{{$t('change')}}</button>
             </div>
 
           </form>
@@ -777,9 +812,8 @@ export default {
         chooseProvider: null,
         chooseBind: null,
         providerInfo: {
-          a: "a",
-          b: "b",
-          c: "c"
+          oldIp: "",
+          newIp: ""
         }
       },
       groups: {
@@ -976,6 +1010,7 @@ export default {
             ? "ad"
             : success.isLdap ? "ldap" : null;
           context.users.providerInfo = success;
+          context.users.providerInfo.oldIp = success["NsdcIp"];
 
           if (context.users.provider) {
             context.getUsers();
@@ -991,14 +1026,22 @@ export default {
     },
 
     getAdDefault() {
-      /*  nethserver.system.provider.getAdDefault().then(function (defaults) {
-                             this.newProvider.Realm = defaults.Realm;
-                             this.newProvider.Workgroup = defaults.Workgroup;
-                             this.newProvider.IpAddress = "";
-
-                           }, function (err) {
-                             console.error(err);
-                           }); */
+      var context = this;
+      context.exec(
+        ["system-accounts-provider/read"],
+        {
+          action: "default-ad"
+        },
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.newProvider.Realm = success.Realm;
+          context.newProvider.Workgroup = success.Workgroup;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
     },
 
     getUsers() {
@@ -1231,12 +1274,11 @@ export default {
       var context = this;
 
       var providerObj = {
-        action: "removeprovider"
+        action: "remove-provider"
       };
-      context.newProvider.isLoading = true;
       context.$forceUpdate();
 
-      $("#accountProviderWizard").modal("hide");
+      $("#changeProviderModal").modal("hide");
 
       // update values
       context.exec(
@@ -1250,6 +1292,9 @@ export default {
           context.$parent.notifications.success.message = context.$i18n.t(
             "users_groups.provider_uninstalled_ok"
           );
+
+          context.newProvider = {};
+          context.currentStep = 1;
 
           // get provider info
           context.getInfo();
@@ -1281,7 +1326,7 @@ export default {
       context.exec(
         ["system-accounts-provider/read"],
         {
-          action: "probeldap",
+          action: "probe-ldap",
           port: newProvider.tcpport,
           server: newProvider.hostname
         },
@@ -1313,9 +1358,8 @@ export default {
       var context = this;
 
       var ldapObj = {
-        action: "localldap"
+        action: "local-ldap"
       };
-      context.newProvider.isLoading = true;
       context.$forceUpdate();
 
       $("#accountProviderWizard").modal("hide");
@@ -1333,6 +1377,8 @@ export default {
             "users_groups.local_ldap_installed_ok"
           );
 
+          context.$parent.checkSystemTaks();
+
           // get provider info
           context.getInfo();
         },
@@ -1349,7 +1395,7 @@ export default {
       var context = this;
 
       var ldapObj = newProvider.info;
-      ldapObj.action = "remoteldap";
+      ldapObj.action = "remote-ldap";
 
       if (action == "validate") {
         context.newProvider.isChecking = true;
@@ -1412,7 +1458,7 @@ export default {
       context.exec(
         ["system-accounts-provider/read"],
         {
-          action: "probead",
+          action: "probe-ad",
           realm: newProvider.Realm,
           server: newProvider.AdDns
         },
@@ -1440,8 +1486,13 @@ export default {
     joinADomain(action, newProvider) {
       var context = this;
 
-      var adObj = newProvider.info;
-      adObj.action = "remotead";
+      var adObj = {
+        action: "remote-ad",
+        AdRealm: newProvider.Realm,
+        AdDns: newProvider.AdDns,
+        AdUsername: newProvider.info.BindDN,
+        AdPassword: newProvider.info.BindPassword
+      };
 
       if (action == "validate") {
         context.newProvider.isChecking = true;
@@ -1481,6 +1532,8 @@ export default {
               "users_groups.remote_ad_installed_ok"
             );
 
+            context.$parent.checkSystemTaks();
+
             // get provider info
             context.getInfo();
           },
@@ -1498,7 +1551,7 @@ export default {
       var context = this;
 
       var adObj = newProvider;
-      adObj.action = "localad";
+      adObj.action = "local-ad";
       context.newProvider.isLoading = true;
       context.$forceUpdate();
 
@@ -1517,6 +1570,8 @@ export default {
             "users_groups.local_ad_installed_ok"
           );
 
+          context.$parent.checkSystemTaks();
+
           // get provider info
           context.getInfo();
         },
@@ -1524,6 +1579,44 @@ export default {
           // notification
           context.$parent.notifications.error.message = context.$i18n.t(
             "users_groups.local_ad_installed_error"
+          );
+        }
+      );
+    },
+    changeNsdcIp() {
+      var context = this;
+
+      var nsdcIpObj = {
+        action: "change-ad-ip",
+        IpAddress: context.users.providerInfo.newIp
+      };
+      context.$forceUpdate();
+
+      $("#nsdcIpChangeModal").modal("hide");
+
+      // update values
+      context.exec(
+        ["system-accounts-provider/update"],
+        nsdcIpObj,
+        function(stream) {
+          console.info("nsdc-ip-change", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "users_groups.nsdc_ip_address_change_ok"
+          );
+
+          context.users.providerInfo.oldIp = "";
+          context.users.providerInfo.newIp = "";
+
+          // get provider info
+          context.getInfo();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "users_groups.nsdc_ip_address_change_error"
           );
         }
       );

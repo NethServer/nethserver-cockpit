@@ -123,7 +123,7 @@
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
         <span class="fa fa-times"></span>
       </button>
-      <div class="pull-right toast-pf-action">
+      <div class="pull-right toast-pf-action" style="margin-top: 2px;">
         <a @click="notifications.error.action()">{{notifications.error.actionName}}</a>
       </div>
       <span style="padding-top: 20px;" class="pficon fa fa-times"></span>

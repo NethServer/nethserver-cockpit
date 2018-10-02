@@ -3,6 +3,15 @@ var NethServerService = {
     exec(args, input, stream, success, error) {
       var systemCheck = false
 
+      function isJsonString(str) {
+        try {
+          JSON.parse(str);
+        } catch (e) {
+          return false;
+        }
+        return true;
+      }
+
       args[0] = "/usr/libexec/nethserver/api/" + args[0]
       var process = cockpit.spawn(args, input ? {} : {
         pty: true
@@ -24,7 +33,7 @@ var NethServerService = {
           for (var p in pieces) {
             var c = pieces[p] + "}";
             c = c.replace(/\n|\r/g, "");
-            var j = c !== "}" ? JSON.parse(c) : "{}";
+            var j = c !== "}" && isJsonString(c) ? JSON.parse(c) : "{}";
 
             if (j.event) {
               ns.$children[0].notifications.event.show = true;
@@ -53,6 +62,8 @@ var NethServerService = {
             if (j.status == "failed" || j.status == "success" || j.message == "no running tasks") {
               setTimeout(function () {
                 ns.$children[0].notifications.event.show = false;
+                ns.$children[0].notifications.event.message = "";
+                ns.$children[0].notifications.event.name = ""
               }, 500)
               stream(j.status)
             }

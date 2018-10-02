@@ -103,7 +103,7 @@ var UtilService = {
         now.getFullYear() + "_" + (now.getMonth() + 1) + "_" + now.getDate();
       link.setAttribute("download", name + date + ".csv");
       link.click();
-    }
+    },
   }
 };
 export default UtilService;
