@@ -49,11 +49,13 @@ Output:
    "GroupDN" : "dc=edo,dc=nethesis,dc=it",
    "BindPassword" : "",
    "BaseDN" : "dc=edo,dc=nethesis,dc=it",
+   "NsdcIp" : "1.2.3.4",
    "LdapUriDn" : "ldap:///dc%3Dedo%2Cdc%3Dnethesis%2Cdc%3Dit"
 }
 ```
 
 See `perldoc NethServer::SSSD` for attributes description.
+The `NsdcIp` can be empty if local AD is not installed.
 
 ### probeldap
 
