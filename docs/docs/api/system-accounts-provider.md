@@ -157,6 +157,29 @@ Output:
 }
 ```
 
+### defaultad
+
+Suggest Realm and NetBIOS name based on machine name.
+
+Input:
+
+```json
+{
+  "action": "defaultad",
+}
+
+```
+
+Output:
+
+```json
+{
+  "Workgroup": "ADNETHSERVER",
+  "Realm": "ad.adnethserver.org"
+}
+
+```
+
 ## validate
 
 ### Constraints

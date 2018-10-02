@@ -23,6 +23,7 @@
 use strict;
 use JSON;
 use NethServer::SSSD;
+use esmith::ConfigDB;
 use Net::LDAP;
 use File::Temp;
 use Net::DNS;
@@ -222,6 +223,19 @@ if($cmd eq 'probeldap') {
 } elsif($cmd eq 'probeworkgroup') {
     my $realm = $input->{'realm'} || error("InvalidInput", "Missing REALM value");
     print JSON->new()->encode({'Workgroup' => probeWorkgroup($realm)});
+    exit(0);
+
+} elsif($cmd eq 'defaultad') {
+    my $db = esmith::ConfigDB->open_ro();
+    my $domain = $db->get_value('DomainName');
+    my $defaultRealm = "ad.".lc($domain);
+    my @tmp = split(/\./,$domain);
+    my $defaultWorkgroup = $tmp[0];
+    $defaultWorkgroup = uc(substr($defaultWorkgroup, 0, 15));
+    my $realm = $db->get_prop('sssd','Realm') || $defaultRealm;
+    my $workgroup = $db->get_prop('sssd','Workgroup') || $defaultWorkgroup;
+
+    print JSON->new()->encode({'Workgroup' => $workgroup, 'Realm' => $realm });
     exit(0);
 
 } elsif($cmd eq 'dump') {
