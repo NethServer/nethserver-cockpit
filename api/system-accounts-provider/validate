@@ -1,0 +1,147 @@
+#!/usr/bin/php
+<?php
+/*
+ * Copyright (C) 2018 Nethesis S.r.l.
+ * http://www.nethesis.it - nethserver@nethesis.it
+ *
+ * This script is part of NethServer.
+ *
+ * NethServer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License,
+ * or any later version.
+ *
+ * NethServer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NethServer.  If not, see COPYING.
+*/
+
+/** Include helper functions **/
+
+require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
+
+function validate_remoteldap($data) {
+    $v = new LegacyValidator($data);
+    $v->declareParameter('LdapURI', Validate::ANYTHING);
+    $v->declareParameter('BindDN', Validate::ANYTHING);
+    $v->declareParameter('BindPassword', Validate::ANYTHING);
+    $v->declareParameter('BaseDN', Validate::ANYTHING);
+    $v->declareParameter('UserDN', Validate::ANYTHING);
+    $v->declareParameter('GroupDN', Validate::ANYTHING);
+    $v->declareParameter('StartTls', $v->createValidator()->memberOf('', 'enabled', 'disabled'));
+
+    $errors = 0;
+
+    if($data['StartTls'] === 'enabled' && substr($data['LdapURI'], 0, 6) === 'ldaps:') {
+        $errors++;
+        $v->addValidationError('StartTls', _('StartTLS conflicts with "ldaps://" URI scheme'), 'enabled');
+    }
+
+    $credentialsValidator = $v->createValidator()->platform('ldap-credentials', $data['BaseDN'], $data['LdapURI'], $data['StartTls'] === 'enabled' ? '1' : '', $data['BindDN']);
+    if( ! $credentialsValidator->evaluate($data['BindPassword'])) {
+        $errors++;
+        $error = $credentialsValidator->getFailureInfo();
+        $errorCodes['valid_platform,ldap-credentials,ldaptestbind,49'] = _('Invalid LDAP credentials');
+        $errorCodes['valid_platform,ldap-credentials,ldaptestbind,1'] = _('LDAP connection error');
+        $errorCodes['valid_platform,ldap-credentials,ldaptestbind,32'] = _('Base DN was not found or insufficient rights');
+        $errorCodes['valid_platform,ldap-credentials,ldaptestbind,34'] = _('Invalid DN syntax');
+        $v->addValidationError('BindDN', $errorCodes[$error[0][0]] ?: 'generic error');
+    }
+
+    if (!$v->validate() || $errors > 0) {
+        error($v);
+    } else {
+        success();
+    }
+}
+
+function validate_localad($data) {
+    $v = new LegacyValidator($data);
+    $workgroupValidator = $v->createValidator(Validate::HOSTNAME_SIMPLE)->maxLength(15);
+    $realmValidator = $v->createValidator(Validate::HOSTNAME_FQDN);
+    $ipAddressValidator = $v->createValidator(Validate::IP)->platform('dcipaddr');
+    $v->declareParameter('Realm', $realmValidator);
+    $v->declareParameter('Workgroup', $workgroupValidator);
+    $v->declareParameter('IpAddress', $ipAddressValidator);
+
+    if (!$v->validate()) {
+        error($v);
+    } else {
+        success();
+    }
+}
+
+function validate_remotead($data) {
+    $v = new LegacyValidator($data);
+    $workgroupValidator = $v->createValidator(Validate::HOSTNAME_SIMPLE)->maxLength(15);
+    $realmValidator = $v->createValidator(Validate::HOSTNAME_FQDN);
+    $v->declareParameter('AdDns', Validate::IP_OR_EMPTY);
+    $v->declareParameter('AdRealm', $realmValidator);
+    $v->declareParameter('AdUsername', Validate::NOTEMPTY);
+    $v->declareParameter('AdPassword', Validate::NOTEMPTY);
+    $dnsValidator = $v->createValidator()->platform('ad-dns', strtolower($data['AdRealm']));
+    if( ! $dnsValidator->evaluate($data['AdDns'])) {
+        $v->addValidationError( 'AdDns', $dnsValidator);
+    }
+
+    if (!$v->validate()) {
+        error($v);
+    }
+
+    validate_adcredentials($data);
+}
+
+
+function validate_adcredentials($data) {
+    $output = shell_exec("/usr/sbin/account-provider-test probead {$data['AdRealm']} {$data['AdDns']}");
+    if (!$output) {
+        error();
+    }
+    $probe = json_decode($output, TRUE);
+
+    $cmd = "/usr/bin/ldapsearch ";
+    if ($probe['StartTls']) {
+        $cmd .= " -ZZ ";
+    }
+    $host = parse_url($probe['LdapURI'], PHP_URL_HOST);
+    $addr = trim(shell_exec("dig -t A +short $host @{$data['AdDns']}"));
+    $uri = str_replace($host, $addr, $probe['LdapURI']);
+    $cmd .= "-H $uri -x -D {$data['AdUsername']} -w {$data['AdPassword']} -s base -b {$probe['BaseDN']} '(objectClass=*)' 2>&1";
+    exec($cmd, $output, $ret);
+    if ($ret > 0) {
+        error(array('type' => 'NotValid','message' => implode("\n",$output)));
+    } else {
+        success();
+    }
+}
+
+function validate_changeadip($data) {
+    $v = new LegacyValidator($data);
+    $ipAddressValidator = $v->createValidator(Validate::IP)->platform('dcipaddr');
+    $v->declareParameter('IpAddress', $ipAddressValidator);
+
+    if (!$v->validate()) {
+        error($v);
+    } else {
+        success();
+    }
+}
+
+$data = readInput();
+
+if($data['action'] == 'remoteldap') {
+    validate_remoteldap($data);
+} else if($data['action'] == 'localad') {
+    validate_localad($data);
+} else if($data['action'] == 'remotead') {
+    validate_remotead($data);
+} else if($data['action'] == 'changeadip') {
+    validate_changeadip($data);
+} else {
+    error();
+}
+

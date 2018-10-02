@@ -1,0 +1,155 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+use strict;
+use esmith::ConfigDB;
+use JSON;
+use IPC::Open3;
+use POSIX ":sys_wait_h";
+
+require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
+
+my $input = readInput();
+
+my $cmd = $input->{'action'} || 'fetchbase';
+
+if ($cmd eq 'localldap') {
+
+    my $ret = system('/usr/libexec/nethserver/pkgaction --json --install @nethserver-directory');
+    exit($ret>>8);
+
+} elsif ($cmd eq 'removeprovider') {
+
+    my $ret = system("/sbin/e-smith/signal-event -j nethserver-sssd-remove-provider");
+    exit($ret>>8);
+
+} elsif ($cmd eq 'remoteldap') {
+
+    my $db = esmith::ConfigDB->open();
+    $db->set_prop('sssd', 'LdapURI', $input->{'LdapURI'});
+    $db->set_prop('sssd', 'BindDN', $input->{'BindDN'});
+    $db->set_prop('sssd', 'BindPassword', $input->{'BindPassword'});
+    $db->set_prop('sssd', 'BaseDN', $input->{'BaseDN'});
+    $db->set_prop('sssd', 'UserDN', $input->{'UserDN'});
+    $db->set_prop('sssd', 'GroupDN', $input->{'GroupDN'});
+    $db->set_prop('sssd', 'StartTls', $input->{'StartTls'});
+    $db->set_prop('sssd', 'Provider', 'ldap');
+    $db->set_prop('sssd', 'status', 'enabled');
+
+    my $ret = system("/sbin/e-smith/signal-event -j nethserver-sssd-save");
+    exit($ret>>8);
+
+  
+} elsif ($cmd eq 'remotead') {
+
+    # make sure we are not already part of a domain
+    my $ret = system("/sbin/e-smith/signal-event -j nethserver-sssd-leave");
+
+    # retrieve AD configuration
+    my $cmd = "/usr/sbin/account-provider-test probead " . $input->{'AdRealm'} . " " . $input->{'AdDns'};
+    my $output = `$cmd 2>/dev/null`;
+    if ($? > 0) {
+        error("EventFailed", "Active directory probe failed");
+    }
+    my $probe = decode_json($output);
+
+    # set AD configuration
+    my $db = esmith::ConfigDB->open();
+    $db->set_prop('sssd', 'status', 'disabled');
+    $db->set_prop('sssd', 'Realm', $input->{'AdRealm'});
+    $db->set_prop('sssd', 'AdDns', $input->{'AdDns'});
+    $db->set_prop('sssd', 'Provider', 'ad');
+    $db->set_prop('sssd', 'Workgroup', '');
+    $db->set_prop('sssd', 'BindDN', '');
+    $db->set_prop('sssd', 'BindPassword', '');
+    $db->set_prop('sssd', 'LdapURI', $probe->{'LdapURI'});
+    $db->set_prop('sssd', 'StartTls', $probe->{'StartTls'} ? 'enabled' : 'disabled');
+    $db->set_prop('sssd', 'UserDN', $probe->{'UserDN'});
+    $db->set_prop('sssd', 'GroupDN', $probe->{'GroupDN'});
+    $db->set_prop('sssd', 'BaseDN', $probe->{'BaseDN'});
+
+    # update DNS configuration
+    if ($input->{'AdDns'}) {
+        $ret = system("/sbin/e-smith/signal-event -j nethserver-dnsmasq-save");
+    }
+
+    # retrieve workgroup configuration
+    $cmd = "/usr/sbin/account-provider-test probeworkgroup " . $input->{'AdRealm'};
+    $output = `$cmd 2>/dev/null`;
+    if ($output) {
+        $probe = decode_json($output);
+        my $wg = $probe->{'Workgroup'} || '';
+        $db->set_prop('sssd', 'Workgroup', $wg);
+    }
+
+    $cmd = "/usr/sbin/realm join --server-software=active-directory -v -U " . $input->{'AdUsername'} . " " . $input->{'AdRealm'};
+    my $pid = open3(\*CHLD_IN, \*CHLD_OUT, \*CHLD_ERR, $cmd) or error("EventFailed", "Couldn't fork: $!\n");
+    print CHLD_IN $input->{'AdPassword'}."\n";
+    my $err = <CHLD_ERR>;
+    $output = <CHLD_OUT>;
+    waitpid($pid, 0);
+    if ($? > 0) {
+        $db->set_prop('sssd', 'status', 'disabled');
+        $db->set_prop('sssd', 'Realm', '');
+        $db->set_prop('sssd', 'AdDns', '');
+        $db->set_prop('sssd', 'Provider', '');
+        $db->set_prop('sssd', 'Workgroup', '');
+        $db->set_prop('sssd', 'BindDN', '');
+        $db->set_prop('sssd', 'BindPassword', '');
+        $db->set_prop('sssd', 'LdapURI', '');
+        $db->set_prop('sssd', 'StartTls', '');
+        $db->set_prop('sssd', 'UserDN', '');
+        $db->set_prop('sssd', 'GroupDN', '');
+        $db->set_prop('sssd', 'BaseDN', '');
+
+        system("/sbin/e-smith/signal-event nethserver-sssd-leave");
+        if ($input->{'AdDns'}) {
+            system("/sbin/e-smith/signal-event nethserver-dnsmasq-save");
+        }
+        error("EventFailed", "Join failed: ".$err);
+    } else {
+        $db->set_prop('sssd', 'status', 'enabled');
+        system("/sbin/e-smith/signal-event -j nethserver-sssd-save");
+        exit($?>>8);
+    }
+
+} elsif ($cmd eq 'localad') {
+
+    my $db = esmith::ConfigDB->open();
+    $db->set_prop('sssd', 'Realm', $input->{'Realm'});
+    $db->set_prop('sssd', 'Workgroup', $input->{'Workgroup'});
+    my $nsdc = $db->get('nsdc') || undef;
+    if (!$nsdc) {
+        $db->set_value('nsdc','service');
+    }
+    $db->set_prop('nsdc', 'status', 'enabled');
+    $db->set_prop('nsdc', 'IpAddress', $input->{'IpAddress'});
+
+    my $ret = system('/usr/libexec/nethserver/pkgaction --json --install @nethserver-dc');
+    exit($ret>>8);
+
+} elsif ($cmd eq 'changeadip') {
+
+    system("/sbin/e-smith/signal-event -j nethserver-dc-change-ip ".$input->{'IpAddress'});
+    exit($?>>8);
+
+}
