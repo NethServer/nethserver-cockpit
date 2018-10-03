@@ -139,15 +139,15 @@ a {
   height: inherit !important;
 }
 
-.list-group-item>a {
+.nav-pf-vertical .list-group-item>a {
   text-decoration: none !important;
 }
 
-.list-group-item:first-child {
+.nav-pf-vertical .list-group-item:first-child {
   border-top: 2px solid #4d5257 !important;
 }
 
-.list-group-item:last-child {
+.nav-pf-vertical .list-group-item:last-child {
   border-bottom: 1px solid #4d5257 !important;
 }
 
@@ -155,7 +155,7 @@ a {
   border-bottom: 2px solid #4d5257 !important;
 }
 
-.list-group-item:hover>a,
+.nav-pf-vertical .list-group-item:hover>a,
 .menu-item-left:hover {
   background-color: #4d5258 !important;
 }
@@ -668,6 +668,10 @@ input[type="checkbox"].form-control {
   margin-top: -34px;
 }
 
+.margin-left-md {
+  margin-left: 10px;
+}
+
 .modal {
   z-index: 3;
   margin-left: 55px !important;
@@ -702,4 +706,12 @@ input[type="checkbox"].form-control {
 
 .Password__icons {
   display: none !important;
+}
+
+.list-view-pf .list-group-item {
+  border-top: 1px solid #ededec;
+}
+
+.list-group.list-view-pf {
+  border-top: 0px;
 }

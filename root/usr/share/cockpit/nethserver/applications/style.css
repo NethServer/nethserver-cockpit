@@ -139,15 +139,15 @@ a {
     height: inherit !important;
 }
 
-.list-group-item>a {
+.nav-pf-vertical .list-group-item>a {
     text-decoration: none !important;
 }
 
-.list-group-item:first-child {
+.nav-pf-vertical .list-group-item:first-child {
     border-top: 2px solid #4d5257 !important;
 }
 
-.list-group-item:last-child {
+.nav-pf-vertical .list-group-item:last-child {
     border-bottom: 1px solid #4d5257 !important;
 }
 
@@ -155,7 +155,7 @@ li.active>a>span {
     margin-left: -3px;
 }
 
-.list-group-item:hover>a,
+.nav-pf-vertical .list-group-item:hover>a,
 .menu-item-left:hover {
     background-color: #4d5258 !important;
 }

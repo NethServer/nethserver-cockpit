@@ -5,19 +5,20 @@
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
 
     <div v-if="view.isLoaded && users.provider !== null">
-      <h3>{{$t('users_groups.summary')}}</h3>
+      <h3>{{$t('users_groups.account_provider')}}</h3>
       <div class="panel panel-default" id="provider-markup">
         <div class="panel-heading">
           <button id="change-provider-btn" data-toggle="modal" data-target="#changeProviderModal" class="btn btn-primary">{{$t('users_groups.change_provider')}}</button>
-          {{$t('users_groups.account_provider')}}: <span class="panel-title">{{$t('users_groups.'+users.provider)}}</span>
+          <span class="panel-title">{{$t('users_groups.'+(users.providerInfo.IsLocal ? 'local_' : 'remote_'
+            )+users.provider)}}</span>
           <span class="provider-details" data-toggle="collapse" data-parent="#provider-markup" href="#providerDetails">{{$t('users_groups.details')}}</span>
         </div>
         <div id="providerDetails" class="panel-collapse collapse">
           <dl class="dl-horizontal details-container">
             <span v-if="!(k == 'isAD' || k == 'isLdap')" v-for="(v,k) in users.providerInfo" v-bind:key="k">
-              <dt v-if="k != 'oldIp' && k != 'newIp'">{{k | capitalize}}</dt>
-              <dd v-if="k != 'NsdcIp' && k != 'oldIp' && k != 'newIp'">{{v}}</dd>
-              <dd v-if="k == 'NsdcIp'">
+              <dt v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal'">{{k | capitalize}}</dt>
+              <dd v-if="k != 'NsdcIp' && k != 'oldIp' && k != 'newIp' && k != 'IsLocal'">{{v}}</dd>
+              <dd v-if="k == 'NsdcIp' && users.provider.isAD">
                 <a data-toggle="modal" data-target="#nsdcIpChangeModal" href="#">{{v}}</a>
               </dd>
             </span>
@@ -26,7 +27,20 @@
       </div>
     </div>
 
-    <div v-if="view.isLoaded && users.provider !== null" class="inline-block-div">
+    <div v-if="view.isLoaded">
+      <h3>{{$t('users_groups.password_policy')}}</h3>
+      <div class="panel panel-default" id="provider-markup">
+        <div class="panel-heading">
+          <button id="change-provider-btn" @click="openPasswordPolicy()" class="btn btn-primary">{{$t('users_groups.change_policy')}}</button>
+          <span class="panel-title">
+            <span>{{$t('users_groups.strong_password')}}</span> <span :class="['fa', passwordPolicy.Users == 'yes' ? 'fa-check' : 'fa-times']"></span>
+            <span class="margin-left-md">{{$t('users_groups.expiration_password')}}</span> <span :class="['fa', passwordPolicy.PassExpires == 'yes' ? 'fa-check' : 'fa-times']"></span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="view.isLoaded && users.provider !== null && users.providerInfo.IsLocal" class="inline-block-div">
       <h3>{{$t('actions')}}</h3>
       <div class="btn-group">
         <button v-if="currentSearchFilter == 'user'" @click="openCreateUser()" class="btn btn-primary btn-lg shutdown-privileged"
@@ -76,8 +90,8 @@
       </form>
 
       <div class="list-group list-view-pf">
-        <div v-if="currentSearchFilter == 'user'" v-for="(u, ku) in users.list" v-bind:key="ku" class="list-group-item">
-          <div class="list-view-pf-actions">
+        <div v-if="currentSearchFilter == 'user'" v-for="(u, ku) in filteredUserList" v-bind:key="ku" class="list-group-item">
+          <div v-if="users.providerInfo.IsLocal" class="list-view-pf-actions">
             <button @click="openEditUser(ku, u)" class="btn btn-default">
               <span class="pficon pficon-edit span-right-margin"></span>
               {{$t('edit')}}
@@ -92,6 +106,11 @@
                   <a @click="openChangePassword(ku, u)">
                     <span class="fa fa-key span-right-margin"></span>
                     {{$t('users_groups.change_password')}}</a>
+                </li>
+                <li>
+                  <a @click="toggleLock(ku, u)">
+                    <span :class="['pficon', !u.locked ? 'pficon-locked' : 'pficon-unlocked', 'span-right-margin']"></span>
+                    {{!u.locked ? $t('users_groups.lock') : $t('users_groups.unlock')}}</a>
                 </li>
                 <li role="separator" class="divider"></li>
                 <li>
@@ -108,11 +127,17 @@
             </div>
             <div class="list-view-pf-body">
               <div class="list-view-pf-description">
-                <div @click="openEditUser(ku, u)" class="list-group-item-heading">
+                <div @click="users.providerInfo.IsLocal ? openEditUser(ku, u) : null" class="list-group-item-heading">
                   <a :class="[u.locked == 1 ? 'disabled' : '']">{{ku}}</a>
                 </div>
                 <div class="list-group-item-text">
                   <span :class="[u.locked == 1 ? 'disabled' : '']">{{u.gecos}}</span>
+                </div>
+                <div class="list-group-item-text">
+                  <span :class="[u.expired ? 'fa fa-clock-o red' : 'fa fa-clock-o']"></span>
+                  <span :class="[u.expired ? 'red' : '']">
+                    {{u.expired ? $t('users_groups.expired') : $t('users_groups.not_expired')}}
+                  </span>
                 </div>
               </div>
               <div class="list-view-pf-additional-info">
@@ -121,8 +146,8 @@
           </div>
         </div>
 
-        <div v-if="currentSearchFilter == 'group'" v-for="(g, kg) in groups.list" v-bind:key="kg" class="list-group-item">
-          <div class="list-view-pf-actions">
+        <div v-if="currentSearchFilter == 'group'" v-for="(g, kg) in filteredGroupList" v-bind:key="kg" class="list-group-item">
+          <div v-if="users.providerInfo.IsLocal" class="list-view-pf-actions">
             <button @click="openEditGroup(kg, g)" class="btn btn-default">
               <span class="pficon pficon-edit span-right-margin"></span>
               {{$t('edit')}}
@@ -147,7 +172,7 @@
             </div>
             <div class="list-view-pf-body">
               <div class="list-view-pf-description">
-                <div @click="openEditGroup(kg, g)" class="list-group-item-heading">
+                <div @click="users.providerInfo.IsLocal ? openEditGroup(kg, g) : null" class="list-group-item-heading">
                   <a>{{kg}}</a>
                 </div>
                 <div class="list-group-item-text">
@@ -168,24 +193,21 @@
           <div class="modal-header">
             <h4 v-if="!newUser.isPassEdit" class="modal-title">{{newUser.isEdit ? $t('edit') :
               $t('users_groups.create_user')}}
-              <span>{{newUser.key}}</span>
+              <span>{{newUser.name}}</span>
             </h4>
             <h4 v-if="newUser.isPassEdit" class="modal-title">{{newUser.isPassEdit ?
               $t('users_groups.change_password_to') : $t('users_groups.create_user')}}
-              <span>{{newUser.key}}</span>
+              <span>{{newUser.name}}</span>
             </h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="newUser.isEdit ? newUser.isPassEdit ? changePassword(newUser) : editUser(newUser) : createUser(newUser)">
 
             <div class="modal-body">
-              <div v-if="!newUser.isPassEdit" :class="['form-group', newUser.errorProps['key'] ? 'has-error' : '']">
+              <div v-if="!newUser.isPassEdit" :class="['form-group', newUser.errorProps['name'] ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.username')}}</label>
-                <div class="col-sm-5">
-                  <input :disabled="newUser.isEdit" required type="text" v-model="newUser.key" class="form-control">
-                  <span v-if="newUser.errorProps['key']" class="help-block">{{newUser.errorProps['key']}}</span>
-                </div>
-                <div class="col-sm-4">
-                  <input :disabled="true" type="text" v-model="users.domain" class="form-control">
+                <div class="col-sm-9">
+                  <input :disabled="newUser.isEdit" required type="text" v-model="newUser.name" class="form-control">
+                  <span v-if="newUser.errorProps['name']" class="help-block">{{newUser.errorProps['name']}}</span>
                 </div>
               </div>
               <div v-if="!newUser.isPassEdit" :class="['form-group', newUser.errorProps['gecos'] ? 'has-error' : '']">
@@ -199,7 +221,7 @@
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.groups')}}</label>
                 <div class="col-sm-9">
                   <select @change="addGroupToUser(newUser.selectedGroup)" v-model="newUser.selectedGroup" class="combobox form-control">
-                    <option></option>
+                    <option>-</option>
                     <option :value="kg" v-for="(g, kg) in groups.list" v-bind:key="kg">{{kg}}</option>
                   </select>
                   <span v-if="newUser.errorProps['groups']" class="help-block">{{newUser.errorProps['groups']}}</span>
@@ -221,21 +243,23 @@
                   </button>
                 </div>
               </div>
-              <div v-if="!(newUser.isEdit && !newUser.isPassEdit)" class="form-group">
+              <div v-if="!(newUser.isEdit && !newUser.isPassEdit)" :class="['form-group', newUser.errorProps['newPassword'] ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.password')}}</label>
                 <div class="col-sm-7">
-                  <input required :type="newUser.isPassGenerated ? 'text' : 'password'" v-model="newUser.password"
+                  <input required :type="newUser.isPassGenerated ? 'text' : 'password'" v-model="newUser.newPassword"
                     class="form-control">
+                  <span v-if="newUser.errorProps['newPassword']" class="help-block">{{newUser.errorProps['newPassword']}}</span>
                 </div>
                 <div class="col-sm-2">
                   <button @click="genPassword()" type="button" class="btn btn-primary">{{$t('users_groups.generate')}}</button>
                 </div>
               </div>
-              <div v-if="!(newUser.isEdit && !newUser.isPassEdit)" class="form-group">
+              <div v-if="!(newUser.isEdit && !newUser.isPassEdit)" :class="['form-group', newUser.errorProps['confirmNewPassword'] ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.confirm_password')}}</label>
                 <div class="col-sm-7">
-                  <password v-model="newUser.confirmPassword" @score="showScore" id="password-user-create" placeholder=""
-                    :showPassword="newUser.isPassGenerated" />
+                  <password v-model="newUser.confirmNewPassword" @score="showScore" id="password-user-create"
+                    placeholder="" :showPassword="newUser.isPassGenerated" />
+                  <span v-if="newUser.errorProps['confirmNewPassword']" class="help-block">{{newUser.errorProps['confirmNewPassword']}}</span>
                 </div>
               </div>
               <p v-if="!newUser.isPassEdit">{{$t('users_groups.advanced_options')}}</p>
@@ -253,9 +277,11 @@
               </div>
             </div>
             <div class="modal-footer">
+              <div v-if="newUser.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
-              <button :disabled="newUser.passwordStrength < 4 || newUser.password !== newUser.confirmPassword" class="btn btn-primary"
-                type="submit">{{newUser.isEdit ? newUser.isPassEdit ? $t('change') : $t('edit') : $t('create')}}</button>
+              <button :disabled="!newUser.isEdit && (newUser.passwordStrength < 4 || newUser.newPassword !== newUser.confirmNewPassword)"
+                class="btn btn-primary" type="submit">{{newUser.isEdit ? newUser.isPassEdit ? $t('change') : $t('edit')
+                : $t('create')}}</button>
             </div>
 
           </form>
@@ -268,20 +294,17 @@
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">{{newGroup.isEdit ? $t('edit') : $t('users_groups.create_group')}}
-              <span v-if="newGroup.isEdit">{{newGroup.key}}</span>
+              <span v-if="newGroup.isEdit">{{newGroup.name}}</span>
             </h4>
           </div>
-          <form class="form-horizontal" v-on:submit.prevent="newGroup.isEdit ? editGroup(newGroup) : addGroup(newGroup)">
+          <form class="form-horizontal" v-on:submit.prevent="newGroup.isEdit ? editGroup(newGroup) : createGroup(newGroup)">
 
             <div class="modal-body">
-              <div :class="['form-group', newGroup.errorProps['key'] ? 'has-error' : '']">
+              <div :class="['form-group', newGroup.errorProps['name'] ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.name')}}</label>
-                <div class="col-sm-5">
-                  <input :disabled="newGroup.isEdit" required type="text" v-model="newGroup.key" class="form-control">
-                  <span v-if="newGroup.errorProps['key']" class="help-block">{{newGroup.errorProps['key']}}</span>
-                </div>
-                <div class="col-sm-4">
-                  <input :disabled="true" type="text" v-model="groups.domain" class="form-control">
+                <div class="col-sm-9">
+                  <input :disabled="newGroup.isEdit" required type="text" v-model="newGroup.name" class="form-control">
+                  <span v-if="newGroup.errorProps['name']" class="help-block">{{newGroup.errorProps['name']}}</span>
                 </div>
               </div>
               <div :class="['form-group', newGroup.errorProps['members'] ? 'has-error' : '']">
@@ -312,6 +335,7 @@
               </div>
             </div>
             <div class="modal-footer">
+              <div v-if="newGroup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{newGroup.isEdit ? $t('edit') : $t('create')}}</button>
             </div>
@@ -326,7 +350,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">{{toDelete.isGroup ? $t('users_groups.delete_group') :
-              $t('users_groups.delete_user')}} {{toDelete.key}}</h4>
+              $t('users_groups.delete_user')}} {{toDelete.name}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="toDelete.isGroup ? deleteGroup(toDelete) : deleteUser(toDelete)">
 
@@ -376,7 +400,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('users_groups.change_provider')}}</h4>
+            <h4 class="modal-title">{{$t('users_groups.change_nsdc_ip')}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="changeNsdcIp()">
 
@@ -391,6 +415,50 @@
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.new_ip')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="users.providerInfo.newIp" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-primary" type="submit">{{$t('change')}}</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="passwordPolicyModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('users_groups.change_password_policy')}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="changePasswordPolicy()">
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="col-sm-6 control-label" for="textInput-modal-markup">{{$t('users_groups.strong_password')}}</label>
+                <div class="col-sm-6">
+                  <input type="checkbox" v-model="passwordPolicy.Users" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-6 control-label" for="textInput-modal-markup">{{$t('users_groups.expiration_password')}}</label>
+                <div class="col-sm-6">
+                  <input type="checkbox" v-model="passwordPolicy.PassExpires" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-6 control-label" for="textInput-modal-markup">{{$t('users_groups.min_pass_age')}}</label>
+                <div class="col-sm-6">
+                  <input required type="number" min="0" v-model="passwordPolicy.MinPassAge" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-6 control-label" for="textInput-modal-markup">{{$t('users_groups.max_pass_age')}}</label>
+                <div class="col-sm-6">
+                  <input required type="number" min="0" v-model="passwordPolicy.MaxPassAge" class="form-control">
                 </div>
               </div>
             </div>
@@ -623,7 +691,7 @@
                           </div>
                         </div> -->
 
-                        <div v-if="newProvider.isChecked && k!='action' && k!='DiscoverDcType' && k!='port' && k!='isAD' && k!='isLdap' && k!='host' && k!='Provider' && !((newProvider.info.BindType == 'anonymous' && k=='BindPassword') || (newProvider.info.BindType == 'anonymous' && k=='BindDN'))"
+                        <div v-if="newProvider.isChecked && k!='action' && k != 'NsdcIp' && k!='DiscoverDcType' && k!='port' && k!='isAD' && k!='isLdap' && k!='host' && k!='Provider' && !((newProvider.info.BindType == 'anonymous' && k=='BindPassword') || (newProvider.info.BindType == 'anonymous' && k=='BindDN'))"
                           v-for="(v,k) in newProvider.info" v-bind:key="k" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{k | camelToSentence}}</label>
                           <div class="col-sm-9">
@@ -793,6 +861,29 @@ export default {
   },
   mounted() {
     this.getInfo();
+    this.getPasswordPolicy();
+  },
+  computed: {
+    filteredUserList() {
+      var returnObj = {};
+      for (var a in this.users.list) {
+        if (a.toLowerCase().includes(this.searchString.toLowerCase())) {
+          returnObj[a] = this.users.list[a];
+        }
+      }
+
+      return returnObj;
+    },
+    filteredGroupList() {
+      var returnObj = {};
+      for (var a in this.groups.list) {
+        if (a.toLowerCase().includes(this.searchString.toLowerCase())) {
+          returnObj[a] = this.groups.list[a];
+        }
+      }
+
+      return returnObj;
+    }
   },
   data() {
     return {
@@ -807,7 +898,6 @@ export default {
       },
       users: {
         list: {},
-        domain: "@",
         provider: null,
         chooseProvider: null,
         chooseBind: null,
@@ -817,9 +907,9 @@ export default {
         }
       },
       groups: {
-        domain: "@",
         list: {}
       },
+      passwordPolicy: {},
       newUser: this.initUser(),
       newGroup: this.initGroup(),
       toDelete: {},
@@ -972,15 +1062,21 @@ export default {
       return {
         selectedGroup: null,
         groups: [],
-        password: "",
+        newPassword: "",
         isPassGenerated: false,
-        confirmPassword: "",
+        confirmNewPassword: "",
         passwordStrength: 0,
-        errorProps: {},
+        errorProps: {
+          name: "",
+          gecos: "",
+          newPassword: "",
+          confirmNewPassword: ""
+        },
         isEdit: false,
-        key: "",
+        name: "",
         expires: false,
-        shell: false
+        shell: false,
+        isLoading: false
       };
     },
     initGroup() {
@@ -988,10 +1084,13 @@ export default {
         selectedUser: null,
         members: [],
         loadMembers: false,
-        users: [],
         isEdit: false,
-        key: "",
-        errorProps: {}
+        name: "",
+        errorProps: {
+          name: "",
+          members: ""
+        },
+        isLoading: false
       };
     },
 
@@ -1012,6 +1111,10 @@ export default {
           context.users.providerInfo = success;
           context.users.providerInfo.oldIp = success["NsdcIp"];
 
+          if (context.users.provider == "ldap") {
+            delete context.users.providerInfo.NsdcIp;
+          }
+
           if (context.users.provider) {
             context.getUsers();
             context.getGroups();
@@ -1021,6 +1124,74 @@ export default {
         },
         function(error) {
           console.error(error);
+        }
+      );
+    },
+
+    getPasswordPolicy() {
+      var context = this;
+      context.exec(
+        ["system-password-policy/read"],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.passwordPolicy = success.configuration.props;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+
+    openPasswordPolicy() {
+      this.passwordPolicy.Users =
+        this.passwordPolicy.Users == "yes" ? true : false;
+      this.passwordPolicy.PassExpires =
+        this.passwordPolicy.PassExpires == "yes" ? true : false;
+      $("#passwordPolicyModal").modal("show");
+    },
+
+    changePasswordPolicy() {
+      this.passwordPolicy.Users =
+        this.passwordPolicy.Users == true ? "yes" : "no";
+      this.passwordPolicy.PassExpires =
+        this.passwordPolicy.PassExpires == true ? "yes" : "no";
+      this.passwordPolicy.MinPassAge = parseInt(this.passwordPolicy.MinPassAge);
+      this.passwordPolicy.MaxPassAge = parseInt(this.passwordPolicy.MaxPassAge);
+
+      $("#passwordPolicyModal").modal("hide");
+
+      var context = this;
+      context.exec(
+        ["system-password-policy/update"],
+        {
+          props: {
+            PassExpires: context.passwordPolicy.PassExpires,
+            MinPassAge: context.passwordPolicy.MinPassAge,
+            MaxPassAge: context.passwordPolicy.MaxPassAge,
+            Users: context.passwordPolicy.Users
+          },
+          name: "passwordstrength",
+          type: "configuration"
+        },
+        function(stream) {
+          console.info("password-policy", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "users_groups.password_policy_ok"
+          );
+
+          // get policy
+          context.getPasswordPolicy();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "users_groups.password_policy_error"
+          );
         }
       );
     },
@@ -1045,23 +1216,45 @@ export default {
     },
 
     getUsers() {
-      this.view.isLoaded = true;
-      /* nethserver.system.users.getUsers().then(function (users) {
-                            this.users.list = users;
-                            context.view.isLoaded = true;
+      var context = this;
+      context.view.isLoaded = false;
+      context.exec(
+        ["system-users/read"],
+        {
+          action: "list-users"
+        },
+        null,
+        function(success) {
+          success = JSON.parse(success);
 
-                          }, function (err) {
-                            console.error(err);
-                          }); */
+          context.view.isLoaded = true;
+          context.users.list = success;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
     },
 
     getGroups() {
-      /* nethserver.system.users.getGroups().then(function (groups) {
-                            this.groups.list = groups;
+      var context = this;
+      context.view.isLoaded = false;
+      context.exec(
+        ["system-users/read"],
+        {
+          action: "list-groups"
+        },
+        null,
+        function(success) {
+          success = JSON.parse(success);
 
-                          }, function (err) {
-                            console.error(err);
-                          }); */
+          context.view.isLoaded = true;
+          context.groups.list = success;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
     },
 
     addGroupToUser(group) {
@@ -1090,8 +1283,8 @@ export default {
 
     genPassword() {
       var password = this.generatePassword();
-      this.newUser.password = password.trim();
-      this.newUser.confirmPassword = password.trim();
+      this.newUser.newPassword = password.trim();
+      this.newUser.confirmNewPassword = password.trim();
       this.newUser.isPassGenerated = true;
 
       setTimeout(function() {
@@ -1111,98 +1304,271 @@ export default {
     },
 
     createUser(user) {
-      user.expires = user.expires ? "yes" : "no";
-      user.shell = user.shell
-        ? "/bin/bash"
-        : "/usr/libexec/openssh/sftp-server";
-      this.cleanUserErrors();
-      /* nethserver.system.users.addUser(user).then(function () {
-                            $('#createUserModal').modal('hide');
-                          }, function (err) {
-                            console.error(err);
-                            this.newUser.errorMessage = err.message;
-                            this.newUser.errorProps = err.attributes;
+      var context = this;
 
-                          }); */
+      var userObj = {
+        action: "user-create",
+        name: user.name,
+        groups: user.groups,
+        gecos: user.gecos,
+        expires: user.expires ? "yes" : "no",
+        shell: user.shell ? "/bin/bash" : "/usr/libexec/openssh/sftp-server",
+        newPassword: user.newPassword,
+        confirmNewPassword: user.confirmNewPassword
+      };
+
+      // validate object
+      context.newUser.isLoading = true;
+      context.exec(
+        ["system-users/validate"],
+        userObj,
+        null,
+        function(success) {
+          context.newUser.isLoading = false;
+          $("#createUserModal").modal("hide");
+
+          context.exec(
+            ["system-users/create"],
+            userObj,
+            function(stream) {
+              console.info("user-create", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "users_groups.user_created_ok"
+              );
+
+              context.newUser = context.initUser();
+
+              // get users
+              context.getUsers();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "users_groups.user_created_error"
+              );
+            }
+          );
+        },
+        function(error, data) {
+          var errorData = JSON.parse(data);
+          context.newUser.isLoading = false;
+
+          for (var e in errorData.attributes) {
+            var attr = errorData.attributes[e];
+
+            context.newUser.errorProps[attr.parameter] = attr.error;
+          }
+        }
+      );
     },
 
     openEditUser(ku, user) {
-      this.newUser = user;
-      this.newUser.key = ku;
+      this.newUser = this.initUser();
+
+      this.newUser.name = ku;
+      this.newUser.gecos = user.gecos;
+
       this.newUser.isEdit = true;
       this.newUser.isPassEdit = false;
       this.newUser.loadGroups = true;
       this.newUser.expires =
-        this.newUser.expires == true || this.newUser.expires == "yes"
-          ? true
-          : false;
+        this.newUser.expires == true || user.expires == "yes" ? true : false;
       this.newUser.shell =
-        this.newUser.shell == true || this.newUser.shell == "/bin/bash"
-          ? true
-          : false;
-      /* nethserver.system.users.getUserMembership(ku).then(function (groups) {
-                            this.newUser.groups = groups;
-                            this.newUser.loadGroups = false;
+        this.newUser.shell == true || user.shell == "/bin/bash" ? true : false;
 
-                          }, function (err) {
-                            console.error(err);
-                            this.newUser.loadGroups = false;
-                          }); */
+      var context = this;
+      context.exec(
+        ["system-users/read"],
+        {
+          action: "user-membership",
+          user: ku
+        },
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.newUser.groups = success;
+          context.newUser.loadGroups = false;
+        },
+        function(error) {
+          console.error(error);
+          context.newUser.loadGroups = false;
+        }
+      );
+
       $("#createUserModal").modal("show");
     },
 
     editUser(user) {
-      user.expires = user.expires ? "yes" : "no";
-      user.shell = user.shell
-        ? "/bin/bash"
-        : "/usr/libexec/openssh/sftp-server";
-      this.cleanUserErrors();
-      /* nethserver.system.users.editUser(user).then(function () {
-                            $('#createUserModal').modal('hide');
+      var context = this;
 
-                          }, function (err) {
-                            console.error(err);
-                            this.newUser.errorMessage = err.message;
-                            this.newUser.errorProps = err.attributes;
+      var userObj = {
+        action: "user-update",
+        name: user.name,
+        groups: user.groups,
+        gecos: user.gecos,
+        expires: user.expires ? "yes" : "no",
+        shell: user.shell ? "/bin/bash" : "/usr/libexec/openssh/sftp-server"
+      };
 
-                          }); */
+      // validate object
+      context.newUser.isLoading = true;
+      context.exec(
+        ["system-users/validate"],
+        userObj,
+        null,
+        function(success) {
+          context.newUser.isLoading = false;
+          $("#createUserModal").modal("hide");
+
+          context.exec(
+            ["system-users/update"],
+            userObj,
+            function(stream) {
+              console.info("user-update", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "users_groups.user_updated_ok"
+              );
+
+              context.newUser = context.initUser();
+
+              // get users
+              context.getUsers();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "users_groups.user_updated_error"
+              );
+            }
+          );
+        },
+        function(error, data) {
+          var errorData = JSON.parse(data);
+          context.newUser.isLoading = false;
+
+          for (var e in errorData.attributes) {
+            var attr = errorData.attributes[e];
+
+            context.newUser.errorProps[attr.parameter] = attr.error;
+          }
+        }
+      );
     },
 
     openChangePassword(ku, user) {
-      this.newUser = user;
-      this.newUser.key = ku;
+      this.newUser = this.initUser();
+      this.newUser.name = ku;
       this.newUser.isEdit = true;
       this.newUser.isPassEdit = true;
       $("#createUserModal").modal("show");
     },
 
     changePassword(user) {
-      this.cleanUserErrors();
-      /* nethserver.system.users.setPassword(user.key, user.password).then(function () {
-                            $('#createUserModal').modal('hide');
+      var context = this;
 
-                          }, function (err) {
-                            console.error(err);
-                            this.newUser.errorMessage = err.message;
-                            this.newUser.errorProps = err.attributes;
+      $("#createUserModal").modal("hide");
 
-                          }); */
+      context.exec(
+        ["system-users/update"],
+        {
+          action: "change-password",
+          name: user.name,
+          newPassword: user.newPassword,
+          confirmNewPassword: user.confirmNewPassword
+        },
+        function(stream) {
+          console.info("user-change-password", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "users_groups.user_pass_change_ok"
+          );
+
+          // get users
+          context.getUsers();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "users_groups.user_pass_change_error"
+          );
+        }
+      );
+    },
+
+    toggleLock(ku, user) {
+      var context = this;
+
+      context.exec(
+        ["system-users/update"],
+        {
+          action: "toggle-lock",
+          name: ku
+        },
+        function(stream) {
+          console.info("user-toggle-lock", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = user.locked
+            ? context.$i18n.t("users_groups.user_unlocked_ok")
+            : context.$i18n.t("users_groups.user_locked_ok");
+
+          // get users
+          context.getUsers();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.success.message = user.locked
+            ? context.$i18n.t("users_groups.user_unlocked_error")
+            : context.$i18n.t("users_groups.user_locked_error");
+        }
+      );
     },
 
     openDeleteUser(ku, toDelete) {
-      this.toDelete = toDelete;
+      this.toDelete = this.initUser();
+      this.toDelete.name = ku;
       this.toDelete.isGroup = false;
-      this.toDelete.key = ku;
       $("#deleteModal").modal("show");
     },
 
     deleteUser(user) {
-      this.cleanUserErrors();
-      /* nethserver.system.users.deleteUser(user.key).then(function () {
-                            $('#deleteModal').modal('hide');
-                          }, function (err) {
-                            console.error(err);
-                          }); */
+      var context = this;
+
+      $("#deleteModal").modal("hide");
+      context.exec(
+        ["system-users/delete"],
+        {
+          action: "user-delete",
+          name: user.name
+        },
+        function(stream) {
+          console.info("user-delete", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "users_groups.user_deleted_ok"
+          );
+
+          // get users
+          context.getUsers();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "users_groups.user_deleted_error"
+          );
+        }
+      );
     },
 
     openCreateGroup() {
@@ -1210,60 +1576,184 @@ export default {
       $("#createGroupModal").modal("show");
     },
 
-    addGroup(group) {
-      this.cleanGroupErrors();
-      /* nethserver.system.users.addGroup(group).then(function () {
-                            $('#createGroupModal').modal('hide');
-                          }, function (err) {
-                            console.error(err);
-                            this.newGroup.errorMessage = err.message;
-                            this.newGroup.errorProps = err.attributes;
+    createGroup(group) {
+      var context = this;
 
-                          }); */
+      var groupObj = {
+        action: "group-create",
+        name: group.name,
+        members: group.members
+      };
+
+      // validate object
+      context.newGroup.isLoading = true;
+      context.exec(
+        ["system-users/validate"],
+        groupObj,
+        null,
+        function(success) {
+          context.newGroup.isLoading = false;
+          $("#createGroupModal").modal("hide");
+
+          context.exec(
+            ["system-users/create"],
+            groupObj,
+            function(stream) {
+              console.info("group-create", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "users_groups.group_created_ok"
+              );
+
+              context.newGroup = context.initGroup();
+
+              // get groups
+              context.getGroups();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "users_groups.group_created_error"
+              );
+            }
+          );
+        },
+        function(error, data) {
+          var errorData = JSON.parse(data);
+          context.newGroup.isLoading = false;
+
+          for (var e in errorData.attributes) {
+            var attr = errorData.attributes[e];
+
+            context.newGroup.errorProps[attr.parameter] = attr.error;
+          }
+        }
+      );
     },
 
     openEditGroup(kg, group) {
-      this.newGroup = group;
-      this.newGroup.key = kg;
+      this.newGroup = this.initGroup();
+      this.newGroup.name = kg;
       this.newGroup.isEdit = true;
       this.newGroup.loadMembers = true;
-      /* nethserver.system.users.getGroupMembers(kg).then(function (members) {
-                            this.newGroup.members = members;
-                            this.newGroup.loadMembers = false;
 
-                          }, function (err) {
-                            console.error(err);
-                            this.newGroup.loadMembers = false;
-                          }); */
+      var context = this;
+      context.exec(
+        ["system-users/read"],
+        {
+          action: "group-members",
+          group: kg
+        },
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.newGroup.members = success;
+          context.newGroup.loadMembers = false;
+        },
+        function(error) {
+          console.error(error);
+          context.newGroup.loadMembers = false;
+        }
+      );
+
       $("#createGroupModal").modal("show");
     },
 
     editGroup(group) {
-      this.cleanGroupErrors();
-      /* nethserver.system.users.editGroup(group).then(function () {
-                            $('#createGroupModal').modal('hide');
-                          }, function (err) {
-                            console.error(err);
-                            this.newGroup.errorMessage = err.message;
-                            this.newGroup.errorProps = err.attributes;
+      var context = this;
 
-                          }); */
+      var groupObj = {
+        action: "group-update",
+        name: group.name,
+        members: group.members
+      };
+
+      // validate object
+      context.newGroup.isLoading = true;
+      context.exec(
+        ["system-users/validate"],
+        groupObj,
+        null,
+        function(success) {
+          context.newGroup.isLoading = false;
+          $("#createGroupModal").modal("hide");
+
+          context.exec(
+            ["system-users/update"],
+            groupObj,
+            function(stream) {
+              console.info("group-update", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "users_groups.group_updated_ok"
+              );
+
+              context.newGroup = context.initGroup();
+
+              // get groups
+              context.getGroups();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "users_groups.group_updated_error"
+              );
+            }
+          );
+        },
+        function(error, data) {
+          var errorData = JSON.parse(data);
+          context.newGroup.isLoading = false;
+
+          for (var e in errorData.attributes) {
+            var attr = errorData.attributes[e];
+
+            context.newGroup.errorProps[attr.parameter] = attr.error;
+          }
+        }
+      );
     },
 
     openDeleteGroup(kg, toDelete) {
-      this.toDelete = toDelete;
+      this.toDelete = this.initGroup();
+      this.toDelete.name = kg;
       this.toDelete.isGroup = true;
-      this.toDelete.key = kg;
       $("#deleteModal").modal("show");
     },
 
     deleteGroup(group) {
-      this.cleanGroupErrors();
-      /* nethserver.system.users.deleteGroup(group.key).then(function () {
-                            $('#deleteModal').modal('hide');
-                          }, function (err) {
-                            console.error(err);
-                          }); */
+      var context = this;
+
+      $("#deleteModal").modal("hide");
+      context.exec(
+        ["system-users/delete"],
+        {
+          action: "group-delete",
+          name: group.name
+        },
+        function(stream) {
+          console.info("group-delete", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "users_groups.group_deleted_ok"
+          );
+
+          // get groups
+          context.getGroups();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "users_groups.group_deleted_error"
+          );
+        }
+      );
     },
 
     updateValues(k, v) {
@@ -1295,6 +1785,8 @@ export default {
 
           context.newProvider = {};
           context.currentStep = 1;
+          context.newUser = context.initUser();
+          context.newGroup = context.initGroup();
 
           // get provider info
           context.getInfo();
