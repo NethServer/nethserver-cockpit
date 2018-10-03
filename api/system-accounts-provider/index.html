@@ -738,6 +738,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-users/" title="system-users" class="md-nav__link">
+      system-users
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -1151,6 +1163,7 @@
    <span class="nt">&quot;BindPassword&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
    <span class="nt">&quot;BaseDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;dc=edo,dc=nethesis,dc=it&quot;</span><span class="p">,</span>
    <span class="nt">&quot;NsdcIp&quot;</span> <span class="p">:</span> <span class="s2">&quot;1.2.3.4&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;IsLocal&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
    <span class="nt">&quot;LdapUriDn&quot;</span> <span class="p">:</span> <span class="s2">&quot;ldap:///dc%3Dedo%2Cdc%3Dnethesis%2Cdc%3Dit&quot;</span>
 <span class="p">}</span>
 </pre></div>
@@ -1257,7 +1270,7 @@ possible with a root DSE query.</p>
 <p>Suggest Realm and NetBIOS name based on machine name.</p>
 <p>Input:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;defaultad&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;default-ad&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -1275,7 +1288,7 @@ possible with a root DSE query.</p>
 <p>The action must be specified inside the JSON <code>action</code> field.</p>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;remoteldap&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;remote-ldap&quot;</span><span class="p">,</span>
   <span class="err">...</span>
 <span class="p">}</span>
 </pre></div>
@@ -1340,7 +1353,7 @@ possible with a root DSE query.</p>
 <h4 id="change-ad-ip">change-ad-ip<a class="headerlink" href="#change-ad-ip" title="Permanent link">&para;</a></h4>
 <p>Input example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;changeadip&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;change-ad-ip&quot;</span><span class="p">,</span>
   <span class="nt">&quot;IpAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.35&quot;</span>
 <span class="p">}</span>
 </pre></div>
@@ -1349,7 +1362,7 @@ possible with a root DSE query.</p>
 <h4 id="remote-ad">remote-ad<a class="headerlink" href="#remote-ad" title="Permanent link">&para;</a></h4>
 <p>Input example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;remotead&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;remote-ad&quot;</span><span class="p">,</span>
   <span class="nt">&quot;AdRealm&quot;</span><span class="p">:</span> <span class="s2">&quot;adnethserver.org&quot;</span><span class="p">,</span>
   <span class="nt">&quot;AdDns&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
   <span class="nt">&quot;AdUsername&quot;</span><span class="p">:</span> <span class="s2">&quot;administrator@adnethserver.org&quot;</span><span class="p">,</span>
@@ -1361,12 +1374,12 @@ possible with a root DSE query.</p>
 <h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
 <p>It takes an <code>action</code> argument, supported actions are:</p>
 <ul>
-<li><code>removeprovider</code></li>
-<li><code>localldap</code></li>
+<li><code>remove-provider</code></li>
+<li><code>local-ldap</code></li>
 </ul>
 <p>Input example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;removeprovider&quot;</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;remove-provider&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
