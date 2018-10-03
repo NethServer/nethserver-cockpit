@@ -1,0 +1,47 @@
+#!/usr/bin/php
+<?php
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+/** Include common functions **/
+
+require_once("/usr/libexec/nethserver/api/system-users/functions.php");
+
+$data = readInput();
+
+function user_delete($data) {
+    # first remove the user from groups
+    # if list-group-members is executed after user removal, the user is not listed inside
+    # the group, even if is present inside the LDAP tree (it's filtered out)
+    cleanup_groups($data['name']);
+    passthru("/sbin/e-smith/signal-event -j user-delete '{$data['name']}'", $ret);
+    exit($ret);
+}
+
+function group_delete($data) {
+    passthru("/sbin/e-smith/signal-event -j group-delete '{$data['name']}'", $ret);
+    exit($ret);
+}
+
+if ($data['action'] == 'user-delete') {
+    user_delete($data);
+} else if ($data['action'] == 'group-delete') {
+    group_delete($data);
+}

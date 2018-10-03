@@ -1,0 +1,86 @@
+#!/usr/bin/php
+<?php
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+/** Include common functions **/
+
+require_once("/usr/libexec/nethserver/api/system-users/functions.php");
+
+$data = readInput();
+
+function user_update($data) {
+    $ret = 0;
+    $tmp_ret = 0;
+    $current_groups = user_membership($data['name']);
+    
+    # remove user from groups no more associated to it
+    foreach ($current_groups as $g) {
+        if (!in_array($g, $data['groups'])) {
+            $ret += cleanup_group($g, $data['name']);
+        }
+    }
+
+    # add user to new groups
+    foreach ($data['groups'] as $g) {
+        $ret += add_to_group($data['name'], $g);
+    }
+    passthru("/sbin/e-smith/signal-event -j user-modify '{$data['name']}' ".escapeshellarg($data['gecos'])." {$data['shell']}", $tmp_ret);
+    $ret += $tmp_ret;
+    passthru("/sbin/e-smith/signal-event -j password-policy-update '{$data['name']}' '{$data['expires']}'", $tmp_ret);
+    $ret += $tmp_ret;
+    exit($ret);
+}
+
+function group_update($data) {
+    $cmd = "/sbin/e-smith/signal-event -j group-modify '{$data['name']}'";
+    foreach($data['members'] as $m) {
+        $cmd .= " ".escapeshellarg($m);
+    }
+
+    passthru($cmd, $ret);
+    exit($ret);
+}
+
+function change_password($data) {
+    exit (save_password($data));
+}
+
+function toggle_lock($data) {
+    $user = user_info($data['name']);
+    $db = new EsmithDatabase('configuration');
+    $name = $data['name']."@".$db->getType('DomainName');
+    if ($user['locked'] == 1) {
+        passthru("/sbin/e-smith/signal-event -j user-unlock '$name'",$ret);
+    } else {
+        passthru("/sbin/e-smith/signal-event -j user-lock '$name'",$ret);
+    }
+    exit($ret);
+}
+
+if ($data['action'] == 'user-update') {
+    user_update($data);
+} else if ($data['action'] == 'group-update') {
+    group_update($data);
+} else if ($data['action'] == 'change-password') {
+    change_password($data);
+} else if ($data['action'] == 'toggle-lock') {
+    toggle_lock($data);
+}
