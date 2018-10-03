@@ -126,7 +126,8 @@ sub getDefaults
         'BindDN' => $o->bindDN(),
         'BindPassword' => $o->bindPassword(),
         'DiscoverDcType' => $o->{'DiscoverDcType'},
-        'NsdcIp' => $ip
+        'NsdcIp' => $ip,
+        'IsLocal' => $o->isLocalProvider(),
     };
 
     return $dump;

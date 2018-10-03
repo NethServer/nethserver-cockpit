@@ -48,6 +48,7 @@ Output:
    "BindPassword" : "",
    "BaseDN" : "dc=edo,dc=nethesis,dc=it",
    "NsdcIp" : "1.2.3.4",
+   "IsLocal": 1,
    "LdapUriDn" : "ldap:///dc%3Dedo%2Cdc%3Dnethesis%2Cdc%3Dit"
 }
 ```
