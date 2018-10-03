@@ -1,6 +1,6 @@
 # system-company
 
-Read ans set `OrganizationContact` record from `configuration` db.
+Read and set `OrganizationContact` record from `configuration` db.
 
 ## read
 
@@ -55,6 +55,6 @@ Input example from: `config getjson OrganizationContact`:
 }
 ```
 
-## write
+## update
 
 Same input from validate helper.
