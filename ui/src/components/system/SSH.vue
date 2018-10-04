@@ -58,6 +58,14 @@
 <script>
 export default {
   name: "SSH",
+  beforeRouteEnter(to, from, next) {
+    var auths = JSON.parse(localStorage.getItem("auths"));
+    if (auths.indexOf("ssh") != -1) {
+      next();
+    } else {
+      next("/");
+    }
+  },
   mounted() {
     this.getSSHConfig();
   },

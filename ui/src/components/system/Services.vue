@@ -124,6 +124,14 @@
 <script>
 export default {
   name: "Services",
+  beforeRouteEnter(to, from, next) {
+    var auths = JSON.parse(localStorage.getItem("auths"));
+    if (auths.indexOf("services") != -1) {
+      next();
+    } else {
+      next("/");
+    }
+  },
   beforeRouteLeave(to, from, next) {
     $("#detailsModal").modal("hide");
     next();

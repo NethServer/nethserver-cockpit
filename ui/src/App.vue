@@ -12,94 +12,94 @@
 
       <ul v-if="wizardDone" class="list-group panel">
 
-        <li id="dashboard-item" v-bind:class="[getCurrentPath('') ? 'active' : '', 'list-group-item']">
+        <li v-if="checkAuth('')" id="dashboard-item" v-bind:class="[getCurrentPath('') ? 'active' : '', 'list-group-item']">
           <a href="#/">
             <span class="fa fa-cube"></span>
             <span class="list-group-item-value">{{$t('menu.dashboard')}}</span>
           </a>
         </li>
 
-        <li class="li-empty"></li>
+        <li v-if="checkAuth('')" class="li-empty"></li>
 
-        <li v-b-toggle.object-collapse v-bind:class="[getCurrentPath('storage') ? 'active' : '', 'list-group-item']">
+        <li v-if="checkAuth('storage')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('storage') ? 'active' : '', 'list-group-item']">
           <a href="#/storage">
             <span class="fa fa-hdd-o"></span>
             <span class="list-group-item-value">{{$t('menu.storage')}}</span>
           </a>
         </li>
-        <li v-b-toggle.object-collapse v-bind:class="[getCurrentPath('disk-usage') ? 'active' : '', 'list-group-item']">
+        <li v-if="checkAuth('disk-usage')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('disk-usage') ? 'active' : '', 'list-group-item']">
           <a href="#/disk-usage">
             <span class="fa fa-pie-chart"></span>
             <span class="list-group-item-value">{{$t('menu.disk_usage')}}</span>
           </a>
         </li>
 
-        <li class="li-empty"></li>
+        <li v-if="checkAuth('storage') || checkAuth('disk-usage')" class="li-empty"></li>
 
-        <li v-b-toggle.object-collapse v-bind:class="[getCurrentPath('certificates') ? 'active' : '', 'list-group-item']">
+        <li v-if="checkAuth('certificates')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('certificates') ? 'active' : '', 'list-group-item']">
           <a href="#/certificates">
             <span class="fa fa-key"></span>
             <span class="list-group-item-value">{{$t('menu.certificates')}}</span>
           </a>
         </li>
-        <li v-b-toggle.object-collapse v-bind:class="[getCurrentPath('dns') ? 'active' : '', 'list-group-item']">
+        <li v-if="checkAuth('dns')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('dns') ? 'active' : '', 'list-group-item']">
           <a href="#/dns">
             <span class="fa fa-database"></span>
             <span class="list-group-item-value">{{$t('menu.dns')}}</span>
           </a>
         </li>
-        <li v-b-toggle.object-collapse v-bind:class="[getCurrentPath('services') ? 'active' : '', 'list-group-item']">
+        <li v-if="checkAuth('services')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('services') ? 'active' : '', 'list-group-item']">
           <a href="#/services">
             <span class="fa fa-fighter-jet"></span>
             <span class="list-group-item-value">{{$t('menu.services')}}</span>
           </a>
         </li>
-        <li v-b-toggle.object-collapse v-bind:class="[getCurrentPath('users-groups') ? 'active' : '', 'list-group-item']">
+        <li v-if="checkAuth('users-groups')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('users-groups') ? 'active' : '', 'list-group-item']">
           <a href="#/users-groups">
             <span class="fa fa-users"></span>
             <span class="list-group-item-value">{{$t('menu.users_groups')}}</span>
           </a>
         </li>
 
-        <li class="li-empty"></li>
+        <li v-if="checkAuth('certificates') || checkAuth('dns') || checkAuth('services') || checkAuth('users-groups')" class="li-empty"></li>
 
-        <li v-b-toggle.object-collapse v-bind:class="[getCurrentPath('network') ? 'active' : '', 'list-group-item']">
+        <li v-if="checkAuth('network')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('network') ? 'active' : '', 'list-group-item']">
           <a href="#/network">
             <span class="fa fa-plug"></span>
             <span class="list-group-item-value">{{$t('menu.network')}}</span>
           </a>
         </li>
-        <li v-b-toggle.object-collapse v-bind:class="[getCurrentPath('ssh') ? 'active' : '', 'list-group-item']">
+        <li v-if="checkAuth('ssh')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('ssh') ? 'active' : '', 'list-group-item']">
           <a href="#/ssh">
             <span class="fa fa-terminal"></span>
             <span class="list-group-item-value">{{$t('menu.ssh')}}</span>
           </a>
         </li>
-        <li v-b-toggle.object-collapse v-bind:class="[getCurrentPath('tls-policy') ? 'active' : '', 'list-group-item']">
+        <li v-if="checkAuth('tls-policy')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('tls-policy') ? 'active' : '', 'list-group-item']">
           <a href="#/tls-policy">
             <span class="fa fa-shield"></span>
             <span class="list-group-item-value">{{$t('menu.tls_policy')}}</span>
           </a>
         </li>
-        <li v-b-toggle.object-collapse v-bind:class="[getCurrentPath('trusted-networks') ? 'active' : '', 'list-group-item']">
+        <li v-if="checkAuth('trusted-networks')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('trusted-networks') ? 'active' : '', 'list-group-item']">
           <a href="#/trusted-networks">
             <span class="fa fa-certificate"></span>
             <span class="list-group-item-value">{{$t('menu.trusted_networks')}}</span>
           </a>
         </li>
 
-        <li class="li-empty"></li>
+        <li v-if="checkAuth('network') || checkAuth('ssh') || checkAuth('tls-policy') || checkAuth('trusted-networks')" class="li-empty"></li>
 
-        <li v-bind:class="[getCurrentPath('logs') ? 'active' : '', 'list-group-item']">
+        <li v-if="checkAuth('logs')" v-bind:class="[getCurrentPath('logs') ? 'active' : '', 'list-group-item']">
           <a href="#/logs">
             <span class="fa fa-list"></span>
             <span class="list-group-item-value">{{$t('menu.logs')}}</span>
           </a>
         </li>
 
-        <li class="li-empty"></li>
+        <li v-if="checkAuth('logs')" class="li-empty"></li>
 
-        <li v-bind:class="[getCurrentPath('about') ? 'active' : '', 'list-group-item']">
+        <li v-if="checkAuth('about')" v-bind:class="[getCurrentPath('about') ? 'active' : '', 'list-group-item']">
           <a href="#/about">
             <span class="fa fa-info"></span>
             <span class="list-group-item-value">{{$t('menu.about')}}</span>
@@ -171,17 +171,20 @@ export default {
       }
     });
 
+    this.getAuths();
+
     // check for running tasks
     this.checkSystemTaks();
   },
   watch: {
-    $route (to, from) {
-      this.notifications.success.show = false
-      this.notifications.error.show = false
-      this.notifications.event.show = false
-      this.notifications.addMargin = to.path.indexOf("/applications/") < 0 ? false : true
+    $route(to, from) {
+      this.notifications.success.show = false;
+      this.notifications.error.show = false;
+      this.notifications.event.show = false;
+      this.notifications.addMargin =
+        to.path.indexOf("/applications/") < 0 ? false : true;
 
-      this.checkSystemTaks()
+      this.checkSystemTaks();
     }
   },
   data() {
@@ -215,6 +218,7 @@ export default {
         },
         addMargin: this.$route.path.indexOf("/applications/") < 0 ? false : true
       },
+      auths: [],
       taskInProgress: false
     };
   },
@@ -246,6 +250,26 @@ export default {
           console.error(error);
         }
       );
+    },
+    getAuths() {
+      var context = this;
+      context.exec(
+        ["system-authorization/read"],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.auths = success.system || [];
+          localStorage.setItem("auths", JSON.stringify(context.auths));
+        },
+        function(error) {
+          console.error(error);
+        },
+        false
+      );
+    },
+    checkAuth(route) {
+      return this.auths.indexOf(route) != -1;
     }
   }
 };

@@ -383,7 +383,7 @@ circle {
 #sequence {
   height: 20px;
   position: fixed;
-  left: 112px;
+  left: 165px;
 }
 
 #sequence text {
@@ -395,7 +395,7 @@ circle {
   top: 120px;
   bottom: 25px;
   position: fixed;
-  z-index: -1;
+  z-index: 0;
 }
 
 #chart path {
@@ -407,6 +407,7 @@ circle {
   z-index: 10;
   top: 220px;
   position: fixed;
+  z-index: 1;
 }
 
 #totalSize {
@@ -714,4 +715,44 @@ input[type="checkbox"].form-control {
 
 .list-group.list-view-pf {
   border-top: 0px;
+}
+
+.password-meter-uncheck {
+  background: #ededed;
+  margin: 4px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.password-meter-check {
+  background: #3f9c35;
+  color: white;
+  margin: 4px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.password-meter-length-uncheck {
+  position: absolute;
+  top: 4px;
+  right: 25px;
+  background: #ededed;
+  height: 18px;
+  width: 18px;
+  text-align: center;
+}
+
+.password-meter-length-check {
+  position: absolute;
+  top: 4px;
+  right: 25px;
+  background: #3f9c35;
+  color: white;
+  height: 18px;
+  width: 18px;
+  text-align: center;
+}
+
+.password-hints {
+  text-align: center
 }

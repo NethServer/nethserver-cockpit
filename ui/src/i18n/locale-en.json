@@ -30,6 +30,11 @@
     "check": "Check",
     "stats": "Statistics",
     "for_more_info": "for more info",
+    "lowercase": "lowercase",
+    "uppercase": "uppercase",
+    "number": "number",
+    "symbol": "symbol",
+    "equal": "equal",
     "menu": {
       "dashboard": "Dashboard",
       "storage": "Storage",
@@ -104,7 +109,10 @@
     },
     "disk_usage": {
       "title": "Disk usage",
-      "update_data": "Update data"
+      "update_data": "Update data",
+      "update_at": "Update at",
+      "disk_updated_ok": "Disk usage updated successfully!",
+      "disk_updated_error": "Disk usage not updated"
     },
     "storage": {
       "title": "Storage"

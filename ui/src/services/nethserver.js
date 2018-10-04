@@ -1,6 +1,6 @@
 var NethServerService = {
   methods: {
-    exec(args, input, stream, success, error) {
+    exec(args, input, stream, success, error, superuser=true) {
       var systemCheck = false
 
       function isJsonString(str) {
@@ -12,9 +12,18 @@ var NethServerService = {
         return true;
       }
 
-      args[0] = "/usr/libexec/nethserver/api/" + args[0]
+      var api = args[0]
+
+      if (superuser) {
+        args[0] = "/usr/bin/sudo"
+        args[1] = "/usr/libexec/nethserver/api/" + api
+      } else {
+        args[0] = "/usr/libexec/nethserver/api/" + api
+      }
+
       var process = cockpit.spawn(args, input ? {} : {
-        pty: true
+        pty: true,
+        environ: ["TERM=dumb"]
       })
 
       if (input) {

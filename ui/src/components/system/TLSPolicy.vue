@@ -30,6 +30,14 @@
 <script>
 export default {
   name: "TLSPolicy",
+  beforeRouteEnter(to, from, next) {
+    var auths = JSON.parse(localStorage.getItem("auths"));
+    if (auths.indexOf("tls-policy") != -1) {
+      next();
+    } else {
+      next("/");
+    }
+  },
   mounted() {
     this.getTLSPolicy();
   },

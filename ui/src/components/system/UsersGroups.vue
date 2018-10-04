@@ -246,40 +246,39 @@
               <div v-if="!(newUser.isEdit && !newUser.isPassEdit)" :class="['form-group', newUser.errorProps['newPassword'] ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.password')}}</label>
                 <div class="col-sm-7">
-                  <input required :type="newUser.isPassGenerated ? 'text' : 'password'" v-model="newUser.newPassword"
-                    class="form-control">
+                  <input required :type="newUser.togglePass ? 'text' : 'password'" v-model="newUser.newPassword" class="form-control">
                   <span v-if="newUser.errorProps['newPassword']" class="help-block">{{newUser.errorProps['newPassword']}}</span>
                 </div>
                 <div class="col-sm-2">
-                  <button @click="genPassword()" type="button" class="btn btn-primary">{{$t('users_groups.generate')}}</button>
+                  <button @click="togglePass()" type="button" class="btn btn-primary">
+                    <span :class="[!newUser.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"></span>
+                    </button>
                 </div>
               </div>
               <div v-if="!(newUser.isEdit && !newUser.isPassEdit)" :class="['form-group', newUser.errorProps['confirmNewPassword'] ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.confirm_password')}}</label>
                 <div class="col-sm-7">
-                  <password v-model="newUser.confirmNewPassword" @score="showScore" id="password-user-create"
-                    placeholder="" :showPassword="newUser.isPassGenerated" />
-                  <span v-if="newUser.errorProps['confirmNewPassword']" class="help-block">{{newUser.errorProps['confirmNewPassword']}}</span>
+                  <password-meter></password-meter>
                 </div>
               </div>
               <p v-if="!newUser.isPassEdit">{{$t('users_groups.advanced_options')}}</p>
               <div v-if="!newUser.isPassEdit" class="form-group">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.password_expiration')}}</label>
                 <div class="col-sm-9">
-                  <input type="checkbox" v-model="newUser.expires">
+                  <input type="checkbox" class="form-control" v-model="newUser.expires">
                 </div>
               </div>
               <div v-if="!newUser.isPassEdit" class="form-group">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.remote_shell')}}</label>
                 <div class="col-sm-9">
-                  <input type="checkbox" v-model="newUser.shell">
+                  <input type="checkbox" class="form-control" v-model="newUser.shell">
                 </div>
               </div>
             </div>
             <div class="modal-footer">
               <div v-if="newUser.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
-              <button :disabled="!newUser.isEdit && (newUser.passwordStrength < 4 || newUser.newPassword !== newUser.confirmNewPassword)"
+              <button :disabled="!newUser.isEdit && !newUser.passwordStrength"
                 class="btn btn-primary" type="submit">{{newUser.isEdit ? newUser.isPassEdit ? $t('change') : $t('edit')
                 : $t('create')}}</button>
             </div>
@@ -698,7 +697,8 @@
                             <input v-if="!(k == 'StartTls' || k == 'BindType')" required type="text" v-model="newProvider.info[k]"
                               :value="v" @change="updateValues(k,newProvider.info[k])" class="form-control">
 
-                            <input v-if="k == 'StartTls'" type="checkbox" :value="v == 'enabled'" @click="changeStartTLS(v)">
+                            <input v-if="k == 'StartTls'" type="checkbox" class="form-control" :value="v == 'enabled'"
+                              @click="changeStartTLS(v)">
 
                             <input v-if="k == 'BindType'" type="radio" v-model="newProvider.info.BindType" value="authenticated"
                               @click="changeBindType('authenticated')">
@@ -848,15 +848,23 @@
 </template>
 
 <script>
-import Password from "vue-password-strength-meter";
+import PasswordMeter from "../../directives/PasswordMeter.vue";
 
 export default {
   name: "UsersGroups",
   components: {
-    Password
+    PasswordMeter
+  },
+  beforeRouteEnter(to, from, next) {
+    var auths = JSON.parse(localStorage.getItem("auths"));
+    if (auths.indexOf("users-groups") != -1) {
+      next();
+    } else {
+      next("/");
+    }
   },
   beforeRouteLeave(to, from, next) {
-    $("#accountProviderWizard").modal("hide");
+    $(".modal").modal("hide");
     next();
   },
   mounted() {
@@ -1063,9 +1071,9 @@ export default {
         selectedGroup: null,
         groups: [],
         newPassword: "",
-        isPassGenerated: false,
         confirmNewPassword: "",
-        passwordStrength: 0,
+        passwordStrength: false,
+        togglePass: false,
         errorProps: {
           name: "",
           gecos: "",
@@ -1126,6 +1134,10 @@ export default {
           console.error(error);
         }
       );
+    },
+
+    togglePass() {
+      this.newUser.togglePass = !this.newUser.togglePass;
     },
 
     getPasswordPolicy() {
@@ -1279,23 +1291,6 @@ export default {
 
     removeUserFromGroup(index) {
       this.newGroup.members.splice(index, 1);
-    },
-
-    genPassword() {
-      var password = this.generatePassword();
-      this.newUser.newPassword = password.trim();
-      this.newUser.confirmNewPassword = password.trim();
-      this.newUser.isPassGenerated = true;
-
-      setTimeout(function() {
-        var element = document.getElementById("password-user-create");
-        var event = new Event("input");
-        element.dispatchEvent(event);
-      }, 250);
-    },
-
-    showScore(score) {
-      this.newUser.passwordStrength = score;
     },
 
     openCreateUser() {

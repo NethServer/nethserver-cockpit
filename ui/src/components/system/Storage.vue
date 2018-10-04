@@ -10,6 +10,14 @@
 <script>
 export default {
   name: "Storage",
+  beforeRouteEnter(to, from, next) {
+    var auths = JSON.parse(localStorage.getItem("auths"));
+    if (auths.indexOf("storage") != -1) {
+      next();
+    } else {
+      next("/");
+    }
+  },
   mounted() {
     var context = this;
     $("#storage-frame").on("load", function() {

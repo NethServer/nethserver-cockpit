@@ -10,6 +10,14 @@
 <script>
 export default {
   name: "Network",
+  beforeRouteEnter(to, from, next) {
+    var auths = JSON.parse(localStorage.getItem("auths"));
+    if (auths.indexOf("network") != -1) {
+      next();
+    } else {
+      next("/");
+    }
+  },
   mounted() {
     var context = this
     $('#network-frame').on('load', function () {

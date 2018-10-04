@@ -13,9 +13,29 @@ export default {
   name: "ApplicationsDetails",
   mounted() {
     var context = this;
-    $("#app-frame").on("load", function() {
-      context.view.isLoaded = true;
 
+    context.exec(
+      ["system-authorization/validate"],
+      {
+        action: "check-app",
+        name: context.application
+      },
+      null,
+      function(success) {
+        if (success.auth) {
+          context.view.isLoaded = true;
+        } else {
+          context.$router.push("/applications");
+        }
+      },
+      function(error) {
+        console.error(error);
+        context.$router.push("/applications");
+      },
+      false
+    );
+
+    $("#app-frame").on("load", function() {
       // select the target node
       var target = document.querySelector("#app-frame").contentDocument.body;
 

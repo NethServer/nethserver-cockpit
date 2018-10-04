@@ -112,6 +112,14 @@
 <script>
 export default {
   name: "TrustedNetworks",
+  beforeRouteEnter(to, from, next) {
+    var auths = JSON.parse(localStorage.getItem("auths"));
+    if (auths.indexOf("trusted-networks") != -1) {
+      next();
+    } else {
+      next("/");
+    }
+  },
   beforeRouteLeave(to, from, next) {
     $("#newNetworkModal").modal("hide");
     $("#deleteNetworkModal").modal("hide");

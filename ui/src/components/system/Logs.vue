@@ -10,6 +10,14 @@
 <script>
   export default {
     name: "Logs",
+    beforeRouteEnter(to, from, next) {
+    var auths = JSON.parse(localStorage.getItem("auths"));
+    if (auths.indexOf("logs") != -1) {
+      next();
+    } else {
+      next("/");
+    }
+  },
     mounted() {
       var context = this
       $('#logs-frame').on('load', function () {
