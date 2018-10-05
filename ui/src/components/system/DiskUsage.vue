@@ -3,7 +3,7 @@
     <h2>{{$t('disk_usage.title')}}</h2>
     <h3>{{$t('actions')}}</h3>
     <button @click="updateJSONUsage()" class="btn btn-primary btn-lg" type="button">{{$t('disk_usage.update_data')}}</button>
-    <h4>{{$t('disk_usage.update_at')}} {{disk.updatedAt | dateFormat}}</h4>
+    <h4>{{$t('disk_usage.update_at')}} <b>{{disk.updatedAt | dateFormat}}</b></h4>
 
     <div v-if="!view.isLoaded" class="spinner"></div>
 
@@ -14,7 +14,8 @@
     <div id="sequence" v-if="view.isLoaded"></div>
 
     <div id="explanation" v-if="view.isLoaded">
-      <p id="nameFolder">/</p>
+      <button @click="copyPath()" class="btn btn-primary copy-path" type="button">{{$t('disk_usage.copy_path')}}</button>
+      <span v-if="view.copied" class="pficon pficon-ok copy-ok"></span>
       <p id="sizeFolder"></p>
     </div>
 
@@ -60,11 +61,23 @@ export default {
       },
       view: {
         isLoaded: true,
-        isAuth: false
+        isAuth: false,
+        copied: false
       }
     };
   },
   methods: {
+    copyPath() {
+      var context = this;
+      context.$copyText($("#baseBread").html()).then(
+        function(e) {
+          context.view.copied = true;
+        },
+        function(e) {
+          context.view.copied = false;
+        }
+      );
+    },
     drawChart() {
       var context = this;
 
@@ -235,20 +248,12 @@ export default {
                 d3.select(this).on("mouseover", mouseover);
               });
 
-            d3.select("#nameFolder").text("/");
-
             d3
               .select("#sizeFolder")
               .text(context.$options.filters.byteFormat(d.size_actual));
-
-            $("#baseBread").text("/");
           }
 
           function mouseover(d) {
-            if (d.data.name)
-              d3.select("#nameFolder").text(truncate(d.data.name, 18));
-            else d3.select("#nameFolder").text(baseDir);
-
             d3
               .select("#sizeFolder")
               .text(context.$options.filters.byteFormat(d.data.size_actual));
@@ -272,7 +277,7 @@ export default {
               .style("opacity", 1);
           }
 
-                   // Generate a string that describes the points of a breadcrumb polygon.
+          // Generate a string that describes the points of a breadcrumb polygon.
           function breadcrumbPoints(d, i) {
             var points = [];
             points.push("0,0");

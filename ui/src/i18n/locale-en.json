@@ -112,7 +112,8 @@
       "update_data": "Update data",
       "update_at": "Update at",
       "disk_updated_ok": "Disk usage updated successfully!",
-      "disk_updated_error": "Disk usage not updated"
+      "disk_updated_error": "Disk usage not updated",
+      "copy_path": "Copy path"
     },
     "storage": {
       "title": "Storage"

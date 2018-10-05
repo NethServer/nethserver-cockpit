@@ -654,6 +654,16 @@ input[type="checkbox"].form-control {
   margin-top: 10px !important;
 }
 
+.copy-path {
+  margin-top: 5px;
+}
+
+.copy-ok {
+  top: 12px;
+  position: absolute;
+  right: -20px;
+}
+
 .apps-icon {
   height: 30px;
   width: 30px;
