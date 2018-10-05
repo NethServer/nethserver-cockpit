@@ -1,0 +1,16 @@
+[
+    "storage", 
+    "disk-usage", 
+    "certificates", 
+    "dns",
+    "services", 
+    "users-groups", 
+    "network", 
+    "ssh", 
+    "tls-policy", 
+    "trusted-networks",
+    "logs",
+    "wizard",
+    "applications",
+    "software-center"
+]

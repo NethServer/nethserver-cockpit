@@ -1,0 +1,54 @@
+#!/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+use strict;
+use warnings;
+use JSON;
+
+require '/usr/libexec/nethserver/api/lib/auth_functions.pl';
+
+my $ret = {"system" => [], "applications" => []};
+my $user = whoami();
+
+my @apps = list_applications();
+my @system_routes = list_system_routes();
+
+my $system_routes = read_json("/etc/nethserver/cockpit/authorization/system-routes.json");
+
+my $role = get_role($user);
+
+# root can always access everything
+if ($user eq 'root') {
+    foreach my $r (@system_routes) {
+        push($ret->{"system"}, $r)
+    }
+    foreach my $a (@apps) {
+        push($ret->{"applications"}, $a);
+    }
+
+    print encode_json($ret);
+    exit(0);
+}
+
+$ret = get_acl($user, $role);
+
+print encode_json($ret);

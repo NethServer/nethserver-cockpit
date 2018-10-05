@@ -1,0 +1,32 @@
+{
+    "admins":
+    {
+        "system": [
+            "storage",
+            "disk-usage",
+            "certificates",
+            "dns",
+            "services",
+            "users-groups",
+            "network",
+            "ssh",
+            "tls-policy",
+            "trusted-networks",
+            "logs",
+            "wizard",
+            "applications",
+            "software-center"
+        ],
+        "applications": [
+        ]
+    },
+    "managers":
+    {
+        "system": [
+            "services",
+            "users-groups"
+        ],
+        "applications": [
+        ]
+    }
+}

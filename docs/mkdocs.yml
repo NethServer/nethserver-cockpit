@@ -24,6 +24,7 @@ nav:
       - api/system-accounts-provider.md
       - api/system-aliases.md
       - api/system-apps.md
+      - api/system-authorization.md
       - api/system-certificate.md
       - api/system-company.md
       - api/system-disk-usage.md
@@ -40,6 +41,7 @@ nav:
       - api/system-tls-policy.md
       - api/system-trusted-networks.md
       - api/system-users.md
+- authorizations.md
 - ui_guidelines.md
 - environment.md
 - application_manifest.md

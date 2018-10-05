@@ -1,0 +1,7 @@
+Cmnd_Alias MANAGER = /usr/libexec/nethserver/api/system-*/read, /usr/libexec/nethserver/api/system-services/* /usr/libexec/nethserver/api/system-users/* /usr/libexec/nethserver/api/system-disk-usage/*
+
+%managers ALL=NOPASSWD: MANAGER
+
+# server-manager does not require a tty
+Defaults:%managers !requiretty
+

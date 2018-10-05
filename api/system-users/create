@@ -40,8 +40,10 @@ function user_create($data) {
 
 function group_create($data) {
     $cmd = "/sbin/e-smith/signal-event -j group-create '{$data['name']}'";
-    foreach($data['members'] as $m) {
-        $cmd .= " ".escapeshellarg($m);
+    if (isset($data['members'])) {
+        foreach($data['members'] as $m) {
+            $cmd .= " ".escapeshellarg($m);
+        }
     }
 
     passthru($cmd, $ret);
