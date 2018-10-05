@@ -1,48 +1,73 @@
 <template>
-  <div>
+  <div v-if="view.isAuth">
     <h2>{{$t('disk_usage.title')}}</h2>
     <h3>{{$t('actions')}}</h3>
-      <button @click="updateJSONUsage()" class="btn btn-primary btn-lg" type="button">{{$t('disk_usage.update_data')}}</button>
-      <h4>{{'Updated at' | translate}} {{disk.updatedAt}}</h4>
+    <button @click="updateJSONUsage()" class="btn btn-primary btn-lg" type="button">{{$t('disk_usage.update_data')}}</button>
+    <h4>{{$t('disk_usage.update_at')}} {{disk.updatedAt | dateFormat}}</h4>
 
-      <div v-if="!view.isLoaded" class="spinner"></div>
+    <div v-if="!view.isLoaded" class="spinner"></div>
 
     <h3>{{$t('info')}}</h3>
-      <div id="baseContainer" v-if="view.isLoaded">
-        <a href="" onclick="$.reset();" id="baseBread">/</a>
-      </div>
-      <div id="sequence" v-if="view.isLoaded"></div>
+    <div id="baseContainer" v-if="view.isLoaded">
+      <a href="" onclick="$.reset();" id="baseBread">/</a>
+    </div>
+    <div id="sequence" v-if="view.isLoaded"></div>
 
-      <div id="explanation" v-if="view.isLoaded">
-        <p id="nameFolder">/</p>
-        <p id="sizeFolder"></p>
-      </div>
+    <div id="explanation" v-if="view.isLoaded">
+      <p id="nameFolder">/</p>
+      <p id="sizeFolder"></p>
+    </div>
 
-      <div id="chart" v-if="view.isLoaded">
-      </div>
+    <div id="chart" v-if="view.isLoaded">
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "DiskUsage",
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.exec(
+        ["system-authorization/read"],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+
+          if (success.system.indexOf(to.path.substring(1)) == -1) {
+            window.location.hash = "#/";
+            vm.$router.push("/");
+          }
+
+          vm.view.isAuth = true;
+        },
+        function(error) {
+          console.error(error);
+        },
+        false
+      );
+    });
+  },
   mounted() {
-    this.diskUpdateAt();
     this.getJSONUsage();
     this.drawChart();
   },
   data() {
     return {
       disk: {
-        updatedAt: '5/14/2018 4:00:56 AM UTC'
+        updatedAt: 0
       },
       view: {
-        isLoaded: true
+        isLoaded: true,
+        isAuth: false
       }
     };
   },
   methods: {
     drawChart() {
+      var context = this;
+
       // disk draw methods (using d3.js)
       (function($) {
         $.duc = function() {
@@ -51,20 +76,30 @@ export default {
           var height = window.innerHeight;
           var radius = Math.min(height, width) / 3;
 
+          // Breadcrumb dimensions: width, height, spacing, width of tip/tail.
+          var b = {
+            w: window.innerWidth * 80 / 1920,
+            h: 20,
+            s: 3,
+            t: 10
+          };
+
           var total = 0;
           var breadCumbText = window.innerWidth * 6 / 1920;
 
           var baseDir = "/";
           var arcDefault;
 
+          // Keep track of the node that is currently being displayed as the root.
+          var node;
+          var path;
+
           // Total size of all segments; we set this later, after loading the data.
           var totalSize = 0;
 
-          var x = d3.scale.linear().range([0, 2 * Math.PI]);
-
-          var y = d3.scale.sqrt().range([0, radius]);
-
-          var color = d3.scale.category10();
+          var x = d3.scaleLinear().range([0, 2 * Math.PI]);
+          var y = d3.scaleSqrt().range([0, radius]);
+          var color = d3.scaleOrdinal(d3.schemeCategory10);
 
           var svg = d3
             .select("#chart")
@@ -78,53 +113,55 @@ export default {
               "translate(" + width / 2 + "," + height / 2.3 + ")"
             );
 
-          var partition = d3.layout.partition().value(function(d) {
-            return d.size_actual;
-          });
+          var partition = d3.partition();
 
-          var arc = d3.svg
+          var arc = d3
             .arc()
             .startAngle(function(d) {
-              return Math.max(0, Math.min(2 * Math.PI, x(d.x)));
+              return Math.max(0, Math.min(2 * Math.PI, x(d.x0)));
             })
             .endAngle(function(d) {
-              return Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx)));
+              return Math.max(0, Math.min(2 * Math.PI, x(d.x1)));
             })
             .innerRadius(function(d) {
-              return Math.max(0, y(d.y));
+              return Math.max(0, y(d.y0));
             })
             .outerRadius(function(d) {
-              return Math.max(0, y(d.y + d.dy));
+              return Math.max(0, y(d.y1));
             });
 
-          // Keep track of the node that is currently being displayed as the root.
-          var node;
-          var path;
-
-          // Breadcrumb dimensions: width, height, spacing, width of tip/tail.
-          var b = {
-            w: window.innerWidth * 80 / 1920,
-            h: 20,
-            s: 3,
-            t: 10
-          };
-
           function createVisualization(json) {
-            var root = json.duc;
+            json.name = "root";
+            var root = d3
+              .hierarchy(json)
+              .sum(function(d) {
+                return d.size_actual;
+              })
+              .sort(function(a, b) {
+                return b.size_actual - a.size_actual;
+              });
+
             arcDefault = root;
             node = root;
 
+            var nodes = partition(root)
+              .descendants()
+              .filter(function(d) {
+                return true; // 0.005 radians = 0.29 degrees
+              });
+
             path = svg
-              .datum(root)
+              .data([json])
               .selectAll("path")
-              .data(partition.nodes)
+              .data(nodes)
               .enter()
               .append("svg:path")
               .attr("d", arc)
               .attr("fill-rule", "evenodd")
               .style("fill", function(d) {
-                return color(d.name);
+                return color(d.data.name);
               })
+              .style("opacity", 1)
               .on("click", click)
               .on("dblclick", gotoBase)
               .on("mouseover", mouseover)
@@ -151,10 +188,9 @@ export default {
             });
 
             var sizeFolder = document.getElementById("sizeFolder");
-            sizeFolder.innerHTML = filesize(root.size_actual);
-
-            // Basic setup of page elements.
-            initializeBreadcrumbTrail();
+            sizeFolder.innerHTML = context.$options.filters.byteFormat(
+              root.size_actual
+            );
 
             function click(d) {
               node = d;
@@ -185,8 +221,6 @@ export default {
             d3.selection.prototype.first = function() {
               return d3.select(this[0][0]);
             };
-            // Hide the breadcrumb trail
-            d3.select("#trail").style("visibility", "hidden");
 
             // Deactivate all segments during transition.
             d3.selectAll("path").on("mouseover", null);
@@ -195,28 +229,36 @@ export default {
             d3
               .selectAll("path")
               .transition()
-              .duration(1)
+              .duration(10)
               .style("opacity", 1)
-              .each("end", function() {
+              .on("end", function() {
                 d3.select(this).on("mouseover", mouseover);
               });
-            //var rootElem = d3.selectAll("path").first().style("opacity", 1)
 
             d3.select("#nameFolder").text("/");
 
-            d3.select("#sizeFolder").text(filesize(d.size_actual));
+            d3
+              .select("#sizeFolder")
+              .text(context.$options.filters.byteFormat(d.size_actual));
+
+            $("#baseBread").text("/");
           }
 
           function mouseover(d) {
-            if (d.name) d3.select("#nameFolder").text(truncate(d.name, 18));
+            if (d.data.name)
+              d3.select("#nameFolder").text(truncate(d.data.name, 18));
             else d3.select("#nameFolder").text(baseDir);
 
-            d3.select("#sizeFolder").text(filesize(d.size_actual));
+            d3
+              .select("#sizeFolder")
+              .text(context.$options.filters.byteFormat(d.data.size_actual));
 
             d3.select("#explanation").style("visibility", "");
 
-            var sequenceArray = getAncestors(d);
-            updateBreadcrumbs(sequenceArray, d.size_actual);
+            var sequenceArray = d.ancestors().reverse();
+            sequenceArray.shift();
+            updateBreadcrumbs(sequenceArray);
+
             // Fade all the segments.
             d3.selectAll("path").style("opacity", 0.3);
 
@@ -230,32 +272,7 @@ export default {
               .style("opacity", 1);
           }
 
-          function getAncestors(node) {
-            var path = [];
-            var current = node;
-            while (current.parent) {
-              path.unshift(current);
-              current = current.parent;
-            }
-            return path;
-          }
-
-          function initializeBreadcrumbTrail() {
-            // Add the svg area.
-            var trail = d3
-              .select("#sequence")
-              .append("svg:svg")
-              .attr("width", width)
-              .attr("height", 20)
-              .attr("id", "trail");
-            // Add the label at the end, for the percentage.
-            trail
-              .append("svg:text")
-              .attr("id", "endlabel")
-              .style("fill", "#000");
-          }
-
-          // Generate a string that describes the points of a breadcrumb polygon.
+                   // Generate a string that describes the points of a breadcrumb polygon.
           function breadcrumbPoints(d, i) {
             var points = [];
             points.push("0,0");
@@ -270,55 +287,12 @@ export default {
             return points.join(" ");
           }
 
-          // Update the breadcrumb trail to show the current sequence and percentage.
-          function updateBreadcrumbs(nodeArray, percentageString) {
-            // Data join; key function combines name and depth (= position in sequence).
-            var g = d3
-              .select("#trail")
-              .selectAll("g")
-              .data(nodeArray, function(d) {
-                return d.name + d.depth;
-              });
-
-            // Add breadcrumb and label for entering nodes.
-            var entering = g.enter().append("svg:g");
-
-            entering
-              .append("svg:polygon")
-              .attr("points", breadcrumbPoints)
-              .style("fill", function(d) {
-                return color(d.name);
-              });
-
-            entering
-              .append("svg:text")
-              .attr("x", (b.w + b.t) / 2)
-              .attr("y", b.h / 2)
-              .attr("dy", "0.35em")
-              .attr("text-anchor", "middle")
-              .text(function(d) {
-                return truncate(d.name, breadCumbText);
-              });
-
-            // Set position for entering and updating nodes.
-            g.attr("transform", function(d, i) {
-              return "translate(" + i * (b.w + b.s) + ", 0)";
+          function updateBreadcrumbs(nodeArray) {
+            var dirs = nodeArray.map(function(i) {
+              return i.data.name;
             });
 
-            // Remove exiting nodes.
-            g.exit().remove();
-
-            // Now move and update the percentage at the end.
-            d3
-              .select("#trail")
-              .select("#endlabel")
-              .attr("x", (nodeArray.length + 0.5) * (b.w + b.s))
-              .attr("y", b.h / 2)
-              .attr("dy", "0.35em")
-              .attr("text-anchor", "middle");
-
-            // Make the breadcrumb trail visible, if it's hidden.
-            d3.select("#trail").style("visibility", "");
+            $("#baseBread").text("/" + dirs.join("/"));
           }
 
           function truncate(n, len) {
@@ -336,30 +310,24 @@ export default {
 
           // Setup for switching data: stash the old values for transition.
           function stash(d) {
-            d.x0 = d.x;
-            d.dx0 = d.dx;
+            d.xx0 = d.x0;
+            d.xx1 = d.x1;
           }
 
           // When switching data: interpolate the arcs in data space.
           function arcTweenData(a, i) {
             var oi = d3.interpolate(
-              {
-                x: a.x0,
-                dx: a.dx0
-              },
+              { x0: a.x0s ? a.x0s : 0, x1: a.x1s ? a.x1s : 0 },
               a
             );
-
             function tween(t) {
               var b = oi(t);
-              a.x0 = b.x;
-              a.dx0 = b.dx;
+              a.x0s = b.x0;
+              a.x1s = b.x1;
               return arc(b);
             }
             if (i == 0) {
-              // If we are on the first arc, adjust the x domain to match the root node
-              // at the current zoom level. (We only need to do this once.)
-              var xd = d3.interpolate(x.domain(), [node.x, node.x + node.dx]);
+              var xd = d3.interpolate(x.domain(), [node.x0, node.x1]);
               return function(t) {
                 x.domain(xd(t));
                 return tween(t);
@@ -371,9 +339,9 @@ export default {
 
           // When zooming: interpolate the scales.
           function arcTweenZoom(d) {
-            var xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
-              yd = d3.interpolate(y.domain(), [d.y, 1]),
-              yr = d3.interpolate(y.range(), [d.y ? 20 : 0, radius]);
+            var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
+              yd = d3.interpolate(y.domain(), [d.y0, 1]),
+              yr = d3.interpolate(y.range(), [d.y0 ? 20 : 0, radius]);
             return function(d, i) {
               return i
                 ? function(t) {
@@ -391,48 +359,58 @@ export default {
         };
       })(jQuery);
     },
-    diskUpdateAt() {
-      /* nethserver.system.disks.getUpdatedUsage().then(
-            function(updated) {
-              $scope.objects.updatedAt = updated;
-              $scope.$apply();
-            },
-            function(err) {
-              console.error(err);
-            }
-          ); */
-    },
+
     getJSONUsage() {
-      /* nethserver.system.disks.getJSONUsage().then(
-            function(json) {
-              $scope.view.isLoaded = true;
-              var cv = $.duc();
-              cv(JSON.parse(json));
-              $scope.$apply();
-            },
-            function(err) {
-              console.error(err);
-            }
-          ); */
+      var context = this;
+
+      context.exec(
+        ["system-disk-usage/read"],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.view.isLoaded = true;
+
+          var cv = $.duc();
+          cv(success.status.data.duc);
+
+          context.disk.updatedAt = success.status.date;
+        },
+        function(error) {
+          console.error(error);
+          context.view.isLoaded = true;
+        }
+      );
     },
     updateJSONUsage() {
-      this.view.isLoaded = false;
-      /* nethserver.system.disks.updateJSONUsage().then(
-            function(result) {
-              $scope.diskUpdateAt();
-              $scope.getJSONUsage();
-              $scope.objects.onLoad = false;
-              $scope.$apply();
-            },
-            function(err) {
-              console.error(err);
-            }
-          ); */
+      var context = this;
+
+      context.exec(
+        ["system-disk-usage/update"],
+        null,
+        function(stream) {
+          console.info("disk-usage", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "disk_usage.disk_updated_ok"
+          );
+
+          // get hosts
+          window.location.reload();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "disk_usage.disk_updated_error"
+          );
+        }
+      );
     }
   }
 };
 </script>
 
 <style>
-
 </style>

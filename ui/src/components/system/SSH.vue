@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="view.isAuth">
     <h2>{{$t('ssh.title')}}</h2>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <div v-if="view.isLoaded">
@@ -59,12 +59,27 @@
 export default {
   name: "SSH",
   beforeRouteEnter(to, from, next) {
-    var auths = JSON.parse(localStorage.getItem("auths"));
-    if (auths.indexOf("ssh") != -1) {
-      next();
-    } else {
-      next("/");
-    }
+    next(vm => {
+      vm.exec(
+        ["system-authorization/read"],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+
+          if (success.system.indexOf(to.path.substring(1)) == -1) {
+            window.location.hash = "#/";
+            vm.$router.push("/");
+          }
+
+          vm.view.isAuth = true;
+        },
+        function(error) {
+          console.error(error);
+        },
+        false
+      );
+    });
   },
   mounted() {
     this.getSSHConfig();
@@ -72,7 +87,8 @@ export default {
   data() {
     return {
       view: {
-        isLoaded: false
+        isLoaded: false,
+        isAuth: false
       },
       SSHConfig: {
         isLoading: false,

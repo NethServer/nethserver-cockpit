@@ -12,14 +12,14 @@
 
       <ul v-if="wizardDone" class="list-group panel">
 
-        <li v-if="checkAuth('')" id="dashboard-item" v-bind:class="[getCurrentPath('') ? 'active' : '', 'list-group-item']">
+        <li id="dashboard-item" v-bind:class="[getCurrentPath('') ? 'active' : '', 'list-group-item']">
           <a href="#/">
             <span class="fa fa-cube"></span>
             <span class="list-group-item-value">{{$t('menu.dashboard')}}</span>
           </a>
         </li>
 
-        <li v-if="checkAuth('')" class="li-empty"></li>
+        <li class="li-empty"></li>
 
         <li v-if="checkAuth('storage')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('storage') ? 'active' : '', 'list-group-item']">
           <a href="#/storage">
@@ -99,7 +99,7 @@
 
         <li v-if="checkAuth('logs')" class="li-empty"></li>
 
-        <li v-if="checkAuth('about')" v-bind:class="[getCurrentPath('about') ? 'active' : '', 'list-group-item']">
+        <li v-bind:class="[getCurrentPath('about') ? 'active' : '', 'list-group-item']">
           <a href="#/about">
             <span class="fa fa-info"></span>
             <span class="list-group-item-value">{{$t('menu.about')}}</span>
@@ -171,6 +171,7 @@ export default {
       }
     });
 
+    // get authorization for routes
     this.getAuths();
 
     // check for running tasks
@@ -260,7 +261,6 @@ export default {
         function(success) {
           success = JSON.parse(success);
           context.auths = success.system || [];
-          localStorage.setItem("auths", JSON.stringify(context.auths));
         },
         function(error) {
           console.error(error);

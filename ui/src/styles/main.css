@@ -372,12 +372,14 @@ circle {
 
 #baseBread {
   float: left;
+  font-size: 15px;
   background: rgb(103, 102, 102);
-  width: 90px;
   text-align: center;
   color: white;
   text-decoration: none;
   z-index: 1;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 #sequence {

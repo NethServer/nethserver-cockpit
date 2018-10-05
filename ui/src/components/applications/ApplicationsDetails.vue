@@ -25,11 +25,13 @@ export default {
         if (success.auth) {
           context.view.isLoaded = true;
         } else {
+          window.location.hash = "#/applications";
           context.$router.push("/applications");
         }
       },
       function(error) {
         console.error(error);
+        window.location.hash = "#/applications";
         context.$router.push("/applications");
       },
       false

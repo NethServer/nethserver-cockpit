@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="view.isAuth">
     <h2>{{$t('logs.title')}}</h2>
     <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
     <iframe id="logs-frame" class="iframe-embedded" src="/cockpit/@localhost/system/logs.html"></iframe>
@@ -8,60 +8,73 @@
 </template>
 
 <script>
-  export default {
-    name: "Logs",
-    beforeRouteEnter(to, from, next) {
-    var auths = JSON.parse(localStorage.getItem("auths"));
-    if (auths.indexOf("logs") != -1) {
-      next();
-    } else {
-      next("/");
-    }
+export default {
+  name: "Logs",
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.exec(
+        ["system-authorization/read"],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+
+          if (success.system.indexOf(to.path.substring(1)) == -1) {
+            window.location.hash = "#/";
+            vm.$router.push("/");
+          }
+
+          vm.view.isAuth = true;
+        },
+        function(error) {
+          console.error(error);
+        },
+        false
+      );
+    });
   },
-    mounted() {
-      var context = this
-      $('#logs-frame').on('load', function () {
-        context.view.isLoaded = true;
+  mounted() {
+    var context = this;
+    $("#logs-frame").on("load", function() {
+      context.view.isLoaded = true;
 
-        // select the target node
-        var target = document.querySelector('#logs-frame').contentDocument.body;
+      // select the target node
+      var target = document.querySelector("#logs-frame").contentDocument.body;
 
-        // create an observer instance
-        var observer = new MutationObserver(function (mutations) {
-          mutations.forEach(function (mutation) {
-            if ($(mutation.target).hasClass("modal-open")) {
-              context.view.modalFake = true;
-            } else {
-              context.view.modalFake = false;
-            }
-          });
+      // create an observer instance
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if ($(mutation.target).hasClass("modal-open")) {
+            context.view.modalFake = true;
+          } else {
+            context.view.modalFake = false;
+          }
         });
-
-        // configuration of the observer:
-        var config = {
-          attributes: true,
-          childList: true,
-          characterData: true
-        }
-
-        // pass in the target node, as well as the observer options
-        observer.observe(target, config);
       });
-    },
-    data() {
-      return {
-        msg: "Welcome to Your NethServer Module",
-        view: {
-          isLoaded: false,
-          modalFake: false
-        }
-      };
-    }
-  };
 
+      // configuration of the observer:
+      var config = {
+        attributes: true,
+        childList: true,
+        characterData: true
+      };
+
+      // pass in the target node, as well as the observer options
+      observer.observe(target, config);
+    });
+  },
+  data() {
+    return {
+      msg: "Welcome to Your NethServer Module",
+      view: {
+        isLoaded: false,
+        isAuth: false,
+        modalFake: false
+      }
+    };
+  }
+};
 </script>
 
 <style>
-
-
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="view.isAuth">
     <h2>{{$t('dns.title')}}</h2>
     <h3>{{$t('actions')}}</h3>
     <button @click="newDNS()" class="btn btn-primary btn-lg shutdown-privileged" data-action="restart" data-container="body">
@@ -127,12 +127,27 @@
 export default {
   name: "DNS",
   beforeRouteEnter(to, from, next) {
-    var auths = JSON.parse(localStorage.getItem("auths"));
-    if (auths.indexOf("dns") != -1) {
-      next();
-    } else {
-      next("/");
-    }
+    next(vm => {
+      vm.exec(
+        ["system-authorization/read"],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+
+          if (success.system.indexOf(to.path.substring(1)) == -1) {
+            window.location.hash = "#/";
+            vm.$router.push("/");
+          }
+
+          vm.view.isAuth = true;
+        },
+        function(error) {
+          console.error(error);
+        },
+        false
+      );
+    });
   },
   beforeRouteLeave(to, from, next) {
     $("#newDNSModal").modal("hide");
@@ -145,7 +160,8 @@ export default {
   data() {
     return {
       view: {
-        isLoaded: false
+        isLoaded: false,
+        isAuth: false
       },
       tableLangsTexts: this.tableLangs(),
       columns: [

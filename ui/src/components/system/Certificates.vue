@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="view.isAuth">
     <h2>{{$t('certificates.title')}}</h2>
     <h3>{{$t('actions')}}</h3>
     <div class="btn-group">
@@ -317,13 +317,28 @@
 <script>
 export default {
   name: "Certificates",
-   beforeRouteEnter(to, from, next) {
-    var auths = JSON.parse(localStorage.getItem("auths"));
-    if (auths.indexOf("certificates") != -1) {
-      next();
-    } else {
-      next("/");
-    }
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.exec(
+        ["system-authorization/read"],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+
+          if (success.system.indexOf(to.path.substring(1)) == -1) {
+            window.location.hash = "#/";
+            vm.$router.replace("/");
+          }
+
+          vm.view.isAuth = true;
+        },
+        function(error) {
+          console.error(error);
+        },
+        false
+      );
+    });
   },
   beforeRouteLeave(to, from, next) {
     $("#uploadCertificateModal").modal("hide");
@@ -338,7 +353,8 @@ export default {
   data() {
     return {
       view: {
-        isLoaded: false
+        isLoaded: false,
+        isAuth: false
       },
       tableLangsTexts: this.tableLangs(),
       columns: [

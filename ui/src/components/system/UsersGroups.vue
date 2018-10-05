@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="view.isAuth">
     <h2>{{$t('users_groups.title')}}</h2>
 
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
@@ -852,6 +852,29 @@ import PasswordMeter from "../../directives/PasswordMeter.vue";
 
 export default {
   name: "UsersGroups",
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.exec(
+        ["system-authorization/read"],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+
+          if (success.system.indexOf(to.path.substring(1)) == -1) {
+            window.location.hash = "#/";
+            vm.$router.push("/");
+          }
+
+          vm.view.isAuth = true;
+        },
+        function(error) {
+          console.error(error);
+        },
+        false
+      );
+    });
+  },
   components: {
     PasswordMeter
   },
@@ -896,7 +919,8 @@ export default {
   data() {
     return {
       view: {
-        isLoaded: false
+        isLoaded: false,
+        isAuth: false
       },
       searchString: "",
       currentSearchFilter: "user",
