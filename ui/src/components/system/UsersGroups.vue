@@ -878,14 +878,6 @@ export default {
   components: {
     PasswordMeter
   },
-  beforeRouteEnter(to, from, next) {
-    var auths = JSON.parse(localStorage.getItem("auths"));
-    if (auths.indexOf("users-groups") != -1) {
-      next();
-    } else {
-      next("/");
-    }
-  },
   beforeRouteLeave(to, from, next) {
     $(".modal").modal("hide");
     next();
