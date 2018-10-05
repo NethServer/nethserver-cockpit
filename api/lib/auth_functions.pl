@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 
 #
 # Copyright (C) 2018 Nethesis S.r.l.
