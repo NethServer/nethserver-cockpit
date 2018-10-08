@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version:        0.0.2
+Version:        0.0.3
 Release:        1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
