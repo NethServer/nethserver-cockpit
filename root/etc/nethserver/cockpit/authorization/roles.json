@@ -5,6 +5,7 @@
             "storage",
             "disk-usage",
             "certificates",
+            "backup",
             "dns",
 	    "dhcp",
             "services",

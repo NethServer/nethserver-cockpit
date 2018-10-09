@@ -4,6 +4,7 @@
     "certificates", 
     "dns",
     "dhcp",
+    "backup",
     "services", 
     "users-groups", 
     "network", 
