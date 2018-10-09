@@ -72,6 +72,9 @@ export default {
       context.$copyText($("#baseBread").html()).then(
         function(e) {
           context.view.copied = true;
+          setTimeout(function() {
+            context.view.copied = false;
+          }, 2000);
         },
         function(e) {
           context.view.copied = false;

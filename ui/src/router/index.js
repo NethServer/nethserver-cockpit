@@ -13,6 +13,7 @@ import DiskUsage from '@/components/system/DiskUsage'
 
 import Certificates from '@/components/system/Certificates'
 import DNS from '@/components/system/DNS'
+import DHCP from '@/components/system/DHCP'
 import Services from '@/components/system/Services'
 import UsersGroups from '@/components/system/UsersGroups'
 
@@ -63,6 +64,11 @@ export default new Router({
       path: '/dns',
       name: 'DNS',
       component: DNS
+    },
+    {
+      path: '/dhcp',
+      name: 'DHCP',
+      component: DHCP
     },
     {
       path: '/services',

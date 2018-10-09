@@ -2,8 +2,9 @@ import Vue from "vue";
 import VueResource from "vue-resource";
 import VueI18n from "vue-i18n";
 import VueGoodTable from "vue-good-table";
-import VueClipboard from 'vue-clipboard2'
-import BootstrapVue from 'bootstrap-vue'
+import VueClipboard from 'vue-clipboard2';
+import VueToggleButton from 'vue-js-toggle-button';
+import BootstrapVue from 'bootstrap-vue';
 
 import App from "./App.vue";
 import router from "./router/index";
@@ -19,6 +20,7 @@ Vue.use(VueResource);
 Vue.use(VueI18n);
 Vue.use(VueGoodTable);
 Vue.use(VueClipboard)
+Vue.use(VueToggleButton)
 Vue.use(BootstrapVue);
 
 import NethServer from "./services/nethserver"

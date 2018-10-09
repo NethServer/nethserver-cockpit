@@ -15,6 +15,7 @@ a {
 .container-cards-pf {
   margin-left: 55px;
   margin-top: 0px;
+  margin-bottom: 20px;
 }
 
 .container-cards-pf-apps {
@@ -767,4 +768,37 @@ input[type="checkbox"].form-control {
 
 .password-hints {
   text-align: center
+}
+
+.vue-js-switch .v-switch-core {
+  border: 1px solid #bbbbbb !important;
+  border-radius: 0px !important;
+}
+
+.vue-js-switch .v-switch-core .v-switch-button {
+  border-radius: 0px !important;
+  height: 18px !important;
+}
+
+.vue-js-switch.min-toggle .v-switch-core .v-switch-button {
+  border-radius: 0px !important;
+  height: 12px !important;
+}
+
+.vue-js-switch.toggled .v-switch-core .v-switch-button {
+  transform: translate3d(30px, 3px, 0px) !important;
+}
+
+.vue-js-switch.toggled.min-toggle .v-switch-core .v-switch-button {
+  transform: translate3d(21px, 3px, 0px) !important;
+}
+
+.dhcp-int {
+  display: inline;
+  margin-right: 10px;
+}
+
+.dhcp-mod-btn {
+  margin-left: 8px;
+  margin-top: -4px;
 }

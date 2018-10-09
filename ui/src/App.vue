@@ -48,6 +48,12 @@
             <span class="list-group-item-value">{{$t('menu.dns')}}</span>
           </a>
         </li>
+        <li v-if="checkAuth('dhcp')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('dhcp') ? 'active' : '', 'list-group-item']">
+          <a href="#/dhcp">
+            <span class="pficon pficon-network"></span>
+            <span class="list-group-item-value">{{$t('menu.dhcp')}}</span>
+          </a>
+        </li>
         <li v-if="checkAuth('services')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('services') ? 'active' : '', 'list-group-item']">
           <a href="#/services">
             <span class="fa fa-fighter-jet"></span>
@@ -61,7 +67,7 @@
           </a>
         </li>
 
-        <li v-if="checkAuth('certificates') || checkAuth('dns') || checkAuth('services') || checkAuth('users-groups')" class="li-empty"></li>
+        <li v-if="checkAuth('certificates') || checkAuth('dns') || checkAuth('dhcp') || checkAuth('services') || checkAuth('users-groups')" class="li-empty"></li>
 
         <li v-if="checkAuth('network')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('network') ? 'active' : '', 'list-group-item']">
           <a href="#/network">
