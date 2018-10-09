@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+set -e
+
+HOST=$1
+PORT=$2
+USER=$3
+DIR=$4
+PASSWORD=$5 # must be a file containing the password
+
+if [ ! -f $PASSWORD ]; then
+    exit 1
+fi
+
+tmp=$(mktemp -u -p $DIR)
+timeout 5 sshpass -f $PASSWORD ssh -p $PORT $USER@$HOST "touch $tmp && rm -f $tmp"

@@ -1,0 +1,178 @@
+#!/usr/bin/php
+<?php
+/*
+ * Copyright (C) 2018 Nethesis S.r.l.
+ * http://www.nethesis.it - nethserver@nethesis.it
+ *
+ * This script is part of NethServer.
+ *
+ * NethServer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License,
+ * or any later version.
+ *
+ * NethServer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NethServer.  If not, see COPYING.
+*/
+
+require_once("/usr/libexec/nethserver/api/lib/dhcp_functions.php");
+
+$vfstypes = array('usb','cifs','nfs','b2','s3','sftp');
+$engines = array('duplicity','restic','rsync');
+$cleanuptypes = array('never','7D','14D','28D','56D','168D','364D');
+
+function validate_time($time, &$error)
+{
+    $time = trim($time);
+    if (!@$time) {
+        $error = 'backuptime_not_found';
+        return false;
+    }
+    $tmp = explode(" ",$time);
+    if (count($tmp) < 5) {
+        $error = "backuptime_not_enough_elements";
+        return false;
+    }
+
+    return true;
+}
+
+$data = readInput();
+$action = $data['action'];
+
+
+$v = new LegacyValidator($data);
+if ($action == 'create-backup' || $action == 'update-backup') {
+    $v->declareParameter('name', Validate::USERNAME);
+    $v->declareParameter('status', Validate::SERVICESTATUS);
+    $v->declareParameter('VFSType', $v->createValidator()->memberOf($vfstypes));
+    $v->declareParameter('engine', $v->createValidator()->memberOf($engines));
+    $v->declareParameter('Notify',  $v->createValidator()->memberOf(array('error','always','never')));
+    $v->declareParameter('IncludeLogs', Validate::SERVICESTATUS);
+    $v->declareParameter('CleanupOlderThan', $v->createValidator()->memberOf($cleanuptypes));
+
+    $db = new EsmithDatabase('backups');
+    $r = $db->getKey($data['name']);
+    if ($r && $action == 'create-backup') {
+        $v->addValidationError('name','backup_already_exists');
+        error($v);
+    };
+
+    if (!validate_time($data['BackupTime'], $error)) {
+        $v->addValidationError('BackupTime',$error);
+        error($v);
+    }
+
+
+    switch($data['engine']) {
+    case 'duplicity':
+        $v->declareParameter('Type', $v->createValidator()->memberOf(array('full','incremental')));
+        $v->declareParameter('FullDay', $v->createValidator()->integer()->greatThan(-1)->lessThan(7));
+        $v->declareParameter('VolSize', $v->createValidator()->integer()->greatThan(1));
+        break;
+    case 'restic':
+        $v->declareParameter('Prune', $v->createValidator()->memberOf(array('always',0,1,2,3,4,5,6,7)));
+        break;
+    }
+    switch($data['VFSType']) {
+    case 'usb':
+        $v->declareParameter('USBLabel', Validate::NOTEMPTY);
+        break;
+    case 'cifs':
+        $v->declareParameter('SMBShare', Validate::NOTEMPTY);
+        $v->declareParameter('SMBHost', Validate::HOSTADDRESS);
+        $v->declareParameter('SMBLogin', Validate::ANYTHING);
+        $v->declareParameter('SMBPassword', Validate::ANYTHING);
+        break;
+    case 'nfs':
+        $v->declareParameter('NFSShare', Validate::NOTEMPTY);
+        $v->declareParameter('NFSHost', Validate::HOSTADDRESS);
+        break;
+    case 'sftp':
+        $v->declareParameter('SftpHost', Validate::HOSTADDRESS);
+        $v->declareParameter('SftpPort', Validate::PORTNUMBER);
+        $v->declareParameter('SftpUser', Validate::NOTEMPTY);
+        $v->declareParameter('SftpPassword', Validate::NOTEMPTY);
+        $v->declareParameter('SftpDirectory', Validate::NOTEMPTY);
+        break;
+    case 's3':
+        $v->declareParameter('S3AccessKey', Validate::NOTEMPTY);
+        $v->declareParameter('S3Bucket', Validate::NOTEMPTY);
+        $v->declareParameter('S3SecretKey', Validate::NOTEMPTY);
+        $v->declareParameter('S3Host', Validate::HOSTADDRESS);
+        break;
+    case 'b2':
+        $v->declareParameter('B2AccountId', Validate::NOTEMPTY);
+        $v->declareParameter('B2AccountKey', Validate::NOTEMPTY);
+        $v->declareParameter('B2Bucket', Validate::NOTEMPTY);
+        break;
+    }
+
+} else if ($action == 'sftp-credentials') {
+    $pass_file = tempnam("/tmp","SFTP");
+    file_put_contents($pass_file, $data['SftpPassword']);
+    exec("/usr/libexec/nethserver/api/system-backup/check-sftp {$data['SftpHost']} {$data['SftpPort']} {$data['SftpUser']} {$data['SftpDirectory']} $pass_file", $output, $ret);
+    unlink($pass_file);
+    if ($ret > 0) {
+        error(array("type" => "NotValid", "message" => "Invalid credentials"));
+    } else {
+        success();
+    }
+
+} else if ($action == 'b2-credentials') {
+    exec("/usr/libexec/nethserver/api/system-backup/check-b2 {$data['B2AccountId']} {$data['B2AccountKey']} {$data['B2Bucket']}", $output, $ret);
+    if ($ret > 0) {
+        error(array("type" => "NotValid", "message" => "Invalid credentials"));
+    } else {
+        success();
+    }
+
+} else if ($action == 's3-credentials') {
+    exec("/usr/libexec/nethserver/api/system-backup/check-s3 {$data['S3AccessKey']} {$data['S3SecretKey']} {$data['S3Bucket']} {$data['S3Host']}", $output, $ret);
+    if ($ret > 0) {
+        error(array("type" => "NotValid", "message" => "Invalid credentials"));
+    } else {
+        success();
+    }
+
+} else if ($action == 'nfs-credentials') {
+    exec("/usr/libexec/nethserver/api/system-backup/check-nfs {$data['NFSHost']} {$data['NFSShare']}", $output, $ret);
+    if ($ret > 0) {
+        error(array("type" => "NotValid", "message" => "Invalid credentials"));
+    } else {
+        success();
+    }
+
+} else if ($action == 'cifs-credentials') {
+    $pass_file = tempnam("/tmp","SMB");
+    file_put_contents($pass_file, "username={$data['SMBLogin']}\npassword={$data['SMBPassword']}\n");
+    exec("/usr/libexec/nethserver/api/system-backup/check-cifs {$data['SMBHost']} $pass_file {$data['SMBShare']}", $output, $ret);
+    unlink($pass_file);
+    if ($ret > 0) {
+        error(array("type" => "NotValid", "message" => "Invalid credentials"));
+    } else {
+        success();
+    }
+
+} else if ($action == 'disk-access') {
+    exec("/usr/libexec/nethserver/api/system-backup/check-disk {$data['USBLabel']}", $output, $ret);
+    if ($ret > 0) {
+        error(array("type" => "NotValid", "message" => "Disk access failed"));
+    } else {
+        success();
+    }
+
+}
+
+# Validate the input
+if ($v->validate()) {
+    success();
+} else {
+    error($v);
+}
+

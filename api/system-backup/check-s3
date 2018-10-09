@@ -1,0 +1,61 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+#
+# Try to upload a file to B2, then delete it
+#
+# Exit codes:
+# 1 - upload failed
+# 2  delte failed
+#
+
+ACCESS_KEY=$1
+SECRET_KEY=$2
+BUCKET=$3
+HOST=${4:-s3.amazonaws.com}
+
+date=$(date -R)
+# Prepare file to upload
+tmp_file=$(mktemp)
+echo $RANMDOM > $tmp_file
+file_to_upload=$(basename $tmp_file)
+
+path="/$BUCKET/$file_to_upload"
+content_type="application/octet-stream"
+put_challenge="PUT\n\n${content_type}\n${date}\n${path}"
+put_signature=`echo -en ${put_challenge} | openssl sha1 -hmac ${SECRET_KEY} -binary | base64`
+curl -s -X PUT -T "${tmp_file}" -H "Host: ${BUCKET}.${HOST}" -H "Date: ${date}" -H "Content-Type: ${content_type}" -H "Authorization: AWS ${ACCESS_KEY}:${put_signature}" "https://${BUCKET}.${HOST}/${file_to_upload}"
+if [ $? -gt 0 ]; then
+    rm -f $tmp_file
+    exit 1
+fi
+delete_challenge="DELETE\n\n\n${date}\n${path}"
+delete_signature=`echo -en ${delete_challenge} | openssl sha1 -hmac ${SECRET_KEY} -binary | base64`
+curl -s --fail -X DELETE -H "Host: ${BUCKET}.${HOST}" -H "Date: ${date}" -H "Authorization: AWS ${ACCESS_KEY}:${delete_signature}" "https://${BUCKET}.${HOST}/${file_to_upload}"
+if [ $? -gt 0 ]; then
+    rm -f $tmp_file
+    exit 1
+fi
+
+rm -f $tmp_file
+
+exit 0

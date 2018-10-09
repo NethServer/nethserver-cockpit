@@ -80,7 +80,7 @@ function error($arg = NULL)
     $error = array(
         "id" => time(),
         "type" => "GenericError",
-        "messages" => "Generic error"
+        "message" => "Generic error"
     );
     if ($arg instanceof LegacyValidator) {
         $error = array(

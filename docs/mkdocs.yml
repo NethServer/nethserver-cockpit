@@ -25,6 +25,7 @@ nav:
       - api/system-aliases.md
       - api/system-apps.md
       - api/system-authorization.md
+      - api/system-backup.md
       - api/system-certificate.md
       - api/system-company.md
       - api/system-dhcp.md

@@ -1,0 +1,63 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+# Try to mount a partition using the filesystem label
+# Exit codes:
+# 1 - filesystem not found
+# 2 - mount failed
+# 3 - write failed
+# 4 - delete failed
+
+LABEL=$1
+
+device=$(/sbin/blkid -u filesystem -L $LABEL)
+if [ $? -gt 0 ]; then
+    exit 1
+fi
+
+tmp_dir=$(mktemp -d)
+mount $device $tmp_dir
+if [ $? -gt 0 ]; then
+    rmdir $tmp_dir
+    exit 2
+fi
+
+
+tmp_file=$(mktemp -p $tmp_dir)
+if [ $? -gt 0 ]; then
+    rm -rf $tmp_file
+    umount $tmp_dir
+    rmdir $tmp_dir
+    exit 3
+fi
+
+rm -f $tmp_file
+if [ $? -gt 0 ]; then
+    umount $tmp_dir
+    rmdir $tmp_dir
+    exit 4
+fi
+
+umount $tmp_dir
+rmdir $tmp_dir
+
+exit 0

@@ -1,0 +1,244 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+use strict;
+use warnings;
+use esmith::ConfigDB;
+use NethServer::BackupData;
+use JSON;
+use File::stat;
+
+require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
+
+sub get_custom_includes
+{
+    my $name = shift;
+    my @include_data_files;
+    my $backup = new NethServer::BackupData();
+
+    if ( -f "/etc/backup-data/$name.include" ) {
+        @include_data_files = $backup->load_file_list("/etc/backup-data/$name.include");
+        $backup->uniq(\@include_data_files);
+    }
+    return \@include_data_files;
+}
+
+sub get_custom_excludes
+{
+    my $name = shift;
+    my @exclude_data_files;
+    my $backup = new NethServer::BackupData();
+
+    if ( -f "/etc/backup-data/$name.exclude" ) {
+        @exclude_data_files = $backup->load_file_list("/etc/backup-data/$name.exclude");
+        $backup->uniq(\@exclude_data_files);
+    }
+    return \@exclude_data_files;
+}
+
+sub get_default_includes()
+{
+    my $backup = new NethServer::BackupData();
+    my @tmp = $backup->includes($backup->get_config_dir());
+    $backup->uniq(\@tmp);
+    return \@tmp;
+}
+
+sub get_default_excludes()
+{
+    my $backup = new NethServer::BackupData();
+    my @tmp = $backup->excludes($backup->get_config_dir());
+    $backup->uniq(\@tmp);
+    return \@tmp;
+}
+
+sub get_default_custom_includes
+{
+    my $backup = new NethServer::BackupData();
+    my @tmp = $backup->load_file_list("/etc/backup-data.d/custom.include");
+    $backup->uniq(\@tmp);
+    return \@tmp;
+}
+
+sub get_default_custom_excludes
+{
+    my $backup = new NethServer::BackupData();
+    my @tmp = $backup->load_file_list("/etc/backup-data.d/custom.exclude");
+    $backup->uniq(\@tmp);
+    return \@tmp;
+}
+
+sub find_latest_log
+{
+    my $name = shift;
+    my $n = "[0123456789]";
+    my $latest_filename = "";
+    my $latest_ts = 0;
+    foreach my $file (glob("/var/log/backup/backup-$name-$n$n$n$n$n$n$n$n$n$n$n$n.log")) {
+        my $stat = stat($file);
+        if ($stat->mtime > $latest_ts) {
+            $latest_ts = $stat->mtime;
+            $latest_filename = $file
+        }
+    }
+    return ($latest_filename, $latest_ts);
+}
+
+sub get_latest_stats
+{
+    my $name = shift;
+    my %status = ('id' => $name, 'log' => '', 'last-run' => 0, 'result' => 'unknown');
+
+    my @log_stats = find_latest_log($name);
+    if ($log_stats[0] eq '') {
+        return %status;
+    } else {
+        $status{'log'} = $log_stats[0];
+        $status{'last-run'} = $log_stats[1];
+    }
+
+    open my $fh, '<:encoding(UTF-8)', $log_stats[0] or die;
+    while (my $line = <$fh>) {
+        if ($line =~ /^Backup status: (.*)/) {
+            if ($1 eq 'SUCCESS') {
+                $status{'result'} = 'success';
+            } elsif ($1 eq 'SUCCESS') {
+                $status{'result'} = 'fail';
+            }
+        }
+    }
+    return %status;
+}
+
+sub list_disks
+{
+    my %disks;
+    my @parts;
+    my @blacklist;
+    my @output = `lsblk -n -P -b -o NAME,FSTYPE,MOUNTPOINT,LABEL,MODEL,SIZE,TYPE,RO,RM,VENDOR,PKNAME`;
+    foreach my $line (@output) {
+        my %disk;
+        chomp $line;
+
+        # Parse line into hash, format example:
+        # NAME="/dev/sda" FSTYPE="" MOUNTPOINT="" LABEL="" MODEL="VBOX HARDDISK   " SIZE="10737418240" TYPE="disk" RO="0" RM="0" VENDOR="ATA     " PKNAME=""
+        my @tmp = split(/" /,$line);
+        foreach my $chunk (@tmp) {
+            $chunk =~ s/"//g;
+            my ($k,$v) = split(/=/,$chunk);
+            $v =~ s/\s+$//;
+            $disk{lc($k)} = $v;
+        }
+
+        # skip read-only 
+        if ($disk{'ro'} eq '1' || $disk{'type'} eq 'rom') {
+            next;
+        }
+
+        # exclude mounted parition and blacklist the parent
+        if ($disk{'mountpoint'} ne '') {
+            push(@blacklist, $disk{'pkname'});
+            next;
+        }
+
+        if ($disk{'type'} eq 'disk') {
+            $disks{$disk{'name'}} = \%disk
+        } else {
+            push(@parts, \%disk);
+        }
+    }
+
+    # remove disks with mounted partitions
+    foreach (@blacklist) {
+        delete($disks{$_});
+    }
+
+    my @ret;
+
+    foreach my $k (keys %disks) {
+        my $disk = $disks{$k};
+        my @children;
+        my $formatted = 0;
+        foreach my $part (@parts) {
+            if ($part->{'pkname'} eq $k) {
+                if ($part->{'fstype'} ne '') {
+                    $formatted = 1;
+                }
+                push(@children, { size => $part->{'size'}, label => $part->{'label'}, fstype => $part->{'fstype'}  });
+            }
+        }
+        my $record = { 'name' => $k, 'vendor' => $disk->{'vendor'}, 'model' =>  $disk->{'model'}, size => $disk->{'size'}, partitions => \@children, formatted => $formatted };
+        push(@ret, $record);
+    }
+
+    print encode_json(\@ret);
+}
+
+
+my $input = readInput();
+
+my $cmd = $input->{'action'} || 'backup-info';
+
+if($cmd eq 'backup-info') {
+    my $ret = {};
+    my @backups;
+    my @backups_status;
+    my $default_includes = get_default_includes();
+    my $default_excludes = get_default_excludes();
+    my $default_custom_includes = get_default_custom_includes();
+    my $default_custom_excludes = get_default_custom_excludes();
+    $ret->{'configuration'}->{'backup-data'}->{'defaults'}->{'includes'} = $default_includes;
+    $ret->{'configuration'}->{'backup-data'}->{'defaults'}->{'excludes'} = $default_excludes;
+    $ret->{'configuration'}->{'backup-data'}->{'defaults'}->{'custom-includes'} = $default_custom_includes;
+    $ret->{'configuration'}->{'backup-data'}->{'defaults'}->{'custom-excludes'} = $default_custom_excludes;
+    my $db = esmith::ConfigDB->open_ro('backups');
+    foreach my $backup ($db->get_all()) {
+        my %props = $backup->props;
+        my $record = {'type' => 'backup', 'name' => $backup->key, 'props' => \%props };
+        $record->{'custom-includes'} = get_custom_includes($backup->key);
+        $record->{'custom-excludes'} = get_custom_excludes($backup->key);
+        push(@backups,$record);
+        my %stats = get_latest_stats($backup->key);
+        push(@backups_status, \%stats);
+    }
+    $ret->{'configuration'}{'backup-data'}{'backups'} = \@backups;
+    $ret->{'status'}{'backup-data'} = \@backups_status;
+
+    my $backup_config_list = decode_json(`/usr/libexec/nethserver/backup-config-history list`);
+    $ret->{'status'}{'backup-config'} = $backup_config_list;
+    $db = esmith::ConfigDB->open_ro();
+    $ret->{'configuration'}{'backup-config'}{'HistoryLength'} = $db->get_prop('backup-config','HistoryLength') || 3;
+    print encode_json($ret);
+} elsif ($cmd eq 'list-disks') {
+    list_disks();
+} elsif ($cmd eq 'last-log') {
+    my $ret;
+    $ret->{'data'} = '';
+    my @log_stats = find_latest_log($input->{'name'});
+    if ( -f $log_stats[0] ) {
+        open my $fh, '<', $log_stats[0];
+        $/ = undef;
+        $ret->{'data'} = <$fh>;
+        close $fh;
+    }
+    print encode_json($ret);
+}

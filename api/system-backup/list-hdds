@@ -1,0 +1,94 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+# List all disks without mounted partitions
+
+use warnings;
+use strict;
+use JSON;
+
+our %disks;
+our @parts;
+
+sub delete_parent
+{
+    my $name = shift;
+}
+
+my @blacklist;
+my @output = `lsblk -n -P -b -o NAME,FSTYPE,MOUNTPOINT,LABEL,MODEL,SIZE,TYPE,RO,RM,VENDOR,PKNAME`;
+foreach my $line (@output) {
+    my %disk;
+    chomp $line;
+
+    # Parse line into hash, format example:
+    # NAME="/dev/sda" FSTYPE="" MOUNTPOINT="" LABEL="" MODEL="VBOX HARDDISK   " SIZE="10737418240" TYPE="disk" RO="0" RM="0" VENDOR="ATA     " PKNAME=""
+    my @tmp = split(/" /,$line);
+    foreach my $chunk (@tmp) {
+        $chunk =~ s/"//g;
+        my ($k,$v) = split(/=/,$chunk);
+        $v =~ s/\s+$//;
+        $disk{lc($k)} = $v;
+    }
+
+    # skip read-only 
+    if ($disk{'ro'} eq '1' || $disk{'type'} eq 'rom') {
+        next;
+    }
+
+    # exclude mounted parition and blacklist the parent
+    if ($disk{'mountpoint'} ne '') {
+        push(@blacklist, $disk{'pkname'});
+        next;
+    }
+
+    if ($disk{'type'} eq 'disk') {
+        $disks{$disk{'name'}} = \%disk
+    } else {
+        push(@parts, \%disk);
+    }
+}
+
+# remove disks with mounted partitions
+foreach (@blacklist) {
+    delete($disks{$_});
+}
+
+my @ret;
+
+foreach my $k (keys %disks) {
+    my $disk = $disks{$k};
+    my @children;
+    my $formatted = 0;
+    foreach my $part (@parts) {
+        if ($part->{'pkname'} eq $k) {
+            if ($part->{'fstype'} ne '') {
+                $formatted = 1;
+            }
+            push(@children, { size => $part->{'size'}, label => $part->{'label'}, fstype => $part->{'fstype'}  }); 
+        }
+    }
+    my $record = { 'name' => $k, 'vendor' => $disk->{'vendor'}, 'model' =>  $disk->{'model'}, size => $disk->{'size'}, partitions => \@children, formatted => $formatted };
+    push(@ret, $record);
+}
+
+print encode_json(\@ret);

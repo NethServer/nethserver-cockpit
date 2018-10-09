@@ -1,0 +1,84 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+#
+# Try to upload a file to B2, then delete it
+#
+# Exit codes:
+# 1 - unauthorized
+# 2 - bucket not found
+# 3 - upload failed
+# 4 - delete failed
+#
+
+ACCOUNT_ID=$1
+APPLICATION_KEY=$2
+BUCKET=$3
+
+# Retrieve authorization token, api url and accountid
+response=$(curl -s https://api.backblazeb2.com/b2api/v2/b2_authorize_account -u "$ACCOUNT_ID:$APPLICATION_KEY")
+token=$(echo $response | jq -r ".authorizationToken")
+if [ "$token" == "null" ]; then
+    exit 1
+fi
+account_id=$(echo $response | jq -r ".accountId")
+api_base=$(echo $response | jq -r ".apiUrl")
+
+# Retrieve bucket id
+list_payload=$(printf "{\"accountId\": \"%s\", \"bucketName\": \"%s\"}" "$account_id" "$BUCKET")
+bucket_id=$(curl -s -H "Authorization: $token" -d "$list_payload" $api_base/b2api/v2/b2_list_buckets | jq -r ".buckets[0].bucketId")
+if [ $? -gt 0 ]; then
+    exit 2
+fi
+
+# Retrieve upload url
+upload_payload=$(printf "{\"bucketId\": \"%s\"}" "$bucket_id")
+upload_url_response=$(curl -s -H "Authorization: $token"  -d "$upload_payload" $api_base/b2api/v2/b2_get_upload_url)
+upload_url=$(echo $upload_url_response | jq -r ".uploadUrl")
+upload_token=$(echo $upload_url_response | jq -r ".authorizationToken")
+if [ "$upload_url" == "null" ]; then
+    exit 2
+fi
+
+# Prepare file to upload
+file_to_upload=$(mktemp)
+echo $RANMDOM > $file_to_upload
+sha1=$(openssl dgst -sha1 $file_to_upload | awk '{print $2;}')
+
+# Execute upload
+upload_response=$(curl -s -H "Authorization: $upload_token" -H "X-Bz-File-Name: $(basename $file_to_upload)" -H "Content-Type: text/plain" -H "X-Bz-Content-Sha1: $sha1" --data-binary "@$file_to_upload" $upload_url)
+file_id=$(echo $upload_response | jq -r '.fileId')
+if [ $? -gt 0 ]; then
+    rm -f $file_to_upload 2>/dev/null
+    exit 4
+fi
+
+# Delete uploaded file
+delete_payload=$(printf "{\"fileName\": \"%s\", \"fileId\": \"%s\"}" "$(basename $file_to_upload)" "$file_id")
+curl -s -H "Authorization: $token" -d "$delete_payload" $api_base/b2api/v2/b2_delete_file_version
+if [ $? -gt 0 ]; then
+    exit 4
+fi
+
+rm -f $file_to_upload 2>/dev/null
+
+exit 0

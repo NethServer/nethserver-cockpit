@@ -1,0 +1,54 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+# Partition an format a disk for backup
+# Exit codes:
+# 1 - disk not found
+# 2 - partitioning failed
+# 3 - parition reload failed
+# 4 - format failed
+
+DISK=$1
+LABEL=${2:-backup}
+
+dev="/dev/$DISK"
+lsblk $dev &>/dev/null
+if [ $? -gt 0 ]; then
+    exit 1
+fi
+
+echo "0," | sfdisk $dev
+if [ $? -gt 0 ]; then
+    exit 2
+fi
+
+blockdev --rereadpt $dev
+if [ $? -gt 0 ]; then
+    exit 3
+fi
+
+mkfs.ext4 -v $dev"1" -L backup -E lazy_itable_init
+if [ $? -gt 0 ]; then
+    exit 4
+fi
+
+exit 0
