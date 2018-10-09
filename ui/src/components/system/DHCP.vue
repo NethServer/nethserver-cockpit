@@ -1,6 +1,22 @@
 <template>
   <div v-if="view.isAuth">
     <h2>{{$t('dhcp.title')}}</h2>
+    <h3>{{$t('stats')}}</h3>
+    <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
+    <div v-if="view.isLoaded">
+      <div class="stats-container card-pf-utilization-details">
+        <span class="card-pf-utilization-card-details-count">{{stats.reservations}}</span>
+        <span class="card-pf-utilization-card-details-description">
+          <span class="card-pf-utilization-card-details-line-2 stats-text">{{$t('dhcp.reservations')}}</span>
+        </span>
+      </div>
+      <div class="stats-container card-pf-utilization-details">
+        <span class="card-pf-utilization-card-details-count">{{stats.leases}}</span>
+        <span class="card-pf-utilization-card-details-description">
+          <span class="card-pf-utilization-card-details-line-2 stats-text">{{$t('dhcp.leases')}}</span>
+        </span>
+      </div>
+    </div>
     <h3>{{$t('dhcp.interfaces')}}</h3>
     <div v-for="i in ranges" v-bind:key="i">
       <h4 class="dhcp-int">{{i.name}}</h4>
@@ -304,7 +320,11 @@ export default {
       ranges: [],
       currentRange: this.initRange(),
       currentReservation: {},
-      newReservation: this.initReservation()
+      newReservation: this.initReservation(),
+      stats: {
+        reservations: 0,
+        leases: 0
+      }
     };
   },
   methods: {
@@ -541,6 +561,7 @@ export default {
           var valid_macs = results.map(function(i) {
             return i.props.MacAddress.toLowerCase();
           });
+          context.stats.reservations = valid_macs.length;
 
           for (var s in success.status) {
             var lease = success.status[s];
@@ -555,6 +576,7 @@ export default {
                 },
                 type: "disabled"
               });
+              context.stats.leases++;
             }
           }
 
