@@ -11,7 +11,7 @@
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       
       
-        <link rel="canonical" href="https://nethserver.github.io/nethserver-cockpit/api/system-aliases/">
+        <link rel="canonical" href="https://nethserver.github.io/nethserver-cockpit/api/system-dhcp/">
       
       
       
@@ -38,7 +38,7 @@
     
     
       
-        <title>system-alias - NethServer Cockpit</title>
+        <title>system-dhcp - NethServer Cockpit</title>
       
     
     
@@ -100,7 +100,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="../../#system-alias" tabindex="1" class="md-skip">
+      <a href="../../#system-dhcp" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -126,7 +126,7 @@
                 NethServer Cockpit
               </span>
               <span class="md-header-nav__topic">
-                system-alias
+                system-dhcp
               </span>
             
           
@@ -367,109 +367,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        system-alias
-      </label>
-    
-    <a href="./" title="system-alias" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../system-aliases/" title="system-alias" class="md-nav__link">
       system-alias
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#read" title="read" class="md-nav__link">
-    read
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#output" title="Output" class="md-nav__link">
-    Output
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#validate" title="validate" class="md-nav__link">
-    validate
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#constraints" title="Constraints" class="md-nav__link">
-    Constraints
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#input" title="Input" class="md-nav__link">
-    Input
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#update" title="update" class="md-nav__link">
-    update
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#input_1" title="Input" class="md-nav__link">
-    Input
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -525,11 +427,190 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../system-dhcp/" title="system-dhcp" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        system-dhcp
+      </label>
+    
+    <a href="./" title="system-dhcp" class="md-nav__link md-nav__link--active">
       system-dhcp
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#read" title="read" class="md-nav__link">
+    read
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#output" title="Output" class="md-nav__link">
+    Output
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate" title="validate" class="md-nav__link">
+    validate
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constraints" title="Constraints" class="md-nav__link">
+    Constraints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-reservation" title="create-reservation" class="md-nav__link">
+    create-reservation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-reservation" title="update-reservation" class="md-nav__link">
+    update-reservation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-range" title="update-range" class="md-nav__link">
+    update-range
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update" title="update" class="md-nav__link">
+    update
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-reservation_1" title="update-reservation" class="md-nav__link">
+    update-reservation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-range_1" title="update-range" class="md-nav__link">
+    update-range
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create" title="create" class="md-nav__link">
+    create
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-reservation_1" title="create-reservation" class="md-nav__link">
+    create-reservation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete" title="delete" class="md-nav__link">
+    delete
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delete-range" title="delete-range" class="md-nav__link">
+    delete-range
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-reservation" title="delete-reservation" class="md-nav__link">
+    delete-reservation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -939,6 +1020,33 @@
     Input
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-reservation" title="create-reservation" class="md-nav__link">
+    create-reservation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-reservation" title="update-reservation" class="md-nav__link">
+    update-reservation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-range" title="update-range" class="md-nav__link">
+    update-range
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -955,8 +1063,62 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#input_1" title="Input" class="md-nav__link">
-    Input
+  <a href="#update-reservation_1" title="update-reservation" class="md-nav__link">
+    update-reservation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-range_1" title="update-range" class="md-nav__link">
+    update-range
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create" title="create" class="md-nav__link">
+    create
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-reservation_1" title="create-reservation" class="md-nav__link">
+    create-reservation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete" title="delete" class="md-nav__link">
+    delete
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delete-range" title="delete-range" class="md-nav__link">
+    delete-range
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-reservation" title="delete-reservation" class="md-nav__link">
+    delete-reservation
   </a>
   
 </li>
@@ -982,74 +1144,165 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/docs/api/system-aliases.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/docs/api/system-dhcp.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="system-alias">system-alias<a class="headerlink" href="#system-alias" title="Permanent link">&para;</a></h1>
-<p>Read and write system DNS system alias.</p>
+                <h1 id="system-dhcp">system-dhcp<a class="headerlink" href="#system-dhcp" title="Permanent link">&para;</a></h1>
+<p>Manage DHCP configuration for DNSMasq.</p>
 <h2 id="read">read<a class="headerlink" href="#read" title="Permanent link">&para;</a></h2>
-<p>List current configured aliases.</p>
 <h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
-<p>The <code>configuration</code> contains an array of alias records (type <code>self</code> from <code>hosts</code> db).</p>
-<p>Output example:</p>
+<p>Inside the <code>configuration</code> field return:</p>
+<ul>
+<li><code>reservations</code>: all configured reservation records from the <code>hosts</code></li>
+<li><code>ranges</code>: the list of green and blue interfaces with relative DHCP configuration.
+  If DHCP is not configured for an interface, the <code>status</code> prop is set to <code>disabled</code>,
+  <code>DhcpRangeEnd</code> and <code>DhcpRangeStart</code> are set to a reasonable default.</li>
+</ul>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">[</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="p">[</span>
     <span class="p">{</span>
-      <span class="nt">&quot;props&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+      <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.20&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;xx:xx:xx:xx:xx:xx&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;expire&quot;</span><span class="p">:</span> <span class="mi">1539081950</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myhost&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;client&quot;</span><span class="p">:</span> <span class="s2">&quot;xxxxxxxxxxxxxxx&quot;</span>
+    <span class="p">},</span>
+
+    <span class="err">...</span>
+    <span class="p">],</span>
+  <span class="nt">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;ranges&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;br0&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;range&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;props&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;DhcpTFTP&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;DhcpDNS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;DhcpDomain&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;DhcpLeaseTime&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;DhcpRangeStart&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;DhcpWINS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;DhcpRangeEnd&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.254&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;DhcpGatewayIP&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;DhcpNTP&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;reservations&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;mypc&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;local&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;props&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;MacAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;xx:xx:xx:xx:xx:xx&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;IpAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.104&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;My PC&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;local&quot;</span>
+        <span class="p">}</span>
       <span class="p">},</span>
-      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;alias1.neth.loc&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;self&quot;</span>
-    <span class="p">}</span>
-  <span class="p">]</span>
+    <span class="err">...</span>
+    <span class="p">]</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 
 
 <h2 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h2>
-<p>Validate a collection of alias records.</p>
 <h3 id="constraints">Constraints<a class="headerlink" href="#constraints" title="Permanent link">&para;</a></h3>
+<p>The request must contain an <code>action</code> field. Valid actions are:</p>
 <ul>
-<li>the alias <code>name</code> must be a valid FQDN</li>
+<li><code>create-reservation</code></li>
+<li><code>update-reservation</code></li>
+</ul>
+<p>Constraints for <code>create-reservation</code></p>
+<ul>
+<li>IpAddress: must be a valid IP address</li>
+<li>MacAddress: must be a valid mac address</li>
+<li>name: muse be simple hostname</li>
+<li>all parameters are also validated against "dhcp-reservation" platform validator</li>
+</ul>
+<p>Constraints for <code>update-reservation</code>:</p>
+<ul>
+<li>name: must be unique inside the hosts db</li>
+<li>same constraints from create-reservation</li>
+</ul>
+<p>Constraints for <code>update-range</code>:</p>
+<ul>
+<li>name: must be an existing network interface</li>
+<li>DhcpRangeStart: a valid IP, lower than maximum range and lower than DhcpRangeEnd</li>
+<li>DhcpRangeEnd: a valid IP, greater than minimum range and greater than DhcpRangeStart</li>
+<li>DhcpLeaseTime: positive integer or empty</li>
+<li>DhcpDomain: domain or empty</li>
+<li>DhcpDNS, 'DhcpWINS, DhcpNTP, DhcpTFTP: a valid IP or empty</li>
 </ul>
 <h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
-<p>Use the read output as input.
-Each record must have the type set to <code>self</code>, the <code>Description</code> field is currently not used.</p>
+<h4 id="create-reservation">create-reservation<a class="headerlink" href="#create-reservation" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nt">&quot;props&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
-      <span class="p">},</span>
-      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test3.nethserver.org&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;self&quot;</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-      <span class="nt">&quot;props&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
-      <span class="p">},</span>
-      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test2.nethserver.org&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;self&quot;</span>
-    <span class="p">}</span>
-  <span class="p">]</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create-reservation&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;IpAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.20&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;MacAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;xx:xx:xx:xx:xx:xx&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myhost&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
 
-<p>Invocation example:</p>
-<div class="codehilite"><pre><span></span><span class="nb">echo</span> <span class="s1">&#39;{ &quot;configuration&quot; : [{&quot;props&quot;:{&quot;Description&quot;:&quot;&quot;},&quot;name&quot;:&quot;test3.nethserver.org&quot;,&quot;type&quot;:&quot;self&quot;}, {&quot;props&quot;:{&quot;Description&quot;:&quot;&quot;},&quot;name&quot;:&quot;test2.nethserver.org&quot;,&quot;type&quot;:&quot;self&quot;}]}&#39;</span> <span class="p">|</span> ./validate
+<h4 id="update-reservation">update-reservation<a class="headerlink" href="#update-reservation" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;update-reservation&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;IpAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.20&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;MacAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;xx:xx:xx:xx:xx:xx&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myhost&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="update-range">update-range<a class="headerlink" href="#update-range" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;update-range&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;DhcpRangeStart&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.10&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;DhcpRangeEnd&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.50&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;br0&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;DhcpGatewayIP&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;DhcpLeaseTime&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;DhcpDomain&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;DhcpDNS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;DhcpWINS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;DhcpNTP&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;DhcpTFTP&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
-<p>All alias are destroyed and recreated on update.
-The helper should be invoked once, after all alias has been modified.</p>
-<h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
-<p>The same from validate helper.</p>
-<p>Invocation example:</p>
-<div class="codehilite"><pre><span></span><span class="nb">echo</span> <span class="s1">&#39;{ &quot;configuration&quot; : [{&quot;props&quot;:{&quot;Description&quot;:&quot;&quot;},&quot;name&quot;:&quot;test3.neth.eu&quot;,&quot;type&quot;:&quot;self&quot;}, {&quot;props&quot;:{&quot;Description&quot;:&quot;&quot;},&quot;name&quot;:&quot;test2.neth.eu&quot;,&quot;type&quot;:&quot;self&quot;}]}&#39;</span> <span class="p">|</span> ./update
+<h3 id="update-reservation_1">update-reservation<a class="headerlink" href="#update-reservation_1" title="Permanent link">&para;</a></h3>
+<p>Use the same input from validate.</p>
+<h3 id="update-range_1">update-range<a class="headerlink" href="#update-range_1" title="Permanent link">&para;</a></h3>
+<p>Use the same input from validate.</p>
+<h2 id="create">create<a class="headerlink" href="#create" title="Permanent link">&para;</a></h2>
+<h3 id="create-reservation_1">create-reservation<a class="headerlink" href="#create-reservation_1" title="Permanent link">&para;</a></h3>
+<p>Use the same input from validate.</p>
+<h2 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h2>
+<h3 id="delete-range">delete-range<a class="headerlink" href="#delete-range" title="Permanent link">&para;</a></h3>
+<p>Delete the given range. The <code>name</code> field must contain the interface name.</p>
+<p>Input example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;br0&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="delete-reservation">delete-reservation<a class="headerlink" href="#delete-reservation" title="Permanent link">&para;</a></h3>
+<p>Delete the given reservation. Pass the the key to be deleted inside the <code>name</code> field.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myhost&quot;</span>
+<span class="p">}</span>
 </pre></div>
                 
                   
@@ -1071,7 +1324,7 @@ The helper should be invoked once, after all alias has been modified.</p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../system-accounts-provider/" title="system-accounts-provider" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../system-company/" title="system-company" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -1080,19 +1333,19 @@ The helper should be invoked once, after all alias has been modified.</p>
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                system-accounts-provider
+                system-company
               </span>
             </div>
           </a>
         
         
-          <a href="../system-apps/" title="system-apps" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../system-disk-usage/" title="system-disk-usage" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                system-apps
+                system-disk-usage
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
