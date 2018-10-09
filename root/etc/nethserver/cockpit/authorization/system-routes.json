@@ -3,6 +3,7 @@
     "disk-usage", 
     "certificates", 
     "dns",
+    "dhcp",
     "services", 
     "users-groups", 
     "network", 
