@@ -27,6 +27,7 @@ nav:
       - api/system-authorization.md
       - api/system-certificate.md
       - api/system-company.md
+      - api/system-dhcp.md
       - api/system-disk-usage.md
       - api/system-dns.md
       - api/system-hostname.md

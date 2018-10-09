@@ -1,0 +1,76 @@
+#!/usr/bin/php
+<?php
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+require_once("/usr/libexec/nethserver/api/lib/dhcp_functions.php");
+
+function not_expired($r)
+{
+    if (time() > $r['expire']) {
+    print $r['expire']."\n";
+    }
+    return time() < $r['expire'];
+}
+
+$ret = array();
+$ranges = array();
+$leases = array();
+$reservations = array();
+
+# List current leases
+$output = shell_exec("/usr/libexec/nethserver/read-dhcp-leases");
+foreach (json_decode($output, TRUE) as $lease) {
+    if (time() > $lease['expire']) {
+        continue;
+    }
+    if (!$lease['name']) {
+        $tmp = explode(".",$lease['ip']);
+        $lease['name'] = "host-".$tmp[3];
+    }
+    $leases[] = $lease;
+}
+$ret['status'] = $leases;
+
+
+# Merge list of available interfaces with dhcp configuration
+$dhcp_db = new EsmithDatabase('dhcp');
+foreach (getNetworkInterfaces() as $i => $props) {
+    $range = $dhcp_db->getKey($i);
+    $record = array("name" => $i ,"type" => "range");
+    if ($range) {
+        $record['props'] = $range;
+    } else {
+        $record['props'] = getDefaults($props);
+    }
+    $ranges[] = $record;
+}
+$ret['configuration']['ranges'] = $ranges;
+
+$hosts_db = new  EsmithDatabase('hosts');
+foreach ($hosts_db->getAll("local") as $key => $props) {
+    $record = array("name" => $key ,"type" => "local", "props" => $props);
+    $reservations[] = $record;
+}
+$ret['configuration']['reservations'] = $reservations;
+
+# JSON output
+print json_encode($ret); 

@@ -1,0 +1,106 @@
+#!/usr/bin/php
+<?php
+/*
+ * Copyright (C) 2018 Nethesis S.r.l.
+ * http://www.nethesis.it - nethserver@nethesis.it
+ *
+ * This script is part of NethServer.
+ *
+ * NethServer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License,
+ * or any later version.
+ *
+ * NethServer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NethServer.  If not, see COPYING.
+*/
+
+require_once("/usr/libexec/nethserver/api/lib/dhcp_functions.php");
+
+$data = readInput();
+$action = $data['action'];
+
+function valid_interface($interface)
+{
+    foreach (getNetworkInterfaces() as $i => $props) {
+        if ($interface == $i) {
+            return true;
+        }
+    }
+    return false;
+}
+
+$v = new LegacyValidator($data);
+if ($action == 'create-reservation') {
+    $db = new EsmithDatabase('hosts');
+    $r = $db->getKey($data['name']);
+    if ($r) {
+        $v->addValidationError('name','host_already_exists');
+        error($v);
+    };
+
+    $ipAddressValidator = $v->createValidator(Validate::IP)->platform('dhcp-reservation', $data['MacAddress'], $data['name']);
+    $v->declareParameter('name', Validate::HOSTNAME_SIMPLE);
+    $v->declareParameter('MacAddress', Validate::MACADDRESS);
+    $v->declareParameter('IpAddress', $ipAddressValidator);
+
+} else if ($action == 'update-reservation') {
+    $ipAddressValidator = $v->createValidator(Validate::IP)->platform('dhcp-reservation', $data['MacAddress'], $data['name']);
+    $v->declareParameter('name', Validate::HOSTNAME_SIMPLE);
+    $v->declareParameter('MacAddress', Validate::MACADDRESS);
+    $v->declareParameter('IpAddress', $ipAddressValidator);
+
+} else if ($action == 'update-range') {
+
+    $key = $data['name'];
+    if (!valid_interface($key)) {
+        $v->addValidationError('name','invalid_interface');
+        error($v);
+    };
+    $interfaces = getNetworkInterfaces();
+
+    $ipValidator = $v->createValidator()->ipV4Address();
+    $positiveValidator = $v->createValidator(Validate::POSITIVE_INTEGER);
+    $hostnameValidator = $v->createValidator(Validate::HOSTNAME);
+    $emptyValidator = $v->createValidator(Validate::EMPTYSTRING);
+    $v->declareParameter('status',Validate::SERVICESTATUS);
+    $v->declareParameter('DhcpGatewayIP', $v->createValidator()->OrValidator($ipValidator, $emptyValidator)); 
+    $v->declareParameter('DhcpLeaseTime', $v->createValidator()->OrValidator($positiveValidator, $emptyValidator));
+    $v->declareParameter('DhcpDomain', $v->createValidator()->OrValidator($hostnameValidator, $emptyValidator));
+    $v->declareParameter('DhcpDNS', $v->createValidator()->OrValidator($ipValidator, $emptyValidator));
+    $v->declareParameter('DhcpWINS', $v->createValidator()->OrValidator($ipValidator, $emptyValidator));
+    $v->declareParameter('DhcpNTP', $v->createValidator()->OrValidator($ipValidator, $emptyValidator));
+    $v->declareParameter('DhcpTFTP', $v->createValidator()->OrValidator($ipValidator, $emptyValidator));
+
+    if ($ipValidator->evaluate($data['DhcpRangeStart'])) {
+        if (ip2long($data['DhcpRangeStart']) < ip2long(getDefaultRange('start', $interfaces[$key]))) {
+            $v->addValidationErrore('DhcpRangeStart', 'valid_iprange_outofbounds');
+        }
+    } else {
+        $v->addValidationError('DhcpRangeStart', $ipValidator);
+    }
+    if ($ipValidator->evaluate($data['DhcpRangeEnd'])) {
+        if (ip2long($data['DhcpRangeEnd']) > ip2long(getDefaultRange('end', $interfaces[$key]))) {
+            $v->addValidationError('DhcpRangeEnd', 'valid_iprange_outofbounds');
+        }
+    } else {
+        $v->addValidationError('DhcpRangeEnd', $ipValidator);
+    }
+    if (ip2long($data['DhcpRangeStart']) > ip2long($data['DhcpRangeEnd'])) {
+        $v->addValidationError('DhcpStart', 'valid_iprange_outofbounds');
+    }
+
+}
+
+# Validate the input
+if ($v->validate()) {
+    success();
+} else {
+    error($v);
+}
+
