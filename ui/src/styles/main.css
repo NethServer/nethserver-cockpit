@@ -325,7 +325,7 @@ iframe>.breadcrumb {
 }
 
 .adjust-top-col {
-  margin-top: 0px;
+  margin-top: 0px !important;
 }
 
 @media screen and (max-width: 1196px) {
@@ -569,6 +569,10 @@ input[type="checkbox"].form-control {
   margin-top: 60px !important;
 }
 
+.margin-top-sm {
+  margin-top: 20px !important;
+}
+
 .white-background {
   background: #fff;
 }
@@ -793,6 +797,10 @@ input[type="checkbox"].form-control {
   transform: translate3d(21px, 3px, 0px) !important;
 }
 
+.display-inline-block {
+  display: inline-block;
+}
+
 .dhcp-int {
   display: inline;
   margin-right: 10px;
@@ -801,4 +809,34 @@ input[type="checkbox"].form-control {
 .dhcp-mod-btn {
   margin-left: 8px;
   margin-top: -4px;
+}
+
+.sub-title-menu {
+  font-size: 19px;
+}
+
+.adjust-label-wizard {
+  margin-top: 0px
+}
+
+.cron-human-text {
+  font-size: 20px;
+  margin-top: 25px;
+  text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+  .adjust-label-wizard {
+    margin-top: 15px;
+  }
+}
+
+.wizard-where-choices {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.small-size-wizard {
+  font-size: 20px !important;
+  line-height: 20px !important;
 }

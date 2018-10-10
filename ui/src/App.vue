@@ -21,6 +21,12 @@
 
         <li class="li-empty"></li>
 
+        <li v-if="checkAuth('backup')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('backup') ? 'active' : '', 'list-group-item']">
+          <a href="#/backup">
+            <span class="pficon pficon-restart"></span>
+            <span class="list-group-item-value">{{$t('menu.backup')}}</span>
+          </a>
+        </li>
         <li v-if="checkAuth('storage')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('storage') ? 'active' : '', 'list-group-item']">
           <a href="#/storage">
             <span class="fa fa-hdd-o"></span>
@@ -34,12 +40,12 @@
           </a>
         </li>
 
-        <li v-if="checkAuth('storage') || checkAuth('disk-usage')" class="li-empty"></li>
+        <li v-if="checkAuth('backup') || checkAuth('storage') || checkAuth('disk-usage')" class="li-empty"></li>
 
-        <li v-if="checkAuth('certificates')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('certificates') ? 'active' : '', 'list-group-item']">
-          <a href="#/certificates">
-            <span class="fa fa-key"></span>
-            <span class="list-group-item-value">{{$t('menu.certificates')}}</span>
+        <li v-if="checkAuth('network')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('network') ? 'active' : '', 'list-group-item']">
+          <a href="#/network">
+            <span class="fa fa-plug"></span>
+            <span class="list-group-item-value">{{$t('menu.network')}}</span>
           </a>
         </li>
         <li v-if="checkAuth('dns')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('dns') ? 'active' : '', 'list-group-item']">
@@ -67,12 +73,12 @@
           </a>
         </li>
 
-        <li v-if="checkAuth('certificates') || checkAuth('dns') || checkAuth('dhcp') || checkAuth('services') || checkAuth('users-groups')" class="li-empty"></li>
+        <li v-if="checkAuth('network') || checkAuth('dns') || checkAuth('dhcp') || checkAuth('services') || checkAuth('users-groups')" class="li-empty"></li>
 
-        <li v-if="checkAuth('network')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('network') ? 'active' : '', 'list-group-item']">
-          <a href="#/network">
-            <span class="fa fa-plug"></span>
-            <span class="list-group-item-value">{{$t('menu.network')}}</span>
+        <li v-if="checkAuth('certificates')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('certificates') ? 'active' : '', 'list-group-item']">
+          <a href="#/certificates">
+            <span class="fa fa-key"></span>
+            <span class="list-group-item-value">{{$t('menu.certificates')}}</span>
           </a>
         </li>
         <li v-if="checkAuth('ssh')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('ssh') ? 'active' : '', 'list-group-item']">
@@ -94,7 +100,7 @@
           </a>
         </li>
 
-        <li v-if="checkAuth('network') || checkAuth('ssh') || checkAuth('tls-policy') || checkAuth('trusted-networks')" class="li-empty"></li>
+        <li v-if="checkAuth('certificates') || checkAuth('ssh') || checkAuth('tls-policy') || checkAuth('trusted-networks')" class="li-empty"></li>
 
         <li v-if="checkAuth('logs')" v-bind:class="[getCurrentPath('logs') ? 'active' : '', 'list-group-item']">
           <a href="#/logs">
