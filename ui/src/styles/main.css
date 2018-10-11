@@ -664,9 +664,9 @@ input[type="checkbox"].form-control {
 }
 
 .copy-ok {
-  top: 12px;
-  position: absolute;
-  right: -20px;
+  top: 4px;
+  position: relative;
+  right: -8px;
 }
 
 .apps-icon {
@@ -839,4 +839,8 @@ input[type="checkbox"].form-control {
 .small-size-wizard {
   font-size: 20px !important;
   line-height: 20px !important;
+}
+
+.blank-state-backup {
+  background-color: white !important;
 }
