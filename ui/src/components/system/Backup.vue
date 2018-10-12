@@ -120,6 +120,12 @@
               </button>
               <ul class="dropdown-menu dropdown-menu-right">
                 <li>
+                  <a @click="openLastLog(b)">
+                    <span class="fa fa-list span-right-margin"></span>
+                    {{$t('backup.view_last_log')}}</a>
+                </li>
+                <li role="presentation" class="divider"></li>
+                <li>
                   <a @click="openDeleteData(b)">
                     <span class="fa fa-times span-right-margin"></span>
                     {{$t('delete')}}</a>
@@ -140,12 +146,12 @@
                   <span>{{b.props.BackupTime | cronToHuman}}</span>
                 </div>
                 <div class="list-group-item-text">
-                  <span :title="$t('backup.last_backup_status') + ': ' + b.status.result" :class="['fa', b.status.result == 'success' ? 'fa-check green' : 'fa-times red', 'panel-icon']"></span>{{b.status['last-run']
+                  <span :title="$t('backup.last_backup_status') + ': ' + b.status.result" :class="['fa', b.status.result == 'success' ? 'fa-check green' : b.status.result == 'unknown' ? 'fa-question gray' : 'fa-times red', 'panel-icon']"></span>{{b.status['last-run']
                   | dateFormat}}
                 </div>
                 <div class="list-group-item-text">
-                  <span class="fa fa-space-shuttle panel-icon"></span>{{b.props.VFSType | uppercase}} {{$t('with')}}
-                  {{b.props.type | capitalize}}
+                  <span class="fa fa-space-shuttle panel-icon"></span><b>{{b.props.VFSType | uppercase}}</b>
+                  | <b>{{b.props.type | capitalize}}</b>
                 </div>
               </div>
               <div class="list-view-pf-additional-info">
@@ -195,7 +201,7 @@
                 <input required class="col-sm-1 control-label" type="radio" id="restoreURL" value="url" v-model="currentConfigBackup.restoreMode">
                 <label class="col-sm-2 control-label" for="restoreURL">{{$t('backup.from_url')}}</label>
                 <div class="col-sm-9">
-                  <input type="url" v-model="currentConfigBackup.restoreURL" class="form-control" placeholder="https://mysite.com/archive/backup-last.tar.gz">
+                  <input type="url" v-model="currentConfigBackup.restoreURL" class="form-control" placeholder="https://mysite.com/archive/backup-last.tar.xz">
                 </div>
               </div>
               <div class="advanced">
@@ -210,7 +216,7 @@
                     <i class="fa fa-cloud-upload span-right-margin"></i>{{$t('backup.choose_file')}}
                   </label>
                   <input class="inputfile" @change="onChangeInput($event)" id="backup-file" name="file-upload-backup"
-                    type="file" accept=".tar.gz" />
+                    type="file" accept=".tar.xz" />
                 </div>
               </div>
               <div class="advanced">
@@ -337,6 +343,29 @@
         </div>
       </div>
     </div>
+    <div class="modal" id="lastLogDataModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('backup.last_log_for')}} {{currentDataBackup.name}}</h4>
+          </div>
+          <form class="form-horizontal">
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.from_backup')}}</label>
+                <div class="col-sm-9">
+                  <div v-if="!currentDataBackup.lastLog" class="spinner spinner-sm"></div>
+                  <pre v-if="currentDataBackup.lastLog" class="prettyprint">{{currentDataBackup.lastLog}}</pre>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button @click="cleanLastLog()" class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
     <div class="modal" id="configureDataModal" tabindex="-1" role="dialog" data-backdrop="static">
       <div class="modal-dialog modal-lg wizard-pf">
         <div class="modal-content">
@@ -446,6 +475,7 @@
                         <!-- -->
                       </div>
                       <p class="cron-human-text">{{crontabComputed | cronToHuman}}</p>
+                      <input disabled type="text" class="form-control input-lg password-hints" v-model="wizard.when.crontab">
                     </div>
                   </form>
                 </div>
@@ -468,7 +498,7 @@
                             NFS
                           </h3>
                           <p>
-                            <a>{{$t('backup.doc_link')}}</a>
+                            <doc-info :placement="'top'" :title="'NFS'" :chapter="'backup'" :section="'nfs'"></doc-info>
                           </p>
                         </div>
                       </div>
@@ -481,7 +511,7 @@
                             CIFS
                           </h3>
                           <p>
-                            <a>{{$t('backup.doc_link')}}</a>
+                            <doc-info :placement="'top'" :title="'CIFS'" :chapter="'backup'" :section="'cifs'"></doc-info>
                           </p>
                         </div>
                       </div>
@@ -491,10 +521,10 @@
                             <span class="fa fa-usb"></span>
                           </div>
                           <h3>
-                            USB
+                            {{$t('backup.disk')}}
                           </h3>
                           <p>
-                            <a>{{$t('backup.doc_link')}}</a>
+                            <doc-info :placement="'top'" :title="$t('backup.disk')" :chapter="'backup'" :section="'usb'"></doc-info>
                           </p>
                         </div>
                       </div>
@@ -509,7 +539,7 @@
                             SFTP
                           </h3>
                           <p>
-                            <a>{{$t('backup.doc_link')}}</a>
+                            <doc-info :placement="'top'" :title="'SFTP'" :chapter="'backup'" :section="'sftp'"></doc-info>
                           </p>
                         </div>
                       </div>
@@ -519,10 +549,10 @@
                             <span class="fa fa-fire"></span>
                           </div>
                           <h3>
-                            Blackblaze B2
+                            Backblaze B2
                           </h3>
                           <p>
-                            <a>{{$t('backup.doc_link')}}</a>
+                            <doc-info :placement="'top'" :title="'Backblaze B2'" :chapter="'backup'" :section="'b2'"></doc-info>
                           </p>
                         </div>
                       </div>
@@ -535,7 +565,7 @@
                             Amazon S3
                           </h3>
                           <p>
-                            <a>{{$t('backup.doc_link')}}</a>
+                            <doc-info :placement="'top'" :title="'Amazon S3'" :chapter="'backup'" :section="'s3'"></doc-info>
                           </p>
                         </div>
                       </div>
@@ -553,7 +583,8 @@
                       <div v-if="wizard.where.choice == 'nfs'">
                         <div class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'NFSShare' |
-                            camelToSentence}}</label>
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
                             <input required type="text" v-model="wizard.where.nfs.NFSShare" class="form-control">
                           </div>
@@ -618,7 +649,8 @@
                           v-bind:key="i" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup"><span v-if="i == 0">{{$t('backup.usb_partitions')}}</span></label>
                           <div class="col-sm-9">
-                            <span class="provider-details" @click="selectUSBDevicePartition(p)">{{p.label}}: {{p.fstype | uppercase}} | {{p.size | byteFormat}}</span>
+                            <span class="provider-details" @click="selectUSBDevicePartition(p)">{{p.label}}: {{p.fstype
+                              | uppercase}} | {{p.size | byteFormat}}</span>
                           </div>
                         </div>
                         <div v-if="wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.formatted" class="form-group">
@@ -725,17 +757,30 @@
                         </div>
                       </div>
                       <!-- -->
-                      <div v-if="wizard.where.choice != 'usb' || (wizard.where.choice == 'usb' && wizard.where.usb.USBDevice)" class="form-group">
+                      <div v-if="wizard.where.choice != 'usb' || (wizard.where.choice == 'usb' && wizard.where.usb.USBDevice)"
+                        class="form-group">
                         <label class="col-sm-3 control-label" for="textInput-modal-markup"></label>
                         <div class="col-sm-2">
-                          <button :disabled="wizard.where.isChecking || (wizard.where.choice == 'usb' && (wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.formatted == 1) && wizard.where.usb.USBLabel.length == 0)" type="submit" class="btn btn-primary">
-                            {{wizard.where.choice == 'usb' && wizard.where.usb.USBDevice && !wizard.where.usb.USBDevice.formatted ? $t('backup.format') : $t('backup.check')}}
+                          <button :disabled="wizard.where.isChecking || (wizard.where.choice == 'usb' && (wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.formatted == 1) && wizard.where.usb.USBLabel.length == 0)"
+                            type="submit" class="btn btn-primary">
+                            {{wizard.where.choice == 'usb' && wizard.where.usb.USBDevice &&
+                            !wizard.where.usb.USBDevice.formatted ? $t('backup.format') : $t('backup.check')}}
                           </button>
+                          <span v-if="wizard.where.isValid" class="fa fa-check green copy-ok"></span>
                         </div>
                         <div v-if="wizard.where.isChecking" class="col-sm-1">
                           <div class="spinner"></div>
                         </div>
                       </div>
+                      <!-- OUTPUT -->
+                      <div v-show="wizard.where.usb.isFormatting && wizard.where.choice == 'usb' && wizard.where.usb.USBDevice && !wizard.where.usb.USBDevice.formatted"
+                        class="form-group">
+                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('output')}}</label>
+                        <div class="col-sm-9">
+                          <textarea id="format-output" class="form-control command-output" v-model="wizard.where.usb.formatOutput"></textarea>
+                        </div>
+                      </div>
+                      <!-- -->
                     </div>
                   </form>
                 </div>
@@ -749,7 +794,7 @@
                       {{$t('backup.wizard_choose_how_title')}}
                     </h1>
                     <div class="blank-slate-pf-main-action row wizard-where-choices">
-                      <div @click="selectHow('duplicity')" :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.how.choice == 'duplicity' ? 'active-choose' : '']">
+                      <div v-show="handleHow().duplicity" @click="selectHow('duplicity')" :class="['col-xs-12', 'col-sm-'+(12/handleHow().num), 'col-md-'+(12/handleHow().num), 'col-lg-'+(12/handleHow().num), 'card-pf', wizard.how.choice == 'duplicity' ? 'active-choose' : '']">
                         <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-clone"></span>
@@ -758,11 +803,11 @@
                             Duplicity
                           </h3>
                           <p>
-                            <a>{{$t('backup.doc_link')}}</a>
+                            <doc-info :placement="'top'" :title="'Duplicity'" :chapter="'backup'" :section="'duplicity'"></doc-info>
                           </p>
                         </div>
                       </div>
-                      <div @click="selectHow('restic')" :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.how.choice == 'restic' ? 'active-choose' : '']">
+                      <div v-show="handleHow().restic" @click="selectHow('restic')" :class="['col-xs-12', 'col-sm-'+(12/handleHow().num), 'col-md-'+(12/handleHow().num), 'col-lg-'+(12/handleHow().num), 'card-pf', wizard.how.choice == 'restic' ? 'active-choose' : '']">
                         <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-rocket"></span>
@@ -771,11 +816,11 @@
                             Restic
                           </h3>
                           <p>
-                            <a>{{$t('backup.doc_link')}}</a>
+                            <doc-info :placement="'top'" :title="'Restic'" :chapter="'backup'" :section="'restic'"></doc-info>
                           </p>
                         </div>
                       </div>
-                      <div @click="selectHow('rsync')" :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.how.choice == 'rsync' ? 'active-choose' : '']">
+                      <div v-show="handleHow().rsync" @click="selectHow('rsync')" :class="['col-xs-12', 'col-sm-'+(12/handleHow().num), 'col-md-'+(12/handleHow().num), 'col-lg-'+(12/handleHow().num), 'card-pf', wizard.how.choice == 'rsync' ? 'active-choose' : '']">
                         <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-refresh"></span>
@@ -784,7 +829,7 @@
                             rSync
                           </h3>
                           <p>
-                            <a>{{$t('backup.doc_link')}}</a>
+                            <doc-info :placement="'top'" :title="'rSync'" :chapter="'backup'" :section="'rsync'"></doc-info>
                           </p>
                         </div>
                       </div>
@@ -952,6 +997,8 @@
 </template>
 
 <script>
+import DocInfo from "../../directives/DocInfo.vue";
+
 export default {
   name: "Backup",
   beforeRouteEnter(to, from, next) {
@@ -976,6 +1023,9 @@ export default {
         false
       );
     });
+  },
+  components: {
+    DocInfo
   },
   beforeRouteLeave(to, from, next) {
     $(".modal").modal("hide");
@@ -1016,7 +1066,11 @@ export default {
           var minute = this.wizard.when.hour_minute.split(":")[1];
           var hour = this.wizard.when.hour_minute.split(":")[0];
 
-          if (minute && hour) {
+          if (
+            minute &&
+            !isNaN(parseInt(minute)) &&
+            (hour && !isNaN(parseInt(hour)))
+          ) {
             cronString =
               minute + " " + hour + " */1 * " + this.wizard.when.week_day;
           } else {
@@ -1029,7 +1083,11 @@ export default {
           var minute = this.wizard.when.hour_minute.split(":")[1];
           var hour = this.wizard.when.hour_minute.split(":")[0];
 
-          if (minute && hour) {
+          if (
+            minute &&
+            !isNaN(parseInt(minute)) &&
+            (hour && !isNaN(parseInt(hour)))
+          ) {
             cronString =
               minute + " " + hour + " " + this.wizard.when.day + " */1 *";
           } else {
@@ -1091,10 +1149,11 @@ export default {
           },
           usb: {
             USBLabel: null,
-            format: false,
             USBDevice: null,
             devices: [],
-            partitions: ""
+            partitions: [],
+            formatOutput: "",
+            isFormatting: false
           },
           sftp: {
             SftpDirectory: null,
@@ -1192,8 +1251,9 @@ export default {
     },
     selectWhere(where) {
       this.wizard.where.choice = where;
+      this.getUSBDevices();
     },
-    getUSBDevices() {
+    getUSBDevices(callback) {
       var context = this;
       context.exec(
         ["system-backup/read"],
@@ -1203,7 +1263,29 @@ export default {
         null,
         function(success) {
           success = JSON.parse(success);
+
+          var usbName =
+            context.wizard.where.usb.USBDevice &&
+            context.wizard.where.usb.USBDevice.name
+              ? context.wizard.where.usb.USBDevice.name
+              : null;
+
+          context.wizard.where.usb.isFormatting = false;
+          context.wizard.where.usb.USBLabel = "";
+          context.wizard.where.usb.USBDevice = null;
+          context.wizard.where.usb.partitions = [];
           context.wizard.where.usb.devices = success;
+
+          if (usbName) {
+            context.wizard.where.usb.USBDevice = context.wizard.where.usb.devices.filter(
+              function(i) {
+                return i.name == usbName;
+              }
+            )[0];
+            context.getUSBDevicePartitions();
+          }
+
+          callback ? callback() : null;
         },
         function(error) {
           console.error(error);
@@ -1214,20 +1296,24 @@ export default {
       this.wizard.where.isValid = false;
       this.wizard.where.configError = false;
 
-      var name = this.wizard.where.usb.USBDevice.name;
+      var name =
+        this.wizard.where.usb.USBDevice && this.wizard.where.usb.USBDevice.name;
       var device = this.wizard.where.usb.devices.filter(function(i) {
         return i.name == name;
       })[0];
 
-      this.wizard.where.usb.partitions = device.partitions;
+      this.wizard.where.usb.partitions = device && device.partitions;
       this.wizard.where.usb.USBLabel =
-        device.partitions.length == 1 ? device.partitions[0].label : "";
+        device && device.partitions.length == 1
+          ? device && device.partitions[0].label
+          : "";
     },
     selectUSBDevicePartition(partition) {
       this.wizard.where.usb.USBLabel = partition.label;
     },
     checkWhereConfiguration() {
       var context = this;
+      var method = "exec";
       var api = "system-backup/validate";
 
       var configObj = context.wizard.where[context.wizard.where.choice];
@@ -1244,17 +1330,43 @@ export default {
           configObj.USBDevice.formatted == 1
             ? "system-backup/validate"
             : "system-backup/execute";
+
+        method = configObj.USBDevice.formatted == 1 ? "exec" : "execRaw";
       }
 
       context.wizard.where.isChecking = true;
-      context.exec(
+      context[method](
         [api],
         configObj,
-        null,
+        method == "execRaw"
+          ? function(stream) {
+              context.wizard.where.usb.isFormatting =
+                stream.length > 0 ? true : false;
+              context.wizard.where.usb.formatOutput +=
+                stream.length > 0 ? stream : "";
+              document.getElementById(
+                "format-output"
+              ).scrollTop = document.getElementById(
+                "format-output"
+              ).scrollHeight;
+            }
+          : null,
         function(success) {
-          context.wizard.where.isChecking = false;
-          context.wizard.where.isValid = true;
-          context.wizard.where.configError = false;
+          if (
+            context.wizard.where.choice == "usb" &&
+            !configObj.USBDevice.formatted
+          ) {
+            setTimeout(function() {
+              context.getUSBDevices(function() {
+                context.wizard.where.isChecking = false;
+                context.wizard.where.configError = false;
+              });
+            }, 3000);
+          } else {
+            context.wizard.where.isChecking = false;
+            context.wizard.where.isValid = true;
+            context.wizard.where.configError = false;
+          }
         },
         function(error) {
           console.error(error);
@@ -1263,6 +1375,35 @@ export default {
           context.wizard.where.configError = true;
         }
       );
+    },
+    handleHow() {
+      var num = 0;
+      var duplicity =
+        this.wizard.where.choice == "nfs" ||
+        this.wizard.where.choice == "cifs" ||
+        this.wizard.where.choice == "usb";
+
+      var restic =
+        this.wizard.where.choice == "nfs" ||
+        this.wizard.where.choice == "cifs" ||
+        this.wizard.where.choice == "usb" ||
+        this.wizard.where.choice == "sftp" ||
+        this.wizard.where.choice == "b2" ||
+        this.wizard.where.choice == "s3";
+
+      var rsync =
+        this.wizard.where.choice == "sftp" || this.wizard.where.choice == "usb";
+
+      num += duplicity ? 1 : 0;
+      num += restic ? 1 : 0;
+      num += rsync ? 1 : 0;
+
+      return {
+        num: num,
+        duplicity: duplicity,
+        restic: restic,
+        rsync: rsync
+      };
     },
     selectHow(how) {
       this.wizard.how.choice = how;
@@ -1280,7 +1421,9 @@ export default {
     },
     initBackupData() {
       return {
-        isLoading: false
+        isLoading: false,
+        name: "",
+        lastLog: null
       };
     },
     onChangeInput(event) {
@@ -1380,7 +1523,27 @@ export default {
 
       //$("#configureConfigModal").modal("hide");
     },
-    downloadConfigBackup(b) {},
+    downloadConfigBackup(b) {
+      var context = this;
+      context.exec(
+        ["system-backup/execute"],
+        {
+          action: "download-backup-config",
+          name: b.id
+        },
+        null,
+        function(success) {
+          require("downloadjs")(
+            "data:application/x-gtar;base64," + success,
+            b.id + ".tar.xz",
+            "application/x-gtar"
+          );
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
     deleteConfigBackup() {
       var context = this;
 
@@ -1424,6 +1587,34 @@ export default {
     openConfigureData() {
       this.currentDataBackup = this.initBackupData();
       $("#configureDataModal").modal("show");
+    },
+    openLastLog(b) {
+      var context = this;
+
+      context.currentDataBackup = context.initBackupData();
+      context.currentDataBackup.name = b.name;
+      context.currentDataBackup.lastLog = null;
+
+      $("#lastLogDataModal").modal("show");
+      context.exec(
+        ["system-backup/read"],
+        {
+          action: "last-log",
+          name: b.name
+        },
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.currentDataBackup.lastLog = success.data;
+        },
+        function(error) {
+          console.error(error);
+          context.currentDataBackup.lastLog = "-";
+        }
+      );
+    },
+    cleanLastLog() {
+      this.currentDataBackup.lastLog = null;
     },
     openDeleteData(b) {
       this.currentDataBackup = this.initBackupData();
@@ -1469,7 +1660,7 @@ export default {
       var context = this;
 
       var backupObj = {
-        action: "create-backup",
+        action: "create-backup-data",
         name: context.wizard.review.Name,
         engine: context.wizard.how.choice,
         status: "enabled",
@@ -1525,7 +1716,7 @@ export default {
                 "backup.backup_create_ok"
               );
 
-              this.wizard = this.initWizard();
+              context.wizard = context.initWizard();
 
               // get hosts
               context.getBackupInfo();

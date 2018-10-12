@@ -39,6 +39,8 @@
     "symbol": "symbol",
     "equal": "equal",
     "copy_command": "Copy command",
+    "output": "Output",
+    "more_info": "More info",
     "menu": {
       "dashboard": "Dashboard",
       "backup": "Backup",
@@ -165,11 +167,12 @@
       "every_day": "Every day",
       "doc_link": "Documentation link",
       "check": "Check",
-      "usb_list": "USB list",
-      "usb_partitions": "Select USB partition:",
-      "usb_label": "USB label",
+      "disk": "Local disk",
+      "usb_list": "Disk list",
+      "usb_partitions": "Select disk partition:",
+      "usb_label": "Disk label",
       "format": "Format",
-      "format_usb": "Format USB",
+      "format_usb": "Format disk",
       "type": "Type",
       "full_day": "Day for Full backup",
       "vol_size": "Volume size",
@@ -208,7 +211,9 @@
       "delete_config_backup_ok": "Config backup deleted successfully!",
       "delete_config_backup_error": "Config backup not deleted.",
       "delete_data_backup_ok": "Data backup deleted successfully!",
-      "delete_data_backup_error": "Data backup not deleted."
+      "delete_data_backup_error": "Data backup not deleted.",
+      "last_log_for": "Last log for backup data",
+      "view_last_log": "View last log"
     },
     "disk_usage": {
       "title": "Disk usage",

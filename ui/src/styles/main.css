@@ -10,6 +10,7 @@ body {
 
 a {
   cursor: pointer;
+  word-break: break-all;
 }
 
 .container-cards-pf {
@@ -664,7 +665,7 @@ input[type="checkbox"].form-control {
 }
 
 .copy-ok {
-  top: 4px;
+  top: 2px;
   position: relative;
   right: -8px;
 }
@@ -843,4 +844,29 @@ input[type="checkbox"].form-control {
 
 .blank-state-backup {
   background-color: white !important;
+}
+
+.command-output {
+  background: black;
+  color: #cecece;
+  font-family: monospace;
+  min-height: 175px;
+  resize: vertical;
+}
+
+.command-logs {
+  min-height: 375px;
+}
+
+.popover-title.closable>button {
+  font-size: 14px;
+}
+
+.popover {
+  min-width: 350px;
+}
+
+.popover-content {
+  max-height: 350px;
+  overflow: auto;
 }
