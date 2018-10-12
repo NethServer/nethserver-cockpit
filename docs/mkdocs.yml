@@ -30,6 +30,7 @@ nav:
       - api/system-company.md
       - api/system-dhcp.md
       - api/system-disk-usage.md
+      - api/system-docs.md
       - api/system-dns.md
       - api/system-hostname.md
       - api/system-hosts.md
