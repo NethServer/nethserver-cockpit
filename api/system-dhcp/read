@@ -37,16 +37,18 @@ $leases = array();
 $reservations = array();
 
 # List current leases
-$output = shell_exec("/usr/libexec/nethserver/read-dhcp-leases");
-foreach (json_decode($output, TRUE) as $lease) {
-    if (time() > $lease['expire']) {
-        continue;
+if (file_exists("/var/lib/dnsmasq/dnsmasq.leases")) {
+    $output = shell_exec("/usr/libexec/nethserver/read-dhcp-leases");
+    foreach (json_decode($output, TRUE) as $lease) {
+        if (time() > $lease['expire']) {
+            continue;
+        }
+        if (!$lease['name']) {
+            $tmp = explode(".",$lease['ip']);
+            $lease['name'] = "host-".$tmp[3];
+        }
+        $leases[] = $lease;
     }
-    if (!$lease['name']) {
-        $tmp = explode(".",$lease['ip']);
-        $lease['name'] = "host-".$tmp[3];
-    }
-    $leases[] = $lease;
 }
 $ret['status'] = $leases;
 
