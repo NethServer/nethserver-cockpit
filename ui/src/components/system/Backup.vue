@@ -199,9 +199,9 @@
             <div class="modal-body">
               <div class="form-group">
                 <input required class="col-sm-1 control-label" type="radio" id="restoreURL" value="url" v-model="currentConfigBackup.restoreMode">
-                <label class="col-sm-2 control-label" for="restoreURL">{{$t('backup.from_url')}}</label>
+                <label :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'url' ? 'gray' : '']" for="restoreURL">{{$t('backup.from_url')}}</label>
                 <div class="col-sm-9">
-                  <input type="url" v-model="currentConfigBackup.restoreURL" class="form-control" placeholder="https://mysite.com/archive/backup-last.tar.xz">
+                  <input :required="currentConfigBackup.restoreMode == 'url'" :disabled="currentConfigBackup.restoreMode != 'url'" type="url" v-model="currentConfigBackup.restoreURL" class="form-control" placeholder="https://mysite.com/archive/backup-last.tar.xz">
                 </div>
               </div>
               <div class="advanced">
@@ -210,12 +210,12 @@
               </div>
               <div class="form-group">
                 <input required class="col-sm-1 control-label" type="radio" id="restoreFile" value="file" v-model="currentConfigBackup.restoreMode">
-                <label class="col-sm-2 control-label" for="restoreFile">{{$t('backup.from_file')}}</label>
+                <label :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'file' ? 'gray' : '']" for="restoreFile">{{$t('backup.from_file')}}</label>
                 <div class="col-sm-9">
-                  <label for="file-upload-cert" class="custom-file-upload">
+                  <label for="file-upload-cert" :class="['custom-file-upload', currentConfigBackup.restoreMode != 'file' ? 'gray' : '']">
                     <i class="fa fa-cloud-upload span-right-margin"></i>{{$t('backup.choose_file')}}
                   </label>
-                  <input class="inputfile" @change="onChangeInput($event)" id="backup-file" name="file-upload-backup"
+                  <input :required="currentConfigBackup.restoreMode == 'file'" :disabled="currentConfigBackup.restoreMode != 'file'" class="inputfile" @change="onChangeInput($event)" id="backup-file" name="file-upload-backup"
                     type="file" accept=".tar.xz" />
                 </div>
               </div>
@@ -225,9 +225,9 @@
               </div>
               <div class="form-group">
                 <input required class="col-sm-1 control-label" type="radio" id="restoreBackup" value="backup" v-model="currentConfigBackup.restoreMode">
-                <label class="col-sm-2 control-label" for="restoreBackup">{{$t('backup.from_backup')}}</label>
+                <label :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'backup' ? 'gray' : '']" for="restoreBackup">{{$t('backup.from_backup')}}</label>
                 <div class="col-sm-9">
-                  <select v-model="currentConfigBackup.restoreBackup" class="combobox form-control">
+                  <select :required="currentConfigBackup.restoreMode == 'backup'" :disabled="currentConfigBackup.restoreMode != 'backup'" v-model="currentConfigBackup.restoreBackup" class="combobox form-control">
                     <option v-for="t in backupConfigurations" v-bind:key="t">
                       {{t.type | capitalize}} - {{t.description}}</option>
                   </select>
@@ -1251,6 +1251,14 @@ export default {
     },
     selectWhere(where) {
       this.wizard.where.choice = where;
+      switch (where) {
+        case "sftp":
+          this.wizard.how.choice = "rsync";
+          break;
+        case "usb":
+          this.wizard.how.choice = "rsync";
+          break;
+      }
       this.getUSBDevices();
     },
     getUSBDevices(callback) {
