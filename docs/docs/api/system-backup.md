@@ -12,6 +12,7 @@ Valid actions:
 - `backup-info`
 - `list-disks`
 - `last-log`
+- `running-info`
 
 Example:
 ```json
@@ -44,11 +45,6 @@ Output example
 ```json
 {
   "status": {
-    "running": {
-       "restore-config": 0,
-       "restore-data": 0,
-       "backup-data": 1
-    },
     "backup-config": [
       ...
       {
@@ -133,7 +129,6 @@ Output example
 
 Fields explanation for `status` section:
 
-- `running`: indicates if there are background jobs (restore-config, restore-data or backup-data) started by the UI
 - `backup-config`: list of all available configuration backups
 - `backup-data`: list of all executed data backup, `result` field can be `success`, `fail` or `unknown`
 
@@ -179,6 +174,18 @@ Example:
 ```json
 {
   "data": "Backup: local119\nBackup started at ...."
+}
+```
+
+#### running-info
+
+It indicates if there are background jobs (restore-data or backup-data) started by the UI.
+
+Example:
+```json
+{
+  "restore-data": 0,
+  "backup-data": 1
 }
 ```
 

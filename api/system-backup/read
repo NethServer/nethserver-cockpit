@@ -193,6 +193,15 @@ sub list_disks
     print encode_json(\@ret);
 }
 
+sub running_info
+{
+    my $ret = {};
+    my $out = `systemctl is-active cockpit-backup-data*`;
+    $ret->{'backup-data'} = ($? == 0)?1:0;
+    $out = `systemctl is-active cockpit-restore-data*`;
+    $ret->{'restore-data'} = ($? == 0)?1:0;
+    print encode_json($ret);
+}
 
 my $input = readInput();
 
@@ -228,16 +237,11 @@ if($cmd eq 'backup-info') {
     $db = esmith::ConfigDB->open_ro();
     $ret->{'configuration'}{'backup-config'}{'HistoryLength'} = $db->get_prop('backup-config','HistoryLength') || 3;
 
-    my $out = `systemctl is-active cockpit-backup-data*`;
-    $ret->{'status'}{'running'}{'backup-data'} = ($? == 0)?1:0;
-    $out = `systemctl is-active cockpit-restore-data*`;
-    $ret->{'status'}{'running'}{'restore-data'} = ($? == 0)?1:0;
-    $out = `systemctl is-active cockpit-restore-config*`;
-    $ret->{'status'}{'running'}{'restore-config'} = ($? == 0)?1:0;
-
     print encode_json($ret);
 } elsif ($cmd eq 'list-disks') {
     list_disks();
+} elsif ($cmd eq 'running-info') {
+    running_info();
 } elsif ($cmd eq 'last-log') {
     my $ret;
     $ret->{'data'} = '';
