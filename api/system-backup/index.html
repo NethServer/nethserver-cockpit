@@ -2012,10 +2012,12 @@ The <code>name</code> field should contain a description for the backup; the fie
 
 <h4 id="restore-backup-config">restore-backup-config<a class="headerlink" href="#restore-backup-config" title="Permanent link">&para;</a></h4>
 <p>Execute a configuration restore in background using a systemd unit.
-The <code>name</code> field should contain the id of configuration backup to restore.</p>
+The <code>name</code> field should contain the id of configuration backup to restore.
+The <code>InstallPackages</code> can be <code>enabled</code> or <code>disabled</code>.</p>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;restore-backup-config&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;InstallPackages&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;c00&quot;</span>
 <span class="p">}</span>
 </pre></div>
