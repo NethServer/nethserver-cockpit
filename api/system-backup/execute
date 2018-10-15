@@ -42,14 +42,14 @@ case $action in
         unit=cockpit-backup-data-"$(_get name)"
 
         # Skip double execution
-        systemctl is-active $name >/dev/null
+        systemctl is-active $unit >/dev/null
         if [ $? -eq 0 ]; then
             exit 0
         else
-            systemctl reset-failed $name >/dev/null
+            systemctl reset-failed $unit >/dev/null
         fi
 
-        systemd-run --unit=cockpit-backup-data-"$(_get name)" /sbin/e-smith/backup-data-wrapper "$(_get name)"
+        systemd-run --unit=$unit /sbin/e-smith/backup-data-wrapper "$(_get name)"
         ;;
 
     "run-backup-config")
@@ -64,4 +64,36 @@ case $action in
         rm -f $tmp
         ;;
 
+    "restore-backup-config")
+        unit=cockpit-restore-config-"$(_get name)"
+
+        # Skip double execution
+        systemctl is-active $unit >/dev/null
+        if [ $? -eq 0 ]; then
+            exit 0
+        else
+            systemctl reset-failed $name >/dev/null
+        fi
+
+        /usr/libexec/nethserver/backup-config-history pull -i "$(_get name)"
+        if [ "$(_get InstallPackages)" == "enabled" ]; then
+            systemd-run --unit=$unit  /sbin/e-smith/restore-backup-config
+        else
+            systemd-run --unit=$unit  /sbin/e-smith/restore-backup-config --no-reinstall
+        fi
+        ;;
+
+    "restore-backup-data")
+        unit=cockpit-restore-data-"$(_get name)"
+
+        # Skip double execution
+        systemctl is-active $unit >/dev/null
+        if [ $? -eq 0 ]; then
+            exit 0
+        else
+            systemctl reset-failed $name >/dev/null
+        fi
+
+        systemd-run --unit=$unit  /sbin/e-smith/restore-data -b "$(_get name)"
+        ;;
 esac
