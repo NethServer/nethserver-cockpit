@@ -31,6 +31,27 @@ function _get
     echo $data | jq -r ".$field"
 }
 
+function _restore
+{
+    id=$1
+
+    # Simulate json event output
+    echo '{"steps":2,"pid":"","args":"","event":"restore-config"}'
+    echo '{"step":1,"pid":"","action":"Pulling from history","event":"restore-config","state":"running"}'
+    /usr/libexec/nethserver/backup-config-history pull -i $id
+    sleep 2
+    echo '{"progress":"0.50","time":"2.00","exit":0,"event":"restore-config","state":"done","step":1,"pid":"","action":"Pulling from history"}';
+
+    echo '{"step":2,"pid":"","action":"Restoring configuration","event":"restore-config","state":"running"}'
+    /sbin/e-smith/restore-config &>/dev/null
+    ret=$?
+    echo "{\"progress\":\"1.00\",\"time\":\"\",\"exit\":$ret,\"event\":\"restore-config\",\"state\":\"done\",\"step\":2,\"pid\":\"\",\"action\":\"Restoring configuration\"}"
+    if [ $ret -gt 0 ]; then
+        echo '{"pid":"","status":"failed","event":"restore-config"}'
+    else
+        echo '{"pid":"","status":"success","event":"restore-config"}'
+    fi
+}
 
 case $action in
 
@@ -65,7 +86,33 @@ case $action in
         ;;
 
     "restore-backup-config")
-        unit=cockpit-restore-config-"$(_get name)"
+
+        case "$(_get mode)" in
+            "file")
+                tmp_file=$(mktemp)
+                echo "$(_get data)" | base64 -d > $tmp_file
+                /usr/libexec/nethserver/backup-config-history push -t upload -f $tmp_file -d "Upload from UI"
+                rm -f $tmp_file
+                # retrieve uploaded id
+                id=$(/usr/libexec/nethserver/backup-config-history list | jq ".[0].id" -r)
+
+                _restore $id
+                ;;
+            "url")
+                tmp_file=$(mktemp)
+                description=$(echo "$(_get data)" | sed -e 's|^[^/]*//||' -e 's|/.*$||') # extract host name
+                wget --quiet "$(_get data)" -O $tmp_file
+                /usr/libexec/nethserver/backup-config-history push -t upload -f $tmp_file -d "Downloaded from $description"
+                rm -f $tmp_file
+                # retrieve uploaded id
+                id=$(/usr/libexec/nethserver/backup-config-history list | jq ".[0].id" -r)
+
+                _restore $id
+                ;;
+            "backup")
+                _restore "$(_get data)"
+                ;;
+        esac
 
         # Skip double execution
         systemctl is-active $unit >/dev/null
@@ -75,12 +122,6 @@ case $action in
             systemctl reset-failed $name >/dev/null
         fi
 
-        /usr/libexec/nethserver/backup-config-history pull -i "$(_get name)"
-        if [ "$(_get InstallPackages)" == "enabled" ]; then
-            systemd-run --unit=$unit  /sbin/e-smith/restore-backup-config
-        else
-            systemd-run --unit=$unit  /sbin/e-smith/restore-backup-config --no-reinstall
-        fi
         ;;
 
     "restore-backup-data")
@@ -94,6 +135,6 @@ case $action in
             systemctl reset-failed $name >/dev/null
         fi
 
-        systemd-run --unit=$unit  /sbin/e-smith/restore-data -b "$(_get name)"
+        systemd-run --unit=$unit  /sbin/e-smith/restore-data -b "$(_get name)"  >/dev/null
         ;;
 esac

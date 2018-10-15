@@ -488,7 +488,7 @@ Example:
 
 #### restore-backup-config
 
-Execute a configuration restore in background using a systemd unit.
+Execute a configuration restore.
 The `name` field should contain the id of configuration backup to restore.
 The `InstallPackages` can be `enabled` or `disabled`.
 
@@ -530,7 +530,7 @@ No output.
 
 #### restore-backup-config
 
-No output. 
+Mimic event output. 
 
 #### restore-backup-data
 
