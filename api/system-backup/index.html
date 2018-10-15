@@ -705,6 +705,20 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#restore-backup-config" title="restore-backup-config" class="md-nav__link">
+    restore-backup-config
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restore-backup-data" title="restore-backup-data" class="md-nav__link">
+    restore-backup-data
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -735,6 +749,20 @@
           <li class="md-nav__item">
   <a href="#run-backup-config_1" title="run-backup-config" class="md-nav__link">
     run-backup-config
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restore-backup-config_1" title="restore-backup-config" class="md-nav__link">
+    restore-backup-config
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restore-backup-data_1" title="restore-backup-data" class="md-nav__link">
+    restore-backup-data
   </a>
   
 </li>
@@ -1448,6 +1476,20 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#restore-backup-config" title="restore-backup-config" class="md-nav__link">
+    restore-backup-config
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restore-backup-data" title="restore-backup-data" class="md-nav__link">
+    restore-backup-data
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1478,6 +1520,20 @@
           <li class="md-nav__item">
   <a href="#run-backup-config_1" title="run-backup-config" class="md-nav__link">
     run-backup-config
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restore-backup-config_1" title="restore-backup-config" class="md-nav__link">
+    restore-backup-config
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restore-backup-data_1" title="restore-backup-data" class="md-nav__link">
+    restore-backup-data
   </a>
   
 </li>
@@ -1547,6 +1603,11 @@ Both fields contain <code>backup-data</code> and <code>backup-config</code> fiel
 <p>Output example</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;running&quot;</span><span class="p">:</span> <span class="p">{</span>
+       <span class="nt">&quot;restore-config&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+       <span class="nt">&quot;restore-data&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+       <span class="nt">&quot;backup-data&quot;</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">},</span>
     <span class="nt">&quot;backup-config&quot;</span><span class="p">:</span> <span class="p">[</span>
       <span class="err">...</span>
       <span class="p">{</span>
@@ -1631,6 +1692,7 @@ Both fields contain <code>backup-data</code> and <code>backup-config</code> fiel
 
 <p>Fields explanation for <code>status</code> section:</p>
 <ul>
+<li><code>running</code>: indicates if there are background jobs (restore-config, restore-data or backup-data) started by the UI</li>
 <li><code>backup-config</code>: list of all available configuration backups</li>
 <li><code>backup-data</code>: list of all executed data backup, <code>result</code> field can be <code>success</code>, <code>fail</code> or <code>unknown</code></li>
 </ul>
@@ -1906,6 +1968,8 @@ The <code>name</code> field must contain the backup name.</p>
 <li><code>run-backup-data</code></li>
 <li><code>run-backup-config</code></li>
 <li><code>download-backup-config</code></li>
+<li><code>restore-backup-config</code></li>
+<li><code>restore-backup-data</code></li>
 </ul>
 <h3 id="input_2">Input<a class="headerlink" href="#input_2" title="Permanent link">&para;</a></h3>
 <h4 id="format-disk">format-disk<a class="headerlink" href="#format-disk" title="Permanent link">&para;</a></h4>
@@ -1946,13 +2010,39 @@ The <code>name</code> field should contain a description for the backup; the fie
 </pre></div>
 
 
+<h4 id="restore-backup-config">restore-backup-config<a class="headerlink" href="#restore-backup-config" title="Permanent link">&para;</a></h4>
+<p>Execute a configuration restore in background using a systemd unit.
+The <code>name</code> field should contain the id of configuration backup to restore.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;restore-backup-config&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;c00&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="restore-backup-data">restore-backup-data<a class="headerlink" href="#restore-backup-data" title="Permanent link">&para;</a></h4>
+<p>Execute a data restore in background using a systemd unit.
+The <code>name</code> field should contain the name of data backup to restore.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;restore-backup-data&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;mybackup&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h3 id="output_1">Output<a class="headerlink" href="#output_1" title="Permanent link">&para;</a></h3>
 <h4 id="format-disk_1">format-disk<a class="headerlink" href="#format-disk_1" title="Permanent link">&para;</a></h4>
 <p>Raw output from paritioning and formatting tools.</p>
 <h4 id="run-backup-data_1">run-backup-data<a class="headerlink" href="#run-backup-data_1" title="Permanent link">&para;</a></h4>
 <p>No relevant output. The backup is started using a systemd transient unit.</p>
 <h4 id="run-backup-config_1">run-backup-config<a class="headerlink" href="#run-backup-config_1" title="Permanent link">&para;</a></h4>
-<p>No ouput. </p>
+<p>No output. </p>
+<h4 id="restore-backup-config_1">restore-backup-config<a class="headerlink" href="#restore-backup-config_1" title="Permanent link">&para;</a></h4>
+<p>No output. </p>
+<h4 id="restore-backup-data_1">restore-backup-data<a class="headerlink" href="#restore-backup-data_1" title="Permanent link">&para;</a></h4>
+<p>No output. </p>
                 
                   
                 
