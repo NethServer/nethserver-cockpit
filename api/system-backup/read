@@ -206,10 +206,10 @@ if($cmd eq 'backup-info') {
     my $default_excludes = get_default_excludes();
     my $default_custom_includes = get_default_custom_includes();
     my $default_custom_excludes = get_default_custom_excludes();
-    $ret->{'configuration'}->{'backup-data'}->{'defaults'}->{'includes'} = $default_includes;
-    $ret->{'configuration'}->{'backup-data'}->{'defaults'}->{'excludes'} = $default_excludes;
-    $ret->{'configuration'}->{'backup-data'}->{'defaults'}->{'custom-includes'} = $default_custom_includes;
-    $ret->{'configuration'}->{'backup-data'}->{'defaults'}->{'custom-excludes'} = $default_custom_excludes;
+    $ret->{'configuration'}{'backup-data'}{'defaults'}{'includes'} = $default_includes;
+    $ret->{'configuration'}{'backup-data'}{'defaults'}{'excludes'} = $default_excludes;
+    $ret->{'configuration'}{'backup-data'}{'defaults'}{'custom-includes'} = $default_custom_includes;
+    $ret->{'configuration'}{'backup-data'}{'defaults'}{'custom-excludes'} = $default_custom_excludes;
     my $db = esmith::ConfigDB->open_ro('backups');
     foreach my $backup ($db->get_all()) {
         my %props = $backup->props;
@@ -227,6 +227,14 @@ if($cmd eq 'backup-info') {
     $ret->{'status'}{'backup-config'} = $backup_config_list;
     $db = esmith::ConfigDB->open_ro();
     $ret->{'configuration'}{'backup-config'}{'HistoryLength'} = $db->get_prop('backup-config','HistoryLength') || 3;
+
+    my $out = `systemctl is-active cockpit-backup-data*`;
+    $ret->{'status'}{'running'}{'backup-data'} = ($? == 0)?1:0;
+    $out = `systemctl is-active cockpit-restore-data*`;
+    $ret->{'status'}{'running'}{'restore-data'} = ($? == 0)?1:0;
+    $out = `systemctl is-active cockpit-restore-config*`;
+    $ret->{'status'}{'running'}{'restore-config'} = ($? == 0)?1:0;
+
     print encode_json($ret);
 } elsif ($cmd eq 'list-disks') {
     list_disks();

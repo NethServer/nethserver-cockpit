@@ -44,6 +44,11 @@ Output example
 ```json
 {
   "status": {
+    "running": {
+       "restore-config": 0,
+       "restore-data": 0,
+       "backup-data": 1
+    },
     "backup-config": [
       ...
       {
@@ -128,6 +133,7 @@ Output example
 
 Fields explanation for `status` section:
 
+- `running`: indicates if there are background jobs (restore-config, restore-data or backup-data) started by the UI
 - `backup-config`: list of all available configuration backups
 - `backup-data`: list of all executed data backup, `result` field can be `success`, `fail` or `unknown`
 
@@ -431,6 +437,8 @@ Available actions:
 - `run-backup-data`
 - `run-backup-config`
 - `download-backup-config`
+- `restore-backup-config`
+- `restore-backup-data`
 
 ### Input
 
@@ -478,6 +486,32 @@ Example:
 }
 ```
 
+#### restore-backup-config
+
+Execute a configuration restore in background using a systemd unit.
+The `name` field should contain the id of configuration backup to restore.
+
+Example:
+```json
+{
+  "action": "restore-backup-config",
+  "name": "c00"
+}
+```
+
+#### restore-backup-data
+
+Execute a data restore in background using a systemd unit.
+The `name` field should contain the name of data backup to restore.
+
+Example:
+```json
+{
+  "action": "restore-backup-data",
+  "name": "mybackup"
+}
+```
+
 ### Output
 
 #### format-disk
@@ -490,4 +524,12 @@ No relevant output. The backup is started using a systemd transient unit.
 
 #### run-backup-config
 
-No ouput. 
+No output. 
+
+#### restore-backup-config
+
+No output. 
+
+#### restore-backup-data
+
+No output. 
