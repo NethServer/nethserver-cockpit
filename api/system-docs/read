@@ -23,13 +23,19 @@
 
 require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
 
-define("BASE_URL","https://nethserver-docs-cockpit.readthedocs.io");
+define("DOWNLOAD_BASE_URL","https://nethserver-docs-cockpit.readthedocs.io");
+define("LINK_BASE_URL","http://docs.nethserver.org");
 define("VERSION","latest");
 define("CACHE_DIR","/var/spool/nethserver-cockpit/docs");
 
-function get_url($chapter, $lang)
+function get_link($chapter, $lang, $section)
 {
-    return BASE_URL."/$lang/".VERSION."/$chapter.html";
+    return LINK_BASE_URL."/$lang/".VERSION."/$chapter.html#$section";
+}
+
+function get_download_url($chapter, $lang)
+{
+    return DOWNLOAD_BASE_URL."/$lang/".VERSION."/$chapter.html#";
 }
 
 function find_section($url, $section)
@@ -49,7 +55,8 @@ function find_section($url, $section)
 
 $data = readInput();
 
-$url = get_url($data['chapter'], $data['language']);
+$url = get_download_url($data['chapter'], $data['language']);
+$link = get_link($data['chapter'], $data['language'], $data['section']);
 $html = find_section($url, $data['section']);
 
-echo json_encode(array("data" => base64_encode($html), "link" => $url));
+echo json_encode(array("data" => base64_encode($html), "link" => $link));
