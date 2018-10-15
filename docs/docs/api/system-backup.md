@@ -490,11 +490,13 @@ Example:
 
 Execute a configuration restore in background using a systemd unit.
 The `name` field should contain the id of configuration backup to restore.
+The `InstallPackages` can be `enabled` or `disabled`.
 
 Example:
 ```json
 {
   "action": "restore-backup-config",
+  "InstallPackages": "enabled",
   "name": "c00"
 }
 ```
