@@ -1,6 +1,6 @@
 var NethServerService = {
   methods: {
-    exec(args, input, stream, success, error, superuser=true) {
+    exec(args, input, stream, success, error, superuser = true) {
       var systemCheck = false
 
       function isJsonString(str) {
@@ -101,6 +101,33 @@ var NethServerService = {
           ns.$children[0].notifications.error.show = true
           ns.$children[0].taskInProgress = false
         }
+        error(errorResp, errorData)
+      });
+    },
+    execRaw(args, input, stream, success, error, superuser = true) {
+      var api = args[0]
+
+      if (superuser) {
+        args[0] = "/usr/bin/sudo"
+        args[1] = "/usr/libexec/nethserver/api/" + api
+      } else {
+        args[0] = "/usr/libexec/nethserver/api/" + api
+      }
+
+      var process = cockpit.spawn(args, input ? {} : {
+        pty: true,
+        environ: ["TERM=dumb"],
+      })
+
+      if (input) {
+        process.input(JSON.stringify(input))
+      }
+
+      if (stream) {
+        process.stream(stream)
+      }
+      process.done(success).
+      fail(function (errorResp, errorData) {
         error(errorResp, errorData)
       });
     },

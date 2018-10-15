@@ -90,7 +90,6 @@
                 <div class="col-sm-9">
                   <label for="file-upload-cert" class="custom-file-upload">
                     <i class="fa fa-cloud-upload span-right-margin"></i>{{$t('certificates.choose_file')}}
-                    {{newCertificate.certificate}}
                   </label>
                   <input class="inputfile" required @change="onChangeInput($event, 'cert')" id="certificate-file" name="file-upload-cert"
                     type="file" />

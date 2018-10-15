@@ -2,7 +2,7 @@ var Lang = {
   initLang() {
     // get browser lang and init locales
     var messages = {};
-    var userLang = navigator.language || navigator.userLanguage;
+    var userLang = cockpit.language || navigator.language || navigator.userLanguage;
     userLang = userLang.replace("-", "_").split("_")[0];
 
     // try loading browser locale

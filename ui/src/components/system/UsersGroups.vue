@@ -33,8 +33,8 @@
         <div class="panel-heading">
           <button id="change-provider-btn" @click="openPasswordPolicy()" class="btn btn-primary">{{$t('users_groups.change_policy')}}</button>
           <span class="panel-title">
-            <span>{{$t('users_groups.strong_password')}}</span> <span :class="['fa', passwordPolicy.Users == 'yes' ? 'fa-check' : 'fa-times']"></span>
-            <span class="margin-left-md">{{$t('users_groups.expiration_password')}}</span> <span :class="['fa', passwordPolicy.PassExpires == 'yes' ? 'fa-check' : 'fa-times']"></span>
+            <span>{{$t('users_groups.strong_password')}}</span> <span :class="['fa', passwordPolicy.Users == 'yes' ? 'fa-check green' : 'fa-times red']"></span>
+            <span class="margin-left-md">{{$t('users_groups.expiration_password')}}</span> <span :class="['fa', passwordPolicy.PassExpires == 'yes' ? 'fa-check green' : 'fa-times red']"></span>
           </span>
         </div>
       </div>
@@ -79,7 +79,7 @@
                 </li>
               </ul>
             </div>
-            <input v-model="searchString" type="text" class="form-control input-lg" id="filter" :placeholder="'Filter by '+ availableSearchFilter[currentSearchFilter] +'...'">
+            <input v-model="searchString" type="text" class="form-control input-lg" id="filter" :placeholder="$t('users_groups.filter_by') +' '+ availableSearchFilter[currentSearchFilter] +'...'">
           </div>
         </div>
         <div class="form-group">

@@ -21,6 +21,12 @@
 
         <li class="li-empty"></li>
 
+        <li v-if="checkAuth('backup')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('backup') ? 'active' : '', 'list-group-item']">
+          <a href="#/backup">
+            <span class="pficon pficon-restart"></span>
+            <span class="list-group-item-value">{{$t('menu.backup')}}</span>
+          </a>
+        </li>
         <li v-if="checkAuth('storage')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('storage') ? 'active' : '', 'list-group-item']">
           <a href="#/storage">
             <span class="fa fa-hdd-o"></span>
@@ -34,12 +40,12 @@
           </a>
         </li>
 
-        <li v-if="checkAuth('storage') || checkAuth('disk-usage')" class="li-empty"></li>
+        <li v-if="checkAuth('backup') || checkAuth('storage') || checkAuth('disk-usage')" class="li-empty"></li>
 
-        <li v-if="checkAuth('certificates')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('certificates') ? 'active' : '', 'list-group-item']">
-          <a href="#/certificates">
-            <span class="fa fa-key"></span>
-            <span class="list-group-item-value">{{$t('menu.certificates')}}</span>
+        <li v-if="checkAuth('network')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('network') ? 'active' : '', 'list-group-item']">
+          <a href="#/network">
+            <span class="fa fa-plug"></span>
+            <span class="list-group-item-value">{{$t('menu.network')}}</span>
           </a>
         </li>
         <li v-if="checkAuth('dns')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('dns') ? 'active' : '', 'list-group-item']">
@@ -67,12 +73,13 @@
           </a>
         </li>
 
-        <li v-if="checkAuth('certificates') || checkAuth('dns') || checkAuth('dhcp') || checkAuth('services') || checkAuth('users-groups')" class="li-empty"></li>
+        <li v-if="checkAuth('network') || checkAuth('dns') || checkAuth('dhcp') || checkAuth('services') || checkAuth('users-groups')"
+          class="li-empty"></li>
 
-        <li v-if="checkAuth('network')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('network') ? 'active' : '', 'list-group-item']">
-          <a href="#/network">
-            <span class="fa fa-plug"></span>
-            <span class="list-group-item-value">{{$t('menu.network')}}</span>
+        <li v-if="checkAuth('certificates')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('certificates') ? 'active' : '', 'list-group-item']">
+          <a href="#/certificates">
+            <span class="fa fa-key"></span>
+            <span class="list-group-item-value">{{$t('menu.certificates')}}</span>
           </a>
         </li>
         <li v-if="checkAuth('ssh')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('ssh') ? 'active' : '', 'list-group-item']">
@@ -94,7 +101,8 @@
           </a>
         </li>
 
-        <li v-if="checkAuth('network') || checkAuth('ssh') || checkAuth('tls-policy') || checkAuth('trusted-networks')" class="li-empty"></li>
+        <li v-if="checkAuth('certificates') || checkAuth('ssh') || checkAuth('tls-policy') || checkAuth('trusted-networks')"
+          class="li-empty"></li>
 
         <li v-if="checkAuth('logs')" v-bind:class="[getCurrentPath('logs') ? 'active' : '', 'list-group-item']">
           <a href="#/logs">
@@ -118,7 +126,8 @@
       <router-view></router-view>
     </div>
 
-    <div v-if="notifications.success.show" :style="{ top: notifications.addMargin ? 72+'px' : 10+'px', minWidth: 390+'px', right: 10+'px', zIndex: 5, position: 'fixed'}" class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
+    <div v-if="notifications.success.show" :style="{ top: notifications.addMargin ? 72+'px' : 10+'px', minWidth: 390+'px', right: 10+'px', zIndex: 5, position: 'fixed'}"
+      class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
       <span style="padding-top: 20px;" class="pficon fa fa-check"></span>
       <strong>{{$t('success')}}</strong>
       <p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{{notifications.success.message || '-'}}</p>
@@ -135,8 +144,11 @@
       <span style="padding-top: 20px;" class="pficon fa fa-times"></span>
       <strong>{{$t('error')}}</strong>
       <p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{{notifications.error.message || '-'}}</p>
-      <p>{{$t('check')}} <pre class="pre-inline">logs</pre> {{$t('for_more_info')}}.</p>
+      <p>{{$t('check')}}
+        <pre class="pre-inline">logs</pre> {{$t('for_more_info')}}.</p>
       <pre>less /var/log/messages</pre>
+      <button @click="copyCommand('less /var/log/messages')" class="btn btn-primary copy-path" type="button">{{$t('copy_command')}}</button>
+      <span v-if="copied" class="fa fa-check green copy-ok"></span>
     </div>
 
     <div v-if="notifications.event.show" :style="{ top: notifications.addMargin ? (notifications.success.show && notifications.error.show) ? 300+'px' : (notifications.success.show ? 142+'px' : (notifications.error.show ? 230+'px' : 72 +'px')) : (notifications.success.show && notifications.error.show) ? 238+'px' : (notifications.success.show ? 80+'px' : (notifications.error.show ? 168+'px' : 10 +'px')), minWidth: 390+'px', right: 10+'px', zIndex: 5, position: 'fixed' }"
@@ -226,10 +238,25 @@ export default {
         addMargin: this.$route.path.indexOf("/applications/") < 0 ? false : true
       },
       auths: [],
-      taskInProgress: false
+      taskInProgress: false,
+      copied: false
     };
   },
   methods: {
+    copyCommand(cmd) {
+      var context = this;
+      context.$copyText(cmd).then(
+        function(e) {
+          context.copied = true;
+          setTimeout(function() {
+            context.copied = false;
+          }, 2000);
+        },
+        function(e) {
+          context.copied = false;
+        }
+      );
+    },
     getCurrentPath(route, offset) {
       if (offset) {
         return this.$route.path.split("/")[offset] === route;

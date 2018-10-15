@@ -46,14 +46,14 @@ var Filters = {
     var moment = require("moment");
     if (+new Date(value) > 0) {
       var converted = isNaN(value) ? String(value) : String(value).length == 10 ? value * 1000 : value
-      return moment(converted).format("DD MMMM YYYY, HH:mm");
+      return moment(converted).utc().format("DD MMMM YYYY, HH:mm");
     } else return "-";
   },
   capitalize: function (value) {
-    return value.toString().charAt(0).toUpperCase() + value.toString().slice(1);
+    return value && value.toString().charAt(0).toUpperCase() + value.toString().slice(1);
   },
   uppercase: function (value) {
-    return value.toUpperCase()
+    return value && value.toUpperCase()
   },
   isEmpty: function (value) {
     jQuery.isEmptyObject(value);
@@ -61,6 +61,12 @@ var Filters = {
   camelToSentence: function (value) {
     var result = value.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
     return result.charAt(0).toUpperCase() + result.slice(1);
+  },
+  cronToHuman: function (value) {
+    var cronstrue = require("cronstrue/i18n");
+    return value && cronstrue.toString(value, {
+      locale: ns.$options.currentLocale
+    });
   }
 };
 

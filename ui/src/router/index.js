@@ -8,6 +8,7 @@ import Wizard from '@/components/wizard/Wizard'
 /* SYSTEM */
 import Dashboard from '@/components/system/Dashboard'
 
+import Backup from '@/components/system/Backup'
 import Storage from '@/components/system/Storage'
 import DiskUsage from '@/components/system/DiskUsage'
 
@@ -44,6 +45,11 @@ export default new Router({
       component: Dashboard
     },
 
+    {
+      path: '/backup',
+      name: 'Backup',
+      component: Backup
+    },
     {
       path: '/storage',
       name: 'Storage',

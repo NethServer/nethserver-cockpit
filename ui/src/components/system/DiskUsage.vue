@@ -15,7 +15,7 @@
 
     <div id="explanation" v-if="view.isLoaded">
       <button @click="copyPath()" class="btn btn-primary copy-path" type="button">{{$t('disk_usage.copy_path')}}</button>
-      <span v-if="view.copied" class="pficon pficon-ok copy-ok"></span>
+      <span v-if="view.copied" class="fa fa-check green copy-ok"></span>
       <p id="sizeFolder"></p>
     </div>
 

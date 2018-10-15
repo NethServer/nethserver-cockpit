@@ -1,0 +1,1790 @@
+<template>
+  <div v-if="view.isAuth">
+    <h2>{{$t('backup.title')}}</h2>
+    <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
+    <div v-if="view.isLoaded">
+      <h3 class="sub-title-menu">{{$t('backup.config')}}</h3>
+      <div class="panel panel-default" id="provider-markup">
+        <div class="panel-heading">
+          <button @click="openConfigureConfig()" class="btn btn-default right">{{$t('backup.configure')}}</button>
+          <button @click="openRestoreConfig(b)" class="btn btn-primary right panel-icon">{{$t('backup.restore')}}</button>
+          <button @click="openExecuteConfig(b)" class="btn btn-primary right span-right-margin">{{$t('backup.execute_now')}}</button>
+          <span class="panel-title">{{$t('backup.configured_backup')}}: {{backupConfigurations.length}}</span>
+          <span class="provider-details margin-left-md" data-toggle="collapse" data-parent="#provider-markup" href="#providerDetails">{{$t('backup.details')}}</span>
+        </div>
+        <div id="providerDetails" class="panel-collapse collapse list-group list-view-pf">
+          <div v-if="backupConfigurations.length == 0" class="alert alert-info alert-dismissable compact">
+            <span class="pficon pficon-info"></span>
+            <strong>{{$t('backup.no_config_backup_found_title')}}.</strong>
+            {{$t('backup.no_config_backup_found_desc')}}.
+          </div>
+          <div class="list-group-item" v-for="b in backupConfigurations" v-bind:key="b">
+            <div class="list-view-pf-actions">
+              <button @click="downloadConfigBackup(b)" class="btn btn-default">
+                <span class="fa fa-download span-right-margin"></span>
+                {{$t('backup.download')}}
+              </button>
+              <div class="dropdown pull-right dropdown-kebab-pf">
+                <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                  aria-expanded="true">
+                  <span class="fa fa-ellipsis-v"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li>
+                    <a @click="openDeleteConfig(b)">
+                      <span class="fa fa-times span-right-margin"></span>
+                      {{$t('delete')}}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="list-view-pf-main-info">
+              <div class="list-view-pf-left">
+                <span :class="['fa', b.type == 'cron' ? 'fa-cog' : 'fa-camera', 'list-view-pf-icon-sm']"></span>
+              </div>
+              <div class="list-view-pf-body">
+                <div class="list-view-pf-description">
+                  <div @click="downloadConfigBackup(b)" class="list-group-item-heading">
+                    <a>{{b.type | capitalize}}</a>
+                  </div>
+                  <div class="list-group-item-text">
+                    <span>{{b.description}}</span>
+                  </div>
+                  <div class="list-group-item-text">
+                    <span class="fa fa-clock-o panel-icon"></span>{{b.push_ts | dateFormat}}
+                  </div>
+                  <div class="list-group-item-text">
+                    <span class="fa fa-archive panel-icon"></span>{{b.size | byteFormat}}
+                  </div>
+                </div>
+                <div class="list-view-pf-additional-info">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <h3 class="sub-title-menu">{{$t('backup.data')}}</h3>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <button @click="openConfigureData()" class="btn btn-default right">{{$t('backup.configure')}}</button>
+          <button @click="openRestoreData(b)" class="btn btn-primary right panel-icon">{{$t('backup.restore')}}</button>
+          <span class="panel-title">
+            <span>{{$t('backup.configured_backup')}}:</span> {{backupData.length}}
+          </span>
+        </div>
+      </div>
+
+      <h3>{{$t('list')}}</h3>
+      <div v-if="backupData.length == 0" class="blank-slate-pf blank-state-backup" id="">
+        <div class="blank-slate-pf-icon">
+          <span class="pficon pficon pficon-add-circle-o"></span>
+        </div>
+        <h1>
+          {{$t('backup.no_data_backup_found_title')}}
+        </h1>
+        <p>
+          {{$t('backup.no_data_backup_found_desc')}}
+        </p>
+        <div class="blank-slate-pf-main-action">
+          <button @click="openConfigureData()" class="btn btn-default btn-lg">{{$t('backup.configure')}}</button>
+        </div>
+      </div>
+
+      <form v-if="backupData.length > 0" role="form" class="search-pf has-button search">
+        <div class="form-group has-clear">
+          <div class="search-pf-input-group">
+            <label class="sr-only">Search</label>
+            <input type="search" v-model="searchString" class="form-control input-lg" :placeholder="$t('search')+'...'">
+          </div>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-default btn-lg" type="button"><span class="fa fa-search"></span></button>
+        </div>
+      </form>
+
+      <div class="list-group list-view-pf">
+        <div v-if="backupData.length > 0" class="list-group-item" v-for="b in filteredBackupList" v-bind:key="b">
+          <div class="list-view-pf-actions">
+            <button @click="openExecuteData(b)" class="btn btn-default">
+              <span class="fa fa-play span-right-margin"></span>
+              {{$t('backup.execute_now')}}
+            </button>
+            <div class="dropdown pull-right dropdown-kebab-pf">
+              <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="true">
+                <span class="fa fa-ellipsis-v"></span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li>
+                  <a @click="openLastLog(b)">
+                    <span class="fa fa-list span-right-margin"></span>
+                    {{$t('backup.view_last_log')}}</a>
+                </li>
+                <li role="presentation" class="divider"></li>
+                <li>
+                  <a @click="openDeleteData(b)">
+                    <span class="fa fa-times span-right-margin"></span>
+                    {{$t('delete')}}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="list-view-pf-main-info">
+            <div class="list-view-pf-left">
+              <span class="fa fa-database list-view-pf-icon-sm"></span>
+            </div>
+            <div class="list-view-pf-body">
+              <div class="list-view-pf-description">
+                <div @click="openExecuteData(b)" class="list-group-item-heading">
+                  <a>{{b.name}}</a>
+                </div>
+                <div class="list-group-item-text">
+                  <span>{{b.props.BackupTime | cronToHuman}}</span>
+                </div>
+                <div class="list-group-item-text">
+                  <span :title="$t('backup.last_backup_status') + ': ' + b.status.result" :class="['fa', b.status.result == 'success' ? 'fa-check green' : b.status.result == 'unknown' ? 'fa-question gray' : 'fa-times red', 'panel-icon']"></span>{{b.status['last-run']
+                  | dateFormat}}
+                </div>
+                <div class="list-group-item-text">
+                  <span class="fa fa-space-shuttle panel-icon"></span><b>{{b.props.VFSType | uppercase}}</b>
+                  | <b>{{b.props.type | capitalize}}</b>
+                </div>
+              </div>
+              <div class="list-view-pf-additional-info">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BACKUP CONFIGURATION -->
+    <div class="modal" id="executeConfigModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('backup.execute_configuration_backup_now')}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="executeConfigBackup(currentConfigBackup)">
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.description')}}</label>
+                <div class="col-sm-9">
+                  <input required type="text" v-model="currentConfigBackup.Description" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div v-if="currentConfigBackup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-primary" type="submit">{{$t('backup.execute')}}</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="restoreConfigModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('backup.restore_configuration_backup')}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="restoreConfigBackup(currentConfigBackup)">
+            <div class="modal-body">
+              <div class="form-group">
+                <input required class="col-sm-1 control-label" type="radio" id="restoreURL" value="url" v-model="currentConfigBackup.restoreMode">
+                <label :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'url' ? 'gray' : '']" for="restoreURL">{{$t('backup.from_url')}}</label>
+                <div class="col-sm-9">
+                  <input :required="currentConfigBackup.restoreMode == 'url'" :disabled="currentConfigBackup.restoreMode != 'url'" type="url" v-model="currentConfigBackup.restoreURL" class="form-control" placeholder="https://mysite.com/archive/backup-last.tar.xz">
+                </div>
+              </div>
+              <div class="advanced">
+                <span class="display-inline-block"></span>
+                <div class="divider divider-advanced"></div>
+              </div>
+              <div class="form-group">
+                <input required class="col-sm-1 control-label" type="radio" id="restoreFile" value="file" v-model="currentConfigBackup.restoreMode">
+                <label :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'file' ? 'gray' : '']" for="restoreFile">{{$t('backup.from_file')}}</label>
+                <div class="col-sm-9">
+                  <label for="file-upload-cert" :class="['custom-file-upload', currentConfigBackup.restoreMode != 'file' ? 'gray' : '']">
+                    <i class="fa fa-cloud-upload span-right-margin"></i>{{$t('backup.choose_file')}}
+                  </label>
+                  <input :required="currentConfigBackup.restoreMode == 'file'" :disabled="currentConfigBackup.restoreMode != 'file'" class="inputfile" @change="onChangeInput($event)" id="backup-file" name="file-upload-backup"
+                    type="file" accept=".tar.xz" />
+                </div>
+              </div>
+              <div class="advanced">
+                <span class="display-inline-block"></span>
+                <div class="divider divider-advanced"></div>
+              </div>
+              <div class="form-group">
+                <input required class="col-sm-1 control-label" type="radio" id="restoreBackup" value="backup" v-model="currentConfigBackup.restoreMode">
+                <label :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'backup' ? 'gray' : '']" for="restoreBackup">{{$t('backup.from_backup')}}</label>
+                <div class="col-sm-9">
+                  <select :required="currentConfigBackup.restoreMode == 'backup'" :disabled="currentConfigBackup.restoreMode != 'backup'" v-model="currentConfigBackup.restoreBackup" class="combobox form-control">
+                    <option v-for="t in backupConfigurations" v-bind:key="t">
+                      {{t.type | capitalize}} - {{t.description}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div v-if="currentConfigBackup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-primary" type="submit">{{$t('backup.restore')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="configureConfigModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('backup.configure_configuration_backup')}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="configureConfigBackup(currentConfigBackup)">
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="col-sm-6 control-label" for="textInput-modal-markup">{{$t('backup.automatic_backups_keep')}}</label>
+                <div class="col-sm-6">
+                  <input type="number" min="0" v-model="currentConfigBackup.HistoryLength" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div v-if="currentConfigBackup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="deleteConfigModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('backup.delete_config_backup')}}
+              {{currentConfigBackup.type | capitalize}} - {{currentConfigBackup.description}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="deleteConfigBackup(currentConfigBackup)">
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div v-if="currentConfigBackup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-danger" type="submit">{{$t('delete')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- END BACKUP CONFIGURATION -->
+
+    <!-- BACKUP DATA -->
+    <div class="modal" id="executeDataModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('backup.execute_data_backup_now')}} {{$t('of')}} {{currentDataBackup.name}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="executeDataBackup(currentDataBackup)">
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div v-if="currentDataBackup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-primary" type="submit">{{$t('backup.execute')}}</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="restoreDataModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('backup.restore_data_backup')}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="restoreDataBackup(currentDataBackup)">
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.from_backup')}}</label>
+                <div class="col-sm-9">
+                  <select v-model="currentDataBackup.restoreBackup" class="combobox form-control">
+                    <option v-for="t in backupData" v-bind:key="t">{{t.name}} - {{t.props.VFSType | uppercase}}
+                      {{$t('with')}} {{t.props.type | capitalize}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div v-if="currentDataBackup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-primary" type="submit">{{$t('backup.restore')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="lastLogDataModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('backup.last_log_for')}} {{currentDataBackup.name}}</h4>
+          </div>
+          <form class="form-horizontal">
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.from_backup')}}</label>
+                <div class="col-sm-9">
+                  <div v-if="!currentDataBackup.lastLog" class="spinner spinner-sm"></div>
+                  <pre v-if="currentDataBackup.lastLog" class="prettyprint">{{currentDataBackup.lastLog}}</pre>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button @click="cleanLastLog()" class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="configureDataModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog modal-lg wizard-pf">
+        <div class="modal-content">
+          <div class="modal-header">
+            <dt class="modal-title">{{$t('backup.configure_data_backup')}}</dt>
+          </div>
+
+          <div class="modal-body wizard-pf-body clearfix">
+            <div class="wizard-pf-steps">
+              <ul class="wizard-pf-steps-indicator">
+
+                <li :class="['wizard-pf-step', wizard.currentStep == 1 ? 'active' : '']" data-tabgroup="1">
+                  <a>
+                    <span class="wizard-pf-step-number">1</span>
+                    <span class="wizard-pf-step-title">{{$t('backup.when')}}</span>
+                  </a>
+                </li>
+
+                <li :class="['wizard-pf-step', wizard.currentStep == 2 ? 'active' : '']" data-tabgroup="2">
+                  <a>
+                    <span class="wizard-pf-step-number">2</span>
+                    <span class="wizard-pf-step-title">{{$t('backup.where')}}</span>
+                  </a>
+                </li>
+
+                <li :class="['wizard-pf-step', wizard.currentStep == 3 ? 'active' : '']" data-tabgroup="3">
+                  <a>
+                    <span class="wizard-pf-step-number">3</span>
+                    <span class="wizard-pf-step-title">{{$t('backup.how')}}</span>
+                  </a>
+                </li>
+
+                <li :class="['wizard-pf-step', wizard.currentStep == 4 ? 'active' : '']" data-tabgroup="3">
+                  <a>
+                    <span class="wizard-pf-step-number">4</span>
+                    <span class="wizard-pf-step-title">{{$t('backup.final')}}</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="wizard-pf-row">
+              <div class="wizard-pf-main">
+                <div :class="['wizard-pf-contents', wizard.currentStep == 1 ? '' : 'hidden']">
+                  <div class="blank-slate-pf " id="">
+                    <div class="blank-slate-pf-icon">
+                      <span class="fa fa-clock-o"></span>
+                    </div>
+                    <h1>
+                      {{$t('backup.wizard_choose_when_title')}}
+                    </h1>
+                  </div>
+                  <form id="local-ldap" class="form-horizontal" v-on:submit.prevent="nextStep()">
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('backup.every')}}</label>
+                        <div class="col-sm-2">
+                          <select @change="resetCronTab()" v-model="wizard.when.every" class="combobox form-control">
+                            <option value="hour">{{$t('backup.hour')}}</option>
+                            <option value="day">{{$t('backup.day')}}</option>
+                            <option value="week">{{$t('backup.week')}}</option>
+                            <option value="month">{{$t('backup.month')}}</option>
+                          </select>
+                        </div>
+                        <!-- HOUR -->
+                        <label v-if="wizard.when.every == 'hour'" class="col-sm-2 control-label adjust-label-wizard"
+                          for="textInput-modal-markup">{{$t('backup.at_minute')}}</label>
+                        <div v-if="wizard.when.every == 'hour'" class="col-sm-6">
+                          <input v-model="wizard.when.minute" type="number" min="0" max="59" class="form-control">
+                        </div>
+                        <!-- -->
+                        <!-- DAY -->
+                        <label v-if="wizard.when.every == 'day'" class="col-sm-2 control-label adjust-label-wizard" for="textInput-modal-markup">{{$t('backup.at_hour')}}</label>
+                        <div v-if="wizard.when.every == 'day'" class="col-sm-2">
+                          <input v-model="wizard.when.hour" type="number" min="0" max="23" class="form-control">
+                        </div>
+                        <label v-if="wizard.when.every == 'day'" class="col-sm-2 control-label adjust-label-wizard" for="textInput-modal-markup">{{$t('backup.at_minute')}}</label>
+                        <div v-if="wizard.when.every == 'day'" class="col-sm-2">
+                          <input v-model="wizard.when.minute" type="number" min="0" max="59" class="form-control">
+                        </div>
+                        <!-- -->
+                        <!-- WEEK -->
+                        <label v-if="wizard.when.every == 'week'" class="col-sm-2 control-label adjust-label-wizard"
+                          for="textInput-modal-markup">{{$t('backup.on_day')}}</label>
+                        <div v-if="wizard.when.every == 'week'" class="col-sm-2">
+                          <select v-model="wizard.when.week_day" class="combobox form-control">
+                            <option v-for="(w,i) in weekdays()" v-bind:key="w" :value="i">{{w | capitalize}}</option>
+                          </select>
+                        </div>
+                        <label v-if="wizard.when.every == 'week'" class="col-sm-1 control-label adjust-label-wizard"
+                          for="textInput-modal-markup">{{$t('backup.at')}}</label>
+                        <div v-if="wizard.when.every == 'week'" class="col-sm-3">
+                          <input v-model="wizard.when.hour_minute" type="text" class="col-sm-1 form-control reset-width">
+                        </div>
+                        <!-- -->
+                        <!-- MONTH -->
+                        <label v-if="wizard.when.every == 'month'" class="col-sm-2 control-label adjust-label-wizard"
+                          for="textInput-modal-markup">{{$t('backup.on_day')}}</label>
+                        <div v-if="wizard.when.every == 'month'" class="col-sm-2">
+                          <input v-model="wizard.when.day" type="number" min="1" max="31" class="form-control">
+                        </div>
+                        <label v-if="wizard.when.every == 'month'" class="col-sm-1 control-label adjust-label-wizard"
+                          for="textInput-modal-markup">{{$t('backup.at')}}</label>
+                        <div v-if="wizard.when.every == 'month'" class="col-sm-3">
+                          <input v-model="wizard.when.hour_minute" type="text" class="col-sm-1 form-control reset-width">
+                        </div>
+                        <!-- -->
+                      </div>
+                      <p class="cron-human-text">{{crontabComputed | cronToHuman}}</p>
+                      <input disabled type="text" class="form-control input-lg password-hints" v-model="wizard.when.crontab">
+                    </div>
+                  </form>
+                </div>
+
+                <div :class="['wizard-pf-contents', wizard.currentStep == 2 ? '' : 'hidden']">
+                  <div class="blank-slate-pf " id="">
+                    <div class="blank-slate-pf-icon">
+                      <span class="pficon pficon-volume"></span>
+                    </div>
+                    <h1>
+                      {{$t('backup.wizard_choose_where_title')}}
+                    </h1>
+                    <div class="blank-slate-pf-main-action row wizard-where-choices">
+                      <div @click="selectWhere('nfs')" :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 'nfs' ? 'active-choose' : '']">
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="fa fa-hdd-o"></span>
+                          </div>
+                          <h3>
+                            NFS
+                          </h3>
+                          <p>
+                            <doc-info :placement="'top'" :title="'NFS'" :chapter="'backup'" :section="'nfs'"></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                      <div @click="selectWhere('cifs')" :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 'cifs' ? 'active-choose' : '']">
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="fa fa-folder-open"></span>
+                          </div>
+                          <h3>
+                            CIFS
+                          </h3>
+                          <p>
+                            <doc-info :placement="'top'" :title="'CIFS'" :chapter="'backup'" :section="'cifs'"></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                      <div @click="selectWhere('usb')" :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 'usb' ? 'active-choose' : '']">
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="fa fa-usb"></span>
+                          </div>
+                          <h3>
+                            {{$t('backup.disk')}}
+                          </h3>
+                          <p>
+                            <doc-info :placement="'top'" :title="$t('backup.disk')" :chapter="'backup'" :section="'usb'"></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="blank-slate-pf-main-action row wizard-where-choices adjust-top-col">
+                      <div @click="selectWhere('sftp')" :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 'sftp' ? 'active-choose' : '']">
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="fa fa-terminal"></span>
+                          </div>
+                          <h3>
+                            SFTP
+                          </h3>
+                          <p>
+                            <doc-info :placement="'top'" :title="'SFTP'" :chapter="'backup'" :section="'sftp'"></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                      <div @click="selectWhere('b2')" :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 'b2' ? 'active-choose' : '']">
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="fa fa-fire"></span>
+                          </div>
+                          <h3>
+                            Backblaze B2
+                          </h3>
+                          <p>
+                            <doc-info :placement="'top'" :title="'Backblaze B2'" :chapter="'backup'" :section="'b2'"></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                      <div @click="selectWhere('s3')" :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 's3' ? 'active-choose' : '']">
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="fa fa-amazon"></span>
+                          </div>
+                          <h3>
+                            Amazon S3
+                          </h3>
+                          <p>
+                            <doc-info :placement="'top'" :title="'Amazon S3'" :chapter="'backup'" :section="'s3'"></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <form class="form-horizontal" v-on:submit.prevent="checkWhereConfiguration()">
+                    <div v-if="wizard.where.configError && !wizard.where.isChecking" class="alert alert-danger alert-dismissable compact">
+                      <span class="pficon pficon-error-circle-o"></span>
+                      <strong>{{$t('backup.where_config_error')}}.</strong>
+                      {{$t('backup.where_config_error_description')}}.
+                    </div>
+                    <div class="modal-body">
+                      <!-- NFS -->
+                      <div v-if="wizard.where.choice == 'nfs'">
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'NFSShare' |
+                            camelToSentence}}
+                          </label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.nfs.NFSShare" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'NFSHost' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.nfs.NFSHost" class="form-control">
+                          </div>
+                        </div>
+                      </div>
+                      <!-- -->
+                      <!-- CIFS -->
+                      <div v-if="wizard.where.choice == 'cifs'">
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SMBShare' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.cifs.SMBShare" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SMBHost' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.cifs.SMBHost" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SMBLogin' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.cifs.SMBLogin" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SMBPassword' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.cifs.SMBPassword" class="form-control">
+                          </div>
+                        </div>
+                      </div>
+                      <!-- -->
+                      <!-- USB -->
+                      <div v-if="wizard.where.choice == 'usb'">
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.usb_list')}}</label>
+                          <div class="col-sm-6">
+                            <select required v-model="wizard.where.usb.USBDevice" @change="getUSBDevicePartitions()"
+                              class="combobox form-control">
+                              <option v-for="d in wizard.where.usb.devices" v-bind:key="d" :value="d">{{d.name}} -
+                                {{d.model}} | {{d.size | byteFormat}}</option>
+                            </select>
+                          </div>
+                          <div class="col-sm-3">
+                            <button type="button" @click="getUSBDevices()" class="btn btn-default">{{$t('backup.refresh')}}</button>
+                          </div>
+                        </div>
+                        <div v-if="wizard.where.usb.partitions.length > 0" v-for="(p,i) in wizard.where.usb.partitions"
+                          v-bind:key="i" class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup"><span v-if="i == 0">{{$t('backup.usb_partitions')}}</span></label>
+                          <div class="col-sm-9">
+                            <span class="provider-details" @click="selectUSBDevicePartition(p)">{{p.label}}: {{p.fstype
+                              | uppercase}} | {{p.size | byteFormat}}</span>
+                          </div>
+                        </div>
+                        <div v-if="wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.formatted" class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.usb_label')}}</label>
+                          <div class="col-sm-9">
+                            <input required disabled type="text" v-model="wizard.where.usb.USBLabel" class="form-control">
+                          </div>
+                        </div>
+                      </div>
+                      <!-- -->
+                      <!-- SFTP -->
+                      <div v-if="wizard.where.choice == 'sftp'">
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SFTPDirectory' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.sftp.SftpDirectory" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SFTPHost' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.sftp.SftpHost" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SFTPPort' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.sftp.SftpPort" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SFTPUser' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.sftp.SftpUser" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SFTPPassword' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.sftp.SftpPassword" class="form-control">
+                          </div>
+                        </div>
+                      </div>
+                      <!-- -->
+                      <!-- B2 -->
+                      <div v-if="wizard.where.choice == 'b2'">
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'B2Bucket' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.b2.B2Bucket" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'B2AccountId' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.b2.B2AccountId" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'B2AccountKey' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.b2.B2AccountKey" class="form-control">
+                          </div>
+                        </div>
+                      </div>
+                      <!-- -->
+                      <!-- S3 -->
+                      <div v-if="wizard.where.choice == 's3'">
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'S3Bucket' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.s3.S3Bucket" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'S3Host' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.s3.S3Host" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'S3AccessKey' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.s3.S3AccessKey" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'S3SecretKey' |
+                            camelToSentence}}</label>
+                          <div class="col-sm-9">
+                            <input required type="text" v-model="wizard.where.s3.S3SecretKey" class="form-control">
+                          </div>
+                        </div>
+                      </div>
+                      <!-- -->
+                      <div v-if="wizard.where.choice != 'usb' || (wizard.where.choice == 'usb' && wizard.where.usb.USBDevice)"
+                        class="form-group">
+                        <label class="col-sm-3 control-label" for="textInput-modal-markup"></label>
+                        <div class="col-sm-2">
+                          <button :disabled="wizard.where.isChecking || (wizard.where.choice == 'usb' && (wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.formatted == 1) && wizard.where.usb.USBLabel.length == 0)"
+                            type="submit" class="btn btn-primary">
+                            {{wizard.where.choice == 'usb' && wizard.where.usb.USBDevice &&
+                            !wizard.where.usb.USBDevice.formatted ? $t('backup.format') : $t('backup.check')}}
+                          </button>
+                          <span v-if="wizard.where.isValid" class="fa fa-check green copy-ok"></span>
+                        </div>
+                        <div v-if="wizard.where.isChecking" class="col-sm-1">
+                          <div class="spinner"></div>
+                        </div>
+                      </div>
+                      <!-- OUTPUT -->
+                      <div v-show="wizard.where.usb.isFormatting && wizard.where.choice == 'usb' && wizard.where.usb.USBDevice && !wizard.where.usb.USBDevice.formatted"
+                        class="form-group">
+                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('output')}}</label>
+                        <div class="col-sm-9">
+                          <textarea id="format-output" class="form-control command-output" v-model="wizard.where.usb.formatOutput"></textarea>
+                        </div>
+                      </div>
+                      <!-- -->
+                    </div>
+                  </form>
+                </div>
+
+                <div :class="['wizard-pf-contents', wizard.currentStep == 3 ? '' : 'hidden']">
+                  <div class="blank-slate-pf " id="">
+                    <div class="blank-slate-pf-icon">
+                      <span class="fa fa-space-shuttle"></span>
+                    </div>
+                    <h1>
+                      {{$t('backup.wizard_choose_how_title')}}
+                    </h1>
+                    <div class="blank-slate-pf-main-action row wizard-where-choices">
+                      <div v-show="handleHow().duplicity" @click="selectHow('duplicity')" :class="['col-xs-12', 'col-sm-'+(12/handleHow().num), 'col-md-'+(12/handleHow().num), 'col-lg-'+(12/handleHow().num), 'card-pf', wizard.how.choice == 'duplicity' ? 'active-choose' : '']">
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="fa fa-clone"></span>
+                          </div>
+                          <h3>
+                            Duplicity
+                          </h3>
+                          <p>
+                            <doc-info :placement="'top'" :title="'Duplicity'" :chapter="'backup'" :section="'duplicity'"></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                      <div v-show="handleHow().restic" @click="selectHow('restic')" :class="['col-xs-12', 'col-sm-'+(12/handleHow().num), 'col-md-'+(12/handleHow().num), 'col-lg-'+(12/handleHow().num), 'card-pf', wizard.how.choice == 'restic' ? 'active-choose' : '']">
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="fa fa-rocket"></span>
+                          </div>
+                          <h3>
+                            Restic
+                          </h3>
+                          <p>
+                            <doc-info :placement="'top'" :title="'Restic'" :chapter="'backup'" :section="'restic'"></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                      <div v-show="handleHow().rsync" @click="selectHow('rsync')" :class="['col-xs-12', 'col-sm-'+(12/handleHow().num), 'col-md-'+(12/handleHow().num), 'col-lg-'+(12/handleHow().num), 'card-pf', wizard.how.choice == 'rsync' ? 'active-choose' : '']">
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="fa fa-refresh"></span>
+                          </div>
+                          <h3>
+                            rSync
+                          </h3>
+                          <p>
+                            <doc-info :placement="'top'" :title="'rSync'" :chapter="'backup'" :section="'rsync'"></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <form class="form-horizontal" v-on:submit.prevent="nextStep()">
+                    <div class="modal-body">
+                      <!-- DUPLICITY -->
+                      <div v-if="wizard.how.choice == 'duplicity'">
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.type')}}</label>
+                          <div class="col-sm-9">
+                            <select required v-model="wizard.how.duplicity.Type" class="combobox form-control">
+                              <option v-for="d in wizard.how.duplicity.types" v-bind:key="d" :value="d">{{d |
+                                capitalize}}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div v-if="wizard.how.duplicity.Type == 'incremental'" class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.full_day')}}</label>
+                          <div class="col-sm-9">
+                            <select required v-model="wizard.how.duplicity.FullDay" class="combobox form-control">
+                              <option v-for="d in wizard.how.duplicity.days" v-bind:key="d" :value="d">{{d |
+                                capitalize}}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.vol_size')}}</label>
+                          <div class="col-sm-9">
+                            <input required type="number" min="2" v-model="wizard.how.duplicity.VolSize" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.cleanup_older_than')}}</label>
+                          <div class="col-sm-9">
+                            <select required v-model="wizard.how.duplicity.CleanupOlderThan" class="combobox form-control">
+                              <option v-for="d in wizard.how.duplicity.cleanups" v-bind:key="d" :value="d">{{$t('backup.'+d)}}</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- -->
+                      <!-- RESTIC -->
+                      <div v-if="wizard.how.choice == 'restic'">
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.prune')}}</label>
+                          <div class="col-sm-9">
+                            <select required v-model="wizard.how.restic.Prune" class="combobox form-control">
+                              <option v-for="d in wizard.how.restic.prunes" v-bind:key="d" :value="d">{{d |
+                                capitalize}}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.cleanup_older_than')}}</label>
+                          <div class="col-sm-9">
+                            <select required v-model="wizard.how.restic.CleanupOlderThan" class="combobox form-control">
+                              <option v-for="d in wizard.how.restic.cleanups" v-bind:key="d" :value="d">{{$t('backup.'+d)}}</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- -->
+                      <!-- RSYNC -->
+                      <div v-if="wizard.how.choice == 'rsync'">
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.cleanup_older_than')}}</label>
+                          <div class="col-sm-9">
+                            <select required v-model="wizard.how.rsync.CleanupOlderThan" class="combobox form-control">
+                              <option v-for="d in wizard.how.rsync.cleanups" v-bind:key="d" :value="d">{{$t('backup.'+d)}}</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- -->
+                    </div>
+                  </form>
+                </div>
+
+                <div :class="['wizard-pf-contents', wizard.currentStep == 4 ? '' : 'hidden']">
+                  <div class="blank-slate-pf " id="">
+                    <div class="blank-slate-pf-icon">
+                      <span class="fa fa-database"></span>
+                    </div>
+                    <h1>
+                      {{$t('backup.wizard_choose_config')}}
+                    </h1>
+                  </div>
+                  <form id="local-ldap" class="form-horizontal" v-on:submit.prevent="configureDataBackup()">
+                    <div class="modal-body">
+                      <div :class="['form-group', wizard.review.errors.name.hasError ? 'has-error' : '']">
+                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.name')}}</label>
+                        <div class="col-sm-6">
+                          <input required type="text" v-model="wizard.review.Name" class="form-control">
+                          <span v-if="wizard.review.errors.name.hasError" class="help-block">{{wizard.review.errors.name.message}}</span>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.notify')}}</label>
+                        <div class="col-sm-6">
+                          <select required v-model="wizard.review.Notify" class="combobox form-control">
+                            <option v-for="d in wizard.review.notifyTypes" v-bind:key="d" :value="d">{{$t('backup.'+d)}}</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.include_logs')}}</label>
+                        <div class="col-sm-6">
+                          <input type="checkbox" v-model="wizard.review.IncludeLogs" class="form-control">
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer wizard-pf-footer">
+            <div v-if="wizard.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+            <button @click="cancelWizard()" type="button" class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss">{{$t('cancel')}}</button>
+            <button :disabled="wizard.currentStep == 1" @click="prevStep()" type="button" class="btn btn-default wizard-pf-back">
+              <span class="i fa fa-angle-left"></span>
+              {{$t('back')}}
+            </button>
+            <button :disabled="checkIfDisabled()" @click="nextStep()" type="button" class="btn btn-primary wizard-pf-next">
+              {{wizard.currentStep == 4 ? $t('backup.configure') : $t('next')}}
+              <span class="i fa fa-angle-right"></span>
+            </button>
+            <button type="button" class="btn btn-primary hidden wizard-pf-finish">
+              {{$t('backup.configure')}}
+              <span class="i fa fa-angle-right"></span>
+            </button>
+            <button type="button" class="btn btn-primary hidden wizard-pf-close wizard-pf-dismiss">{{$t('close')}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="deleteDataModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('backup.delete_data_backup')}}
+              {{currentDataBackup.name}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="deleteDataBackup(currentDataBackup)">
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div v-if="currentDataBackup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-danger" type="submit">{{$t('delete')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- END BACKUP DATA -->
+  </div>
+</template>
+
+<script>
+import DocInfo from "../../directives/DocInfo.vue";
+
+export default {
+  name: "Backup",
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.exec(
+        ["system-authorization/read"],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+
+          if (success.system.indexOf(to.path.substring(1)) == -1) {
+            window.location.hash = "#/";
+            vm.$router.push("/");
+          }
+
+          vm.view.isAuth = true;
+        },
+        function(error) {
+          console.error(error);
+        },
+        false
+      );
+    });
+  },
+  components: {
+    DocInfo
+  },
+  beforeRouteLeave(to, from, next) {
+    $(".modal").modal("hide");
+    next();
+  },
+  mounted() {
+    this.getBackupInfo();
+    this.getUSBDevices();
+  },
+  computed: {
+    filteredBackupList() {
+      var returnObj = [];
+      for (var a in this.backupData) {
+        if (
+          this.backupData[a].name
+            .toLowerCase()
+            .includes(this.searchString.toLowerCase())
+        ) {
+          returnObj.push(this.backupData[a]);
+        }
+      }
+
+      return returnObj;
+    },
+    crontabComputed: function() {
+      var cronString = "";
+
+      switch (this.wizard.when.every) {
+        case "hour":
+          cronString = this.wizard.when.minute + " * * * *";
+          break;
+        case "day":
+          cronString =
+            this.wizard.when.minute + " " + this.wizard.when.hour + " */1 * *";
+          break;
+
+        case "week":
+          var minute = this.wizard.when.hour_minute.split(":")[1];
+          var hour = this.wizard.when.hour_minute.split(":")[0];
+
+          if (
+            minute &&
+            !isNaN(parseInt(minute)) &&
+            (hour && !isNaN(parseInt(hour)))
+          ) {
+            cronString =
+              minute + " " + hour + " */1 * " + this.wizard.when.week_day;
+          } else {
+            cronString = "";
+          }
+
+          break;
+
+        case "month":
+          var minute = this.wizard.when.hour_minute.split(":")[1];
+          var hour = this.wizard.when.hour_minute.split(":")[0];
+
+          if (
+            minute &&
+            !isNaN(parseInt(minute)) &&
+            (hour && !isNaN(parseInt(hour)))
+          ) {
+            cronString =
+              minute + " " + hour + " " + this.wizard.when.day + " */1 *";
+          } else {
+            cronString = "";
+          }
+          break;
+      }
+
+      this.wizard.when.crontab = cronString;
+
+      return cronString;
+    }
+  },
+  data() {
+    return {
+      view: {
+        isLoaded: false,
+        isAuth: false
+      },
+      wizard: this.initWizard(),
+      searchString: "",
+      backupConfigurations: [],
+      backupData: [],
+      globalConfigBackup: {},
+      globalDataBackup: {},
+      currentConfigBackup: this.initBackupConfiguration(),
+      currentDataBackup: this.initBackupData()
+    };
+  },
+  methods: {
+    dumb() {},
+    initWizard() {
+      return {
+        isLoading: false,
+        currentStep: 1,
+        when: {
+          every: "hour",
+          minute: 0,
+          hour: 0,
+          hour_minute: "1:00",
+          week_day: 0,
+          day: 0,
+          crontab: ""
+        },
+        where: {
+          choice: "nfs",
+          isChecking: false,
+          configError: false,
+          isValid: false,
+          nfs: {
+            NFSShare: null,
+            NFSHost: null
+          },
+          cifs: {
+            SMBShare: null,
+            SMBHost: null,
+            SMBLogin: null,
+            SMBPassword: null
+          },
+          usb: {
+            USBLabel: null,
+            USBDevice: null,
+            devices: [],
+            partitions: [],
+            formatOutput: "",
+            isFormatting: false
+          },
+          sftp: {
+            SftpDirectory: null,
+            SftpUser: null,
+            SftpPassword: null,
+            SftpHost: null,
+            SftpPort: null
+          },
+          b2: {
+            B2AccountId: null,
+            B2AccountKey: null,
+            B2Bucket: null
+          },
+          s3: {
+            S3Host: "s3.amazonaws.com",
+            S3AccessKey: null,
+            S3Bucket: null,
+            S3SecretKey: null
+          }
+        },
+        how: {
+          choice: "duplicity",
+          duplicity: {
+            Type: "full",
+            types: ["full", "incremental"],
+            FullDay: 0,
+            days: this.weekdays(),
+            VolSize: 2,
+            CleanupOlderThan: "never",
+            cleanups: ["never", "7D", "14D", "28D", "56D", "168D", "364D"]
+          },
+          restic: {
+            Prune: "always",
+            prunes: ["always"].concat(this.weekdays()),
+            CleanupOlderThan: "never",
+            cleanups: ["never", "7D", "14D", "28D", "56D", "168D", "364D"]
+          },
+          rsync: {
+            CleanupOlderThan: "never",
+            cleanups: ["never", "7D", "14D", "28D", "56D", "168D", "364D"]
+          }
+        },
+        review: {
+          name: "",
+          Notify: "error",
+          notifyTypes: ["error", "always", "never"],
+          IncludeLogs: false,
+          errors: {
+            name: {
+              hasError: false,
+              message: ""
+            }
+          }
+        }
+      };
+    },
+    weekdays() {
+      var moment = require("moment");
+      return moment.localeData(this.$options.currentLocale).weekdays();
+    },
+    resetCronTab() {
+      this.wizard.when.minute = 0;
+      this.wizard.when.hour = 0;
+      this.wizard.when.week_day = 0;
+      this.wizard.when.day = 0;
+    },
+    nextStep() {
+      if (this.wizard.currentStep == 4) {
+        this.configureDataBackup();
+      } else {
+        this.wizard.currentStep++;
+      }
+    },
+    prevStep() {
+      if (this.wizard.currentStep > 1) {
+        this.wizard.currentStep--;
+      }
+    },
+    checkIfDisabled() {
+      var disabled = false;
+      switch (this.wizard.currentStep) {
+        case 1:
+          disabled = this.crontabComputed.length == 0;
+          break;
+        case 2:
+          disabled = !this.wizard.where.isValid;
+          break;
+      }
+
+      return disabled;
+    },
+    cancelWizard() {
+      this.wizard = this.initWizard();
+      $("#configureDataModal").modal("hide");
+    },
+    selectWhere(where) {
+      this.wizard.where.choice = where;
+      switch (where) {
+        case "sftp":
+          this.wizard.how.choice = "rsync";
+          break;
+        case "usb":
+          this.wizard.how.choice = "rsync";
+          break;
+      }
+      this.getUSBDevices();
+    },
+    getUSBDevices(callback) {
+      var context = this;
+      context.exec(
+        ["system-backup/read"],
+        {
+          action: "list-disks"
+        },
+        null,
+        function(success) {
+          success = JSON.parse(success);
+
+          var usbName =
+            context.wizard.where.usb.USBDevice &&
+            context.wizard.where.usb.USBDevice.name
+              ? context.wizard.where.usb.USBDevice.name
+              : null;
+
+          context.wizard.where.usb.isFormatting = false;
+          context.wizard.where.usb.USBLabel = "";
+          context.wizard.where.usb.USBDevice = null;
+          context.wizard.where.usb.partitions = [];
+          context.wizard.where.usb.devices = success;
+
+          if (usbName) {
+            context.wizard.where.usb.USBDevice = context.wizard.where.usb.devices.filter(
+              function(i) {
+                return i.name == usbName;
+              }
+            )[0];
+            context.getUSBDevicePartitions();
+          }
+
+          callback ? callback() : null;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+    getUSBDevicePartitions() {
+      this.wizard.where.isValid = false;
+      this.wizard.where.configError = false;
+
+      var name =
+        this.wizard.where.usb.USBDevice && this.wizard.where.usb.USBDevice.name;
+      var device = this.wizard.where.usb.devices.filter(function(i) {
+        return i.name == name;
+      })[0];
+
+      this.wizard.where.usb.partitions = device && device.partitions;
+      this.wizard.where.usb.USBLabel =
+        device && device.partitions.length == 1
+          ? device && device.partitions[0].label
+          : "";
+    },
+    selectUSBDevicePartition(partition) {
+      this.wizard.where.usb.USBLabel = partition.label;
+    },
+    checkWhereConfiguration() {
+      var context = this;
+      var method = "exec";
+      var api = "system-backup/validate";
+
+      var configObj = context.wizard.where[context.wizard.where.choice];
+      configObj.action = context.wizard.where.choice + "-credentials";
+
+      if (context.wizard.where.choice == "usb") {
+        configObj.action =
+          configObj.USBDevice.formatted == 1 ? "disk-access" : "format-disk";
+
+        configObj.name =
+          configObj.USBDevice.formatted == 1 ? null : configObj.USBDevice.name;
+
+        api =
+          configObj.USBDevice.formatted == 1
+            ? "system-backup/validate"
+            : "system-backup/execute";
+
+        method = configObj.USBDevice.formatted == 1 ? "exec" : "execRaw";
+      }
+
+      context.wizard.where.isChecking = true;
+      context[method](
+        [api],
+        configObj,
+        method == "execRaw"
+          ? function(stream) {
+              context.wizard.where.usb.isFormatting =
+                stream.length > 0 ? true : false;
+              context.wizard.where.usb.formatOutput +=
+                stream.length > 0 ? stream : "";
+              document.getElementById(
+                "format-output"
+              ).scrollTop = document.getElementById(
+                "format-output"
+              ).scrollHeight;
+            }
+          : null,
+        function(success) {
+          if (
+            context.wizard.where.choice == "usb" &&
+            !configObj.USBDevice.formatted
+          ) {
+            setTimeout(function() {
+              context.getUSBDevices(function() {
+                context.wizard.where.isChecking = false;
+                context.wizard.where.configError = false;
+              });
+            }, 3000);
+          } else {
+            context.wizard.where.isChecking = false;
+            context.wizard.where.isValid = true;
+            context.wizard.where.configError = false;
+          }
+        },
+        function(error) {
+          console.error(error);
+          context.wizard.where.isChecking = false;
+          context.wizard.where.isValid = false;
+          context.wizard.where.configError = true;
+        }
+      );
+    },
+    handleHow() {
+      var num = 0;
+      var duplicity =
+        this.wizard.where.choice == "nfs" ||
+        this.wizard.where.choice == "cifs" ||
+        this.wizard.where.choice == "usb";
+
+      var restic =
+        this.wizard.where.choice == "nfs" ||
+        this.wizard.where.choice == "cifs" ||
+        this.wizard.where.choice == "usb" ||
+        this.wizard.where.choice == "sftp" ||
+        this.wizard.where.choice == "b2" ||
+        this.wizard.where.choice == "s3";
+
+      var rsync =
+        this.wizard.where.choice == "sftp" || this.wizard.where.choice == "usb";
+
+      num += duplicity ? 1 : 0;
+      num += restic ? 1 : 0;
+      num += rsync ? 1 : 0;
+
+      return {
+        num: num,
+        duplicity: duplicity,
+        restic: restic,
+        rsync: rsync
+      };
+    },
+    selectHow(how) {
+      this.wizard.how.choice = how;
+    },
+    initBackupConfiguration() {
+      return {
+        restoreURL: "",
+        restoreFile: "",
+        restoreBackup: "",
+        HistoryLength: 0,
+        Description: "",
+        isLoading: false,
+        restoreMode: "url"
+      };
+    },
+    initBackupData() {
+      return {
+        isLoading: false,
+        name: "",
+        lastLog: null
+      };
+    },
+    onChangeInput(event) {
+      var context = this;
+      this.getBase64(event.target.files[0], function(resp) {
+        context.currentConfigBackup.restoreFile = resp.split(",")[1];
+      });
+    },
+    getBackupInfo() {
+      var context = this;
+      context.exec(
+        ["system-backup/read"],
+        {
+          action: "backup-info"
+        },
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.view.isLoaded = true;
+
+          context.backupConfigurations = success.status["backup-config"];
+          context.backupData = success.configuration["backup-data"].backups;
+
+          for (var b in context.backupData) {
+            var id = context.backupData[b].name;
+            var status = success.status["backup-data"].filter(function(i) {
+              return i.id == id;
+            })[0];
+            context.backupData[b].status = status;
+          }
+
+          context.globalConfigBackup = success.configuration["backup-config"];
+        },
+        function(error) {
+          console.error(error);
+          context.view.isLoaded = true;
+        }
+      );
+    },
+    openExecuteConfig(b) {
+      this.currentConfigBackup = this.initBackupConfiguration();
+      $("#executeConfigModal").modal("show");
+    },
+    openRestoreConfig(b) {
+      this.currentConfigBackup = this.initBackupConfiguration();
+      $("#restoreConfigModal").modal("show");
+    },
+    openConfigureConfig() {
+      this.currentConfigBackup = this.initBackupConfiguration();
+      this.currentConfigBackup.HistoryLength = this.globalConfigBackup.HistoryLength;
+      $("#configureConfigModal").modal("show");
+    },
+    openDeleteConfig(b) {
+      this.currentConfigBackup = this.initBackupConfiguration();
+      this.currentConfigBackup.id = b.id;
+      this.currentConfigBackup.type = b.type;
+      this.currentConfigBackup.description = b.description;
+      $("#deleteConfigModal").modal("show");
+    },
+    executeConfigBackup() {
+      var context = this;
+
+      $("#executeConfigModal").modal("hide");
+      context.exec(
+        ["system-backup/execute"],
+        {
+          action: "run-backup-config",
+          name: context.currentConfigBackup.Description
+        },
+        function(stream) {
+          console.info("backup-config", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "backup.execute_config_backup_ok"
+          );
+
+          // get backup info
+          context.getBackupInfo();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "backup.execute_config_backup_error"
+          );
+        }
+      );
+    },
+    restoreConfigBackup() {
+      this.currentConfigBackup.isLoading = true;
+
+      //$("#restoreConfigModal").modal("hide");
+    },
+    configureConfigBackup() {
+      this.currentConfigBackup.isLoading = true;
+
+      //$("#configureConfigModal").modal("hide");
+    },
+    downloadConfigBackup(b) {
+      var context = this;
+      context.exec(
+        ["system-backup/execute"],
+        {
+          action: "download-backup-config",
+          name: b.id
+        },
+        null,
+        function(success) {
+          require("downloadjs")(
+            "data:application/x-gtar;base64," + success,
+            b.id + ".tar.xz",
+            "application/x-gtar"
+          );
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+    deleteConfigBackup() {
+      var context = this;
+
+      $("#deleteConfigModal").modal("hide");
+      context.exec(
+        ["system-backup/delete"],
+        {
+          action: "backup-config",
+          name: context.currentConfigBackup.id
+        },
+        function(stream) {
+          console.info("backup-config-delete", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "backup.delete_config_backup_ok"
+          );
+
+          // get backup info
+          context.getBackupInfo();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "backup.delete_config_backup_error"
+          );
+        }
+      );
+    },
+
+    openExecuteData(b) {
+      this.currentDataBackup = this.initBackupData();
+      this.currentDataBackup.name = b.name;
+      $("#executeDataModal").modal("show");
+    },
+    openRestoreData() {
+      this.currentDataBackup = this.initBackupData();
+      $("#restoreDataModal").modal("show");
+    },
+    openConfigureData() {
+      this.currentDataBackup = this.initBackupData();
+      $("#configureDataModal").modal("show");
+    },
+    openLastLog(b) {
+      var context = this;
+
+      context.currentDataBackup = context.initBackupData();
+      context.currentDataBackup.name = b.name;
+      context.currentDataBackup.lastLog = null;
+
+      $("#lastLogDataModal").modal("show");
+      context.exec(
+        ["system-backup/read"],
+        {
+          action: "last-log",
+          name: b.name
+        },
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.currentDataBackup.lastLog = success.data;
+        },
+        function(error) {
+          console.error(error);
+          context.currentDataBackup.lastLog = "-";
+        }
+      );
+    },
+    cleanLastLog() {
+      this.currentDataBackup.lastLog = null;
+    },
+    openDeleteData(b) {
+      this.currentDataBackup = this.initBackupData();
+      this.currentDataBackup.name = b.name;
+      $("#deleteDataModal").modal("show");
+    },
+    executeDataBackup(b) {
+      var context = this;
+
+      $("#executeDataModal").modal("hide");
+      context.exec(
+        ["system-backup/execute"],
+        {
+          action: "run-backup-data",
+          name: b.name
+        },
+        function(stream) {
+          console.info("backup-data", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "backup.execute_data_backup_ok"
+          );
+
+          // get backup info
+          context.getBackupInfo();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "backup.execute_data_backup_error"
+          );
+        }
+      );
+    },
+    restoreDataBackup() {
+      this.currentDataBackup.isLoading = true;
+
+      //$("#restoreDataModal").modal("hide");
+    },
+    configureDataBackup() {
+      var context = this;
+
+      var backupObj = {
+        action: "create-backup-data",
+        name: context.wizard.review.Name,
+        engine: context.wizard.how.choice,
+        status: "enabled",
+        Notify: context.wizard.review.Notify,
+        IncludeLogs: context.wizard.review.IncludeLogs ? "enabled" : "disabled",
+        BackupTime: context.wizard.when.crontab,
+        VFSType: context.wizard.where.choice,
+        SMBShare: context.wizard.where.cifs.SMBShare,
+        SMBHost: context.wizard.where.cifs.SMBHost,
+        SMBUser: context.wizard.where.cifs.SMBUser,
+        SMBPassord: context.wizard.where.cifs.SMBPassord,
+        SftpHost: context.wizard.where.sftp.SftpHost,
+        SftpPort: context.wizard.where.sftp.SftpPort,
+        SftpUser: context.wizard.where.sftp.SftpUser,
+        SftpPassword: context.wizard.where.sftp.SftpPassword,
+        SftpDirectory: context.wizard.where.sftp.SftpDirectory,
+        B2AccountId: context.wizard.where.b2.B2AccountId,
+        B2AccountKey: context.wizard.where.b2.B2AccountKey,
+        B2Bucket: context.wizard.where.b2.B2Bucket,
+        S3AccessKey: context.wizard.where.s3.S3AccessKey,
+        S3Bucket: context.wizard.where.s3.S3Bucket,
+        S3SecretKey: context.wizard.where.s3.S3SecretKey,
+        S3Host: context.wizard.where.s3.S3Host,
+        NFSHost: context.wizard.where.nfs.NFSHost,
+        NFSShare: context.wizard.where.nfs.NFSShare,
+        USBLabel: context.wizard.where.usb.USBLabel,
+        Type: context.wizard.how.duplicity.Type,
+        FullDay: context.wizard.how.duplicity.FullDay,
+        VolSize: context.wizard.how.duplicity.VolSize,
+        CleanupOlderThan: context.wizard.how.duplicity.CleanupOlderThan
+      };
+
+      context.wizard.isLoading = true;
+      context.wizard.review.errors.name.hasError = false;
+
+      context.exec(
+        ["system-backup/validate"],
+        backupObj,
+        null,
+        function(success) {
+          context.wizard.isLoading = false;
+          $("#configureDataModal").modal("hide");
+
+          context.exec(
+            ["system-backup/create"],
+            backupObj,
+            function(stream) {
+              console.info("backup", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "backup.backup_create_ok"
+              );
+
+              context.wizard = context.initWizard();
+
+              // get hosts
+              context.getBackupInfo();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "backup.backup_create_error"
+              );
+            }
+          );
+        },
+        function(error, data) {
+          var errorData = JSON.parse(data);
+
+          context.wizard.isLoading = false;
+          context.wizard.review.errors.name.hasError = false;
+
+          for (var e in errorData.attributes) {
+            var attr = errorData.attributes[e];
+            context.wizard.review.errors[attr.parameter].hasError = true;
+            context.wizard.review.errors[attr.parameter].message =
+              "[" + errorData.message + "]: " + attr.error;
+          }
+        }
+      );
+    },
+    deleteDataBackup() {
+      var context = this;
+
+      $("#deleteDataModal").modal("hide");
+      context.exec(
+        ["system-backup/delete"],
+        {
+          action: "backup-data",
+          name: context.currentDataBackup.name
+        },
+        function(stream) {
+          console.info("backup-data-delete", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "backup.delete_data_backup_ok"
+          );
+
+          // get backup info
+          context.getBackupInfo();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "backup.delete_data_backup_error"
+          );
+        }
+      );
+    }
+  }
+};
+</script>
+
+<style>
+</style>
