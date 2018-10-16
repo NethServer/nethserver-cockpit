@@ -47,7 +47,7 @@ $action = $data['action'];
 
 
 $v = new LegacyValidator($data);
-if ($action == 'create-backup' || $action == 'update-backup') {
+if ($action == 'create-backup-data' || $action == 'update-backup-data') {
     $v->declareParameter('name', Validate::USERNAME);
     $v->declareParameter('status', Validate::SERVICESTATUS);
     $v->declareParameter('VFSType', $v->createValidator()->memberOf($vfstypes));
@@ -58,7 +58,7 @@ if ($action == 'create-backup' || $action == 'update-backup') {
 
     $db = new EsmithDatabase('backups');
     $r = $db->getKey($data['name']);
-    if ($r && $action == 'create-backup') {
+    if ($r && $action == 'create-backup-data') {
         $v->addValidationError('name','backup_already_exists');
         error($v);
     };
@@ -167,6 +167,8 @@ if ($action == 'create-backup' || $action == 'update-backup') {
         success();
     }
 
+} else {
+    error();
 }
 
 # Validate the input

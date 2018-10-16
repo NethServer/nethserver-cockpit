@@ -32,12 +32,14 @@ sub set_backup
 {
     my $input = shift;
 
-    my $args = $input->{'name'};
+    my $name = $input->{'name'};
+    my $args = $name;
     my $db = esmith::ConfigDB->open('backups');
-    my $r = $db->get($input->{'name'});
-    if (!$r) {
-        $db->set_value($input->{'name'}, $input->{'engine'}, create => 1);
-        $r = $db->get($input->{'name'})
+    my $r = $db->get($name);
+    if ($r) {
+        $r->set_prop('type', $input->{'engine'});
+    } else {
+        $db->set_value($name, $input->{'engine'}, create => 1);
     }
     delete($input->{'name'});
     delete($input->{'engine'});
@@ -50,7 +52,7 @@ sub set_backup
         delete($input->{'SftpPassword'});
     }
     foreach my $k (keys %$input) {
-        $r->set_prop($k, $input->{$k});
+        $db->set_prop($name, $k, $input->{$k});
     }
     system("/sbin/e-smith/signal-event -j nethserver-backup-data-save $args");
     if ($? > 0) {

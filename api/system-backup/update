@@ -26,6 +26,22 @@ use esmith::ConfigDB;
 
 require '/usr/libexec/nethserver/api/lib/backup_functions.pl';
 
+sub write_to_file
+{
+    my $entries = shift;
+    my $file = shift;
+    open(my $fh, '>', '/etc/backup-data.d/'.$file) || return 0;
+    foreach my $e (@$entries) {
+       $e =~ s/^\s+//;
+       $e =~ s/\s+$//;
+       if ($e) {
+           print $fh $e."\n";
+       }
+    }
+    close($fh);
+    return 1;
+}
+
 my $input = readInput();
 
 my $cmd = $input->{'action'};
@@ -43,6 +59,14 @@ if($cmd eq 'update-backup-data') {
         success();
     }
 
+} elsif($cmd eq 'backup-data-contents') {
+    my $db = esmith::ConfigDB->open();
+    $db->set_prop('backup-data', 'IncludeLogs', $input->{'IncludeLogs'});
+    if (!write_to_file($input->{'custom-includes'},"custom.include") || !write_to_file($input->{'custom-excludes'},"custom.exclude")) {
+        error();
+    } else {
+        success();
+    }
 } else {
     error();
 }
