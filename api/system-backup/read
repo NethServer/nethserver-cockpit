@@ -219,6 +219,8 @@ if($cmd eq 'backup-info') {
     $ret->{'configuration'}{'backup-data'}{'defaults'}{'excludes'} = $default_excludes;
     $ret->{'configuration'}{'backup-data'}{'defaults'}{'custom-includes'} = $default_custom_includes;
     $ret->{'configuration'}{'backup-data'}{'defaults'}{'custom-excludes'} = $default_custom_excludes;
+    my $cdb = esmith::ConfigDB->open_ro();
+    $ret->{'configuration'}{'backup-data'}{'defaults'}{'IncludeLogs'} = $cdb->get_prop('backup-data','IncludeLogs');
     my $db = esmith::ConfigDB->open_ro('backups');
     foreach my $backup ($db->get_all()) {
         my %props = $backup->props;

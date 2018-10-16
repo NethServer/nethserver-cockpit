@@ -104,6 +104,7 @@ Output example
         ...
       ],
       "defaults": {
+        "IncludeLogs": "enabled",
         "custom-excludes": [],
         "custom-includes": [
           ...
@@ -393,6 +394,26 @@ Use the same input from validate.
 ### update-backup-config
 
 Use the same input from validate.
+
+### backup-data-contents
+
+Change include and execludes of all data backups.
+
+Input example:
+```json
+{
+  "action": "backup-data-contents",
+  "custom-includes": [
+    "file1",
+    "file2"
+  ],
+  "custom-excludes": [
+    "file1",
+    "file2"
+  ],
+  "IncludeLogs": "enabled"
+}
+```
 
 ## create
 
