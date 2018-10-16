@@ -28,7 +28,23 @@ use NethServer::Service;
 use JSON;
 
 my $confDb = esmith::ConfigDB->open_ro();
-my @services = map { $_->key } $confDb->get_all_by_prop('type' => 'service');
+
+sub ports_to_array
+{
+    my $ret;
+    my $ports = shift;
+
+    if (!$ports) {
+        return [];
+    }
+    if ($ports =~ ',') {
+        my @tmp = split(',',$ports);
+        $ret = \@tmp;
+    } else {
+        $ret = [$ports]
+    }
+    return $ret;
+}
 
 my @status;
 my @configuration;
@@ -53,16 +69,14 @@ foreach ($confDb->get_all_by_prop('type' => 'service')) {
     delete($props{'UDPPort'});
     delete($props{'UDPPorts'});
     delete($props{'TCPPorts'});
-    
-    my @tmp = split(',',$tcpPorts);
-    $ports{'TCP'} = \@tmp;
-    @tmp = split(',',$udpPorts);
-    $ports{'UDP'} = \@tmp;
+
+    $ports{'TCP'} = ports_to_array($tcpPorts);
+    $ports{'UDP'} = ports_to_array($udpPorts);
 
     my $service_status = {
         'name' => $key,
-	    'status' => $s->is_enabled() ? 1 : 0,
-	    'running' => $s->is_running() ? 1 : 0,
+        'status' => $s->is_enabled() ? 1 : 0,
+        'running' => $s->is_running() ? 1 : 0,
     };
     my $service_configuration = {
         'name' => $key,
@@ -70,7 +84,7 @@ foreach ($confDb->get_all_by_prop('type' => 'service')) {
         'ports' => \%ports,
         'props' => \%props
     };
-   
+
     push(@status,$service_status);
     push(@configuration,$service_configuration);
 }
