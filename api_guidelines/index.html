@@ -366,6 +366,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#execute" title="execute" class="md-nav__link">
+    execute
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -954,6 +961,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#execute" title="execute" class="md-nav__link">
+    execute
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1004,13 +1018,17 @@ After spawning the process, the controller gather the standard output to track t
 
 
 <h2 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h2>
-<p>APIs should implement classical CRUD operations, plus a validation helper:</p>
+<p>APIs should implement classical CRUD operations:</p>
 <ul>
 <li><a href="#create">create</a></li>
 <li><a href="#read">read</a></li>
 <li><a href="#update">update</a></li>
 <li><a href="#delete">delete</a></li>
+</ul>
+<p>Extra operations:</p>
+<ul>
 <li><a href="#validate">validate</a></li>
+<li><a href="#execute">execute</a></li>
 </ul>
 <p>None of the above action is mandatory.</p>
 <h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">&para;</a></h3>
@@ -1040,6 +1058,9 @@ It should return an object with <code>system</code> and <code>configuration</cod
 <p>Validate the given input.
 If validation fail, raise a <a href="../api_protocol/#validation">validation error</a> and exit 1.
 Otherwise return a <a href="../api_protocol/#success">success</a> and exit 0.</p>
+<h3 id="execute">execute<a class="headerlink" href="#execute" title="Permanent link">&para;</a></h3>
+<p>Execute a command in foreground or background.
+This type of operation can return raw output from underlying system.</p>
 <h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
 <p>When creating new helpers, remember to write the related documentation.</p>
 <ol>
