@@ -1,5 +1,5 @@
 <template>
-  <div v-if="view.isAuth">
+  <div v-show="view.isAuth">
     <h2>{{$t('logs.title')}}</h2>
     <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
     <iframe id="logs-frame" class="iframe-embedded" src="/cockpit/@localhost/system/logs.html"></iframe>
@@ -65,7 +65,6 @@ export default {
   },
   data() {
     return {
-      msg: "Welcome to Your NethServer Module",
       view: {
         isLoaded: false,
         isAuth: false,

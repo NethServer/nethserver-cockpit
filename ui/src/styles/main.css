@@ -13,6 +13,10 @@ a {
   word-break: break-all;
 }
 
+textarea {
+  resize: vertical;
+}
+
 .container-cards-pf {
   margin-left: 55px;
   margin-top: 0px;
@@ -473,6 +477,18 @@ circle {
 
 .gray {
   color: #72767b;
+}
+
+.border-green {
+  border: 2px solid #3f9c35 !important;
+}
+
+.border-red {
+  border: 2px solid #cc0000 !important;
+}
+
+.border-gray {
+  border: 2px solid #72767b !important;
 }
 
 input[type="checkbox"].form-control {

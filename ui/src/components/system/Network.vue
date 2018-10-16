@@ -66,7 +66,6 @@ export default {
   },
   data() {
     return {
-      msg: "Welcome to Your NethServer Module",
       view: {
         isLoaded: false,
         isAuth: false,

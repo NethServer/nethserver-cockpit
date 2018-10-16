@@ -22,7 +22,8 @@ export default {
       },
       null,
       function(success) {
-        if (success.auth) {
+        var success = JSON.parse(success);
+        if (success.state == "success") {
           context.view.isLoaded = true;
         } else {
           window.location.hash = "#/applications";
@@ -82,7 +83,6 @@ export default {
   },
   data() {
     return {
-      msg: "Welcome to Your NethServer Module",
       view: {
         isLoaded: false,
         modalFake: false

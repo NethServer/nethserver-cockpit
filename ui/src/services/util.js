@@ -63,7 +63,7 @@ var UtilService = {
         callback(reader.result)
       };
       reader.onerror = function (error) {
-        console.log('Error: ', error);
+        console.error('Error: ', error);
         callback(null)
       };
       reader.readAsDataURL(file);

@@ -21,26 +21,14 @@
 
         <li class="li-empty"></li>
 
-        <li v-if="checkAuth('backup')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('backup') ? 'active' : '', 'list-group-item']">
-          <a href="#/backup">
-            <span class="pficon pficon-restart"></span>
-            <span class="list-group-item-value">{{$t('menu.backup')}}</span>
-          </a>
-        </li>
-        <li v-if="checkAuth('storage')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('storage') ? 'active' : '', 'list-group-item']">
-          <a href="#/storage">
-            <span class="fa fa-hdd-o"></span>
-            <span class="list-group-item-value">{{$t('menu.storage')}}</span>
-          </a>
-        </li>
-        <li v-if="checkAuth('disk-usage')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('disk-usage') ? 'active' : '', 'list-group-item']">
-          <a href="#/disk-usage">
-            <span class="fa fa-pie-chart"></span>
-            <span class="list-group-item-value">{{$t('menu.disk_usage')}}</span>
+        <li v-if="checkAuth('users-groups')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('users-groups') ? 'active' : '', 'list-group-item']">
+          <a href="#/users-groups">
+            <span class="fa fa-users"></span>
+            <span class="list-group-item-value">{{$t('menu.users_groups')}}</span>
           </a>
         </li>
 
-        <li v-if="checkAuth('backup') || checkAuth('storage') || checkAuth('disk-usage')" class="li-empty"></li>
+        <li v-if="checkAuth('users-groups')" class="li-empty"></li>
 
         <li v-if="checkAuth('network')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('network') ? 'active' : '', 'list-group-item']">
           <a href="#/network">
@@ -66,15 +54,30 @@
             <span class="list-group-item-value">{{$t('menu.services')}}</span>
           </a>
         </li>
-        <li v-if="checkAuth('users-groups')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('users-groups') ? 'active' : '', 'list-group-item']">
-          <a href="#/users-groups">
-            <span class="fa fa-users"></span>
-            <span class="list-group-item-value">{{$t('menu.users_groups')}}</span>
+
+        <li v-if="checkAuth('network') || checkAuth('dns') || checkAuth('dhcp') || checkAuth('services')"
+          class="li-empty"></li>
+
+        <li v-if="checkAuth('backup')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('backup') ? 'active' : '', 'list-group-item']">
+          <a href="#/backup">
+            <span class="pficon pficon-restart"></span>
+            <span class="list-group-item-value">{{$t('menu.backup')}}</span>
+          </a>
+        </li>
+        <li v-if="checkAuth('storage')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('storage') ? 'active' : '', 'list-group-item']">
+          <a href="#/storage">
+            <span class="fa fa-hdd-o"></span>
+            <span class="list-group-item-value">{{$t('menu.storage')}}</span>
+          </a>
+        </li>
+        <li v-if="checkAuth('disk-usage')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('disk-usage') ? 'active' : '', 'list-group-item']">
+          <a href="#/disk-usage">
+            <span class="fa fa-pie-chart"></span>
+            <span class="list-group-item-value">{{$t('menu.disk_usage')}}</span>
           </a>
         </li>
 
-        <li v-if="checkAuth('network') || checkAuth('dns') || checkAuth('dhcp') || checkAuth('services') || checkAuth('users-groups')"
-          class="li-empty"></li>
+        <li v-if="checkAuth('backup') || checkAuth('storage') || checkAuth('disk-usage')" class="li-empty"></li>
 
         <li v-if="checkAuth('certificates')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('certificates') ? 'active' : '', 'list-group-item']">
           <a href="#/certificates">
