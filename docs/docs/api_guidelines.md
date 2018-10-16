@@ -22,13 +22,17 @@ process = cockpit.spawn("/usr/libexec/nethserver/system-status/read", { ... }
 
 ## Methods
 
-APIs should implement classical CRUD operations, plus a validation helper:
+APIs should implement classical CRUD operations:
 
 * [create](#create)
 * [read](#read)
 * [update](#update)
 * [delete](#delete)
+
+Extra operations:
+
 * [validate](#validate)
+* [execute](#execute)
 
 None of the above action is mandatory.
 
@@ -73,6 +77,11 @@ Example: [system-hosts](api/system-hosts.md#create).
 Validate the given input.
 If validation fail, raise a [validation error](api_protocol.md#validation) and exit 1.
 Otherwise return a [success](api_protocol.md#success) and exit 0.
+
+### execute
+
+Execute a command in foreground or background.
+This type of operation can return raw output from underlying system.
 
 ## Documentation
 

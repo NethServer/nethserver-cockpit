@@ -3,6 +3,7 @@
 The API and the UI talk to each other using JSON and the communication
 protocol defines a set of a well-known objects.
 
+As an exception, the [execute operation](/api_guidelines/#execute) can return RAW output instead of JSON.
 
 ## Esmith db records
 
