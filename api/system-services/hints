@@ -1,0 +1,50 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
+
+use strict;
+use warnings;
+
+use esmith::ConfigDB;
+use NethServer::Service;
+use JSON;
+
+my $confDb = esmith::ConfigDB->open_ro();
+
+my $details;
+foreach ($confDb->get_all_by_prop('type' => 'service')) {
+    my $key = $_->key;
+    next if ( ! -e "/etc/e-smith/db/configuration/defaults/$key/status" );
+
+    my $s = NethServer::Service->new($key, $confDb);
+    my %props = $_->props();
+    my %ports;
+    my $desc = `systemctl show --property=Description $key`;
+    $desc =~ s/.*=//;
+
+    if ($s->is_enabled() !=  $s->is_running()) {
+        $details->{$key} = 'service_not_consistent';
+    }
+}
+
+hints("",$details);

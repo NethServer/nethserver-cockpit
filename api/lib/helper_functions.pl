@@ -28,6 +28,33 @@ use JSON;
 
 
 #
+# Print a hints object
+# Parameters:
+# - message: a general hint message
+# - details: an hashmap reference, the map must be in the form {"prop1" => "hint_ message1", ... }
+# - link: an url to external doc
+#
+sub hints
+{
+    my $ret = {count => 0, message => undef, details => undef, link => undef};
+    my ($message, $details, $link) = @_;
+
+    if (defined($link)) {
+        $ret->{'link'} = $link;
+    }
+    if (defined($message) && $message ne '') {
+        $ret->{'count'} = 1;
+        $ret->{'message'} = $message;
+    }
+    if (defined($details) && scalar(keys %$details)) {
+        $ret->{'count'} = scalar(keys %$details);
+        $ret->{'details'} = $details;
+    }
+    print encode_json($ret);
+    exit 0;
+}
+
+#
 # Print a success JSON object and exit 0
 #
 sub success

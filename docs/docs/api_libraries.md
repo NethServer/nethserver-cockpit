@@ -131,6 +131,27 @@ my $data = readInput();
 print $data->{'name'};
 ```
 
+**hints**
+
+Output an hint in JSON format.
+
+Takes 3 parameters:
+
+- a general hint message
+- an hashmap reference, the map must be in the form `{"prop1" => "hint1", ... }`
+- an url to external doc
+
+Example of simple hint:
+```perl
+hints("","change_me");
+```
+
+
+Example of complex hint:
+```perl
+hints("",{"TCPPort" => "change_default","status" => "status_should_be_enabled"},"http://docs.nethserver.org");
+
+```
 
 
 ### General examples
@@ -187,6 +208,28 @@ error "GenericError" "System failure message"
 **invalid_error**
 
 Print an InvalidInput error and exit 1.
+
+**hints**
+
+Print am hint in JSON format.
+
+Takes 4 parameters:
+
+- a general message
+- a details map in json format
+- the number of element inside the details map
+- a link to an external doc
+
+
+Example of simple hint:
+```bash
+hint 'one_or_more_dns_not_working'
+```
+
+Example of complex hint:
+```bash
+hints '' '{"TCPPort":"change_default_ssh_port"}' 1
+```
 
 
 ### General examples

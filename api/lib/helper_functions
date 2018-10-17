@@ -53,3 +53,33 @@ function success {
     exit 0
 }
 
+
+#
+# Print a hint in JSON format
+# Takes 4 parameters:
+#  - a general message
+#  - a details map in json format
+#  - the number of element inside the details map
+#  - a link to an external doc
+# 
+# If details is empty, print an empty hint
+function hints {
+    message=$1
+    details=${2-null}
+    count=${3-0}
+    link=$4
+    if [ -z "$message" ]; then
+        message="null"
+    else
+        message="\"$message\""
+    fi
+
+    if [ -z "$link" ]; then
+        link="null"
+    else
+        link="\"$link\""
+    fi 
+
+    printf '{"count":%s, "message": %s, "details": %s, "link": %s}' "$count" "$message" "$details" "$link"
+    exit 0
+}

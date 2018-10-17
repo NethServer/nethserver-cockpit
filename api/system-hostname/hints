@@ -1,0 +1,53 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+. /usr/libexec/nethserver/api/lib/helper_functions
+
+/usr/bin/hostnamectl --static | grep -q "localhost"
+if [ $? -eq 0 ]; then
+    hints "hostname_should_not_contain_localhost"
+fi
+
+/usr/bin/hostnamectl --static | grep -q "localdomain"
+if [ $? -eq 0 ]; then
+    hints "hostname_should_not_contain_localdomain"
+fi
+
+H=$(/usr/bin/hostnamectl --static | cut -d. -f1)
+
+# NetBIOS length limit for hostname H
+if (( ${#H} > 15 || ${#H} == 0 )); then
+    hints "first_hostname_part_maximum_length_15"
+fi
+
+# Check it is composed by "letters, digits, hyphens, and periods":
+if [[ -n "$(tr -d '[:alnum:].-' <<< ${H})" ]]; then
+    hints "hostname_composed_by_letters_digits_hypens_periods"
+fi
+
+# Count parts
+points=$(hostnamectl  --static | grep -o '\.' | wc -l)
+if [ $points -lt 2 ]; then
+    hints "hostname_should_be_third_level_domain"
+fi
+
+hints

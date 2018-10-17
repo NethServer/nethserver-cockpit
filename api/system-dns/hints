@@ -1,0 +1,41 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+. /usr/libexec/nethserver/api/lib/helper_functions
+
+servers=$(/sbin/e-smith/config getprop dns NameServers)
+
+if [ -z "$servers" ]; then
+    hints "no_servers_configured"
+fi
+
+for s in $(echo $servers | sed 's/,/ /')
+do
+    dig +time=2 +tries=1 +short www.nethserver.org @$s &> /dev/null
+    ret=$(($ret+$?))
+done
+
+if [ $ret -gt 0 ]; then
+    hints "one_or_more_dns_not_working"
+else
+    hints
+fi

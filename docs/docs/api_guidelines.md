@@ -33,6 +33,7 @@ Extra operations:
 
 * [validate](#validate)
 * [execute](#execute)
+* [hints](#hints)
 
 None of the above action is mandatory.
 
@@ -82,6 +83,14 @@ Otherwise return a [success](api_protocol.md#success) and exit 0.
 
 Execute a command in foreground or background.
 This type of operation can return raw output from underlying system.
+
+Example: [system-backup](api/system-backup.md#execute)
+
+### hints
+
+Execute system checks and propose configuration tweaks.
+
+Check out the [JSON format](api_protocol.md#hints).
 
 ## Documentation
 

@@ -156,3 +156,39 @@ Invalid JSON object input:
   "message": "No JSON data available"
 }
 ```
+
+## Hints
+
+Configuration suggestions displayed inside the UI.
+An hint must always contain the following fields:
+
+- `count`: the count of hints for the module, 0 means no hints
+- `message`: if the hint is not bounded to a specific field, a general message for the module
+- `link`: a link to external documentation
+- `details`: contains hints specific to one ore more property. Object format: `<prop_name>`:`<message>`
+
+Unused field should be set to `null`
+
+Example of simple hint:
+```json
+{
+  "count": 1,
+  "details": null,
+  "message": "must_configure_backup_data",
+  "link": "http://docs.nethserver.org/en/v7/backup.html"
+}
+```
+
+Example of multiple hint:
+```json
+{
+  "count": 2,
+  "details": {
+    "snmpd": "service_not_consistent",
+    "smartd": "service_not_consistent"
+  },
+  "message": null,
+  "link": null
+}
+```
+
