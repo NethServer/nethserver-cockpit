@@ -1150,6 +1150,24 @@ Exit with InvalidInput error if JSON can't be decoded.</p>
 </pre></div>
 
 
+<p><strong>hints</strong></p>
+<p>Output an hint in JSON format.</p>
+<p>Takes 3 parameters:</p>
+<ul>
+<li>a general hint message</li>
+<li>an hashmap reference, the map must be in the form <code>{"prop1" =&gt; "hint1", ... }</code></li>
+<li>an url to external doc</li>
+</ul>
+<p>Example of simple hint:</p>
+<div class="codehilite"><pre><span></span><span class="n">hints</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="s">&quot;change_me&quot;</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Example of complex hint:</p>
+<div class="codehilite"><pre><span></span><span class="n">hints</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,{</span><span class="s">&quot;TCPPort&quot;</span> <span class="o">=&gt;</span> <span class="s">&quot;change_default&quot;</span><span class="p">,</span><span class="s">&quot;status&quot;</span> <span class="o">=&gt;</span> <span class="s">&quot;status_should_be_enabled&quot;</span><span class="p">},</span><span class="s">&quot;http://docs.nethserver.org&quot;</span><span class="p">);</span>
+</pre></div>
+
+
 <h3 id="general-examples">General examples<a class="headerlink" href="#general-examples" title="Permanent link">&para;</a></h3>
 <p>Output <code>sshd</code> key in json output:</p>
 <div class="codehilite"><pre><span></span><span class="k">use</span> <span class="nn">JSON</span><span class="p">;</span>
@@ -1195,6 +1213,25 @@ Takes 2 arguments:</p>
 
 <p><strong>invalid_error</strong></p>
 <p>Print an InvalidInput error and exit 1.</p>
+<p><strong>hints</strong></p>
+<p>Print am hint in JSON format.</p>
+<p>Takes 4 parameters:</p>
+<ul>
+<li>a general message</li>
+<li>a details map in json format</li>
+<li>the number of element inside the details map</li>
+<li>a link to an external doc</li>
+</ul>
+<p>Example of simple hint:</p>
+<div class="codehilite"><pre><span></span>hint <span class="s1">&#39;one_or_more_dns_not_working&#39;</span>
+</pre></div>
+
+
+<p>Example of complex hint:</p>
+<div class="codehilite"><pre><span></span>hints <span class="s1">&#39;&#39;</span> <span class="s1">&#39;{&quot;TCPPort&quot;:&quot;change_default_ssh_port&quot;}&#39;</span> <span class="m">1</span>
+</pre></div>
+
+
 <h3 id="general-examples_1">General examples<a class="headerlink" href="#general-examples_1" title="Permanent link">&para;</a></h3>
 <p>Read JSON from STDIN and set the record:</p>
 <div class="codehilite"><pre><span></span>cat /dev/stdin <span class="p">|</span> /sbin/e-smith/config setjson - <span class="m">2</span>&gt;/dev/null

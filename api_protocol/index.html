@@ -416,6 +416,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#hints" title="Hints" class="md-nav__link">
+    Hints
+  </a>
+  
+</li>
+      
       
       
       
@@ -1018,6 +1025,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#hints" title="Hints" class="md-nav__link">
+    Hints
+  </a>
+  
+</li>
+      
       
       
       
@@ -1169,6 +1183,39 @@ Bash example:</p>
   <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;1536738276&quot;</span><span class="p">,</span>
   <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;InvalidInput&quot;</span><span class="p">,</span>
   <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No JSON data available&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="hints">Hints<a class="headerlink" href="#hints" title="Permanent link">&para;</a></h2>
+<p>Configuration suggestions displayed inside the UI.
+An hint must always contain the following fields:</p>
+<ul>
+<li><code>count</code>: the count of hints for the module, 0 means no hints</li>
+<li><code>message</code>: if the hint is not bounded to a specific field, a general message for the module</li>
+<li><code>link</code>: a link to external documentation</li>
+<li><code>details</code>: contains hints specific to one ore more property. Object format: <code>&lt;prop_name&gt;</code>:<code>&lt;message&gt;</code></li>
+</ul>
+<p>Unused field should be set to <code>null</code></p>
+<p>Example of simple hint:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;must_configure_backup_data&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;link&quot;</span><span class="p">:</span> <span class="s2">&quot;http://docs.nethserver.org/en/v7/backup.html&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Example of multiple hint:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;snmpd&quot;</span><span class="p">:</span> <span class="s2">&quot;service_not_consistent&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;smartd&quot;</span><span class="p">:</span> <span class="s2">&quot;service_not_consistent&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="nt">&quot;link&quot;</span><span class="p">:</span> <span class="kc">null</span>
 <span class="p">}</span>
 </pre></div>
                 

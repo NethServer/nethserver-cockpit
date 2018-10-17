@@ -373,6 +373,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#hints" title="hints" class="md-nav__link">
+    hints
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -968,6 +975,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#hints" title="hints" class="md-nav__link">
+    hints
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1029,6 +1043,7 @@ After spawning the process, the controller gather the standard output to track t
 <ul>
 <li><a href="#validate">validate</a></li>
 <li><a href="#execute">execute</a></li>
+<li><a href="#hints">hints</a></li>
 </ul>
 <p>None of the above action is mandatory.</p>
 <h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">&para;</a></h3>
@@ -1061,6 +1076,10 @@ Otherwise return a <a href="../api_protocol/#success">success</a> and exit 0.</p
 <h3 id="execute">execute<a class="headerlink" href="#execute" title="Permanent link">&para;</a></h3>
 <p>Execute a command in foreground or background.
 This type of operation can return raw output from underlying system.</p>
+<p>Example: <a href="../api/system-backup/#execute">system-backup</a></p>
+<h3 id="hints">hints<a class="headerlink" href="#hints" title="Permanent link">&para;</a></h3>
+<p>Execute system checks and propose configuration tweaks.</p>
+<p>Check out the <a href="../api_protocol/#hints">JSON format</a>.</p>
 <h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
 <p>When creating new helpers, remember to write the related documentation.</p>
 <ol>
