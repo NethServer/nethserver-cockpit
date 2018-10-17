@@ -41,6 +41,7 @@
     "copy_command": "Copy command",
     "output": "Output",
     "more_info": "More info",
+    "hints_suggested": "Hints suggested",
     "menu": {
       "dashboard": "Dashboard",
       "backup": "Backup",

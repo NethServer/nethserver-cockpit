@@ -88,9 +88,19 @@
       </div>
 
       <h3 v-if="backupData.length > 0">{{$t('list')}}</h3>
+
+      <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
+        <span class="pficon pficon-warning-triangle-o"></span>
+        <strong>{{$t('hints_suggested')}}:</strong>
+        <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{t}}</strong>: {{m}}</li>
+        <span v-if="hints.message && hints.message.length > 0">
+          {{hints.message && hints.message}}
+        </span>
+      </div>
+
       <div v-if="backupData.length == 0" class="blank-slate-pf blank-state-backup" id="">
         <div class="blank-slate-pf-icon">
-          <span class="pficon pficon pficon-add-circle-o"></span>
+          <span class="fa fa-database"></span>
         </div>
         <h1>
           {{$t('backup.no_data_backup_found_title')}}
@@ -1116,6 +1126,15 @@ export default {
     this.getBackupStatus();
     this.pollingStatus();
     this.getUSBDevices();
+    this.getHints();
+  },
+  watch: {
+    backupData: function() {
+      var context = this;
+      this.getHints(function() {
+        context.$parent.hints.backup.count = context.hints.count;
+      });
+    }
   },
   computed: {
     filteredBackupList() {
@@ -1132,7 +1151,7 @@ export default {
 
       return returnObj;
     },
-    crontabComputed: function() {
+    crontabComputed() {
       var cronString = "";
 
       if (this.wizard.isEditCron) {
@@ -1208,10 +1227,24 @@ export default {
         "restore-config": 0,
         "restore-data": 0,
         "backup-data": 0
-      }
+      },
+      hints: {}
     };
   },
   methods: {
+    getHints(callback) {
+      var context = this;
+      context.execHints(
+        "system-backup",
+        function(success) {
+          context.hints = success;
+          callback ? callback() : null;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
     editCronTab() {
       this.wizard.when = {
         every: "hour",

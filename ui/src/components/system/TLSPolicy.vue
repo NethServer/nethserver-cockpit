@@ -4,12 +4,21 @@
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <div v-if="view.isLoaded">
       <h3>{{$t('config')}}</h3>
+      <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
+        <span class="pficon pficon-warning-triangle-o"></span>
+        <strong>{{$t('hints_suggested')}}:</strong>
+        <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{t}}</strong>: {{m}}</li>
+        <span v-if="hints.message && hints.message.length > 0">
+          {{hints.message && hints.message}}
+        </span>
+      </div>
       <form class="form-horizontal" v-on:submit.prevent="saveTLSPolicy(TLSPolicy)">
         <div :class="['form-group', TLSPolicy.errors.policy.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('tls_policy.enforce_security')}}</label>
           <div class="col-sm-5">
             <select required type="text" v-model="TLSPolicy.policy" class="form-control">
-              <option :value="p" v-for="p in TLSPolicy.policies" v-bind:key="p">{{p.length > 0 ? p : $t('tls_policy.default_policy')}}</option>
+              <option :value="p.length > 0 ? p : 0" v-for="p in TLSPolicy.policies" v-bind:key="p">{{p.length > 0 ? p :
+                $t('tls_policy.default_policy')}}</option>
             </select>
             <span v-if="TLSPolicy.errors.policy.hasError" class="help-block">{{TLSPolicy.errors.policy.message}}</span>
           </div>
@@ -55,6 +64,7 @@ export default {
   },
   mounted() {
     this.getTLSPolicy();
+    this.getHints();
   },
   data() {
     return {
@@ -72,10 +82,24 @@ export default {
         },
         policy: "",
         policies: []
-      }
+      },
+      hints: {}
     };
   },
   methods: {
+    getHints(callback) {
+      var context = this;
+      context.execHints(
+        "system-tls-policy",
+        function(success) {
+          context.hints = success;
+          callback ? callback() : null;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
     getTLSPolicy() {
       var context = this;
       context.exec(
@@ -91,6 +115,10 @@ export default {
             success.status.available
           );
           context.TLSPolicy.policy = success.configuration.props.policy;
+
+          context.getHints(function() {
+            context.$parent.hints.tls_policy.count = context.hints.count;
+          });
         },
         function(error) {
           console.error(error);

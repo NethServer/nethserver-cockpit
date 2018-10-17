@@ -7,16 +7,26 @@
       <div class="stats-container card-pf-utilization-details">
         <span class="card-pf-utilization-card-details-count">{{stats.connections}}</span>
         <span class="card-pf-utilization-card-details-description">
-          <span class="card-pf-utilization-card-details-line-2 stats-text">{{stats.connections == 1 ? $t('ssh.connection') : $t('ssh.connections')}}</span>
+          <span class="card-pf-utilization-card-details-line-2 stats-text">{{stats.connections == 1 ?
+            $t('ssh.connection') : $t('ssh.connections')}}</span>
         </span>
       </div>
       <div class="stats-container card-pf-utilization-details">
         <span class="card-pf-utilization-card-details-count">{{stats.peers}}</span>
         <span class="card-pf-utilization-card-details-description">
-          <span class="card-pf-utilization-card-details-line-2 stats-text">{{stats.peers == 1 ? $t('ssh.peer') : $t('ssh.peers')}}</span>
+          <span class="card-pf-utilization-card-details-line-2 stats-text">{{stats.peers == 1 ? $t('ssh.peer') :
+            $t('ssh.peers')}}</span>
         </span>
       </div>
       <h3>{{$t('config')}}</h3>
+      <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
+        <span class="pficon pficon-warning-triangle-o"></span>
+        <strong>{{$t('hints_suggested')}}:</strong>
+        <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{t}}</strong>: {{m}}</li>
+        <span v-if="hints.message && hints.message.length > 0">
+          {{hints.message && hints.message}}
+        </span>
+      </div>
       <form class="form-horizontal" v-on:submit.prevent="saveSSH(SSHConfig)">
         <div :class="['form-group', SSHConfig.errors.TCPPort.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('ssh.tcp_port')}}</label>
@@ -83,6 +93,7 @@ export default {
   },
   mounted() {
     this.getSSHConfig();
+    this.getHints();
   },
   data() {
     return {
@@ -113,10 +124,24 @@ export default {
       stats: {
         connections: 0,
         peers: 0
-      }
+      },
+      hints: {}
     };
   },
   methods: {
+    getHints(callback) {
+      var context = this;
+      context.execHints(
+        "system-openssh",
+        function(success) {
+          context.hints = success;
+          callback ? callback() : null;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
     getSSHConfig() {
       var context = this;
       context.exec(
@@ -143,6 +168,10 @@ export default {
             }
           }
           context.stats.peers = peers.length;
+
+          context.getHints(function() {
+            context.$parent.hints.ssh.count = context.hints.count;
+          });
         },
         function(error) {
           console.error(error);

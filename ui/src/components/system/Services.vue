@@ -25,6 +25,14 @@
     </div>
 
     <h3>{{$t('list')}}</h3>
+    <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
+      <span class="pficon pficon-warning-triangle-o"></span>
+      <strong>{{$t('hints_suggested')}}:</strong>
+      <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{t}}</strong>: {{m}}</li>
+      <span v-if="hints.message && hints.message.length > 0">
+        {{hints.message && hints.message}}
+      </span>
+    </div>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <vue-good-table v-if="view.isLoaded" :customRowsPerPageDropdown="[25,50,100]" :perPage="25" :columns="columns"
       :rows="rows" :lineNumbers="false" :defaultSortBy="{field: 'name', type: 'asc'}" :globalSearch="true" :paginate="true"
@@ -32,6 +40,7 @@
       :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder" :ofText="tableLangsTexts.ofText">
       <template slot="table-row" slot-scope="props">
         <td class="fancy">
+          <span v-if="checkHints(props.row.name)" class="pficon pficon-warning-triangle-o panel-icon"></span>
           <strong>{{ props.row.name}}</strong>
         </td>
         <td class="fancy">{{ props.row.description}}</td>
@@ -153,6 +162,15 @@ export default {
   },
   mounted() {
     this.getServices();
+    this.getHints();
+  },
+  watch: {
+    rows: function() {
+      var context = this;
+      this.getHints(function() {
+        context.$parent.hints.services.count = context.hints.count;
+      });
+    }
   },
   data() {
     return {
@@ -235,10 +253,31 @@ export default {
         servicesCount: 0,
         servicesEnabledCount: 0,
         servicesRunningCount: 0
-      }
+      },
+      hints: {}
     };
   },
   methods: {
+    getHints(callback) {
+      var context = this;
+      context.execHints(
+        "system-services",
+        function(success) {
+          context.hints = success;
+          callback ? callback() : null;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+    checkHints(service) {
+      return (
+        this.hints.details &&
+        this.hints.details[service] &&
+        this.hints.details[service].length > 0
+      );
+    },
     isEmpty: function(obj) {
       if (obj) {
         return Object.keys(obj).lenght === 0;

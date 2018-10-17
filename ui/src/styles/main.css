@@ -98,6 +98,10 @@ textarea {
   padding: 10px 15px;
   position: relative;
   white-space: nowrap;
+  width: 55px;
+}
+
+.nav-pf-vertical:hover .list-group-item:not(#dashboard-item)>a {
   width: 180px;
 }
 
@@ -147,6 +151,11 @@ textarea {
 
 .nav-pf-vertical .list-group-item>a {
   text-decoration: none !important;
+  width: 55px;
+}
+
+.nav-pf-vertical:hover .list-group-item>a {
+  width: 200px;
 }
 
 .nav-pf-vertical .list-group-item:first-child {
@@ -885,4 +894,35 @@ input[type="checkbox"].form-control {
 .popover-content {
   max-height: 350px;
   overflow: auto;
+}
+
+.nav-pf-vertical .list-group-item .badge {
+  padding: 2px 3px;
+  right: 10px;
+  top: 35px;
+}
+
+.nav-pf-vertical .list-group-item .badge.badge-small {
+  padding: 2px 3px;
+  right: 10px;
+  top: 20px;
+}
+
+.nav-pf-vertical:hover .list-group-item .badge {
+  padding: 5px;
+  right: 30px;
+  top: 21px;
+}
+
+.nav-pf-vertical:hover .list-group-item .badge.badge-small {
+  padding: 5px;
+  right: 10px;
+  top: 8px;
+}
+
+.nav-pf-vertical .list-group-item .badge {
+  background: #f0ab00;
+  border: 1px solid #d1d1d1;
+  position: absolute;
+  border-radius: 0;
 }

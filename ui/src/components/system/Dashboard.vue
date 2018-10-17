@@ -1,6 +1,14 @@
 <template>
   <div>
     <h2>{{$t('dashboard.title')}}</h2>
+    <div v-if="(hints.details.hostname && hints.details.hostname.count > 0) || (hints.details.dns && hints.details.dns.count > 0) || (hints.details.company && hints.details.company.count > 0)" class="alert alert-warning alert-dismissable">
+      <span class="pficon pficon-warning-triangle-o"></span>
+      <strong>{{$t('hints_suggested')}}:</strong>
+      <li v-if="m.count > 0" v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{t | capitalize}}</strong>: {{m.message}}</li>
+      <span v-if="hints.message && hints.message.length > 0">
+        {{hints.message && hints.message}}
+      </span>
+    </div>
     <div class="row row-dashboard">
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
         <form class="form-horizontal">
@@ -65,6 +73,9 @@
                     <span v-if="!i == system.summary.dns.length - 1 && system.summary.dns[1].readDns.length != 0">,
                     </span>
                   </span>
+                </a>
+                <a v-if="!loaders.dns && system.summary.dns[0].readDns.length == 0" data-toggle="modal" data-target="#dnsChangeModal" href="#">
+                  {{$t('edit')}}
                 </a>
               </p>
             </div>
@@ -435,6 +446,9 @@ export default {
     next();
   },
   mounted() {
+    this.getHints("hostname");
+    this.getHints("dns");
+    this.getHints("company");
     this.getSystemSummary();
     this.getSystemHostname();
     this.getSystemAliases();
@@ -549,10 +563,40 @@ export default {
             isLoading: false
           }
         }
+      },
+      hints: {
+        details: {}
       }
     };
   },
   methods: {
+    getHints(type, callback) {
+      var context = this;
+      context.execHints(
+        "system-" + type,
+        function(success) {
+          context.hints.details[type] = {};
+          context.hints.details[type].count = 0;
+
+          for (var h in success.details) {
+            context.hints.details[h.toLowerCase()].message = success.details[h];
+            context.hints.details[h.toLowerCase()].count = success.count;
+          }
+
+          if (success.message) {
+            context.hints.details[type].message = success.message;
+            context.hints.details[type].count += 1;
+          }
+
+          context.$forceUpdate();
+
+          callback ? callback() : null;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
     getSystemSummary() {
       var context = this;
       context.exec(
@@ -613,6 +657,11 @@ export default {
 
           context.loaders.hostname = false;
           context.$forceUpdate();
+
+          context.getHints("hostname", function() {
+            context.$parent.hints.hostname.count =
+              context.hints.details.hostname.count;
+          });
         },
         function(error) {
           console.error(error);
@@ -850,6 +899,11 @@ export default {
 
           context.loaders.dns = false;
           context.$forceUpdate();
+
+          context.getHints("dns", function() {
+            context.$parent.hints.upstreamDns.count =
+              context.hints.details.dns.count;
+          });
         },
         function(error) {
           console.error(error);
@@ -1056,6 +1110,11 @@ export default {
 
           context.loaders.company = false;
           context.$forceUpdate();
+
+          context.getHints("company", function() {
+            context.$parent.hints.company.count =
+              context.hints.details.company.count;
+          });
         },
         function(error) {
           console.error(error);

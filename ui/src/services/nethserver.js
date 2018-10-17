@@ -131,6 +131,18 @@ var NethServerService = {
         error(errorResp, errorData)
       });
     },
+    execHints(packName, success, error) {
+      var process = cockpit.spawn(["/usr/bin/sudo", "/usr/libexec/nethserver/api/" + packName + "/hints"], {
+        pty: true,
+        environ: ["TERM=dumb"],
+      });
+      process.done(function (successResp) {
+        success(JSON.parse(successResp))
+      }).
+      fail(function (errorResp, errorData) {
+        error(errorResp, errorData)
+      });
+    }
   }
 };
 export default NethServerService;

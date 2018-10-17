@@ -16,6 +16,7 @@
           <a href="#/">
             <span class="fa fa-cube"></span>
             <span class="list-group-item-value">{{$t('menu.dashboard')}}</span>
+            <span v-if="hints.hostname.count > 0 || hints.upstreamDns.count > 0 || hints.company.count > 0" class="badge">{{hints.hostname.count+hints.upstreamDns.count+hints.company.count}}</span>
           </a>
         </li>
 
@@ -25,6 +26,7 @@
           <a href="#/users-groups">
             <span class="fa fa-users"></span>
             <span class="list-group-item-value">{{$t('menu.users_groups')}}</span>
+            <span v-if="hints.users_groups.count > 0" class="badge badge-small">{{hints.users_groups.count}}</span>
           </a>
         </li>
 
@@ -34,46 +36,52 @@
           <a href="#/network">
             <span class="fa fa-plug"></span>
             <span class="list-group-item-value">{{$t('menu.network')}}</span>
+            <span v-if="hints.network.count > 0" class="badge badge-small">{{hints.network.count}}</span>
           </a>
         </li>
         <li v-if="checkAuth('dns')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('dns') ? 'active' : '', 'list-group-item']">
           <a href="#/dns">
             <span class="fa fa-database"></span>
             <span class="list-group-item-value">{{$t('menu.dns')}}</span>
+            <span v-if="hints.dns.count > 0" class="badge badge-small">{{hints.dns.count}}</span>
           </a>
         </li>
         <li v-if="checkAuth('dhcp')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('dhcp') ? 'active' : '', 'list-group-item']">
           <a href="#/dhcp">
             <span class="pficon pficon-network"></span>
             <span class="list-group-item-value">{{$t('menu.dhcp')}}</span>
+            <span v-if="hints.dhcp.count > 0" class="badge badge-small">{{hints.dhcp.count}}</span>
           </a>
         </li>
         <li v-if="checkAuth('services')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('services') ? 'active' : '', 'list-group-item']">
           <a href="#/services">
             <span class="fa fa-fighter-jet"></span>
             <span class="list-group-item-value">{{$t('menu.services')}}</span>
+            <span v-if="hints.services.count > 0" class="badge badge-small">{{hints.services.count}}</span>
           </a>
         </li>
 
-        <li v-if="checkAuth('network') || checkAuth('dns') || checkAuth('dhcp') || checkAuth('services')"
-          class="li-empty"></li>
+        <li v-if="checkAuth('network') || checkAuth('dns') || checkAuth('dhcp') || checkAuth('services')" class="li-empty"></li>
 
         <li v-if="checkAuth('backup')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('backup') ? 'active' : '', 'list-group-item']">
           <a href="#/backup">
             <span class="pficon pficon-restart"></span>
             <span class="list-group-item-value">{{$t('menu.backup')}}</span>
+            <span v-if="hints.backup.count > 0" class="badge badge-small">{{hints.backup.count}}</span>
           </a>
         </li>
         <li v-if="checkAuth('storage')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('storage') ? 'active' : '', 'list-group-item']">
           <a href="#/storage">
             <span class="fa fa-hdd-o"></span>
             <span class="list-group-item-value">{{$t('menu.storage')}}</span>
+            <span v-if="hints.storage.count > 0" class="badge badge-small">{{hints.storage.count}}</span>
           </a>
         </li>
         <li v-if="checkAuth('disk-usage')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('disk-usage') ? 'active' : '', 'list-group-item']">
           <a href="#/disk-usage">
             <span class="fa fa-pie-chart"></span>
             <span class="list-group-item-value">{{$t('menu.disk_usage')}}</span>
+            <span v-if="hints.disk_usage.count > 0" class="badge badge-small">{{hints.disk_usage.count}}</span>
           </a>
         </li>
 
@@ -83,24 +91,28 @@
           <a href="#/certificates">
             <span class="fa fa-key"></span>
             <span class="list-group-item-value">{{$t('menu.certificates')}}</span>
+            <span v-if="hints.certificates.count > 0" class="badge badge-small">{{hints.certificates.count}}</span>
           </a>
         </li>
         <li v-if="checkAuth('ssh')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('ssh') ? 'active' : '', 'list-group-item']">
           <a href="#/ssh">
             <span class="fa fa-terminal"></span>
             <span class="list-group-item-value">{{$t('menu.ssh')}}</span>
+            <span v-if="hints.ssh.count > 0" class="badge badge-small">{{hints.ssh.count}}</span>
           </a>
         </li>
         <li v-if="checkAuth('tls-policy')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('tls-policy') ? 'active' : '', 'list-group-item']">
           <a href="#/tls-policy">
             <span class="fa fa-shield"></span>
             <span class="list-group-item-value">{{$t('menu.tls_policy')}}</span>
+            <span v-if="hints.tls_policy.count > 0" class="badge badge-small">{{hints.tls_policy.count}}</span>
           </a>
         </li>
         <li v-if="checkAuth('trusted-networks')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('trusted-networks') ? 'active' : '', 'list-group-item']">
           <a href="#/trusted-networks">
             <span class="fa fa-certificate"></span>
             <span class="list-group-item-value">{{$t('menu.trusted_networks')}}</span>
+            <span v-if="hints.trusted_networks.count > 0" class="badge badge-small">{{hints.trusted_networks.count}}</span>
           </a>
         </li>
 
@@ -183,7 +195,7 @@ export default {
     console.log(this.msg);
     // check for first configuration wizard
     var context = this;
-    this.wizardIsDone(function(done) {
+    context.wizardIsDone(function(done) {
       if (!done) {
         context.$router.push("/wizard");
         context.wizardDone = false;
@@ -193,10 +205,13 @@ export default {
     });
 
     // get authorization for routes
-    this.getAuths();
+    context.getAuths();
 
     // check for running tasks
-    this.checkSystemTaks();
+    context.checkSystemTaks();
+
+    // get hints
+    context.getGroupHints();
   },
   watch: {
     $route(to, from) {
@@ -242,7 +257,8 @@ export default {
       },
       auths: [],
       taskInProgress: false,
-      copied: false
+      copied: false,
+      hints: this.initHints()
     };
   },
   methods: {
@@ -306,6 +322,77 @@ export default {
     },
     checkAuth(route) {
       return this.auths.indexOf(route) != -1;
+    },
+    initHints() {
+      return {
+        hostname: {
+          count: 0
+        },
+        upstreamDns: {
+          count: 0
+        },
+        company: {
+          count: 0
+        },
+        users_groups: {
+          count: 0
+        },
+        network: {
+          count: 0
+        },
+        dns: {
+          count: 0
+        },
+        dhcp: {
+          count: 0
+        },
+        services: {
+          count: 0
+        },
+        backup: {
+          count: 0
+        },
+        storage: {
+          count: 0
+        },
+        disk_usage: {
+          count: 0
+        },
+        certificates: {
+          count: 0
+        },
+        ssh: {
+          count: 0
+        },
+        tls_policy: {
+          count: 0
+        },
+        trusted_networks: {
+          count: 0
+        }
+      };
+    },
+    getHints(type, prop) {
+      var context = this;
+      context.execHints(
+        type,
+        function(success) {
+          context.hints[prop].count = success.count;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+    getGroupHints() {
+      this.getHints("system-hostname", "hostname");
+      this.getHints("system-dns", "upstreamDns");
+      this.getHints("system-company", "company");
+      this.getHints("system-users", "users_groups");
+      this.getHints("system-services", "services");
+      this.getHints("system-backup", "backup");
+      this.getHints("system-openssh", "ssh");
+      this.getHints("system-tls-policy", "tls_policy");
     }
   }
 };
