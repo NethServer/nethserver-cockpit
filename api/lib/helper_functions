@@ -72,6 +72,9 @@ function hints {
         message="null"
     else
         message="\"$message\""
+        if [ $count -eq 0 ]; then
+            count=1
+        fi
     fi
 
     if [ -z "$link" ]; then
