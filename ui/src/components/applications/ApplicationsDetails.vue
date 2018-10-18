@@ -118,7 +118,7 @@ export default {
 #app-frame {
   margin-top: 8px;
   width: 100%;
-  height: calc(100% + 1px);
+  height: calc(100% - 62px);
   border-top: 1px solid #d1d1d1;
 }
 </style>

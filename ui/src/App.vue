@@ -166,7 +166,7 @@
       <span v-if="copied" class="fa fa-check green copy-ok"></span>
     </div>
 
-    <div v-if="notifications.event.show" :style="{ top: notifications.addMargin ? (notifications.success.show && notifications.error.show) ? 300+'px' : (notifications.success.show ? 142+'px' : (notifications.error.show ? 230+'px' : 72 +'px')) : (notifications.success.show && notifications.error.show) ? 238+'px' : (notifications.success.show ? 80+'px' : (notifications.error.show ? 168+'px' : 10 +'px')), minWidth: 390+'px', right: 10+'px', zIndex: 5, position: 'fixed' }"
+    <div v-if="notifications.event.show" :style="{ top: notifications.addMargin ? (notifications.success.show && notifications.error.show) ? 330+'px' : (notifications.success.show ? 142+'px' : (notifications.error.show ? 260+'px' : 72 +'px')) : (notifications.success.show && notifications.error.show) ? 238+'px' : (notifications.success.show ? 80+'px' : (notifications.error.show ? 168+'px' : 10 +'px')), minWidth: 390+'px', right: 10+'px', zIndex: 5, position: 'fixed' }"
       class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-warning alert-dismissable">
       <span style="padding-top: 25px;" class="pficon fa fa-warning"></span>
       <strong>{{$t('event')}}: </strong>{{notifications.event.name || '-'}} <span v-if="notifications.event.message">(<strong>{{notifications.event.message}}</strong>)</span>
