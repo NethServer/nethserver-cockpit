@@ -5,6 +5,10 @@ body.login-pf {
     padding-top: 60px;
 }
 
+#main-navbar a {
+    text-decoration: none;
+}
+
 #badge {
     width: 75px;
     height: 75px;
@@ -131,6 +135,8 @@ li.credential-lock>a:first-child {
 
     .nav-sidebar {
         width: 185px;
+        background: #393f43;
+        border-right: 1px solid #282e34;
     }
 
     #host-nav {
@@ -173,4 +179,18 @@ li.credential-lock>a:first-child {
 
 .modal-backdrop {
     opacity: 0.5 !important;
+}
+
+.nav-sidebar .list-group .list-group-item {
+    background: #393f43;
+    border-color: #4d5257;
+}
+
+.nav-pf-vertical .list-group-item.active:hover {
+    border-color: #4d5257;
+}
+
+.nav-pf-vertical .list-group-item.active>a,
+.nav-pf-vertical .list-group-item:hover>a {
+    background-color: #4d5258;
 }
