@@ -25,6 +25,7 @@
           </dl>
         </div>
       </div>
+      <div class="divider"></div>
     </div>
 
     <div v-if="view.isLoaded">
@@ -38,6 +39,7 @@
           </span>
         </div>
       </div>
+      <div class="divider"></div>
     </div>
 
     <div v-if="view.isLoaded && users.provider !== null && users.providerInfo.IsLocal" class="inline-block-div">
@@ -252,7 +254,7 @@
                 <div class="col-sm-2">
                   <button @click="togglePass()" type="button" class="btn btn-primary">
                     <span :class="[!newUser.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"></span>
-                    </button>
+                  </button>
                 </div>
               </div>
               <div v-if="!(newUser.isEdit && !newUser.isPassEdit)" :class="['form-group', newUser.errorProps['confirmNewPassword'] ? 'has-error' : '']">
@@ -278,8 +280,8 @@
             <div class="modal-footer">
               <div v-if="newUser.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
-              <button :disabled="!newUser.isEdit && !newUser.passwordStrength"
-                class="btn btn-primary" type="submit">{{newUser.isEdit ? newUser.isPassEdit ? $t('change') : $t('edit')
+              <button :disabled="!newUser.isEdit && !newUser.passwordStrength" class="btn btn-primary" type="submit">{{newUser.isEdit
+                ? newUser.isPassEdit ? $t('change') : $t('edit')
                 : $t('create')}}</button>
             </div>
 
@@ -310,7 +312,7 @@
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.users')}}</label>
                 <div class="col-sm-9">
                   <select @change="addUserToGroup(newGroup.selectedUser)" v-model="newGroup.selectedUser" class="combobox form-control">
-                    <option></option>
+                    <option>-</option>
                     <option :value="ku" v-for="(u, ku) in users.list" v-bind:key="ku">{{ku}} - {{u.gecos}}</option>
                   </select>
                   <span v-if="newGroup.errorProps['members']" class="help-block">{{newGroup.errorProps['members']}}</span>
@@ -544,6 +546,24 @@
                     <p>
                       {{$t('users_groups.description_provider')}}
                     </p>
+
+                    <div v-show="!users.hostname.valid">
+                      <strong class="display-inline-block review-li-wizard">{{$t('users_groups.set_valid_hostname')}}:</strong>
+                      <form class="form-horizontal" v-on:submit.prevent="saveHostname()">
+                        <div :class="['form-group', users.hostname.errors.hasError ? 'has-error' : '']">
+                          <div class="col-sm-3">
+                          </div>
+                          <div class="col-sm-6">
+                            <input v-model="users.hostname.value" required class="form-control" type="text">
+                            <span v-if="users.hostname.errors.hasError" class="help-block">{{users.hostname.errors.message}}</span>
+                          </div>
+                          <div class="col-sm-3 adjust-top-min">
+                            <button class="btn btn-primary" type="submit">{{$t('modify')}}</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+
                     <strong>{{$t('users_groups.choose_account_provider')}}:</strong>
                     <div class="blank-slate-pf-main-action">
                       <div @click="selectProvider('ldap')" :class="['col-xs-12 col-sm-6 col-md-6 col-lg-6 card-pf', users.chooseProvider == 'ldap' ? 'active-choose' : '']">
@@ -928,6 +948,15 @@ export default {
         providerInfo: {
           oldIp: "",
           newIp: ""
+        },
+        hostname: {
+          valid: false,
+          errors: {
+            hasError: false,
+            message: ""
+          },
+          value: "",
+          isLoading: true
         }
       },
       groups: {
@@ -956,7 +985,7 @@ export default {
 
     checkIfDisabled() {
       if (this.currentStep == 1) {
-        if (this.users.chooseProvider == null) {
+        if (this.users.chooseProvider == null || !this.users.hostname.valid) {
           return true;
         } else {
           return false;
@@ -1118,6 +1147,57 @@ export default {
       };
     },
 
+    saveHostname() {
+      var context = this;
+
+      var hostnameObj = {
+        hostname: context.users.hostname.value
+      };
+
+      context.users.hostname.errors.hasError = false;
+      context.exec(
+        ["system-hostname/validate"],
+        hostnameObj,
+        null,
+        function(success) {
+          // update values
+          context.exec(
+            ["system-hostname/update"],
+            hostnameObj,
+            function(stream) {
+              console.info("hostname", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "users_groups.hostname_save_ok"
+              );
+
+              context.users.hostname.valid = true;
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "users_groups.hostname_save_error"
+              );
+            }
+          );
+        },
+        function(error, data) {
+          var errorData = JSON.parse(data);
+
+          context.users.hostname.errors.hasError = true;
+
+          for (var e in errorData.attributes) {
+            var attr = errorData.attributes[e];
+            context.users.hostname.errors.hasError = true;
+            context.users.hostname.errors.message =
+              "[" + errorData.message + "]: " + attr.error;
+          }
+        }
+      );
+    },
+
     getInfo() {
       var context = this;
       context.exec(
@@ -1131,9 +1211,13 @@ export default {
 
           context.users.provider = success.isAD
             ? "ad"
-            : success.isLdap ? "ldap" : null;
+            : success.isLdap
+              ? "ldap"
+              : null;
           context.users.providerInfo = success;
           context.users.providerInfo.oldIp = success["NsdcIp"];
+
+          context.users.hostname.valid = success["ValidHostname"] == 1;
 
           if (context.users.provider == "ldap") {
             delete context.users.providerInfo.NsdcIp;
@@ -1286,7 +1370,7 @@ export default {
     },
 
     addGroupToUser(group) {
-      if (group.length > 0) {
+      if (group.length > 0 && group != "-") {
         if (!this.groupAlreadyAdded(group)) {
           this.newUser.groups.push(group);
         }
@@ -1298,7 +1382,7 @@ export default {
     },
 
     addUserToGroup(user) {
-      if (user.length > 0) {
+      if (user.length > 0 && user != "-") {
         if (!this.userAlreadyAdded(user)) {
           this.newGroup.members.push(user);
         }
@@ -1351,6 +1435,7 @@ export default {
               );
 
               context.newUser = context.initUser();
+              $("#pass-meter-input").val("");
 
               // get users
               context.getUsers();

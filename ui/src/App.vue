@@ -119,6 +119,16 @@
         <li v-if="checkAuth('certificates') || checkAuth('ssh') || checkAuth('tls-policy') || checkAuth('trusted-networks')"
           class="li-empty"></li>
 
+        <li v-if="checkAuth('settings')" v-bind:class="[getCurrentPath('settings') ? 'active' : '', 'list-group-item']">
+          <a href="#/settings">
+            <span class="fa fa-gear"></span>
+            <span class="list-group-item-value">{{$t('menu.settings')}}</span>
+            <span v-if="hints.settings.count > 0" class="badge badge-small">{{hints.settings.count}}</span>
+          </a>
+        </li>
+
+        <li v-if="checkAuth('settings')" class="li-empty"></li>
+
         <li v-if="checkAuth('logs')" v-bind:class="[getCurrentPath('logs') ? 'active' : '', 'list-group-item']">
           <a href="#/logs">
             <span class="fa fa-list"></span>
@@ -211,7 +221,7 @@ export default {
     context.checkSystemTaks();
 
     // get hints
-    context.getGroupHints();
+    context.checkHints();
   },
   watch: {
     $route(to, from) {
@@ -325,6 +335,7 @@ export default {
     },
     initHints() {
       return {
+        available: false,
         hostname: {
           count: 0
         },
@@ -369,8 +380,35 @@ export default {
         },
         trusted_networks: {
           count: 0
+        },
+        settings: {
+          count: 0
         }
       };
+    },
+    checkHints(callback) {
+      var context = this;
+
+      context.exec(
+        ["system-settings/read"],
+        { action: "hints" },
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.hints.available = success.hints == "enabled";
+
+          if (context.hints.available) {
+            context.getGroupHints();
+          } else {
+            context.hints = context.initHints();
+          }
+
+          callback ? callback() : null;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
     },
     getHints(type, prop) {
       var context = this;
@@ -393,6 +431,7 @@ export default {
       this.getHints("system-backup", "backup");
       this.getHints("system-openssh", "ssh");
       this.getHints("system-tls-policy", "tls_policy");
+      this.getHints("system-settings", "settings");
     }
   }
 };

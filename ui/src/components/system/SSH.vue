@@ -131,16 +131,21 @@ export default {
   methods: {
     getHints(callback) {
       var context = this;
-      context.execHints(
-        "system-openssh",
-        function(success) {
-          context.hints = success;
-          callback ? callback() : null;
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
+      if (context.$parent.hints.available) {
+        context.execHints(
+          "system-openssh",
+          function(success) {
+            context.hints = success;
+            callback ? callback() : null;
+          },
+          function(error) {
+            console.error(error);
+          }
+        );
+      } else {
+        context.hints = {};
+        callback ? callback() : null;
+      }
     },
     getSSHConfig() {
       var context = this;

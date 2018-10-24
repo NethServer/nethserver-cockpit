@@ -11,7 +11,7 @@
         <strong>{{$t('backup.task_in_progress')}}.</strong> {{status['restore-data'] > 0 ?
         $t('backup.restore_data_progress') : status['backup-data'] > 0 ? $t('backup.backup_data_progress') : ''}}
       </div>
-      <h3 class="sub-title-menu">{{$t('backup.config')}}</h3>
+      <h3>{{$t('backup.config')}}</h3>
       <div class="panel panel-default" id="provider-markup">
         <div class="panel-heading">
           <button @click="openConfigureConfig()" class="btn btn-default right">{{$t('backup.configure')}}</button>
@@ -75,7 +75,7 @@
 
       <div class="divider"></div>
 
-      <h3 class="sub-title-menu">{{$t('backup.data')}}</h3>
+      <h3>{{$t('backup.data')}}</h3>
       <div class="panel panel-default">
         <div class="panel-heading">
           <button @click="openConfigureData()" class="btn btn-default right">{{$t('backup.configure')}}</button>
@@ -1030,11 +1030,26 @@
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.notify')}}</label>
+                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.notify_on')}}</label>
                         <div class="col-sm-6">
                           <select required v-model="wizard.review.Notify" class="combobox form-control">
                             <option v-for="d in wizard.review.notifyTypes" v-bind:key="d" :value="d">{{$t('backup.'+d)}}</option>
                           </select>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.notify_to')}}</label>
+                        <div class="col-sm-9">
+                          <input class="col-sm-2 col-xs-2" type="radio" v-model="wizard.review.notifyToChoice" value="root">
+                          <label class="col-sm-10 col-xs-10 control-label text-align-left">{{$t('backup.root')}}</label>
+                          <input class="col-sm-2 col-xs-2" type="radio" v-model="wizard.review.notifyToChoice" value="custom">
+                          <label class="col-sm-10 col-xs-10 control-label text-align-left">{{$t('backup.custom_email')}}</label>
+                        </div>
+                      </div>
+                      <div v-if="wizard.review.notifyToChoice == 'custom'" class="form-group">
+                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.email_address')}}</label>
+                        <div class="col-sm-6">
+                          <textarea :required="wizard.review.notifyToChoice == 'custom'" class="form-control" v-model="wizard.review.NotifyTo"></textarea>
                         </div>
                       </div>
                     </div>
@@ -1234,16 +1249,21 @@ export default {
   methods: {
     getHints(callback) {
       var context = this;
-      context.execHints(
-        "system-backup",
-        function(success) {
-          context.hints = success;
-          callback ? callback() : null;
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
+      if (context.$parent.hints.available) {
+        context.execHints(
+          "system-backup",
+          function(success) {
+            context.hints = success;
+            callback ? callback() : null;
+          },
+          function(error) {
+            console.error(error);
+          }
+        );
+      } else {
+        context.hints = {};
+        callback ? callback() : null;
+      }
     },
     editCronTab() {
       this.wizard.when = {
@@ -1361,6 +1381,8 @@ export default {
         review: {
           Name: b && b.name ? b.name : "",
           Notify: b && b.props.Notify ? b.props.Notify : "error",
+          NotifyTo: b && b.props.NotifyTo ? b.props.NotifyTo.join("\n") : "",
+          notifyToChoice: "root",
           notifyTypes: ["error", "always", "never"],
           errors: {
             name: {
@@ -2038,6 +2060,12 @@ export default {
         engine: context.wizard.how.choice,
         status: "enabled",
         Notify: context.wizard.review.Notify,
+        NotifyTo:
+          context.wizard.review.notifyToChoice == "root"
+            ? "root"
+            : context.wizard.review.NotifyTo.length > 0
+              ? context.wizard.review.NotifyTo.split("\n")
+              : [],
         BackupTime: context.wizard.when.crontab,
         VFSType: context.wizard.where.choice,
         SMBShare: context.wizard.where.cifs.SMBShare,

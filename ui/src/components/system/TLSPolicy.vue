@@ -89,16 +89,21 @@ export default {
   methods: {
     getHints(callback) {
       var context = this;
-      context.execHints(
-        "system-tls-policy",
-        function(success) {
-          context.hints = success;
-          callback ? callback() : null;
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
+      if (context.$parent.hints.available) {
+        context.execHints(
+          "system-tls-policy",
+          function(success) {
+            context.hints = success;
+            callback ? callback() : null;
+          },
+          function(error) {
+            console.error(error);
+          }
+        );
+      } else {
+        context.hints = {};
+        callback ? callback() : null;
+      }
     },
     getTLSPolicy() {
       var context = this;

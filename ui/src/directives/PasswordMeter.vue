@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input v-model="confirmPassword" @input="updateMeter()" :type="$parent.newUser.togglePass ? 'text' : 'password'" class="form-control" />
+    <input id="pass-meter-input" v-model="confirmPassword" @input="updateMeter()" :type="$parent.newUser.togglePass ? 'text' : 'password'" class="form-control" />
     <div class="password-hints">
       <span :class="[ lowercase ? 'password-meter-check' : 'password-meter-uncheck']">{{$t('lowercase')}}</span>
       <span :class="[ uppercase ? 'password-meter-check' : 'password-meter-uncheck']">{{$t('uppercase')}}</span>
@@ -46,6 +46,19 @@ export default {
         this.symbol &&
         this.length &&
         this.equal;
+
+      if ($("#pass-meter-input").val().length > 0) {
+        this.$parent.newUser.confirmNewPassword = this.confirmPassword;
+      } else {
+        this.$parent.newUser.confirmNewPassword = "";
+        this.confirmPassword = "";
+        this.lowercase = false;
+        this.uppercase = false;
+        this.number = false;
+        this.symbol = false;
+        this.length = 0;
+        this.equal = false;
+      }
 
       this.$forceUpdate();
     }

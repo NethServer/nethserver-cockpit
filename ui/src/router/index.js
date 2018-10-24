@@ -23,6 +23,7 @@ import SSH from '@/components/system/SSH'
 import TLSPolicy from '@/components/system/TLSPolicy'
 import TrustedNetworks from '@/components/system/TrustedNetworks'
 
+import Settings from '@/components/system/Settings'
 import Logs from '@/components/system/Logs'
 import About from '@/components/system/About'
 /* */
@@ -108,6 +109,11 @@ export default new Router({
       component: TrustedNetworks
     },
 
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: Settings
+    },
     {
       path: '/logs',
       name: 'Logs',

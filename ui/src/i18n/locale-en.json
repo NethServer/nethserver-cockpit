@@ -56,6 +56,7 @@
       "ssh": "SSH",
       "tls_policy": "TLS Policy",
       "trusted_networks": "Trusted Networks",
+      "settings": "Settings",
       "logs": "Logs",
       "about": "About",
       "wizard": "Wizard"
@@ -189,7 +190,11 @@
       "56D": "56 days",
       "168D": "168 days",
       "364D": "364 days",
-      "notify": "Notify",
+      "notify_on": "Notify on",
+      "notify_to": "Notify to",
+      "root": "System administrator",
+      "custom_email": "Custom mail address",
+      "email_address": "Email addresses (one per line)",
       "error": "Error",
       "always": "Always",
       "review": "Review",
@@ -483,7 +488,10 @@
       "min_pass_age": "Minimum password age (days)",
       "max_pass_age": "Maximum password age (days)",
       "password_policy_ok": "Password policy changed successfully!",
-      "password_policy_error": "Password policy not changed."
+      "password_policy_error": "Password policy not changed.",
+      "set_valid_hostname": "Set valid hostname",
+      "hostname_save_ok": "Hostname changed successfully!",
+      "hostname_save_error": "Hostname not changed."
     },
     "network": {
       "title": "Network"
@@ -522,6 +530,31 @@
       "network_update_error": "Network not updated.",
       "network_delete_ok": "Network deleted successfully!",
       "network_delete_error": "Network not deleted."
+    },
+    "settings": {
+      "title": "Settings",
+      "password": "Password",
+      "old_password": "Old password",
+      "new_password": "New password",
+      "confirm_new_password": "Confirm new password",
+      "smart_host": "Smart host",
+      "use_smarthost": "Use smarthost",
+      "smarthost_hostname": "Hostname",
+      "smarthost_port": "Port",
+      "smarthost_username": "Username",
+      "smarthost_password": "Password",
+      "smarthost_encrypt": "Unencrypted connections",
+      "notifications": "Notifications",
+      "notify_from": "Sender address",
+      "notify_to": "Notify to",
+      "add_email": "Add email",
+      "web_shell": "Server Manager",
+      "hints": "Hints",
+      "show_hints": "Show hints",
+      "limit_access": "Grant access from RED",
+      "allow_only": "List allowed IP (one per line)",
+      "settings_updated_ok": "Settings updated successfully!",
+      "settings_updated_error": "Settings not updated."
     },
     "logs": {
       "title": "Logs"

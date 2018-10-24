@@ -21,7 +21,7 @@
     <div v-for="i in ranges" v-bind:key="i">
       <h4 class="dhcp-int">{{i.name}}</h4>
       <toggle-button class="min-toggle" :width="40" :height="20" :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
-        v-model="i.props.status" @change="toggleInterface(i)" />
+        :value="i.props.status" :sync="true" @change="toggleInterface(i)" />
       <button v-if="i.props.status" @click="toggleInterface(i, false, true)" class="btn btn-primary dhcp-mod-btn">{{$t('modify')}}</button>
     </div>
 

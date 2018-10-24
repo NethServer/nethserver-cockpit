@@ -1,10 +1,12 @@
 <template>
   <div>
     <h2>{{$t('dashboard.title')}}</h2>
-    <div v-if="(hints.details.hostname && hints.details.hostname.count > 0) || (hints.details.dns && hints.details.dns.count > 0) || (hints.details.company && hints.details.company.count > 0)" class="alert alert-warning alert-dismissable">
+    <div v-if="(hints.details.hostname && hints.details.hostname.count > 0) || (hints.details.dns && hints.details.dns.count > 0) || (hints.details.company && hints.details.company.count > 0)"
+      class="alert alert-warning alert-dismissable">
       <span class="pficon pficon-warning-triangle-o"></span>
       <strong>{{$t('hints_suggested')}}:</strong>
-      <li v-if="m.count > 0" v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{t | capitalize}}</strong>: {{m.message}}</li>
+      <li v-if="m.count > 0" v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{t | capitalize}}</strong>:
+        {{m.message}}</li>
       <span v-if="hints.message && hints.message.length > 0">
         {{hints.message && hints.message}}
       </span>
@@ -74,7 +76,8 @@
                     </span>
                   </span>
                 </a>
-                <a v-if="!loaders.dns && system.summary.dns[0].readDns.length == 0" data-toggle="modal" data-target="#dnsChangeModal" href="#">
+                <a v-if="!loaders.dns && system.summary.dns[0].readDns.length == 0" data-toggle="modal" data-target="#dnsChangeModal"
+                  href="#">
                   {{$t('edit')}}
                 </a>
               </p>
@@ -202,7 +205,7 @@
               <div :class="['form-group', system.errors.hostname.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.fqdn')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="system.summary.newHostname" class="form-control">
+                  <input :disabled="!system.summary.hostnameIsEdit" required type="text" v-model="system.summary.newHostname" class="form-control">
                   <span v-if="system.errors.hostname.hasError" class="help-block">{{system.errors.hostname.message}}</span>
                 </div>
               </div>
@@ -475,6 +478,7 @@ export default {
           uptime: "",
           hostname: "",
           newHostname: "",
+          hostnameIsEdit: false,
           aliases: [],
           dns: [
             {
@@ -572,30 +576,41 @@ export default {
   methods: {
     getHints(type, callback) {
       var context = this;
-      context.execHints(
-        "system-" + type,
-        function(success) {
-          context.hints.details[type] = {};
-          context.hints.details[type].count = 0;
 
-          for (var h in success.details) {
-            context.hints.details[h.toLowerCase()].message = success.details[h];
-            context.hints.details[h.toLowerCase()].count = success.count;
+      if (context.$parent.hints.available) {
+        context.execHints(
+          "system-" + type,
+          function(success) {
+            context.hints.details[type] = {};
+            context.hints.details[type].count = 0;
+
+            for (var h in success.details) {
+              context.hints.details[h.toLowerCase()].message =
+                success.details[h];
+              context.hints.details[h.toLowerCase()].count = success.count;
+            }
+
+            if (success.message) {
+              context.hints.details[type].message = success.message;
+              context.hints.details[type].count += 1;
+            }
+
+            context.$forceUpdate();
+
+            callback ? callback() : null;
+          },
+          function(error) {
+            console.error(error);
           }
-
-          if (success.message) {
-            context.hints.details[type].message = success.message;
-            context.hints.details[type].count += 1;
-          }
-
-          context.$forceUpdate();
-
-          callback ? callback() : null;
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
+        );
+      } else {
+        context.hints = {
+          details: {}
+        };
+        context.hints.details[type] = {};
+        context.hints.details[type].count = 0;
+        callback ? callback() : null;
+      }
     },
     getSystemSummary() {
       var context = this;
@@ -654,6 +669,7 @@ export default {
           success = JSON.parse(success);
           context.system.summary.hostname = success.hostname;
           context.system.summary.newHostname = success.hostname;
+          context.system.summary.hostnameIsEdit = success.editable == 1;
 
           context.loaders.hostname = false;
           context.$forceUpdate();

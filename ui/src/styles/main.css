@@ -15,6 +15,7 @@ a {
 
 textarea {
   resize: vertical;
+  min-height: 125px;
 }
 
 .container-cards-pf {
@@ -292,6 +293,10 @@ textarea {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 136, 206, 0.6) !important;
 }
 
+.text-align-left {
+  text-align: left !important;
+}
+
 .table td,
 .table th:not(.line-numbers) {
   text-align: left;
@@ -334,6 +339,10 @@ iframe>.breadcrumb {
   height: 120px;
 }
 
+.adjust-top-min {
+  margin-top: 0px;
+}
+
 .adjust-top {
   margin-top: 15px;
 }
@@ -351,6 +360,9 @@ iframe>.breadcrumb {
 @media screen and (max-width: 768px) {
   .adjust-top-col {
     margin-top: 15px;
+  }
+  .adjust-top-min {
+    margin-top: 8px;
   }
 }
 
@@ -839,6 +851,7 @@ input[type="checkbox"].form-control {
 
 .sub-title-menu {
   font-size: 19px;
+  font-weight: 300;
 }
 
 .adjust-label-wizard {
