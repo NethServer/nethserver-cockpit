@@ -1027,10 +1027,14 @@
 <p>Return the system hostname.</p>
 <h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;hostname&quot;</span><span class="p">:</span><span class="s2">&quot;myserver.test.local&quot;</span><span class="p">}</span>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;hostname&quot;</span><span class="p">:</span> <span class="s2">&quot;test.netserver.org&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;editable&quot;</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">}</span>
 </pre></div>
 
 
+<p>The <code>editable</code> field is set to 1 if SSSD is not configured (no account provider installed).</p>
 <h2 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h2>
 <h3 id="constraints">Constraints<a class="headerlink" href="#constraints" title="Permanent link">&para;</a></h3>
 <ul>

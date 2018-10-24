@@ -1246,6 +1246,7 @@
 
 <p>Output:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
+   <span class="nt">&quot;ValidHostname&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
    <span class="nt">&quot;BindDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
    <span class="nt">&quot;LdapURI&quot;</span> <span class="p">:</span> <span class="s2">&quot;ldap://127.0.0.1&quot;</span><span class="p">,</span>
    <span class="nt">&quot;DiscoverDcType&quot;</span> <span class="p">:</span> <span class="s2">&quot;dns&quot;</span><span class="p">,</span>
@@ -1267,6 +1268,10 @@
 
 <p>See <code>perldoc NethServer::SSSD</code> for attributes description.
 The <code>NsdcIp</code> can be empty if local AD is not installed.</p>
+<p>The <code>ValidHostname</code> check if the current host name is good enough
+for an account provider installation.
+The host name is checked against <code>myhostname</code> system validator, also
+it should not contain the <code>localhost</code> keywork and should be at least a 3rd level domain.</p>
 <h3 id="probel-dap">probel-dap<a class="headerlink" href="#probel-dap" title="Permanent link">&para;</a></h3>
 <p>Tries to contact a remote LDAP server and retrieve as much information as
 possible with a root DSE query.</p>
