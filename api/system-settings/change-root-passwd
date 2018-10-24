@@ -1,4 +1,4 @@
-#!/bin/expect -f
+#!/usr/bin/expect -f
 
 #
 # Expect a file in the format containing: the new and confirm password
