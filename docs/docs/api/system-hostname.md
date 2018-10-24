@@ -11,8 +11,13 @@ Return the system hostname.
 
 Example:
 ```json
-{"hostname":"myserver.test.local"}
+{
+  "hostname": "test.netserver.org",
+  "editable": 1
+}
 ```
+
+The `editable` field is set to 1 if SSSD is not configured (no account provider installed).
 
 ## validate
 

@@ -21,5 +21,9 @@
 #
 
 hostname=$(hostnamectl --static)
+editable=1
+if [ $(/sbin/e-smith/config getprop sssd status) == "enabled" ]; then
+    editable=0
+fi
 
-printf '{"hostname":"%s"}' $hostname
+printf '{"hostname":"%s", "editable": %d}' $hostname $editable
