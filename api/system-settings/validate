@@ -1,0 +1,72 @@
+#!/usr/bin/php
+<?php
+/*
+ * Copyright (C) 2018 Nethesis S.r.l.
+ * http://www.nethesis.it - nethserver@nethesis.it
+ *
+ * This script is part of NethServer.
+ *
+ * NethServer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License,
+ * or any later version.
+ *
+ * NethServer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NethServer.  If not, see COPYING.
+*/
+
+require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
+
+$data = readInput();
+
+$v = new LegacyValidator($data);
+switch ($data['action']) {
+
+    case "smarthost":
+        $v->declareParameter('SmartHostStatus', Validate::SERVICESTATUS);
+        $v->declareParameter('SmartHostName', Validate::HOSTNAME);
+        $v->declareParameter('SmartHostPort', Validate::PORTNUMBER);
+        $v->declareParameter('SmartHostUsername', Validate::ANYTHING);
+        $v->declareParameter('SmartHostPassword', Validate::ANYTHING);
+        $v->declareParameter('SmartHostTlsStatus', Validate::SERVICESTATUS);
+        break;
+
+    case "cockpit":
+        $ipValidator = $v->createValidator()->ipV4Address();
+        $cidrValidator = $v->createValidator(Validate::CIDR_BLOCK);
+        foreach ($data['LimitAccess'] as $el) {
+            if (!$ipValidator->evaluate($el) && !$cidrValidator->evaluate($el)) {
+                $v->addValidationError('LimitAccess', 'ip_address_or_cidr');
+            }
+        }
+        break;
+
+    case "root":
+        $emailValidator = $v->createValidator(Validate::EMAIL);
+        $v->declareParameter('SenderAddress', Validate::EMAIL);
+        $v->declareParameter('KeepMessageCopy', $v->createValidator()->memberOf(array('yes','no')));
+        foreach ($data['EmailAddress'] as $el) {
+            if (!$emailValidator->evaluate($el)) {
+                $v->addValidationError('EmailAddress', 'valid_mail_address');
+            }
+        }
+
+        break;
+
+    case "hints":
+        $v->declareParameter('ShowHints', Validate::SERVICESTATUS);
+        break;
+
+}
+
+# Validate the input
+if ($v->validate()) {
+    success();
+} else {
+    error($v);
+}

@@ -1,0 +1,15 @@
+{
+    my $port = ${'cockpit.socket'}{'TCPPort'} || '9090';
+    my $access = ${'cockpit.socket'}{'access'} || 'green';
+    my $limit = ${'cockpit.socket'}{'LimitAccess'} || '';
+
+    if ($limit ne '') {
+        $limit = ":$limit";
+    }
+    if ($access =~ 'green') {
+        $OUT .= "ACCEPT\tloc\t\$FW\ttcp\t$port\n";
+    }
+    if ($access =~ 'red') {
+        $OUT .= "ACCEPT\tnet$limit\t\$FW\ttcp\t$port\n";
+    }
+}

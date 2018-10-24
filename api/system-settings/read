@@ -1,0 +1,96 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+#
+# Return current ssh connections and sshd configuration
+#
+
+use warnings;
+use strict;
+
+require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
+
+use JSON;
+use esmith::ConfigDB;
+my %ret;
+
+my $is_root = ($< == 0);
+my $input = readInput();
+
+my $cmd = $input->{'action'};
+
+if($cmd eq 'hints') {
+    my %r;
+    if (!$is_root) {
+        $r{'hints'} = 'disabled';
+    } else {
+        my $db = esmith::ConfigDB->open("configuration");
+        $r{'hints'} = $db->get_prop('cockpit.socket', 'ShowHints'),
+    }
+    print encode_json(\%r);
+    exit(0);
+} elsif ($cmd eq 'settings') {
+
+    $ret{'status'}{'isRoot'} = int($is_root);
+
+    if (!$is_root) {
+        $ret{'configuration'} = undef;
+        print encode_json(\%ret);
+        exit(0);
+    }
+
+    my $db = esmith::ConfigDB->open("configuration");
+    my $postfix = $db->get('postfix');
+    my %smarthost = (
+        SmartHostStatus => $postfix->prop('SmartHostStatus'),
+        SmartHostName => $postfix->prop('SmartHostName'),
+        SmartHostPort => $postfix->prop('SmartHostPort'),
+        SmartHostUsername => $postfix->prop('SmartHostUsername'),
+        SmartHostPassword => $postfix->prop('SmartHostPassword'),
+        SmartHostTlsStatus => $postfix->prop('SmartHostTlsStatus'),
+    );
+
+    my @addresses = ();
+    my $email_address = $db->get_prop('root', 'EmailAddress');
+    if ($email_address) {
+        @addresses = split(",",$email_address);
+    }
+    my %root = (
+        EmailAddress => \@addresses,
+        KeepMessageCopy => $db->get_prop('root', 'KeepMessageCopy'),
+        SenderAddress => $db->get_prop('root', 'SenderAddress')
+    );
+
+    my %cockpit = (
+        access => $db->get_prop('cockpit.socket', 'access'),
+        LimitAccess => $db->get_prop('cockpit.socket', 'LimitAccess'),
+        ShowHints => $db->get_prop('cockpit.socket', 'ShowHints')
+    );
+
+    $ret{'configuration'}{'smarthost'} = \%smarthost;
+    $ret{'configuration'}{'cockpit'} = \%cockpit;
+    $ret{'configuration'}{'root'} = \%root;
+
+    print encode_json(\%ret);
+} else {
+    error();
+}
