@@ -35,6 +35,7 @@ Output:
 
 ```json
 {
+   "ValidHostname": 0,
    "BindDN" : "",
    "LdapURI" : "ldap://127.0.0.1",
    "DiscoverDcType" : "dns",
@@ -55,6 +56,11 @@ Output:
 
 See `perldoc NethServer::SSSD` for attributes description.
 The `NsdcIp` can be empty if local AD is not installed.
+
+The `ValidHostname` check if the current host name is good enough
+for an account provider installation.
+The host name is checked against `myhostname` system validator, also
+it should not contain the `localhost` keywork and should be at least a 3rd level domain.
 
 ### probel-dap
 

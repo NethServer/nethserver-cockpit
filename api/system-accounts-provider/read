@@ -244,6 +244,18 @@ if($cmd eq 'probe-ldap') {
 
 } elsif($cmd eq 'dump') {
     my $dump = getDefaults();
+
+    # check if current hostname is a good one
+    my $db = esmith::ConfigDB->open_ro();
+    my $fqdn = $db->get_value('SystemName').".".$db->get_value('DomainName');
+    my $validHostname = 1;
+    my $count = () = $fqdn =~ /\Q./g;
+    my $out = `/sbin/e-smith/validate myhostname $fqdn`;
+    if ($count < 2 || $fqdn =~ /localhost/ || $? > 0) {
+        $validHostname = 0;
+    }
+    $dump->{'ValidHostname'} = $validHostname;
+
     print JSON->new()->encode($dump);
     exit(0);
 
