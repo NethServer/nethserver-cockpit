@@ -9,6 +9,8 @@ General module to manage multiple system settings:
 This API returns different output based on the running user.
 Do not invoke the helpers using `sudo`.
 
+This route is accessible from all users.
+
 ## read
 
 Read the configuration of all system settings and hints.

@@ -43,7 +43,7 @@ A role is defined by:
 - an array of applications inside the `applications`
 
 Only listed modules will be accessible by the user, except
-"Dashboard" and "About" modules which are accessible by all users.
+"Dashboard", "Settings" and "About" modules which are accessible by all users.
 
 Role example:
 ```json
