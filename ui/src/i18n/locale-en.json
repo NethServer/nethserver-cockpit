@@ -573,6 +573,13 @@
       "icon": "Logo",
       "settings": "Settings",
       "refresh": "Refresh"
+    },
+    "hints": {
+      "Password": "Password",
+      "change_default_root_password": "Change default root password"
+    },
+    "validation": {
+
     }
   }
 }
