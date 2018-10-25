@@ -68,6 +68,13 @@ function hints {
     details=${2-null}
     count=${3-0}
     link=$4
+
+    status=$(/sbin/e-smith/config getprop cockpit.socket ShowHints 2>/dev/null)
+    if [ -z "$status" ] || [ "$status" == "disabled" ]; then
+        printf '{"count": 0, "message": null, "details": null, "link": null}'
+        exit 0
+    fi
+
     if [ -z "$message" ]; then
         message="null"
     else

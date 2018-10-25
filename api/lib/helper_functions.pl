@@ -25,7 +25,7 @@
 use strict;
 use warnings;
 use JSON;
-
+use esmith::ConfigDB;
 
 #
 # Print a hints object
@@ -38,6 +38,18 @@ sub hints
 {
     my $ret = {count => 0, message => undef, details => undef, link => undef};
     my ($message, $details, $link) = @_;
+
+    # this check is usefull when the code is runnin as non-root user
+    my $db = esmith::ConfigDB->open_ro();
+    if (!$db) {
+        print encode_json($ret);
+        exit 0;
+    }
+    my $show_hints = $db->get_prop("cockpit.socket", "ShowHints") || "disabled";
+    if ($show_hints ne 'enabled') {
+        print encode_json($ret);
+        exit 0;
+    }
 
     if (defined($link)) {
         $ret->{'link'} = $link;
