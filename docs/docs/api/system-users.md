@@ -174,7 +174,7 @@ Action `user-delete`:
 Action `change-password`:
 
 - name: an existing user
-- newPassword: if not empty, must match with confirmNewPassword; also checked agains password-strength system validator
+- newPassword: if not empty, must match with confirmNewPassword; also checked against password-strength system validator
 
 #### Groups
 

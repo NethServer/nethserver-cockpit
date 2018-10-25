@@ -33,10 +33,10 @@ function _get
 
 id=$(id -u)
 pass_file=$(mktemp)
-echo $data | jq -r ".NewPassword" >> $pass_file
-echo $data | jq -r ".ConfirmPassword" >> $pass_file
+echo $data | jq -r ".newPassword" >> $pass_file
+echo $data | jq -r ".confirmNewPassword" >> $pass_file
 if [ $id -gt 0 ]; then
-    echo $data | jq -r ".CurrentPassword" >> $pass_file
+    echo $data | jq -r ".currentPassword" >> $pass_file
     timeout 3 /usr/libexec/nethserver/api/system-password/change-user-passwd $pass_file &>/dev/null
 else
     timeout 3 /usr/libexec/nethserver/api/system-password/change-root-passwd $pass_file &>/dev/null
@@ -45,7 +45,7 @@ tmp=$?
 rm -f $pass_file
 
 if [ $tmp -gt 0 ]; then
-    error "EventFailed" "See /var/log/messages"
+    error
 else
     success
 fi

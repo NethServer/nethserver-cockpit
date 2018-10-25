@@ -4,11 +4,13 @@ Change password of the logged user.
 
 This API should not be invoked using `sudo`.
 
-## update
+## validate
 
-Required fields:
+The validation helper uses system-users library.
 
-- NewPassword and ConfirmPassword: values must be the same and should comply with the password policy
+Constraints:
+
+- newPassword: if not empty, must match with confirmNewPassword; also checked against password-strength system validator
 - ConfirmPassword: required only if invoked by non-root user
 
 ### Input
@@ -16,16 +18,20 @@ Required fields:
 Input example for normal user:
 ```json
 {
-  "ConfirmPassword": "Nethesis,1234",
-  "NewPassword": "Nethesis,1234",
-  "CurrentPassword": "TestPassword,1234"
+  "confirmNewPassword": "Nethesis,1234",
+  "newPassword": "Nethesis,1234",
+  "currentPassword": "TestPassword,1234"
 }
 ```
 
 Input example for root user:
 ```json
 {
-  "ConfirmPassword": "Nethesis,1234",
-  "NewPassword": "Nethesis,1234",
+  "confirmNewPassword": "Nethesis,1234",
+  "newPassword": "Nethesis,1234",
 }
 ```
+
+## update
+
+Same input as vaidate.
