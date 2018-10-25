@@ -22,33 +22,7 @@
 
 /** Include common functions **/
 
-require_once("/usr/libexec/nethserver/api/system-users/functions.php");
-
-function check_password($data, $v) {
-    if (!isset($data['newPassword']) || !isset($data['confirmNewPassword'])) {
-        return;
-    }
-
-    if ($data['newPassword'] !== $data['confirmNewPassword']) {
-        $v->addValidationError('confirmNewPassword','password_no_match');
-        error($v);
-    }
-
-    if ($data['newPassword'] && $data['confirmNewPassword']) {
-        $tmpFilePath = @tempnam(sys_get_temp_dir(), 'ng-');
-        $tmpFile = fopen($tmpFilePath, 'w');
-        fwrite($tmpFile, $data['newPassword']);
-        fclose($tmpFile);
-
-        $passwordValidator = $v->createValidator()->platform('password-strength', 'Users');
-        if (!$passwordValidator->evaluate($tmpFilePath)) {
-            $v->addValidationError('newPassword', 'weak_password');
-            unlink($tmpFilePath);
-            error($v);
-        }
-        unlink($tmpFilePath);
-    }
-}
+require_once("/usr/libexec/nethserver/api/lib/users_functions.php");
 
 function validate_group_create($data) {
     $v = new LegacyValidator($data);
@@ -178,15 +152,7 @@ function validate_user_delete($data) {
 function validate_change_password($data) {
     $v = new LegacyValidator($data);
     $v->declareParameter('name', $v->createValidator()->memberOf(list_users()));
-    if (!isset($data['newPassword'])) {
-        $v->addValidationError('newPassword','not_empty');
-        error($v);
-    }
-    if (!isset($data['confirmNewPassword'])) {
-        $v->addValidationError('confirmNewPassword','not_empty');
-        error($v);
-    }
-
+   
     check_password($data, $v);
 
     if (!$v->validate()) {

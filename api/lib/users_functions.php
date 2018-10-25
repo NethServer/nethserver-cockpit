@@ -110,7 +110,7 @@ function add_to_groups($user, $groups) {
 }
 
 /* Set the user password 
- * The 'data' prameter must contain following fields
+ * The 'data' parameter must contain following fields
  *   - newPassword
  *   - confirmNewPassword
  *   - name
@@ -130,5 +130,47 @@ function save_password($data) {
     }
 
     return $ret;
+}
+
+/* Check if new password is good
+ * Paramaters:
+ * - data parameter must contain following fields
+ *   - newPassword
+ *   - confirmNewPassword
+ * - v is the validator object
+ */
+function check_password($data, $v) {
+    if (!isset($data['newPassword']) || !isset($data['confirmNewPassword'])) {
+        return;
+    }
+
+    if (!isset($data['newPassword'])) {
+        $v->addValidationError('newPassword','not_empty');
+        error($v);
+    }
+    if (!isset($data['confirmNewPassword'])) {
+        $v->addValidationError('confirmNewPassword','not_empty');
+        error($v);
+    }
+
+    if ($data['newPassword'] !== $data['confirmNewPassword']) {
+        $v->addValidationError('confirmNewPassword','password_no_match');
+        error($v);
+    }
+
+    if ($data['newPassword'] && $data['confirmNewPassword']) {
+        $tmpFilePath = @tempnam(sys_get_temp_dir(), 'ng-');
+        $tmpFile = fopen($tmpFilePath, 'w');
+        fwrite($tmpFile, $data['newPassword']);
+        fclose($tmpFile);
+
+        $passwordValidator = $v->createValidator()->platform('password-strength', 'Users');
+        if (!$passwordValidator->evaluate($tmpFilePath)) {
+            $v->addValidationError('newPassword', 'weak_password');
+            unlink($tmpFilePath);
+            error($v);
+        }
+        unlink($tmpFilePath);
+    }
 }
 

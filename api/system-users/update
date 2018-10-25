@@ -22,7 +22,7 @@
 
 /** Include common functions **/
 
-require_once("/usr/libexec/nethserver/api/system-users/functions.php");
+require_once("/usr/libexec/nethserver/api/lib/users_functions.php");
 
 $data = readInput();
 
