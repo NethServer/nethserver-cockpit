@@ -57,27 +57,6 @@ case $action in
         /sbin/e-smith/signal-event -j nethserver-mail-smarthost-save
         ;;
 
-    "password")
-        id=$(id -u)
-        pass_file=$(mktemp)
-        echo $data | jq -r ".NewPassword" >> $pass_file
-        echo $data | jq -r ".ConfirmPassword" >> $pass_file
-        if [ $id -gt 0 ]; then
-            echo $data | jq -r ".CurrentPassword" >> $pass_file
-            timeout 3 /usr/libexec/nethserver/api/system-settings/change-user-passwd $pass_file &>/dev/null
-        else
-            timeout 3 /usr/libexec/nethserver/api/system-settings/change-root-passwd $pass_file &>/dev/null
-        fi
-        tmp=$?
-        rm -f $pass_file
-        if [ $tmp -gt 0 ]; then
-            error "EventFailed" "See /var/log/messages"
-        else
-            success
-        fi
-
-        ;;
-
 esac
 
 if [ $? -gt 0 ]; then

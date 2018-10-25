@@ -5,7 +5,9 @@ General module to manage multiple system settings:
 - smart host configuration
 - mail forward
 - cockpit configuration
-- change user password
+
+This API returns different output based on the running user.
+Do not invoke the helpers using `sudo`.
 
 ## read
 
@@ -164,7 +166,7 @@ Use same input from validate.
 
 ### Input
 
-Takes the same actions from validate plus the `password` action.
+Takes the same actions from validate.
 
 #### root
 
@@ -182,23 +184,11 @@ Same as validate.
 
 Same as validate.
 
-#### password
-
-Input example:
-```json
-{
-  "action": "password",
-  "ConfirmPassword": "Nethesis,1234",
-  "NewPassword": "Nethesis,1234",
-  "CurrentPassword": "Nethesis,1234"
-}
-```
-
 ## hints
 
 Available hints:
 
-- the system is using the default password
+- the root user is using the default password
 - cockpit port is open to the red network without IP limitations
 
 ### Output
