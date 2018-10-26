@@ -22,9 +22,9 @@
       <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
         <span class="pficon pficon-warning-triangle-o"></span>
         <strong>{{$t('hints_suggested')}}:</strong>
-        <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{t}}</strong>: {{m}}</li>
+        <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{$t('hints.'+t)}}</strong>: {{$t('hints.'+m)}}</li>
         <span v-if="hints.message && hints.message.length > 0">
-          {{hints.message && hints.message}}
+          {{hints.message && $t('hints.'+hints.message)}}
         </span>
       </div>
       <form class="form-horizontal" v-on:submit.prevent="saveSSH(SSHConfig)">
@@ -32,7 +32,7 @@
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('ssh.tcp_port')}}</label>
           <div class="col-sm-5">
             <input required type="number" v-model="SSHConfig.TCPPort" class="form-control">
-            <span v-if="SSHConfig.errors.TCPPort.hasError" class="help-block">{{SSHConfig.errors.TCPPort.message}}</span>
+            <span v-if="SSHConfig.errors.TCPPort.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+SSHConfig.errors.TCPPort.message)}}</span>
           </div>
         </div>
         <div :class="['form-group', SSHConfig.errors.PermitRootLogin.hasError ? 'has-error' : '']">
@@ -40,7 +40,7 @@
           <div class="col-sm-5">
             <input type="checkbox" :value="SSHConfig.PermitRootLogin == 'yes'" v-model="SSHConfig.PermitRootLogin"
               class="form-control">
-            <span v-if="SSHConfig.errors.PermitRootLogin.hasError" class="help-block">{{SSHConfig.errors.PermitRootLogin.message}}</span>
+            <span v-if="SSHConfig.errors.PermitRootLogin.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+SSHConfig.errors.PermitRootLogin.message)}}</span>
           </div>
         </div>
         <div :class="['form-group', SSHConfig.errors.PasswordAuthentication.hasError ? 'has-error' : '']">
@@ -48,7 +48,7 @@
           <div class="col-sm-5">
             <input type="checkbox" :value="SSHConfig.PasswordAuthentication == 'yes'" v-model="SSHConfig.PasswordAuthentication"
               class="form-control">
-            <span v-if="SSHConfig.errors.PasswordAuthentication.hasError" class="help-block">{{SSHConfig.errors.PasswordAuthentication.message}}</span>
+            <span v-if="SSHConfig.errors.PasswordAuthentication.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+SSHConfig.errors.PasswordAuthentication.message)}}</span>
           </div>
         </div>
 
@@ -131,21 +131,16 @@ export default {
   methods: {
     getHints(callback) {
       var context = this;
-      if (context.$parent.hints.available) {
-        context.execHints(
-          "system-openssh",
-          function(success) {
-            context.hints = success;
-            callback ? callback() : null;
-          },
-          function(error) {
-            console.error(error);
-          }
-        );
-      } else {
-        context.hints = {};
-        callback ? callback() : null;
-      }
+      context.execHints(
+        "system-openssh",
+        function(success) {
+          context.hints = success;
+          callback ? callback() : null;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
     },
     getSSHConfig() {
       var context = this;
@@ -242,8 +237,7 @@ export default {
           for (var e in errorData.attributes) {
             var attr = errorData.attributes[e];
             context.SSHConfig.errors[attr.parameter].hasError = true;
-            context.SSHConfig.errors[attr.parameter].message =
-              "[" + errorData.message + "]: " + attr.error;
+            context.SSHConfig.errors[attr.parameter].message = attr.error;
           }
         }
       );

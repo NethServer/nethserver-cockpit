@@ -56,21 +56,21 @@
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('trusted_networks.network_address')}}</label>
                 <div class="col-sm-9">
                   <input :disabled="newNetwork.isEdit" required type="text" v-model="newNetwork.name" class="form-control">
-                  <span v-if="newNetwork.errors.name.hasError" class="help-block">{{newNetwork.errors.name.message}}</span>
+                  <span v-if="newNetwork.errors.name.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newNetwork.errors.name.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', newNetwork.errors.Mask.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('trusted_networks.network_mask')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="newNetwork.props.Mask" class="form-control">
-                  <span v-if="newNetwork.errors.Mask.hasError" class="help-block">{{newNetwork.errors.Mask.message}}</span>
+                  <span v-if="newNetwork.errors.Mask.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newNetwork.errors.Mask.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', newNetwork.errors.Description.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('trusted_networks.description')}}</label>
                 <div class="col-sm-9">
                   <input type="text" v-model="newNetwork.props.Description" class="form-control">
-                  <span v-if="newNetwork.errors.Description.hasError" class="help-block">{{newNetwork.errors.Description.message}}</span>
+                  <span v-if="newNetwork.errors.Description.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newNetwork.errors.Description.message)}}</span>
                 </div>
               </div>
             </div>
@@ -300,8 +300,7 @@ export default {
 
             if (context.newNetwork.errors[attr.parameter]) {
               context.newNetwork.errors[attr.parameter].hasError = true;
-              context.newNetwork.errors[attr.parameter].message =
-                "[" + errorData.message + "]: " + attr.error;
+              context.newNetwork.errors[attr.parameter].message = attr.error;
             }
           }
         }

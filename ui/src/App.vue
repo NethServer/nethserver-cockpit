@@ -119,15 +119,13 @@
         <li v-if="checkAuth('certificates') || checkAuth('ssh') || checkAuth('tls-policy') || checkAuth('trusted-networks')"
           class="li-empty"></li>
 
-        <li v-if="checkAuth('settings')" v-bind:class="[getCurrentPath('settings') ? 'active' : '', 'list-group-item']">
+        <li v-bind:class="[getCurrentPath('settings') ? 'active' : '', 'list-group-item']">
           <a href="#/settings">
             <span class="fa fa-gear"></span>
             <span class="list-group-item-value">{{$t('menu.settings')}}</span>
             <span v-if="hints.settings.count > 0" class="badge badge-small">{{hints.settings.count}}</span>
           </a>
         </li>
-
-        <li v-if="checkAuth('settings')" class="li-empty"></li>
 
         <li v-if="checkAuth('logs')" v-bind:class="[getCurrentPath('logs') ? 'active' : '', 'list-group-item']">
           <a href="#/logs">
@@ -403,7 +401,7 @@ export default {
             context.hints = context.initHints();
           }
 
-          callback ? callback() : null;
+          callback ? callback(context.hints.available) : null;
         },
         function(error) {
           console.error(error);

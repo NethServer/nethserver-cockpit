@@ -592,7 +592,7 @@
       "validation_failed": "Validation failed",
       "not_empty": "Field can't be empty",
       "password_no_match": "Passwords don't match",
-      "starttls_conflict" : "StartTLS conflicts with 'ldaps://' URI scheme",
+      "starttls_conflict": "StartTLS conflicts with 'ldaps://' URI scheme",
       "valid_platform,ldap-credentials,ldaptestbind,49": "Invalid LDAP credentials",
       "valid_platform,ldap-credentials,ldaptestbind,1": "LDAP connection error",
       "valid_platform,ldap-credentials,ldaptestbind,32": "Base DN was not found or insufficient rights",

@@ -61,28 +61,28 @@
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dns.hostname')}}</label>
                 <div class="col-sm-9">
                   <input :disabled="newDns.isEdit" required type="text" v-model="newDns.name" class="form-control">
-                  <span v-if="newDns.errors.name.hasError" class="help-block">{{newDns.errors.name.message}}</span>
+                  <span v-if="newDns.errors.name.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newDns.errors.name.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', newDns.errors.IpAddress.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dns.ip_address')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="newDns.props.IpAddress" class="form-control">
-                  <span v-if="newDns.errors.IpAddress.hasError" class="help-block">{{newDns.errors.IpAddress.message}}</span>
+                  <span v-if="newDns.errors.IpAddress.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newDns.errors.IpAddress.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', newDns.errors.Description.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dns.description')}}</label>
                 <div class="col-sm-9">
                   <input type="text" v-model="newDns.props.Description" class="form-control">
-                  <span v-if="newDns.errors.Description.hasError" class="help-block">{{newDns.errors.Description.message}}</span>
+                  <span v-if="newDns.errors.Description.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newDns.errors.Description.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', newDns.errors.WildcardMode.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dns.wildcard')}}</label>
                 <div class="col-sm-9">
                   <input type="checkbox" :value="newDns.props.WildcardMode == 'enabled'" v-model="newDns.props.WildcardMode" class="form-control">
-                  <span v-if="newDns.errors.WildcardMode.hasError" class="help-block">{{newDns.errors.WildcardMode.message}}</span>
+                  <span v-if="newDns.errors.WildcardMode.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newDns.errors.WildcardMode.message)}}</span>
                 </div>
               </div>
             </div>
@@ -329,8 +329,7 @@ export default {
           for (var e in errorData.attributes) {
             var attr = errorData.attributes[e];
             context.newDns.errors[attr.parameter].hasError = true;
-            context.newDns.errors[attr.parameter].message =
-              "[" + errorData.message + "]: " + attr.error;
+            context.newDns.errors[attr.parameter].message = attr.error;
           }
         }
       );

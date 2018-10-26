@@ -5,10 +5,10 @@
       class="alert alert-warning alert-dismissable">
       <span class="pficon pficon-warning-triangle-o"></span>
       <strong>{{$t('hints_suggested')}}:</strong>
-      <li v-if="m.count > 0" v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{t | capitalize}}</strong>:
-        {{m.message}}</li>
+      <li v-if="m.count > 0" v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{$t('hints.'+t) | capitalize}}</strong>:
+        {{$t('hints.'+m.message)}}</li>
       <span v-if="hints.message && hints.message.length > 0">
-        {{hints.message && hints.message}}
+        {{hints.message && $t('hints.'+hints.message)}}
       </span>
     </div>
     <div class="row row-dashboard">
@@ -206,7 +206,7 @@
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.fqdn')}}</label>
                 <div class="col-sm-9">
                   <input :disabled="!system.summary.hostnameIsEdit" required type="text" v-model="system.summary.newHostname" class="form-control">
-                  <span v-if="system.errors.hostname.hasError" class="help-block">{{system.errors.hostname.message}}</span>
+                  <span v-if="system.errors.hostname.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.hostname.message)}}</span>
                 </div>
               </div>
               <div v-for="(a, i) in system.summary.aliases" v-bind:key="i" :class="['form-group', system.summary.aliases[i].hasError ? 'has-error' : '']">
@@ -214,7 +214,7 @@
                   $t('dashboard.alias') : ''}}</label>
                 <div class="col-xs-7 col-sm-6">
                   <input type="text" v-model="a.key" class="form-control">
-                  <span v-if="system.summary.aliases[i].hasError" class="help-block">{{system.summary.aliases[i].message}}</span>
+                  <span v-if="system.summary.aliases[i].hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+system.summary.aliases[i].message)}}</span>
                 </div>
                 <div class="col-xs-5 col-sm-2">
                   <button @click="removeAlias(a, i)" class="btn btn-default" type="button">
@@ -254,14 +254,14 @@
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">1° {{$t('dashboard.dns')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="system.summary.dns[0].dns" class="form-control">
-                  <span v-if="system.errors.dns1.hasError" class="help-block">{{system.errors.dns1.message}}</span>
+                  <span v-if="system.errors.dns1.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.dns1.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', system.errors.dns2.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">2° {{$t('dashboard.dns')}}</label>
                 <div class="col-sm-9">
                   <input type="text" v-model="system.summary.dns[1].dns" class="form-control">
-                  <span v-if="system.errors.dns2.hasError" class="help-block">{{system.errors.dns2.message}}</span>
+                  <span v-if="system.errors.dns2.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.dns2.message)}}</span>
                 </div>
               </div>
             </div>
@@ -322,7 +322,7 @@
                       <span class="fa fa-calendar"></span>
                     </span>
                   </div>
-                  <span v-if="system.errors.datetime.date.hasError" class="help-block">{{system.errors.datetime.date.message}}</span>
+                  <span v-if="system.errors.datetime.date.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.datetime.date.message)}}</span>
                 </div>
                 <div class="col-sm-3">
                   <div class="input-group time-picker-pf" id="time-picker">
@@ -331,7 +331,7 @@
                       <span class="fa fa-clock-o"></span>
                     </span>
                   </div>
-                  <span v-if="system.errors.datetime.time.hasError" class="help-block">{{system.errors.datetime.time.message}}</span>
+                  <span v-if="system.errors.datetime.time.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.datetime.time.message)}}</span>
                 </div>
               </div>
 
@@ -339,7 +339,7 @@
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.ntp_server')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="system.summary.newNtpServer" class="form-control">
-                  <span v-if="system.errors.datetime.NTPServer.hasError" class="help-block">{{system.errors.datetime.NTPServer.message}}</span>
+                  <span v-if="system.errors.datetime.NTPServer.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.datetime.NTPServer.message)}}</span>
                 </div>
               </div>
             </div>
@@ -577,40 +577,30 @@ export default {
     getHints(type, callback) {
       var context = this;
 
-      if (context.$parent.hints.available) {
-        context.execHints(
-          "system-" + type,
-          function(success) {
-            context.hints.details[type] = {};
-            context.hints.details[type].count = 0;
+      context.execHints(
+        "system-" + type,
+        function(success) {
+          context.hints.details[type] = {};
+          context.hints.details[type].count = 0;
 
-            for (var h in success.details) {
-              context.hints.details[h.toLowerCase()].message =
-                success.details[h];
-              context.hints.details[h.toLowerCase()].count = success.count;
-            }
-
-            if (success.message) {
-              context.hints.details[type].message = success.message;
-              context.hints.details[type].count += 1;
-            }
-
-            context.$forceUpdate();
-
-            callback ? callback() : null;
-          },
-          function(error) {
-            console.error(error);
+          for (var h in success.details) {
+            context.hints.details[h.toLowerCase()].message = success.details[h];
+            context.hints.details[h.toLowerCase()].count = success.count;
           }
-        );
-      } else {
-        context.hints = {
-          details: {}
-        };
-        context.hints.details[type] = {};
-        context.hints.details[type].count = 0;
-        callback ? callback() : null;
-      }
+
+          if (success.message) {
+            context.hints.details[type].message = success.message;
+            context.hints.details[type].count += 1;
+          }
+
+          context.$forceUpdate();
+
+          callback ? callback() : null;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
     },
     getSystemSummary() {
       var context = this;
@@ -708,7 +698,7 @@ export default {
               var errorData = JSON.parse(data);
               context.system.errors.hostname.hasError = true;
               context.system.errors.hostname.message =
-                "[" + errorData.message + "]: " + errorData.attributes[0].error;
+                errorData.attributes[0].error;
               reject(error);
             }
           );
@@ -758,8 +748,7 @@ export default {
                 }
 
                 context.system.summary.aliases[i].hasError = true;
-                context.system.summary.aliases[i].message =
-                  "[" + errorData.message + "]: " + attr.error;
+                context.system.summary.aliases[i].message = attr.error;
 
                 context.$forceUpdate();
               }
@@ -983,8 +972,7 @@ export default {
           for (var e in errorData.attributes) {
             var attr = errorData.attributes[e];
             context.system.errors[attr.parameter].hasError = true;
-            context.system.errors[attr.parameter].message =
-              "[" + errorData.message + "]: " + attr.error;
+            context.system.errors[attr.parameter].message = attr.error;
           }
         }
       );
@@ -1102,8 +1090,7 @@ export default {
           for (var a in errorData.attributes) {
             var attr = errorData.attributes[a];
             context.system.errors.datetime[attr.parameter].hasError = true;
-            context.system.errors.datetime[attr.parameter].message =
-              "[" + errorData.message + "]: " + attr.error;
+            context.system.errors.datetime[attr.parameter].message = attr.error;
           }
         }
       );
@@ -1198,7 +1185,7 @@ export default {
           context.system.errors.company.isLoading = false;
           context.system.errors.company.hasError = true;
           context.system.errors.company.message =
-            "[" + errorData.message + "]: " + errorData.attributes.name[0][0];
+            errorData.attributes.name[0][0];
         }
       );
     },

@@ -82,7 +82,7 @@
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('certificates.name')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="newCertificate.name" class="form-control">
-                  <span v-if="newCertificate.errors.name.hasError" class="help-block">{{newCertificate.errors.name.message}}</span>
+                  <span v-if="newCertificate.errors.name.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newCertificate.errors.name.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', newCertificate.errors.certificate.hasError ? 'has-error' : '']">
@@ -93,7 +93,7 @@
                   </label>
                   <input class="inputfile" required @change="onChangeInput($event, 'cert')" id="certificate-file" name="file-upload-cert"
                     type="file" />
-                  <span v-if="newCertificate.errors.certificate.hasError" class="help-block">{{newCertificate.errors.certificate.message}}</span>
+                  <span v-if="newCertificate.errors.certificate.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newCertificate.errors.certificate.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', newCertificate.errors.key.hasError ? 'has-error' : '']">
@@ -104,7 +104,7 @@
                   </label>
                   <input class="inputfile" required @change="onChangeInput($event, 'key')" id="key-file" name="file-upload-key"
                     type="file" />
-                  <span v-if="newCertificate.errors.key.hasError" class="help-block">{{newCertificate.errors.key.message}}</span>
+                  <span v-if="newCertificate.errors.key.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newCertificate.errors.key.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', newCertificate.errors.chain.hasError ? 'has-error' : '']">
@@ -115,7 +115,7 @@
                   </label>
                   <input class="inputfile" @change="onChangeInput($event, 'chain')" id="chain-file" name="file-upload-chain"
                     type="file" />
-                  <span v-if="newCertificate.errors.chain.hasError" class="help-block">{{newCertificate.errors.chain.message}}</span>
+                  <span v-if="newCertificate.errors.chain.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newCertificate.errors.chain.message)}}</span>
                 </div>
               </div>
             </div>
@@ -143,49 +143,49 @@
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('certificates.country_code')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="selfSignedCertificate.CountryCode" class="form-control">
-                  <span v-if="selfSignedCertificate.errors.CountryCode.hasError" class="help-block">{{selfSignedCertificate.errors.CountryCode.message}}</span>
+                  <span v-if="selfSignedCertificate.errors.CountryCode.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+selfSignedCertificate.errors.CountryCode.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', selfSignedCertificate.errors.State.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('certificates.state')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="selfSignedCertificate.State" class="form-control">
-                  <span v-if="selfSignedCertificate.errors.State.hasError" class="help-block">{{selfSignedCertificate.errors.State.message}}</span>
+                  <span v-if="selfSignedCertificate.errors.State.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+selfSignedCertificate.errors.State.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', selfSignedCertificate.errors.Locality.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('certificates.locality')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="selfSignedCertificate.Locality" class="form-control">
-                  <span v-if="selfSignedCertificate.errors.Locality.hasError" class="help-block">{{selfSignedCertificate.errors.Locality.message}}</span>
+                  <span v-if="selfSignedCertificate.errors.Locality.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+selfSignedCertificate.errors.Locality.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', selfSignedCertificate.errors.Organization.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('certificates.organization')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="selfSignedCertificate.Organization" class="form-control">
-                  <span v-if="selfSignedCertificate.errors.Organization.hasError" class="help-block">{{selfSignedCertificate.errors.Organization.message}}</span>
+                  <span v-if="selfSignedCertificate.errors.Organization.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+selfSignedCertificate.errors.Organization.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', selfSignedCertificate.errors.OrganizationalUnitName.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('certificates.organization_unit')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="selfSignedCertificate.OrganizationalUnitName" class="form-control">
-                  <span v-if="selfSignedCertificate.errors.OrganizationalUnitName.hasError" class="help-block">{{selfSignedCertificate.errors.OrganizationalUnitName.message}}</span>
+                  <span v-if="selfSignedCertificate.errors.OrganizationalUnitName.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+selfSignedCertificate.errors.OrganizationalUnitName.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', selfSignedCertificate.errors.CommonName.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('certificates.common_name')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="selfSignedCertificate.CommonName" class="form-control">
-                  <span v-if="selfSignedCertificate.errors.CommonName.hasError" class="help-block">{{selfSignedCertificate.errors.CommonName.message}}</span>
+                  <span v-if="selfSignedCertificate.errors.CommonName.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+selfSignedCertificate.errors.CommonName.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', selfSignedCertificate.errors.EmailAddress.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('certificates.email_address')}}</label>
                 <div class="col-sm-9">
                   <input type="text" v-model="selfSignedCertificate.EmailAddress" class="form-control">
-                  <span v-if="selfSignedCertificate.errors.EmailAddress.hasError" class="help-block">{{selfSignedCertificate.errors.EmailAddress.message}}</span>
+                  <span v-if="selfSignedCertificate.errors.EmailAddress.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+selfSignedCertificate.errors.EmailAddress.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', selfSignedCertificate.errors.SubjectAltName.hasError ? 'has-error' : '']">
@@ -193,14 +193,14 @@
                 <div class="col-sm-9">
                   <textarea :placeholder="$t('certificates.alternative_name')" type="text" v-model="selfSignedCertificate.SubjectAltName"
                     class="form-control"></textarea>
-                    <span v-if="selfSignedCertificate.errors.SubjectAltName.hasError" class="help-block">{{selfSignedCertificate.errors.SubjectAltName.message}}</span>
+                    <span v-if="selfSignedCertificate.errors.SubjectAltName.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+selfSignedCertificate.errors.SubjectAltName.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', selfSignedCertificate.errors.CertificateDuration.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('certificates.certificate_validity_days')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="selfSignedCertificate.CertificateDuration" class="form-control">
-                  <span v-if="selfSignedCertificate.errors.CertificateDuration.hasError" class="help-block">{{selfSignedCertificate.errors.CertificateDuration.message}}</span>
+                  <span v-if="selfSignedCertificate.errors.CertificateDuration.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+selfSignedCertificate.errors.CertificateDuration.message)}}</span>
                 </div>
               </div>
 
@@ -235,7 +235,7 @@
                   $t('certificates.domains') : ''}}</label>
                 <div class="col-xs-7 col-sm-6">
                   <input required type="text" v-model="a.name" class="form-control">
-                  <span v-if="letsEncryptCertificate.errors.LetsEncryptDomains.hasError" class="help-block">{{letsEncryptCertificate.errors.LetsEncryptDomains.message}}</span>
+                  <span v-if="letsEncryptCertificate.errors.LetsEncryptDomains.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+letsEncryptCertificate.errors.LetsEncryptDomains)}}</span>
                 </div>
                 <div class="col-xs-5 col-sm-2">
                   <button v-if="i > 0" @click="removeDomain(a, i)" class="btn btn-default" type="button">
@@ -623,8 +623,7 @@ export default {
           for (var e in errorData.attributes) {
             var attr = errorData.attributes[e];
             context.newCertificate.errors[attr.parameter].hasError = true;
-            context.newCertificate.errors[attr.parameter].message =
-              "[" + errorData.message + "]: " + attr.error;
+            context.newCertificate.errors[attr.parameter].message = attr.error;
           }
         }
       );
@@ -717,7 +716,7 @@ export default {
               attr.parameter
             ].hasError = true;
             context.selfSignedCertificate.errors[attr.parameter].message =
-              "[" + errorData.message + "]: " + attr.error;
+              attr.error;
           }
         }
       );
@@ -802,7 +801,7 @@ export default {
               attr.parameter
             ].hasError = true;
             context.letsEncryptCertificate.errors[attr.parameter].message =
-              "[" + errorData.message + "]: " + attr.error;
+              attr.error;
           }
         }
       );

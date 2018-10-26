@@ -28,9 +28,9 @@
     <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
       <span class="pficon pficon-warning-triangle-o"></span>
       <strong>{{$t('hints_suggested')}}:</strong>
-      <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{t}}</strong>: {{m}}</li>
+      <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{$t('hints.'+t)}}</strong>: {{$t('hints.'+m)}}</li>
       <span v-if="hints.message && hints.message.length > 0">
-        {{hints.message && hints.message}}
+        {{hints.message && $t('hints.'+hints.message)}}
       </span>
     </div>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
@@ -260,21 +260,16 @@ export default {
   methods: {
     getHints(callback) {
       var context = this;
-      if (context.$parent.hints.available) {
-        context.execHints(
-          "system-services",
-          function(success) {
-            context.hints = success;
-            callback ? callback() : null;
-          },
-          function(error) {
-            console.error(error);
-          }
-        );
-      } else {
-        context.hints = {};
-        callback ? callback() : null;
-      }
+      context.execHints(
+        "system-services",
+        function(success) {
+          context.hints = success;
+          callback ? callback() : null;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
     },
     checkHints(service) {
       return (

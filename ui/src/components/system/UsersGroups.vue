@@ -555,7 +555,7 @@
                           </div>
                           <div class="col-sm-6">
                             <input v-model="users.hostname.value" required class="form-control" type="text">
-                            <span v-if="users.hostname.errors.hasError" class="help-block">{{users.hostname.errors.message}}</span>
+                            <span v-if="users.hostname.errors.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+users.hostname.errors.message)}}</span>
                           </div>
                           <div class="col-sm-3 adjust-top-min">
                             <button class="btn btn-primary" type="submit">{{$t('modify')}}</button>
@@ -1191,8 +1191,7 @@ export default {
           for (var e in errorData.attributes) {
             var attr = errorData.attributes[e];
             context.users.hostname.errors.hasError = true;
-            context.users.hostname.errors.message =
-              "[" + errorData.message + "]: " + attr.error;
+            context.users.hostname.errors.message = attr.error;
           }
         }
       );

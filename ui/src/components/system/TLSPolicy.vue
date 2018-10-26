@@ -7,9 +7,9 @@
       <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
         <span class="pficon pficon-warning-triangle-o"></span>
         <strong>{{$t('hints_suggested')}}:</strong>
-        <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{t}}</strong>: {{m}}</li>
+        <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{$t('hints.'+t)}}</strong>: {{$t('hints.'+m)}}</li>
         <span v-if="hints.message && hints.message.length > 0">
-          {{hints.message && hints.message}}
+          {{hints.message && $t('hints.'+hints.message)}}
         </span>
       </div>
       <form class="form-horizontal" v-on:submit.prevent="saveTLSPolicy(TLSPolicy)">
@@ -20,7 +20,7 @@
               <option :value="p.length > 0 ? p : 0" v-for="p in TLSPolicy.policies" v-bind:key="p">{{p.length > 0 ? p :
                 $t('tls_policy.default_policy')}}</option>
             </select>
-            <span v-if="TLSPolicy.errors.policy.hasError" class="help-block">{{TLSPolicy.errors.policy.message}}</span>
+            <span v-if="TLSPolicy.errors.policy.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+TLSPolicy.errors.policy.message)}}</span>
           </div>
         </div>
         <div class="form-group">
@@ -89,21 +89,16 @@ export default {
   methods: {
     getHints(callback) {
       var context = this;
-      if (context.$parent.hints.available) {
-        context.execHints(
-          "system-tls-policy",
-          function(success) {
-            context.hints = success;
-            callback ? callback() : null;
-          },
-          function(error) {
-            console.error(error);
-          }
-        );
-      } else {
-        context.hints = {};
-        callback ? callback() : null;
-      }
+      context.execHints(
+        "system-tls-policy",
+        function(success) {
+          context.hints = success;
+          callback ? callback() : null;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
     },
     getTLSPolicy() {
       var context = this;
@@ -183,8 +178,7 @@ export default {
           for (var e in errorData.attributes) {
             var attr = errorData.attributes[e];
             context.TLSPolicy.errors[attr.parameter].hasError = true;
-            context.TLSPolicy.errors[attr.parameter].message =
-              "[" + errorData.message + "]: " + attr.error;
+            context.TLSPolicy.errors[attr.parameter].message = attr.error;
           }
         }
       );

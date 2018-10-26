@@ -1,5 +1,5 @@
 <template>
-  <div v-if="view.isAuth">
+  <div>
     <h2>{{$t('about.title')}}</h2>
     <div class="page-container">
     </div>
@@ -10,8 +10,7 @@
 export default {
   name: "About",
   data() {
-    return {
-    };
+    return {};
   }
 };
 </script>

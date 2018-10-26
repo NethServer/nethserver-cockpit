@@ -92,9 +92,9 @@
       <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
         <span class="pficon pficon-warning-triangle-o"></span>
         <strong>{{$t('hints_suggested')}}:</strong>
-        <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{t}}</strong>: {{m}}</li>
+        <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{$t('hints.'+t)}}</strong>: {{$t('hints.'+m)}}</li>
         <span v-if="hints.message && hints.message.length > 0">
-          {{hints.message && hints.message}}
+          {{hints.message && $t('hints.'+hints.message)}}
         </span>
       </div>
 
@@ -1026,7 +1026,7 @@
                         <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.name')}}</label>
                         <div class="col-sm-6">
                           <input :disabled="wizard.isEdit" required type="text" v-model="wizard.review.Name" class="form-control">
-                          <span v-if="wizard.review.errors.name.hasError" class="help-block">{{wizard.review.errors.name.message}}</span>
+                          <span v-if="wizard.review.errors.name.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+wizard.review.errors.name.message)}}</span>
                         </div>
                       </div>
                       <div class="form-group">
@@ -1249,21 +1249,16 @@ export default {
   methods: {
     getHints(callback) {
       var context = this;
-      if (context.$parent.hints.available) {
-        context.execHints(
-          "system-backup",
-          function(success) {
-            context.hints = success;
-            callback ? callback() : null;
-          },
-          function(error) {
-            console.error(error);
-          }
-        );
-      } else {
-        context.hints = {};
-        callback ? callback() : null;
-      }
+      context.execHints(
+        "system-backup",
+        function(success) {
+          context.hints = success;
+          callback ? callback() : null;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
     },
     editCronTab() {
       this.wizard.when = {
@@ -1381,7 +1376,12 @@ export default {
         review: {
           Name: b && b.name ? b.name : "",
           Notify: b && b.props.Notify ? b.props.Notify : "error",
-          NotifyTo: b && b.props.NotifyTo ? b.props.NotifyTo.join("\n") : "",
+          NotifyTo:
+            b && b.props.NotifyTo
+              ? b.props.NotifyTo == "root"
+                ? "root"
+                : b.props.NotifyTo.join("\n")
+              : "",
           notifyToChoice: "root",
           notifyTypes: ["error", "always", "never"],
           errors: {
@@ -2146,8 +2146,7 @@ export default {
           for (var e in errorData.attributes) {
             var attr = errorData.attributes[e];
             context.wizard.review.errors[attr.parameter].hasError = true;
-            context.wizard.review.errors[attr.parameter].message =
-              "[" + errorData.message + "]: " + attr.error;
+            context.wizard.review.errors[attr.parameter].message = attr.error;
           }
         }
       );
