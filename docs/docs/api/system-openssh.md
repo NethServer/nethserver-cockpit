@@ -73,7 +73,7 @@ Input example from: `config getjson sshd`:
     "props": {
         "PasswordAuthentication": "yes",
         "PermitRootLogin": "yes",
-        "TCPPort": "22",
+        "TCPPort": "22"
     },
     "type": "service"
 }
