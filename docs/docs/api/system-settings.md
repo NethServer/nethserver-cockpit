@@ -34,9 +34,26 @@ Input example:
 
 #### settings
 
-Example:
+Example for normal user:
 ```json
 {
+  "status": {
+    "canChangePassword": 1,
+    "isRoot": 0
+  },
+  "configuration": null
+}
+```
+
+The `canChangePassword` field is set to 0 if the account provider is remote.
+
+Example for root user:
+```json
+{
+  "status": {
+    "canChangePassword": 1,
+    "isRoot": 1
+  },
   "configuration": {
     "cockpit": {
       "LimitAccess": "",

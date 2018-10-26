@@ -51,8 +51,15 @@ if($cmd eq 'hints') {
 } elsif ($cmd eq 'settings') {
 
     $ret{'status'}{'isRoot'} = int($is_root);
+    $ret{'status'}{'canChangePassword'} = 1;
 
     if (!$is_root) {
+        my $nsdc = system("/usr/bin/systemctl status nsdc &>/dev/null");
+        my $ldap = system("/usr/bin/systemctl status slapd &>/dev/null");
+        if ($nsdc > 0 && $ldap > 0) { # sssd is configured for remote account provider
+            $ret{'status'}{'canChangePassword'} = 0; 
+        }
+
         $ret{'configuration'} = undef;
         print encode_json(\%ret);
         exit(0);
