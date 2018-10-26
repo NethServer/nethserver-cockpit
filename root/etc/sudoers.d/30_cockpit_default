@@ -1,0 +1,8 @@
+Cmnd_Alias USERS = /usr/libexec/nethserver/api/system-dns/read, /usr/libexec/nethserver/api/system-company/read, /usr/libexec/nethserver/api/system-hostname/read, /usr/libexec/nethserver/api/system-aliases/read, /usr/libexec/nethserver/api/system-time/read, /usr/libexec/nethserver/api/system-status/read, /usr/libexec/nethserver/api/system-task/read, /usr/libexec/nethserver/api/system-authorization/read, /usr/libexec/nethserver/api/system-settings/read, /usr/libexec/nethserver/api/system-apps/read, /usr/libexec/nethserver/api/system-password/*, /sbin/e-smith/validate
+
+%locals ALL=NOPASSWD: USERS
+%domain\ users ALL=NOPASSWD: USERS
+
+# server-manager does not require a tty
+Defaults:%locals !requiretty
+Defaults:%domain\ users !requiretty
