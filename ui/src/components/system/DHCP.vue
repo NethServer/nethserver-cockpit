@@ -435,7 +435,7 @@ export default {
       if (reset) {
         this.getRanges();
       } else {
-        if (range.props.status) {
+        if (!range.props.status) {
           this.currentRange = this.initRange();
           this.currentRange.name = range.name;
           this.currentRange.DhcpRangeStart = range.props.DhcpRangeStart;
