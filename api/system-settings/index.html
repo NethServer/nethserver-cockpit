@@ -525,6 +525,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../system-password/" title="system-password" class="md-nav__link">
+      system-password
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../system-password-policy/" title="system-password-policy" class="md-nav__link">
       system-password-policy
     </a>
@@ -723,13 +735,6 @@
           <li class="md-nav__item">
   <a href="#hints_2" title="hints" class="md-nav__link">
     hints
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#password" title="password" class="md-nav__link">
-    password
   </a>
   
 </li>
@@ -1209,13 +1214,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#password" title="password" class="md-nav__link">
-    password
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1271,8 +1269,10 @@
 <li>smart host configuration</li>
 <li>mail forward</li>
 <li>cockpit configuration</li>
-<li>change user password</li>
 </ul>
+<p>This API returns different output based on the running user.
+Do not invoke the helpers using <code>sudo</code>.</p>
+<p>This route is accessible from all users.</p>
 <h2 id="read">read<a class="headerlink" href="#read" title="Permanent link">&para;</a></h2>
 <p>Read the configuration of all system settings and hints.
 Requires an <code>action</code> field.</p>
@@ -1291,8 +1291,24 @@ Requires an <code>action</code> field.</p>
 
 <h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
 <h4 id="settings">settings<a class="headerlink" href="#settings" title="Permanent link">&para;</a></h4>
-<p>Example:</p>
+<p>Example for normal user:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;canChangePassword&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">&quot;isRoot&quot;</span><span class="p">:</span> <span class="mi">0</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;configuration&quot;</span><span class="p">:</span> <span class="kc">null</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The <code>canChangePassword</code> field is set to 0 if the account provider is remote.</p>
+<p>Example for root user:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;canChangePassword&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">&quot;isRoot&quot;</span><span class="p">:</span> <span class="mi">1</span>
+  <span class="p">},</span>
   <span class="nt">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="nt">&quot;cockpit&quot;</span><span class="p">:</span> <span class="p">{</span>
       <span class="nt">&quot;LimitAccess&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -1412,7 +1428,7 @@ Valid actions are:</p>
 <h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
 <p>Use same input from validate.</p>
 <h3 id="input_2">Input<a class="headerlink" href="#input_2" title="Permanent link">&para;</a></h3>
-<p>Takes the same actions from validate plus the <code>password</code> action.</p>
+<p>Takes the same actions from validate.</p>
 <h4 id="root_1">root<a class="headerlink" href="#root_1" title="Permanent link">&para;</a></h4>
 <p>Same as validate.</p>
 <h4 id="smarthost_1">smarthost<a class="headerlink" href="#smarthost_1" title="Permanent link">&para;</a></h4>
@@ -1421,21 +1437,10 @@ Valid actions are:</p>
 <p>Same as validate.</p>
 <h4 id="hints_2">hints<a class="headerlink" href="#hints_2" title="Permanent link">&para;</a></h4>
 <p>Same as validate.</p>
-<h4 id="password">password<a class="headerlink" href="#password" title="Permanent link">&para;</a></h4>
-<p>Input example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;password&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;ConfirmPassword&quot;</span><span class="p">:</span> <span class="s2">&quot;Nethesis,1234&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;NewPassword&quot;</span><span class="p">:</span> <span class="s2">&quot;Nethesis,1234&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;CurrentPassword&quot;</span><span class="p">:</span> <span class="s2">&quot;Nethesis,1234&quot;</span>
-<span class="p">}</span>
-</pre></div>
-
-
 <h2 id="hints_3">hints<a class="headerlink" href="#hints_3" title="Permanent link">&para;</a></h2>
 <p>Available hints:</p>
 <ul>
-<li>the system is using the default password</li>
+<li>the root user is using the default password</li>
 <li>cockpit port is open to the red network without IP limitations</li>
 </ul>
 <h3 id="output_1">Output<a class="headerlink" href="#output_1" title="Permanent link">&para;</a></h3>
