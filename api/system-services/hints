@@ -43,7 +43,7 @@ foreach ($confDb->get_all_by_prop('type' => 'service')) {
     $desc =~ s/.*=//;
 
     if ($s->is_enabled() !=  $s->is_running()) {
-        $details->{$key} = 'service_not_consistent';
+        $details->{$key} = 'service_is_enabled_but_is_not_running';
     }
 }
 

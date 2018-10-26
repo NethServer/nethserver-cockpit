@@ -57,7 +57,7 @@ function validate_remoteldap($data) {
 function validate_localad($data) {
     $v = new LegacyValidator($data);
     $workgroupValidator = $v->createValidator(Validate::HOSTNAME_SIMPLE)->maxLength(15);
-    $realmValidator = $v->createValidator(Validate::HOSTNAME_FQDN);
+    $realmValidator = $v->createValidator(Validate::HOSTNAME_FQDN)->platform('dcrealm');
     $ipAddressValidator = $v->createValidator(Validate::IP)->platform('dcipaddr');
     $v->declareParameter('Realm', $realmValidator);
     $v->declareParameter('Workgroup', $workgroupValidator);

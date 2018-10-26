@@ -35,7 +35,7 @@ function validate_group_create($data) {
     $users = list_users();
     foreach ($data['members'] as $m) {
         if (!in_array($m, $users)) {
-            $v->addValidationError('members','non_exiting_user');
+            $v->addValidationError('members','non_existing_user');
             error($v);
         }
     }
@@ -55,7 +55,7 @@ function validate_group_update($data) {
     $users = list_users();
     foreach ($data['members'] as $m) {
         if (!in_array($m, $users)) {
-            $v->addValidationError('members','non_exiting_user');
+            $v->addValidationError('members','non_existing_user');
             error($v);
         }
     }
@@ -98,7 +98,7 @@ function validate_user_create($data) {
     $groups = list_groups();
     foreach ($data['groups'] as $g) {
         if (!in_array($g, $groups)) {
-            $v->addValidationError('groups','non_exiting_group');
+            $v->addValidationError('groups','non_existing_group');
             error($v);
         }
     }
@@ -123,7 +123,7 @@ function validate_user_update($data) {
     $groups = list_groups();
     foreach ($data['groups'] as $g) {
         if (!in_array($g, $groups)) {
-            $v->addValidationError('groups','non_exiting_group');
+            $v->addValidationError('groups','non_existing_group');
             error($v);
         }
     }

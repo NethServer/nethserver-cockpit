@@ -42,6 +42,20 @@ function validate_time($time, &$error)
     return true;
 }
 
+function fail($parameter, $error)
+{
+    $error = array(
+        "id" => time(),
+        "type" => 'NotValid',
+        "message" => "validation_failed",
+        "attributes" => array(array("parameter" => $parameter, "value" => '', "error" => $error))
+    );
+
+    echo json_encode($error);
+    exit(1);
+
+}
+
 $data = readInput();
 $action = $data['action'];
 
@@ -119,15 +133,26 @@ if ($action == 'create-backup-data' || $action == 'update-backup-data') {
     exec("/usr/libexec/nethserver/api/system-backup/check-sftp {$data['SftpHost']} {$data['SftpPort']} {$data['SftpUser']} {$data['SftpDirectory']} $pass_file", $output, $ret);
     unlink($pass_file);
     if ($ret > 0) {
-        error(array("type" => "NotValid", "message" => "Invalid credentials"));
+        fail('SftpHost', 'sftp_invalid_credentials');
     } else {
         success();
     }
 
 } else if ($action == 'b2-credentials') {
     exec("/usr/libexec/nethserver/api/system-backup/check-b2 {$data['B2AccountId']} {$data['B2AccountKey']} {$data['B2Bucket']}", $output, $ret);
+    $errors = array(
+        "1" => "b2_unauthorized",
+        "2" => "b2_bucket_not_found",
+        "3" => "b2_upload failed",
+        "4" => "b2_delete_failed"
+    );
     if ($ret > 0) {
-        error(array("type" => "NotValid", "message" => "Invalid credentials"));
+        if ($ret == 1 ) {
+            $param = "B2AccountId";
+        } else {
+            $param = "B2Bucket";
+        }
+        fail($param, $errors["$ret"]);
     } else {
         success();
     }
@@ -135,7 +160,7 @@ if ($action == 'create-backup-data' || $action == 'update-backup-data') {
 } else if ($action == 's3-credentials') {
     exec("/usr/libexec/nethserver/api/system-backup/check-s3 {$data['S3AccessKey']} {$data['S3SecretKey']} {$data['S3Bucket']} {$data['S3Host']}", $output, $ret);
     if ($ret > 0) {
-        error(array("type" => "NotValid", "message" => "Invalid credentials"));
+        fail("S3Bucket","s3_unauthorized");
     } else {
         success();
     }
@@ -143,7 +168,7 @@ if ($action == 'create-backup-data' || $action == 'update-backup-data') {
 } else if ($action == 'nfs-credentials') {
     exec("/usr/libexec/nethserver/api/system-backup/check-nfs {$data['NFSHost']} {$data['NFSShare']}", $output, $ret);
     if ($ret > 0) {
-        error(array("type" => "NotValid", "message" => "Invalid credentials"));
+        fail("NFSHost","nfs_unauthorized");
     } else {
         success();
     }
@@ -154,14 +179,21 @@ if ($action == 'create-backup-data' || $action == 'update-backup-data') {
     exec("/usr/libexec/nethserver/api/system-backup/check-cifs {$data['SMBHost']} $pass_file {$data['SMBShare']}", $output, $ret);
     unlink($pass_file);
     if ($ret > 0) {
-        error(array("type" => "NotValid", "message" => "Invalid credentials"));
+        fail("SMBHost","cifs_unauthorized");
     } else {
         success();
     }
 
 } else if ($action == 'disk-access') {
     exec("/usr/libexec/nethserver/api/system-backup/check-disk {$data['USBLabel']}", $output, $ret);
+    $errors = array(
+        "1" => "usb_filesystem_not_found",
+        "2" => "usb_mount_failed",
+        "3" => "usb_write_failed",
+        "4" => "usb_delete_failed"
+    );
     if ($ret > 0) {
+        fail($data['USBLabel'], $errors["$ret"]);
         error(array("type" => "NotValid", "message" => "Disk access failed"));
     } else {
         success();

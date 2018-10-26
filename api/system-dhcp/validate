@@ -79,20 +79,20 @@ if ($action == 'create-reservation') {
 
     if ($ipValidator->evaluate($data['DhcpRangeStart'])) {
         if (ip2long($data['DhcpRangeStart']) < ip2long(getDefaultRange('start', $interfaces[$key]))) {
-            $v->addValidationErrore('DhcpRangeStart', 'valid_iprange_outofbounds');
+            $v->addValidationError('DhcpRangeStart', 'valid_ip_range_out_of_bounds');
         }
     } else {
         $v->addValidationError('DhcpRangeStart', $ipValidator);
     }
     if ($ipValidator->evaluate($data['DhcpRangeEnd'])) {
         if (ip2long($data['DhcpRangeEnd']) > ip2long(getDefaultRange('end', $interfaces[$key]))) {
-            $v->addValidationError('DhcpRangeEnd', 'valid_iprange_outofbounds');
+            $v->addValidationError('DhcpRangeEnd', 'valid_ip_range_out_of_bounds');
         }
     } else {
         $v->addValidationError('DhcpRangeEnd', $ipValidator);
     }
     if (ip2long($data['DhcpRangeStart']) > ip2long($data['DhcpRangeEnd'])) {
-        $v->addValidationError('DhcpStart', 'valid_iprange_outofbounds');
+        $v->addValidationError('DhcpStart', 'valid_ip_range_out_of_bounds');
     }
 
 }

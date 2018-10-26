@@ -52,4 +52,4 @@ if ($cmd eq 'check-app') {
         }
     }
 }
-error("NotValid","Permission denied");
+error("NotValid","permission_denied");

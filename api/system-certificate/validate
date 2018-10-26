@@ -52,7 +52,7 @@ function validate_letsencrypt($props)
     $domains = array_filter(preg_split('/[,\s]+/', $props['LetsEncryptDomains']));
     foreach ($domains as $domain){
         if( ! $hostnameValidator->evaluate($domain)) {
-            $v->addValidationError('LetsEncryptDomains', "Domain $domain is not a valid domain FQDN");
+            $v->addValidationError('LetsEncryptDomains', "all_domains_must_be_fqdn");
             error($v);
         }
     }
@@ -88,7 +88,7 @@ function validate_upload($files)
     file_put_contents($crt, base64_decode($files['certificate']));
     exec("/sbin/e-smith/validate pem-certificate $crt",$output,$ret);
     if ($ret!=0) {
-        $v->addValidationError('certificate','Invalid x509 certificate');
+        $v->addValidationError('certificate','invalid_x509_ceritficate');
         unlink($crt);
         error($v);
     }
@@ -97,7 +97,7 @@ function validate_upload($files)
     file_put_contents($key, base64_decode($files['key']));
     exec("/sbin/e-smith/validate rsa-key $key",$output,$ret);
     if ($ret!=0) {
-        $v->addValidationError('key','Invalid x509 key');
+        $v->addValidationError('key','invalid_x509_key');
         unlink($key);
         error($v);
     }
@@ -116,7 +116,7 @@ function validate_upload($files)
         file_put_contents($crt, base64_decode($files['chain']));
         exec("/sbin/e-smith/validate pem-certificate $crt",$output,$ret);
         if ($ret!=0) {
-            $v->addValidationError('chain','Invalid x509 certificate');
+            $v->addValidationError('chain','invalid_x509_ceritficate');
             unlink($crt);
             error($v);
         }
