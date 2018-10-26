@@ -14,14 +14,19 @@
       </div>
 
       <h3>{{$t('settings.password')}}</h3>
+      <div v-if="!newUser.canChangePassword" class="alert alert-info alert-dismissable">
+        <span class="pficon pficon-info"></span>
+        <strong>{{$t('settings.cannot_change_password')}}.</strong> {{$t('settings.remote_account_provider_password')}}.
+      </div>
       <form class="form-horizontal" v-on:submit.prevent="saveSettings('password')">
         <div v-if="!view.isRoot" class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.old_password')}}</label>
           <div class="col-sm-5">
-            <input required :type="newUser.togglePass ? 'text' : 'password'" v-model="newUser.oldPassword" class="form-control">
+            <input :disabled="!newUser.canChangePassword" required :type="newUser.togglePass ? 'text' : 'password'" v-model="newUser.oldPassword"
+              class="form-control">
           </div>
           <div class="col-sm-2">
-            <button @click="togglePass()" type="button" class="btn btn-primary">
+            <button @click="togglePass()" type="button" class="btn btn-primary adjust-top-min">
               <span :class="[!newUser.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"></span>
             </button>
           </div>
@@ -29,8 +34,10 @@
         <div :class="['form-group', errors.newPassword.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.new_password')}}</label>
           <div class="col-sm-5">
-            <input required :type="newUser.togglePass ? 'text' : 'password'" v-model="newUser.newPassword" class="form-control">
-            <span v-if="errors.newPassword.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+errors.newPassword.message)}}</span>
+            <input :disabled="!newUser.canChangePassword" required :type="newUser.togglePass ? 'text' : 'password'" v-model="newUser.newPassword"
+              class="form-control">
+            <span v-if="errors.newPassword.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.newPassword.message)}}</span>
           </div>
           <div v-show="view.isRoot" class="col-sm-2">
             <button @click="togglePass()" type="button" class="btn btn-primary">
@@ -49,7 +56,7 @@
             <div v-if="loaders.password" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
           </label>
           <div class="col-sm-5">
-            <button :disabled="!newUser.passwordStrength" class="btn btn-primary" type="submit">{{$t('save')}}</button>
+            <button :disabled="!newUser.passwordStrength || !newUser.canChangePassword" class="btn btn-primary" type="submit">{{$t('save')}}</button>
           </div>
         </div>
       </form>
@@ -121,7 +128,8 @@
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.notify_from')}}</label>
           <div class="col-sm-5">
             <input required type="email" v-model="settings.root.SenderAddress" class="form-control">
-            <span v-if="errors.SenderAddress.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+errors.SenderAddress.message)}}</span>
+            <span v-if="errors.SenderAddress.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.SenderAddress.message)}}</span>
           </div>
         </div>
         <div v-for="(a, i) in settings.root.EmailAddress" v-bind:key="i" :class="['form-group', errors.EmailAddress.hasError ? 'has-error' : '']">
@@ -129,7 +137,8 @@
             $t('settings.notify_to') : ''}}</label>
           <div class="col-sm-5">
             <input required type="email" v-model="a.email" class="form-control">
-            <span v-if="errors.EmailAddress.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+errors.EmailAddress.message)}}</span>
+            <span v-if="errors.EmailAddress.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.EmailAddress.message)}}</span>
           </div>
           <div class="col-sm-2">
             <button @click="removeEmail(a, i)" class="btn btn-default" type="button">
@@ -163,14 +172,16 @@
           <div class="col-sm-5">
             <toggle-button class="min-toggle" :width="40" :height="20" :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
               :value="settings.cockpit.access" :sync="true" @change="toggleSettingsLimitAccess()" />
-            <span v-if="errors.access.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+errors.access.message)}}</span>
+            <span v-if="errors.access.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.access.message)}}</span>
           </div>
         </div>
         <div v-if="settings.cockpit.access" :class="['form-group', errors.LimitAccess.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.allow_only')}}</label>
           <div class="col-sm-5">
             <textarea v-model="settings.cockpit.LimitAccess" class="form-control"></textarea>
-            <span v-if="errors.LimitAccess.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+errors.LimitAccess.message)}}</span>
+            <span v-if="errors.LimitAccess.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.LimitAccess.message)}}</span>
           </div>
         </div>
         <div class="form-group">
@@ -191,7 +202,8 @@
           <div class="col-sm-5">
             <toggle-button class="min-toggle" :width="40" :height="20" :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
               :value="settings.cockpit.ShowHints" :sync="true" @change="toggleSettingsHints()" />
-            <span v-if="errors.ShowHints.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+errors.ShowHints.message)}}</span>
+            <span v-if="errors.ShowHints.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.ShowHints.message)}}</span>
           </div>
         </div>
         <div class="form-group">
@@ -217,28 +229,28 @@ export default {
     PasswordMeter
   },
   /*  beforeRouteEnter(to, from, next) {
-      next(vm => {
-        vm.exec(
-          ["system-authorization/read"],
-          null,
-          null,
-          function(success) {
-            success = JSON.parse(success);
+        next(vm => {
+          vm.exec(
+            ["system-authorization/read"],
+            null,
+            null,
+            function(success) {
+              success = JSON.parse(success);
 
-            if (success.system.indexOf(to.path.substring(1)) == -1) {
-              window.location.hash = "#/";
-              vm.$router.push("/");
-            }
+              if (success.system.indexOf(to.path.substring(1)) == -1) {
+                window.location.hash = "#/";
+                vm.$router.push("/");
+              }
 
-            vm.view.isAuth = true;
-          },
-          function(error) {
-            console.error(error);
-          },
-          false
-        );
-      });
-    }, */
+              vm.view.isAuth = true;
+            },
+            function(error) {
+              console.error(error);
+            },
+            false
+          );
+        });
+      }, */
   mounted() {
     this.getSettings();
     this.getHints();
@@ -282,7 +294,8 @@ export default {
         oldPassword: "",
         confirmNewPassword: "",
         passwordStrength: false,
-        togglePass: false
+        togglePass: false,
+        canChangePassword: false
       }
     };
   },
@@ -375,6 +388,8 @@ export default {
           context.settings = success.configuration;
 
           context.view.isRoot = success.status.isRoot == 1;
+          context.newUser.canChangePassword =
+            success.status.canChangePassword == 1;
 
           if (context.view.isRoot) {
             // root
