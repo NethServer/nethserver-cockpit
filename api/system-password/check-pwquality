@@ -1,0 +1,43 @@
+#!/usr/bin/python
+
+#
+# Read new and old password from a file, then check passwords against pwquality library.
+#
+# The file must contain the old password in the first line, and the new password in the second line
+#
+
+from __future__ import print_function
+import pwquality
+import sys
+import os.path
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+
+if len (sys.argv) < 2:
+    eprint("Usage: check-pwquality <file");
+    sys.exit(1)
+
+passfile = sys.argv[1]
+
+if not os.path.isfile(passfile):
+    eprint("No such firle or directory: %s" % passfile);
+    sys.exit(1)
+
+# read file
+fp = open(passfile, "r")
+lines = fp.readlines()
+old = lines[0];
+new = lines[1]
+
+# execute pwquality checkes
+try:
+    pw_quality = pwquality.PWQSettings()
+    pw_quality.read_config()
+    pw_quality.check(new, old, None)
+except pwquality.PWQError as (e, msg):
+    print(msg)
+    sys.exit(1)
+
+sys.exit(0)

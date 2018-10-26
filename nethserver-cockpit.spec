@@ -12,7 +12,7 @@ BuildArch:      noarch
 
 BuildRequires:  nethserver-devtools
 Requires:       cockpit, cockpit-storaged, cockpit-packagekit
-Requires:	jq, openldap-clients, expect
+Requires:	jq, openldap-clients, expect, python-pwquality
 
 %description
 NethServer Server Manager Web UI based on Cockpit

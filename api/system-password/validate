@@ -31,7 +31,27 @@ check_password($data, $v);
 
 if (!$v->validate()) {
     error($v);
-} else {
-    success();
 }
 
+# Use pwquality helper
+$tmpFilePath = @tempnam(sys_get_temp_dir(), 'ng-');
+$tmpFile = fopen($tmpFilePath, 'w');
+fwrite($tmpFile, $data['currentPassword']."\n");
+fwrite($tmpFile, $data['newPassword']."\n");
+fclose($tmpFile);
+exec("/usr/libexec/nethserver/api/system-password/check-pwquality $tmpFilePath", $out, $ret);
+unlink($tmpFilePath);
+
+if ($ret > 0) {
+    $error = array(
+        "id" => time(),
+        "type" => 'NotValid',
+        "message" => "validation_failed",
+        "attributes" => array(array("parameter" => "newPassword", "value" => $data['newPassword'], "error" => implode("\n",$out)))
+    );
+
+    echo json_encode($error);
+    exit(1);
+}
+
+success();

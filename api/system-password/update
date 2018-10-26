@@ -37,14 +37,15 @@ echo $data | jq -r ".newPassword" >> $pass_file
 echo $data | jq -r ".confirmNewPassword" >> $pass_file
 if [ $id -gt 0 ]; then
     echo $data | jq -r ".currentPassword" >> $pass_file
-    timeout 3 /usr/libexec/nethserver/api/system-password/change-user-passwd $pass_file &>/dev/null
+    LANG=C timeout 3 /usr/libexec/nethserver/api/system-password/change-user-passwd $pass_file &>/dev/null
 else
-    timeout 3 /usr/libexec/nethserver/api/system-password/change-root-passwd $pass_file &>/dev/null
+    LANG=C timeout 3 /usr/libexec/nethserver/api/system-password/change-root-passwd $pass_file &>/dev/null
 fi
 tmp=$?
 rm -f $pass_file
 
 if [ $tmp -gt 0 ]; then
+    {"id":1540482967,"type":"NotValid","message":"validation_failed","attributes":[{"parameter":"newPassword","value":null,"error":"weak_password"}]}
     error
 else
     success
