@@ -84,7 +84,7 @@ sub success
 sub error
 {
     my $type = shift || 'GenericError';
-    my $msg = shift || 'Generic error';
+    my $msg = shift || 'generic_error';
     print encode_json({ 'id' => time, 'type' => $type, 'message' => $msg });
     exit 1;
 }
@@ -102,7 +102,7 @@ sub readInput
         my $ref = decode_json($str) || undef;
         return $ref;
     } or do {
-        error('InvalidInput', 'No JSON data available');
+        error('InvalidInput', 'no_json_data_available');
     };
 
 }

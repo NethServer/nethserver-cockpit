@@ -38,18 +38,13 @@ function validate_remoteldap($data) {
 
     if($data['StartTls'] === 'enabled' && substr($data['LdapURI'], 0, 6) === 'ldaps:') {
         $errors++;
-        $v->addValidationError('StartTls', _('StartTLS conflicts with "ldaps://" URI scheme'), 'enabled');
+        $v->addValidationError('StartTls', 'starttls_conflict');
     }
 
     $credentialsValidator = $v->createValidator()->platform('ldap-credentials', $data['BaseDN'], $data['LdapURI'], $data['StartTls'] === 'enabled' ? '1' : '', $data['BindDN']);
     if( ! $credentialsValidator->evaluate($data['BindPassword'])) {
         $errors++;
-        $error = $credentialsValidator->getFailureInfo();
-        $errorCodes['valid_platform,ldap-credentials,ldaptestbind,49'] = _('Invalid LDAP credentials');
-        $errorCodes['valid_platform,ldap-credentials,ldaptestbind,1'] = _('LDAP connection error');
-        $errorCodes['valid_platform,ldap-credentials,ldaptestbind,32'] = _('Base DN was not found or insufficient rights');
-        $errorCodes['valid_platform,ldap-credentials,ldaptestbind,34'] = _('Invalid DN syntax');
-        $v->addValidationError('BindDN', $errorCodes[$error[0][0]] ?: 'generic error');
+        $v->addValidationError('BindDN', $credentialsValidator->getFailureInfo());
     }
 
     if (!$v->validate() || $errors > 0) {

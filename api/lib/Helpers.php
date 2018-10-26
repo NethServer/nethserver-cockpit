@@ -40,7 +40,7 @@ function readInput()
         echo json_encode(array(
             "id" => time(),
             "type" => 'InvalidInput',
-            "message" => "No JSON data available"
+            "message" => "no_json_data_available"
         ));
         exit(1);
     }
@@ -80,13 +80,13 @@ function error($arg = NULL)
     $error = array(
         "id" => time(),
         "type" => "GenericError",
-        "message" => "Generic error"
+        "message" => "generic_error"
     );
     if ($arg instanceof LegacyValidator) {
         $error = array(
             "id" => time(),
             "type" => 'NotValid',
-            "message" => "Validation failed",
+            "message" => "validation_failed",
         );
         foreach ($arg->invalidParameters as $p => $v) {
             $error["attributes"][] = $v;

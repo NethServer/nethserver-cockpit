@@ -68,7 +68,7 @@ if ($cmd eq 'local-ldap') {
     my $cmd = "/usr/sbin/account-provider-test probead " . $input->{'AdRealm'} . " " . $input->{'AdDns'};
     my $output = `$cmd 2>/dev/null`;
     if ($? > 0) {
-        error("EventFailed", "Active directory probe failed");
+        error("EventFailed", "active_directory_probe_failed");
     }
     my $probe = decode_json($output);
 
@@ -102,7 +102,7 @@ if ($cmd eq 'local-ldap') {
     }
 
     $cmd = "/usr/sbin/realm join --server-software=active-directory -v -U " . $input->{'AdUsername'} . " " . $input->{'AdRealm'};
-    my $pid = open3(\*CHLD_IN, \*CHLD_OUT, \*CHLD_ERR, $cmd) or error("EventFailed", "Couldn't fork: $!\n");
+    my $pid = open3(\*CHLD_IN, \*CHLD_OUT, \*CHLD_ERR, $cmd) or error("EventFailed", "join_failed");
     print CHLD_IN $input->{'AdPassword'}."\n";
     my $err = <CHLD_ERR>;
     $output = <CHLD_OUT>;
@@ -125,7 +125,7 @@ if ($cmd eq 'local-ldap') {
         if ($input->{'AdDns'}) {
             system("/sbin/e-smith/signal-event nethserver-dnsmasq-save");
         }
-        error("EventFailed", "Join failed: ".$err);
+        error("EventFailed", $err);
     } else {
         $db->set_prop('sssd', 'status', 'enabled');
         system("/sbin/e-smith/signal-event -j nethserver-sssd-save");

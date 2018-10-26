@@ -576,10 +576,29 @@
     },
     "hints": {
       "Password": "Password",
-      "change_default_root_password": "Change default root password"
+      "change_default_root_password": "Change default root password",
+      "Company": "Company",
+      "change_default_company": "Change the default company",
+      "one_or_more_dns_not_working": "One or more DNS servers are not responding",
+      "TCPPort": "TCP port"
     },
     "validation": {
-
+      "weak_password": "Password too weak, it could be inside a dictinary or too similar to the previous one",
+      "change_default_ssh_port": "Change the default SSH port to lower brute force attack rates",
+      "no_json_data_available": "No JSON data available",
+      "The password is too similar to the old one": "The password is too similar to the old one",
+      "The password is the same as the old one": "The password is the same as the old one",
+      "generic_error": "Generic error",
+      "validation_failed": "Validation failed",
+      "not_empty": "Field can't be empty",
+      "password_no_match": "Passwords don't match",
+      "starttls_conflict" : "StartTLS conflicts with 'ldaps://' URI scheme",
+      "valid_platform,ldap-credentials,ldaptestbind,49": "Invalid LDAP credentials",
+      "valid_platform,ldap-credentials,ldaptestbind,1": "LDAP connection error",
+      "valid_platform,ldap-credentials,ldaptestbind,32": "Base DN was not found or insufficient rights",
+      "valid_platform,ldap-credentials,ldaptestbind,34": "Invalid DN syntax",
+      "active_directory_probe_failed": "Active directory probe failed",
+      "join_failed": "join_failed"
     }
   }
 }

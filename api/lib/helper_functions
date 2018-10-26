@@ -28,7 +28,7 @@
 # Print an InvalidInput error and exit 1
 #
 function invalid_error {
-        error "InvalidInput" "No JSON data available"
+        error "InvalidInput" "no_json_data_available"
 }
 
 #
@@ -39,7 +39,7 @@ function invalid_error {
 #
 function error {
     type=${1:-"GenericError"}
-    message=${2-"Generic error"}
+    message=${2-"generic_error"}
 
     printf '{"id":"%s","type":"%s","message":"%s"}' "$(date +%s)" "$type" "$message"
     exit 1
