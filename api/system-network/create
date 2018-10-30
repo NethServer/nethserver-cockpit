@@ -1,0 +1,87 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
+
+use warnings;
+use strict;
+use esmith::NetworksDB;
+
+our $ndb = esmith::NetworksDB->open();
+
+my $input = readInput();
+my $cmd = $input->{'action'};
+
+sub find_next_alias
+{
+    my $parent = shift;
+    my $k = -1;
+    foreach my $i ($ndb->get_all()) {
+        if ($i->key =~ /^$parent/) {
+            $k++;
+        }
+    }
+    return "$parent:$k";
+}
+
+sub find_next_bridge
+{
+    my $k = 0;
+    foreach my $i ($ndb->get_all()) {
+        if ($i->prop('type') eq 'bridge') {
+            $k++;
+        }
+    }
+
+    return "br$k";
+}
+
+if($cmd eq 'create-alias') {
+
+    my $alias = find_next_alias($input->{'parent'});
+    $ndb->new_record($alias, { 'role' => 'alias', 'ipaddr' => $input->{'ipaddr'}, 'netmask' => $input->{'netmask'}, 'type' => 'alias' });
+    system("/sbin/e-smith/signal-event -j interface-update");
+
+} elsif($cmd eq 'create-bridge') {
+
+    my $bridge = find_next_bridge();
+    $ndb->new_record($bridge, {
+            'bootproto' => $input->{'bootproto'} || 'none',
+            'role' => $input->{'role'} || '',
+            'ipaddr' => $input->{'ipaddr'} || '',
+            'netmask' => $input->{'netmask'} || '',
+            'gateway' => $input->{'gateway'} || '',
+            'type' => 'bridge'
+        });
+    my $devices = $input->{'devices'};
+    foreach (@$devices) {
+        my $d = $ndb->get($_) || next;
+        my $type = $d->prop('type') || next;
+        $d->delete();
+        $ndb->new_record($_, { 'type' => $type, 'role' => 'bridged', 'bridge' => $bridge });
+    }
+    system("/sbin/e-smith/signal-event -j interface-update");
+
+} else {
+    error();
+}
+

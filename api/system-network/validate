@@ -1,0 +1,136 @@
+#!/usr/bin/php
+<?php
+/*
+ * Copyright (C) 2018 Nethesis S.r.l.
+ * http://www.nethesis.it - nethserver@nethesis.it
+ *
+ * This script is part of NethServer.
+ *
+ * NethServer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License,
+ * or any later version.
+ *
+ * NethServer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NethServer.  If not, see COPYING.
+*/
+
+require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
+
+function used_ip($ip) {
+    global $v;
+    $ndb = new EsmithDatabase('networks');
+    foreach ($ndb->getAll() as $n) {
+        if (isset($n['ipaddr']) && ($n['ipaddr'] == $ip)) {
+            $v->addValidationError('ipaddr', 'ip_address_already_in_use');
+        }
+    }
+    $db = new EsmithDatabase('configuration');
+    if ($db->getProp('nsdc','IpAddress')) {
+        $v->addValidationError('ipaddr', 'ip_address_used_by_nsdc');
+    }
+}
+
+function can_release($interface) {
+    global $v;
+    $green = 0;
+    $db = new EsmithDatabase('networks');
+    $i = $db->getKey($interface);
+    if ($i['role'] == 'green') {
+        foreach ($db->getAll() as $n) {
+            if (isset($n['role']) && $n['role'] == 'green') {
+                $green++;
+            }
+        }
+        $green--;
+        if ($green <= 0) {
+            $v->addValidationError('interface', 'one_green_interface_must_always_exists');
+        }
+    }
+}
+
+function check_network_config($data) {
+    global $v;
+
+    # an interface without a role is a valid one
+    if (!isset($data['role']) || !$data['role']) {
+        return;
+    }
+    # if the role is not empty, must be one of the list
+    if (!in_array($data['role'], array('green', 'red', 'orange', 'blue'))) {
+        $v->addValidationError('role', 'invalid_role');
+    }
+    # green and red roles can have static or dynamic address
+    if  ($data['role'] == 'green' || $data['role'] == 'red') {
+        $v->declareParameter('bootproto', $v->createValidator()->memberOf('none', 'dhcp'));
+    }
+    # orange and blue interfaces must be static
+    if ($data['bootproto'] == 'none' || $data['role'] == 'orange' || $data['role'] == 'blue') {
+        $v->declareParameter('ipaddr', Validate::IPv4);
+        $v->declareParameter('netmask', Validate::IPv4_NETMASK);
+        $v->declareParameter('gateway', Validate::IPv4_OR_EMPTY);
+        used_ip($data['ipaddr']);
+    }
+}
+
+function check_devices($devices) {
+    global $v;
+
+    $db = new EsmithDatabase('networks');
+    foreach ($devices as $d) {
+        $r = $db->getKey($d);
+        if (!$r) {
+            $v->addValidationError('devices', 'non_existing_interface');
+        }
+        if (isset($r['role']) && $r['role']) {
+            $v->addValidationError('devices', 'interface_already_in_use');
+        } 
+    }
+}
+
+$data = readInput();
+$action = $data['action'];
+
+$v = new LegacyValidator($data);
+
+if ($action == 'create-alias') {
+
+    $db = new EsmithDatabase('networks');
+    $parent = $db->getKey($data['parent']);
+    if (!$parent) {
+        $v->addValidationError('parent', 'non_existing_interface');
+    }
+    used_ip($data['ipaddr']);
+    $v->declareParameter('ipaddr', Validate::IPv4);
+    $v->declareParameter('netmask', Validate::IPv4_NETMASK);
+
+} else if ($action == 'release-role') {
+
+    $db = new EsmithDatabase('networks');
+    $parent = $db->getKey($data['interface']);
+    if (!$parent) {
+        $v->addValidationError('interface', 'non_existing_interface');
+    }
+    can_release($data['interface']);
+
+} else if ($action == 'create-bridge') {
+
+    check_devices($data['devices']);
+    check_network_config($data);
+
+} else {
+    error();
+}
+
+# Validate the input
+if ($v->validate()) {
+    success();
+} else {
+    error($v);
+}
+

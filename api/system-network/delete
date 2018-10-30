@@ -1,0 +1,58 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
+
+use warnings;
+use strict;
+use esmith::NetworksDB;
+
+our $ndb = esmith::NetworksDB->open();
+
+my $input = readInput();
+my $cmd = $input->{'action'};
+
+sub find_alias
+{
+    my $ipaddr = shift;
+    my $netmask = shift;
+    foreach my $i ($ndb->get_all()) {
+        my $ip = $i->prop('ipaddr') || next;
+        my $net = $i->prop('netmask') || next;
+        if ($ip eq $ipaddr && $net eq $netmask && $i->key =~ /:/) {
+            return $i->key;
+        }
+    }
+    return undef;
+}
+
+if($cmd eq 'delete-alias') {
+    my $alias = find_alias($input->{'ipaddr'}, $input->{'netmask'});
+    if ($alias) {
+        my $r = $ndb->get($alias);
+        $r->delete();
+    }
+    system("/sbin/e-smith/signal-event -j interface-update");
+} else {
+    error();
+}
+
