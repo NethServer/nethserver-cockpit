@@ -105,6 +105,11 @@ if($cmd eq 'list') {
     foreach my $n ($ndb->get_all()) {
         my %props = $n->props;
         next if ($props{'type'} eq 'xdsl-disabled');
+        if ($props{'type'} eq 'vlan') {
+            my @tmp = split(/\./,$n->key);
+            $props{'parent'} = $tmp[0];
+            $props{'tag'} = $tmp[1];
+        }
         $props{'name'} = $n->key;
         my $role = $props{'role'} || '';
         if ($props{'type'} eq 'ethernet') {
@@ -201,7 +206,18 @@ if($cmd eq 'list') {
 } elsif ($cmd eq 'available') {
 
     my @interfaces = list_free_interfaces();
-   $ret = \@interfaces;
+    $ret = \@interfaces;
+
+} elsif ($cmd eq 'vlan-available') {
+
+    my @interfaces;
+    foreach my $n ($ndb->get_all()) {
+        my $type = $n->prop('type');
+        if ($type ne 'alias' && $type ne 'vlan' && $type !~ /xdsl/) {
+            push(@interfaces, $n->key);
+        }
+    }
+    $ret = \@interfaces;
 
 } elsif ($cmd eq 'bond-types') {
 

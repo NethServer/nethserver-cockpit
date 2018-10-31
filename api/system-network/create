@@ -116,6 +116,7 @@ if($cmd eq 'create-alias') {
             'ipaddr' => $input->{'ipaddr'} || '',
             'netmask' => $input->{'netmask'} || '',
             'gateway' => $input->{'gateway'} || '',
+            'BondOptMode' => $input->{'BondOptMode'},
             'type' => 'bond'
         });
     my $devices = $input->{'devices'};

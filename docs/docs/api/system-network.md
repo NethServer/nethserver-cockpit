@@ -14,6 +14,7 @@ Valid actions are:
 - `heirs`
 - `available`
 - `bond-types`
+- `vlan-available`
 
 #### list
 
@@ -88,6 +89,21 @@ Example:
 }
 ```
 
+#### vlan-available
+
+List all interfaces suitable for a vlan.
+
+Example:
+```json
+[
+  "bond0",
+  "br0",
+  "enp0s3",
+  "enp0s8",
+  "enp0s9"
+]
+```
+
 ### Output
 
 #### list
@@ -100,6 +116,50 @@ Example:
   "status": null,
   "configuration": {
     "green": [
+      {
+        "bootproto": "none",
+        "gateway": "",
+        "BondOptMode": "2",
+        "name": "bond0",
+        "devices": [
+          {
+            "link": "1",
+            "bootproto": "none",
+            "bus": "pci",
+            "existing": 1,
+            "master": "bond0",
+            "model": "Intel Corporation 82540EM Gigabit Ethernet Controller (rev 02)",
+            "name": "enp0s8",
+            "virtual": 0,
+            "speed": "1000",
+            "type": "ethernet",
+            "mac": "08:00:27:bd:3d:37",
+            "role": "slave",
+            "driver": "e1000"
+          },
+          {
+            "link": "1",
+            "bootproto": "none",
+            "bus": "pci",
+            "existing": 1,
+            "master": "bond0",
+            "model": "Advanced Micro Devices Inc. [AMD] 79c970 [PCnet32 LANCE] (rev 10)",
+            "name": "enp0s9",
+            "virtual": 0,
+            "speed": "",
+            "type": "ethernet",
+            "mac": "08:00:27:36:f0:08",
+            "role": "slave",
+            "driver": "pcnet32"
+          }
+        ],
+        "virtual": 1,
+        "aliases": [],
+        "type": "bond",
+        "netmask": "255.255.255.0",
+        "role": "green",
+        "ipaddr": "192.168.4.246"
+      },
       {
         "bootproto": "none",
         "gateway": "192.168.5.253",
@@ -132,38 +192,24 @@ Example:
     "free": [],
     "blue": [
       {
-        "bus": "pci",
-        "gateway": "",
-        "model": "Intel Corporation 82540EM Gigabit Ethernet Controller (rev 02)",
-        "speed": "1000",
-        "netmask": "255.255.255.0",
-        "mac": "08:00:27:bd:3d:37",
-        "ipaddr": "10.10.10.2",
-        "link": "1",
+        "parent": "enp0s8",
         "bootproto": "none",
-        "existing": 1,
-        "name": "enp0s8",
+        "gateway": "",
+        "name": "enp0s8.2",
         "devices": [],
-        "virtual": 0,
-        "aliases": [
-          {
-            "name": "enp0s8:1",
-            "netmask": "255.255.255.0",
-            "type": "alias",
-            "role": "alias",
-            "virtual": 1,
-            "ipaddr": "11.11.11.2"
-          }
-        ],
-        "type": "ethernet",
+        "virtual": 1,
+        "aliases": [],
+        "type": "vlan",
+        "netmask": "255.255.255.0",
+        "tag": "2",
         "role": "blue",
-        "driver": "e1000"
+        "ipaddr": "11.12.13.246"
       }
     ],
     "other": [],
+    "pppoe": 0,
     "orange": [],
-    "red": [],
-    "pppoe": 0
+    "red": []
   }
 }
 ```
@@ -211,6 +257,7 @@ The request must contain an `action` field. Valid actions are:
 - `create-bond`
 - `create-vlan`
 - `release-role`
+- `change-properties`
 
 Constraints for `create-alias`
 
@@ -222,30 +269,27 @@ Constraints for `create-bridge`
 
 - devices: a list of non-configured interface names
 - role: can be empty or `green`, `red`, `blue`, `orange`
-- bootproto: must be `none` for blue and orange roles, can be also `dhcp` for
-  green and red roles
+- bootproto: must be `none` for blue and orange roles, can be also `dhcp` for red role
 - ipaddr: if bootproto is static, must be a free IPv4 address (also checked agains nsdc IP)
 - netmask: if bootproto is static, must be an IPv4 netmask
 - gateway: if bootproto is static, can be empty or an IPv4 address
 
 Constraints for `create-bond`
 
-- mode: can be a value between 0 and 6
+- BondOptMode: can be a value between 0 and 6
 - devices: a list of non-configured interface names
 - role: can be empty or `green`, `red`, `blue`, `orange`
-- bootproto: must be `none` for blue and orange roles, can be also `dhcp` for
-  green and red roles
+- bootproto: must be `none` for blue and orange roles, can be also `dhcp` for red role
 - ipaddr: if bootproto is static, must be a free IPv4 address (also checked agains nsdc IP)
 - netmask: if bootproto is static, must be an IPv4 netmask
 - gateway: if bootproto is static, can be empty or an IPv4 address
 
-Constraints for `create-vlan`:
+Constraints for `create-vlan`
 
 - tag: a positive integer
 - parent: the name of an existing network interface, can't be another vlan
 - role: can be empty or `green`, `red`, `blue`, `orange`
-- bootproto: must be `none` for blue and orange roles, can be also `dhcp` for
-  green and red roles
+- bootproto: must be `none` for blue and orange roles, can be also `dhcp` for red role
 - ipaddr: if bootproto is static, must be a free IPv4 address (also checked agains nsdc IP)
 - netmask: if bootproto is static, must be an IPv4 netmask
 - gateway: if bootproto is static, can be empty or an IPv4 address
@@ -254,6 +298,21 @@ Constraints for `release-role`
 
 - interface: must be the name of an existing network interface
 - the role can't be released if it is the last green interface
+
+Constraints for `release-device`
+
+- interface: must be the name of an existing network enslaved or bonded interface
+-
+Constraints for `change-properties`
+
+- interface: the name of an existing network interface
+- role: can be empty or `green`, `red`, `blue`, `orange`
+- bootproto: must be `none` for blue and orange roles, can be also `dhcp` for red role
+- ipaddr: if bootproto is static, must be a free IPv4 address (also checked agains nsdc IP)
+- netmask: if bootproto is static, must be an IPv4 netmask
+- gateway: if bootproto is static, can be empty or an IPv4 address
+- devices: if the interface is a bond or a bridge, a list of existing free interfaces
+
 
 ### Input
 
@@ -297,7 +356,8 @@ Example:
   "bootproto": "none",
   "ipaddr": "192.168.3.246",
   "netmask": "255.255.255.0",
-  "mode": 0,
+  "gateway": "192.168.1.1",
+  "BondOptMode": 0,
   "devices": [
     "enp0s9",
     "enp0s8"
@@ -329,9 +389,49 @@ Example:
 }
 ```
 
+#### release-device
+
+Example:
+```json
+{
+  "action": "release-device",
+  "interface": "enp0s9"
+}
+```
+
+#### change-properties
+
+The `devices` field is mandatory only for bridges and bonding.
+The `BondOptMode` is mandatory only for bonding;
+
+Example:
+```json
+{
+  "action": "change-properties",
+  "role": "blue",
+  "bootproto": "none",
+  "interface": "br1",
+  "ipaddr": "192.168.1.246",
+  "netmask": "255.255.255.0",
+  "BondOptMode": 0,
+  "devices": [
+    "enp0s9"
+  ]
+}
+```
+
+
 ## update
 
 #### release-role
+
+Use the same input from validate.
+
+#### release-device
+
+Use the same input from validate.
+
+#### change-properties
 
 Use the same input from validate.
 
