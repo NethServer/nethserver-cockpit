@@ -29,30 +29,32 @@ use esmith::NetworksDB;
 our $ndb = esmith::NetworksDB->open();
 
 my $input = readInput();
-my $cmd = $input->{'action'};
 
-sub find_alias
-{
-    my $ipaddr = shift;
-    my $netmask = shift;
-    foreach my $i ($ndb->get_all()) {
-        my $ip = $i->prop('ipaddr') || next;
-        my $net = $i->prop('netmask') || next;
-        if ($ip eq $ipaddr && $net eq $netmask && $i->key =~ /:/) {
-            return $i->key;
+my $i = $ndb->get($input->{'interface'}) || error();
+my $type = $i->prop('type');
+
+if ($type eq 'bridge') {
+    foreach ($ndb->get_all()) {
+        my $bridge = $_->prop('bridge') || next;
+        if ($bridge eq $i->key) {
+            $_->set_prop('role', '');
+            $_->delete_prop('bridge');
         }
     }
-    return undef;
 }
 
-if($cmd eq 'delete-alias') {
-    my $alias = find_alias($input->{'ipaddr'}, $input->{'netmask'});
-    if ($alias) {
-        my $r = $ndb->get($alias);
-        $r->delete();
-    }
-    system("/sbin/e-smith/signal-event -j interface-update");
-} else {
-    error();
+# populate heir props
+if ($input->{'heir'}) {
+    my $heir = $ndb->get($input->{'heir'});
+    $heir->delete_prop('bridge');
+    $heir->set_prop('role', $i->prop('role'));
+    $heir->set_prop('bootproto', $i->prop('bootproto'));
+    $heir->set_prop('ipaddr', $i->prop('ipaddr') || '');
+    $heir->set_prop('netmask', $i->prop('netmask') || '');
+    $heir->set_prop('gateway', $i->prop('gateway') || '');
 }
 
+# delete interface
+$i->delete();
+
+system("/sbin/e-smith/signal-event -j interface-update");
