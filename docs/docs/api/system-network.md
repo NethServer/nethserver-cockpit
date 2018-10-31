@@ -13,6 +13,7 @@ Valid actions are:
 - `list`
 - `heirs`
 - `available`
+- `bond-types`
 
 #### list
 
@@ -36,6 +37,44 @@ Example:
   "action": "heirs",
   "parent": "br0"
 }
+```
+
+#### bond-types
+
+List the avaialbe bond types.
+
+Example:
+```json
+[
+  {
+    "value": 3,
+    "name": "broadcast"
+  },
+  {
+    "value": 6,
+    "name": "balance-alb"
+  },
+  {
+    "value": 5,
+    "name": "balance-tlb"
+  },
+  {
+    "value": 1,
+    "name": "active-backup"
+  },
+  {
+    "value": 0,
+    "name": "balance-rr"
+  },
+  {
+    "value": 4,
+    "name": "802.3ad"
+  },
+  {
+    "value": 2,
+    "name": "balance-xor"
+  }
+]
 ```
 
 #### available
@@ -169,6 +208,7 @@ The request must contain an `action` field. Valid actions are:
 
 - `create-alias`
 - `create-bridge`
+- `create-bond`
 - `create-vlan`
 - `release-role`
 
@@ -188,6 +228,17 @@ Constraints for `create-bridge`
 - netmask: if bootproto is static, must be an IPv4 netmask
 - gateway: if bootproto is static, can be empty or an IPv4 address
 
+Constraints for `create-bond`
+
+- mode: can be a value between 0 and 6
+- devices: a list of non-configured interface names
+- role: can be empty or `green`, `red`, `blue`, `orange`
+- bootproto: must be `none` for blue and orange roles, can be also `dhcp` for
+  green and red roles
+- ipaddr: if bootproto is static, must be a free IPv4 address (also checked agains nsdc IP)
+- netmask: if bootproto is static, must be an IPv4 netmask
+- gateway: if bootproto is static, can be empty or an IPv4 address
+
 Constraints for `create-vlan`:
 
 - tag: a positive integer
@@ -198,7 +249,6 @@ Constraints for `create-vlan`:
 - ipaddr: if bootproto is static, must be a free IPv4 address (also checked agains nsdc IP)
 - netmask: if bootproto is static, must be an IPv4 netmask
 - gateway: if bootproto is static, can be empty or an IPv4 address
-
 
 Constraints for `release-role`
 
@@ -237,6 +287,23 @@ Example:
 }
 ```
 
+#### create-bond
+
+Example:
+```json
+{
+  "action": "create-bond",
+  "role": "green",
+  "bootproto": "none",
+  "ipaddr": "192.168.3.246",
+  "netmask": "255.255.255.0",
+  "mode": 0,
+  "devices": [
+    "enp0s9",
+    "enp0s8"
+  ]
+}
+```
 #### create-vlan
 
 Example:

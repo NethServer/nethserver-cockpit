@@ -140,6 +140,14 @@ if ($action == 'create-alias') {
     }
     check_network_config($data);
 
+} else if ($action == 'create-bond') {
+
+    if ($data['mode'] < 0 || $data['mode'] > 6) {
+        $v->addValidationError('mode', 'bond_valid_mode_between_0_and_6');
+    }
+    check_devices($data['devices']);
+    check_network_config($data);
+
 } else {
     error();
 }

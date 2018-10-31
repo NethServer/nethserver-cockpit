@@ -55,6 +55,19 @@ sub find_next_bridge
     return "br$k";
 }
 
+sub find_next_bond
+{
+    my $k = 0;
+    foreach my $i ($ndb->get_all()) {
+        if ($i->prop('type') eq 'bond') {
+            $k++;
+        }
+    }
+
+    return "bond$k";
+}
+
+
 if($cmd eq 'create-alias') {
 
     my $alias = find_next_alias($input->{'parent'});
@@ -92,6 +105,26 @@ if($cmd eq 'create-alias') {
             'gateway' => $input->{'gateway'} || '',
             'type' => 'vlan'
         });
+    system("/sbin/e-smith/signal-event -j interface-update");
+
+} elsif($cmd eq 'create-bond') {
+
+    my $bond = find_next_bond();
+    $ndb->new_record($bond, {
+            'bootproto' => $input->{'bootproto'} || 'none',
+            'role' => $input->{'role'} || '',
+            'ipaddr' => $input->{'ipaddr'} || '',
+            'netmask' => $input->{'netmask'} || '',
+            'gateway' => $input->{'gateway'} || '',
+            'type' => 'bond'
+        });
+    my $devices = $input->{'devices'};
+    foreach (@$devices) {
+        my $d = $ndb->get($_) || next;
+        my $type = $d->prop('type') || next;
+        $d->delete();
+        $ndb->new_record($_, { 'type' => $type, 'role' => 'slave', 'master' => $bond, 'slave' => 'yes' });
+    }
     system("/sbin/e-smith/signal-event -j interface-update");
 
 } else {

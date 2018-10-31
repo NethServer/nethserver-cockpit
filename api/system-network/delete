@@ -43,10 +43,23 @@ if ($type eq 'bridge') {
     }
 }
 
+if ($type eq 'bond') {
+    foreach ($ndb->get_all()) {
+        my $master = $_->prop('master') || next;
+        if ($master eq $i->key) {
+            $_->set_prop('role', '');
+            $_->delete_prop('master');
+            $_->delete_prop('slave');
+        }
+    }
+}
+
 # populate heir props
 if ($input->{'heir'}) {
     my $heir = $ndb->get($input->{'heir'});
     $heir->delete_prop('bridge');
+    $heir->delete_prop('master');
+    $heir->delete_prop('slave');
     $heir->set_prop('role', $i->prop('role'));
     $heir->set_prop('bootproto', $i->prop('bootproto'));
     $heir->set_prop('ipaddr', $i->prop('ipaddr') || '');

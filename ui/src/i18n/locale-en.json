@@ -498,7 +498,8 @@
       "interface_already_in_use": "One ore more selected interface are already in use",
       "one_green_interface_must_always_exists": "The system must have at least one green interface",
       "invalid_vlan_parent": "Invalid parent for a VLAN",
-      "vlan_tag_already_used": "This tag is already used by another VLAN"
+      "vlan_tag_already_used": "This tag is already used by another VLAN",
+      "bond_valid_mode_between_0_and_6": "Bond mode must be a number between 0 and 6"
     },
     "network": {
 	    "title": "Network"
