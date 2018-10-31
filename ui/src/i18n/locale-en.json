@@ -496,7 +496,9 @@
       "non_existing_interface": "Selected interface doesn't exists",
       "invalid_role": "Invalid role",
       "interface_already_in_use": "One ore more selected interface are already in use",
-      "one_green_interface_must_always_exists": "The system must have at least one green interface"
+      "one_green_interface_must_always_exists": "The system must have at least one green interface",
+      "invalid_vlan_parent": "Invalid parent for a VLAN",
+      "vlan_tag_already_used": "This tag is already used by another VLAN"
     },
     "network": {
 	    "title": "Network"

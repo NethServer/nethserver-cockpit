@@ -81,6 +81,19 @@ if($cmd eq 'create-alias') {
     }
     system("/sbin/e-smith/signal-event -j interface-update");
 
+} elsif($cmd eq 'create-vlan') {
+
+    my $vlan = $input->{'parent'}.".".$input->{'tag'};
+    $ndb->new_record($vlan, {
+            'bootproto' => $input->{'bootproto'} || 'none',
+            'role' => $input->{'role'} || '',
+            'ipaddr' => $input->{'ipaddr'} || '',
+            'netmask' => $input->{'netmask'} || '',
+            'gateway' => $input->{'gateway'} || '',
+            'type' => 'vlan'
+        });
+    system("/sbin/e-smith/signal-event -j interface-update");
+
 } else {
     error();
 }

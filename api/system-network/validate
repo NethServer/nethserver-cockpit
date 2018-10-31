@@ -97,10 +97,10 @@ $data = readInput();
 $action = $data['action'];
 
 $v = new LegacyValidator($data);
+$db = new EsmithDatabase('networks');
 
 if ($action == 'create-alias') {
 
-    $db = new EsmithDatabase('networks');
     $parent = $db->getKey($data['parent']);
     if (!$parent) {
         $v->addValidationError('parent', 'non_existing_interface');
@@ -111,7 +111,6 @@ if ($action == 'create-alias') {
 
 } else if ($action == 'release-role') {
 
-    $db = new EsmithDatabase('networks');
     $parent = $db->getKey($data['interface']);
     if (!$parent) {
         $v->addValidationError('interface', 'non_existing_interface');
@@ -121,6 +120,24 @@ if ($action == 'create-alias') {
 } else if ($action == 'create-bridge') {
 
     check_devices($data['devices']);
+    check_network_config($data);
+
+} else if ($action == 'create-vlan') {
+
+    $parent = $db->getKey($data['parent']);
+    if (!$parent) {
+        $v->addValidationError('parent', 'non_existing_interface');
+    } 
+    if ($db->getType($data['parent']) == 'vlan') {
+        $v->addValidationError('parent', 'invalid_vlan_parent');
+    }
+    $v->declareParameter('tag', Validate::POSITIVE_INTEGER);
+    foreach ($db->getAll() as $i => $props) {
+        $tmp = explode(".", $i);
+        if (isset($tmp[1]) && $tmp[1] == $data['tag']) {
+            $v->addValidationError('tag', 'vlan_tag_already_used');
+        }
+    }
     check_network_config($data);
 
 } else {

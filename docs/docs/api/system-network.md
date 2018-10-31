@@ -169,6 +169,7 @@ The request must contain an `action` field. Valid actions are:
 
 - `create-alias`
 - `create-bridge`
+- `create-vlan`
 - `release-role`
 
 Constraints for `create-alias`
@@ -186,6 +187,18 @@ Constraints for `create-bridge`
 - ipaddr: if bootproto is static, must be a free IPv4 address (also checked agains nsdc IP)
 - netmask: if bootproto is static, must be an IPv4 netmask
 - gateway: if bootproto is static, can be empty or an IPv4 address
+
+Constraints for `create-vlan`:
+
+- tag: a positive integer
+- parent: the name of an existing network interface, can't be another vlan
+- role: can be empty or `green`, `red`, `blue`, `orange`
+- bootproto: must be `none` for blue and orange roles, can be also `dhcp` for
+  green and red roles
+- ipaddr: if bootproto is static, must be a free IPv4 address (also checked agains nsdc IP)
+- netmask: if bootproto is static, must be an IPv4 netmask
+- gateway: if bootproto is static, can be empty or an IPv4 address
+
 
 Constraints for `release-role`
 
@@ -224,6 +237,20 @@ Example:
 }
 ```
 
+#### create-vlan
+
+Example:
+```json
+{
+  "action": "create-vlan",
+  "tag": 1,
+  "role": "green",
+  "bootproto": "none",
+  "ipaddr": "192.168.2.246",
+  "netmask": "255.255.255.0",
+  "parent": "enp0s9"
+}
+```
 
 #### release-role
 
@@ -253,16 +280,14 @@ Use the same input from validate.
 
 ## delete
 
-### delete-alias
-
-Delete the given alias. The `ipaddr` field must contain the IPv4 address and `netmask` must contain the network mask.
+Delete the interface specified inside the `interface` field.
+If `heir` field is set, copy all configuration from the bridge to `heir` interface.
 
 Input example:
 ```json
 {
-  "action": "delete-alias",
-  "ipaddr": "192.168.1.246",
-  "netmask": "255.255.255.0"
+  "heir": "enp0s8",
+  "interface": "br1"
 }
 ```
 
