@@ -237,7 +237,7 @@
             <div class="modal-footer">
               <div v-if="currentRange.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" @click="toggleInterface(currentRange, true)" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
-              <button class="btn btn-primary" type="submit">{{currentRange.idEdit ? $t('modify') : $t('save')}}</button>
+              <button class="btn btn-primary" type="submit">{{currentRange.isEdit ? $t('modify') : $t('save')}}</button>
             </div>
 
           </form>
@@ -435,7 +435,7 @@ export default {
       if (reset) {
         this.getRanges();
       } else {
-        if (!range.props.status) {
+        if (!range.props.status || (range.props.status && isEdit)) {
           this.currentRange = this.initRange();
           this.currentRange.name = range.name;
           this.currentRange.DhcpRangeStart = range.props.DhcpRangeStart;

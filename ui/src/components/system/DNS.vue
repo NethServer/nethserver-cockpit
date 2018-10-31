@@ -150,8 +150,7 @@ export default {
     });
   },
   beforeRouteLeave(to, from, next) {
-    $("#newDNSModal").modal("hide");
-    $("#deleteDNSModal").modal("hide");
+    $(".modal").modal("hide");
     next();
   },
   mounted() {

@@ -136,8 +136,7 @@ export default {
     });
   },
   beforeRouteLeave(to, from, next) {
-    $("#newNetworkModal").modal("hide");
-    $("#deleteNetworkModal").modal("hide");
+    $(".modal").modal("hide");
     next();
   },
   mounted() {

@@ -1,10 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-/* WIZARD */
-import Wizard from '@/components/wizard/Wizard'
-/* */
-
 /* SYSTEM */
 import Dashboard from '@/components/system/Dashboard'
 
@@ -123,12 +119,6 @@ export default new Router({
       path: '/about',
       name: 'About',
       component: About
-    },
-
-    {
-      path: '/wizard',
-      name: 'Wizard',
-      component: Wizard
     },
 
     {
