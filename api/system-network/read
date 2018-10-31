@@ -156,7 +156,7 @@ if($cmd eq 'list') {
             }
         }
 
-        # add bond childrent
+        # add bond children
         if (exists($bonds{$k})) {
             my $bonds = $bonds{$k};
             foreach my $a (@$bonds) {
@@ -164,6 +164,13 @@ if($cmd eq 'list') {
             }
         }
 
+        # pppoe is enabled, set connected ethernet interface as device
+        if ($k eq 'ppp0' && $interface->{'type'} eq 'xdsl') {
+            my @tmp = $ndb->get_all_by_prop('role','pppoe');
+            if (@tmp) {
+                push($interface->{'devices'}, $interfaces{$tmp[0]->key});
+            }
+        }
 
         if (exists($ret->{'configuration'}{$role})) {
             push($ret->{'configuration'}{$role}, $interface);

@@ -209,7 +209,39 @@ Example:
     "other": [],
     "pppoe": 0,
     "orange": [],
-    "red": []
+    "red": [
+      {
+        "provider": "xDSL provider",
+        "AuthType": "auto",
+        "FwOutBandwidth": "",
+        "name": "ppp0",
+        "FwInBandwidth": "",
+        "devices": [
+          {
+            "link": "1",
+            "bus": "pci",
+            "existing": 1,
+            "model": "Intel Corporation 82540EM Gigabit Ethernet Controller (rev 02)",
+            "name": "enp0s8",
+            "devices": [],
+            "virtual": 0,
+            "speed": "1000",
+            "aliases": [],
+            "type": "ethernet",
+            "mac": "08:00:27:bd:3d:37",
+            "role": "pppoe",
+            "driver": "e1000"
+          }
+        ],
+        "virtual": 1,
+        "Password": "pass2",
+        "aliases": [],
+        "user": "user1",
+        "type": "xdsl",
+        "role": "red"
+      }
+    ]
+
   }
 }
 ```
