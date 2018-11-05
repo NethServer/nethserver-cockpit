@@ -1,0 +1,210 @@
+#!/usr/bin/php
+<?php
+/*
+ * Copyright (C) 2018 Nethesis S.r.l.
+ * http://www.nethesis.it - nethserver@nethesis.it
+ *
+ * This script is part of NethServer.
+ *
+ * NethServer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License,
+ * or any later version.
+ *
+ * NethServer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NethServer.  If not, see COPYING.
+*/
+
+require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
+
+function used_ip($ip, $exclude) {
+    global $v;
+    $ndb = new EsmithDatabase('networks');
+    foreach ($ndb->getAll() as $i => $n) {
+        # skip for update 
+        if ($i == $exclude) {
+            continue;
+        }
+        if (isset($n['ipaddr']) && ($n['ipaddr'] == $ip)) {
+            $v->addValidationError('ipaddr', 'ip_address_already_in_use');
+        }
+    }
+    $db = new EsmithDatabase('configuration');
+    if ($db->getProp('nsdc','IpAddress')) {
+        $v->addValidationError('ipaddr', 'ip_address_used_by_nsdc');
+    }
+}
+
+function can_release($interface) {
+    global $v;
+    $green = 0;
+    $db = new EsmithDatabase('networks');
+    $i = $db->getKey($interface);
+    if ($i['role'] == 'green') {
+        foreach ($db->getAll() as $n) {
+            if (isset($n['role']) && $n['role'] == 'green') {
+                $green++;
+            }
+        }
+        $green--;
+        if ($green <= 0) {
+            $v->addValidationError('interface', 'one_green_interface_must_always_exists');
+        }
+    }
+}
+
+function check_network_config($data, $exclude = "") {
+    global $v;
+
+    # an interface without a role is a valid one
+    if (!isset($data['role']) || !$data['role']) {
+        return;
+    }
+    # if the role is not empty, must be one of the list
+    if (!in_array($data['role'], array('green', 'red', 'orange', 'blue'))) {
+        $v->addValidationError('role', 'invalid_role');
+    }
+    # red role can have static or dynamic address
+    if  ($data['role'] == 'red') {
+        $v->declareParameter('bootproto', $v->createValidator()->memberOf('none', 'dhcp'));
+    } else {
+        if ($data['bootproto'] != 'none') {
+            $v->addValidationError('bootproto', 'invalid_bootproto_for_role');
+        }
+    }
+    # orange and blue interfaces must be static
+    if ($data['bootproto'] == 'none' || $data['role'] == 'green' || $data['role'] == 'orange' || $data['role'] == 'blue') {
+        $v->declareParameter('ipaddr', Validate::IPv4);
+        $v->declareParameter('netmask', Validate::IPv4_NETMASK);
+        $v->declareParameter('gateway', Validate::IPv4_OR_EMPTY);
+        used_ip($data['ipaddr'], $exclude);
+    }
+}
+
+function check_devices($devices, $current = array()) {
+    global $v;
+
+    $db = new EsmithDatabase('networks');
+    foreach ($devices as $d) {
+        # skip current devices for update scenario
+        if (in_array($d, $current)) {
+            continue;
+        }
+        $r = $db->getKey($d);
+        if (!$r) {
+            $v->addValidationError('devices', 'non_existing_interface');
+        }
+        if (isset($r['role']) && $r['role']) {
+            $v->addValidationError('devices', 'interface_already_in_use');
+        } 
+    }
+}
+
+function list_current_devices($virtual) {
+    $ret = array();
+    $db = new EsmithDatabase('networks');
+    foreach ($db->getAll() as $i => $props) {
+        if (isset($props['bridge']) && $props['bridge'] == $virtual) {
+            $ret[] = $i;
+        }
+        if (isset($props['master']) && $props['master'] == $virtual) {
+            $ret[] = $i;
+        }
+    }
+
+    return $ret;
+}
+
+$data = readInput();
+$action = $data['action'];
+
+$v = new LegacyValidator($data);
+$db = new EsmithDatabase('networks');
+
+if ($action == 'create-alias') {
+
+    $parent = $db->getKey($data['parent']);
+    if (!$parent) {
+        $v->addValidationError('parent', 'non_existing_interface');
+    }
+    used_ip($data['ipaddr']);
+    $v->declareParameter('ipaddr', Validate::IPv4);
+    $v->declareParameter('netmask', Validate::IPv4_NETMASK);
+
+} else if ($action == 'release-role') {
+
+    $parent = $db->getKey($data['interface']);
+    if (!$parent) {
+        $v->addValidationError('interface', 'non_existing_interface');
+    }
+    can_release($data['interface']);
+
+} else if ($action == 'release-role') {
+    
+    $parent = $db->getKey($data['interface']);
+    if (!$parent) {
+        $v->addValidationError('interface', 'non_existing_interface');
+    }
+
+} else if ($action == 'create-bridge') {
+
+    check_devices($data['devices']);
+    check_network_config($data);
+
+} else if ($action == 'create-vlan') {
+
+    $parent = $db->getKey($data['parent']);
+    if (!$parent) {
+        $v->addValidationError('parent', 'non_existing_interface');
+    } 
+    if ($db->getType($data['parent']) == 'vlan') {
+        $v->addValidationError('parent', 'invalid_vlan_parent');
+    }
+    $v->declareParameter('tag', Validate::POSITIVE_INTEGER);
+    foreach ($db->getAll() as $i => $props) {
+        $tmp = explode(".", $i);
+        if (isset($tmp[1]) && $tmp[1] == $data['tag']) {
+            $v->addValidationError('tag', 'vlan_tag_already_used');
+        }
+    }
+    check_network_config($data);
+
+} else if ($action == 'create-bond') {
+
+    if ($data['BondOptMode'] < 0 || $data['BondOptMode'] > 6) {
+        $v->addValidationError('BondOptMode', 'bond_valid_mode_between_0_and_6');
+    }
+    check_devices($data['devices']);
+    check_network_config($data);
+
+} else if ($action == 'change-properties') {
+
+    $type = $db->getType($data['interface']);
+
+    if ($type == "bond") {
+        if ($data['BondOptMode'] < 0 || $data['BondOptMode'] > 6) {
+            $v->addValidationError('BondOptMode', 'bond_valid_mode_between_0_and_6');
+        }
+        check_devices($data['devices'], list_current_devices($data['interface']));
+    } else if ($type == "bridge") {
+        check_devices($data['devices'], list_current_devices($data['interface']));
+    }
+
+    check_network_config($data, $data['interface']);
+
+} else {
+    error();
+}
+
+# Validate the input
+if ($v->validate()) {
+    success();
+} else {
+    error($v);
+}
+

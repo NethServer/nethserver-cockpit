@@ -1,0 +1,113 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
+
+use warnings;
+use strict;
+use esmith::NetworksDB;
+
+my $ndb = esmith::NetworksDB->open();
+
+my $input = readInput();
+my $cmd = $input->{'action'};
+
+if($cmd eq 'release-role') {
+
+    $ndb->set_prop($input->{'interface'}, 'role', '');
+    system("/sbin/e-smith/signal-event -j interface-update");
+
+} elsif($cmd eq 'change-properties') {
+
+    my $i = $ndb->get($input->{'interface'});
+
+    $i->set_prop('role', $input->{'role'});
+    $i->set_prop('bootproto', $input->{'bootproto'});
+    $i->set_prop('ipaddr', $input->{'ipaddr'} || '');
+    $i->set_prop('netmask', $input->{'netmask'} || '');
+    $i->set_prop('gateway', $input->{'gateway'} || '');
+
+    my $devices = $input->{'devices'} || undef;
+
+    if ($i->prop('type') eq 'bond') {
+        $i->set_prop('BondOptMode', $input->{'BondOptMode'});
+
+        # free slave devices
+        foreach my $d ($ndb->get_all()) {
+            my $master = $d->prop('master') || next;
+            my $type = $d->prop('type');
+            if ($master eq $i->key) {
+                $d->delete();
+                # create a new fresh record
+                $ndb->new_record($d->key, {'role' => '', 'type' => $type});
+            }
+        }
+
+        # configure new slaves
+        if (defined($devices)) {
+            foreach (@$devices) {
+                my $d = $ndb->get($_);
+                $d->set_prop('role', 'slave');
+                $d->set_prop('slave', 'yes');
+                $d->set_prop('master', $i->key);
+            }
+        }
+    }
+    if ($i->prop('type') eq 'bridge') {
+        # free bonded devices
+        foreach my $d ($ndb->get_all()) {
+            my $bridge = $d->prop('bridge') || next;
+            my $type = $d->prop('type');
+            if ($bridge eq $i->key) {
+                $d->delete();
+                # create a new fresh record
+                $ndb->new_record($d->key, {'role' => '', 'type' => $type});
+            }
+        }
+
+        # configure new bonded
+        if (defined($devices)) {
+            foreach (@$devices) {
+                my $d = $ndb->get($_);
+                $d->set_prop('role', 'bridged');
+                $d->set_prop('bridge', $i->key);
+            }
+        }
+
+    }
+
+    system("/sbin/e-smith/signal-event -j interface-update");
+
+} elsif($cmd eq 'release-device') {
+
+    my $d = $ndb->get($input->{'interface'});
+    $d->set_prop('role', '');
+    $d->delete_prop('slave');
+    $d->delete_prop('master');
+    $d->delete_prop('bridge');
+    
+    system("/sbin/e-smith/signal-event -j interface-update");
+
+} else {
+    error();
+}
+

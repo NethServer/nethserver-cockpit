@@ -20,12 +20,18 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-policy=$(/sbin/e-smith/config getprop tls policy)
+. /usr/libexec/nethserver/api/lib/helper_functions
 
-# Map empty value to 0
-if [ -z $policy ]; then
-    policy=0
-else
-    policy="\"$policy\""
+# Read JSON from stdin and set the record
+cat /dev/stdin | /sbin/e-smith/config setjson - 2>/dev/null
+
+if [ $? -gt 0 ]; then
+    invalid_error
 fi
-printf '{"status":{"available": ["20180621","20180330","20181001"]},"configuration":{"props":{"policy":%s},"name":"tls","type":"configuration"}}' "$policy"
+
+/sbin/e-smith/signal-event -j proxy-modify
+if [ $? -gt 0 ]; then
+    error "EventFailed" "See /var/log/messages"
+else
+    success
+fi

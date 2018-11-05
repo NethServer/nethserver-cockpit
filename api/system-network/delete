@@ -1,0 +1,73 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
+
+use warnings;
+use strict;
+use esmith::NetworksDB;
+
+our $ndb = esmith::NetworksDB->open();
+
+my $input = readInput();
+
+my $i = $ndb->get($input->{'interface'}) || error();
+my $type = $i->prop('type');
+
+if ($type eq 'bridge') {
+    foreach ($ndb->get_all()) {
+        my $bridge = $_->prop('bridge') || next;
+        if ($bridge eq $i->key) {
+            $_->set_prop('role', '');
+            $_->delete_prop('bridge');
+        }
+    }
+}
+
+if ($type eq 'bond') {
+    foreach ($ndb->get_all()) {
+        my $master = $_->prop('master') || next;
+        if ($master eq $i->key) {
+            $_->set_prop('role', '');
+            $_->delete_prop('master');
+            $_->delete_prop('slave');
+        }
+    }
+}
+
+# populate heir props
+if ($input->{'heir'}) {
+    my $heir = $ndb->get($input->{'heir'});
+    $heir->delete_prop('bridge');
+    $heir->delete_prop('master');
+    $heir->delete_prop('slave');
+    $heir->set_prop('role', $i->prop('role'));
+    $heir->set_prop('bootproto', $i->prop('bootproto'));
+    $heir->set_prop('ipaddr', $i->prop('ipaddr') || '');
+    $heir->set_prop('netmask', $i->prop('netmask') || '');
+    $heir->set_prop('gateway', $i->prop('gateway') || '');
+}
+
+# delete interface
+$i->delete();
+
+system("/sbin/e-smith/signal-event -j interface-update");

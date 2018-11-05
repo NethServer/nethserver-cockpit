@@ -20,12 +20,5 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-policy=$(/sbin/e-smith/config getprop tls policy)
-
-# Map empty value to 0
-if [ -z $policy ]; then
-    policy=0
-else
-    policy="\"$policy\""
-fi
-printf '{"status":{"available": ["20180621","20180330","20181001"]},"configuration":{"props":{"policy":%s},"name":"tls","type":"configuration"}}' "$policy"
+prop=$(/sbin/e-smith/config getjson logrotate)
+printf '{"status":"","configuration":%s}' "$prop"

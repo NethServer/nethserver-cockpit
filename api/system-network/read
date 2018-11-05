@@ -1,0 +1,243 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
+
+use warnings;
+use strict;
+use esmith::NetworksDB;
+
+my $ret = {"status" => undef, "configuration" => {'green' => [], 'red' => [] , 'orange' => [], 'blue' => [], 'free' => [], 'other' => [] }};
+our $ndb = esmith::NetworksDB->open_ro();
+
+sub list_free_interfaces
+{
+    my @interfaces;
+    foreach my $n ($ndb->get_all()) {
+        my $role = $n->prop('role') || '';
+        if ($role eq '') {
+            push(@interfaces, $n->key);
+        }
+    }
+
+    return @interfaces;
+}
+
+my $input = readInput();
+my $cmd = $input->{'action'};
+
+if($cmd eq 'list') {
+    my %interfaces;
+    my %info;
+    my %aliases;
+    my %bridges;
+    my %bonds;
+
+    # Read hardware info
+    open my $in, "/usr/libexec/nethserver/nic-info |";
+    while (my $line = <$in>)
+    {
+        chomp $line;
+        my ($name,$mac,$bus,$model,$driver,$speed,$link) = split(",",$line);
+        $info{$name} = {
+            "mac" => $mac,
+            "bus" => $bus,
+            "model" => $model,
+            "driver" => $driver,
+            "speed" => $speed,
+            "link" => $link
+        };
+    }
+    close($in);
+
+    # Prepare children maps
+    foreach my $n ($ndb->get_all()) {
+        my $parent = '';
+        my $name = $n->key;
+        my $role = $n->prop('role') || next;
+        # handle aliases
+        if ($name =~ /(.*):(.*)/) {
+            $parent = $1;
+            my $ip = $n->prop('ipaddr') || next;
+            my $net = $n->prop('netmask') || next;
+            if (!exists($aliases{$parent})) { # initialize alias array
+                $aliases{$parent} = [];
+            }
+            push($aliases{$parent}, $name);
+            next;
+        }
+        if ($role eq 'bridged') {
+            $parent = $n->prop('bridge') || next;
+            if (!exists($bridges{$parent})) { # initialize bridge array
+                $bridges{$parent} = [];
+            }
+            push($bridges{$parent}, $name);
+        }
+        if ($role eq 'slave') {
+            $parent = $n->prop('master') || next;
+            if (!exists($bonds{$parent})) { # initialize bonds array
+                $bonds{$parent} = [];
+            }
+            push($bonds{$parent}, $name);
+        }
+    }
+
+    # prepare interface map with hardware info
+    foreach my $n ($ndb->get_all()) {
+        my %props = $n->props;
+        next if ($props{'type'} eq 'xdsl-disabled');
+        if ($props{'type'} eq 'vlan') {
+            my @tmp = split(/\./,$n->key);
+            $props{'parent'} = $tmp[0];
+            $props{'tag'} = $tmp[1];
+        }
+        $props{'name'} = $n->key;
+        my $role = $props{'role'} || '';
+        if ($props{'type'} eq 'ethernet') {
+            $props{'virtual'} = 0;
+            $props{'existing'} = exists($info{$n->key}) ? 1 : 0;
+        } else {
+            $props{'virtual'} = 1;
+        }
+
+        # add hardware info
+        if (exists($info{$n->key})) {
+            my $i = $info{$n->key};
+            foreach my $k (keys(%$i)) {
+                $props{$k} = $i->{$k}
+            }
+        }
+
+        $interfaces{$n->key} = \%props
+    }
+
+    foreach my $k (keys(%interfaces)) {
+        my $interface = $interfaces{$k};
+        my $role = $interface->{'role'} || 'free';
+
+        # children will be handled later
+        next if ($role eq 'alias' || $role eq 'bridged' || $role eq 'slave');
+
+        $interface->{'aliases'} = [];
+        $interface->{'devices'} = [];
+
+        # add alias children
+        if (exists($aliases{$k})) {
+            my $aliases = $aliases{$k};
+            foreach my $a (@$aliases) {
+                push($interface->{'aliases'}, $interfaces{$a});
+            }
+        }
+
+        # add bridge children
+        if (exists($bridges{$k})) {
+            my $bridges = $bridges{$k};
+            foreach my $a (@$bridges) {
+                push($interface->{'devices'}, $interfaces{$a});
+            }
+        }
+
+        # add bond children
+        if (exists($bonds{$k})) {
+            my $bonds = $bonds{$k};
+            foreach my $a (@$bonds) {
+                push($interface->{'devices'}, $interfaces{$a});
+            }
+        }
+
+        # pppoe is enabled, set connected ethernet interface as device
+        if ($k eq 'ppp0' && $interface->{'type'} eq 'xdsl') {
+            my @tmp = $ndb->get_all_by_prop('role','pppoe');
+            if (@tmp) {
+                push($interface->{'devices'}, $interfaces{$tmp[0]->key});
+            }
+        }
+
+        if (exists($ret->{'configuration'}{$role})) {
+            push($ret->{'configuration'}{$role}, $interface);
+        } else {
+            push($ret->{'configuration'}{'other'}, $interface);
+        }
+    }
+
+    my $ppp0 = $ndb->get('ppp0');
+    if($ppp0->prop('type') eq 'xdsl-disabled') {
+        $ret->{'configuration'}{'pppoe'} = 0;
+    } else {
+        $ret->{'configuration'}{'pppoe'} = 1;
+    }
+
+} elsif ($cmd eq 'heirs') {
+
+    my $parent = $input->{'parent'};
+    my @interfaces;
+    foreach my $n ($ndb->get_all()) {
+        my %props = $n->props;
+        my $role = $props{'role'} || '';
+        next if ($props{'type'} eq 'xdsl-disabled');
+        if ($role eq '') {
+            push(@interfaces, $n->key);
+            next;
+        }
+        if (defined($props{'master'}) && $props{'master'} eq $parent) {
+            push(@interfaces, $n->key);
+            next;
+        }
+        if (defined($props{'bridge'}) && $props{'bridge'} eq $parent) {
+            push(@interfaces, $n->key);
+            next;
+        }
+    }
+
+    $ret = \@interfaces;
+
+} elsif ($cmd eq 'available') {
+
+    my @interfaces = list_free_interfaces();
+    $ret = \@interfaces;
+
+} elsif ($cmd eq 'vlan-available') {
+
+    my @interfaces;
+    foreach my $n ($ndb->get_all()) {
+        my $type = $n->prop('type');
+        if ($type ne 'alias' && $type ne 'vlan' && $type !~ /xdsl/) {
+            push(@interfaces, $n->key);
+        }
+    }
+    $ret = \@interfaces;
+
+} elsif ($cmd eq 'bond-types') {
+
+    my %types = ( "balance-rr" => 0, "active-backup" => 1, "balance-xor" => 2, "broadcast" => 3, "802.3ad" => 4, "balance-tlb" => 5, "balance-alb" => 6 );
+    my @tmp;
+    foreach (keys(%types)) {
+        push(@tmp, { "name" => $_, "value" => $types{$_} });
+    }
+    $ret = \@tmp;
+
+} else {
+    error();
+}
+
+# JSON output
+print encode_json($ret); 
