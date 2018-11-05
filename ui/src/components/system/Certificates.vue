@@ -340,10 +340,7 @@ export default {
     });
   },
   beforeRouteLeave(to, from, next) {
-    $("#uploadCertificateModal").modal("hide");
-    $("#editCertificateModal").modal("hide");
-    $("#requestLetsEncryptModal").modal("hide");
-    $("#showCertificateModal").modal("hide");
+    $(".modal").modal("hide");
     next();
   },
   mounted() {

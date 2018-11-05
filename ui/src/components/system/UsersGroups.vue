@@ -234,15 +234,19 @@
                   <div class="spinner"></div>
                 </div>
               </div>
-              <div v-if="!newUser.isPassEdit" v-for="(g,i) in newUser.groups" v-bind:key="i" class="form-group">
-                <label class="col-xs-12 col-sm-3 control-label" for="textInput-modal-markup"></label>
-                <div class="col-xs-7 col-sm-6">
-                  <input type="text" :value="g" class="form-control">
-                </div>
-                <div class="col-xs-5 col-sm-2">
-                  <button @click="removeGroupFromUser(i)" class="btn btn-default" type="button">
-                    <span class="fa fa-minus card-icon-def"></span>
-                  </button>
+              <div v-if="!newUser.isPassEdit" class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup"></label>
+                <div class="col-sm-9">
+                  <ul class="list-inline compact">
+                    <li v-for="(g,i) in newUser.groups" v-bind:key="i">
+                      <span class="label label-info">
+                        {{g}}
+                        <a @click="removeGroupFromUser(i)" class="remove-item-inline">
+                          <span class="fa fa-times"></span>
+                        </a>
+                      </span>
+                    </li>
+                  </ul>
                 </div>
               </div>
               <div v-if="!(newUser.isEdit && !newUser.isPassEdit)" :class="['form-group', newUser.errorProps['newPassword'] ? 'has-error' : '']">
@@ -323,15 +327,19 @@
                   <div class="spinner"></div>
                 </div>
               </div>
-              <div v-for="(u,i) in newGroup.members" v-bind:key="i" class="form-group">
-                <label class="col-xs-12 col-sm-3 control-label" for="textInput-modal-markup"></label>
-                <div class="col-xs-7 col-sm-6">
-                  <input type="text" :value="u" class="form-control">
-                </div>
-                <div class="col-xs-5 col-sm-2">
-                  <button @click="removeUserFromGroup()" class="btn btn-default" type="button">
-                    <span class="fa fa-minus card-icon-def"></span>
-                  </button>
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup"></label>
+                <div class="col-sm-9">
+                  <ul class="list-inline compact">
+                    <li v-for="(u,i) in newGroup.members" v-bind:key="i">
+                      <span class="label label-info">
+                        {{u}}
+                        <a @click="removeUserFromGroup(i)" class="remove-item-inline">
+                          <span class="fa fa-times"></span>
+                        </a>
+                      </span>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -555,7 +563,8 @@
                           </div>
                           <div class="col-sm-6">
                             <input v-model="users.hostname.value" required class="form-control" type="text">
-                            <span v-if="users.hostname.errors.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+users.hostname.errors.message)}}</span>
+                            <span v-if="users.hostname.errors.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+users.hostname.errors.message)}}</span>
                           </div>
                           <div class="col-sm-3 adjust-top-min">
                             <button class="btn btn-primary" type="submit">{{$t('modify')}}</button>
@@ -868,1255 +877,1088 @@
 </template>
 
 <script>
-import PasswordMeter from "../../directives/PasswordMeter.vue";
+  import PasswordMeter from "../../directives/PasswordMeter.vue";
 
-export default {
-  name: "UsersGroups",
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      vm.exec(
-        ["system-authorization/read"],
-        null,
-        null,
-        function(success) {
-          success = JSON.parse(success);
+  export default {
+    name: "UsersGroups",
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.exec(
+          ["system-authorization/read"],
+          null,
+          null,
+          function (success) {
+            success = JSON.parse(success);
 
-          if (success.system.indexOf(to.path.substring(1)) == -1) {
-            window.location.hash = "#/";
-            vm.$router.push("/");
-          }
+            if (success.system.indexOf(to.path.substring(1)) == -1) {
+              window.location.hash = "#/";
+              vm.$router.push("/");
+            }
 
-          vm.view.isAuth = true;
-        },
-        function(error) {
-          console.error(error);
-        },
-        false
-      );
-    });
-  },
-  components: {
-    PasswordMeter
-  },
-  beforeRouteLeave(to, from, next) {
-    $(".modal").modal("hide");
-    next();
-  },
-  mounted() {
-    this.getInfo();
-    this.getPasswordPolicy();
-  },
-  computed: {
-    filteredUserList() {
-      var returnObj = {};
-      for (var a in this.users.list) {
-        if (a.toLowerCase().includes(this.searchString.toLowerCase())) {
-          returnObj[a] = this.users.list[a];
-        }
-      }
-
-      return returnObj;
-    },
-    filteredGroupList() {
-      var returnObj = {};
-      for (var a in this.groups.list) {
-        if (a.toLowerCase().includes(this.searchString.toLowerCase())) {
-          returnObj[a] = this.groups.list[a];
-        }
-      }
-
-      return returnObj;
-    }
-  },
-  data() {
-    return {
-      view: {
-        isLoaded: false,
-        isAuth: false
-      },
-      searchString: "",
-      currentSearchFilter: "user",
-      availableSearchFilter: {
-        user: "Users",
-        group: "Groups"
-      },
-      users: {
-        list: {},
-        provider: null,
-        chooseProvider: null,
-        chooseBind: null,
-        providerInfo: {
-          oldIp: "",
-          newIp: ""
-        },
-        hostname: {
-          valid: false,
-          errors: {
-            hasError: false,
-            message: ""
+            vm.view.isAuth = true;
           },
-          value: "",
-          isLoading: true
-        }
-      },
-      groups: {
-        list: {}
-      },
-      passwordPolicy: {},
-      newUser: this.initUser(),
-      newGroup: this.initGroup(),
-      toDelete: {},
-      newProvider: {},
-      currentStep: 1
-    };
-  },
-  methods: {
-    selectProvider(provider) {
-      this.users.chooseProvider = provider;
-      this.users.chooseBind = null;
-      this.newProvider = {};
+          function (error) {
+            console.error(error);
+          },
+          false
+        );
+      });
     },
-
-    selectBind(bind) {
-      this.users.chooseBind = bind;
-      this.newProvider = {};
-      this.getAdDefault();
+    components: {
+      PasswordMeter
     },
-
-    checkIfDisabled() {
-      if (this.currentStep == 1) {
-        if (this.users.chooseProvider == null || !this.users.hostname.valid) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-
-      if (this.currentStep == 2) {
-        if (this.users.chooseBind == null) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-
-      if (this.currentStep == 3) {
-        if (
-          this.users.chooseProvider == "ldap" &&
-          this.users.chooseBind == "local"
-        ) {
-          return false;
-        }
-        if (
-          this.users.chooseProvider == "ldap" &&
-          this.users.chooseBind == "remote"
-        ) {
-          if (this.newProvider.isValid) {
-            return false;
-          } else {
-            return true;
+    beforeRouteLeave(to, from, next) {
+      $(".modal").modal("hide");
+      next();
+    },
+    mounted() {
+      this.getInfo();
+      this.getPasswordPolicy();
+    },
+    computed: {
+      filteredUserList() {
+        var returnObj = {};
+        for (var a in this.users.list) {
+          if (a.toLowerCase().includes(this.searchString.toLowerCase())) {
+            returnObj[a] = this.users.list[a];
           }
         }
-        if (
-          this.users.chooseProvider == "ad" &&
-          this.users.chooseBind == "local"
-        ) {
+
+        return returnObj;
+      },
+      filteredGroupList() {
+        var returnObj = {};
+        for (var a in this.groups.list) {
+          if (a.toLowerCase().includes(this.searchString.toLowerCase())) {
+            returnObj[a] = this.groups.list[a];
+          }
+        }
+
+        return returnObj;
+      }
+    },
+    data() {
+      return {
+        view: {
+          isLoaded: false,
+          isAuth: false
+        },
+        searchString: "",
+        currentSearchFilter: "user",
+        availableSearchFilter: {
+          user: "Users",
+          group: "Groups"
+        },
+        users: {
+          list: {},
+          provider: null,
+          chooseProvider: null,
+          chooseBind: null,
+          providerInfo: {
+            oldIp: "",
+            newIp: ""
+          },
+          hostname: {
+            valid: false,
+            errors: {
+              hasError: false,
+              message: ""
+            },
+            value: "",
+            isLoading: true
+          }
+        },
+        groups: {
+          list: {}
+        },
+        passwordPolicy: {},
+        newUser: this.initUser(),
+        newGroup: this.initGroup(),
+        toDelete: {},
+        newProvider: {},
+        currentStep: 1
+      };
+    },
+    methods: {
+      selectProvider(provider) {
+        this.users.chooseProvider = provider;
+        this.users.chooseBind = null;
+        this.newProvider = {};
+      },
+
+      selectBind(bind) {
+        this.users.chooseBind = bind;
+        this.newProvider = {};
+        this.getAdDefault();
+      },
+
+      checkIfDisabled() {
+        if (this.currentStep == 1) {
+          if (this.users.chooseProvider == null || !this.users.hostname.valid) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+
+        if (this.currentStep == 2) {
+          if (this.users.chooseBind == null) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+
+        if (this.currentStep == 3) {
           if (
-            this.newProvider.Realm &&
-            this.newProvider.Realm.length > 0 &&
-            this.newProvider.Workgroup &&
-            this.newProvider.Workgroup.length > 0 &&
-            this.newProvider.IpAddress &&
-            this.newProvider.IpAddress.length > 0
+            this.users.chooseProvider == "ldap" &&
+            this.users.chooseBind == "local"
           ) {
             return false;
-          } else {
-            return true;
+          }
+          if (
+            this.users.chooseProvider == "ldap" &&
+            this.users.chooseBind == "remote"
+          ) {
+            if (this.newProvider.isValid) {
+              return false;
+            } else {
+              return true;
+            }
+          }
+          if (
+            this.users.chooseProvider == "ad" &&
+            this.users.chooseBind == "local"
+          ) {
+            if (
+              this.newProvider.Realm &&
+              this.newProvider.Realm.length > 0 &&
+              this.newProvider.Workgroup &&
+              this.newProvider.Workgroup.length > 0 &&
+              this.newProvider.IpAddress &&
+              this.newProvider.IpAddress.length > 0
+            ) {
+              return false;
+            } else {
+              return true;
+            }
+          }
+          if (
+            this.users.chooseProvider == "ad" &&
+            this.users.chooseBind == "remote"
+          ) {
+            if (this.newProvider.isValid) {
+              return false;
+            } else {
+              return true;
+            }
           }
         }
-        if (
-          this.users.chooseProvider == "ad" &&
-          this.users.chooseBind == "remote"
-        ) {
-          if (this.newProvider.isValid) {
-            return false;
-          } else {
-            return true;
+      },
+
+      nextStep() {
+        if (this.currentStep == 3) {
+          if (
+            this.users.chooseProvider == "ldap" &&
+            this.users.chooseBind == "local"
+          ) {
+            this.installLDAP();
           }
+          if (
+            this.users.chooseProvider == "ldap" &&
+            this.users.chooseBind == "remote"
+          ) {
+            this.bindToRemoteLdap("update", this.newProvider);
+          }
+          if (
+            this.users.chooseProvider == "ad" &&
+            this.users.chooseBind == "local"
+          ) {
+            this.createDC(this.newProvider);
+          }
+          if (
+            this.users.chooseProvider == "ad" &&
+            this.users.chooseBind == "remote"
+          ) {
+            this.joinADomain("update", this.newProvider);
+          }
+        } else {
+          this.currentStep++;
         }
-      }
-    },
+      },
 
-    nextStep() {
-      if (this.currentStep == 3) {
-        if (
-          this.users.chooseProvider == "ldap" &&
-          this.users.chooseBind == "local"
-        ) {
-          this.installLDAP();
-        }
-        if (
-          this.users.chooseProvider == "ldap" &&
-          this.users.chooseBind == "remote"
-        ) {
-          this.bindToRemoteLdap("update", this.newProvider);
-        }
-        if (
-          this.users.chooseProvider == "ad" &&
-          this.users.chooseBind == "local"
-        ) {
-          this.createDC(this.newProvider);
-        }
-        if (
-          this.users.chooseProvider == "ad" &&
-          this.users.chooseBind == "remote"
-        ) {
-          this.joinADomain("update", this.newProvider);
-        }
-      } else {
-        this.currentStep++;
-      }
-    },
+      prevStep() {
+        this.currentStep--;
+      },
 
-    prevStep() {
-      this.currentStep--;
-    },
+      switchFilterSearch(filter) {
+        this.currentSearchFilter = filter;
+      },
 
-    switchFilterSearch(filter) {
-      this.currentSearchFilter = filter;
-    },
+      groupAlreadyAdded(group) {
+        return this.newUser.groups.indexOf(group) > -1;
+      },
 
-    groupAlreadyAdded(group) {
-      return this.newUser.groups.indexOf(group) > -1;
-    },
+      userAlreadyAdded(user) {
+        return this.newGroup.members.indexOf(user) > -1;
+      },
 
-    userAlreadyAdded(user) {
-      return this.newGroup.members.indexOf(user) > -1;
-    },
+      cancelWizard() {
+        $("#accountProviderWizard").modal("hide");
+        this.$router.push("/");
+      },
 
-    cancelWizard() {
-      $("#accountProviderWizard").modal("hide");
-      this.$router.push("/");
-    },
+      cleanUserErrors() {
+        delete this.newUser.errorMessage;
+        delete this.newUser.errorProps;
+        delete this.newUser.onTaskRunning;
+      },
 
-    cleanUserErrors() {
-      delete this.newUser.errorMessage;
-      delete this.newUser.errorProps;
-      delete this.newUser.onTaskRunning;
-    },
+      cleanGroupErrors() {
+        delete this.newGroup.errorMessage;
+        delete this.newGroup.errorProps;
+        delete this.newGroup.onTaskRunning;
+      },
 
-    cleanGroupErrors() {
-      delete this.newGroup.errorMessage;
-      delete this.newGroup.errorProps;
-      delete this.newGroup.onTaskRunning;
-    },
-
-    initUser() {
-      return {
-        selectedGroup: null,
-        groups: [],
-        newPassword: "",
-        confirmNewPassword: "",
-        passwordStrength: false,
-        togglePass: false,
-        errorProps: {
-          name: "",
-          gecos: "",
+      initUser() {
+        return {
+          selectedGroup: null,
+          groups: [],
           newPassword: "",
-          confirmNewPassword: ""
-        },
-        isEdit: false,
-        name: "",
-        expires: false,
-        shell: false,
-        isLoading: false
-      };
-    },
-    initGroup() {
-      return {
-        selectedUser: null,
-        members: [],
-        loadMembers: false,
-        isEdit: false,
-        name: "",
-        errorProps: {
+          confirmNewPassword: "",
+          passwordStrength: false,
+          togglePass: false,
+          errorProps: {
+            name: "",
+            gecos: "",
+            newPassword: "",
+            confirmNewPassword: ""
+          },
+          isEdit: false,
           name: "",
-          members: ""
-        },
-        isLoading: false
-      };
-    },
-
-    saveHostname() {
-      var context = this;
-
-      var hostnameObj = {
-        hostname: context.users.hostname.value
-      };
-
-      context.users.hostname.errors.hasError = false;
-      context.exec(
-        ["system-hostname/validate"],
-        hostnameObj,
-        null,
-        function(success) {
-          // update values
-          context.exec(
-            ["system-hostname/update"],
-            hostnameObj,
-            function(stream) {
-              console.info("hostname", stream);
-            },
-            function(success) {
-              // notification
-              context.$parent.notifications.success.message = context.$i18n.t(
-                "users_groups.hostname_save_ok"
-              );
-
-              context.users.hostname.valid = true;
-            },
-            function(error, data) {
-              // notification
-              context.$parent.notifications.error.message = context.$i18n.t(
-                "users_groups.hostname_save_error"
-              );
-            }
-          );
-        },
-        function(error, data) {
-          var errorData = JSON.parse(data);
-
-          context.users.hostname.errors.hasError = true;
-
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.users.hostname.errors.hasError = true;
-            context.users.hostname.errors.message = attr.error;
-          }
-        }
-      );
-    },
-
-    getInfo() {
-      var context = this;
-      context.exec(
-        ["system-accounts-provider/read"],
-        {
-          action: "dump"
-        },
-        null,
-        function(success) {
-          success = JSON.parse(success);
-
-          context.users.provider = success.isAD
-            ? "ad"
-            : success.isLdap
-              ? "ldap"
-              : null;
-          context.users.providerInfo = success;
-          context.users.providerInfo.oldIp = success["NsdcIp"];
-
-          context.users.hostname.valid = success["ValidHostname"] == 1;
-
-          if (context.users.provider == "ldap") {
-            delete context.users.providerInfo.NsdcIp;
-          }
-
-          if (context.users.provider) {
-            context.getUsers();
-            context.getGroups();
-          } else {
-            $("#accountProviderWizard").modal("show");
-          }
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
-    },
-
-    togglePass() {
-      this.newUser.togglePass = !this.newUser.togglePass;
-    },
-
-    getPasswordPolicy() {
-      var context = this;
-      context.exec(
-        ["system-password-policy/read"],
-        null,
-        null,
-        function(success) {
-          success = JSON.parse(success);
-          context.passwordPolicy = success.configuration.props;
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
-    },
-
-    openPasswordPolicy() {
-      this.passwordPolicy.Users =
-        this.passwordPolicy.Users == "yes" ? true : false;
-      this.passwordPolicy.PassExpires =
-        this.passwordPolicy.PassExpires == "yes" ? true : false;
-      $("#passwordPolicyModal").modal("show");
-    },
-
-    changePasswordPolicy() {
-      this.passwordPolicy.Users =
-        this.passwordPolicy.Users == true ? "yes" : "no";
-      this.passwordPolicy.PassExpires =
-        this.passwordPolicy.PassExpires == true ? "yes" : "no";
-      this.passwordPolicy.MinPassAge = parseInt(this.passwordPolicy.MinPassAge);
-      this.passwordPolicy.MaxPassAge = parseInt(this.passwordPolicy.MaxPassAge);
-
-      $("#passwordPolicyModal").modal("hide");
-
-      var context = this;
-      context.exec(
-        ["system-password-policy/update"],
-        {
-          props: {
-            PassExpires: context.passwordPolicy.PassExpires,
-            MinPassAge: context.passwordPolicy.MinPassAge,
-            MaxPassAge: context.passwordPolicy.MaxPassAge,
-            Users: context.passwordPolicy.Users
+          expires: false,
+          shell: false,
+          isLoading: false
+        };
+      },
+      initGroup() {
+        return {
+          selectedUser: null,
+          members: [],
+          loadMembers: false,
+          isEdit: false,
+          name: "",
+          errorProps: {
+            name: "",
+            members: ""
           },
-          name: "passwordstrength",
-          type: "configuration"
-        },
-        function(stream) {
-          console.info("password-policy", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "users_groups.password_policy_ok"
-          );
+          isLoading: false
+        };
+      },
 
-          // get policy
-          context.getPasswordPolicy();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "users_groups.password_policy_error"
-          );
-        }
-      );
-    },
+      saveHostname() {
+        var context = this;
 
-    getAdDefault() {
-      var context = this;
-      context.exec(
-        ["system-accounts-provider/read"],
-        {
-          action: "default-ad"
-        },
-        null,
-        function(success) {
-          success = JSON.parse(success);
-          context.newProvider.Realm = success.Realm;
-          context.newProvider.Workgroup = success.Workgroup;
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
-    },
+        var hostnameObj = {
+          hostname: context.users.hostname.value
+        };
 
-    getUsers() {
-      var context = this;
-      context.view.isLoaded = false;
-      context.exec(
-        ["system-users/read"],
-        {
-          action: "list-users"
-        },
-        null,
-        function(success) {
-          success = JSON.parse(success);
-
-          context.view.isLoaded = true;
-          context.users.list = success;
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
-    },
-
-    getGroups() {
-      var context = this;
-      context.view.isLoaded = false;
-      context.exec(
-        ["system-users/read"],
-        {
-          action: "list-groups"
-        },
-        null,
-        function(success) {
-          success = JSON.parse(success);
-
-          context.view.isLoaded = true;
-          context.groups.list = success;
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
-    },
-
-    addGroupToUser(group) {
-      if (group.length > 0 && group != "-") {
-        if (!this.groupAlreadyAdded(group)) {
-          this.newUser.groups.push(group);
-        }
-      }
-    },
-
-    removeGroupFromUser(index) {
-      this.newUser.groups.splice(index, 1);
-    },
-
-    addUserToGroup(user) {
-      if (user.length > 0 && user != "-") {
-        if (!this.userAlreadyAdded(user)) {
-          this.newGroup.members.push(user);
-        }
-      }
-    },
-
-    removeUserFromGroup(index) {
-      this.newGroup.members.splice(index, 1);
-    },
-
-    openCreateUser() {
-      this.newUser = this.initUser();
-      $("#createUserModal").modal("show");
-    },
-
-    createUser(user) {
-      var context = this;
-
-      var userObj = {
-        action: "user-create",
-        name: user.name,
-        groups: user.groups,
-        gecos: user.gecos,
-        expires: user.expires ? "yes" : "no",
-        shell: user.shell ? "/bin/bash" : "/usr/libexec/openssh/sftp-server",
-        newPassword: user.newPassword,
-        confirmNewPassword: user.confirmNewPassword
-      };
-
-      // validate object
-      context.newUser.isLoading = true;
-      context.exec(
-        ["system-users/validate"],
-        userObj,
-        null,
-        function(success) {
-          context.newUser.isLoading = false;
-          $("#createUserModal").modal("hide");
-
-          context.exec(
-            ["system-users/create"],
-            userObj,
-            function(stream) {
-              console.info("user-create", stream);
-            },
-            function(success) {
-              // notification
-              context.$parent.notifications.success.message = context.$i18n.t(
-                "users_groups.user_created_ok"
-              );
-
-              context.newUser = context.initUser();
-              $("#pass-meter-input").val("");
-
-              // get users
-              context.getUsers();
-            },
-            function(error, data) {
-              // notification
-              context.$parent.notifications.error.message = context.$i18n.t(
-                "users_groups.user_created_error"
-              );
-            }
-          );
-        },
-        function(error, data) {
-          var errorData = JSON.parse(data);
-          context.newUser.isLoading = false;
-
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-
-            context.newUser.errorProps[attr.parameter] = attr.error;
-          }
-        }
-      );
-    },
-
-    openEditUser(ku, user) {
-      this.newUser = this.initUser();
-
-      this.newUser.name = ku;
-      this.newUser.gecos = user.gecos;
-
-      this.newUser.isEdit = true;
-      this.newUser.isPassEdit = false;
-      this.newUser.loadGroups = true;
-      this.newUser.expires =
-        this.newUser.expires == true || user.expires == "yes" ? true : false;
-      this.newUser.shell =
-        this.newUser.shell == true || user.shell == "/bin/bash" ? true : false;
-
-      var context = this;
-      context.exec(
-        ["system-users/read"],
-        {
-          action: "user-membership",
-          user: ku
-        },
-        null,
-        function(success) {
-          success = JSON.parse(success);
-          context.newUser.groups = success;
-          context.newUser.loadGroups = false;
-        },
-        function(error) {
-          console.error(error);
-          context.newUser.loadGroups = false;
-        }
-      );
-
-      $("#createUserModal").modal("show");
-    },
-
-    editUser(user) {
-      var context = this;
-
-      var userObj = {
-        action: "user-update",
-        name: user.name,
-        groups: user.groups,
-        gecos: user.gecos,
-        expires: user.expires ? "yes" : "no",
-        shell: user.shell ? "/bin/bash" : "/usr/libexec/openssh/sftp-server"
-      };
-
-      // validate object
-      context.newUser.isLoading = true;
-      context.exec(
-        ["system-users/validate"],
-        userObj,
-        null,
-        function(success) {
-          context.newUser.isLoading = false;
-          $("#createUserModal").modal("hide");
-
-          context.exec(
-            ["system-users/update"],
-            userObj,
-            function(stream) {
-              console.info("user-update", stream);
-            },
-            function(success) {
-              // notification
-              context.$parent.notifications.success.message = context.$i18n.t(
-                "users_groups.user_updated_ok"
-              );
-
-              context.newUser = context.initUser();
-
-              // get users
-              context.getUsers();
-            },
-            function(error, data) {
-              // notification
-              context.$parent.notifications.error.message = context.$i18n.t(
-                "users_groups.user_updated_error"
-              );
-            }
-          );
-        },
-        function(error, data) {
-          var errorData = JSON.parse(data);
-          context.newUser.isLoading = false;
-
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-
-            context.newUser.errorProps[attr.parameter] = attr.error;
-          }
-        }
-      );
-    },
-
-    openChangePassword(ku, user) {
-      this.newUser = this.initUser();
-      this.newUser.name = ku;
-      this.newUser.isEdit = true;
-      this.newUser.isPassEdit = true;
-      $("#createUserModal").modal("show");
-    },
-
-    changePassword(user) {
-      var context = this;
-
-      $("#createUserModal").modal("hide");
-
-      context.exec(
-        ["system-users/update"],
-        {
-          action: "change-password",
-          name: user.name,
-          newPassword: user.newPassword,
-          confirmNewPassword: user.confirmNewPassword
-        },
-        function(stream) {
-          console.info("user-change-password", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "users_groups.user_pass_change_ok"
-          );
-
-          // get users
-          context.getUsers();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "users_groups.user_pass_change_error"
-          );
-        }
-      );
-    },
-
-    toggleLock(ku, user) {
-      var context = this;
-
-      context.exec(
-        ["system-users/update"],
-        {
-          action: "toggle-lock",
-          name: ku
-        },
-        function(stream) {
-          console.info("user-toggle-lock", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = user.locked
-            ? context.$i18n.t("users_groups.user_unlocked_ok")
-            : context.$i18n.t("users_groups.user_locked_ok");
-
-          // get users
-          context.getUsers();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.success.message = user.locked
-            ? context.$i18n.t("users_groups.user_unlocked_error")
-            : context.$i18n.t("users_groups.user_locked_error");
-        }
-      );
-    },
-
-    openDeleteUser(ku, toDelete) {
-      this.toDelete = this.initUser();
-      this.toDelete.name = ku;
-      this.toDelete.isGroup = false;
-      $("#deleteModal").modal("show");
-    },
-
-    deleteUser(user) {
-      var context = this;
-
-      $("#deleteModal").modal("hide");
-      context.exec(
-        ["system-users/delete"],
-        {
-          action: "user-delete",
-          name: user.name
-        },
-        function(stream) {
-          console.info("user-delete", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "users_groups.user_deleted_ok"
-          );
-
-          // get users
-          context.getUsers();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "users_groups.user_deleted_error"
-          );
-        }
-      );
-    },
-
-    openCreateGroup() {
-      this.newGroup = this.initGroup();
-      $("#createGroupModal").modal("show");
-    },
-
-    createGroup(group) {
-      var context = this;
-
-      var groupObj = {
-        action: "group-create",
-        name: group.name,
-        members: group.members
-      };
-
-      // validate object
-      context.newGroup.isLoading = true;
-      context.exec(
-        ["system-users/validate"],
-        groupObj,
-        null,
-        function(success) {
-          context.newGroup.isLoading = false;
-          $("#createGroupModal").modal("hide");
-
-          context.exec(
-            ["system-users/create"],
-            groupObj,
-            function(stream) {
-              console.info("group-create", stream);
-            },
-            function(success) {
-              // notification
-              context.$parent.notifications.success.message = context.$i18n.t(
-                "users_groups.group_created_ok"
-              );
-
-              context.newGroup = context.initGroup();
-
-              // get groups
-              context.getGroups();
-            },
-            function(error, data) {
-              // notification
-              context.$parent.notifications.error.message = context.$i18n.t(
-                "users_groups.group_created_error"
-              );
-            }
-          );
-        },
-        function(error, data) {
-          var errorData = JSON.parse(data);
-          context.newGroup.isLoading = false;
-
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-
-            context.newGroup.errorProps[attr.parameter] = attr.error;
-          }
-        }
-      );
-    },
-
-    openEditGroup(kg, group) {
-      this.newGroup = this.initGroup();
-      this.newGroup.name = kg;
-      this.newGroup.isEdit = true;
-      this.newGroup.loadMembers = true;
-
-      var context = this;
-      context.exec(
-        ["system-users/read"],
-        {
-          action: "group-members",
-          group: kg
-        },
-        null,
-        function(success) {
-          success = JSON.parse(success);
-          context.newGroup.members = success;
-          context.newGroup.loadMembers = false;
-        },
-        function(error) {
-          console.error(error);
-          context.newGroup.loadMembers = false;
-        }
-      );
-
-      $("#createGroupModal").modal("show");
-    },
-
-    editGroup(group) {
-      var context = this;
-
-      var groupObj = {
-        action: "group-update",
-        name: group.name,
-        members: group.members
-      };
-
-      // validate object
-      context.newGroup.isLoading = true;
-      context.exec(
-        ["system-users/validate"],
-        groupObj,
-        null,
-        function(success) {
-          context.newGroup.isLoading = false;
-          $("#createGroupModal").modal("hide");
-
-          context.exec(
-            ["system-users/update"],
-            groupObj,
-            function(stream) {
-              console.info("group-update", stream);
-            },
-            function(success) {
-              // notification
-              context.$parent.notifications.success.message = context.$i18n.t(
-                "users_groups.group_updated_ok"
-              );
-
-              context.newGroup = context.initGroup();
-
-              // get groups
-              context.getGroups();
-            },
-            function(error, data) {
-              // notification
-              context.$parent.notifications.error.message = context.$i18n.t(
-                "users_groups.group_updated_error"
-              );
-            }
-          );
-        },
-        function(error, data) {
-          var errorData = JSON.parse(data);
-          context.newGroup.isLoading = false;
-
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-
-            context.newGroup.errorProps[attr.parameter] = attr.error;
-          }
-        }
-      );
-    },
-
-    openDeleteGroup(kg, toDelete) {
-      this.toDelete = this.initGroup();
-      this.toDelete.name = kg;
-      this.toDelete.isGroup = true;
-      $("#deleteModal").modal("show");
-    },
-
-    deleteGroup(group) {
-      var context = this;
-
-      $("#deleteModal").modal("hide");
-      context.exec(
-        ["system-users/delete"],
-        {
-          action: "group-delete",
-          name: group.name
-        },
-        function(stream) {
-          console.info("group-delete", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "users_groups.group_deleted_ok"
-          );
-
-          // get groups
-          context.getGroups();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "users_groups.group_deleted_error"
-          );
-        }
-      );
-    },
-
-    updateValues(k, v) {
-      this.newProvider.info[k] = v;
-    },
-
-    uninstallProvider() {
-      var context = this;
-
-      var providerObj = {
-        action: "remove-provider"
-      };
-      context.$forceUpdate();
-
-      $("#changeProviderModal").modal("hide");
-
-      // update values
-      context.exec(
-        ["system-accounts-provider/update"],
-        providerObj,
-        function(stream) {
-          console.info("accounts-provider", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "users_groups.provider_uninstalled_ok"
-          );
-
-          context.newProvider = {};
-          context.currentStep = 1;
-          context.newUser = context.initUser();
-          context.newGroup = context.initGroup();
-
-          // get provider info
-          context.getInfo();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "users_groups.provider_uninstalled_error"
-          );
-        }
-      );
-    },
-
-    changeBindType(v) {
-      this.newProvider.info.BindType = v;
-      this.$forceUpdate();
-    },
-
-    changeStartTLS(v) {
-      this.newProvider.info.StartTls = !v ? "enabled" : "disabled";
-    },
-
-    checkLdapConfig(newProvider) {
-      var context = this;
-
-      context.newProvider.isChecking = true;
-      context.$forceUpdate();
-
-      context.exec(
-        ["system-accounts-provider/read"],
-        {
-          action: "probe-ldap",
-          port: newProvider.tcpport,
-          server: newProvider.hostname
-        },
-        null,
-        function(success) {
-          success = JSON.parse(success);
-          context.newProvider.info = success;
-          context.newProvider.info.LdapUriDn = unescape(
-            context.newProvider.info.LdapUriDn
-          );
-          context.newProvider.info.BindType = "anonymous";
-          context.newProvider.probeError = false;
-          context.newProvider.isChecking = false;
-          context.newProvider.isChecked = true;
-          context.$forceUpdate();
-        },
-        function(error) {
-          context.newProvider.info = null;
-          context.newProvider.probeError = true;
-          context.newProvider.isChecking = false;
-          context.newProvider.isChecked = true;
-          context.$forceUpdate();
-          console.error(error);
-        }
-      );
-    },
-
-    installLDAP() {
-      var context = this;
-
-      var ldapObj = {
-        action: "local-ldap"
-      };
-      context.$forceUpdate();
-
-      $("#accountProviderWizard").modal("hide");
-
-      // update values
-      context.exec(
-        ["system-accounts-provider/update"],
-        ldapObj,
-        function(stream) {
-          console.info("accounts-provider", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "users_groups.local_ldap_installed_ok"
-          );
-
-          context.$parent.checkSystemTaks();
-
-          // get provider info
-          context.getInfo();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "users_groups.local_ldap_installed_error"
-          );
-        }
-      );
-    },
-
-    bindToRemoteLdap(action, newProvider) {
-      var context = this;
-
-      var ldapObj = newProvider.info;
-      ldapObj.action = "remote-ldap";
-
-      if (action == "validate") {
-        context.newProvider.isChecking = true;
-        context.$forceUpdate();
-
-        // validate
+        context.users.hostname.errors.hasError = false;
         context.exec(
-          ["system-accounts-provider/validate"],
-          ldapObj,
+          ["system-hostname/validate"],
+          hostnameObj,
           null,
-          function(success) {
-            context.newProvider.isChecking = false;
-            context.newProvider.isValid = true;
-            context.$forceUpdate();
+          function (success) {
+            // update values
+            context.exec(
+              ["system-hostname/update"],
+              hostnameObj,
+              function (stream) {
+                console.info("hostname", stream);
+              },
+              function (success) {
+                // notification
+                context.$parent.notifications.success.message = context.$i18n.t(
+                  "users_groups.hostname_save_ok"
+                );
+
+                context.users.hostname.valid = true;
+              },
+              function (error, data) {
+                // notification
+                context.$parent.notifications.error.message = context.$i18n.t(
+                  "users_groups.hostname_save_error"
+                );
+              }
+            );
           },
-          function(error, data) {
+          function (error, data) {
             var errorData = JSON.parse(data);
-            context.newProvider.isChecking = false;
-            context.newProvider.isValid = false;
-            context.newProvider.probeError = true;
-            context.$forceUpdate();
+
+            context.users.hostname.errors.hasError = true;
+
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.users.hostname.errors.hasError = true;
+              context.users.hostname.errors.message = attr.error;
+            }
           }
         );
-      } else {
-        // update values
-        $("#accountProviderWizard").modal("hide");
+      },
 
+      getInfo() {
+        var context = this;
         context.exec(
-          ["system-accounts-provider/update"],
-          ldapObj,
-          function(stream) {
-            console.info("accounts-provider", stream);
+          ["system-accounts-provider/read"], {
+            action: "dump"
           },
-          function(success) {
+          null,
+          function (success) {
+            success = JSON.parse(success);
+
+            context.users.provider = success.isAD ?
+              "ad" :
+              success.isLdap ?
+              "ldap" :
+              null;
+            context.users.providerInfo = success;
+            context.users.providerInfo.oldIp = success["NsdcIp"];
+
+            context.users.hostname.valid = success["ValidHostname"] == 1;
+
+            if (context.users.provider == "ldap") {
+              delete context.users.providerInfo.NsdcIp;
+            }
+
+            if (context.users.provider) {
+              context.getUsers();
+              context.getGroups();
+            } else {
+              $("#accountProviderWizard").modal("show");
+            }
+          },
+          function (error) {
+            console.error(error);
+          }
+        );
+      },
+
+      togglePass() {
+        this.newUser.togglePass = !this.newUser.togglePass;
+      },
+
+      getPasswordPolicy() {
+        var context = this;
+        context.exec(
+          ["system-password-policy/read"],
+          null,
+          null,
+          function (success) {
+            success = JSON.parse(success);
+            context.passwordPolicy = success.configuration.props;
+          },
+          function (error) {
+            console.error(error);
+          }
+        );
+      },
+
+      openPasswordPolicy() {
+        this.passwordPolicy.Users =
+          this.passwordPolicy.Users == "yes" ? true : false;
+        this.passwordPolicy.PassExpires =
+          this.passwordPolicy.PassExpires == "yes" ? true : false;
+        $("#passwordPolicyModal").modal("show");
+      },
+
+      changePasswordPolicy() {
+        this.passwordPolicy.Users =
+          this.passwordPolicy.Users == true ? "yes" : "no";
+        this.passwordPolicy.PassExpires =
+          this.passwordPolicy.PassExpires == true ? "yes" : "no";
+        this.passwordPolicy.MinPassAge = parseInt(this.passwordPolicy.MinPassAge);
+        this.passwordPolicy.MaxPassAge = parseInt(this.passwordPolicy.MaxPassAge);
+
+        $("#passwordPolicyModal").modal("hide");
+
+        var context = this;
+        context.exec(
+          ["system-password-policy/update"], {
+            props: {
+              PassExpires: context.passwordPolicy.PassExpires,
+              MinPassAge: context.passwordPolicy.MinPassAge,
+              MaxPassAge: context.passwordPolicy.MaxPassAge,
+              Users: context.passwordPolicy.Users
+            },
+            name: "passwordstrength",
+            type: "configuration"
+          },
+          function (stream) {
+            console.info("password-policy", stream);
+          },
+          function (success) {
             // notification
             context.$parent.notifications.success.message = context.$i18n.t(
-              "users_groups.remote_ldap_installed_ok"
+              "users_groups.password_policy_ok"
             );
+
+            // get policy
+            context.getPasswordPolicy();
+          },
+          function (error, data) {
+            // notification
+            context.$parent.notifications.error.message = context.$i18n.t(
+              "users_groups.password_policy_error"
+            );
+          }
+        );
+      },
+
+      getAdDefault() {
+        var context = this;
+        context.exec(
+          ["system-accounts-provider/read"], {
+            action: "default-ad"
+          },
+          null,
+          function (success) {
+            success = JSON.parse(success);
+            context.newProvider.Realm = success.Realm;
+            context.newProvider.Workgroup = success.Workgroup;
+          },
+          function (error) {
+            console.error(error);
+          }
+        );
+      },
+
+      getUsers() {
+        var context = this;
+        context.view.isLoaded = false;
+        context.exec(
+          ["system-users/read"], {
+            action: "list-users"
+          },
+          null,
+          function (success) {
+            success = JSON.parse(success);
+
+            context.view.isLoaded = true;
+            context.users.list = success;
+          },
+          function (error) {
+            console.error(error);
+          }
+        );
+      },
+
+      getGroups() {
+        var context = this;
+        context.view.isLoaded = false;
+        context.exec(
+          ["system-users/read"], {
+            action: "list-groups"
+          },
+          null,
+          function (success) {
+            success = JSON.parse(success);
+
+            context.view.isLoaded = true;
+            context.groups.list = success;
+          },
+          function (error) {
+            console.error(error);
+          }
+        );
+      },
+
+      addGroupToUser(group) {
+        if (group.length > 0 && group != "-") {
+          if (!this.groupAlreadyAdded(group)) {
+            this.newUser.groups.push(group);
+          }
+        }
+      },
+
+      removeGroupFromUser(index) {
+        this.newUser.groups.splice(index, 1);
+      },
+
+      addUserToGroup(user) {
+        if (user.length > 0 && user != "-") {
+          if (!this.userAlreadyAdded(user)) {
+            this.newGroup.members.push(user);
+          }
+        }
+      },
+
+      removeUserFromGroup(index) {
+        this.newGroup.members.splice(index, 1);
+      },
+
+      openCreateUser() {
+        this.newUser = this.initUser();
+        $("#createUserModal").modal("show");
+      },
+
+      createUser(user) {
+        var context = this;
+
+        var userObj = {
+          action: "user-create",
+          name: user.name,
+          groups: user.groups,
+          gecos: user.gecos,
+          expires: user.expires ? "yes" : "no",
+          shell: user.shell ? "/bin/bash" : "/usr/libexec/openssh/sftp-server",
+          newPassword: user.newPassword,
+          confirmNewPassword: user.confirmNewPassword
+        };
+
+        // validate object
+        context.newUser.isLoading = true;
+        context.exec(
+          ["system-users/validate"],
+          userObj,
+          null,
+          function (success) {
+            context.newUser.isLoading = false;
+            $("#createUserModal").modal("hide");
+
+            context.exec(
+              ["system-users/create"],
+              userObj,
+              function (stream) {
+                console.info("user-create", stream);
+              },
+              function (success) {
+                // notification
+                context.$parent.notifications.success.message = context.$i18n.t(
+                  "users_groups.user_created_ok"
+                );
+
+                context.newUser = context.initUser();
+                $("#pass-meter-input").val("");
+
+                // get users
+                context.getUsers();
+              },
+              function (error, data) {
+                // notification
+                context.$parent.notifications.error.message = context.$i18n.t(
+                  "users_groups.user_created_error"
+                );
+              }
+            );
+          },
+          function (error, data) {
+            var errorData = JSON.parse(data);
+            context.newUser.isLoading = false;
+
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+
+              context.newUser.errorProps[attr.parameter] = attr.error;
+            }
+          }
+        );
+      },
+
+      openEditUser(ku, user) {
+        this.newUser = this.initUser();
+
+        this.newUser.name = ku;
+        this.newUser.gecos = user.gecos;
+
+        this.newUser.isEdit = true;
+        this.newUser.isPassEdit = false;
+        this.newUser.loadGroups = true;
+        this.newUser.expires =
+          this.newUser.expires == true || user.expires == "yes" ? true : false;
+        this.newUser.shell =
+          this.newUser.shell == true || user.shell == "/bin/bash" ? true : false;
+
+        var context = this;
+        context.exec(
+          ["system-users/read"], {
+            action: "user-membership",
+            user: ku
+          },
+          null,
+          function (success) {
+            success = JSON.parse(success);
+            context.newUser.groups = success;
+            context.newUser.loadGroups = false;
+          },
+          function (error) {
+            console.error(error);
+            context.newUser.loadGroups = false;
+          }
+        );
+
+        $("#createUserModal").modal("show");
+      },
+
+      editUser(user) {
+        var context = this;
+
+        var userObj = {
+          action: "user-update",
+          name: user.name,
+          groups: user.groups,
+          gecos: user.gecos,
+          expires: user.expires ? "yes" : "no",
+          shell: user.shell ? "/bin/bash" : "/usr/libexec/openssh/sftp-server"
+        };
+
+        // validate object
+        context.newUser.isLoading = true;
+        context.exec(
+          ["system-users/validate"],
+          userObj,
+          null,
+          function (success) {
+            context.newUser.isLoading = false;
+            $("#createUserModal").modal("hide");
+
+            context.exec(
+              ["system-users/update"],
+              userObj,
+              function (stream) {
+                console.info("user-update", stream);
+              },
+              function (success) {
+                // notification
+                context.$parent.notifications.success.message = context.$i18n.t(
+                  "users_groups.user_updated_ok"
+                );
+
+                context.newUser = context.initUser();
+
+                // get users
+                context.getUsers();
+              },
+              function (error, data) {
+                // notification
+                context.$parent.notifications.error.message = context.$i18n.t(
+                  "users_groups.user_updated_error"
+                );
+              }
+            );
+          },
+          function (error, data) {
+            var errorData = JSON.parse(data);
+            context.newUser.isLoading = false;
+
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+
+              context.newUser.errorProps[attr.parameter] = attr.error;
+            }
+          }
+        );
+      },
+
+      openChangePassword(ku, user) {
+        this.newUser = this.initUser();
+        this.newUser.name = ku;
+        this.newUser.isEdit = true;
+        this.newUser.isPassEdit = true;
+        $("#createUserModal").modal("show");
+      },
+
+      changePassword(user) {
+        var context = this;
+
+        $("#createUserModal").modal("hide");
+
+        context.exec(
+          ["system-users/update"], {
+            action: "change-password",
+            name: user.name,
+            newPassword: user.newPassword,
+            confirmNewPassword: user.confirmNewPassword
+          },
+          function (stream) {
+            console.info("user-change-password", stream);
+          },
+          function (success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "users_groups.user_pass_change_ok"
+            );
+
+            // get users
+            context.getUsers();
+          },
+          function (error, data) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "users_groups.user_pass_change_error"
+            );
+          }
+        );
+      },
+
+      toggleLock(ku, user) {
+        var context = this;
+
+        context.exec(
+          ["system-users/update"], {
+            action: "toggle-lock",
+            name: ku
+          },
+          function (stream) {
+            console.info("user-toggle-lock", stream);
+          },
+          function (success) {
+            // notification
+            context.$parent.notifications.success.message = user.locked ?
+              context.$i18n.t("users_groups.user_unlocked_ok") :
+              context.$i18n.t("users_groups.user_locked_ok");
+
+            // get users
+            context.getUsers();
+          },
+          function (error, data) {
+            // notification
+            context.$parent.notifications.success.message = user.locked ?
+              context.$i18n.t("users_groups.user_unlocked_error") :
+              context.$i18n.t("users_groups.user_locked_error");
+          }
+        );
+      },
+
+      openDeleteUser(ku, toDelete) {
+        this.toDelete = this.initUser();
+        this.toDelete.name = ku;
+        this.toDelete.isGroup = false;
+        $("#deleteModal").modal("show");
+      },
+
+      deleteUser(user) {
+        var context = this;
+
+        $("#deleteModal").modal("hide");
+        context.exec(
+          ["system-users/delete"], {
+            action: "user-delete",
+            name: user.name
+          },
+          function (stream) {
+            console.info("user-delete", stream);
+          },
+          function (success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "users_groups.user_deleted_ok"
+            );
+
+            // get users
+            context.getUsers();
+          },
+          function (error, data) {
+            // notification
+            context.$parent.notifications.error.message = context.$i18n.t(
+              "users_groups.user_deleted_error"
+            );
+          }
+        );
+      },
+
+      openCreateGroup() {
+        this.newGroup = this.initGroup();
+        $("#createGroupModal").modal("show");
+      },
+
+      createGroup(group) {
+        var context = this;
+
+        var groupObj = {
+          action: "group-create",
+          name: group.name,
+          members: group.members
+        };
+
+        // validate object
+        context.newGroup.isLoading = true;
+        context.exec(
+          ["system-users/validate"],
+          groupObj,
+          null,
+          function (success) {
+            context.newGroup.isLoading = false;
+            $("#createGroupModal").modal("hide");
+
+            context.exec(
+              ["system-users/create"],
+              groupObj,
+              function (stream) {
+                console.info("group-create", stream);
+              },
+              function (success) {
+                // notification
+                context.$parent.notifications.success.message = context.$i18n.t(
+                  "users_groups.group_created_ok"
+                );
+
+                context.newGroup = context.initGroup();
+
+                // get groups
+                context.getGroups();
+              },
+              function (error, data) {
+                // notification
+                context.$parent.notifications.error.message = context.$i18n.t(
+                  "users_groups.group_created_error"
+                );
+              }
+            );
+          },
+          function (error, data) {
+            var errorData = JSON.parse(data);
+            context.newGroup.isLoading = false;
+
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+
+              context.newGroup.errorProps[attr.parameter] = attr.error;
+            }
+          }
+        );
+      },
+
+      openEditGroup(kg, group) {
+        this.newGroup = this.initGroup();
+        this.newGroup.name = kg;
+        this.newGroup.isEdit = true;
+        this.newGroup.loadMembers = true;
+
+        var context = this;
+        context.exec(
+          ["system-users/read"], {
+            action: "group-members",
+            group: kg
+          },
+          null,
+          function (success) {
+            success = JSON.parse(success);
+            context.newGroup.members = success;
+            context.newGroup.loadMembers = false;
+          },
+          function (error) {
+            console.error(error);
+            context.newGroup.loadMembers = false;
+          }
+        );
+
+        $("#createGroupModal").modal("show");
+      },
+
+      editGroup(group) {
+        var context = this;
+
+        var groupObj = {
+          action: "group-update",
+          name: group.name,
+          members: group.members
+        };
+
+        // validate object
+        context.newGroup.isLoading = true;
+        context.exec(
+          ["system-users/validate"],
+          groupObj,
+          null,
+          function (success) {
+            context.newGroup.isLoading = false;
+            $("#createGroupModal").modal("hide");
+
+            context.exec(
+              ["system-users/update"],
+              groupObj,
+              function (stream) {
+                console.info("group-update", stream);
+              },
+              function (success) {
+                // notification
+                context.$parent.notifications.success.message = context.$i18n.t(
+                  "users_groups.group_updated_ok"
+                );
+
+                context.newGroup = context.initGroup();
+
+                // get groups
+                context.getGroups();
+              },
+              function (error, data) {
+                // notification
+                context.$parent.notifications.error.message = context.$i18n.t(
+                  "users_groups.group_updated_error"
+                );
+              }
+            );
+          },
+          function (error, data) {
+            var errorData = JSON.parse(data);
+            context.newGroup.isLoading = false;
+
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+
+              context.newGroup.errorProps[attr.parameter] = attr.error;
+            }
+          }
+        );
+      },
+
+      openDeleteGroup(kg, toDelete) {
+        this.toDelete = this.initGroup();
+        this.toDelete.name = kg;
+        this.toDelete.isGroup = true;
+        $("#deleteModal").modal("show");
+      },
+
+      deleteGroup(group) {
+        var context = this;
+
+        $("#deleteModal").modal("hide");
+        context.exec(
+          ["system-users/delete"], {
+            action: "group-delete",
+            name: group.name
+          },
+          function (stream) {
+            console.info("group-delete", stream);
+          },
+          function (success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "users_groups.group_deleted_ok"
+            );
+
+            // get groups
+            context.getGroups();
+          },
+          function (error, data) {
+            // notification
+            context.$parent.notifications.error.message = context.$i18n.t(
+              "users_groups.group_deleted_error"
+            );
+          }
+        );
+      },
+
+      updateValues(k, v) {
+        this.newProvider.info[k] = v;
+      },
+
+      uninstallProvider() {
+        var context = this;
+
+        var providerObj = {
+          action: "remove-provider"
+        };
+        context.$forceUpdate();
+
+        $("#changeProviderModal").modal("hide");
+
+        // update values
+        context.exec(
+          ["system-accounts-provider/update"],
+          providerObj,
+          function (stream) {
+            console.info("accounts-provider", stream);
+          },
+          function (success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "users_groups.provider_uninstalled_ok"
+            );
+
+            context.newProvider = {};
+            context.currentStep = 1;
+            context.newUser = context.initUser();
+            context.newGroup = context.initGroup();
 
             // get provider info
             context.getInfo();
           },
-          function(error, data) {
+          function (error, data) {
             // notification
             context.$parent.notifications.error.message = context.$i18n.t(
-              "users_groups.remote_ldap_installed_error"
+              "users_groups.provider_uninstalled_error"
             );
           }
         );
-      }
-    },
+      },
 
-    checkAdConfig(newProvider) {
-      var context = this;
+      changeBindType(v) {
+        this.newProvider.info.BindType = v;
+        this.$forceUpdate();
+      },
 
-      context.newProvider.isChecking = true;
-      context.newProvider.info = {};
-      context.$forceUpdate();
+      changeStartTLS(v) {
+        this.newProvider.info.StartTls = !v ? "enabled" : "disabled";
+      },
 
-      context.exec(
-        ["system-accounts-provider/read"],
-        {
-          action: "probe-ad",
-          realm: newProvider.Realm,
-          server: newProvider.AdDns
-        },
-        null,
-        function(success) {
-          success = JSON.parse(success);
-          context.newProvider.info = success;
-          context.newProvider.info.BindPassword = "";
-          context.newProvider.probeError = false;
-          context.newProvider.isChecking = false;
-          context.newProvider.isChecked = true;
-          context.$forceUpdate();
-        },
-        function(error) {
-          context.newProvider.info = null;
-          context.newProvider.probeError = true;
-          context.newProvider.isChecking = false;
-          context.newProvider.isChecked = false;
-          context.$forceUpdate();
-          console.error(error);
-        }
-      );
-    },
+      checkLdapConfig(newProvider) {
+        var context = this;
 
-    joinADomain(action, newProvider) {
-      var context = this;
-
-      var adObj = {
-        action: "remote-ad",
-        AdRealm: newProvider.Realm,
-        AdDns: newProvider.AdDns,
-        AdUsername: newProvider.info.BindDN,
-        AdPassword: newProvider.info.BindPassword
-      };
-
-      if (action == "validate") {
         context.newProvider.isChecking = true;
         context.$forceUpdate();
 
-        // validate
         context.exec(
-          ["system-accounts-provider/validate"],
-          adObj,
+          ["system-accounts-provider/read"], {
+            action: "probe-ldap",
+            port: newProvider.tcpport,
+            server: newProvider.hostname
+          },
           null,
-          function(success) {
+          function (success) {
+            success = JSON.parse(success);
+            context.newProvider.info = success;
+            context.newProvider.info.LdapUriDn = unescape(
+              context.newProvider.info.LdapUriDn
+            );
+            context.newProvider.info.BindType = "anonymous";
+            context.newProvider.probeError = false;
             context.newProvider.isChecking = false;
-            context.newProvider.isValid = true;
+            context.newProvider.isChecked = true;
             context.$forceUpdate();
           },
-          function(error, data) {
-            var errorData = JSON.parse(data);
+          function (error) {
+            context.newProvider.info = null;
+            context.newProvider.probeError = true;
             context.newProvider.isChecking = false;
-            context.newProvider.isValid = false;
-            context.newProvider.joinError = true;
+            context.newProvider.isChecked = true;
             context.$forceUpdate();
+            console.error(error);
           }
         );
-      } else {
-        // update values
+      },
+
+      installLDAP() {
+        var context = this;
+
+        var ldapObj = {
+          action: "local-ldap"
+        };
+        context.$forceUpdate();
+
         $("#accountProviderWizard").modal("hide");
 
+        // update values
         context.exec(
           ["system-accounts-provider/update"],
-          adObj,
-          function(stream) {
+          ldapObj,
+          function (stream) {
             console.info("accounts-provider", stream);
           },
-          function(success) {
+          function (success) {
             // notification
             context.$parent.notifications.success.message = context.$i18n.t(
-              "users_groups.remote_ad_installed_ok"
+              "users_groups.local_ldap_installed_ok"
             );
 
             context.$parent.checkSystemTaks();
@@ -2124,92 +1966,246 @@ export default {
             // get provider info
             context.getInfo();
           },
-          function(error, data) {
+          function (error, data) {
             // notification
             context.$parent.notifications.error.message = context.$i18n.t(
-              "users_groups.remote_ad_installed_error"
+              "users_groups.local_ldap_installed_error"
+            );
+          }
+        );
+      },
+
+      bindToRemoteLdap(action, newProvider) {
+        var context = this;
+
+        var ldapObj = newProvider.info;
+        ldapObj.action = "remote-ldap";
+
+        if (action == "validate") {
+          context.newProvider.isChecking = true;
+          context.$forceUpdate();
+
+          // validate
+          context.exec(
+            ["system-accounts-provider/validate"],
+            ldapObj,
+            null,
+            function (success) {
+              context.newProvider.isChecking = false;
+              context.newProvider.isValid = true;
+              context.$forceUpdate();
+            },
+            function (error, data) {
+              var errorData = JSON.parse(data);
+              context.newProvider.isChecking = false;
+              context.newProvider.isValid = false;
+              context.newProvider.probeError = true;
+              context.$forceUpdate();
+            }
+          );
+        } else {
+          // update values
+          $("#accountProviderWizard").modal("hide");
+
+          context.exec(
+            ["system-accounts-provider/update"],
+            ldapObj,
+            function (stream) {
+              console.info("accounts-provider", stream);
+            },
+            function (success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "users_groups.remote_ldap_installed_ok"
+              );
+
+              // get provider info
+              context.getInfo();
+            },
+            function (error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "users_groups.remote_ldap_installed_error"
+              );
+            }
+          );
+        }
+      },
+
+      checkAdConfig(newProvider) {
+        var context = this;
+
+        context.newProvider.isChecking = true;
+        context.newProvider.info = {};
+        context.$forceUpdate();
+
+        context.exec(
+          ["system-accounts-provider/read"], {
+            action: "probe-ad",
+            realm: newProvider.Realm,
+            server: newProvider.AdDns
+          },
+          null,
+          function (success) {
+            success = JSON.parse(success);
+            context.newProvider.info = success;
+            context.newProvider.info.BindPassword = "";
+            context.newProvider.probeError = false;
+            context.newProvider.isChecking = false;
+            context.newProvider.isChecked = true;
+            context.$forceUpdate();
+          },
+          function (error) {
+            context.newProvider.info = null;
+            context.newProvider.probeError = true;
+            context.newProvider.isChecking = false;
+            context.newProvider.isChecked = false;
+            context.$forceUpdate();
+            console.error(error);
+          }
+        );
+      },
+
+      joinADomain(action, newProvider) {
+        var context = this;
+
+        var adObj = {
+          action: "remote-ad",
+          AdRealm: newProvider.Realm,
+          AdDns: newProvider.AdDns,
+          AdUsername: newProvider.info.BindDN,
+          AdPassword: newProvider.info.BindPassword
+        };
+
+        if (action == "validate") {
+          context.newProvider.isChecking = true;
+          context.$forceUpdate();
+
+          // validate
+          context.exec(
+            ["system-accounts-provider/validate"],
+            adObj,
+            null,
+            function (success) {
+              context.newProvider.isChecking = false;
+              context.newProvider.isValid = true;
+              context.$forceUpdate();
+            },
+            function (error, data) {
+              var errorData = JSON.parse(data);
+              context.newProvider.isChecking = false;
+              context.newProvider.isValid = false;
+              context.newProvider.joinError = true;
+              context.$forceUpdate();
+            }
+          );
+        } else {
+          // update values
+          $("#accountProviderWizard").modal("hide");
+
+          context.exec(
+            ["system-accounts-provider/update"],
+            adObj,
+            function (stream) {
+              console.info("accounts-provider", stream);
+            },
+            function (success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "users_groups.remote_ad_installed_ok"
+              );
+
+              context.$parent.checkSystemTaks();
+
+              // get provider info
+              context.getInfo();
+            },
+            function (error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "users_groups.remote_ad_installed_error"
+              );
+            }
+          );
+        }
+      },
+
+      createDC(newProvider) {
+        var context = this;
+
+        var adObj = newProvider;
+        adObj.action = "local-ad";
+        context.newProvider.isLoading = true;
+        context.$forceUpdate();
+
+        $("#accountProviderWizard").modal("hide");
+
+        // update values
+        context.exec(
+          ["system-accounts-provider/update"],
+          adObj,
+          function (stream) {
+            console.info("accounts-provider", stream);
+          },
+          function (success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "users_groups.local_ad_installed_ok"
+            );
+
+            context.$parent.checkSystemTaks();
+
+            // get provider info
+            context.getInfo();
+          },
+          function (error, data) {
+            // notification
+            context.$parent.notifications.error.message = context.$i18n.t(
+              "users_groups.local_ad_installed_error"
+            );
+          }
+        );
+      },
+      changeNsdcIp() {
+        var context = this;
+
+        var nsdcIpObj = {
+          action: "change-ad-ip",
+          IpAddress: context.users.providerInfo.newIp
+        };
+        context.$forceUpdate();
+
+        $("#nsdcIpChangeModal").modal("hide");
+
+        // update values
+        context.exec(
+          ["system-accounts-provider/update"],
+          nsdcIpObj,
+          function (stream) {
+            console.info("nsdc-ip-change", stream);
+          },
+          function (success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "users_groups.nsdc_ip_address_change_ok"
+            );
+
+            context.users.providerInfo.oldIp = "";
+            context.users.providerInfo.newIp = "";
+
+            // get provider info
+            context.getInfo();
+          },
+          function (error, data) {
+            // notification
+            context.$parent.notifications.error.message = context.$i18n.t(
+              "users_groups.nsdc_ip_address_change_error"
             );
           }
         );
       }
-    },
-
-    createDC(newProvider) {
-      var context = this;
-
-      var adObj = newProvider;
-      adObj.action = "local-ad";
-      context.newProvider.isLoading = true;
-      context.$forceUpdate();
-
-      $("#accountProviderWizard").modal("hide");
-
-      // update values
-      context.exec(
-        ["system-accounts-provider/update"],
-        adObj,
-        function(stream) {
-          console.info("accounts-provider", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "users_groups.local_ad_installed_ok"
-          );
-
-          context.$parent.checkSystemTaks();
-
-          // get provider info
-          context.getInfo();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "users_groups.local_ad_installed_error"
-          );
-        }
-      );
-    },
-    changeNsdcIp() {
-      var context = this;
-
-      var nsdcIpObj = {
-        action: "change-ad-ip",
-        IpAddress: context.users.providerInfo.newIp
-      };
-      context.$forceUpdate();
-
-      $("#nsdcIpChangeModal").modal("hide");
-
-      // update values
-      context.exec(
-        ["system-accounts-provider/update"],
-        nsdcIpObj,
-        function(stream) {
-          console.info("nsdc-ip-change", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "users_groups.nsdc_ip_address_change_ok"
-          );
-
-          context.users.providerInfo.oldIp = "";
-          context.users.providerInfo.newIp = "";
-
-          // get provider info
-          context.getInfo();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "users_groups.nsdc_ip_address_change_error"
-          );
-        }
-      );
     }
-  }
-};
+  };
 </script>
 
 <style>

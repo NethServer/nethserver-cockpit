@@ -72,8 +72,8 @@
                   {{props.row.enabled ? $t('services.disable') : $t('services.enable') }}
                 </a>
               </li>
-              <li ng-if="props.row.running" role="separator" class="divider"></li>
-              <li ng-if="props.row.running">
+              <li v-if="props.row.running" role="separator" class="divider"></li>
+              <li v-if="props.row.running">
                 <a @click="stopService(props.row.name)">
                   <span class="fa fa-power-off action-icon-menu"></span>
                   {{$t('services.stop')}}
@@ -157,7 +157,7 @@ export default {
     });
   },
   beforeRouteLeave(to, from, next) {
-    $("#detailsModal").modal("hide");
+    $(".modal").modal("hide");
     next();
   },
   mounted() {

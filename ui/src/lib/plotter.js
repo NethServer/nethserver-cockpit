@@ -17,23 +17,14 @@
  * along with Cockpit; If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* var $ = require("jquery");
-var cockpit = require("cockpit"); */
-
-/* require("jquery-flot/jquery.flot");
-require("jquery-flot/jquery.flot.selection");
-require("jquery-flot/jquery.flot.time"); */
-
-var plotter = {};
-
-var C_ = cockpit.gettext;
+const C_ = cockpit.gettext;
 
 /* A thin abstraction over flot and metrics channels.  It mostly
  * shields you from hairy array acrobatics and having to know when it
  * is safe or required to create the flot object.
  *
  *
- * - plot = plotter.plot(element, x_range, [x_stop])
+ * - plot = new plot.Plot(element, x_range, [x_stop])
  *
  * Creates a 'plot' object attached to the given DOM element.  It will
  * show 'x_range' seconds worth of samples, until 'x_stop'.
@@ -68,11 +59,15 @@ var C_ = cockpit.gettext;
  * Set the global flot options.  You need to refresh the plot
  * afterwards.
  *
- * In addition to the flot options, you can also set 'setup_hook'
+ * In addition to the flot options, you can also set the 'setup_hook'
  * field to a function.  This function will be called between
  * flot.setData() and flot.draw() and can be used to adjust the axes
  * limits, for example.  It is called with the flot object as its only
  * parameter.
+ *
+ * Setting the 'post_hook' to a function will call that function after
+ * each refresh of the plot.  This is used to decorate a plot with the
+ * unit strings, for example.
  *
  * - options = plot.get_options()
  *
@@ -128,36 +123,361 @@ var C_ = cockpit.gettext;
  * == true), or stops hovering over it ('val' == false).
  */
 
-plotter.plot = function plot(element, x_range_seconds, x_stop_seconds) {
-  var options = {};
-  var result = {};
+class Metrics_series {
+  constructor(desc, opts, grid, flot_data, interval) {
+    this.desc = desc;
+    this.options = opts;
+    this.grid = grid;
+    this.flot_data = flot_data;
+    this.interval = interval;
+    this.channel = null;
+    this.chanopts_list = [];
+  }
 
-  var series = [];
-  var flot_data = [];
-  var flot = null;
+  stop() {
+    if (this.channel)
+      this.channel.close();
+  }
 
-  var interval;
-  var grid;
+  remove_series() {
+    var pos = this.flot_data.indexOf(this.options);
+    if (pos >= 0)
+      this.flot_data.splice(pos, 1);
+  }
 
-  function refresh_now() {
-    if (element.height() === 0 || element.width() === 0)
+  remove() {
+    this.stop();
+    this.remove_series();
+    $(self).triggerHandler('removed');
+  }
+
+  build_metric(n) {
+    return {
+      name: n,
+      units: this.desc.units,
+      derive: this.desc.derive
+    };
+  }
+
+  hover_hit(pos, item) {
+    return !!(item && (item.series.data == this.options.data));
+  }
+
+  hover(val) {
+    $(this).triggerHandler('hover', [val]);
+  }
+
+  move_to_front() {
+    var pos = this.flot_data.indexOf(this.options);
+    if (pos >= 0) {
+      this.flot_data.splice(pos, 1);
+      this.flot_data.push(this.options);
+    }
+  }
+
+  check_archives() {
+    if (this.channel.archives)
+      $(this).triggerHandler('changed');
+  }
+}
+
+class Metrics_sum_series extends Metrics_series {
+  constructor(desc, opts, grid, flot_data, interval) {
+    super(desc, opts, grid, flot_data, interval);
+    if (this.desc.direct) {
+      this.chanopts_list.push({
+        source: 'direct',
+        archive_source: 'pcp-archive',
+        metrics: this.desc.direct.map(this.build_metric, this),
+        instances: this.desc.instances,
+        'omit-instances': this.desc['omit-instances'],
+        host: this.desc.host
+      });
+    }
+    if (this.desc.internal) {
+      this.chanopts_list.push({
+        source: 'internal',
+        metrics: this.desc.internal.map(this.build_metric, this),
+        instances: this.desc.instances,
+        'omit-instances': this.desc['omit-instances'],
+        host: this.desc.host
+      });
+    }
+  }
+
+  flat_sum(val) {
+    var sum;
+
+    if (!val)
+      return 0;
+    if (val.length !== undefined) {
+      sum = 0;
+      for (let i = 0; i < val.length; i++)
+        sum += this.flat_sum(val[i]);
+      return sum;
+    }
+    return val;
+  }
+
+  reset_series() {
+    if (this.channel)
+      this.channel.close();
+
+    this.channel = cockpit.metrics(this.interval, this.chanopts_list);
+
+    var metrics_row = this.grid.add(this.channel, []);
+    var factor = this.desc.factor || 1;
+    var threshold = this.desc.threshold || null;
+    var offset = this.desc.offset || 0;
+    this.options.data = this.grid.add((row, x, n) => {
+      for (let i = 0; i < n; i++) {
+        let value = offset + this.flat_sum(metrics_row[x + i]) * factor;
+        if (threshold !== null)
+          row[x + i] = [(this.grid.beg + x + i) * this.interval, Math.abs(value) > threshold ? value : null, threshold];
+        else
+          row[x + i] = [(this.grid.beg + x + i) * this.interval, value];
+      }
+    });
+
+    $(this.channel).on('changed', this.check_archives.bind(this));
+    this.check_archives();
+  }
+}
+
+class Metrics_difference_series extends Metrics_series {
+  constructor(desc, opts, grid, flot_data, interval) {
+    super(desc, opts, grid, flot_data, interval);
+    if (this.desc.direct) {
+      this.chanopts_list.push({
+        source: 'direct',
+        archive_source: 'pcp-archive',
+        metrics: this.desc.direct.map(this.build_metric, this),
+        instances: this.desc.instances,
+        'omit-instances': this.desc['omit-instances'],
+        host: this.desc.host
+      });
+    }
+    if (this.desc.internal) {
+      this.chanopts_list.push({
+        source: 'internal',
+        metrics: this.desc.internal.map(this.build_metric, this),
+        instances: this.desc.instances,
+        'omit-instances': this.desc['omit-instances'],
+        host: this.desc.host
+      });
+    }
+  }
+
+  flat_difference(val) {
+    var diff;
+
+    if (!val)
+      return 0;
+    if (val.length !== undefined) {
+      diff = val[0];
+      for (let i = 1; i < val.length; i++)
+        diff -= this.flat_difference(val[i]);
+      return diff;
+    }
+    return val;
+  }
+
+  reset_series() {
+    if (this.channel)
+      this.channel.close();
+
+    this.channel = cockpit.metrics(this.interval, this.chanopts_list);
+
+    var metrics_row = this.grid.add(this.channel, []);
+    var factor = this.desc.factor || 1;
+    var threshold = this.desc.threshold || null;
+    var offset = this.desc.offset || 0;
+    this.options.data = this.grid.add((row, x, n) => {
+      for (let i = 0; i < n; i++) {
+        let value = offset + this.flat_difference(metrics_row[x + i]) * factor;
+        if (threshold !== null)
+          row[x + i] = [(this.grid.beg + x + i) * this.interval, Math.abs(value) > threshold ? value : null, threshold];
+        else
+          row[x + i] = [(this.grid.beg + x + i) * this.interval, value];
+      }
+    });
+
+    $(this.channel).on('changed', this.check_archives.bind(this));
+    this.check_archives();
+  }
+}
+
+class Metrics_stacked_instances_series extends Metrics_series {
+  constructor(desc, opts, grid, flot_data, interval) {
+    super(desc, opts, grid, flot_data, interval);
+    this.instances = {};
+    this.last_instance = null;
+    if (this.desc.direct) {
+      this.chanopts_list.push({
+        source: 'direct',
+        archive_source: 'pcp-archive',
+        metrics: [this.build_metric(this.desc.direct)],
+        metrics_path_names: ['a'],
+        instances: this.desc.instances,
+        'omit-instances': this.desc['omit-instances'],
+        host: this.desc.host
+      });
+    }
+
+    if (this.desc.internal) {
+      this.chanopts_list.push({
+        source: 'internal',
+        metrics: [this.build_metric(this.desc.internal)],
+        metrics_path_names: ['a'],
+        instances: this.desc.instances,
+        'omit-instances': this.desc['omit-instances'],
+        host: this.desc.host
+      });
+    }
+  }
+
+  reset_series() {
+    if (this.channel)
+      this.channel.close();
+    this.channel = cockpit.metrics(this.interval, this.chanopts_list);
+    $(this.channel).on('changed', this.check_archives.bind(this));
+    this.check_archives();
+    for (let name in this.instances)
+      this.instances[name].reset();
+  }
+
+  add_instance(name, selector) {
+    if (this.instances[name])
       return;
 
-    if (flot === null)
-      flot = $.plot(element, flot_data, options);
+    var instance_data = $.extend({
+      selector: selector
+    }, this.options);
+    var factor = this.desc.factor || 1;
+    var threshold = this.desc.threshold || 0;
+    var metrics_row;
+    var last = this.last_instance;
 
-    flot.setData(flot_data);
-    var axes = flot.getAxes();
+    function reset() {
+      metrics_row = this.grid.add(this.channel, ['a', name]);
+      instance_data.data = this.grid.add((row, x, n) => {
+        for (let i = 0; i < n; i++) {
+          let value = (metrics_row[x + i] || 0) * factor;
+          let ts = (this.grid.beg + x + i) * this.interval;
+          let floor = 0;
+
+          if (last) {
+            if (last.data[x + i][1])
+              floor = last.data[x + i][1];
+            else
+              floor = last.data[x + i][2];
+          }
+
+          if (Math.abs(value) > threshold) {
+            row[x + i] = [ts, floor + value, floor];
+            if (row[x + i - 1] && row[x + i - 1][1] === null)
+              row[x + i - 1][1] = row[x + i - 1][2];
+          } else {
+            row[x + i] = [ts, null, floor];
+            if (row[x + i - 1] && row[x + i - 1][1] !== null)
+              row[x + i - 1][1] = row[x + i - 1][2];
+          }
+        }
+      });
+    }
+
+    function remove() {
+      this.grid.remove(metrics_row);
+      this.grid.remove(instance_data.data);
+      var pos = this.flot_data.indexOf(instance_data);
+      if (pos >= 0)
+        this.flot_data.splice(pos, 1);
+    }
+
+    instance_data.reset = reset.bind(this);
+    instance_data.remove = remove.bind(this);
+    this.last_instance = instance_data;
+    this.instances[name] = instance_data;
+    instance_data.reset();
+    this.flot_data.push(instance_data);
+    this.grid.sync();
+  }
+
+  clear_instances() {
+    for (let i in this.instances)
+      this.instances[i].remove();
+    this.instances = {};
+    this.last_instance = null;
+  }
+
+  hover_hit(pos, item) {
+    var index;
+
+    if (!this.grid)
+      return false;
+
+    index = Math.round(pos.x / this.interval) - this.grid.beg;
+    if (index < 0)
+      index = 0;
+
+    for (let name in this.instances) {
+      let d = this.instances[name].data;
+      if (d[index] && d[index][1] && d[index][2] <= pos.y && pos.y <= d[index][1])
+        return this.instances[name].selector || name;
+    }
+    return false;
+  }
+}
+
+export class Plot {
+  constructor(element, x_range_seconds, x_stop_seconds) {
+    this.element = element;
+    this.options = {};
+
+    this.series = [];
+    this.flot_data = [];
+    this.flot = null;
+
+    this.interval = Math.ceil(x_range_seconds / 1000) * 1000;
+    this.grid = null;
+
+    this.refresh_pending = false;
+    this.sync_suppressed = 0;
+    this.archives = false;
+
+    this.cur_hover_series = null;
+    this.cur_hover_val = false;
+
+    $(this.element).on('plothover', null, this, this.hover_on);
+    $(this.element).on('mouseleave', null, this, this.hover_off);
+    $(this.element).on('plotselecting', null, this, this.selecting);
+    $(this.element).on('plotselected', null, this, this.selected);
+
+    // for testing
+    $(this.element).data('flot_data', this.flot_data);
+
+    this.reset(x_range_seconds, x_stop_seconds);
+  }
+
+  refresh_now() {
+    if (this.element.height() === 0 || this.element.width() === 0)
+      return;
+
+    if (this.flot === null)
+      this.flot = $.plot(this.element, this.flot_data, this.options);
+
+    this.flot.setData(this.flot_data);
+    var axes = this.flot.getAxes();
 
     /* Walking and fetching samples are not synchronized, which
      * means that a walk step might reveal a sample that hasn't
      * been fetched yet.  To reduce flicker, we cut off one extra
      * sample at the end.
      */
-    axes.xaxis.options.min = grid.beg * interval;
-    axes.xaxis.options.max = (grid.end - 2) * interval;
-    if (options.setup_hook)
-      options.setup_hook(flot);
+    axes.xaxis.options.min = this.grid.beg * this.interval;
+    axes.xaxis.options.max = (this.grid.end - 2) * this.interval;
+    if (this.options.setup_hook)
+      this.options.setup_hook(this.flot);
 
     /* This makes sure that the axes are displayed even for an
      * empty plot.
@@ -167,42 +487,40 @@ plotter.plot = function plot(element, x_range_seconds, x_stop_seconds) {
     axes.yaxis.show = true;
     axes.yaxis.used = true;
 
-    flot.setupGrid();
-    flot.draw();
+    this.flot.setupGrid();
+    this.flot.draw();
+
+    if (this.options.post_hook)
+      this.options.post_hook(this.flot);
   }
 
-  var refresh_pending = false;
-
-  function refresh() {
-    if (!refresh_pending) {
-      refresh_pending = true;
-      window.setTimeout(function () {
-        refresh_pending = false;
-        refresh_now();
+  refresh() {
+    if (!this.refresh_pending) {
+      this.refresh_pending = true;
+      window.setTimeout(() => {
+        this.refresh_pending = false;
+        this.refresh_now();
       }, 0);
     }
   }
 
-  function start_walking() {
-    grid.walk();
+  start_walking() {
+    this.grid.walk();
   }
 
-  function stop_walking() {
-    grid.move(grid.beg, grid.end);
+  stop_walking() {
+    this.grid.move(this.grid.beg, this.grid.end);
   }
 
-  var sync_suppressed = 0;
-
-  function reset(x_range_seconds, x_stop_seconds) {
-    if (flot)
-      flot.clearSelection(true);
+  reset(x_range_seconds, x_stop_seconds) {
+    if (this.flot)
+      this.flot.clearSelection(true);
 
     // Fill the plot with about 1000 samples, but don't sample
     // faster than once per second.
     //
     // TODO - do this based on the actual size of the plot.
-
-    interval = Math.ceil(x_range_seconds / 1000) * 1000;
+    this.interval = Math.ceil(x_range_seconds / 1000) * 1000;
 
     var x_offset;
     if (x_stop_seconds !== undefined)
@@ -210,448 +528,176 @@ plotter.plot = function plot(element, x_range_seconds, x_stop_seconds) {
     else
       x_offset = 0;
 
-    var beg = -Math.ceil((x_range_seconds * 1000 + x_offset) / interval);
-    var end = -Math.floor(x_offset / interval);
+    var beg = -Math.ceil((x_range_seconds * 1000 + x_offset) / this.interval);
+    var end = -Math.floor(x_offset / this.interval);
 
-    if (grid && grid.interval == interval) {
-      grid.move(beg, end);
+    if (this.grid && this.grid.interval == this.interval) {
+      this.grid.move(beg, end);
     } else {
-      if (grid)
-        grid.close();
-      grid = cockpit.grid(interval, beg, end);
-      sync_suppressed++;
-      for (var i = 0; i < series.length; i++)
-        series[i].reset();
-      sync_suppressed--;
-      sync();
+      if (this.grid)
+        this.grid.close();
+      this.grid = cockpit.grid(this.interval, beg, end);
+      this.sync_suppressed++;
+      for (var i = 0; i < this.series.length; i++) {
+        this.series[i].stop();
+        this.series[i].interval = this.interval;
+        this.series[i].grid = this.grid;
+        this.series[i].reset_series();
+      }
+      this.sync_suppressed--;
+      this.sync();
 
-      $(grid).on('notify', function (event, index, count) {
-        refresh();
+      $(this.grid).on('notify', (event, index, count) => {
+        this.refresh();
       });
     }
   }
 
-  function sync() {
-    if (sync_suppressed === 0)
-      grid.sync();
+  sync() {
+    if (this.sync_suppressed === 0)
+      this.grid.sync();
   }
 
-  function destroy() {
-    grid.close();
-    for (var i = 0; i < series.length; i++)
-      series[i].stop();
+  destroy() {
+    this.grid.close();
+    for (var i = 0; i < this.series.length; i++)
+      this.series[i].stop();
 
-    options = {};
-    series = [];
-    flot_data = [];
-    flot = null;
-    $(element).empty();
-    $(element).data("flot_data", null);
+    this.options = {};
+    this.series = [];
+    this.flot_data = [];
+    this.flot = null;
+    $(this.element).empty();
+    $(this.element).data('flot_data', null);
   }
 
-  function resize() {
-    if (element.height() === 0 || element.width() === 0)
+  resize() {
+    if (this.element.height() === 0 || this.element.width() === 0)
       return;
-    if (flot)
-      flot.resize();
-    refresh();
+    if (this.flot)
+      this.flot.resize();
+    this.refresh();
   }
 
-  function set_options(opts) {
-    options = opts;
-    flot = null;
+  set_options(opts) {
+    this.options = opts;
+    this.flot = null;
   }
 
-  function get_options() {
-    return options;
+  get_options() {
+    return this.options;
   }
 
-  function add_metrics_sum_series(desc, opts) {
-    var channel = null;
-
-    var self = {
-      options: opts,
-      move_to_front: move_to_front,
-      remove: remove
-    };
-
-    series.push({
-      stop: stop,
-      reset: reset_series,
-      hover_hit: hover_hit,
-      hover: hover
-    });
-
-    function stop() {
-      if (channel)
-        channel.close();
-    }
-
-    function add_series() {
-      flot_data.push(opts);
-    }
-
-    function remove_series() {
-      var pos = flot_data.indexOf(opts);
-      if (pos >= 0)
-        flot_data.splice(pos, 1);
-    }
-
-    function move_to_front() {
-      var pos = flot_data.indexOf(opts);
-      if (pos >= 0) {
-        flot_data.splice(pos, 1);
-        flot_data.push(opts);
-      }
-    }
-
-    function remove() {
-      stop();
-      remove_series();
-      refresh();
-    }
-
-    function build_metric(n) {
-      return {
-        name: n,
-        units: desc.units,
-        derive: desc.derive
-      };
-    }
-
-    var chanopts_list = [];
-
-    if (desc.direct) {
-      chanopts_list.push({
-        source: "direct",
-        archive_source: "pcp-archive",
-        metrics: desc.direct.map(build_metric),
-        instances: desc.instances,
-        "omit-instances": desc['omit-instances'],
-        host: desc.host
-      });
-    }
-
-    if (desc.internal) {
-      chanopts_list.push({
-        source: "internal",
-        metrics: desc.internal.map(build_metric),
-        instances: desc.instances,
-        "omit-instances": desc['omit-instances'],
-        host: desc.host
-      });
-    }
-
-    function flat_sum(val) {
-      var i, sum;
-
-      if (!val)
-        return 0;
-      if (val.length !== undefined) {
-        sum = 0;
-        for (i = 0; i < val.length; i++)
-          sum += flat_sum(val[i]);
-        return sum;
-      }
-      return val;
-    }
-
-    function reset_series() {
-      if (channel)
-        channel.close();
-
-      channel = cockpit.metrics(interval, chanopts_list);
-
-      var metrics_row = grid.add(channel, []);
-      var factor = desc.factor || 1;
-      opts.data = grid.add(function (row, x, n) {
-        for (var i = 0; i < n; i++)
-          row[x + i] = [(grid.beg + x + i) * interval, flat_sum(metrics_row[x + i]) * factor];
-      });
-
-      function check_archives() {
-        if (channel.archives && !result.archives) {
-          result.archives = true;
-          $(result).triggerHandler("changed");
-        }
-      }
-
-      $(channel).on('changed', check_archives);
-      check_archives();
-
-      sync();
-    }
-
-    function hover_hit(pos, item) {
-      return !!(item && (item.series.data == opts.data));
-    }
-
-    function hover(val) {
-      $(self).triggerHandler('hover', [val]);
-    }
-
-    reset_series();
-    add_series();
-
-    return self;
-  }
-
-  function add_metrics_stacked_instances_series(desc, opts) {
-    var channel = null;
-
-    var self = {
-      add_instance: add_instance,
-      clear_instances: clear_instances
-    };
-
-    series.push({
-      stop: stop,
-      reset: reset_series,
-      hover_hit: hover_hit,
-      hover: hover
-    });
-
-    function stop() {
-      if (channel)
-        channel.close();
-    }
-
-    function build_metric(n) {
-      return {
-        name: n,
-        units: desc.units,
-        derive: desc.derive
-      };
-    }
-
-    var chanopts_list = [];
-
-    if (desc.direct) {
-      chanopts_list.push({
-        source: "direct",
-        archive_source: "pcp-archive",
-        metrics: [build_metric(desc.direct)],
-        metrics_path_names: ["a"],
-        instances: desc.instances,
-        "omit-instances": desc['omit-instances'],
-        host: desc.host
-      });
-    }
-
-    if (desc.internal) {
-      chanopts_list.push({
-        source: "internal",
-        metrics: [build_metric(desc.internal)],
-        metrics_path_names: ["a"],
-        instances: desc.instances,
-        "omit-instances": desc['omit-instances'],
-        host: desc.host
-      });
-    }
-
-    var instances = {};
-    var last_instance = null;
-
-    function reset_series() {
-      if (channel)
-        channel.close();
-
-      channel = cockpit.metrics(interval, chanopts_list);
-
-      function check_archives() {
-        if (channel.archives && !result.archives) {
-          result.archives = true;
-          $(result).triggerHandler("changed");
-        }
-      }
-
-      $(channel).on('changed', check_archives);
-      check_archives();
-
-      sync_suppressed++;
-      for (var name in instances)
-        instances[name].reset();
-      sync_suppressed--;
-      sync();
-    }
-
-    function add_instance(name, selector) {
-      if (instances[name])
-        return;
-
-      var instance_data = $.extend({
-        selector: selector
-      }, opts);
-      var factor = desc.factor || 1;
-      var threshold = desc.threshold || 0;
-      var metrics_row;
-
-      var last = last_instance;
-
-      function reset() {
-        metrics_row = grid.add(channel, ["a", name]);
-        instance_data.data = grid.add(function (row, x, n) {
-          for (var i = 0; i < n; i++) {
-            var value = (metrics_row[x + i] || 0) * factor;
-            var ts = (grid.beg + x + i) * interval;
-            var floor = 0;
-
-            if (last) {
-              if (last.data[x + i][1])
-                floor = last.data[x + i][1];
-              else
-                floor = last.data[x + i][2];
-            }
-
-            if (Math.abs(value) > threshold) {
-              row[x + i] = [ts, floor + value, floor];
-              if (row[x + i - 1] && row[x + i - 1][1] === null)
-                row[x + i - 1][1] = row[x + i - 1][2];
-            } else {
-              row[x + i] = [ts, null, floor];
-              if (row[x + i - 1] && row[x + i - 1][1] !== null)
-                row[x + i - 1][1] = row[x + i - 1][2];
-            }
-          }
-        });
-        sync();
-      }
-
-      function remove() {
-        grid.remove(metrics_row);
-        grid.remove(instance_data.data);
-        var pos = flot_data.indexOf(instance_data);
-        if (pos >= 0)
-          flot_data.splice(pos, 1);
-      }
-
-      last_instance = instance_data;
-      instances[name] = instance_data;
-      instance_data.reset = reset;
-      instance_data.remove = remove;
-
-      reset();
-      flot_data.push(instance_data);
-    }
-
-    function clear_instances() {
-      for (var i in instances)
-        instances[i].remove();
-      instances = {};
-      last_instance = null;
-    }
-
-    function hover_hit(pos, item) {
-      var name, index;
-
-      if (!grid)
-        return false;
-
-      index = Math.round(pos.x / interval) - grid.beg;
-      if (index < 0)
-        index = 0;
-
-      for (name in instances) {
-        var d = instances[name].data;
-        if (d[index] && d[index][1] && d[index][2] <= pos.y && pos.y <= d[index][1])
-          return instances[name].selector || name;
-      }
-      return false;
-    }
-
-    function hover(val) {
-      $(self).triggerHandler('hover', [val]);
-    }
-
-    reset_series();
-    return self;
-  }
-
-  var cur_hover_series = null;
-  var cur_hover_val = false;
-
-  function hover(next_hover_series, next_hover_val) {
-    if (cur_hover_series != next_hover_series) {
-      if (cur_hover_series)
-        cur_hover_series.hover(false);
-      cur_hover_series = next_hover_series;
-      cur_hover_val = next_hover_val;
-      if (cur_hover_series)
-        cur_hover_series.hover(cur_hover_val);
-    } else if (cur_hover_val != next_hover_val) {
-      cur_hover_val = next_hover_val;
-      if (cur_hover_series)
-        cur_hover_series.hover(cur_hover_val);
+  check_archives() {
+    if (!this.archives) {
+      this.archives = true;
+      $(this).triggerHandler('changed');
     }
   }
 
-  function hover_on(event, pos, item) {
+  add_metrics_sum_series(desc, opts) {
+    var sum_series = new Metrics_sum_series(desc, opts, this.grid, this.flot_data, this.interval);
+
+    $(sum_series).on('removed', this.refresh.bind(this));
+    $(sum_series).on('changed', this.check_archives.bind(this));
+    sum_series.reset_series();
+    sum_series.check_archives();
+
+    this.series.push(sum_series);
+    this.sync();
+    this.flot_data.push(opts);
+
+    return sum_series;
+  }
+
+  add_metrics_difference_series(desc, opts) {
+    var difference_series = new Metrics_difference_series(desc, opts, this.grid, this.flot_data, this.interval);
+
+    $(difference_series).on('removed', this.refresh.bind(this));
+    $(difference_series).on('changed', this.check_archives.bind(this));
+    difference_series.reset_series();
+    difference_series.check_archives();
+
+    this.series.push(difference_series);
+    this.sync();
+    this.flot_data.push(opts);
+
+    return difference_series;
+  }
+
+  add_metrics_stacked_instances_series(desc, opts) {
+    var stacked_series = new Metrics_stacked_instances_series(desc, opts, this.grid, this.flot_data, this.interval);
+
+    $(stacked_series).on('removed', this.refresh.bind(this));
+    $(stacked_series).on('changed', this.check_archives.bind(this));
+    stacked_series.reset_series();
+    stacked_series.check_archives();
+
+    this.series.push(stacked_series);
+    this.sync_suppressed++;
+    for (let name in stacked_series.instances)
+      stacked_series.instances[name].reset();
+    this.sync_suppressed--;
+    this.sync();
+
+    return stacked_series;
+  }
+
+  hover(next_hover_series, next_hover_val) {
+    if (this.cur_hover_series != next_hover_series) {
+      if (this.cur_hover_series)
+        this.cur_hover_series.hover(false);
+      this.cur_hover_series = next_hover_series;
+      this.cur_hover_val = next_hover_val;
+      if (this.cur_hover_series)
+        this.cur_hover_series.hover(this.cur_hover_val);
+    } else if (this.cur_hover_val != next_hover_val) {
+      this.cur_hover_val = next_hover_val;
+      if (this.cur_hover_series)
+        this.cur_hover_series.hover(this.cur_hover_val);
+    }
+  }
+
+  hover_on(event, pos, item) {
     var next_hover_series = null;
     var next_hover_val = false;
-    for (var i = 0; i < series.length; i++) {
-      next_hover_val = series[i].hover_hit(pos, item);
+    for (let i = 0; i < event.data.series.length; i++) {
+      next_hover_val = event.data.series[i].hover_hit(pos, item);
       if (next_hover_val) {
-        next_hover_series = series[i];
+        next_hover_series = event.data.series[i];
         break;
       }
     }
-
-    hover(next_hover_series, next_hover_val);
+    event.data.hover(next_hover_series, next_hover_val);
   }
 
-  function hover_off(event) {
-    hover(null, false);
+  hover_off(event) {
+    event.data.hover(null, false);
   }
 
-  function selecting(event, ranges) {
+  selecting(event, ranges) {
     if (ranges)
-      $(result).triggerHandler("zoomstart", []);
+      $(event.data).triggerHandler('zoomstart', []);
   }
 
-  function selected(event, ranges) {
-    flot.clearSelection(true);
-    $(result).triggerHandler("zoom", [(ranges.xaxis.to - ranges.xaxis.from) / 1000, ranges.xaxis.to / 1000]);
+  selected(event, ranges) {
+    event.data.flot.clearSelection(true);
+    $(event.data).triggerHandler('zoom', [(ranges.xaxis.to - ranges.xaxis.from) / 1000, ranges.xaxis.to / 1000]);
   }
+}
 
-  $(element).on("plothover", hover_on);
-  $(element).on("mouseleave", hover_off);
-  $(element).on("plotselecting", selecting);
-  $(element).on("plotselected", selected);
+export function plot_simple_template() {
+  var plot_colors = [
+    '#006bb4',
+    '#008ff0',
+    '#2daaff',
+    '#69c2ff',
+    '#a5daff',
+    '#e1f3ff',
+    '#00243c',
+    '#004778'
+  ];
 
-  // for testing
-  $(element).data("flot_data", flot_data);
-
-  reset(x_range_seconds, x_stop_seconds);
-
-  $.extend(result, {
-    archives: false,
-    /* true if any archive data found */
-    start_walking: start_walking,
-    stop_walking: stop_walking,
-    refresh: refresh,
-    reset: reset,
-    destroy: destroy,
-    resize: resize,
-    set_options: set_options,
-    get_options: get_options,
-    add_metrics_sum_series: add_metrics_sum_series,
-    add_metrics_stacked_instances_series: add_metrics_stacked_instances_series
-  });
-
-  return result;
-};
-
-var plot_colors = ["#006bb4",
-  "#008ff0",
-  "#2daaff",
-  "#69c2ff",
-  "#a5daff",
-  "#e1f3ff",
-  "#00243c",
-  "#004778"
-];
-
-plotter.plot_simple_template = function simple() {
   return {
     colors: plot_colors,
     legend: {
@@ -666,13 +712,13 @@ plotter.plot_simple_template = function simple() {
     },
     xaxis: {
       tickLength: 0,
-      mode: "time",
-      tickFormatter: plotter.format_date_tick,
+      mode: 'time',
+      tickFormatter: format_date_tick,
       minTickSize: [1, 'minute'],
       reserveSpace: false
     },
     yaxis: {
-      tickColor: "#d1d1d1",
+      tickColor: '#d1d1d1',
       min: 0
     },
     /*
@@ -685,23 +731,26 @@ plotter.plot_simple_template = function simple() {
     grid: {
       borderWidth: 1,
       aboveData: false,
-      color: "black",
-      borderColor: $.color.parse("black").scale('a', 0.22).toString(),
+      color: 'black',
+      borderColor: $.color
+        .parse('black')
+        .scale('a', 0.22)
+        .toString(),
       labelMargin: 0
     }
   };
-};
+}
 
-plotter.memory_ticks = function memory_ticks(opts) {
+export function memory_ticks(opts) {
   // Not more than 5 ticks, nicely rounded to powers of 2.
   var size = Math.pow(2.0, Math.ceil(Math.log(opts.max / 5) / Math.LN2));
   var ticks = [];
-  for (var t = 0; t < opts.max; t += size)
+  for (let t = 0; t < opts.max; t += size)
     ticks.push(t);
   return ticks;
-};
+}
 
-var month_names = [
+const month_names = [
   C_("month-name", 'Jan'),
   C_("month-name", 'Feb'),
   C_("month-name", 'Mar'),
@@ -716,7 +765,7 @@ var month_names = [
   C_("month-name", 'Dec')
 ];
 
-plotter.format_date_tick = function format_date_tick(val, axis) {
+export function format_date_tick(val, axis) {
   function pad(n) {
     var str = n.toFixed();
     if (str.length == 1)
@@ -736,11 +785,11 @@ plotter.format_date_tick = function format_date_tick(val, axis) {
   // tick to the next.
 
   var size = axis.tickSize[1];
-  if (size == "minute" || size == "hour")
+  if (size == 'minute' || size == 'hour')
     end = hour_minute_index;
-  else if (size == "day")
+  else if (size == 'day')
     end = day_index;
-  else if (size == "month")
+  else if (size == 'month')
     end = month_index;
   else
     end = year_index;
@@ -771,61 +820,59 @@ plotter.format_date_tick = function format_date_tick(val, axis) {
   // And render it
 
   var d = new Date(val);
-  var label = " ";
+  var label = ' ';
 
   if (year_index >= begin && year_index <= end)
-    label += d.getFullYear().toFixed() + " ";
+    label += d.getFullYear().toFixed() + ' ';
   if (month_index >= begin && month_index <= end)
-    label += month_names[d.getMonth()] + " ";
+    label += month_names[d.getMonth()] + ' ';
   if (day_index >= begin && day_index <= end)
-    label += d.getDate().toFixed() + " ";
+    label += d.getDate().toFixed() + ' ';
   if (hour_minute_index >= begin && hour_minute_index <= end)
-    label += pad(d.getHours()) + ':' + pad(d.getMinutes()) + " ";
+    label += pad(d.getHours()) + ':' + pad(d.getMinutes()) + ' ';
 
   return label.substr(0, label.length - 1);
-};
+}
 
-plotter.bytes_tick_unit = function bytes_tick_unit(axis) {
+export function bytes_tick_unit(axis) {
   return cockpit.format_bytes(axis.max, 1024, true)[1];
-};
+}
 
-plotter.format_bytes_tick_no_unit = function format_bytes_tick_no_unit(val, axis) {
-  return cockpit.format_bytes(val, plotter.bytes_tick_unit(axis), true)[0];
-};
+export function format_bytes_tick_no_unit(val, axis) {
+  return cockpit.format_bytes(val, bytes_tick_unit(axis), true)[0];
+}
 
-plotter.format_bytes_tick = function format_bytes_tick(val, axis) {
+export function format_bytes_tick(val, axis) {
   return cockpit.format_bytes(val, 1024);
-};
+}
 
-plotter.bytes_per_sec_tick_unit = function bytes_per_sec_tick_unit(axis) {
+export function bytes_per_sec_tick_unit(axis) {
   return cockpit.format_bytes_per_sec(axis.max, 1024, true)[1];
-};
+}
 
-plotter.format_bytes_per_sec_tick_no_unit = function format_bytes_per_sec_tick_no_unit(val, axis) {
-  return cockpit.format_bytes_per_sec(val, plotter.bytes_per_sec_tick_unit(axis), true)[0];
-};
+export function format_bytes_per_sec_tick_no_unit(val, axis) {
+  return cockpit.format_bytes_per_sec(val, bytes_per_sec_tick_unit(axis), true)[0];
+}
 
-plotter.format_bytes_per_sec_tick = function format_bytes_per_sec_tick(val, axis) {
+export function format_bytes_per_sec_tick(val, axis) {
   return cockpit.format_bytes_per_sec(val, 1024);
-};
+}
 
-plotter.bits_per_sec_tick_unit = function bits_per_sec_tick_unit(axis) {
+export function bits_per_sec_tick_unit(axis) {
   return cockpit.format_bits_per_sec(axis.max * 8, 1000, true)[1];
-};
+}
 
-plotter.format_bits_per_sec_tick_no_unit = function format_bits_per_sec_tick_no_tick(val, axis) {
-  return cockpit.format_bits_per_sec(val * 8, plotter.bits_per_sec_tick_unit(axis), true)[0];
-};
+export function format_bits_per_sec_tick_no_unit(val, axis) {
+  return cockpit.format_bits_per_sec(val * 8, bits_per_sec_tick_unit(axis), true)[0];
+}
 
-plotter.format_bits_per_sec_tick = function format_bits_per_sec_tick(val, axis) {
+export function format_bits_per_sec_tick(val, axis) {
   return cockpit.format_bits_per_sec(val * 8, 1000);
-};
+}
 
-plotter.setup_plot_controls = function setup_plot_controls(container, element, plots) {
-
+export function setup_plot_controls(container, element, plots) {
   var plot_min_x_range = 5 * 60;
   var plot_zoom_steps = [5 * 60, 60 * 60, 6 * 60 * 60, 24 * 60 * 60, 7 * 24 * 60 * 60, 30 * 24 * 60 * 60, 365 * 24 * 60 * 60];
-
   var plot_x_range = 5 * 60;
   var plot_x_stop;
   var zoom_history = [];
@@ -898,30 +945,28 @@ plotter.setup_plot_controls = function setup_plot_controls(container, element, p
     var n;
     if (seconds >= 365 * 24 * 60 * 60) {
       n = Math.ceil(seconds / (365 * 24 * 60 * 60));
-      return cockpit.format(cockpit.ngettext("$0 year", "$0 years", n), n);
+      return cockpit.format(cockpit.ngettext('$0 year', '$0 years', n), n);
     } else if (seconds >= 30 * 24 * 60 * 60) {
       n = Math.ceil(seconds / (30 * 24 * 60 * 60));
-      return cockpit.format(cockpit.ngettext("$0 month", "$0 months", n), n);
+      return cockpit.format(cockpit.ngettext('$0 month', '$0 months', n), n);
     } else if (seconds >= 7 * 24 * 60 * 60) {
       n = Math.ceil(seconds / (7 * 24 * 60 * 60));
-      return cockpit.format(cockpit.ngettext("$0 week", "$0 weeks", n), n);
+      return cockpit.format(cockpit.ngettext('$0 week', '$0 weeks', n), n);
     } else if (seconds >= 24 * 60 * 60) {
       n = Math.ceil(seconds / (24 * 60 * 60));
-      return cockpit.format(cockpit.ngettext("$0 day", "$0 days", n), n);
+      return cockpit.format(cockpit.ngettext('$0 day', '$0 days', n), n);
     } else if (seconds >= 60 * 60) {
       n = Math.ceil(seconds / (60 * 60));
-      return cockpit.format(cockpit.ngettext("$0 hour", "$0 hours", n), n);
+      return cockpit.format(cockpit.ngettext('$0 hour', '$0 hours', n), n);
     } else {
       n = Math.ceil(seconds / 60);
-      return cockpit.format(cockpit.ngettext("$0 minute", "$0 minutes", n), n);
+      return cockpit.format(cockpit.ngettext('$0 minute', '$0 minutes', n), n);
     }
   }
 
   function update_plot_buttons() {
-    element.find('[data-action="scroll-right"]')
-      .attr('disabled', plot_x_stop === undefined);
-    element.find('[data-action="zoom-out"]')
-      .attr('disabled', plot_x_range >= plot_zoom_steps[plot_zoom_steps.length - 1]);
+    element.find('[data-action="scroll-right"]').attr('disabled', plot_x_stop === undefined);
+    element.find('[data-action="zoom-out"]').attr('disabled', plot_x_range >= plot_zoom_steps[plot_zoom_steps.length - 1]);
   }
 
   function update_selection_zooming() {
@@ -929,7 +974,7 @@ plotter.setup_plot_controls = function setup_plot_controls(container, element, p
 
     if (container.hasClass('show-zoom-controls') && plot_x_range > plot_min_x_range) {
       container.addClass('show-zoom-cursor');
-      mode = "x";
+      mode = 'x';
     } else {
       container.removeClass('show-zoom-cursor');
       mode = null;
@@ -940,7 +985,7 @@ plotter.setup_plot_controls = function setup_plot_controls(container, element, p
       if (!options.selection || options.selection.mode != mode) {
         options.selection = {
           mode: mode,
-          color: "#d4edfa"
+          color: '#edf8ff'
         };
         p.set_options(options);
         p.refresh();
@@ -972,7 +1017,7 @@ plotter.setup_plot_controls = function setup_plot_controls(container, element, p
         }
       }
 
-      $(p).on("changed", check_archives);
+      $(p).on('changed', check_archives);
       check_archives();
     });
 
@@ -985,11 +1030,11 @@ plotter.setup_plot_controls = function setup_plot_controls(container, element, p
       p = [];
     plots = p;
     plots.forEach(function (p) {
-      $(p).on("zoomstart", function (event) {
-        zoom_plot_start();
+      $(p).on('zoomstart', function (event) {
+        zoom_plot_start()
       });
-      $(p).on("zoom", function (event, x_range, x_stop) {
-        zoom_plot_in(x_range, x_stop);
+      $(p).on('zoom', function (event, x_range, x_stop) {
+        zoom_plot_in(x_range, x_stop)
       });
     });
     plot_reset();
@@ -1000,11 +1045,11 @@ plotter.setup_plot_controls = function setup_plot_controls(container, element, p
   return {
     reset: reset
   };
-};
+}
 
-function setup_plot(graph_id, grid, data, user_options) {
+export function setup_plot(graph_id, grid, data, user_options) {
   var options = {
-    colors: ["#0099d3"],
+    colors: ['#0099d3'],
     legend: {
       show: false
     },
@@ -1017,12 +1062,12 @@ function setup_plot(graph_id, grid, data, user_options) {
     },
     xaxis: {
       tickFormatter: function () {
-        return "";
+        return ''
       }
     },
     yaxis: {
       tickFormatter: function () {
-        return "";
+        return ''
       }
     },
     // The point radius influences
@@ -1036,8 +1081,11 @@ function setup_plot(graph_id, grid, data, user_options) {
     grid: {
       borderWidth: 1,
       aboveData: true,
-      color: "black",
-      borderColor: $.color.parse("black").scale('a', 0.22).toString(),
+      color: 'black',
+      borderColor: $.color
+        .parse('black')
+        .scale('a', 0.22)
+        .toString(),
       labelMargin: 0
     }
   };
@@ -1096,7 +1144,6 @@ function setup_plot(graph_id, grid, data, user_options) {
     } else if (!starting) {
       starting = window.setInterval(maybe_start, 500);
     }
-
   }
 
   function stop() {
@@ -1110,6 +1157,8 @@ function setup_plot(graph_id, grid, data, user_options) {
         user_options.setup_hook(plot);
       plot.setupGrid();
       plot.draw();
+      if (user_options.post_hook)
+        user_options.post_hook(plot);
     }
   }
 
@@ -1144,7 +1193,7 @@ function setup_plot(graph_id, grid, data, user_options) {
   return self;
 }
 
-plotter.setup_complicated_plot = function setup_complicated_plot(graph_id, grid, series, options) {
+export function setup_complicated_plot(graph_id, grid, series, options) {
   function basic_flot_row(grid, input) {
     return grid.add(function (row, x, n) {
       for (var i = 0; i < n; i++)
@@ -1167,16 +1216,24 @@ plotter.setup_complicated_plot = function setup_complicated_plot(graph_id, grid,
     });
   }
 
+  function offset_flot_row(grid, input, offset, factor) {
+    var f = factor || 1;
+    return grid.add(function (row, x, n) {
+      for (var i = 0; i < n; i++)
+        row[x + i] = [i, offset + (f * (input[x + i] || 0)), offset];
+    });
+  }
+
   /* All the data row setup happens now */
   var last = null;
   series.forEach(function (ser, i) {
-    if (options.x_rh_stack_graphs)
+    if (ser.offset)
+      ser.data = offset_flot_row(grid, ser.row, ser.offset, ser.factor);
+    else if (options.x_rh_stack_graphs)
       ser.data = stacked_flot_row(grid, ser.row, last);
     else
       ser.data = basic_flot_row(grid, ser.row);
     last = ser.data;
   });
   return setup_plot(graph_id, grid, series, options);
-};
-
-module.exports = plotter;
+}

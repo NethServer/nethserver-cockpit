@@ -127,21 +127,21 @@
       <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
         <div class="row adjust-top">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <label>CPU</label> %
+            <span class="plot-unit" id="server_cpu_unit">%</span> CPU
             <div id="server_cpu_graph" class="graph zoomable-plot"></div>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 adjust-top-col">
-            <label>{{$t('dashboard.memory')}}</label> Gib
+            <span class="plot-unit" id="server_memory_unit"></span> {{$t('dashboard.memory')}}
             <div id="server_memory_graph" class="graph zoomable-plot"></div>
           </div>
         </div>
         <div class="row adjust-top-row">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <label>{{$t('dashboard.disk_io')}}</label> Mib/s
+            <span class="plot-unit" id="server_disk_io_unit"></span> {{$t('dashboard.disk_io')}}
             <div id="server_disk_io_graph" class="graph zoomable-plot"></div>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 adjust-top-col">
-            <label>{{$t('dashboard.network')}}</label> Mbps
+            <span class="plot-unit" id="server_network_traffic_unit"></span> {{$t('dashboard.network')}}
             <div id="server_network_traffic_graph" class="graph zoomable-plot"></div>
           </div>
         </div>
@@ -433,7 +433,7 @@
 </template>
 
 <script>
-window.plotter = require("./../../lib/plotter.js");
+var plot = require("./../../lib/plotter.js");
 require("jquery.flot");
 require("jquery.flot/jquery.flot.selection");
 require("jquery.flot/jquery.flot.time");
@@ -441,11 +441,7 @@ require("jquery.flot/jquery.flot.time");
 export default {
   name: "Dashboard",
   beforeRouteLeave(to, from, next) {
-    $("#hostnameChangeModal").modal("hide");
-    $("#dnsChangeModal").modal("hide");
-    $("#systimeChangeModal").modal("hide");
-    $("#companyChangeModal").modal("hide");
-    $("#powerModal").modal("hide");
+    $(".modal").modal("hide");
     next();
   },
   mounted() {
@@ -1286,14 +1282,14 @@ export default {
         factor: 0.1 // millisec / sec -> percent
       };
 
-      var cpu_options = plotter.plot_simple_template();
+      var cpu_options = plot.plot_simple_template();
       $.extend(cpu_options.yaxis, {
         tickFormatter: function(v) {
           return v.toFixed(0);
         },
         max: 100
       });
-      this.cpu_plot = plotter.plot($("#server_cpu_graph"), 300);
+      this.cpu_plot = new plot.Plot($("#server_cpu_graph"), 300);
       this.cpu_plot.set_options(cpu_options);
       series = this.cpu_plot.add_metrics_sum_series(cpu_data, {});
 
@@ -1304,17 +1300,17 @@ export default {
         units: "bytes"
       };
 
-      var memory_options = plotter.plot_simple_template();
+      var memory_options = plot.plot_simple_template();
       $.extend(memory_options.yaxis, {
-        ticks: plotter.memory_ticks,
-        tickFormatter: plotter.format_bytes_tick_no_unit
+        ticks: plot.memory_ticks,
+        tickFormatter: plot.format_bytes_tick_no_unit
       });
       memory_options.setup_hook = function memory_setup_hook(pl) {
         var axes = pl.getAxes();
-        $("#server_memory_unit").text(plotter.bytes_tick_unit(axes.yaxis));
+        $("#server_memory_unit").text(plot.bytes_tick_unit(axes.yaxis));
       };
 
-      this.memory_plot = plotter.plot($("#server_memory_graph"), 300);
+      this.memory_plot = new plot.Plot($("#server_memory_graph"), 300);
       this.memory_plot.set_options(memory_options);
       series = this.memory_plot.add_metrics_sum_series(memory_data, {});
 
@@ -1327,9 +1323,9 @@ export default {
         derive: "rate"
       };
 
-      var network_options = plotter.plot_simple_template();
+      var network_options = plot.plot_simple_template();
       $.extend(network_options.yaxis, {
-        tickFormatter: plotter.format_bits_per_sec_tick_no_unit
+        tickFormatter: plot.format_bits_per_sec_tick_no_unit
       });
       network_options.setup_hook = function network_setup_hook(pl) {
         var axes = pl.getAxes();
@@ -1338,11 +1334,14 @@ export default {
         axes.yaxis.options.min = 0;
 
         $("#server_network_traffic_unit").text(
-          plotter.bits_per_sec_tick_unit(axes.yaxis)
+          plot.bits_per_sec_tick_unit(axes.yaxis)
         );
       };
 
-      this.network_plot = plotter.plot($("#server_network_traffic_graph"), 300);
+      this.network_plot = new plot.Plot(
+        $("#server_network_traffic_graph"),
+        300
+      );
       this.network_plot.set_options(network_options);
       series = this.network_plot.add_metrics_sum_series(network_data, {});
 
@@ -1354,10 +1353,10 @@ export default {
         derive: "rate"
       };
 
-      var disk_options = plotter.plot_simple_template();
+      var disk_options = plot.plot_simple_template();
       $.extend(disk_options.yaxis, {
-        ticks: plotter.memory_ticks,
-        tickFormatter: plotter.format_bytes_per_sec_tick_no_unit
+        ticks: plot.memory_ticks,
+        tickFormatter: plot.format_bytes_per_sec_tick_no_unit
       });
       disk_options.setup_hook = function disk_setup_hook(pl) {
         var axes = pl.getAxes();
@@ -1366,11 +1365,11 @@ export default {
         axes.yaxis.options.min = 0;
 
         $("#server_disk_io_unit").text(
-          plotter.bytes_per_sec_tick_unit(axes.yaxis)
+          plot.bytes_per_sec_tick_unit(axes.yaxis)
         );
       };
 
-      this.disk_plot = plotter.plot($("#server_disk_io_graph"), 300);
+      this.disk_plot = new plot.Plot($("#server_disk_io_graph"), 300);
       this.disk_plot.set_options(disk_options);
       series = this.disk_plot.add_metrics_sum_series(disk_data, {});
 

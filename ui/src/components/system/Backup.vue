@@ -733,8 +733,9 @@
                         <div v-show="!wizard.isEditUSB" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.usb_list')}}</label>
                           <div class="col-sm-6">
-                            <select required v-model="wizard.where.usb.USBDevice" @change="getUSBDevicePartitions()"
-                              class="combobox form-control">
+                            <div v-if="wizard.where.usb.isRefreshingUSB" class="spinner spinner-sm"></div>
+                            <select v-show="!wizard.where.usb.isRefreshingUSB" title="-" required v-model="wizard.where.usb.USBDevice"
+                              @change="getUSBDevicePartitions()" class="combobox form-control">
                               <option v-for="d in wizard.where.usb.devices" v-bind:key="d" :value="d">{{d.name}} -
                                 {{d.model}} | {{d.size | byteFormat}}</option>
                             </select>
@@ -743,22 +744,22 @@
                             <button type="button" @click="getUSBDevices()" class="btn btn-default">{{$t('backup.refresh')}}</button>
                           </div>
                         </div>
-                        <div v-show="!wizard.isEditUSB" v-if="wizard.where.usb.partitions.length > 0" v-for="(p,i) in wizard.where.usb.partitions"
-                          v-bind:key="i" class="form-group">
+                        <div v-show="!wizard.isEditUSB && !wizard.where.usb.isRefreshingUSB" v-if="wizard.where.usb.partitions.length > 0"
+                          v-for="(p,i) in wizard.where.usb.partitions" v-bind:key="i" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup"><span v-if="i == 0">{{$t('backup.usb_partitions')}}</span></label>
                           <div class="col-sm-9">
                             <span class="provider-details" @click="selectUSBDevicePartition(p)">{{p.label}}: {{p.fstype
                               | uppercase}} | {{p.size | byteFormat}}</span>
                           </div>
                         </div>
-                        <div v-if="!wizard.isEditUSB && wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.formatted"
+                        <div v-if="!wizard.isEditUSB && wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.formatted && !wizard.where.usb.isRefreshingUSB"
                           class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.usb_label')}}</label>
                           <div class="col-sm-9">
                             <input required disabled type="text" v-model="wizard.where.usb.USBLabel" class="form-control">
                           </div>
                         </div>
-                        <div v-if="wizard.isEditUSB" class="form-group">
+                        <div v-if="wizard.isEditUSB && !wizard.where.usb.isRefreshingUSB" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.usb_label')}}</label>
                           <div class="col-sm-6">
                             <input required disabled type="text" v-model="wizard.where.usb.USBLabel" class="form-control">
@@ -869,7 +870,7 @@
                         class="form-group">
                         <label class="col-sm-3 control-label" for="textInput-modal-markup"></label>
                         <div class="col-sm-2">
-                          <button :disabled="wizard.where.isChecking || (wizard.where.choice == 'usb' && (wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.formatted == 1) && wizard.where.usb.USBLabel.length == 0)"
+                          <button v-if="!wizard.where.usb.isRefreshingUSB" :disabled="wizard.where.isChecking || (wizard.where.choice == 'usb' && (wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.formatted == 1) && wizard.where.usb.USBLabel.length == 0)"
                             type="submit" class="btn btn-primary">
                             {{wizard.where.choice == 'usb' && wizard.where.usb.USBDevice &&
                             !wizard.where.usb.USBDevice.formatted ? $t('backup.format') : $t('backup.check')}}
@@ -987,7 +988,7 @@
                         <div class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.prune')}}</label>
                           <div class="col-sm-9">
-                            <select required v-model="wizard.how.restic.Prune" class="combobox form-control">
+                            <select title="-" required v-model="wizard.how.restic.Prune" class="combobox form-control">
                               <option v-for="(d,i) in wizard.how.restic.prunes" v-bind:key="i" :value="i">{{d |
                                 capitalize}}</option>
                             </select>
@@ -1026,7 +1027,8 @@
                         <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.name')}}</label>
                         <div class="col-sm-6">
                           <input :disabled="wizard.isEdit" required type="text" v-model="wizard.review.Name" class="form-control">
-                          <span v-if="wizard.review.errors.name.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+wizard.review.errors.name.message)}}</span>
+                          <span v-if="wizard.review.errors.name.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+                            {{$t('validation.'+wizard.review.errors.name.message)}}</span>
                         </div>
                       </div>
                       <div class="form-group">
@@ -1322,7 +1324,8 @@ export default {
             devices: [],
             partitions: [],
             formatOutput: "",
-            isFormatting: false
+            isFormatting: false,
+            isRefreshingUSB: false
           },
           sftp: {
             SftpDirectory:
@@ -1361,7 +1364,7 @@ export default {
             cleanups: ["never", "7D", "14D", "28D", "56D", "168D", "364D"]
           },
           restic: {
-            Prune: b && b.props.Prune ? parseInt(b.props.Prune) + 1 : "always",
+            Prune: b && b.props.Prune ? parseInt(b.props.Prune) + 1 : 0,
             prunes: ["always"].concat(this.weekdays()),
             CleanupOlderThan:
               b && b.props.CleanupOlderThan
@@ -1446,6 +1449,8 @@ export default {
     },
     getUSBDevices(callback) {
       var context = this;
+
+      context.wizard.where.usb.isRefreshingUSB = true;
       context.exec(
         ["system-backup/read"],
         {
@@ -1461,6 +1466,7 @@ export default {
               ? context.wizard.where.usb.USBDevice.name
               : null;
 
+          context.wizard.where.usb.isRefreshingUSB = false;
           context.wizard.where.usb.isFormatting = false;
           context.wizard.where.usb.USBLabel = "";
           context.wizard.where.usb.USBDevice = null;
@@ -1473,6 +1479,10 @@ export default {
                 return i.name == usbName;
               }
             )[0];
+            context.getUSBDevicePartitions();
+          } else {
+            context.wizard.where.usb.USBDevice =
+              context.wizard.where.usb.devices[0];
             context.getUSBDevicePartitions();
           }
 
