@@ -509,6 +509,30 @@
 
 
   <li class="md-nav__item">
+    <a href="../api/system-logrotate/" title="system-logrotate" class="md-nav__link">
+      system-logrotate
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-network/" title="system-network" class="md-nav__link">
+      system-network
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../api/system-openssh/" title="system-openssh" class="md-nav__link">
       system-openssh
     </a>
@@ -535,6 +559,18 @@
   <li class="md-nav__item">
     <a href="../api/system-password-policy/" title="system-password-policy" class="md-nav__link">
       system-password-policy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/system-proxy/" title="system-proxy" class="md-nav__link">
+      system-proxy
     </a>
   </li>
 
@@ -783,8 +819,22 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install-rpm" title="Install RPM" class="md-nav__link">
-    Install RPM
+  <a href="#automatic-builds" title="Automatic builds" class="md-nav__link">
+    Automatic builds
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#locally" title="Locally" class="md-nav__link">
+    Locally
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upstream-rpms" title="Upstream RPMs" class="md-nav__link">
+    Upstream RPMs
   </a>
   
 </li>
@@ -886,8 +936,22 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install-rpm" title="Install RPM" class="md-nav__link">
-    Install RPM
+  <a href="#automatic-builds" title="Automatic builds" class="md-nav__link">
+    Automatic builds
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#locally" title="Locally" class="md-nav__link">
+    Locally
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upstream-rpms" title="Upstream RPMs" class="md-nav__link">
+    Upstream RPMs
   </a>
   
 </li>
@@ -912,21 +976,25 @@
                 
                 
                 <h1 id="building-rpm">Building RPM<a class="headerlink" href="#building-rpm" title="Permanent link">&para;</a></h1>
+<h2 id="automatic-builds">Automatic builds<a class="headerlink" href="#automatic-builds" title="Permanent link">&para;</a></h2>
+<p>The package is automatically built using <a href="https://travis-ci.org/NethServer/nethserver-cockpit">Travis</a></p>
+<p>Build are started when:</p>
+<ul>
+<li>a new PR has been created</li>
+<li>one or more commit have been pushed to the master branch</li>
+</ul>
+<p><strong>Note:</strong> due to Travis limits, the package should have a new tag every 50 commits.
+The tag avoids the upload of a testing package inside the sable repository.</p>
+<h2 id="locally">Locally<a class="headerlink" href="#locally" title="Permanent link">&para;</a></h2>
 <p>Move to the root directory of cloned repository and
 use standard <code>make-rpms</code> NethServer tool:</p>
 <div class="codehilite"><pre><span></span>./prep-sources &amp;&amp; make-rpms
 </pre></div>
 
 
-<h2 id="install-rpm">Install RPM<a class="headerlink" href="#install-rpm" title="Permanent link">&para;</a></h2>
-<ol>
-<li>
-<p>Copy the rpm to the NethServer</p>
-</li>
-<li>
-<p>Access the NethServer, then download COPR repository:</p>
-</li>
-</ol>
+<h2 id="upstream-rpms">Upstream RPMs<a class="headerlink" href="#upstream-rpms" title="Permanent link">&para;</a></h2>
+<p>The upstream project provides packages for EPEL.
+To install it from the upstream repository:</p>
 <div class="codehilite"><pre><span></span>wget https://copr.fedorainfracloud.org/coprs/g/cockpit/cockpit-preview/repo/epel-7/group_cockpit-cockpit-preview-epel-7.repo -O /etc/yum.repos.d/cockpit.repo
 yum install nethserver-cockpit*rpm
 </pre></div>
