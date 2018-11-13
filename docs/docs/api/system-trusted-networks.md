@@ -4,7 +4,7 @@ Manage trusted networks records from `networks` db.
 
 ## read
 
-### Input
+### Output
 
 Return all current configured records from `/usr/libexec/nethserver/trusted-networks` inside the `status` field.
 Return all `network` records  from `networks` database inside the `configuration field.
