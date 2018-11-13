@@ -107,6 +107,28 @@ if($cmd eq 'release-role') {
     
     system("/sbin/e-smith/signal-event -j interface-update");
 
+} elsif($cmd eq 'set-pppoe') {
+
+    my $ppp = $ndb->get('ppp0');
+    $ppp->set_prop('type', 'xdsl');
+    $ppp->set_prop('AuthType', $input->{'AuthType'});
+    $ppp->set_prop('Password', $input->{'Password'});
+    $ppp->set_prop('user', $input->{'user'});
+    $ppp->set_prop('provider', $input->{'provider'});
+
+    $ndb->set_prop($input->{'parent'}, 'role', 'pppoe');
+
+    system("/sbin/e-smith/signal-event -j interface-update");
+
+} elsif($cmd eq 'unset-pppoe') {
+    
+    my $ppp = $ndb->get('ppp0');
+    $ppp->set_prop('type', 'xdsl-disabled');
+
+    my @tmp = $ndb->get_all_by_prop('role', 'pppoe');
+    $tmp[0]->set_prop('role', '');
+
+    system("/sbin/e-smith/signal-event -j interface-update");
 } else {
     error();
 }

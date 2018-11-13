@@ -109,11 +109,18 @@ Example:
 #### list
 
 Inside the `configuration` field return a list of all network interfaces.
+The `status` field contain current network status, like dynamic IP address.
 
 Example:
 ```json
 {
-  "status": null,
+  "status": [
+    {
+      "br0": {
+        "ipaddr": "192.168.5.246"
+      }
+    }
+  ],
   "configuration": {
     "green": [
       {
@@ -288,6 +295,7 @@ The request must contain an `action` field. Valid actions are:
 - `create-bridge`
 - `create-bond`
 - `create-vlan`
+- `set-pppoe`
 - `release-role`
 - `change-properties`
 
@@ -326,6 +334,11 @@ Constraints for `create-vlan`
 - netmask: if bootproto is static, must be an IPv4 netmask
 - gateway: if bootproto is static, can be empty or an IPv4 address
 
+Constraints for `set-pppoe`
+
+- AuthType: can be `auto`, `pap` or `chap`
+- parent: the name of an existing network interface
+
 Constraints for `release-role`
 
 - interface: must be the name of an existing network interface
@@ -334,7 +347,7 @@ Constraints for `release-role`
 Constraints for `release-device`
 
 - interface: must be the name of an existing network enslaved or bonded interface
--
+
 Constraints for `change-properties`
 
 - interface: the name of an existing network interface
@@ -396,6 +409,7 @@ Example:
   ]
 }
 ```
+
 #### create-vlan
 
 Example:
@@ -408,6 +422,21 @@ Example:
   "ipaddr": "192.168.2.246",
   "netmask": "255.255.255.0",
   "parent": "enp0s9"
+}
+```
+
+#### set-pppoe
+
+
+Example:
+```json
+{
+  "action": "set-pppoe",
+  "parent": "enp0s8",
+  "AuthType": "auto",
+  "Password": "mypass",
+  "user": "myuser",
+  "provider": "xDSL provider"
 }
 ```
 
@@ -466,6 +495,19 @@ Use the same input from validate.
 #### change-properties
 
 Use the same input from validate.
+
+#### set-pppoe
+
+Use the same input from validate.
+
+#### unset-pppoe
+
+Input example:
+```json
+{
+  "action": "unset-pppoe"
+}
+```
 
 ## create
 

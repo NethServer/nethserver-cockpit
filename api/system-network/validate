@@ -197,6 +197,14 @@ if ($action == 'create-alias') {
 
     check_network_config($data, $data['interface']);
 
+} else if ($action == 'set-pppoe') {
+
+    $parent = $db->getKey($data['parent']);
+    if (!$parent) {
+        $v->addValidationError('parent', 'non_existing_interface');
+    }
+    $v->declareParameter('AuthType', $v->createValidator()->memberOf('auto', 'pap', 'chap'));
+
 } else {
     error();
 }
