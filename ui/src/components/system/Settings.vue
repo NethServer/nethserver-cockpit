@@ -140,7 +140,7 @@
             <span v-if="errors.EmailAddress.hasError" class="help-block">{{$t('validation.validation_failed')}}:
               {{$t('validation.'+errors.EmailAddress.message)}}</span>
           </div>
-          <div class="col-sm-2">
+          <div v-if="i > 0" class="col-sm-2">
             <button @click="removeEmail(a, i)" class="btn btn-default" type="button">
               <span class="fa fa-minus card-icon-def"></span>
             </button>
@@ -403,7 +403,7 @@ export default {
                 });
               }
             }
-            context.settings.root.EmailAddress = emails;
+            context.settings.root.EmailAddress = emails.length == 0 ? [{}] : emails;
 
             //smarthost
             context.settings.smarthost.SmartHostStatus =

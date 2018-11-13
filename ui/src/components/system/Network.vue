@@ -61,6 +61,12 @@
                           {{$t('network.create_alias')}}
                         </a>
                       </li>
+                      <li>
+                        <a @click="openCreateRoute(i)">
+                          <span class="pficon pficon-route span-right-margin"></span>
+                          {{$t('network.create_route')}}
+                        </a>
+                      </li>
                       <li role="separator" class="divider"></li>
                       <li v-if="i.virtual == 0">
                         <a @click="openReleaseRole(i)">
@@ -89,24 +95,32 @@
                       </div>
                       <div class="list-group-item-text details-ip">
                         <span class="pficon pficon-screen"></span>
-                        <strong>{{i.ipaddr || '-'}}</strong>
+                        <strong>{{i.ipaddr || interfaceStatus[i.name] && interfaceStatus[i.name].ipaddr || '-'}}</strong>
                       </div>
                     </div>
                     <div class="list-view-pf-additional-info">
                       <div v-if="roleKey == 'other'" class="list-view-pf-additional-info-item">
                         <span class="fa fa-cube"></span>
-                        <strong>{{i.role | capitalize}}</strong>
+                        <strong>{{i.role == 'pppoe' ? 'PPPoE' : i.role | capitalize}}</strong>
                       </div>
                       <div v-if="i.aliases.length > 0" class="list-view-pf-additional-info-item">
                         <span class="fa fa-clone"></span>
-                        <strong>{{i.aliases.length}}</strong> {{$t('network.aliases')}}
+                        <strong>{{i.aliases.length}}</strong> {{i.aliases.length == 1 ? $t('network.alias') :
+                        $t('network.aliases')}}
                       </div>
                       <div v-if="i.devices.length > 0" class="list-view-pf-additional-info-item">
                         <span class="pficon pficon-container-node"></span>
-                        <strong>{{i.devices.length}}</strong> {{i.type == 'bond' ? $t('network.slaves') :
-                        $t('network.devices')}}
+                        <strong>{{i.devices.length}}</strong> {{i.type == 'bond' ? i.devices.length == 1 ?
+                        $t('network.slave') : $t('network.slaves') :
+                        i.devices.length == 1 ? $t('network.device') : $t('network.devices')}}
                       </div>
-                      <div v-if="i.aliases.length > 0 || i.devices.length > 0" class="list-view-pf-additional-info-item">
+                      <div v-if="routes[i.name] && routes[i.name].length > 0" class="list-view-pf-additional-info-item">
+                        <span class="pficon pficon-route"></span>
+                        <strong>{{routes[i.name] && routes[i.name].length}}</strong> {{routes[i.name] &&
+                        routes[i.name].length == 1 ? $t('network.route') : $t('network.routes')}}
+                      </div>
+                      <div v-if="i.aliases.length > 0 || i.devices.length > 0 || routes[i.name] && routes[i.name].length > 0"
+                        class="list-view-pf-additional-info-item">
                         <a @click="toggleOpen(i)">{{$t('details')}}</a>
                       </div>
                     </div>
@@ -115,13 +129,13 @@
               </div>
               <div :class="['list-group-item-container container-fluid', i.isOpened ? 'active' : 'hidden']">
                 <div class="row">
-                  <div class="col-md-6">
+                  <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                     <h4>{{$t('network.aliases')}}</h4>
                     <dl v-for="a in i.aliases" v-bind:key="a" class="dl-horizontal int-details">
                       <dt>{{a.name}}</dt>
-                      <dd>{{a.ipaddr}}</dd>
+                      <dd>{{$t('network.ip_address')}}: <b>{{a.ipaddr}}</b></dd>
                       <dt></dt>
-                      <dd>{{a.netmask}}</dd>
+                      <dd>{{$t('network.netmask')}}: <b>{{a.netmask}}</b></dd>
                       <dt></dt>
                       <dd>
                         <button @click="openDeleteAlias(a)" class="btn btn-danger btn-xs">{{$t('delete')}}</button>
@@ -132,17 +146,35 @@
                       <dd></dd>
                     </dl>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                     <h4>{{i.type == 'bond' ? $t('network.slaves') : $t('network.devices')}}</h4>
                     <dl v-for="a in i.devices" v-bind:key="a" class="dl-horizontal int-details">
                       <dt>{{a.name}}</dt>
-                      <dd>{{a.mac}}</dd>
+                      <dd>{{$t('network.mac_address')}}: <b>{{a.mac}}</b></dd>
                       <dt></dt>
                       <dd v-if="i.devices.length > 1">
                         <button @click="openDeleteDevice(a)" class="btn btn-danger btn-xs">{{$t('network.release')}}</button>
                       </dd>
                     </dl>
                     <dl v-if="i.devices.length == 0" class="dl-horizontal int-details">
+                      <dt>-</dt>
+                      <dd></dd>
+                    </dl>
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                    <h4>{{$t('network.routes')}}</h4>
+                    <dl v-for="r in routes[i.name]" v-bind:key="r" class="dl-horizontal int-details">
+                      <dt>{{r.name}}</dt>
+                      <dd>{{$t('network.router')}}: <b>{{r.Router}}</b></dd>
+                      <dt></dt>
+                      <dd>{{$t('network.metric')}}: <b>{{r.Metric}}</b></dd>
+                      <dt></dt>
+                      <dd>{{$t('network.description')}}: <b>{{r.Description}}</b></dd>
+                      <dd>
+                        <button @click="openDeleteRoute(r)" class="btn btn-danger btn-xs">{{$t('delete')}}</button>
+                      </dd>
+                    </dl>
+                    <dl v-if="routes[i.name] && routes[i.name].length == 0" class="dl-horizontal int-details">
                       <dt>-</dt>
                       <dd></dd>
                     </dl>
@@ -184,6 +216,79 @@
               <div v-if="newInterface.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="createInterfaceRouteModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('network.create_route_for')}} {{currentInterface.name}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="saveRoute(newRoute)">
+            <div class="modal-body">
+              <div :class="['form-group', newRoute.errors.name.hasError ? 'has-error' : '']">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.network_address')}}</label>
+                <div class="col-sm-9">
+                  <input required type="text" v-model="newRoute.name" class="form-control">
+                  <span v-if="newRoute.errors.name.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+                    {{$t('validation.'+newRoute.errors.name.message)}}</span>
+                </div>
+              </div>
+              <div :class="['form-group', newRoute.errors.Router.hasError ? 'has-error' : '']">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.router')}}</label>
+                <div class="col-sm-9">
+                  <input required type="text" v-model="newRoute.Router" class="form-control">
+                  <span v-if="newRoute.errors.Router.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+                    {{$t('validation.'+newRoute.errors.Router.message)}}</span>
+                </div>
+              </div>
+              <div :class="['form-group', newRoute.errors.Description.hasError ? 'has-error' : '']">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.description')}}</label>
+                <div class="col-sm-9">
+                  <input required type="text" v-model="newRoute.Description" class="form-control">
+                  <span v-if="newRoute.errors.Description.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+                    {{$t('validation.'+newRoute.errors.Description.message)}}</span>
+                </div>
+              </div>
+              <div :class="['form-group', newRoute.errors.Metric.hasError ? 'has-error' : '']">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.metric')}}</label>
+                <div class="col-sm-9">
+                  <input type="number" min="0" v-model="newRoute.Metric" class="form-control">
+                  <span v-if="newRoute.errors.Metric.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+                    {{$t('validation.'+newRoute.errors.Metric.message)}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div v-if="newRoute.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="deleteRouteModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('network.delete_alias')}}
+              {{currentRoute.name}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="deleteRoute(currentRoute)">
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-danger" type="submit">{{$t('delete')}}</button>
             </div>
           </form>
         </div>
@@ -268,11 +373,11 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
               </div>
-              <div class="alert alert-warning alert-dismissable">
+              <div v-if="currentInterface.type != 'xdsl'" class="alert alert-warning alert-dismissable">
                 <span class="pficon pficon-warning-triangle-o"></span>
                 <strong>{{$t('warning')}}.</strong> {{$t('network.successor_hints')}}.
               </div>
-              <div class="form-group">
+              <div v-if="currentInterface.type != 'xdsl'" class="form-group">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.select_successor')}}</label>
                 <div class="col-sm-9">
                   <div v-if="!currentInterface.successorListLoaded" class="spinner spinner-sm"></div>
@@ -594,7 +699,8 @@
                         <div class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.tag')}}</label>
                           <div class="col-sm-9">
-                            <input :disabled="wizard.isEdit" required v-model="wizard.type.vlan.tag" class="form-control" type="number" min="1">
+                            <input :disabled="wizard.isEdit" required v-model="wizard.type.vlan.tag" class="form-control"
+                              type="number" min="1">
                           </div>
                         </div>
                         <div class="form-group">
@@ -676,6 +782,240 @@
         </div>
       </div>
     </div>
+
+    <div class="modal" id="configurePhysicalInterface" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog modal-lg wizard-pf">
+        <div class="modal-content">
+          <div class="modal-header">
+            <dt class="modal-title">{{$t('network.configure_physical_interface')}} {{wizardPhysical.currentInterface &&
+              wizardPhysical.currentInterface.name}}</dt>
+          </div>
+
+          <div class="modal-body wizard-pf-body clearfix">
+            <div class="wizard-pf-steps">
+              <ul class="wizard-pf-steps-indicator">
+
+                <li :class="['wizard-pf-step', wizardPhysical.currentStep == 1 ? 'active' : '']" data-tabgroup="1">
+                  <a>
+                    <span class="wizard-pf-step-number">1</span>
+                    <span class="wizard-pf-step-title">{{$t('network.role')}}</span>
+                  </a>
+                </li>
+
+                <li :class="['wizard-pf-step', wizardPhysical.currentStep == 2 ? 'active' : '']" data-tabgroup="3">
+                  <a>
+                    <span class="wizard-pf-step-number">2</span>
+                    <span class="wizard-pf-step-title">{{$t('network.configure')}}</span>
+                  </a>
+                </li>
+
+              </ul>
+            </div>
+
+            <div class="wizard-pf-row">
+              <div class="wizard-pf-main">
+                <div :class="['wizard-pf-contents', wizardPhysical.currentStep == 1 ? '' : 'hidden']">
+                  <div class="blank-slate-pf " id="">
+                    <div class="blank-slate-pf-icon">
+                      <span class="pficon pficon-network"></span>
+                    </div>
+                    <h1>
+                      {{$t('network.wizard_choose_role_title')}}
+                    </h1>
+                    <div class="blank-slate-pf-main-action row wizard-where-choices">
+                      <div @click="selectRolePhysical('green')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizardPhysical.role.choice == 'green' ? 'active-choose-green' : '']">
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="fa fa-map-marker"></span>
+                          </div>
+                          <h3>
+                            {{$t('network.green')}}
+                          </h3>
+                          <p>
+                            <doc-info :placement="'top'" :title="$t('network.green')" :chapter="'network'" :section="'green'"></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                      <div @click="selectRolePhysical('red')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizardPhysical.role.choice == 'red' ? 'active-choose-red' : '']">
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="fa fa-globe"></span>
+                          </div>
+                          <h3>
+                            {{$t('network.red')}}
+                          </h3>
+                          <p>
+                            <doc-info :placement="'top'" :title="$t('network.red')" :chapter="'network'" :section="'red'"></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                      <div @click="selectRolePhysical('blue')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizardPhysical.role.choice == 'blue' ? 'active-choose-blue' : '']">
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="fa fa-users"></span>
+                          </div>
+                          <h3>
+                            {{$t('network.blue')}}
+                          </h3>
+                          <p>
+                            <doc-info :placement="'top'" :title="$t('network.blue')" :chapter="'network'" :section="'blue'"></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                      <div @click="selectRolePhysical('orange')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizardPhysical.role.choice == 'orange' ? 'active-choose-orange' : '']">
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="pficon pficon-security"></span>
+                          </div>
+                          <h3>
+                            {{$t('network.orange')}}
+                          </h3>
+                          <p>
+                            <doc-info :placement="'top'" :title="$t('network.orange')" :chapter="'network'" :section="'orange'"></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div :class="['wizard-pf-contents', wizardPhysical.currentStep == 2 ? '' : 'hidden']">
+                  <div class="blank-slate-pf " id="">
+                    <div class="blank-slate-pf-icon">
+                      <span class="fa fa-asterisk"></span>
+                    </div>
+                    <h1>
+                      {{$t('network.wizard_choose_type_title')}}
+                    </h1>
+                    <div class="blank-slate-pf-main-action row wizard-where-choices">
+                      <div @click="selectTypePhysical('ethernet')" :class="['col-xs-12', wizardPhysical.role.choice == 'red' ? 'col-sm-6 col-md-6 col-lg-6' : 'col-sm-12 col-md-12 col-lg-12', 'card-pf', wizardPhysical.type.choice == 'ethernet' ? 'active-choose' : '']">
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="pficon pficon-plugged"></span>
+                          </div>
+                          <h3>
+                            Ethernet
+                          </h3>
+                          <p>
+                            <doc-info :placement="'top'" :title="'Ethernet'" :chapter="'physical-interfaces'" :section="'ethernet'"></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                      <div v-if="wizardPhysical.role.choice == 'red'" @click="selectTypePhysical('pppoe')" :class="['col-xs-12', 'col-sm-6', 'col-md-6', 'col-lg-6', 'card-pf', wizardPhysical.type.choice == 'pppoe' ? 'active-choose' : '']">
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="pficon pficon-topology"></span>
+                          </div>
+                          <h3>
+                            PPPoE
+                          </h3>
+                          <p>
+                            <doc-info :placement="'top'" :title="'PPPoE'" :chapter="'logical-interfaces'" :section="'pppoe'"></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <form class="form-horizontal" v-on:submit.prevent="nextStepPhysical()">
+                    <div class="modal-body">
+                      <!-- ETHERNET -->
+                      <div v-if="wizardPhysical.type.choice == 'ethernet'">
+                        <div v-if="wizardPhysical.role.choice == 'green' || wizardPhysical.role.choice == 'red'" class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.bootproto')}}</label>
+                          <input class="col-sm-1" type="radio" v-model="wizardPhysical.review.bootproto" value="dhcp">
+                          <label class="col-sm-2 control-label text-align-left">{{$t('network.boot_dhcp')}}</label>
+                          <input class="col-sm-1" type="radio" v-model="wizardPhysical.review.bootproto" value="none">
+                          <label class="col-sm-2 control-label text-align-left">{{$t('network.boot_static')}}</label>
+                        </div>
+                        <div v-if="wizardPhysical.review.bootproto == 'none'" :class="['form-group', wizardPhysical.review.errors.ipaddr.hasError ? 'has-error' : '']">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.ip_address')}}</label>
+                          <div class="col-sm-6">
+                            <input required v-model="wizardPhysical.review.ipaddr" class="form-control" type="text">
+                            <span v-if="wizardPhysical.review.errors.ipaddr.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+wizardPhysical.review.errors.ipaddr.message)}}</span>
+                          </div>
+                        </div>
+                        <div v-if="wizardPhysical.review.bootproto == 'none'" :class="['form-group', wizardPhysical.review.errors.netmask.hasError ? 'has-error' : '']">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.netmask')}}</label>
+                          <div class="col-sm-6">
+                            <input required v-model="wizardPhysical.review.netmask" class="form-control" type="text">
+                            <span v-if="wizardPhysical.review.errors.netmask.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+wizardPhysical.review.errors.netmask.message)}}</span>
+                          </div>
+                        </div>
+                        <div v-if="wizardPhysical.review.bootproto == 'none' && (wizardPhysical.role.choice == 'green' || wizardPhysical.role.choice == 'red')"
+                          :class="['form-group', wizardPhysical.review.errors.gateway.hasError ? 'has-error' : '']">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.gateway')}}</label>
+                          <div class="col-sm-6">
+                            <input required v-model="wizardPhysical.review.gateway" class="form-control" type="text">
+                            <span v-if="wizardPhysical.review.errors.gateway.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+wizardPhysical.review.errors.gateway.message)}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- -->
+                      <!-- PPPoE -->
+                      <div v-if="wizardPhysical.type.choice == 'pppoe'">
+                        <div :class="['form-group', wizardPhysical.review.errors.provider.hasError ? 'has-error' : '']">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.provider')}}</label>
+                          <div class="col-sm-6">
+                            <input required v-model="wizardPhysical.review.provider" class="form-control" type="text">
+                            <span v-if="wizardPhysical.review.errors.provider.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+wizardPhysical.review.errors.provider.message)}}</span>
+                          </div>
+                        </div>
+                        <div :class="['form-group', wizardPhysical.review.errors.username.hasError ? 'has-error' : '']">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.username')}}</label>
+                          <div class="col-sm-6">
+                            <input required v-model="wizardPhysical.review.username" class="form-control" type="text">
+                            <span v-if="wizardPhysical.review.errors.username.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+wizardPhysical.review.errors.username.message)}}</span>
+                          </div>
+                        </div>
+                        <div :class="['form-group', wizardPhysical.review.errors.password.hasError ? 'has-error' : '']">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.password')}}</label>
+                          <div class="col-sm-6">
+                            <input required v-model="wizardPhysical.review.password" class="form-control" type="password">
+                            <span v-if="wizardPhysical.review.errors.password.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+wizardPhysical.review.errors.password.message)}}</span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.auth_type')}}</label>
+                          <div class="col-sm-6">
+                            <select class="combobox form-control" v-model="wizardPhysical.review.auth_type">
+                              <option value="auto">{{$t('network.auto')}}</option>
+                              <option value="pap">{{$t('network.pap')}}</option>
+                              <option value="CHAP">{{$t('network.chap')}}</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- -->
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer wizard-pf-footer">
+            <div v-if="wizardPhysical.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+            <button @click="cancelWizardPhysical()" type="button" class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss">{{$t('cancel')}}</button>
+            <button :disabled="wizardPhysical.currentStep == 1" @click="prevStepPhysical()" type="button" class="btn btn-default wizard-pf-back">
+              <span class="i fa fa-angle-left"></span>
+              {{$t('back')}}
+            </button>
+            <button :disabled="checkIfDisabledPhysical()" @click="nextStepPhysical()" type="button" class="btn btn-primary wizard-pf-next">
+              {{wizardPhysical.currentStep == 2 ? $t('network.configure') : $t('next')}}
+              <span class="i fa fa-angle-right"></span>
+            </button>
+            <button type="button" class="btn btn-primary hidden wizard-pf-close wizard-pf-dismiss">{{$t('close')}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </template>
@@ -725,6 +1065,7 @@ export default {
     this.getInterfaces(function(names) {
       context.initGraphs(names);
     });
+    this.getRoutes();
     this.getProxy();
   },
   data() {
@@ -735,10 +1076,15 @@ export default {
       },
       tableLangsTexts: this.tableLangs(),
       interfaces: [],
+      interfaceStatus: {},
       currentInterface: {},
+      currentRoute: {},
       currentProxy: this.initProxy(),
       newInterface: this.initInterface(),
-      wizard: this.initWizard()
+      newRoute: this.initRoute(),
+      wizard: this.initWizard(),
+      wizardPhysical: this.initWizardPhysical(),
+      routes: {}
     };
   },
   methods: {
@@ -770,31 +1116,39 @@ export default {
             modes: [],
             devices:
               b && b.devices && b.type == "bond"
-                ? b.devices.map(function(i) {
-                    return i.name;
-                  }).sort()
+                ? b.devices
+                    .map(function(i) {
+                      return i.name;
+                    })
+                    .sort()
                 : [],
             device: "",
             devicesList:
               b && b.devices
-                ? b.devices.map(function(i) {
-                    return i.name;
-                  }).sort()
+                ? b.devices
+                    .map(function(i) {
+                      return i.name;
+                    })
+                    .sort()
                 : []
           },
           bridge: {
             devices:
               b && b.devices && b.type == "bridge"
-                ? b.devices.map(function(i) {
-                    return i.name;
-                  }).sort()
+                ? b.devices
+                    .map(function(i) {
+                      return i.name;
+                    })
+                    .sort()
                 : [],
             device: "",
             devicesList:
               b && b.devices
-                ? b.devices.map(function(i) {
-                    return i.name;
-                  }).sort()
+                ? b.devices
+                    .map(function(i) {
+                      return i.name;
+                    })
+                    .sort()
                 : []
           },
           vlan: {
@@ -818,6 +1172,55 @@ export default {
               message: ""
             },
             gateway: {
+              hasError: false,
+              message: ""
+            }
+          }
+        }
+      };
+    },
+    initWizardPhysical(b) {
+      return {
+        currentInterface: b,
+        isLoading: false,
+        currentStep: 1,
+        role: {
+          choice: b && b.role ? b.role : "green"
+        },
+        type: {
+          choice: b && b.type == "xdsl" ? "pppoe" : "ethernet"
+        },
+        review: {
+          ipaddr: b && b.ipaddr ? b.ipaddr : "",
+          netmask: b && b.netmask ? b.netmask : "255.255.255.0",
+          gateway: b && b.gateway ? b.gateway : "",
+          bootproto: b && b.bootproto ? b.bootproto : "none",
+          provider: b && b.provider ? b.provider : "xDSL provider",
+          username: b && b.user ? b.user : "",
+          password: b && b.Password ? b.Password : "",
+          auth_type: b && b.AuthType ? b.AuthType : "auto",
+          errors: {
+            ipaddr: {
+              hasError: false,
+              message: ""
+            },
+            netmask: {
+              hasError: false,
+              message: ""
+            },
+            gateway: {
+              hasError: false,
+              message: ""
+            },
+            provider: {
+              hasError: false,
+              message: ""
+            },
+            username: {
+              hasError: false,
+              message: ""
+            },
+            password: {
               hasError: false,
               message: ""
             }
@@ -893,6 +1296,50 @@ export default {
     },
     selectType(type) {
       this.wizard.type.choice = type;
+    },
+    nextStepPhysical() {
+      if (this.wizardPhysical.currentStep == 2) {
+        this.savePhysicalInterface();
+      } else {
+        this.wizardPhysical.currentStep++;
+      }
+    },
+    prevStepPhysical() {
+      if (this.wizardPhysical.currentStep > 1) {
+        this.wizardPhysical.currentStep--;
+      }
+    },
+    checkIfDisabledPhysical() {
+      var disabled = false;
+      switch (this.wizardPhysical.currentStep) {
+        case 1:
+          disabled = false;
+          break;
+
+        case 3:
+          if (this.wizardPhysical.review.bootproto == "none") {
+            disabled =
+              this.wizardPhysical.review.ipaddr.length == 0 ||
+              this.wizardPhysical.review.netmask.length == 0 ||
+              this.wizardPhysical.review.gateway.length == 0;
+          }
+          break;
+      }
+
+      return disabled;
+    },
+    cancelWizardPhysical() {
+      this.wizardPhysical = this.initWizardPhysical();
+      $("#configurePhysicalInterface").modal("hide");
+    },
+    selectRolePhysical(role) {
+      this.wizardPhysical.role.choice = role;
+      if (role != "red" || role != "green") {
+        this.wizardPhysical.review.bootproto = "none";
+      }
+    },
+    selectTypePhysical(type) {
+      this.wizardPhysical.type.choice = type;
     },
     initGraphs(names) {
       var usage_metrics_channel;
@@ -1187,12 +1634,12 @@ export default {
         null,
         function(success) {
           success = JSON.parse(success);
-          context.wizard.type.bond.devicesList = context.wizard.type.bond.devicesList.concat(
-            success
-          ).sort();
-          context.wizard.type.bridge.devicesList = context.wizard.type.bridge.devicesList.concat(
-            success
-          ).sort();
+          context.wizard.type.bond.devicesList = context.wizard.type.bond.devicesList
+            .concat(success)
+            .sort();
+          context.wizard.type.bridge.devicesList = context.wizard.type.bridge.devicesList
+            .concat(success)
+            .sort();
         },
         function(error) {
           console.error(error);
@@ -1217,6 +1664,21 @@ export default {
         }
       );
     },
+    getRoutes() {
+      var context = this;
+      context.exec(
+        ["system-routes/read"],
+        null,
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.routes = success.configuration;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
     initInterface() {
       return {
         ipaddr: "",
@@ -1227,6 +1689,33 @@ export default {
             message: ""
           },
           netmask: {
+            hasError: false,
+            message: ""
+          }
+        },
+        isLoading: false
+      };
+    },
+    initRoute() {
+      return {
+        name: "",
+        Router: "",
+        Description: "",
+        Metric: "",
+        errors: {
+          name: {
+            hasError: false,
+            message: ""
+          },
+          Router: {
+            hasError: false,
+            message: ""
+          },
+          Description: {
+            hasError: false,
+            message: ""
+          },
+          Metric: {
             hasError: false,
             message: ""
           }
@@ -1246,6 +1735,9 @@ export default {
         function(success) {
           success = JSON.parse(success);
           context.view.isLoaded = true;
+
+          context.interfaceStatus = success.status;
+
           var interfaceNames = [];
           context.interfaces = success.configuration;
           for (var role in context.interfaces) {
@@ -1275,7 +1767,7 @@ export default {
       );
     },
     openConfigureInterface(i) {
-      if (i.virtual == 1) {
+      if (i.virtual == 1 && i.type != "xdsl") {
         this.wizard = this.initWizard(i);
         this.getFreeDevices();
         this.getFreeDevicesVLAN();
@@ -1284,7 +1776,8 @@ export default {
         this.openNewLogicInterface();
       } else {
         this.newInterface = this.initInterface();
-        $("#configureInterface").modal("show");
+        this.wizardPhysical = this.initWizardPhysical(i);
+        $("#configurePhysicalInterface").modal("show");
       }
     },
     openNewLogicInterface() {
@@ -1299,6 +1792,15 @@ export default {
     openDeleteAlias(int) {
       this.currentInterface = Object.assign({}, int);
       $("#deleteAliasModal").modal("show");
+    },
+    openCreateRoute(int) {
+      this.currentInterface = int;
+      this.newRoute = this.initRoute();
+      $("#createInterfaceRouteModal").modal("show");
+    },
+    openDeleteRoute(route) {
+      this.currentRoute = Object.assign({}, route);
+      $("#deleteRouteModal").modal("show");
     },
     openDeleteDevice(int) {
       this.currentInterface = Object.assign({}, int);
@@ -1340,7 +1842,90 @@ export default {
         }
       );
     },
-    saveInterface() {},
+    savePhysicalInterface() {
+      var context = this;
+      var physicalObj = {};
+
+      if (context.wizardPhysical.type.choice == "pppoe") {
+        var parent = context.wizardPhysical.currentInterface.name;
+        if (context.wizardPhysical.currentInterface.type == "xdsl") {
+          parent = context.wizardPhysical.currentInterface.devices[0].name;
+        }
+
+        physicalObj = {
+          action: "set-pppoe",
+          parent: parent,
+          AuthType: context.wizardPhysical.review.auth_type,
+          Password: context.wizardPhysical.review.password,
+          user: context.wizardPhysical.review.username,
+          provider: context.wizardPhysical.review.provider
+        };
+      } else {
+        physicalObj = {
+          action: "change-properties",
+          role: context.wizardPhysical.role.choice,
+          bootproto: context.wizardPhysical.review.bootproto,
+          interface: context.wizardPhysical.currentInterface.name,
+          ipaddr: context.wizardPhysical.review.ipaddr,
+          netmask: context.wizardPhysical.review.netmask,
+          gateway:
+            context.wizardPhysical.role.choice == "green" ||
+            context.wizardPhysical.role.choice == "red"
+              ? context.wizardPhysical.review.gateway
+              : ""
+        };
+      }
+
+      context.wizardPhysical.isLoading = true;
+      context.exec(
+        ["system-network/validate"],
+        physicalObj,
+        null,
+        function(success) {
+          context.wizardPhysical.isLoading = false;
+          $("#configurePhysicalInterface").modal("hide");
+
+          // update values
+          context.exec(
+            ["system-network/update"],
+            physicalObj,
+            function(stream) {
+              console.info("network-update", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "network.interface_configured_ok"
+              );
+
+              // get interfaces
+              context.wizardPhysical = context.initWizardPhysical();
+              context.getInterfaces();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "network.interface_configured_error"
+              );
+            }
+          );
+        },
+        function(error, data) {
+          var errorData = JSON.parse(data);
+          context.wizardPhysical.isLoading = false;
+          context.wizardPhysical.review.errors = context.initWizardPhysical().review.errors;
+
+          for (var e in errorData.attributes) {
+            var attr = errorData.attributes[e];
+            context.wizardPhysical.review.errors[
+              attr.parameter
+            ].hasError = true;
+            context.wizardPhysical.review.errors[attr.parameter].message =
+              attr.error;
+          }
+        }
+      );
+    },
     saveLogicInterface() {
       var context = this;
 
@@ -1428,7 +2013,7 @@ export default {
         parent: this.currentInterface.name
       };
 
-      context.newInterface.errors = this.initInterface().errors;
+      context.newInterface.errors = context.initInterface().errors;
       context.newInterface.isLoading = true;
       context.exec(
         ["system-network/validate"],
@@ -1465,12 +2050,72 @@ export default {
         function(error, data) {
           var errorData = JSON.parse(data);
           context.newInterface.isLoading = false;
-          context.newInterface.errors = this.initInterface().errors;
+          context.newInterface.errors = context.initInterface().errors;
 
           for (var e in errorData.attributes) {
             var attr = errorData.attributes[e];
             context.currentProxy.errors[attr.parameter].hasError = true;
             context.currentProxy.errors[attr.parameter].message = attr.error;
+          }
+        }
+      );
+    },
+    saveRoute() {
+      var context = this;
+
+      var routeObj = {
+        action: "create",
+        Device: this.currentInterface.name,
+        name: this.newRoute.name,
+        Router: this.newRoute.Router,
+        Description: this.newRoute.Description,
+        Metric: this.newRoute.Metric
+      };
+
+      context.newRoute.errors = context.initRoute().errors;
+      context.newRoute.isLoading = true;
+      context.exec(
+        ["system-routes/validate"],
+        routeObj,
+        null,
+        function(success) {
+          context.newRoute.isLoading = false;
+          $("#createInterfaceRouteModal").modal("hide");
+
+          // update values
+          context.exec(
+            ["system-routes/create"],
+            routeObj,
+            function(stream) {
+              console.info("route-update", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "network.route_created_ok"
+              );
+
+              // get interfaces & routes
+              context.getInterfaces();
+              context.getRoutes();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "network.route_created_error"
+              );
+            }
+          );
+        },
+        function(error, data) {
+          var errorData = JSON.parse(data);
+          context.newRoute.isLoading = false;
+          context.newRoute.errors = context.initRoute().errors;
+
+          for (var e in errorData.attributes) {
+            var attr = errorData.attributes[e];
+            context.newRoute.errors[attr.parameter].hasError = true;
+            context.newRoute.errors[attr.parameter].message = attr.error;
           }
         }
       );
@@ -1500,6 +2145,36 @@ export default {
           // notification
           context.$parent.notifications.error.message = context.$i18n.t(
             "network.alias_delete_error"
+          );
+        }
+      );
+    },
+    deleteRoute(route) {
+      var context = this;
+
+      $("#deleteRouteModal").modal("hide");
+      context.exec(
+        ["system-routes/delete"],
+        {
+          name: route.name
+        },
+        function(stream) {
+          console.info("route-delete", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "network.route_delete_ok"
+          );
+
+          // get interfaces & routes
+          context.getInterfaces();
+          context.getRoutes();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "network.route_delete_error"
           );
         }
       );
@@ -1567,13 +2242,22 @@ export default {
     deleteInterface(int) {
       var context = this;
 
-      $("#deleteInterfaceModal").modal("hide");
-      context.exec(
-        ["system-network/delete"],
-        {
+      var delObj = {};
+      if (int.type == "xdsl") {
+        delObj = {
+          action: "unset-pppoe"
+        };
+      } else {
+        delObj = {
           interface: int.name,
           heir: int.successor
-        },
+        };
+      }
+
+      $("#deleteInterfaceModal").modal("hide");
+      context.exec(
+        ["system-network/" + (int.type == "xdsl" ? "update" : "delete")],
+        delObj,
         function(stream) {
           console.info("interface-delete", stream);
         },
@@ -1693,7 +2377,7 @@ export default {
         function(error, data) {
           var errorData = JSON.parse(data);
           context.currentProxy.isLoading = false;
-          context.currentProxy.errors = this.initProxy().errors;
+          context.currentProxy.errors = context.initProxy().errors;
 
           for (var e in errorData.attributes) {
             var attr = errorData.attributes[e];

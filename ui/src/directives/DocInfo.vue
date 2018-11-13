@@ -15,7 +15,7 @@ export default {
     return {
       title: this.title || this.chapter,
       content: "",
-      id: this.chapter + "-" + this.section,
+      id: this.chapter + "-" + this.section + (+new Date()).toString(),
       docAvailable: true
     };
   },
@@ -46,7 +46,7 @@ export default {
             '<a target="_blank" href="' +
             success.link +
             '">' +
-            context.$i18n.t("more_info") +
+            context.$i18n && context.$i18n.t("more_info") +
             "</a>";
 
           // init popovers
