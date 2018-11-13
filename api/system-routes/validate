@@ -1,0 +1,58 @@
+#!/usr/bin/php
+<?php
+/*
+ * Copyright (C) 2018 Nethesis S.r.l.
+ * http://www.nethesis.it - nethserver@nethesis.it
+ *
+ * This script is part of NethServer.
+ *
+ * NethServer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License,
+ * or any later version.
+ *
+ * NethServer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NethServer.  If not, see COPYING.
+*/
+
+require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
+
+$data = readInput();
+
+$v = new LegacyValidator($data);
+$db = new EsmithDatabase('routes');
+$ndb = new EsmithDatabase('networks');
+
+if (!$data['name']) {
+    $v->addValidationError('name', 'route_empty');
+}
+if ($data['name'] != '0.0.0.0/0' && $data['name'] != 'default') {
+    $v->declareParameter('name', Validate::CIDR_BLOCK);
+}
+
+$device = $ndb->getKey($data['Device']);
+if (!$device) {
+    $v->addValidationError('Device', 'non_existing_interface');
+}
+
+if ($data['Metric']) {
+    $v->declareParameter('Metric', Validate::NONNEGATIVE_INTEGER);
+}
+
+$keyExists = $db->getType($data['name']) != '';
+if ($data['action'] == 'create' && $keyExists) {
+    $v->addValidationError('name', 'route_key_exists', $data['name']);
+}
+
+# Validate the input
+if ($v->validate()) {
+    success();
+} else {
+    error($v);
+}
+

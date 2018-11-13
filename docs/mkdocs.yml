@@ -40,6 +40,7 @@ nav:
       - api/system-password.md
       - api/system-password-policy.md
       - api/system-proxy.md
+      - api/system-routes.md
       - api/system-services.md
       - api/system-settings.md
       - api/system-shutdown.md

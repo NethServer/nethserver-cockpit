@@ -684,6 +684,7 @@
       "LimitAccess": "Limit access"
     },
     "validation": {
+<<<<<<< HEAD
       "weak_password": "Password too weak, it could be inside a dictinary or too similar to the previous one",
       "no_json_data_available": "No JSON data available",
       "The password is too similar to the old one": "The password is too similar to the old one",
@@ -763,7 +764,9 @@
       "usb_filesystem_not_found": "No supported filesystem found inside the disk",
       "usb_mount_failed": "Disk mount failed",
       "usb_write_failed": "Can't write files inside the disk",
-      "usb_delete_failed": "Can't delete files from the disk"
+      "usb_delete_failed": "Can't delete files from the disk",
+      "valid_cidrBlock": "Must be a valid CIDR network",
+      "route_key_exists": "Given route alrady exists"
     }
   }
 }
