@@ -51,6 +51,7 @@ if($cmd eq 'list') {
     my %aliases;
     my %bridges;
     my %bonds;
+    my %status;
 
     # Read hardware info
     open my $in, "/usr/libexec/nethserver/nic-info |";
@@ -119,23 +120,33 @@ if($cmd eq 'list') {
             $props{'virtual'} = 1;
         }
 
+        $interfaces{$n->key} = \%props;
+
         # add hardware info
         if (exists($info{$n->key})) {
             my $i = $info{$n->key};
             foreach my $k (keys(%$i)) {
-                $props{$k} = $i->{$k}
+                 $status{$n->key}{$k} = $i->{$k}
             }
         }
 
-        $interfaces{$n->key} = \%props
+        # Retrieve IP address of DHCP interfaces and PPPoE
+        if (defined(($props{'bootproto'}) && $props{'bootproto'} eq 'dhcp') || $n->key eq 'ppp0' ) {
+            my $iname = $n->key;
+            my $ipaddr = `/sbin/ip -o -4 address show $iname primary | head -1 | awk '{print \$4}' | cut -d '/' -f1`;
+            chomp $ipaddr;
+            $status{$iname}{'ipaddr'} = $ipaddr;
+        }
+        $ret->{'status'} = \%status;
     }
 
     foreach my $k (keys(%interfaces)) {
         my $interface = $interfaces{$k};
         my $role = $interface->{'role'} || 'free';
+        my $type = $interface->{'type'};
 
         # children will be handled later
-        next if ($role eq 'alias' || $role eq 'bridged' || $role eq 'slave');
+        next if ($role eq 'alias' || $role eq 'bridged' || $role eq 'slave' || $role eq 'pppoe' || $type eq 'provider');
 
         $interface->{'aliases'} = [];
         $interface->{'devices'} = [];

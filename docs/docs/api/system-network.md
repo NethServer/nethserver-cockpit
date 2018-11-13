@@ -109,18 +109,30 @@ Example:
 #### list
 
 Inside the `configuration` field return a list of all network interfaces.
-The `status` field contain current network status, like dynamic IP address.
+The `status` field contain current network status; if a newtork interface is configured with DHCP, 
+the current address is contained inside the `ipaddr` field.
 
 Example:
 ```json
 {
-  "status": [
-    {
-      "br0": {
-        "ipaddr": "192.168.5.246"
-      }
-    }
-  ],
+  "status": {
+    "enp0s8": {
+      "link": "1",
+      "bus": "pci",
+      "speed": "1000",
+      "model": "Intel Corporation 82540EM Gigabit Ethernet Controller (rev 02)",
+      "mac": "08:00:27:8e:01:18",
+      "driver": "e1000"
+    },
+    "enp0s9": {
+      "link": "1",
+      "bus": "pci",
+      "speed": "1000",
+      "model": "Intel Corporation 82540EM Gigabit Ethernet Controller (rev 02)",
+      "mac": "08:00:27:3d:b1:2b",
+      "driver": "e1000"
+    },
+  },
   "configuration": {
     "green": [
       {
