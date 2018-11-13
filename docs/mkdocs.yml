@@ -49,8 +49,10 @@ nav:
       - api/system-tls-policy.md
       - api/system-trusted-networks.md
       - api/system-users.md
+- UI:
+  - ui_guidelines.md
+  - i18n.md
 - authorizations.md
-- ui_guidelines.md
 - environment.md
 - application_manifest.md
 - tutorial.md
