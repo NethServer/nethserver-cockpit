@@ -228,6 +228,7 @@ Example:
     "other": [],
     "pppoe": 0,
     "orange": [],
+    "missing": [],
     "red": [
       {
         "provider": "xDSL provider",
