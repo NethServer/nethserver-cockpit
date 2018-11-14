@@ -45,7 +45,7 @@
             <div v-for="(i, iKey) in role" v-bind:key="iKey" :class="['list-group-item', roleKey+'-list', i.isOpened ? 'list-view-pf-expand-active' : '', 'no-shadow']">
               <div class="list-group-item-header">
                 <div class="list-view-pf-actions">
-                  <button @click="openConfigureInterface(i)" class="btn btn-default">
+                  <button v-if="roleKey != 'missing'" @click="openConfigureInterface(i)" class="btn btn-default">
                     <span class="fa fa-cog span-right-margin"></span>
                     {{$t('network.configure')}}
                   </button>
@@ -55,19 +55,19 @@
                       <span class="fa fa-ellipsis-v"></span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right" :aria-labelledby="i.name+'-list-container'">
-                      <li>
+                      <li v-if="roleKey != 'missing'">
                         <a @click="openCreateAlias(i)">
                           <span class="fa fa-clone span-right-margin"></span>
                           {{$t('network.create_alias')}}
                         </a>
                       </li>
-                      <li>
+                      <li v-if="roleKey != 'missing'">
                         <a @click="openCreateRoute(i)">
                           <span class="pficon pficon-route span-right-margin"></span>
                           {{$t('network.create_route')}}
                         </a>
                       </li>
-                      <li role="separator" class="divider"></li>
+                      <li v-if="roleKey != 'missing'" role="separator" class="divider"></li>
                       <li v-if="i.virtual == 0">
                         <a @click="openReleaseRole(i)">
                           <span class="pficon pficon-unlocked	 span-right-margin"></span>
@@ -82,7 +82,6 @@
                       </li>
                     </ul>
                   </div>
-
                 </div>
                 <div class="list-view-pf-main-info">
                   <div class="list-view-pf-left">
@@ -133,9 +132,9 @@
                     <h4>{{$t('network.aliases')}}</h4>
                     <dl v-for="a in i.aliases" v-bind:key="a" class="dl-horizontal int-details">
                       <dt>{{a.name}}</dt>
-                      <dd>{{$t('network.ip_address')}}: <b>{{a.ipaddr}}</b></dd>
+                      <dd v-if="a.ipaddr">{{$t('network.ip_address')}}: <b>{{a.ipaddr}}</b></dd>
                       <dt></dt>
-                      <dd>{{$t('network.netmask')}}: <b>{{a.netmask}}</b></dd>
+                      <dd v-if="a.netmask">{{$t('network.netmask')}}: <b>{{a.netmask}}</b></dd>
                       <dt></dt>
                       <dd>
                         <button @click="openDeleteAlias(a)" class="btn btn-danger btn-xs">{{$t('delete')}}</button>
@@ -150,11 +149,12 @@
                     <h4>{{i.type == 'bond' ? $t('network.slaves') : $t('network.devices')}}</h4>
                     <dl v-for="a in i.devices" v-bind:key="a" class="dl-horizontal int-details">
                       <dt>{{a.name}}</dt>
-                      <dd>{{$t('network.mac_address')}}: <b>{{a.mac}}</b></dd>
+                      <dd v-if="a.mac">{{$t('network.mac_address')}}: <b>{{a.mac}}</b></dd>
                       <dt></dt>
                       <dd v-if="i.devices.length > 1">
-                        <button @click="openDeleteDevice(a)" class="btn btn-danger btn-xs">{{$t('network.release')}}</button>
+                        <button @click="openDeleteDevice(a)" class="btn btn-danger btn-xs">{{$t('delete')}}</button>
                       </dd>
+                      <dd v-for="(c,ci) in a.devices" v-bind:key="ci"><span :class="[ci == 0 ? '' : 'transparent']">{{$t('network.children')}}:</span> <b>{{c.name}}<b></dd>
                     </dl>
                     <dl v-if="i.devices.length == 0" class="dl-horizontal int-details">
                       <dt>-</dt>
@@ -165,16 +165,16 @@
                     <h4>{{$t('network.routes')}}</h4>
                     <dl v-for="r in routes[i.name]" v-bind:key="r" class="dl-horizontal int-details">
                       <dt>{{r.name}}</dt>
-                      <dd>{{$t('network.router')}}: <b>{{r.Router}}</b></dd>
+                      <dd v-if="r.Router">{{$t('network.router')}}: <b>{{r.Router}}</b></dd>
                       <dt></dt>
-                      <dd>{{$t('network.metric')}}: <b>{{r.Metric}}</b></dd>
+                      <dd v-if="r.Metric">{{$t('network.metric')}}: <b>{{r.Metric}}</b></dd>
                       <dt></dt>
-                      <dd>{{$t('network.description')}}: <b>{{r.Description}}</b></dd>
+                      <dd v-if="r.Description">{{$t('network.description')}}: <b>{{r.Description}}</b></dd>
                       <dd>
                         <button @click="openDeleteRoute(r)" class="btn btn-danger btn-xs">{{$t('delete')}}</button>
                       </dd>
                     </dl>
-                    <dl v-if="routes[i.name] && routes[i.name].length == 0" class="dl-horizontal int-details">
+                    <dl v-if="!routes[i.name]" class="dl-horizontal int-details">
                       <dt>-</dt>
                       <dd></dd>
                     </dl>
@@ -246,20 +246,20 @@
                     {{$t('validation.'+newRoute.errors.Router.message)}}</span>
                 </div>
               </div>
-              <div :class="['form-group', newRoute.errors.Description.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.description')}}</label>
-                <div class="col-sm-9">
-                  <input required type="text" v-model="newRoute.Description" class="form-control">
-                  <span v-if="newRoute.errors.Description.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                    {{$t('validation.'+newRoute.errors.Description.message)}}</span>
-                </div>
-              </div>
               <div :class="['form-group', newRoute.errors.Metric.hasError ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.metric')}}</label>
                 <div class="col-sm-9">
                   <input type="number" min="0" v-model="newRoute.Metric" class="form-control">
                   <span v-if="newRoute.errors.Metric.hasError" class="help-block">{{$t('validation.validation_failed')}}:
                     {{$t('validation.'+newRoute.errors.Metric.message)}}</span>
+                </div>
+              </div>
+              <div :class="['form-group', newRoute.errors.Description.hasError ? 'has-error' : '']">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.description')}}</label>
+                <div class="col-sm-9">
+                  <input type="text" v-model="newRoute.Description" class="form-control">
+                  <span v-if="newRoute.errors.Description.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+                    {{$t('validation.'+newRoute.errors.Description.message)}}</span>
                 </div>
               </div>
             </div>
@@ -277,7 +277,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('network.delete_alias')}}
+            <h4 class="modal-title">{{$t('network.delete_route')}}
               {{currentRoute.name}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="deleteRoute(currentRoute)">
@@ -1549,6 +1549,10 @@ export default {
         case "other":
           return "fa fa-question";
           break;
+
+        case "missing":
+          return "fa fa-ban";
+          break;
       }
     },
     toggleOpen(i) {
@@ -1753,7 +1757,8 @@ export default {
             blue: success.configuration.blue,
             orange: success.configuration.orange,
             other: success.configuration.other,
-            free: success.configuration.free
+            free: success.configuration.free,
+            missing: success.configuration.missing
           };
 
           context.getFreeDevices();
