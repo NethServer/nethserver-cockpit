@@ -369,11 +369,13 @@
       "enable": "Enable",
       "disable": "Disable",
       "stop": "Stop",
+      "status": "Status",
       "network": "Network",
       "properties": "Properties",
       "details_of": "Details of",
       "service_action_ok": "Action completed successfully!",
-      "service_action_error": "Action not completed."
+      "service_action_error": "Action not completed.",
+      "status_of": "Status of"
     },
     "users_groups": {
       "title": "Users & Groups",
