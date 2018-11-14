@@ -10,6 +10,10 @@
     "/#/applications": {
       "label": "Applications",
       "order": 100
+    },
+    "#/software-center": {
+      "label": "Software Center",
+      "order": 200
     }
   },
 
