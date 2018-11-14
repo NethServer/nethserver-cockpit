@@ -660,7 +660,17 @@
       "title": "Logs"
     },
     "about": {
-      "title": "About"
+      "title": "About",
+      "description_1": "What is NethServer?",
+      "description_2": "NethServer is an operating system for Linux enthusiasts, designed for small offices and medium enterprises.",
+      "description_3": "Get support from the community:",
+      "description_4": "Get advanced support from experts:",
+      "visit_the": "Visit the",
+      "official_site": "Official site",
+      "community": "Community",
+      "documentation": "Documentation",
+      "wiki": "Wiki",
+      "subscription": "Subscription"
     },
     "wizard": {
       "title": "Wizard"
