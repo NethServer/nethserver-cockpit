@@ -583,6 +583,18 @@
           
           
 
+
+  <li class="md-nav__item">
+    <a href="../system-routes/" title="system-routes" class="md-nav__link">
+      system-routes
+    </a>
+  </li>
+
+        
+          
+          
+          
+
   
 
 
@@ -620,9 +632,56 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#input" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list" title="list" class="md-nav__link">
+    list
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status" title="status" class="md-nav__link">
+    status
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#output" title="Output" class="md-nav__link">
     Output
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list_1" title="list" class="md-nav__link">
+    list
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status_1" title="status" class="md-nav__link">
+    status
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -640,7 +699,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#input" title="Input" class="md-nav__link">
+  <a href="#input_1" title="Input" class="md-nav__link">
     Input
   </a>
   
@@ -773,10 +832,46 @@
       
 
 
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      UI
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        UI
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
   <li class="md-nav__item">
-    <a href="../../authorizations/" title="Authorizations" class="md-nav__link">
-      Authorizations
+    <a href="../../ui_guidelines/" title="UI guidelines" class="md-nav__link">
+      UI guidelines
     </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../i18n/" title="Translations" class="md-nav__link">
+      Translations
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
     
@@ -786,8 +881,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../ui_guidelines/" title="UI guidelines" class="md-nav__link">
-      UI guidelines
+    <a href="../../authorizations/" title="Authorizations" class="md-nav__link">
+      Authorizations
     </a>
   </li>
 
@@ -965,9 +1060,56 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#input" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list" title="list" class="md-nav__link">
+    list
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status" title="status" class="md-nav__link">
+    status
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#output" title="Output" class="md-nav__link">
     Output
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list_1" title="list" class="md-nav__link">
+    list
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status_1" title="status" class="md-nav__link">
+    status
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -985,7 +1127,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#input" title="Input" class="md-nav__link">
+  <a href="#input_1" title="Input" class="md-nav__link">
     Input
   </a>
   
@@ -1018,7 +1160,33 @@
                 <h1 id="system-services">system-services<a class="headerlink" href="#system-services" title="Permanent link">&para;</a></h1>
 <p>Get the status and control system services.</p>
 <h2 id="read">read<a class="headerlink" href="#read" title="Permanent link">&para;</a></h2>
+<h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
+<p>Take an <code>action</code> field.
+Available actions are:</p>
+<ul>
+<li><code>list</code>: list current services</li>
+<li><code>status</code>: read current service status from systemd</li>
+</ul>
+<h4 id="list">list<a class="headerlink" href="#list" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;list&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="status">status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h4>
+<p>Take an extra <code>name</code> field containing the name of the service
+Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;status&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;httpd&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
+<h4 id="list_1">list<a class="headerlink" href="#list_1" title="Permanent link">&para;</a></h4>
 <p>Current service status and preset is inside the <code>status</code> field.
 The <code>configuration</code> field contains all properties for each service.</p>
 <p>Example:</p>
@@ -1069,6 +1237,16 @@ The <code>configuration</code> field contains all properties for each service.</
 </pre></div>
 
 
+<h4 id="status_1">status<a class="headerlink" href="#status_1" title="Permanent link">&para;</a></h4>
+<p>Return the status of the service from <code>systemctl status</code>.
+Text is returned under <code>data</code> field and it's ASCII encoded.</p>
+<p>Example</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;* httpd.service - The Apache HTTP Server\n   Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)\n   Active: active (running) since Tue 2018-11-13 14:09:54 CET; 21h ago\n     Docs: man:httpd(8)\n           man:apachectl(8)\n Main PID: 3183 (httpd)\n   Status: \&quot;Total requests: 0; Current requests/sec: 0; Current traffic:   0 B/sec\&quot;\n   CGroup: /system.slice/httpd.service\n           |- 3183 /usr/sbin/httpd -DFOREGROUND\n           |- 4566 /usr/sbin/httpd -DFOREGROUND\n           |-32621 /usr/sbin/httpd -DFOREGROUND\n           |-32622 /usr/sbin/httpd -DFOREGROUND\n           |-32623 /usr/sbin/httpd -DFOREGROUND\n           |-32624 /usr/sbin/httpd -DFOREGROUND\n           `-32625 /usr/sbin/httpd -DFOREGROUND\n\nNov 13 14:55:45 test.local.neth.eu systemd[1]: Reloading The Apache HTTP Server.\nNov 13 14:55:45 test.local.neth.eu systemd[1]: Reloaded The Apache HTTP Server.\nNov 13 15:13:32 test.local.neth.eu systemd[1]: Reloading The Apache HTTP Server.\nNov 13 15:13:33 test.local.neth.eu systemd[1]: Reloaded The Apache HTTP Server.\nNov 13 15:45:33 test.local.neth.eu systemd[1]: Reloading The Apache HTTP Server.\nNov 13 15:45:33 test.local.neth.eu systemd[1]: Reloaded The Apache HTTP Server.\nNov 13 16:16:04 test.local.neth.eu systemd[1]: Reloading The Apache HTTP Server.\nNov 13 16:16:04 test.local.neth.eu systemd[1]: Reloaded The Apache HTTP Server.\nNov 13 16:16:30 test.local.neth.eu systemd[1]: Reloading The Apache HTTP Server.\nNov 13 16:16:30 test.local.neth.eu systemd[1]: Reloaded The Apache HTTP Server.\n&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
 <p>Execute actions on selected service.</p>
 <p>Available actions:</p>
@@ -1079,7 +1257,7 @@ The <code>configuration</code> field contains all properties for each service.</
 <li>enable: enable and start the service</li>
 <li>disable: disable and start the service</li>
 </ul>
-<h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
+<h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
 <p>A JSON object with two fields:</p>
 <ul>
 <li>name: the service name</li>
@@ -1116,7 +1294,7 @@ The <code>configuration</code> field contains all properties for each service.</
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../system-proxy/" title="system-proxy" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../system-routes/" title="system-routes" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -1125,7 +1303,7 @@ The <code>configuration</code> field contains all properties for each service.</
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                system-proxy
+                system-routes
               </span>
             </div>
           </a>

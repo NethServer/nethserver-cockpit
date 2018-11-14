@@ -585,6 +585,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../system-routes/" title="system-routes" class="md-nav__link">
+      system-routes
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../system-services/" title="system-services" class="md-nav__link">
       system-services
     </a>
@@ -704,8 +716,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#input" title="Input" class="md-nav__link">
-    Input
+  <a href="#output" title="Output" class="md-nav__link">
+    Output
   </a>
   
 </li>
@@ -731,7 +743,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#input_1" title="Input" class="md-nav__link">
+  <a href="#input" title="Input" class="md-nav__link">
     Input
   </a>
   
@@ -801,10 +813,46 @@
       
 
 
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      UI
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        UI
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
   <li class="md-nav__item">
-    <a href="../../authorizations/" title="Authorizations" class="md-nav__link">
-      Authorizations
+    <a href="../../ui_guidelines/" title="UI guidelines" class="md-nav__link">
+      UI guidelines
     </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../i18n/" title="Translations" class="md-nav__link">
+      Translations
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
     
@@ -814,8 +862,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../ui_guidelines/" title="UI guidelines" class="md-nav__link">
-      UI guidelines
+    <a href="../../authorizations/" title="Authorizations" class="md-nav__link">
+      Authorizations
     </a>
   </li>
 
@@ -993,8 +1041,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#input" title="Input" class="md-nav__link">
-    Input
+  <a href="#output" title="Output" class="md-nav__link">
+    Output
   </a>
   
 </li>
@@ -1020,7 +1068,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#input_1" title="Input" class="md-nav__link">
+  <a href="#input" title="Input" class="md-nav__link">
     Input
   </a>
   
@@ -1074,7 +1122,7 @@
                 <h1 id="system-trusted-networks">system-trusted-networks<a class="headerlink" href="#system-trusted-networks" title="Permanent link">&para;</a></h1>
 <p>Manage trusted networks records from <code>networks</code> db.</p>
 <h2 id="read">read<a class="headerlink" href="#read" title="Permanent link">&para;</a></h2>
-<h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
+<h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
 <p>Return all current configured records from <code>/usr/libexec/nethserver/trusted-networks</code> inside the <code>status</code> field.
 Return all <code>network</code> records  from <code>networks</code> database inside the `configuration field.</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
@@ -1112,7 +1160,7 @@ Return all <code>network</code> records  from <code>networks</code> database ins
 <li>the combination of name and Mask must be a valid network</li>
 <li>the network should not be used inside the system, for example on a network interface</li>
 </ul>
-<h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
+<h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
 <p>A <code>network</code> esmith db record in JSON format.
 The record must also contain an <code>action</code> fields which can be:
 - <code>create</code> for new dns record creation

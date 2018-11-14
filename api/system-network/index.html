@@ -661,19 +661,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#-interface-must-be-the-name-of-an-existing-network-enslaved-or-bonded-interface" title="- interface: must be the name of an existing network enslaved or bonded interface" class="md-nav__link">
-    - interface: must be the name of an existing network enslaved or bonded interface
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
           <li class="md-nav__item">
   <a href="#input_1" title="Input" class="md-nav__link">
     Input
@@ -706,6 +693,13 @@
           <li class="md-nav__item">
   <a href="#create-vlan" title="create-vlan" class="md-nav__link">
     create-vlan
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-pppoe" title="set-pppoe" class="md-nav__link">
+    set-pppoe
   </a>
   
 </li>
@@ -766,6 +760,20 @@
           <li class="md-nav__item">
   <a href="#change-properties_1" title="change-properties" class="md-nav__link">
     change-properties
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-pppoe_1" title="set-pppoe" class="md-nav__link">
+    set-pppoe
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unset-pppoe" title="unset-pppoe" class="md-nav__link">
+    unset-pppoe
   </a>
   
 </li>
@@ -864,6 +872,18 @@
   <li class="md-nav__item">
     <a href="../system-proxy/" title="system-proxy" class="md-nav__link">
       system-proxy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-routes/" title="system-routes" class="md-nav__link">
+      system-routes
     </a>
   </li>
 
@@ -991,10 +1011,46 @@
       
 
 
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      UI
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        UI
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
   <li class="md-nav__item">
-    <a href="../../authorizations/" title="Authorizations" class="md-nav__link">
-      Authorizations
+    <a href="../../ui_guidelines/" title="UI guidelines" class="md-nav__link">
+      UI guidelines
     </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../i18n/" title="Translations" class="md-nav__link">
+      Translations
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
     
@@ -1004,8 +1060,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../ui_guidelines/" title="UI guidelines" class="md-nav__link">
-      UI guidelines
+    <a href="../../authorizations/" title="Authorizations" class="md-nav__link">
+      Authorizations
     </a>
   </li>
 
@@ -1284,19 +1340,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#-interface-must-be-the-name-of-an-existing-network-enslaved-or-bonded-interface" title="- interface: must be the name of an existing network enslaved or bonded interface" class="md-nav__link">
-    - interface: must be the name of an existing network enslaved or bonded interface
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
           <li class="md-nav__item">
   <a href="#input_1" title="Input" class="md-nav__link">
     Input
@@ -1329,6 +1372,13 @@
           <li class="md-nav__item">
   <a href="#create-vlan" title="create-vlan" class="md-nav__link">
     create-vlan
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-pppoe" title="set-pppoe" class="md-nav__link">
+    set-pppoe
   </a>
   
 </li>
@@ -1389,6 +1439,20 @@
           <li class="md-nav__item">
   <a href="#change-properties_1" title="change-properties" class="md-nav__link">
     change-properties
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-pppoe_1" title="set-pppoe" class="md-nav__link">
+    set-pppoe
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unset-pppoe" title="unset-pppoe" class="md-nav__link">
+    unset-pppoe
   </a>
   
 </li>
@@ -1544,10 +1608,29 @@ The <code>parent</code> contains the name of the interface which will be deleted
 
 <h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
 <h4 id="list_1">list<a class="headerlink" href="#list_1" title="Permanent link">&para;</a></h4>
-<p>Inside the <code>configuration</code> field return a list of all network interfaces.</p>
+<p>Inside the <code>configuration</code> field return a list of all network interfaces.
+The <code>status</code> field contain current network status; if a newtork interface is configured with DHCP, 
+the current address is contained inside the <code>ipaddr</code> field.</p>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;enp0s8&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;link&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;bus&quot;</span><span class="p">:</span> <span class="s2">&quot;pci&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;speed&quot;</span><span class="p">:</span> <span class="s2">&quot;1000&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;Intel Corporation 82540EM Gigabit Ethernet Controller (rev 02)&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;08:00:27:8e:01:18&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;driver&quot;</span><span class="p">:</span> <span class="s2">&quot;e1000&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;enp0s9&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;link&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;bus&quot;</span><span class="p">:</span> <span class="s2">&quot;pci&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;speed&quot;</span><span class="p">:</span> <span class="s2">&quot;1000&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;Intel Corporation 82540EM Gigabit Ethernet Controller (rev 02)&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;08:00:27:3d:b1:2b&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;driver&quot;</span><span class="p">:</span> <span class="s2">&quot;e1000&quot;</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
   <span class="nt">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="nt">&quot;green&quot;</span><span class="p">:</span> <span class="p">[</span>
       <span class="p">{</span>
@@ -1643,6 +1726,7 @@ The <code>parent</code> contains the name of the interface which will be deleted
     <span class="nt">&quot;other&quot;</span><span class="p">:</span> <span class="p">[],</span>
     <span class="nt">&quot;pppoe&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="nt">&quot;orange&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="nt">&quot;missing&quot;</span><span class="p">:</span> <span class="p">[],</span>
     <span class="nt">&quot;red&quot;</span><span class="p">:</span> <span class="p">[</span>
       <span class="p">{</span>
         <span class="nt">&quot;provider&quot;</span><span class="p">:</span> <span class="s2">&quot;xDSL provider&quot;</span><span class="p">,</span>
@@ -1717,6 +1801,7 @@ The <code>parent</code> contains the name of the interface which will be deleted
 <li><code>create-bridge</code></li>
 <li><code>create-bond</code></li>
 <li><code>create-vlan</code></li>
+<li><code>set-pppoe</code></li>
 <li><code>release-role</code></li>
 <li><code>change-properties</code></li>
 </ul>
@@ -1755,13 +1840,20 @@ The <code>parent</code> contains the name of the interface which will be deleted
 <li>netmask: if bootproto is static, must be an IPv4 netmask</li>
 <li>gateway: if bootproto is static, can be empty or an IPv4 address</li>
 </ul>
+<p>Constraints for <code>set-pppoe</code></p>
+<ul>
+<li>AuthType: can be <code>auto</code>, <code>pap</code> or <code>chap</code></li>
+<li>parent: the name of an existing network interface</li>
+</ul>
 <p>Constraints for <code>release-role</code></p>
 <ul>
 <li>interface: must be the name of an existing network interface</li>
 <li>the role can't be released if it is the last green interface</li>
 </ul>
 <p>Constraints for <code>release-device</code></p>
-<h2 id="-interface-must-be-the-name-of-an-existing-network-enslaved-or-bonded-interface">- interface: must be the name of an existing network enslaved or bonded interface<a class="headerlink" href="#-interface-must-be-the-name-of-an-existing-network-enslaved-or-bonded-interface" title="Permanent link">&para;</a></h2>
+<ul>
+<li>interface: must be the name of an existing network enslaved or bonded interface</li>
+</ul>
 <p>Constraints for <code>change-properties</code></p>
 <ul>
 <li>interface: the name of an existing network interface</li>
@@ -1833,6 +1925,19 @@ The <code>parent</code> contains the name of the interface which will be deleted
 </pre></div>
 
 
+<h4 id="set-pppoe">set-pppoe<a class="headerlink" href="#set-pppoe" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;set-pppoe&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;parent&quot;</span><span class="p">:</span> <span class="s2">&quot;enp0s8&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;AuthType&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Password&quot;</span><span class="p">:</span> <span class="s2">&quot;mypass&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;myuser&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;provider&quot;</span><span class="p">:</span> <span class="s2">&quot;xDSL provider&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h4 id="release-role">release-role<a class="headerlink" href="#release-role" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
@@ -1877,6 +1982,16 @@ The <code>BondOptMode</code> is mandatory only for bonding;</p>
 <p>Use the same input from validate.</p>
 <h4 id="change-properties_1">change-properties<a class="headerlink" href="#change-properties_1" title="Permanent link">&para;</a></h4>
 <p>Use the same input from validate.</p>
+<h4 id="set-pppoe_1">set-pppoe<a class="headerlink" href="#set-pppoe_1" title="Permanent link">&para;</a></h4>
+<p>Use the same input from validate.</p>
+<h4 id="unset-pppoe">unset-pppoe<a class="headerlink" href="#unset-pppoe" title="Permanent link">&para;</a></h4>
+<p>Input example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;unset-pppoe&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h2 id="create">create<a class="headerlink" href="#create" title="Permanent link">&para;</a></h2>
 <h3 id="create-alias_1">create-alias<a class="headerlink" href="#create-alias_1" title="Permanent link">&para;</a></h3>
 <p>Use the same input from validate.</p>
