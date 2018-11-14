@@ -154,7 +154,7 @@
                       <dd v-if="i.devices.length > 1">
                         <button @click="openDeleteDevice(a)" class="btn btn-danger btn-xs">{{$t('delete')}}</button>
                       </dd>
-                      <dd v-for="(c,ci) in a.devices" v-bind:key="ci"><span :class="[ci == 0 ? '' : 'transparent']">{{$t('network.children')}}:</span> <b>{{c.name}}<b></dd>
+                      <dd v-for="(c,ci) in a.devices" v-bind:key="ci"><span :class="[ci == 0 ? '' : 'transparent', 'fa fa-arrow-right', 'span-right-margin']"></span> <b>{{c.name}}<b></dd>
                     </dl>
                     <dl v-if="i.devices.length == 0" class="dl-horizontal int-details">
                       <dt>-</dt>
