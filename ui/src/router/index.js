@@ -33,6 +33,10 @@ import ApplicationsDetails from '@/components/applications/ApplicationsDetails'
 import SoftwareCenter from '@/components/software-center/SoftwareCenter'
 /* */
 
+/* TERMINAL */
+import Terminal from '@/components/system/Terminal'
+/* */
+
 Vue.use(Router)
 
 export default new Router({
@@ -137,5 +141,11 @@ export default new Router({
       name: 'SoftwareCenter',
       component: SoftwareCenter
     },
+
+    {
+      path: '/terminal',
+      name: 'Terminal',
+      component: Terminal
+    }
   ]
 })

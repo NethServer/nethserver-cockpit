@@ -1,17 +1,7 @@
 <template>
   <div id="app">
-    <nav v-if="!getCurrentPath('applications')" id="navbar-left" class="nav-pf-vertical nav-pf-vertical-with-sub-menus nav-pf-persistent-secondary">
-      <ul v-if="!wizardDone" class="list-group panel">
-        <li id="dashboard-item" v-bind:class="[getCurrentPath('') ? 'active' : '', 'list-group-item']">
-          <a href="#/wizard">
-            <span class="fa fa-magic"></span>
-            <span class="list-group-item-value">{{$t('menu.wizard')}}</span>
-          </a>
-        </li>
-      </ul>
-
-      <ul v-if="wizardDone" class="list-group panel">
-
+    <nav v-if="routesAvailable()" id="navbar-left" class="nav-pf-vertical nav-pf-vertical-with-sub-menus nav-pf-persistent-secondary">
+      <ul class="list-group panel">
         <li id="dashboard-item" v-bind:class="[getCurrentPath('') ? 'active' : '', 'list-group-item']">
           <a href="#/">
             <span class="fa fa-cube"></span>
@@ -142,10 +132,9 @@
             <span class="list-group-item-value">{{$t('menu.about')}}</span>
           </a>
         </li>
-
       </ul>
     </nav>
-    <div :class="['container-fluid', 'container-cards-pf'+ (getCurrentPath('applications') ? '-apps' : '')]">
+    <div :class="['container-fluid', 'container-cards-pf'+ ( !routesAvailable() ? '-apps' : '')]">
       <router-view></router-view>
     </div>
 
@@ -174,7 +163,7 @@
       <span v-if="copied" class="fa fa-check green copy-ok"></span>
     </div>
 
-    <div v-if="notifications.event.show" :style="{ top: notifications.addMargin ? (notifications.success.show && notifications.error.show) ? 330+'px' : (notifications.success.show ? 142+'px' : (notifications.error.show ? 260+'px' : 72 +'px')) : (notifications.success.show && notifications.error.show) ? 238+'px' : (notifications.success.show ? 80+'px' : (notifications.error.show ? 168+'px' : 10 +'px')), minWidth: 390+'px', right: 10+'px', zIndex: 5, position: 'fixed' }"
+    <div v-if="notifications.event.show" :style="{ top: notifications.addMargin ? (notifications.success.show && notifications.error.show) ? 330+'px' : (notifications.success.show ? 142+'px' : (notifications.error.show ? 260+'px' : 72 +'px')) : (notifications.success.show && notifications.error.show) ? 270+'px' : (notifications.success.show ? 80+'px' : (notifications.error.show ? 200+'px' : 10 +'px')), minWidth: 390+'px', right: 10+'px', zIndex: 5, position: 'fixed' }"
       class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-warning alert-dismissable">
       <span style="padding-top: 25px;" class="pficon fa fa-warning"></span>
       <strong>{{$t('event')}}: </strong>{{notifications.event.name || '-'}} <span v-if="notifications.event.message">(<strong>{{notifications.event.message}}</strong>)</span>
@@ -201,25 +190,15 @@ export default {
   mounted() {
     console.clear();
     console.log(this.msg);
-    // check for first configuration wizard
-    var context = this;
-    context.wizardIsDone(function(done) {
-      if (!done) {
-        context.$router.push("/wizard");
-        context.wizardDone = false;
-      } else {
-        context.wizardDone = true;
-      }
-    });
 
     // get authorization for routes
-    context.getAuths();
+    this.getAuths();
 
     // check for running tasks
-    context.checkSystemTaks();
+    this.checkSystemTaks();
 
     // get hints
-    context.checkHints();
+    this.checkHints();
   },
   watch: {
     $route(to, from) {
@@ -242,7 +221,6 @@ export default {
         "██║ ╚████║███████╗   ██║   ██║  ██║███████║███████╗██║  ██║ ╚████╔╝ ███████╗██║  ██║",
         "╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝"
       ].join("\n"),
-      wizardDone: false,
       notifications: {
         success: {
           message: "",
@@ -266,10 +244,32 @@ export default {
       auths: [],
       taskInProgress: false,
       copied: false,
-      hints: this.initHints()
+      hints: this.initHints(),
+      systemRoutes: [
+        "/",
+        "/storage",
+        "/disk-usage",
+        "/certificates",
+        "/dns",
+        "/dhcp",
+        "/backup",
+        "/services",
+        "/users-groups",
+        "/network",
+        "/ssh",
+        "/tls-policy",
+        "/trusted-networks",
+        "/logs",
+        "/about",
+        "/settings"
+      ]
     };
   },
   methods: {
+    routesAvailable() {
+      var path = this.$route.path;
+      return this.systemRoutes.indexOf(path) >= 0;
+    },
     copyCommand(cmd) {
       var context = this;
       context.$copyText(cmd).then(
@@ -290,9 +290,6 @@ export default {
       } else {
         return this.$route.path.split("/")[1] === route;
       }
-    },
-    wizardIsDone(callback) {
-      callback(true);
     },
     checkSystemTaks() {
       var context = this;
@@ -389,7 +386,9 @@ export default {
 
       context.exec(
         ["system-settings/read"],
-        { action: "hints" },
+        {
+          action: "hints"
+        },
         null,
         function(success) {
           success = JSON.parse(success);

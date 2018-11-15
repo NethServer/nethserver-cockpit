@@ -45,11 +45,11 @@
             <div v-for="(i, iKey) in role" v-bind:key="iKey" :class="['list-group-item', roleKey+'-list', i.isOpened ? 'list-view-pf-expand-active' : '', 'no-shadow']">
               <div class="list-group-item-header">
                 <div class="list-view-pf-actions">
-                  <button v-if="roleKey != 'missing'" @click="openConfigureInterface(i)" class="btn btn-default">
+                  <button :disabled="roleKey == 'missing'" @click="openConfigureInterface(i)" class="btn btn-default">
                     <span class="fa fa-cog span-right-margin"></span>
                     {{$t('network.configure')}}
                   </button>
-                  <div class="dropdown pull-right dropdown-kebab-pf">
+                  <div v-if="roleKey != 'free'" class="dropdown pull-right dropdown-kebab-pf">
                     <button class="btn btn-link dropdown-toggle" type="button" :id="i.name+'-list-container'"
                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                       <span class="fa fa-ellipsis-v"></span>

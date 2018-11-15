@@ -301,6 +301,10 @@ textarea {
   text-align: left !important;
 }
 
+.text-align-right {
+  text-align: right !important;
+}
+
 .table td,
 .table th:not(.line-numbers) {
   text-align: left;
@@ -331,12 +335,20 @@ iframe>.breadcrumb {
   float: right;
 }
 
+.margin-bottom-mid {
+  margin-bottom: 15px !important;
+}
+
 .row-dashboard {
   margin-bottom: 25px;
 }
 
 .panel-icon {
   margin-right: 10px;
+}
+
+.starred-marging {
+  margin-right: 5px;
 }
 
 .graph {
@@ -819,7 +831,7 @@ input[type="checkbox"].form-control {
 }
 
 .copy-path {
-  margin-top: 5px;
+  margin-top: 5px !important;
 }
 
 .copy-ok {

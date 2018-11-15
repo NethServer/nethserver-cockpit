@@ -58,14 +58,14 @@
                   <div class="list-group-item-text">
                     <span>{{b.description}}</span>
                   </div>
-                  <div class="list-group-item-text">
-                    <span class="fa fa-clock-o panel-icon"></span>{{b.push_ts | dateFormat}}
-                  </div>
-                  <div class="list-group-item-text">
-                    <span class="fa fa-archive panel-icon"></span>{{b.size | byteFormat}}
-                  </div>
                 </div>
                 <div class="list-view-pf-additional-info">
+                  <div class="list-view-pf-additional-info-item">
+                    <span class="fa fa-clock-o panel-icon"></span>{{b.push_ts | dateFormat}}
+                  </div>
+                  <div class="list-view-pf-additional-info-item">
+                    <span class="fa fa-archive panel-icon"></span>{{b.size | byteFormat}}
+                  </div>
                 </div>
               </div>
             </div>
@@ -169,16 +169,16 @@
                 <div class="list-group-item-text">
                   <span>{{b.props.BackupTime | cronToHuman}}</span>
                 </div>
-                <div class="list-group-item-text">
+              </div>
+              <div class="list-view-pf-additional-info">
+                <div class="list-view-pf-additional-info-item">
                   <span :title="$t('backup.last_backup_status') + ': ' + b.status.result" :class="['fa', b.status.result == 'success' ? 'fa-check green' : b.status.result == 'unknown' ? 'fa-question gray' : 'fa-times red', 'panel-icon']"></span>{{b.status['last-run']
                   | dateFormat}}
                 </div>
-                <div class="list-group-item-text">
+                <div class="list-view-pf-additional-info-item">
                   <span class="fa fa-space-shuttle panel-icon"></span><b>{{b.props.VFSType | uppercase}}</b>
                   | <b>{{b.props.type | capitalize}}</b>
                 </div>
-              </div>
-              <div class="list-view-pf-additional-info">
               </div>
             </div>
           </div>
@@ -1104,1095 +1104,1066 @@
 </template>
 
 <script>
-import DocInfo from "../../directives/DocInfo.vue";
+  import DocInfo from "../../directives/DocInfo.vue";
 
-export default {
-  name: "Backup",
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      vm.exec(
-        ["system-authorization/read"],
-        null,
-        null,
-        function(success) {
-          success = JSON.parse(success);
+  export default {
+    name: "Backup",
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.exec(
+          ["system-authorization/read"],
+          null,
+          null,
+          function (success) {
+            success = JSON.parse(success);
 
-          if (success.system.indexOf(to.path.substring(1)) == -1) {
-            window.location.hash = "#/";
-            vm.$router.push("/");
-          }
+            if (success.system.indexOf(to.path.substring(1)) == -1) {
+              window.location.hash = "#/";
+              vm.$router.push("/");
+            }
 
-          vm.view.isAuth = true;
-        },
-        function(error) {
-          console.error(error);
-        },
-        false
-      );
-    });
-  },
-  components: {
-    DocInfo
-  },
-  beforeRouteLeave(to, from, next) {
-    $(".modal").modal("hide");
-    next();
-  },
-  mounted() {
-    this.getBackupInfo();
-    this.getBackupStatus();
-    this.pollingStatus();
-    this.getUSBDevices();
-    this.getHints();
-  },
-  watch: {
-    backupData: function() {
-      var context = this;
-      this.getHints(function() {
-        context.$parent.hints.backup.count = context.hints.count;
+            vm.view.isAuth = true;
+          },
+          function (error) {
+            console.error(error);
+          },
+          false
+        );
       });
-    }
-  },
-  computed: {
-    filteredBackupList() {
-      var returnObj = [];
-      for (var a in this.backupData) {
-        if (
-          this.backupData[a].name
+    },
+    components: {
+      DocInfo
+    },
+    beforeRouteLeave(to, from, next) {
+      $(".modal").modal("hide");
+      next();
+    },
+    mounted() {
+      this.getBackupInfo();
+      this.getBackupStatus();
+      this.pollingStatus();
+      this.getUSBDevices();
+      this.getHints();
+    },
+    watch: {
+      backupData: function () {
+        var context = this;
+        this.getHints(function () {
+          context.$parent.hints.backup.count = context.hints.count;
+        });
+      }
+    },
+    computed: {
+      filteredBackupList() {
+        var returnObj = [];
+        for (var a in this.backupData) {
+          if (
+            this.backupData[a].name
             .toLowerCase()
             .includes(this.searchString.toLowerCase())
-        ) {
-          returnObj.push(this.backupData[a]);
-        }
-      }
-
-      return returnObj;
-    },
-    crontabComputed() {
-      var cronString = "";
-
-      if (this.wizard.isEditCron) {
-        cronString = this.wizard.when.crontab;
-      } else {
-        switch (this.wizard.when.every) {
-          case "hour":
-            cronString = this.wizard.when.minute + " * * * *";
-            break;
-          case "day":
-            cronString =
-              this.wizard.when.minute +
-              " " +
-              this.wizard.when.hour +
-              " */1 * *";
-            break;
-
-          case "week":
-            var minute = this.wizard.when.hour_minute.split(":")[1];
-            var hour = this.wizard.when.hour_minute.split(":")[0];
-
-            if (
-              minute &&
-              !isNaN(parseInt(minute)) &&
-              (hour && !isNaN(parseInt(hour)))
-            ) {
-              cronString =
-                minute + " " + hour + " */1 * " + this.wizard.when.week_day;
-            } else {
-              cronString = "";
-            }
-
-            break;
-
-          case "month":
-            var minute = this.wizard.when.hour_minute.split(":")[1];
-            var hour = this.wizard.when.hour_minute.split(":")[0];
-
-            if (
-              minute &&
-              !isNaN(parseInt(minute)) &&
-              (hour && !isNaN(parseInt(hour)))
-            ) {
-              cronString =
-                minute + " " + hour + " " + this.wizard.when.day + " */1 *";
-            } else {
-              cronString = "";
-            }
-            break;
+          ) {
+            returnObj.push(this.backupData[a]);
+          }
         }
 
-        this.wizard.when.crontab = cronString;
-      }
-
-      return cronString;
-    }
-  },
-  data() {
-    return {
-      view: {
-        isLoaded: false,
-        isAuth: false
+        return returnObj;
       },
-      wizard: this.initWizard(),
-      searchString: "",
-      backupConfigurations: [],
-      backupData: [],
-      globalConfigBackup: {},
-      globalDataBackup: {},
-      currentConfigBackup: this.initBackupConfiguration(),
-      currentDataBackup: this.initBackupData(),
-      status: {
-        "restore-config": 0,
-        "restore-data": 0,
-        "backup-data": 0
-      },
-      hints: {}
-    };
-  },
-  methods: {
-    getHints(callback) {
-      var context = this;
-      context.execHints(
-        "system-backup",
-        function(success) {
-          context.hints = success;
-          callback ? callback() : null;
-        },
-        function(error) {
-          console.error(error);
+      crontabComputed() {
+        var cronString = "";
+
+        if (this.wizard.isEditCron) {
+          cronString = this.wizard.when.crontab;
+        } else {
+          switch (this.wizard.when.every) {
+            case "hour":
+              cronString = this.wizard.when.minute + " * * * *";
+              break;
+            case "day":
+              cronString =
+                this.wizard.when.minute +
+                " " +
+                this.wizard.when.hour +
+                " */1 * *";
+              break;
+
+            case "week":
+              var minute = this.wizard.when.hour_minute.split(":")[1];
+              var hour = this.wizard.when.hour_minute.split(":")[0];
+
+              if (
+                minute &&
+                !isNaN(parseInt(minute)) &&
+                (hour && !isNaN(parseInt(hour)))
+              ) {
+                cronString =
+                  minute + " " + hour + " */1 * " + this.wizard.when.week_day;
+              } else {
+                cronString = "";
+              }
+
+              break;
+
+            case "month":
+              var minute = this.wizard.when.hour_minute.split(":")[1];
+              var hour = this.wizard.when.hour_minute.split(":")[0];
+
+              if (
+                minute &&
+                !isNaN(parseInt(minute)) &&
+                (hour && !isNaN(parseInt(hour)))
+              ) {
+                cronString =
+                  minute + " " + hour + " " + this.wizard.when.day + " */1 *";
+              } else {
+                cronString = "";
+              }
+              break;
+          }
+
+          this.wizard.when.crontab = cronString;
         }
-      );
+
+        return cronString;
+      }
     },
-    editCronTab() {
-      this.wizard.when = {
-        every: "hour",
-        minute: 0,
-        hour: 0,
-        hour_minute: "1:00",
-        week_day: 0,
-        day: 0,
-        crontab: ""
-      };
-      this.wizard.isEditCron = false;
-    },
-    editUSBDevice() {
-      this.wizard.where.usb = {
-        USBLabel: null,
-        USBDevice: null,
-        devices: [],
-        partitions: [],
-        formatOutput: "",
-        isFormatting: false
-      };
-      this.wizard.isEditUSB = false;
-      this.wizard.where.isValid = false;
-      this.getUSBDevices();
-    },
-    initWizard(b) {
+    data() {
       return {
-        isEdit: b ? true : false,
-        isEditCron: b ? true : false,
-        isEditUSB: b && b.props.USBLabel ? true : false,
-        isLoading: false,
-        currentStep: 1,
-        when: {
+        view: {
+          isLoaded: false,
+          isAuth: false
+        },
+        wizard: this.initWizard(),
+        searchString: "",
+        backupConfigurations: [],
+        backupData: [],
+        globalConfigBackup: {},
+        globalDataBackup: {},
+        currentConfigBackup: this.initBackupConfiguration(),
+        currentDataBackup: this.initBackupData(),
+        status: {
+          "restore-config": 0,
+          "restore-data": 0,
+          "backup-data": 0
+        },
+        hints: {}
+      };
+    },
+    methods: {
+      getHints(callback) {
+        var context = this;
+        context.execHints(
+          "system-backup",
+          function (success) {
+            context.hints = success;
+            callback ? callback() : null;
+          },
+          function (error) {
+            console.error(error);
+          }
+        );
+      },
+      editCronTab() {
+        this.wizard.when = {
           every: "hour",
           minute: 0,
           hour: 0,
           hour_minute: "1:00",
           week_day: 0,
           day: 0,
-          crontab: b && b.props.BackupTime ? b.props.BackupTime : ""
-        },
-        where: {
-          choice: b && b.props.VFSType ? b.props.VFSType : "nfs",
-          isChecking: false,
-          configError: false,
-          isValid: b && b.props.USBLabel ? true : false,
-          nfs: {
-            NFSShare: b && b.props.NFSShare ? b.props.NFSShare : null,
-            NFSHost: b && b.props.NFSHost ? b.props.NFSHost : null
+          crontab: ""
+        };
+        this.wizard.isEditCron = false;
+      },
+      editUSBDevice() {
+        this.wizard.where.usb = {
+          USBLabel: null,
+          USBDevice: null,
+          devices: [],
+          partitions: [],
+          formatOutput: "",
+          isFormatting: false
+        };
+        this.wizard.isEditUSB = false;
+        this.wizard.where.isValid = false;
+        this.getUSBDevices();
+      },
+      initWizard(b) {
+        return {
+          isEdit: b ? true : false,
+          isEditCron: b ? true : false,
+          isEditUSB: b && b.props.USBLabel ? true : false,
+          isLoading: false,
+          currentStep: 1,
+          when: {
+            every: "hour",
+            minute: 0,
+            hour: 0,
+            hour_minute: "1:00",
+            week_day: 0,
+            day: 0,
+            crontab: b && b.props.BackupTime ? b.props.BackupTime : ""
           },
-          cifs: {
-            SMBShare: b && b.props.SMBShare ? b.props.SMBShare : null,
-            SMBHost: b && b.props.SMBHost ? b.props.SMBHost : null,
-            SMBLogin: b && b.props.SMBLogin ? b.props.SMBLogin : null,
-            SMBPassword: b && b.props.SMBPassword ? b.props.SMBPassword : null
-          },
-          usb: {
-            USBLabel: b && b.props.USBLabel ? b.props.USBLabel : null,
-            USBDevice: null,
-            devices: [],
-            partitions: [],
-            formatOutput: "",
-            isFormatting: false,
-            isRefreshingUSB: false
-          },
-          sftp: {
-            SftpDirectory:
-              b && b.props.SftpDirectory ? b.props.SftpDirectory : null,
-            SftpUser: b && b.props.SftpUser ? b.props.SftpUser : null,
-            SftpPassword:
-              b && b.props.SftpPassword ? b.props.SftpPassword : null,
-            SftpHost: b && b.props.SftpHost ? b.props.SftpHost : null,
-            SftpPort: b && b.props.SftpPort ? b.props.SftpPort : null
-          },
-          b2: {
-            B2AccountId: b && b.props.B2AccountId ? b.props.B2AccountId : null,
-            B2AccountKey:
-              b && b.props.B2AccountKey ? b.props.B2AccountKey : null,
-            B2Bucket: b && b.props.B2Bucket ? b.props.B2Bucket : null
-          },
-          s3: {
-            S3Host: b && b.props.S3Host ? b.props.S3Host : "s3.amazonaws.com",
-            S3AccessKey: b && b.props.S3AccessKey ? b.props.S3AccessKey : null,
-            S3Bucket: b && b.props.S3Bucket ? b.props.S3Bucket : null,
-            S3SecretKey: b && b.props.S3SecretKey ? b.props.S3SecretKey : null
-          }
-        },
-        how: {
-          choice: b && b.props.type ? b.props.type : "duplicity",
-          duplicity: {
-            Type: b && b.props.Type ? b.props.Type : "full",
-            types: ["full", "incremental"],
-            FullDay: b && b.props.FullDay ? parseInt(b.props.FullDay) : 0,
-            days: this.weekdays(),
-            VolSize: b && b.props.VolSize ? b.props.VolSize : 2,
-            CleanupOlderThan:
-              b && b.props.CleanupOlderThan
-                ? b.props.CleanupOlderThan
-                : "never",
-            cleanups: ["never", "7D", "14D", "28D", "56D", "168D", "364D"]
-          },
-          restic: {
-            Prune: b && b.props.Prune ? parseInt(b.props.Prune) + 1 : 0,
-            prunes: ["always"].concat(this.weekdays()),
-            CleanupOlderThan:
-              b && b.props.CleanupOlderThan
-                ? b.props.CleanupOlderThan
-                : "never",
-            cleanups: ["never", "7D", "14D", "28D", "56D", "168D", "364D"]
-          },
-          rsync: {
-            CleanupOlderThan: ""
-          }
-        },
-        review: {
-          Name: b && b.name ? b.name : "",
-          Notify: b && b.props.Notify ? b.props.Notify : "error",
-          NotifyTo:
-            b && b.props.NotifyTo
-              ? b.props.NotifyTo == "root"
-                ? "root"
-                : b.props.NotifyTo.join("\n")
-              : "",
-          notifyToChoice: "root",
-          notifyTypes: ["error", "always", "never"],
-          errors: {
-            name: {
-              hasError: false,
-              message: ""
+          where: {
+            choice: b && b.props.VFSType ? b.props.VFSType : "nfs",
+            isChecking: false,
+            configError: false,
+            isValid: b && b.props.USBLabel ? true : false,
+            nfs: {
+              NFSShare: b && b.props.NFSShare ? b.props.NFSShare : null,
+              NFSHost: b && b.props.NFSHost ? b.props.NFSHost : null
+            },
+            cifs: {
+              SMBShare: b && b.props.SMBShare ? b.props.SMBShare : null,
+              SMBHost: b && b.props.SMBHost ? b.props.SMBHost : null,
+              SMBLogin: b && b.props.SMBLogin ? b.props.SMBLogin : null,
+              SMBPassword: b && b.props.SMBPassword ? b.props.SMBPassword : null
+            },
+            usb: {
+              USBLabel: b && b.props.USBLabel ? b.props.USBLabel : null,
+              USBDevice: null,
+              devices: [],
+              partitions: [],
+              formatOutput: "",
+              isFormatting: false,
+              isRefreshingUSB: false
+            },
+            sftp: {
+              SftpDirectory: b && b.props.SftpDirectory ? b.props.SftpDirectory : null,
+              SftpUser: b && b.props.SftpUser ? b.props.SftpUser : null,
+              SftpPassword: b && b.props.SftpPassword ? b.props.SftpPassword : null,
+              SftpHost: b && b.props.SftpHost ? b.props.SftpHost : null,
+              SftpPort: b && b.props.SftpPort ? b.props.SftpPort : null
+            },
+            b2: {
+              B2AccountId: b && b.props.B2AccountId ? b.props.B2AccountId : null,
+              B2AccountKey: b && b.props.B2AccountKey ? b.props.B2AccountKey : null,
+              B2Bucket: b && b.props.B2Bucket ? b.props.B2Bucket : null
+            },
+            s3: {
+              S3Host: b && b.props.S3Host ? b.props.S3Host : "s3.amazonaws.com",
+              S3AccessKey: b && b.props.S3AccessKey ? b.props.S3AccessKey : null,
+              S3Bucket: b && b.props.S3Bucket ? b.props.S3Bucket : null,
+              S3SecretKey: b && b.props.S3SecretKey ? b.props.S3SecretKey : null
             }
-          }
-        }
-      };
-    },
-    weekdays() {
-      var moment = require("moment");
-      return moment.localeData(this.$options.currentLocale).weekdays();
-    },
-    resetCronTab() {
-      this.wizard.when.minute = 0;
-      this.wizard.when.hour = 0;
-      this.wizard.when.week_day = 0;
-      this.wizard.when.day = 0;
-    },
-    nextStep() {
-      if (this.wizard.currentStep == 4) {
-        this.createDataBackup();
-      } else {
-        this.wizard.currentStep++;
-      }
-    },
-    prevStep() {
-      if (this.wizard.currentStep > 1) {
-        this.wizard.currentStep--;
-      }
-    },
-    checkIfDisabled() {
-      var disabled = false;
-      switch (this.wizard.currentStep) {
-        case 1:
-          disabled = this.crontabComputed.length == 0;
-          break;
-        case 2:
-          disabled = !this.wizard.where.isValid;
-          break;
-      }
-
-      return disabled;
-    },
-    cancelWizard() {
-      this.wizard = this.initWizard();
-      $("#createDataModal").modal("hide");
-    },
-    selectWhere(where) {
-      this.wizard.where.choice = where;
-      switch (where) {
-        case "sftp":
-          this.wizard.how.choice = "rsync";
-          break;
-        case "usb":
-          this.wizard.how.choice = "rsync";
-          break;
-      }
-      this.getUSBDevices();
-    },
-    getUSBDevices(callback) {
-      var context = this;
-
-      context.wizard.where.usb.isRefreshingUSB = true;
-      context.exec(
-        ["system-backup/read"],
-        {
-          action: "list-disks"
-        },
-        null,
-        function(success) {
-          success = JSON.parse(success);
-
-          var usbName =
-            context.wizard.where.usb.USBDevice &&
-            context.wizard.where.usb.USBDevice.name
-              ? context.wizard.where.usb.USBDevice.name
-              : null;
-
-          context.wizard.where.usb.isRefreshingUSB = false;
-          context.wizard.where.usb.isFormatting = false;
-          context.wizard.where.usb.USBLabel = "";
-          context.wizard.where.usb.USBDevice = null;
-          context.wizard.where.usb.partitions = [];
-          context.wizard.where.usb.devices = success;
-
-          if (usbName) {
-            context.wizard.where.usb.USBDevice = context.wizard.where.usb.devices.filter(
-              function(i) {
-                return i.name == usbName;
+          },
+          how: {
+            choice: b && b.props.type ? b.props.type : "duplicity",
+            duplicity: {
+              Type: b && b.props.Type ? b.props.Type : "full",
+              types: ["full", "incremental"],
+              FullDay: b && b.props.FullDay ? parseInt(b.props.FullDay) : 0,
+              days: this.weekdays(),
+              VolSize: b && b.props.VolSize ? b.props.VolSize : 2,
+              CleanupOlderThan: b && b.props.CleanupOlderThan ?
+                b.props.CleanupOlderThan : "never",
+              cleanups: ["never", "7D", "14D", "28D", "56D", "168D", "364D"]
+            },
+            restic: {
+              Prune: b && b.props.Prune ? parseInt(b.props.Prune) + 1 : 0,
+              prunes: ["always"].concat(this.weekdays()),
+              CleanupOlderThan: b && b.props.CleanupOlderThan ?
+                b.props.CleanupOlderThan : "never",
+              cleanups: ["never", "7D", "14D", "28D", "56D", "168D", "364D"]
+            },
+            rsync: {
+              CleanupOlderThan: ""
+            }
+          },
+          review: {
+            Name: b && b.name ? b.name : "",
+            Notify: b && b.props.Notify ? b.props.Notify : "error",
+            NotifyTo: b && b.props.NotifyTo ?
+              b.props.NotifyTo == "root" ?
+              "root" :
+              b.props.NotifyTo.join("\n") : "",
+            notifyToChoice: "root",
+            notifyTypes: ["error", "always", "never"],
+            errors: {
+              name: {
+                hasError: false,
+                message: ""
               }
-            )[0];
-            context.getUSBDevicePartitions();
-          } else {
-            context.wizard.where.usb.USBDevice =
-              context.wizard.where.usb.devices[0];
-            context.getUSBDevicePartitions();
-          }
-
-          callback ? callback() : null;
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
-    },
-    getUSBDevicePartitions() {
-      this.wizard.where.isValid = false;
-      this.wizard.where.configError = false;
-
-      var name =
-        this.wizard.where.usb.USBDevice && this.wizard.where.usb.USBDevice.name;
-      var device = this.wizard.where.usb.devices.filter(function(i) {
-        return i.name == name;
-      })[0];
-
-      this.wizard.where.usb.partitions = device && device.partitions;
-      this.wizard.where.usb.USBLabel =
-        device && device.partitions.length == 1
-          ? device && device.partitions[0].label
-          : "";
-    },
-    selectUSBDevicePartition(partition) {
-      this.wizard.where.usb.USBLabel = partition.label;
-    },
-    checkWhereConfiguration() {
-      var context = this;
-      var method = "exec";
-      var api = "system-backup/validate";
-
-      var configObj = context.wizard.where[context.wizard.where.choice];
-      configObj.action = context.wizard.where.choice + "-credentials";
-
-      if (context.wizard.where.choice == "usb") {
-        configObj.action =
-          configObj.USBDevice.formatted == 1 ? "disk-access" : "format-disk";
-
-        configObj.name =
-          configObj.USBDevice.formatted == 1 ? null : configObj.USBDevice.name;
-
-        api =
-          configObj.USBDevice.formatted == 1
-            ? "system-backup/validate"
-            : "system-backup/execute";
-
-        method = configObj.USBDevice.formatted == 1 ? "exec" : "execRaw";
-      }
-
-      context.wizard.where.isChecking = true;
-      context[method](
-        [api],
-        configObj,
-        method == "execRaw"
-          ? function(stream) {
-              context.wizard.where.usb.isFormatting =
-                stream.length > 0 ? true : false;
-              context.wizard.where.usb.formatOutput +=
-                stream.length > 0 ? stream : "";
-              document.getElementById(
-                "format-output"
-              ).scrollTop = document.getElementById(
-                "format-output"
-              ).scrollHeight;
             }
-          : null,
-        function(success) {
-          if (
-            context.wizard.where.choice == "usb" &&
-            !configObj.USBDevice.formatted
-          ) {
-            setTimeout(function() {
-              context.getUSBDevices(function() {
-                context.wizard.where.isChecking = false;
-                context.wizard.where.configError = false;
-              });
-            }, 3000);
-          } else {
+          }
+        };
+      },
+      weekdays() {
+        var moment = require("moment");
+        return moment.localeData(this.$options.currentLocale).weekdays();
+      },
+      resetCronTab() {
+        this.wizard.when.minute = 0;
+        this.wizard.when.hour = 0;
+        this.wizard.when.week_day = 0;
+        this.wizard.when.day = 0;
+      },
+      nextStep() {
+        if (this.wizard.currentStep == 4) {
+          this.createDataBackup();
+        } else {
+          this.wizard.currentStep++;
+        }
+      },
+      prevStep() {
+        if (this.wizard.currentStep > 1) {
+          this.wizard.currentStep--;
+        }
+      },
+      checkIfDisabled() {
+        var disabled = false;
+        switch (this.wizard.currentStep) {
+          case 1:
+            disabled = this.crontabComputed.length == 0;
+            break;
+          case 2:
+            disabled = !this.wizard.where.isValid;
+            break;
+        }
+
+        return disabled;
+      },
+      cancelWizard() {
+        this.wizard = this.initWizard();
+        $("#createDataModal").modal("hide");
+      },
+      selectWhere(where) {
+        this.wizard.where.choice = where;
+        switch (where) {
+          case "sftp":
+            this.wizard.how.choice = "rsync";
+            break;
+          case "usb":
+            this.wizard.how.choice = "rsync";
+            break;
+        }
+        this.getUSBDevices();
+      },
+      getUSBDevices(callback) {
+        var context = this;
+
+        context.wizard.where.usb.isRefreshingUSB = true;
+        context.exec(
+          ["system-backup/read"], {
+            action: "list-disks"
+          },
+          null,
+          function (success) {
+            success = JSON.parse(success);
+
+            var usbName =
+              context.wizard.where.usb.USBDevice &&
+              context.wizard.where.usb.USBDevice.name ?
+              context.wizard.where.usb.USBDevice.name :
+              null;
+
+            context.wizard.where.usb.isRefreshingUSB = false;
+            context.wizard.where.usb.isFormatting = false;
+            context.wizard.where.usb.USBLabel = "";
+            context.wizard.where.usb.USBDevice = null;
+            context.wizard.where.usb.partitions = [];
+            context.wizard.where.usb.devices = success;
+
+            if (usbName) {
+              context.wizard.where.usb.USBDevice = context.wizard.where.usb.devices.filter(
+                function (i) {
+                  return i.name == usbName;
+                }
+              )[0];
+              context.getUSBDevicePartitions();
+            } else {
+              context.wizard.where.usb.USBDevice =
+                context.wizard.where.usb.devices[0];
+              context.getUSBDevicePartitions();
+            }
+
+            callback ? callback() : null;
+          },
+          function (error) {
+            console.error(error);
+          }
+        );
+      },
+      getUSBDevicePartitions() {
+        this.wizard.where.isValid = false;
+        this.wizard.where.configError = false;
+
+        var name =
+          this.wizard.where.usb.USBDevice && this.wizard.where.usb.USBDevice.name;
+        var device = this.wizard.where.usb.devices.filter(function (i) {
+          return i.name == name;
+        })[0];
+
+        this.wizard.where.usb.partitions = device && device.partitions;
+        this.wizard.where.usb.USBLabel =
+          device && device.partitions.length == 1 ?
+          device && device.partitions[0].label :
+          "";
+      },
+      selectUSBDevicePartition(partition) {
+        this.wizard.where.usb.USBLabel = partition.label;
+      },
+      checkWhereConfiguration() {
+        var context = this;
+        var method = "exec";
+        var api = "system-backup/validate";
+
+        var configObj = context.wizard.where[context.wizard.where.choice];
+        configObj.action = context.wizard.where.choice + "-credentials";
+
+        if (context.wizard.where.choice == "usb") {
+          configObj.action =
+            configObj.USBDevice.formatted == 1 ? "disk-access" : "format-disk";
+
+          configObj.name =
+            configObj.USBDevice.formatted == 1 ? null : configObj.USBDevice.name;
+
+          api =
+            configObj.USBDevice.formatted == 1 ?
+            "system-backup/validate" :
+            "system-backup/execute";
+
+          method = configObj.USBDevice.formatted == 1 ? "exec" : "execRaw";
+        }
+
+        context.wizard.where.isChecking = true;
+        context[method](
+          [api],
+          configObj,
+          method == "execRaw" ?
+          function (stream) {
+            context.wizard.where.usb.isFormatting =
+              stream.length > 0 ? true : false;
+            context.wizard.where.usb.formatOutput +=
+              stream.length > 0 ? stream : "";
+            document.getElementById(
+              "format-output"
+            ).scrollTop = document.getElementById(
+              "format-output"
+            ).scrollHeight;
+          } :
+          null,
+          function (success) {
+            if (
+              context.wizard.where.choice == "usb" &&
+              !configObj.USBDevice.formatted
+            ) {
+              setTimeout(function () {
+                context.getUSBDevices(function () {
+                  context.wizard.where.isChecking = false;
+                  context.wizard.where.configError = false;
+                });
+              }, 3000);
+            } else {
+              context.wizard.where.isChecking = false;
+              context.wizard.where.isValid = true;
+              context.wizard.where.configError = false;
+            }
+          },
+          function (error) {
+            console.error(error);
             context.wizard.where.isChecking = false;
-            context.wizard.where.isValid = true;
-            context.wizard.where.configError = false;
+            context.wizard.where.isValid = false;
+            context.wizard.where.configError = true;
           }
-        },
-        function(error) {
-          console.error(error);
-          context.wizard.where.isChecking = false;
-          context.wizard.where.isValid = false;
-          context.wizard.where.configError = true;
-        }
-      );
-    },
-    handleHow() {
-      var num = 0;
-      var duplicity =
-        this.wizard.where.choice == "nfs" ||
-        this.wizard.where.choice == "cifs" ||
-        this.wizard.where.choice == "usb";
+        );
+      },
+      handleHow() {
+        var num = 0;
+        var duplicity =
+          this.wizard.where.choice == "nfs" ||
+          this.wizard.where.choice == "cifs" ||
+          this.wizard.where.choice == "usb";
 
-      var restic =
-        this.wizard.where.choice == "nfs" ||
-        this.wizard.where.choice == "cifs" ||
-        this.wizard.where.choice == "usb" ||
-        this.wizard.where.choice == "sftp" ||
-        this.wizard.where.choice == "b2" ||
-        this.wizard.where.choice == "s3";
+        var restic =
+          this.wizard.where.choice == "nfs" ||
+          this.wizard.where.choice == "cifs" ||
+          this.wizard.where.choice == "usb" ||
+          this.wizard.where.choice == "sftp" ||
+          this.wizard.where.choice == "b2" ||
+          this.wizard.where.choice == "s3";
 
-      var rsync =
-        this.wizard.where.choice == "sftp" || this.wizard.where.choice == "usb";
+        var rsync =
+          this.wizard.where.choice == "sftp" || this.wizard.where.choice == "usb";
 
-      num += duplicity ? 1 : 0;
-      num += restic ? 1 : 0;
-      num += rsync ? 1 : 0;
+        num += duplicity ? 1 : 0;
+        num += restic ? 1 : 0;
+        num += rsync ? 1 : 0;
 
-      return {
-        num: num,
-        duplicity: duplicity,
-        restic: restic,
-        rsync: rsync
-      };
-    },
-    selectHow(how) {
-      this.wizard.how.choice = how;
-    },
-    initBackupConfiguration() {
-      return {
-        restoreURL: "",
-        restoreFile: "",
-        restoreBackup: "",
-        HistoryLength: 0,
-        Description: "",
-        isLoading: false,
-        restoreMode: "url",
-        restoreInstallPackages: false
-      };
-    },
-    initBackupData() {
-      return {
-        restoreBackup: "",
-        isLoading: false,
-        name: "",
-        lastLog: null
-      };
-    },
-    onChangeInput(event) {
-      var context = this;
-      this.getBase64(event.target.files[0], function(resp) {
-        context.currentConfigBackup.restoreFile = resp.split(",")[1];
-      });
-    },
-    getBackupStatus() {
-      var context = this;
-      context.exec(
-        ["system-backup/read"],
-        {
-          action: "running-info"
-        },
-        null,
-        function(success) {
-          success = JSON.parse(success);
-          context.status = success;
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
-    },
-    pollingStatus() {
-      var context = this;
-      setInterval(function() {
-        context.getBackupStatus();
-      }, 2500);
-    },
-    getBackupInfo() {
-      var context = this;
-      context.exec(
-        ["system-backup/read"],
-        {
-          action: "backup-info"
-        },
-        null,
-        function(success) {
-          success = JSON.parse(success);
-          context.view.isLoaded = true;
-
-          context.backupConfigurations = success.status["backup-config"];
-          context.backupData = success.configuration["backup-data"].backups;
-
-          for (var b in context.backupData) {
-            var id = context.backupData[b].name;
-            var status = success.status["backup-data"].filter(function(i) {
-              return i.id == id;
-            })[0];
-            context.backupData[b].status = status;
+        return {
+          num: num,
+          duplicity: duplicity,
+          restic: restic,
+          rsync: rsync
+        };
+      },
+      selectHow(how) {
+        this.wizard.how.choice = how;
+      },
+      initBackupConfiguration() {
+        return {
+          restoreURL: "",
+          restoreFile: "",
+          restoreBackup: "",
+          HistoryLength: 0,
+          Description: "",
+          isLoading: false,
+          restoreMode: "url",
+          restoreInstallPackages: false
+        };
+      },
+      initBackupData() {
+        return {
+          restoreBackup: "",
+          isLoading: false,
+          name: "",
+          lastLog: null
+        };
+      },
+      onChangeInput(event) {
+        var context = this;
+        this.getBase64(event.target.files[0], function (resp) {
+          context.currentConfigBackup.restoreFile = resp.split(",")[1];
+        });
+      },
+      getBackupStatus() {
+        var context = this;
+        context.exec(
+          ["system-backup/read"], {
+            action: "running-info"
+          },
+          null,
+          function (success) {
+            success = JSON.parse(success);
+            context.status = success;
+          },
+          function (error) {
+            console.error(error);
           }
+        );
+      },
+      pollingStatus() {
+        var context = this;
+        setInterval(function () {
+          context.getBackupStatus();
+        }, 2500);
+      },
+      getBackupInfo() {
+        var context = this;
+        context.exec(
+          ["system-backup/read"], {
+            action: "backup-info"
+          },
+          null,
+          function (success) {
+            success = JSON.parse(success);
+            context.view.isLoaded = true;
 
-          context.globalConfigBackup = success.configuration["backup-config"];
+            context.backupConfigurations = success.status["backup-config"];
+            context.backupData = success.configuration["backup-data"].backups;
 
-          context.globalDataBackup.excludes = success.configuration[
-            "backup-data"
-          ].defaults.excludes.join("\n");
-          context.globalDataBackup.includes = success.configuration[
-            "backup-data"
-          ].defaults.includes.join("\n");
-          context.globalDataBackup["custom-excludes"] = success.configuration[
-            "backup-data"
-          ].defaults["custom-excludes"].join("\n");
-          context.globalDataBackup["custom-includes"] = success.configuration[
-            "backup-data"
-          ].defaults["custom-includes"].join("\n");
-          context.globalDataBackup.IncludeLogs =
-            success.configuration["backup-data"].defaults.IncludeLogs ==
-            "enabled"
-              ? true
-              : false;
-        },
-        function(error) {
-          console.error(error);
-          context.view.isLoaded = true;
-        }
-      );
-    },
-    openExecuteConfig(b) {
-      this.currentConfigBackup = this.initBackupConfiguration();
-      $("#executeConfigModal").modal("show");
-    },
-    openRestoreConfig(b) {
-      this.currentConfigBackup = this.initBackupConfiguration();
-      $("#restoreConfigModal").modal("show");
-    },
-    openConfigureConfig() {
-      this.currentConfigBackup = this.initBackupConfiguration();
-      this.currentConfigBackup.HistoryLength = this.globalConfigBackup.HistoryLength;
-      $("#configureConfigModal").modal("show");
-    },
-    openDeleteConfig(b) {
-      this.currentConfigBackup = this.initBackupConfiguration();
-      this.currentConfigBackup.id = b.id;
-      this.currentConfigBackup.type = b.type;
-      this.currentConfigBackup.description = b.description;
-      $("#deleteConfigModal").modal("show");
-    },
-    executeConfigBackup() {
-      var context = this;
-
-      $("#executeConfigModal").modal("hide");
-      context.exec(
-        ["system-backup/execute"],
-        {
-          action: "run-backup-config",
-          name: context.currentConfigBackup.Description
-        },
-        function(stream) {
-          console.info("backup-config", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "backup.execute_config_backup_ok"
-          );
-
-          // get backup info
-          context.getBackupInfo();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "backup.execute_config_backup_error"
-          );
-        }
-      );
-    },
-    restoreConfigBackup() {
-      var context = this;
-
-      var data = "";
-      switch (context.currentConfigBackup.restoreMode) {
-        case "url":
-          data = context.currentConfigBackup.restoreURL;
-          break;
-
-        case "file":
-          data = context.currentConfigBackup.restoreFile;
-          break;
-
-        case "backup":
-          data = context.currentConfigBackup.restoreBackup;
-          break;
-      }
-
-      $("#restoreConfigModal").modal("hide");
-      context.exec(
-        ["system-backup/execute"],
-        {
-          action: "restore-backup-config",
-          mode: context.currentConfigBackup.restoreMode,
-          data: data,
-          InstallPackages: context.currentConfigBackup.restoreInstallPackages
-            ? "enabled"
-            : "disabled"
-        },
-        function(stream) {
-          console.info("backup-config-restore", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "backup.restore_config_backup_ok"
-          );
-
-          // get backup info
-          context.getBackupInfo();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "backup.restore_config_backup_error"
-          );
-        }
-      );
-    },
-    configureConfigBackup() {
-      var context = this;
-
-      var configObj = {
-        action: "update-backup-config",
-        HistoryLength: context.currentConfigBackup.HistoryLength
-      };
-
-      context.currentConfigBackup.isLoading = true;
-      context.exec(
-        ["system-backup/validate"],
-        configObj,
-        null,
-        function(success) {
-          context.currentConfigBackup.isLoading = false;
-          $("#configureConfigModal").modal("hide");
-
-          // update values
-          context.exec(
-            ["system-backup/update"],
-            configObj,
-            function(stream) {
-              console.info("backup-config", stream);
-            },
-            function(success) {
-              // notification
-              context.$parent.notifications.success.message = context.$i18n.t(
-                "backup.backup_create_ok"
-              );
-
-              // get backup info
-              context.getBackupInfo();
-            },
-            function(error, data) {
-              // notification
-              context.$parent.notifications.error.message = context.$i18n.t(
-                "backup.backup_create_error"
-              );
+            for (var b in context.backupData) {
+              var id = context.backupData[b].name;
+              var status = success.status["backup-data"].filter(function (i) {
+                return i.id == id;
+              })[0];
+              context.backupData[b].status = status;
             }
-          );
-        },
-        function(error, data) {
-          var errorData = JSON.parse(data);
-          context.currentConfigBackup.isLoading = false;
-        }
-      );
-    },
-    downloadConfigBackup(b) {
-      var context = this;
-      context.exec(
-        ["system-backup/execute"],
-        {
-          action: "download-backup-config",
-          name: b.id
-        },
-        null,
-        function(success) {
-          require("downloadjs")(
-            "data:application/x-gtar;base64," + success,
-            b.id + ".tar.xz",
-            "application/x-gtar"
-          );
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
-    },
-    deleteConfigBackup() {
-      var context = this;
 
-      $("#deleteConfigModal").modal("hide");
-      context.exec(
-        ["system-backup/delete"],
-        {
-          action: "backup-config",
-          name: context.currentConfigBackup.id
-        },
-        function(stream) {
-          console.info("backup-config-delete", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "backup.delete_config_backup_ok"
-          );
+            context.globalConfigBackup = success.configuration["backup-config"];
 
-          // get backup info
-          context.getBackupInfo();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "backup.delete_config_backup_error"
-          );
-        }
-      );
-    },
-
-    openExecuteData(b) {
-      this.currentDataBackup = this.initBackupData();
-      this.currentDataBackup.name = b.name;
-      $("#executeDataModal").modal("show");
-    },
-    openRestoreData() {
-      this.currentDataBackup = this.initBackupData();
-      $("#restoreDataModal").modal("show");
-    },
-    openConfigureData(b) {
-      this.currentDataBackup = this.initBackupData();
-      $("#configureDataModal").modal("show");
-    },
-    openCreateData() {
-      this.currentDataBackup = this.initBackupData();
-      $("#createDataModal").modal("show");
-    },
-    openEditBackupData(b) {
-      this.currentDataBackup = this.initBackupData();
-      this.wizard = this.initWizard(b);
-      $("#createDataModal").modal("show");
-    },
-    openLastLogData(b) {
-      var context = this;
-
-      context.currentDataBackup = context.initBackupData();
-      context.currentDataBackup.name = b.name;
-      context.currentDataBackup.lastLog = null;
-
-      $("#lastLogDataModal").modal("show");
-      context.exec(
-        ["system-backup/read"],
-        {
-          action: "last-log",
-          name: b.name
-        },
-        null,
-        function(success) {
-          success = JSON.parse(success);
-          context.currentDataBackup.lastLog = success.data;
-        },
-        function(error) {
-          console.error(error);
-          context.currentDataBackup.lastLog = "-";
-        }
-      );
-    },
-    cleanLastLog() {
-      this.currentDataBackup.lastLog = null;
-    },
-    openDeleteData(b) {
-      this.currentDataBackup = this.initBackupData();
-      this.currentDataBackup.name = b.name;
-      $("#deleteDataModal").modal("show");
-    },
-    executeDataBackup(b) {
-      var context = this;
-
-      $("#executeDataModal").modal("hide");
-      context.exec(
-        ["system-backup/execute"],
-        {
-          action: "run-backup-data",
-          name: b.name
-        },
-        function(stream) {
-          console.info("backup-data", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "backup.execute_data_backup_ok"
-          );
-
-          // get backup info
-          context.getBackupInfo();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "backup.execute_data_backup_error"
-          );
-        }
-      );
-    },
-    restoreDataBackup() {
-      var context = this;
-
-      $("#restoreDataModal").modal("hide");
-      context.exec(
-        ["system-backup/execute"],
-        {
-          action: "restore-backup-data",
-          name: context.currentDataBackup.name
-        },
-        function(stream) {
-          console.info("backup-data-restore", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "backup.restore_data_backup_ok"
-          );
-
-          // get backup info
-          context.getBackupInfo();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "backup.restore_data_backup_error"
-          );
-        }
-      );
-    },
-    configureDataBackup() {
-      var context = this;
-
-      $("#configureDataModal").modal("hide");
-      context.exec(
-        ["system-backup/update"],
-        {
-          action: "backup-data-contents",
-          "custom-includes": context.globalDataBackup["custom-includes"].split(
-            "\n"
-          ),
-          "custom-excludes": context.globalDataBackup["custom-excludes"].split(
-            "\n"
-          ),
-          IncludeLogs: context.globalDataBackup.IncludeLogs
-            ? "enabled"
-            : "disabled"
-        },
-        function(stream) {
-          console.info("backup-data-contents", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "backup.backup_configure_ok"
-          );
-
-          // get backup info
-          context.getBackupInfo();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "backup.backup_configure_error"
-          );
-        }
-      );
-    },
-    createDataBackup() {
-      var context = this;
-
-      var endpoint = context.wizard.isEdit ? "update" : "create";
-      var backupObj = {
-        action: context.wizard.isEdit
-          ? "update-backup-data"
-          : "create-backup-data",
-        name: context.wizard.review.Name,
-        engine: context.wizard.how.choice,
-        status: "enabled",
-        Notify: context.wizard.review.Notify,
-        NotifyTo:
-          context.wizard.review.notifyToChoice == "root"
-            ? "root"
-            : context.wizard.review.NotifyTo.length > 0
-              ? context.wizard.review.NotifyTo.split("\n")
-              : [],
-        BackupTime: context.wizard.when.crontab,
-        VFSType: context.wizard.where.choice,
-        SMBShare: context.wizard.where.cifs.SMBShare,
-        SMBHost: context.wizard.where.cifs.SMBHost,
-        SMBUser: context.wizard.where.cifs.SMBUser,
-        SMBPassord: context.wizard.where.cifs.SMBPassord,
-        SftpHost: context.wizard.where.sftp.SftpHost,
-        SftpPort: context.wizard.where.sftp.SftpPort,
-        SftpUser: context.wizard.where.sftp.SftpUser,
-        SftpPassword: context.wizard.where.sftp.SftpPassword,
-        SftpDirectory: context.wizard.where.sftp.SftpDirectory,
-        B2AccountId: context.wizard.where.b2.B2AccountId,
-        B2AccountKey: context.wizard.where.b2.B2AccountKey,
-        B2Bucket: context.wizard.where.b2.B2Bucket,
-        S3AccessKey: context.wizard.where.s3.S3AccessKey,
-        S3Bucket: context.wizard.where.s3.S3Bucket,
-        S3SecretKey: context.wizard.where.s3.S3SecretKey,
-        S3Host: context.wizard.where.s3.S3Host,
-        NFSHost: context.wizard.where.nfs.NFSHost,
-        NFSShare: context.wizard.where.nfs.NFSShare,
-        USBLabel: context.wizard.where.usb.USBLabel,
-        Type: context.wizard.how.duplicity.Type,
-        FullDay: context.wizard.how.duplicity.FullDay,
-        VolSize: context.wizard.how.duplicity.VolSize,
-        Prune:
-          context.wizard.how.restic.Prune == "always"
-            ? "always"
-            : context.wizard.how.restic.Prune - 1
-      };
-
-      if (context.wizard.how.choice != "rsync") {
-        backupObj["CleanupOlderThan"] =
-          context.wizard.how[context.wizard.how.choice].CleanupOlderThan;
-      }
-
-      context.wizard.isLoading = true;
-      context.wizard.review.errors.name.hasError = false;
-
-      context.exec(
-        ["system-backup/validate"],
-        backupObj,
-        null,
-        function(success) {
-          context.wizard.isLoading = false;
-          $("#createDataModal").modal("hide");
-
-          context.exec(
-            ["system-backup/" + endpoint],
-            backupObj,
-            function(stream) {
-              console.info("backup-data", stream);
-            },
-            function(success) {
-              // notification
-              context.$parent.notifications.success.message = context.$i18n.t(
-                "backup.backup_" + endpoint + "_ok"
-              );
-
-              context.wizard = context.initWizard();
-
-              // get hosts
-              context.getBackupInfo();
-            },
-            function(error, data) {
-              // notification
-              context.$parent.notifications.error.message = context.$i18n.t(
-                "backup.backup_" + endpoint + "_error"
-              );
-            }
-          );
-        },
-        function(error, data) {
-          var errorData = JSON.parse(data);
-
-          context.wizard.isLoading = false;
-          context.wizard.review.errors.name.hasError = false;
-
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.wizard.review.errors[attr.parameter].hasError = true;
-            context.wizard.review.errors[attr.parameter].message = attr.error;
+            context.globalDataBackup.excludes = success.configuration[
+              "backup-data"
+            ].defaults.excludes.join("\n");
+            context.globalDataBackup.includes = success.configuration[
+              "backup-data"
+            ].defaults.includes.join("\n");
+            context.globalDataBackup["custom-excludes"] = success.configuration[
+              "backup-data"
+            ].defaults["custom-excludes"].join("\n");
+            context.globalDataBackup["custom-includes"] = success.configuration[
+              "backup-data"
+            ].defaults["custom-includes"].join("\n");
+            context.globalDataBackup.IncludeLogs =
+              success.configuration["backup-data"].defaults.IncludeLogs ==
+              "enabled" ?
+              true :
+              false;
+          },
+          function (error) {
+            console.error(error);
+            context.view.isLoaded = true;
           }
-        }
-      );
-    },
-    deleteDataBackup() {
-      var context = this;
+        );
+      },
+      openExecuteConfig(b) {
+        this.currentConfigBackup = this.initBackupConfiguration();
+        $("#executeConfigModal").modal("show");
+      },
+      openRestoreConfig(b) {
+        this.currentConfigBackup = this.initBackupConfiguration();
+        $("#restoreConfigModal").modal("show");
+      },
+      openConfigureConfig() {
+        this.currentConfigBackup = this.initBackupConfiguration();
+        this.currentConfigBackup.HistoryLength = this.globalConfigBackup.HistoryLength;
+        $("#configureConfigModal").modal("show");
+      },
+      openDeleteConfig(b) {
+        this.currentConfigBackup = this.initBackupConfiguration();
+        this.currentConfigBackup.id = b.id;
+        this.currentConfigBackup.type = b.type;
+        this.currentConfigBackup.description = b.description;
+        $("#deleteConfigModal").modal("show");
+      },
+      executeConfigBackup() {
+        var context = this;
 
-      $("#deleteDataModal").modal("hide");
-      context.exec(
-        ["system-backup/delete"],
-        {
-          action: "backup-data",
-          name: context.currentDataBackup.name
-        },
-        function(stream) {
-          console.info("backup-data-delete", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "backup.delete_data_backup_ok"
-          );
+        $("#executeConfigModal").modal("hide");
+        context.exec(
+          ["system-backup/execute"], {
+            action: "run-backup-config",
+            name: context.currentConfigBackup.Description
+          },
+          function (stream) {
+            console.info("backup-config", stream);
+          },
+          function (success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "backup.execute_config_backup_ok"
+            );
 
-          // get backup info
-          context.getBackupInfo();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "backup.delete_data_backup_error"
-          );
+            // get backup info
+            context.getBackupInfo();
+          },
+          function (error, data) {
+            // notification
+            context.$parent.notifications.error.message = context.$i18n.t(
+              "backup.execute_config_backup_error"
+            );
+          }
+        );
+      },
+      restoreConfigBackup() {
+        var context = this;
+
+        var data = "";
+        switch (context.currentConfigBackup.restoreMode) {
+          case "url":
+            data = context.currentConfigBackup.restoreURL;
+            break;
+
+          case "file":
+            data = context.currentConfigBackup.restoreFile;
+            break;
+
+          case "backup":
+            data = context.currentConfigBackup.restoreBackup;
+            break;
         }
-      );
+
+        $("#restoreConfigModal").modal("hide");
+        context.exec(
+          ["system-backup/execute"], {
+            action: "restore-backup-config",
+            mode: context.currentConfigBackup.restoreMode,
+            data: data,
+            InstallPackages: context.currentConfigBackup.restoreInstallPackages ?
+              "enabled" : "disabled"
+          },
+          function (stream) {
+            console.info("backup-config-restore", stream);
+          },
+          function (success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "backup.restore_config_backup_ok"
+            );
+
+            // get backup info
+            context.getBackupInfo();
+          },
+          function (error, data) {
+            // notification
+            context.$parent.notifications.error.message = context.$i18n.t(
+              "backup.restore_config_backup_error"
+            );
+          }
+        );
+      },
+      configureConfigBackup() {
+        var context = this;
+
+        var configObj = {
+          action: "update-backup-config",
+          HistoryLength: context.currentConfigBackup.HistoryLength
+        };
+
+        context.currentConfigBackup.isLoading = true;
+        context.exec(
+          ["system-backup/validate"],
+          configObj,
+          null,
+          function (success) {
+            context.currentConfigBackup.isLoading = false;
+            $("#configureConfigModal").modal("hide");
+
+            // update values
+            context.exec(
+              ["system-backup/update"],
+              configObj,
+              function (stream) {
+                console.info("backup-config", stream);
+              },
+              function (success) {
+                // notification
+                context.$parent.notifications.success.message = context.$i18n.t(
+                  "backup.backup_create_ok"
+                );
+
+                // get backup info
+                context.getBackupInfo();
+              },
+              function (error, data) {
+                // notification
+                context.$parent.notifications.error.message = context.$i18n.t(
+                  "backup.backup_create_error"
+                );
+              }
+            );
+          },
+          function (error, data) {
+            var errorData = JSON.parse(data);
+            context.currentConfigBackup.isLoading = false;
+          }
+        );
+      },
+      downloadConfigBackup(b) {
+        var context = this;
+        context.exec(
+          ["system-backup/execute"], {
+            action: "download-backup-config",
+            name: b.id
+          },
+          null,
+          function (success) {
+            require("downloadjs")(
+              "data:application/x-gtar;base64," + success,
+              b.id + ".tar.xz",
+              "application/x-gtar"
+            );
+          },
+          function (error) {
+            console.error(error);
+          }
+        );
+      },
+      deleteConfigBackup() {
+        var context = this;
+
+        $("#deleteConfigModal").modal("hide");
+        context.exec(
+          ["system-backup/delete"], {
+            action: "backup-config",
+            name: context.currentConfigBackup.id
+          },
+          function (stream) {
+            console.info("backup-config-delete", stream);
+          },
+          function (success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "backup.delete_config_backup_ok"
+            );
+
+            // get backup info
+            context.getBackupInfo();
+          },
+          function (error, data) {
+            // notification
+            context.$parent.notifications.error.message = context.$i18n.t(
+              "backup.delete_config_backup_error"
+            );
+          }
+        );
+      },
+
+      openExecuteData(b) {
+        this.currentDataBackup = this.initBackupData();
+        this.currentDataBackup.name = b.name;
+        $("#executeDataModal").modal("show");
+      },
+      openRestoreData() {
+        this.currentDataBackup = this.initBackupData();
+        $("#restoreDataModal").modal("show");
+      },
+      openConfigureData(b) {
+        this.currentDataBackup = this.initBackupData();
+        $("#configureDataModal").modal("show");
+      },
+      openCreateData() {
+        this.currentDataBackup = this.initBackupData();
+        $("#createDataModal").modal("show");
+      },
+      openEditBackupData(b) {
+        this.currentDataBackup = this.initBackupData();
+        this.wizard = this.initWizard(b);
+        $("#createDataModal").modal("show");
+      },
+      openLastLogData(b) {
+        var context = this;
+
+        context.currentDataBackup = context.initBackupData();
+        context.currentDataBackup.name = b.name;
+        context.currentDataBackup.lastLog = null;
+
+        $("#lastLogDataModal").modal("show");
+        context.exec(
+          ["system-backup/read"], {
+            action: "last-log",
+            name: b.name
+          },
+          null,
+          function (success) {
+            success = JSON.parse(success);
+            context.currentDataBackup.lastLog = success.data;
+          },
+          function (error) {
+            console.error(error);
+            context.currentDataBackup.lastLog = "-";
+          }
+        );
+      },
+      cleanLastLog() {
+        this.currentDataBackup.lastLog = null;
+      },
+      openDeleteData(b) {
+        this.currentDataBackup = this.initBackupData();
+        this.currentDataBackup.name = b.name;
+        $("#deleteDataModal").modal("show");
+      },
+      executeDataBackup(b) {
+        var context = this;
+
+        $("#executeDataModal").modal("hide");
+        context.exec(
+          ["system-backup/execute"], {
+            action: "run-backup-data",
+            name: b.name
+          },
+          function (stream) {
+            console.info("backup-data", stream);
+          },
+          function (success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "backup.execute_data_backup_ok"
+            );
+
+            // get backup info
+            context.getBackupInfo();
+          },
+          function (error, data) {
+            // notification
+            context.$parent.notifications.error.message = context.$i18n.t(
+              "backup.execute_data_backup_error"
+            );
+          }
+        );
+      },
+      restoreDataBackup() {
+        var context = this;
+
+        $("#restoreDataModal").modal("hide");
+        context.exec(
+          ["system-backup/execute"], {
+            action: "restore-backup-data",
+            name: context.currentDataBackup.name
+          },
+          function (stream) {
+            console.info("backup-data-restore", stream);
+          },
+          function (success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "backup.restore_data_backup_ok"
+            );
+
+            // get backup info
+            context.getBackupInfo();
+          },
+          function (error, data) {
+            // notification
+            context.$parent.notifications.error.message = context.$i18n.t(
+              "backup.restore_data_backup_error"
+            );
+          }
+        );
+      },
+      configureDataBackup() {
+        var context = this;
+
+        $("#configureDataModal").modal("hide");
+        context.exec(
+          ["system-backup/update"], {
+            action: "backup-data-contents",
+            "custom-includes": context.globalDataBackup["custom-includes"].split(
+              "\n"
+            ),
+            "custom-excludes": context.globalDataBackup["custom-excludes"].split(
+              "\n"
+            ),
+            IncludeLogs: context.globalDataBackup.IncludeLogs ?
+              "enabled" : "disabled"
+          },
+          function (stream) {
+            console.info("backup-data-contents", stream);
+          },
+          function (success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "backup.backup_configure_ok"
+            );
+
+            // get backup info
+            context.getBackupInfo();
+          },
+          function (error, data) {
+            // notification
+            context.$parent.notifications.error.message = context.$i18n.t(
+              "backup.backup_configure_error"
+            );
+          }
+        );
+      },
+      createDataBackup() {
+        var context = this;
+
+        var endpoint = context.wizard.isEdit ? "update" : "create";
+        var backupObj = {
+          action: context.wizard.isEdit ?
+            "update-backup-data" : "create-backup-data",
+          name: context.wizard.review.Name,
+          engine: context.wizard.how.choice,
+          status: "enabled",
+          Notify: context.wizard.review.Notify,
+          NotifyTo: context.wizard.review.notifyToChoice == "root" ?
+            "root" : context.wizard.review.NotifyTo.length > 0 ?
+            context.wizard.review.NotifyTo.split("\n") : [],
+          BackupTime: context.wizard.when.crontab,
+          VFSType: context.wizard.where.choice,
+          SMBShare: context.wizard.where.cifs.SMBShare,
+          SMBHost: context.wizard.where.cifs.SMBHost,
+          SMBUser: context.wizard.where.cifs.SMBUser,
+          SMBPassord: context.wizard.where.cifs.SMBPassord,
+          SftpHost: context.wizard.where.sftp.SftpHost,
+          SftpPort: context.wizard.where.sftp.SftpPort,
+          SftpUser: context.wizard.where.sftp.SftpUser,
+          SftpPassword: context.wizard.where.sftp.SftpPassword,
+          SftpDirectory: context.wizard.where.sftp.SftpDirectory,
+          B2AccountId: context.wizard.where.b2.B2AccountId,
+          B2AccountKey: context.wizard.where.b2.B2AccountKey,
+          B2Bucket: context.wizard.where.b2.B2Bucket,
+          S3AccessKey: context.wizard.where.s3.S3AccessKey,
+          S3Bucket: context.wizard.where.s3.S3Bucket,
+          S3SecretKey: context.wizard.where.s3.S3SecretKey,
+          S3Host: context.wizard.where.s3.S3Host,
+          NFSHost: context.wizard.where.nfs.NFSHost,
+          NFSShare: context.wizard.where.nfs.NFSShare,
+          USBLabel: context.wizard.where.usb.USBLabel,
+          Type: context.wizard.how.duplicity.Type,
+          FullDay: context.wizard.how.duplicity.FullDay,
+          VolSize: context.wizard.how.duplicity.VolSize,
+          Prune: context.wizard.how.restic.Prune == "always" ?
+            "always" : context.wizard.how.restic.Prune - 1
+        };
+
+        if (context.wizard.how.choice != "rsync") {
+          backupObj["CleanupOlderThan"] =
+            context.wizard.how[context.wizard.how.choice].CleanupOlderThan;
+        }
+
+        context.wizard.isLoading = true;
+        context.wizard.review.errors.name.hasError = false;
+
+        context.exec(
+          ["system-backup/validate"],
+          backupObj,
+          null,
+          function (success) {
+            context.wizard.isLoading = false;
+            $("#createDataModal").modal("hide");
+
+            context.exec(
+              ["system-backup/" + endpoint],
+              backupObj,
+              function (stream) {
+                console.info("backup-data", stream);
+              },
+              function (success) {
+                // notification
+                context.$parent.notifications.success.message = context.$i18n.t(
+                  "backup.backup_" + endpoint + "_ok"
+                );
+
+                context.wizard = context.initWizard();
+
+                // get hosts
+                context.getBackupInfo();
+              },
+              function (error, data) {
+                // notification
+                context.$parent.notifications.error.message = context.$i18n.t(
+                  "backup.backup_" + endpoint + "_error"
+                );
+              }
+            );
+          },
+          function (error, data) {
+            var errorData = JSON.parse(data);
+
+            context.wizard.isLoading = false;
+            context.wizard.review.errors.name.hasError = false;
+
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.wizard.review.errors[attr.parameter].hasError = true;
+              context.wizard.review.errors[attr.parameter].message = attr.error;
+            }
+          }
+        );
+      },
+      deleteDataBackup() {
+        var context = this;
+
+        $("#deleteDataModal").modal("hide");
+        context.exec(
+          ["system-backup/delete"], {
+            action: "backup-data",
+            name: context.currentDataBackup.name
+          },
+          function (stream) {
+            console.info("backup-data-delete", stream);
+          },
+          function (success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "backup.delete_data_backup_ok"
+            );
+
+            // get backup info
+            context.getBackupInfo();
+          },
+          function (error, data) {
+            // notification
+            context.$parent.notifications.error.message = context.$i18n.t(
+              "backup.delete_data_backup_error"
+            );
+          }
+        );
+      }
     }
-  }
-};
+  };
 </script>
 
 <style>

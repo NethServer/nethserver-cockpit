@@ -30,6 +30,8 @@ var NethServerService = {
         process.input(JSON.stringify(input))
       }
 
+      console.info("echo '" + JSON.stringify(input) + "' | " + args.join(' '))
+
       if (stream) {
         process.stream(function (data) {
           ns.$children[0].notifications.success.show = false
@@ -142,6 +144,26 @@ var NethServerService = {
       fail(function (errorResp, errorData) {
         error(errorResp, errorData)
       });
+    },
+    addShortcut(appPath, appName) {
+      // add shortcut app into manifest.json
+
+      // reload views
+      cockpit
+        .dbus(null, {
+          bus: "internal"
+        })
+        .call("/packages", "cockpit.Packages", "Reload", []);
+    },
+    removeShortcut(appPath, appName) {
+      // remove shortcut app into manifest.json
+
+      // reload views
+      cockpit
+        .dbus(null, {
+          bus: "internal"
+        })
+        .call("/packages", "cockpit.Packages", "Reload", []);
     }
   }
 };

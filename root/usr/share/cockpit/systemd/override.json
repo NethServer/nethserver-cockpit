@@ -4,5 +4,8 @@
     "index": null,
     "services": null
   },
+  "tools": {
+    "terminal": null
+  },
   "content-security-policy": "default-src 'self' 'unsafe-inline' 'unsafe-eval'"
 }

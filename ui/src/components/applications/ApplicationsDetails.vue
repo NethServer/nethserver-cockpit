@@ -1,16 +1,28 @@
 <template>
   <div>
-   <h2>{{info.name}}</h2>
-   <h2 class="apps-version">{{info.release && info.release.version || ''}}</h2>
-   <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
-   <iframe id="app-frame" class="iframe-embedded" :src="'/cockpit/@localhost/'+application+'/index.html'"></iframe>
-   <div v-if="view.modalFake" class="fake-modal-backdrop"></div>
+    <h2>{{info.name}} {{info.release && info.release.version || ''}}</h2>
+    <button v-if="view.isLoaded" @click="isShortcut ? removeShortcut(application,info.name) : addShortcut(application, info.name)" :class="['btn', isShortcut ? 'btn-danger' : 'btn-primary', 'shortcut']">{{isShortcut
+      ? $t('remove_shortcut') : $t('add_shortcut')}}</button>
+    <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner spinner-inverse"></div>
+    <iframe id="app-frame" class="iframe-embedded" :src="'/cockpit/@localhost/'+application+'/index.html'"></iframe>
+    <div v-if="view.modalFake" class="fake-modal-backdrop"></div>
   </div>
 </template>
 
 <script>
 export default {
   name: "ApplicationsDetails",
+  beforeRouteEnter(to, from, next) {
+    $("#app").css("background", "#393f43");
+    $("#app").css("color", "white");
+    $("#app-frame").css("border-top", "1px solid #4d5258;");
+    next();
+  },
+  beforeRouteLeave(to, from, next) {
+    $("#app").css("background", "");
+    $("#app").css("color", "");
+    next();
+  },
   mounted() {
     var context = this;
 
@@ -71,15 +83,15 @@ export default {
     });
 
     setTimeout(function() {
-      $(parent.document.getElementById("sidebar-menu").children[1]).addClass(
-        "active"
-      );
-      $(parent.document.getElementById("sidebar-menu").children[0]).removeClass(
-        "active"
-      );
+      context.initGraphics();
     }, 50);
 
-    this.getAppInfo();
+    context.getAppInfo();
+  },
+  watch: {
+    $route(to, from) {
+      window.location.reload();
+    }
   },
   data() {
     return {
@@ -88,22 +100,37 @@ export default {
         modalFake: false
       },
       application: this.$route.params.name,
+      isShortcut: false,
       info: {}
     };
   },
   methods: {
+    initGraphics() {
+      $(parent.document.getElementById("sidebar-menu").children[1]).addClass(
+        "active"
+      );
+      $(parent.document.getElementById("sidebar-menu").children[0]).removeClass(
+        "active"
+      );
+      $("#app").css("background", "#393f43");
+      $("#app").css("color", "white");
+      $("#app-frame").css("border-top", "1px solid #4d5258;");
+    },
     getAppInfo() {
       var context = this;
 
       context.view.isLoaded = false;
       context.exec(
         ["system-apps/read"],
-        { name: context.application },
+        {
+          name: context.application
+        },
         null,
         function(success) {
           success = JSON.parse(success);
           context.info = success;
           context.view.isLoaded = true;
+          context.initGraphics();
         },
         function(error) {
           console.error(error);
@@ -119,6 +146,10 @@ export default {
   margin-top: 8px;
   width: 100%;
   height: calc(100% - 62px);
-  border-top: 1px solid #d1d1d1;
+  border-top: 1px solid #4d5258;
+}
+.shortcut {
+  margin-top: -36px;
+  float: right;
 }
 </style>

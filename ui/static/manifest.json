@@ -7,14 +7,22 @@
       "label": "System",
       "order": 10
     },
-    "/#/applications": {
+    "#/applications": {
       "label": "Applications",
-      "order": 100
+      "order": 20
     },
-    "#/software-center": {
+    "/#/software-center": {
       "label": "Software Center",
-      "order": 200
+      "order": 30
+    },
+    "//#/terminal": {
+      "label": "Terminal",
+      "order": 40
     }
+  },
+
+  "tools": {
+
   },
 
   "content-security-policy": "default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:"
