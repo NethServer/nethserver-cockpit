@@ -62,6 +62,13 @@ switch ($data['action']) {
         $v->declareParameter('ShowHints', Validate::SERVICESTATUS);
         break;
 
+    case "logrotate":
+        $v->declareParameter('Compression', Validate::SERVICESTATUS);
+        $v->declareParameter('Times', Validate::POSITIVE_INTEGER);
+        $v->declareParameter('Rotate', $v->createValidator()->memberOf('daily', 'weekly', 'monthly'));
+        break;
+
+
 }
 
 # Validate the input

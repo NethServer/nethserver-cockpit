@@ -57,6 +57,11 @@ case $action in
         /sbin/e-smith/signal-event -j nethserver-mail-smarthost-save
         ;;
 
+    "logrotate")
+        /sbin/e-smith/config setprop logrotate Compression "$(_get Compression)" Rotate "$(_get Rotate)" Times "$(_get Times)"
+        /sbin/e-smith/signal-event -j nethserver-base-update
+        ;;
+
 esac
 
 if [ $? -gt 0 ]; then
@@ -64,4 +69,3 @@ if [ $? -gt 0 ]; then
 else
     success
 fi
-
