@@ -93,9 +93,19 @@ if($cmd eq 'hints') {
         ShowHints => $db->get_prop('cockpit.socket', 'ShowHints')
     );
 
+    my $logrotate = $db->get('logrotate') ||
+            $db->new_record('logrotate', { type => "configuration" });
+
+    my %logrotate = (
+        Compression => $logrotate->prop('Compression'),
+        Rotate => $logrotate->prop('Rotate'),
+        Times => $logrotate->prop('Times')
+    );
+
     $ret{'configuration'}{'smarthost'} = \%smarthost;
     $ret{'configuration'}{'cockpit'} = \%cockpit;
     $ret{'configuration'}{'root'} = \%root;
+    $ret{'configuration'}{'logrotate'} = \%logrotate;
 
     print encode_json(\%ret);
 } else {

@@ -5,6 +5,7 @@ General module to manage multiple system settings:
 - smart host configuration
 - mail forward
 - cockpit configuration
+- log rotation configuration
 
 This API returns different output based on the running user.
 Do not invoke the helpers using `sudo`.
@@ -72,6 +73,11 @@ Example for root user:
       "SenderAddress": "no-reply@nethserver.org",
       "KeepMessageCopy": "yes",
       "EmailAddress": []
+    },
+    "logrotate":{
+        "Compression": "disabled",
+        "Rotate": "weekly",
+        "Times": "52"
     }
   }
 }
@@ -95,6 +101,7 @@ Valid actions are:
 - `cockpit`
 - `smarthost`
 - `hints`
+- `logrotate`
 
 ### Constraints
 
@@ -120,6 +127,11 @@ Constraints for `hints` action:
 
 - ShowHints: can be "enabled" or "disabled"
 
+Constraints for `logrotate` action:
+
+- Compression: can be "enabled" or "disabled"
+- Rotate: can be "daily", "weekly" or "monthly"
+- Times: must be a positive integer number
 
 ### Input
 
@@ -178,6 +190,17 @@ Input example:
   "ShowHints": "enabled",
 }
 ```
+#### logrotate
+
+Input example:
+```json
+{
+  "action": "logrotate",
+  "Compression": "disabled",
+  "Rotate": "weekly",
+  "Times": "52"
+}
+```
 
 ## update
 
@@ -202,6 +225,10 @@ Same as validate.
 #### hints
 
 Same as validate.
+
+#### logrotate
+
+Same as validate
 
 ## hints
 
