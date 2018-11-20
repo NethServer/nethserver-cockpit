@@ -69,8 +69,8 @@ function check_network_config($data, $exclude = "") {
     if (!in_array($data['role'], array('green', 'red', 'orange', 'blue'))) {
         $v->addValidationError('role', 'invalid_role');
     }
-    # red role can have static or dynamic address
-    if  ($data['role'] == 'red') {
+    # red and green roles can have static or dynamic address
+    if  ($data['role'] == 'red' || $data['role'] == 'green') {
         $v->declareParameter('bootproto', $v->createValidator()->memberOf('none', 'dhcp'));
     } else {
         if ($data['bootproto'] != 'none') {
@@ -78,7 +78,7 @@ function check_network_config($data, $exclude = "") {
         }
     }
     # orange and blue interfaces must be static
-    if ($data['bootproto'] == 'none' || $data['role'] == 'green' || $data['role'] == 'orange' || $data['role'] == 'blue') {
+    if ($data['bootproto'] == 'none' || $data['role'] == 'orange' || $data['role'] == 'blue') {
         $v->declareParameter('ipaddr', Validate::IPv4);
         $v->declareParameter('netmask', Validate::IPv4_NETMASK);
         $v->declareParameter('gateway', Validate::IPv4_OR_EMPTY);
