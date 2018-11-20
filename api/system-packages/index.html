@@ -1,0 +1,1758 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+        <link rel="canonical" href="https://nethserver.github.io/nethserver-cockpit/api/system-packages/">
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.3, mkdocs-material-3.0.4">
+    
+    
+      
+        <title>system-packages - NethServer Cockpit</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
+      
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#546e7a">
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="blue-grey" data-md-color-accent="indigo">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="../../#system-packages" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="https://nethserver.github.io/nethserver-cockpit" title="NethServer Cockpit" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon">build</i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                NethServer Cockpit
+              </span>
+              <span class="md-header-nav__topic">
+                system-packages
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/NethServer/nethserver-cockpit/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="https://nethserver.github.io/nethserver-cockpit" title="NethServer Cockpit" class="md-nav__button md-logo">
+      
+        <i class="md-icon">build</i>
+      
+    </a>
+    NethServer Cockpit
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/NethServer/nethserver-cockpit/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+    
+    <label class="md-nav__link" for="nav-2">
+      API
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        API
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-1" type="checkbox" id="nav-2-1">
+    
+    <label class="md-nav__link" for="nav-2-1">
+      General
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-1">
+        General
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api_guidelines/" title="Design guidelines" class="md-nav__link">
+      Design guidelines
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api_protocol/" title="Communication protocol" class="md-nav__link">
+      Communication protocol
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api_libraries/" title="Helper libraries" class="md-nav__link">
+      Helper libraries
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2" checked>
+    
+    <label class="md-nav__link" for="nav-2-2">
+      Helpers
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-2">
+        Helpers
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-accounts-provider/" title="system-accounts-provider" class="md-nav__link">
+      system-accounts-provider
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-aliases/" title="system-alias" class="md-nav__link">
+      system-alias
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-apps/" title="system-apps" class="md-nav__link">
+      system-apps
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-authorization/" title="system-authorization" class="md-nav__link">
+      system-authorization
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-backup/" title="system-backup" class="md-nav__link">
+      system-backup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-certificate/" title="system-certificate" class="md-nav__link">
+      system-certificate
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-company/" title="system-company" class="md-nav__link">
+      system-company
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-dhcp/" title="system-dhcp" class="md-nav__link">
+      system-dhcp
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-disk-usage/" title="system-disk-usage" class="md-nav__link">
+      system-disk-usage
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-docs/" title="system-docs" class="md-nav__link">
+      system-docs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-dns/" title="system-dns" class="md-nav__link">
+      system-dns
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-hostname/" title="system-hostname" class="md-nav__link">
+      system-hostname
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-hosts/" title="system-hosts" class="md-nav__link">
+      system-hosts
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-logrotate/" title="system-logrotate" class="md-nav__link">
+      system-logrotate
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-network/" title="system-network" class="md-nav__link">
+      system-network
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-openssh/" title="system-openssh" class="md-nav__link">
+      system-openssh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-password/" title="system-password" class="md-nav__link">
+      system-password
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-password-policy/" title="system-password-policy" class="md-nav__link">
+      system-password-policy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        system-packages
+      </label>
+    
+    <a href="./" title="system-packages" class="md-nav__link md-nav__link--active">
+      system-packages
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#read" title="read" class="md-nav__link">
+    read
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list-available" title="list-available" class="md-nav__link">
+    list-available
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-updates" title="list-updates" class="md-nav__link">
+    list-updates
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-removed" title="list-removed" class="md-nav__link">
+    list-removed
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changelog" title="changelog" class="md-nav__link">
+    changelog
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-config" title="get-config" class="md-nav__link">
+    get-config
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output" title="Output" class="md-nav__link">
+    Output
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list-available_1" title="list-available" class="md-nav__link">
+    list-available
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-updates_1" title="list-updates" class="md-nav__link">
+    list-updates
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-remove" title="list-remove" class="md-nav__link">
+    list-remove
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changelog_1" title="changelog" class="md-nav__link">
+    changelog
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-config_1" title="get-config" class="md-nav__link">
+    get-config
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update" title="update" class="md-nav__link">
+    update
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input_1" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update_1" title="update" class="md-nav__link">
+    update
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install" title="install" class="md-nav__link">
+    install
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove" title="remove" class="md-nav__link">
+    remove
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-config" title="set-config" class="md-nav__link">
+    set-config
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output_1" title="Output" class="md-nav__link">
+    Output
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update_2" title="update" class="md-nav__link">
+    update
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install_1" title="install" class="md-nav__link">
+    install
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove_1" title="remove" class="md-nav__link">
+    remove
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-config_1" title="set-config" class="md-nav__link">
+    set-config
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-proxy/" title="system-proxy" class="md-nav__link">
+      system-proxy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-routes/" title="system-routes" class="md-nav__link">
+      system-routes
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-services/" title="system-services" class="md-nav__link">
+      system-services
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-settings/" title="system-settings" class="md-nav__link">
+      system-settings
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-shutdown/" title="system-shutdown" class="md-nav__link">
+      system-shutdown
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-status/" title="system-status" class="md-nav__link">
+      system-status
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-task/" title="system-task" class="md-nav__link">
+      system-task
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-time/" title="system-time" class="md-nav__link">
+      system-time
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-tls-policy/" title="system-tls-policy" class="md-nav__link">
+      system-tls-policy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-trusted-networks/" title="system-trusted-networks" class="md-nav__link">
+      system-trusted-networks
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-users/" title="system-users" class="md-nav__link">
+      system-users
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      UI
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        UI
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../ui_guidelines/" title="UI guidelines" class="md-nav__link">
+      UI guidelines
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../i18n/" title="Translations" class="md-nav__link">
+      Translations
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../authorizations/" title="Authorizations" class="md-nav__link">
+      Authorizations
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../environment/" title="Development environment" class="md-nav__link">
+      Development environment
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../application_manifest/" title="Application manifest" class="md-nav__link">
+      Application manifest
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorial/" title="Tutorial" class="md-nav__link">
+      Tutorial
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
+    
+    <label class="md-nav__link" for="nav-8">
+      Build
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        Build
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../build_doc/" title="Building documentation" class="md-nav__link">
+      Building documentation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../build_rpm/" title="Building RPM" class="md-nav__link">
+      Building RPM
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9" type="checkbox" id="nav-9">
+    
+    <label class="md-nav__link" for="nav-9">
+      Manuals
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-9">
+        Manuals
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="http://docs.nethserver.org/projects/nethserver-devel" title="NethServer Developer manual" class="md-nav__link">
+      NethServer Developer manual
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="http://docs.nethserver.org" title="NethServer Administrator manual" class="md-nav__link">
+      NethServer Administrator manual
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="http://cockpit-project.org/guide/latest/" title="Cockpit Guide" class="md-nav__link">
+      Cockpit Guide
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#read" title="read" class="md-nav__link">
+    read
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list-available" title="list-available" class="md-nav__link">
+    list-available
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-updates" title="list-updates" class="md-nav__link">
+    list-updates
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-removed" title="list-removed" class="md-nav__link">
+    list-removed
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changelog" title="changelog" class="md-nav__link">
+    changelog
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-config" title="get-config" class="md-nav__link">
+    get-config
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output" title="Output" class="md-nav__link">
+    Output
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list-available_1" title="list-available" class="md-nav__link">
+    list-available
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-updates_1" title="list-updates" class="md-nav__link">
+    list-updates
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-remove" title="list-remove" class="md-nav__link">
+    list-remove
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changelog_1" title="changelog" class="md-nav__link">
+    changelog
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-config_1" title="get-config" class="md-nav__link">
+    get-config
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update" title="update" class="md-nav__link">
+    update
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input_1" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update_1" title="update" class="md-nav__link">
+    update
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install" title="install" class="md-nav__link">
+    install
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove" title="remove" class="md-nav__link">
+    remove
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-config" title="set-config" class="md-nav__link">
+    set-config
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output_1" title="Output" class="md-nav__link">
+    Output
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update_2" title="update" class="md-nav__link">
+    update
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install_1" title="install" class="md-nav__link">
+    install
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove_1" title="remove" class="md-nav__link">
+    remove
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-config_1" title="set-config" class="md-nav__link">
+    set-config
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/docs/api/system-packages.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="system-packages">system-packages<a class="headerlink" href="#system-packages" title="Permanent link">&para;</a></h1>
+<p>Manage install/uninstall of applications (YUM groups) and system updates.</p>
+<h2 id="read">read<a class="headerlink" href="#read" title="Permanent link">&para;</a></h2>
+<h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
+<p>Take an <code>action</code> field. Valid actions are:</p>
+<ul>
+<li><code>list-available</code>: list not installed applications</li>
+<li><code>list-updates</code>: calculate the list of dependencies which will be removed along with given packages</li>
+<li><code>list-removed</code>: list the packages which will be removed</li>
+<li><code>changelog</code>: retrieve the changelog of all updates</li>
+<li><code>get-config</code>: retrieve yum-cron and NsReleaseLock configuration</li>
+</ul>
+<h4 id="list-available">list-available<a class="headerlink" href="#list-available" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;list-available&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="list-updates">list-updates<a class="headerlink" href="#list-updates" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;list-updates&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="list-removed">list-removed<a class="headerlink" href="#list-removed" title="Permanent link">&para;</a></h4>
+<p>The <code>packages</code> field must contain an array of group or packages which will be removed.
+The command will list all packages removed as dependencies.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;list-removed&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;packages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;nethserver-base&quot;</span><span class="p">,</span> <span class="s2">&quot;@nethserver-web&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="changelog">changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;changelog&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="get-config">get-config<a class="headerlink" href="#get-config" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;get-config&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
+<h4 id="list-available_1">list-available<a class="headerlink" href="#list-available_1" title="Permanent link">&para;</a></h4>
+<p>List all YUM categories and installed groups.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;categories&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;UTM Firewall&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#222&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Firewall&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;firewall&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;applications/firewall.png&quot;</span>
+    <span class="p">},</span>
+    <span class="err">...</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;groups&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;optional_packages&quot;</span><span class="p">:</span> <span class="p">{},</span>
+      <span class="nt">&quot;conditional_packages&quot;</span><span class="p">:</span> <span class="p">{},</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Backup&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;mandatory_packages&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;nethserver-backup-data&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nt">&quot;nethserver-backup-config&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nt">&quot;nethserver-restore-data&quot;</span><span class="p">:</span> <span class="kc">false</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Backup of configuration and data&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;@nethserver-backup&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;default_packages&quot;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">},</span>
+    <span class="err">...</span>
+   <span class="p">]</span>
+  <span class="p">}</span>
+</pre></div>
+
+
+<h4 id="list-updates_1">list-updates<a class="headerlink" href="#list-updates_1" title="Permanent link">&para;</a></h4>
+<p>Retrieve the list of available updates.</p>
+<p>Special <code>nethserver</code> fiels is set to <code>true</code> if the groups comes fron NethServer repositories.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;updates&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;nethserver&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;CentOS minimal package set&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;updates&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="nt">&quot;repo&quot;</span><span class="p">:</span> <span class="s2">&quot;updates&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;epoch&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;2018f&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;tzdata&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;release&quot;</span><span class="p">:</span> <span class="s2">&quot;2.el7&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;arch&quot;</span><span class="p">:</span> <span class="s2">&quot;noarch&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;installed_version&quot;</span><span class="p">:</span> <span class="s2">&quot;2018e&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;installed_release&quot;</span><span class="p">:</span> <span class="s2">&quot;3.el7&quot;</span>
+        <span class="p">},</span>
+        <span class="err">...</span>
+      <span class="p">],</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;@centos-minimal&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;CentOS-minimal&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;nethserver&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;NethServer core packages&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;updates&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="nt">&quot;repo&quot;</span><span class="p">:</span> <span class="s2">&quot;nethserver-updates&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;epoch&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.2.16&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;nethserver-lang-en&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;release&quot;</span><span class="p">:</span> <span class="s2">&quot;1.ns7&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;arch&quot;</span><span class="p">:</span> <span class="s2">&quot;noarch&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;installed_version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.2.15&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;installed_release&quot;</span><span class="p">:</span> <span class="s2">&quot;1.ns7&quot;</span>
+        <span class="p">},</span>
+        <span class="err">...</span>
+      <span class="p">],</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;core&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;NethServer core&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;nethserver&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Other packages&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;updates&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="nt">&quot;repo&quot;</span><span class="p">:</span> <span class="s2">&quot;epel&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;epoch&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;5.8.1&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;collectd&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;release&quot;</span><span class="p">:</span> <span class="s2">&quot;1.el7&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;arch&quot;</span><span class="p">:</span> <span class="s2">&quot;x86_64&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;installed_version&quot;</span><span class="p">:</span> <span class="s2">&quot;5.8.0&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;installed_release&quot;</span><span class="p">:</span> <span class="s2">&quot;4.el7&quot;</span>
+        <span class="p">},</span>
+        <span class="err">...</span>
+      <span class="p">],</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;other&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Other&quot;</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="list-remove">list-remove<a class="headerlink" href="#list-remove" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;packages&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;nethserver-fail2ban&quot;</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="changelog_1">changelog<a class="headerlink" href="#changelog_1" title="Permanent link">&para;</a></h4>
+<p>Retrieve the last changelog entry of the given package update.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;Loaded plugins: changelog, fastestmirror, nethserver_events\nLoading mirror speeds from cached hostfile\n * base: mirror.crazynetwork.it\n * epel: mirror.infonline.de\n * extras: mirror.crazynetwork.it\n * nethforge: server.liftingtrade.hu\n * nethserver-base: server.liftingtrade.hu\n * nethserver-updates: server.liftingtrade.hu\n * updates: mirror.crazynetwork.it\n\nListing 1 changelog\n\n==================== Updated Packages ====================\nnethserver-lang-en-1.2.16-1.ns7.noarch   nethserver-updates\n* Wed Nov 14 13:00:00 2018 Davide Principi &lt;davide.principi@nethesis.it&gt; - 1.2.16-1\n- Pull strings from Transifex\n\nchangelog stats. 1 pkg, 1 source pkg, 1 changelog\n&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="get-config_1">get-config<a class="headerlink" href="#get-config_1" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;messages&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;NsReleaseLock&quot;</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;applyUpdate&quot;</span><span class="p">:</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;download&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
+<p>Available actions:</p>
+<ul>
+<li><code>update</code>: update one or more packages</li>
+<li><code>install</code>: install one or more packages</li>
+<li><code>remove</code>: remove one or more packages</li>
+<li><code>set-config</code>: configure NsReleaseLock and yum-cron</li>
+</ul>
+<h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
+<p>The <code>packages</code> field contains a list of packages or group to be updated.
+If <code>packages</code> field is empty, all packages will be updated.</p>
+<h4 id="update_1">update<a class="headerlink" href="#update_1" title="Permanent link">&para;</a></h4>
+<p>If <code>packages</code> is empty, update all packages.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;update&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;packages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;@nethserver-httpd&quot;</span><span class="p">,</span> <span class="s2">&quot;nethserver-base&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="install">install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;install&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;packages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;@nethserver-httpd&quot;</span><span class="p">,</span> <span class="s2">&quot;nethserver-base&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="remove">remove<a class="headerlink" href="#remove" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;remove&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;packages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;@nethserver-httpd&quot;</span><span class="p">,</span> <span class="s2">&quot;nethserver-base&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="set-config">set-config<a class="headerlink" href="#set-config" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;set-config&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;messages&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;NsReleaseLock&quot;</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;applyUpdate&quot;</span><span class="p">:</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;download&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="output_1">Output<a class="headerlink" href="#output_1" title="Permanent link">&para;</a></h3>
+<h4 id="update_2">update<a class="headerlink" href="#update_2" title="Permanent link">&para;</a></h4>
+<p>Output yum transaction in JSON format:</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Initialization&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Resolving RPM dependencies&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Downloading Packages&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Check Package Signatures&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Running Test Transaction&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Running Transaction&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Installing nethserver-lang-en-1.2.16-1.ns7.noarch&quot;</span><span class="p">}</span>
+<span class="err">...</span>
+<span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Removing nethserver-lang-en&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Transaction end&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="s2">&quot;success&quot;</span><span class="p">}</span><span class="err">+</span> <span class="err">exit</span> <span class="mi">0</span>
+</pre></div>
+
+
+<h4 id="install_1">install<a class="headerlink" href="#install_1" title="Permanent link">&para;</a></h4>
+<p>Same output as <code>update</code>.</p>
+<h4 id="remove_1">remove<a class="headerlink" href="#remove_1" title="Permanent link">&para;</a></h4>
+<p>Same output as <code>update</code>.</p>
+<h4 id="set-config_1">set-config<a class="headerlink" href="#set-config_1" title="Permanent link">&para;</a></h4>
+<p>Output event in json format.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span>{&quot;steps&quot;:2,&quot;pid&quot;:24484,&quot;args&quot;:&quot;&quot;,&quot;event&quot;:&quot;software-repos-save&quot;}
+{&quot;step&quot;:1,&quot;pid&quot;:24484,&quot;action&quot;:&quot;S05generic_template_expand&quot;,&quot;event&quot;:&quot;software-repos-save&quot;,&quot;state&quot;:&quot;running&quot;}
+{&quot;progress&quot;:&quot;0.50&quot;,&quot;time&quot;:&quot;0.242998&quot;,&quot;exit&quot;:0,&quot;event&quot;:&quot;software-repos-save&quot;,&quot;state&quot;:&quot;done&quot;,&quot;step&quot;:1,&quot;pid&quot;:24484,&quot;action&quot;:&quot;S05generic_template_expand&quot;}
+{&quot;step&quot;:2,&quot;pid&quot;:24484,&quot;action&quot;:&quot;S20nethserver-base-software-repos&quot;,&quot;event&quot;:&quot;software-repos-save&quot;,&quot;state&quot;:&quot;running&quot;}
+{&quot;progress&quot;:&quot;1.00&quot;,&quot;time&quot;:&quot;0.422607&quot;,&quot;exit&quot;:0,&quot;event&quot;:&quot;software-repos-save&quot;,&quot;state&quot;:&quot;done&quot;,&quot;step&quot;:2,&quot;pid&quot;:24484,&quot;action&quot;:&quot;S20nethserver-base-software-repos&quot;}
+{&quot;pid&quot;:24484,&quot;status&quot;:&quot;success&quot;,&quot;event&quot;:&quot;software-repos-save&quot;}
+{&quot;state&quot;:&quot;success&quot;}
+</pre></div>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../system-password-policy/" title="system-password-policy" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                system-password-policy
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../system-proxy/" title="system-proxy" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                system-proxy
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.583bbe55.js"></script>
+      
+      <script>app.initialize({version:"1.0.3",url:{base:"../.."}})</script>
+      
+    
+    
+      
+    
+  </body>
+</html>
