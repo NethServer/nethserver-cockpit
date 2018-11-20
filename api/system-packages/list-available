@@ -1,0 +1,143 @@
+#!/usr/bin/python
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+# 
+# This script is part of NethServer.
+# 
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+# 
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# List all available YUM groups, it honors NsReleaseLock property.
+
+import yum
+import os
+import os.path
+import subprocess
+import sys
+import simplejson
+import yum.misc
+import json
+
+def compsdump(yb):
+    metadata = '/usr/share/cockpit/nethserver/categories/categories.json'
+    categories_metadata = {}
+    groups = []
+    categories = []
+
+    installed_packages = map(lambda p: p.name, yb.doRpmDBSetup())
+    package_state = lambda p: (p, p in installed_packages)
+    installed_groups, available_groups = yb.doGroupLists()
+
+    for g in yb.comps.get_groups():
+        if not g.user_visible or g in installed_groups:
+            continue
+        tmp = {
+            'id' : g.groupid,
+            'name' : g.ui_name,
+            'description' : g.ui_description,
+            'mandatory_packages': dict(map(package_state, g.mandatory_packages.keys())),
+            'optional_packages': dict(map(package_state, g.optional_packages.keys())),
+            'default_packages' : dict(map(package_state, g.default_packages.keys())),
+            'conditional_packages': dict(map(package_state, g.conditional_packages.keys()))
+        }
+        groups.append(tmp)        
+
+    if os.path.exists(metadata): 
+        with open(metadata) as f:
+            categories_metadata = json.load(f)
+
+    for c in yb.comps.get_categories():
+        # hide server-manager related packages
+        if c.categoryid == "server-manager-languages":
+            continue;
+        color = "#ffffff"
+        icon = "icon.png"
+        if c.categoryid in categories_metadata:
+            color =  categories_metadata[c.categoryid]['color']
+            icon =  categories_metadata[c.categoryid]['icon']
+
+        categories.append({
+            'id': c.categoryid,
+            'name': c.ui_name,
+            'description': c.ui_description,
+            'groups': c.groups,
+            'color': color,
+            'icon' : "categories/%s" % icon
+        })
+
+    for g in groups:
+        for c in categories:
+            if g['id'] in c['groups']:
+                g['category'] = c['id']
+
+    # add @ to group id to comply with yum syntax
+    for g in groups:
+        g['id'] = "@%s" % g['id']
+
+    for c in categories:
+        c.pop('groups', None)
+
+    print( simplejson.dumps({'categories' : categories, 'groups': groups}) )
+
+
+def parse_pkginfo_conf():
+    repos = []
+    try:
+        f = open('/etc/nethserver/pkginfo.conf')
+        for l in f.read().split("\n"):
+            if l != '' and l[0] != '#':
+                repos.append(l.strip())
+        f.close()
+    except Exception, e:
+        sys.stderr.write("Could not parse pkginfo.conf file: %s" % str(e))
+
+    return repos
+
+def is_strict_updates():
+    lock = subprocess.check_output(['/sbin/e-smith/config', 'getprop', 'sysconfig', 'NsReleaseLock'])
+    return lock.strip() == 'enabled'
+
+def main():
+    try:
+        yum.misc.setup_locale()
+
+        ypbc = yum._YumPreBaseConf()
+        ypbc.debuglevel = 0
+        ypbc.errorlevel = 0
+        ypbc.init_plugins = False
+        yb = yum.YumBase()
+        yb.preconf = ypbc
+
+        # force repository configuration now,
+        # it will not work if invoked after listGroupsEnabled()
+        if is_strict_updates():
+            yb.conf.reposdir = '/etc/nethserver/yum-update.d/'
+
+        for r in yb.repos.listGroupsEnabled():
+            if not r.id in parse_pkginfo_conf():
+                r.enablegroups = 0
+
+        compsdump(yb)
+
+
+    except Exception, e:
+        print simplejson.dumps({'error':"%s"%e})
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
+

@@ -1,0 +1,68 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
+
+use warnings;
+use strict;
+use JSON;
+use esmith::ConfigDB;
+
+my $ret = {};
+my $input = readInput();
+my $cmd = $input->{'action'};
+
+if($cmd eq 'list-updates') {
+  
+   system("/usr/libexec/nethserver/api/system-packages/list-updates");
+
+} elsif ($cmd eq 'list-available') {
+
+   system("/usr/libexec/nethserver/api/system-packages/list-available");
+
+} elsif ($cmd eq 'list-removed') {
+
+    my $packages = $input->{'packages'};
+    $packages = join(" ", @$packages);
+    my @data = `/usr/libexec/nethserver/yum-packages-to-remove $packages`;
+    @data = map { $_ =~ s/\s$//; $_; } @data; # right trim each element
+    print encode_json({"packages" => \@data});
+
+} elsif ($cmd eq 'get-config') {
+
+    my $db = esmith::ConfigDB->open_ro();
+    my $yumcron = $db->get('yum-cron');
+    print encode_json({
+            'applyUpdate' => $db->get_prop('yum-cron', 'applyUpdate'),
+            'download' => $db->get_prop('yum-cron', 'download'),
+            'messages' => $db->get_prop('yum-cron', 'messages'),
+            'NsReleaseLock' => $db->get_prop('sysconfig', 'NsReleaseLock')
+        });
+
+
+} elsif ($cmd eq 'changelog') {
+
+   system("/usr/libexec/nethserver/api/system-packages/changelog");
+
+} else {
+    error();
+}

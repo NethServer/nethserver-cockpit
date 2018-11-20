@@ -39,6 +39,7 @@ nav:
       - api/system-openssh.md
       - api/system-password.md
       - api/system-password-policy.md
+      - api/system-packages.md
       - api/system-proxy.md
       - api/system-routes.md
       - api/system-services.md

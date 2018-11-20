@@ -1,0 +1,14 @@
+{
+    "base": {
+        "color": "#33a0de",
+        "icon": "base.png"
+    },
+    "firewall": {
+        "color": "#ec7a08",
+        "icon": "firewall.png"
+    },
+    "nethforge": {
+        "color": "#703fec",
+        "icon": "nethforge.png"
+    }
+}
