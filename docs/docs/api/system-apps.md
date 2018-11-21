@@ -6,7 +6,7 @@ Return information about installed NethServer apps (or modules).
 
 The `action` field must have one of the following values:
 
-- `list`: list all available applications
+- `list`: list all available applications. The list contains only the applications accessible to user running the script.
 - `info`: retrieve information of the given application
 
 Each application object contains 2 special fields:

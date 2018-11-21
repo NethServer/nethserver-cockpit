@@ -56,6 +56,17 @@ sub app_info
     return $data;
 }
 
+sub authorized_apps
+{
+    my $out = `/usr/libexec/nethserver/api/system-authorization/read`;
+    if ($out ne '') {
+        my $data = decode_json($out) || return ();
+        return $data->{'applications'}
+    } else {
+        return ();
+    }
+}
+
 sub is_editable
 {
     return ($< == 0) ? 1 : 0; # map to integer
@@ -77,10 +88,14 @@ if($cmd eq 'list') {
 
     my @apps;
 
+    my $authorized = authorized_apps();
+
     foreach my $f (glob("$path*.json")) {
         my ($name,$path,$suffix) = fileparse($f,(".json"));
-        my $data = app_info($name) || next;
-        push(@apps, $data);
+        if (grep(/^$name$/, @$authorized)) {
+            my $data = app_info($name) || next;
+            push(@apps, $data);
+        }
     }
 
     print encode_json(\@apps);
