@@ -34,11 +34,11 @@ nav:
       - api/system-dns.md
       - api/system-hostname.md
       - api/system-hosts.md
-      - api/system-logrotate.md
       - api/system-network.md
       - api/system-openssh.md
       - api/system-password.md
       - api/system-password-policy.md
+      - api/system-packages.md
       - api/system-proxy.md
       - api/system-routes.md
       - api/system-services.md

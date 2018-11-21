@@ -28,7 +28,7 @@
     <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
       <span class="pficon pficon-warning-triangle-o"></span>
       <strong>{{$t('hints_suggested')}}:</strong>
-      <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{$t('hints.'+t)}}</strong>: {{$t('hints.'+m)}}</li>
+      <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{t}}</strong>: {{$t('hints.'+m)}}</li>
       <span v-if="hints.message && hints.message.length > 0">
         {{hints.message && $t('hints.'+hints.message)}}
       </span>
@@ -67,12 +67,17 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
               <li>
+                <a @click="statusService(props.row.name)">
+                  <span class="fa fa-search action-icon-menu"></span>
+                  {{$t('services.status')}}</a>
+              </li>
+              <li role="separator" class="divider"></li>
+              <li>
                 <a @click="props.row.enabled ? disableService(props.row.name) : enableService(props.row.name)">
                   <span :class="['fa', props.row.enabled ? 'fa-times' : 'fa-check', 'action-icon-menu']"></span>
                   {{props.row.enabled ? $t('services.disable') : $t('services.enable') }}
                 </a>
               </li>
-              <li v-if="props.row.running" role="separator" class="divider"></li>
               <li v-if="props.row.running">
                 <a @click="stopService(props.row.name)">
                   <span class="fa fa-power-off action-icon-menu"></span>
@@ -84,6 +89,31 @@
         </td>
       </template>
     </vue-good-table>
+
+    <div class="modal" id="statusModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('services.status_of')}} {{currentDetails.name}}</h4>
+          </div>
+          <form class="form-horizontal">
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('services.status')}}</label>
+                <div class="col-sm-9">
+                  <div v-if="!currentDetails.status" class="spinner spinner-sm"></div>
+                  <pre v-if="currentDetails.status" class="prettyprint">{{currentDetails.status}}</pre>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button @click="cleanStatus()" class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <div class="modal" id="detailsModal" tabindex="-1" role="dialog" data-backdrop="static">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -247,7 +277,10 @@ export default {
       ],
       currentDetails: {
         props: {},
-        ports: {}
+        ports: {},
+        isLoading: false,
+        status: null,
+        name: ""
       },
       stats: {
         servicesCount: 0,
@@ -287,7 +320,9 @@ export default {
       var context = this;
       context.exec(
         ["system-services/read"],
-        null,
+        {
+          action: "list"
+        },
         null,
         function(success) {
           success = JSON.parse(success);
@@ -465,6 +500,37 @@ export default {
         }
       );
     },
+
+    statusService(service) {
+      var context = this;
+
+      context.currentDetails.isLoading = true;
+      context.currentDetails.status = null;
+      context.currentDetails.name = service;
+
+      $("#statusModal").modal("show");
+      context.exec(
+        ["system-services/read"],
+        {
+          action: "status",
+          name: service
+        },
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.currentDetails.status = success.data;
+
+          context.currentDetails.isLoading = false;
+        },
+        function(error) {
+          console.log(error);
+        }
+      );
+    },
+    cleanStatus() {
+      this.currentDetails.status = null;
+    },
+
     openDetails(obj) {
       this.currentDetails = obj;
       $("#detailsModal").modal("show");

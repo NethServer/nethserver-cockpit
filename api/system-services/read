@@ -20,6 +20,8 @@
 # along with NethServer.  If not, see COPYING.
 #
 
+require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
+
 use strict;
 use warnings;
 
@@ -27,7 +29,6 @@ use esmith::ConfigDB;
 use NethServer::Service;
 use JSON;
 
-my $confDb = esmith::ConfigDB->open_ro();
 
 sub ports_to_array
 {
@@ -49,46 +50,58 @@ sub ports_to_array
 my @status;
 my @configuration;
 
-foreach ($confDb->get_all_by_prop('type' => 'service')) {
-    my $key = $_->key;
-    next if ( ! -e "/etc/e-smith/db/configuration/defaults/$key/status" );
+my $input = readInput();
+my $cmd = $input->{'action'};
 
-    my $s = NethServer::Service->new($key, $confDb);
-    my %props = $_->props();
-    my %ports;
-    my $desc = `systemctl show --property=Description $key`;
-    $desc =~ s/.*=//;
-    chomp $desc;
-    my $tcpPorts = $props{'TCPPorts'} || $props{'TCPPort'} || "";
-    my $udpPorts = $props{'UDPPorts'} || $props{'UDPPort'} || "";
-    $ports{'access'} = $props{'access'} || '';
-    delete($props{'status'}); 
-    delete($props{'access'}); 
-    delete($props{'type'});
-    delete($props{'TCPPort'});
-    delete($props{'UDPPort'});
-    delete($props{'UDPPorts'});
-    delete($props{'TCPPorts'});
+if($cmd eq 'list') {
+    my $confDb = esmith::ConfigDB->open_ro();
+    foreach ($confDb->get_all_by_prop('type' => 'service')) {
+        my $key = $_->key;
+        next if ( ! -e "/etc/e-smith/db/configuration/defaults/$key/status" );
 
-    $ports{'TCP'} = ports_to_array($tcpPorts);
-    $ports{'UDP'} = ports_to_array($udpPorts);
+        my $s = NethServer::Service->new($key, $confDb);
+        my %props = $_->props();
+        my %ports;
+        my $desc = `systemctl show --property=Description $key`;
+        $desc =~ s/.*=//;
+        chomp $desc;
+        my $tcpPorts = $props{'TCPPorts'} || $props{'TCPPort'} || "";
+        my $udpPorts = $props{'UDPPorts'} || $props{'UDPPort'} || "";
+        $ports{'access'} = $props{'access'} || '';
+        delete($props{'status'}); 
+        delete($props{'access'}); 
+        delete($props{'type'});
+        delete($props{'TCPPort'});
+        delete($props{'UDPPort'});
+        delete($props{'UDPPorts'});
+        delete($props{'TCPPorts'});
 
-    my $service_status = {
-        'name' => $key,
-        'status' => $s->is_enabled() ? 1 : 0,
-        'running' => $s->is_running() ? 1 : 0,
-    };
-    my $service_configuration = {
-        'name' => $key,
-        'description' => $desc,
-        'ports' => \%ports,
-        'props' => \%props
-    };
+        $ports{'TCP'} = ports_to_array($tcpPorts);
+        $ports{'UDP'} = ports_to_array($udpPorts);
 
-    push(@status,$service_status);
-    push(@configuration,$service_configuration);
+        my $service_status = {
+            'name' => $key,
+            'status' => $s->is_enabled() ? 1 : 0,
+            'running' => $s->is_running() ? 1 : 0,
+        };
+        my $service_configuration = {
+            'name' => $key,
+            'description' => $desc,
+            'ports' => \%ports,
+            'props' => \%props
+        };
+
+        push(@status,$service_status);
+        push(@configuration,$service_configuration);
+    }
+
+    print JSON::to_json({ status => \@status, configuration => \@configuration });
+
+} elsif($cmd eq 'status') {
+    my $unit = $input->{'name'};
+    # LANG=C make sure output contains readable characters
+    my $status = `LANG=C /usr/bin/systemctl status --full --no-pager $unit`;
+    print encode_json({'data' => $status});
 }
-
-print JSON::to_json({ status => \@status, configuration => \@configuration });
 exit(0);
 

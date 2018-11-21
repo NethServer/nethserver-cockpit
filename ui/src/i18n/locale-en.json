@@ -369,11 +369,13 @@
       "enable": "Enable",
       "disable": "Disable",
       "stop": "Stop",
+      "status": "Status",
       "network": "Network",
       "properties": "Properties",
       "details_of": "Details of",
       "service_action_ok": "Action completed successfully!",
-      "service_action_error": "Action not completed."
+      "service_action_error": "Action not completed.",
+      "status_of": "Status of"
     },
     "users_groups": {
       "title": "Users & Groups",
@@ -506,6 +508,7 @@
       "configure": "Configure",
       "interface_list": "List",
       "delete_alias": "Delete alias",
+      "delete_route": "Delete route",
       "delete_interface": "Delete interface",
       "delete_device": "Delete device",
       "release_network": "Release role on",
@@ -563,6 +566,8 @@
       "orange": "DMZ (orange)",
       "empty": "Empty (no role)",
       "free": "Unassigned",
+      "missing": "Missing",
+      "children": "Children",
       "other": "Other",
       "edit_logic_interface": "Edit logic interface",
       "add_logic_interface": "Add Logic interface",
@@ -662,7 +667,17 @@
       "title": "Logs"
     },
     "about": {
-      "title": "About"
+      "title": "About",
+      "description_1": "What is NethServer?",
+      "description_2": "NethServer is an operating system for Linux enthusiasts, designed for small offices and medium enterprises.",
+      "description_3": "Get support from the community:",
+      "description_4": "Get advanced support from experts:",
+      "visit_the": "Visit the",
+      "official_site": "Official site",
+      "community": "Community",
+      "documentation": "Documentation",
+      "wiki": "Wiki",
+      "subscription": "Subscription"
     },
     "wizard": {
       "title": "Wizard"

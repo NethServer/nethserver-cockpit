@@ -1,0 +1,141 @@
+#!/usr/bin/python
+
+#
+# Copyright (C) 2012 Nethesis S.r.l.
+# http://www.nethesis.it - support@nethesis.it
+# 
+# This script is part of NethServer.
+# 
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+# 
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# List all available updates, it honors NsReleaseLock property.
+
+import yum
+import os
+import subprocess
+import sys
+import simplejson
+import yum.misc
+
+def grouped_updates(yb, updates):
+    groups = []
+    group_core = {
+         'id' : 'core',
+         'name' : 'NethServer core',
+         'description' : 'NethServer core packages',
+         'packages' : [],
+         'updates': [],
+         'nethserver': True
+    }
+    group_other = {
+         'id' : 'other',
+         'name' : 'Other',
+         'description' : 'Other packages',
+         'packages' : [],
+         'updates': [],
+         'nethserver': False
+    }
+
+
+    for g in yb.comps.get_groups():
+        if g.groupid == 'nethserver-iso':
+            continue
+        groups.append({
+            'id' : '@%s' % g.groupid,
+            'name' : g.ui_name,
+            'description' : g.ui_description,
+            'packages' : g.optional_packages.keys() + g.default_packages.keys() + g.mandatory_packages.keys(),
+            'updates': [],
+            'nethserver': False
+        })
+
+    for p in updates:
+        orphan = True
+        for g in groups:
+           if p['name'] in g['packages']:
+               g['updates'].append(p)
+               if 'nethserver' in p['repo']:
+                   g['nethserver'] = True
+               orphan = False
+        if orphan:
+            if 'nethserver' in p['repo']:
+                group_core['updates'].append(p)
+            else:
+                group_other['updates'].append(p)
+
+    groups.append(group_core)
+    groups.append(group_other)
+    for g in groups:
+        g.pop('packages', None)
+
+    return filter(lambda g: len(g['updates'])>0, groups)
+
+def is_strict_updates():
+    lock = subprocess.check_output(['/sbin/e-smith/config', 'getprop', 'sysconfig', 'NsReleaseLock'])
+    return lock.strip() == 'enabled'
+
+def list_updates(yb):
+    # retrieve installed versions
+    installed_versions = {}
+    for p in yb.doPackageLists(pkgnarrow='installed').installed:
+        installed_versions[p.name] = (p.version, p.release)
+
+    updates = map(lambda i: {'name': i.name, 'arch': i.arch, 'epoch': i.epoch, 'installed_version': installed_versions[i.name][0], 'installed_release': installed_versions[i.name][1], 'version': i.version, 'release': i.release, 'repo': i.repoid}, yb.doPackageLists(pkgnarrow='updates').updates)
+    return updates
+
+def parse_pkginfo_conf():
+    repos = []
+    try:
+        f = open('/etc/nethserver/pkginfo.conf')
+        for l in f.read().split("\n"):
+            if l != '' and l[0] != '#':
+                repos.append(l.strip())
+        f.close()
+    except Exception, e:
+        sys.stderr.write("Could not parse pkginfo.conf file: %s" % str(e))
+
+    return repos
+
+def main():
+    try:
+        yum.misc.setup_locale()
+
+        ypbc = yum._YumPreBaseConf()
+        ypbc.debuglevel = 0
+        ypbc.errorlevel = 0
+        ypbc.init_plugins = False
+        yb = yum.YumBase()
+        yb.preconf = ypbc
+
+        # force repository configuration now,
+        # it will not work if invoked after listGroupsEnabled()
+        if is_strict_updates():
+            yb.conf.reposdir = '/etc/nethserver/yum-update.d/'
+
+        for r in yb.repos.listGroupsEnabled():
+            if not r.id in parse_pkginfo_conf():
+                r.enablegroups = 0
+
+        updates = list_updates(yb)
+        print simplejson.dumps({'updates': grouped_updates(yb, updates)})
+
+    except Exception, e:
+        print simplejson.dumps({'error':"%s"%e})
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
+

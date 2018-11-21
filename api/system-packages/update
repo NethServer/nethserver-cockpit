@@ -1,0 +1,77 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+. /usr/libexec/nethserver/api/lib/helper_functions
+
+# Read JSON from stdin and set the record
+data=$(cat /dev/stdin)
+packages=$(echo $data | jq -r '.packages | join(",")' 2>/dev/null)
+action=$(echo $data | jq -r '.action')
+
+function _get
+{
+    field=$1
+    echo $data | jq -r ".$field"
+}
+
+
+case $action in
+    "update")
+        action="--update"
+        lock=$(/sbin/e-smith/config getprop sysconfig NsReleaseLock)
+        if [ "$lock" == "enabled" ]; then
+            action="--strict-update"
+        fi
+        if [ -z "$packages" ]; then
+            /usr/libexec/nethserver/pkgaction --json $action \*
+        else
+            /usr/libexec/nethserver/pkgaction --json $action $packages
+        fi
+        ;;
+    "install")
+        action="--install"
+        if [ -z "$packages" ]; then
+            error "EventFailed" "no_packages_given" 
+        fi
+        /usr/libexec/nethserver/pkgaction --json $action $packages
+        ;;
+
+    "remove")
+        action="--remove"
+        if [ -z "$packages" ]; then
+            error "EventFailed" "no_packages_given" 
+        fi
+        /usr/libexec/nethserver/pkgaction --json $action $packages
+        ;;
+
+    "set-config")
+        /sbin/e-smith/config setprop sysconfig NsReleaseLock "$(_get NsReleaseLock)"
+        /sbin/e-smith/config setprop yum-cron messages "$(_get messages)" applyUpdate "$(_get applyUpdate)" download "$(_get download)"
+        /sbin/e-smith/signal-event -j software-repos-save
+        ;;
+esac
+
+if [ $? -gt 0 ]; then
+    error "EventFailed" "See /var/log/messages"
+else
+    success
+fi

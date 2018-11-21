@@ -28,9 +28,12 @@ $v = new LegacyValidator($data);
 $db = new EsmithDatabase('routes');
 $ndb = new EsmithDatabase('networks');
 
+$v->declareParameter('Router', Validate::IPv4);
+
 if (!$data['name']) {
     $v->addValidationError('name', 'route_empty');
 }
+
 if ($data['name'] != '0.0.0.0/0' && $data['name'] != 'default') {
     $v->declareParameter('name', Validate::CIDR_BLOCK);
 }

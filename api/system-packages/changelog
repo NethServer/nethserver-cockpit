@@ -1,0 +1,74 @@
+#!/usr/bin/python
+
+#
+# Copyright (C) 2012 Nethesis S.r.l.
+# http://www.nethesis.it - support@nethesis.it
+# 
+# This script is part of NethServer.
+# 
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+# 
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# List all available updates, it honors NsReleaseLock property.
+
+import yum
+import os
+import subprocess
+import sys
+import simplejson
+import yum.misc
+
+def is_strict_updates():
+    lock = subprocess.check_output(['/sbin/e-smith/config', 'getprop', 'sysconfig', 'NsReleaseLock'])
+    return lock.strip() == 'enabled'
+
+def parse_pkginfo_conf():
+    repos = []
+    try:
+        f = open('/etc/nethserver/pkginfo.conf')
+        for l in f.read().split("\n"):
+            if l != '' and l[0] != '#':
+                repos.append(l.strip())
+        f.close()
+    except Exception, e:
+        sys.stderr.write("Could not parse pkginfo.conf file: %s" % str(e))
+
+    return repos
+
+def main():
+    try:
+        yum.misc.setup_locale()
+
+        ypbc = yum._YumPreBaseConf()
+        ypbc.debuglevel = 0
+        ypbc.errorlevel = 0
+        ypbc.init_plugins = False
+        yb = yum.YumBase()
+        yb.preconf = ypbc
+
+        if is_strict_updates():
+               changelog = subprocess.Popen(['/usr/bin/yum', 'changelog', '1', 'updates', '--setopt=reposdir=/etc/nethserver/yum-update.d/'], stdout=subprocess.PIPE, shell=False, env={'LANG': 'en_US.UTF-8'}).communicate()[0];
+        else:
+            changelog = subprocess.Popen(['/usr/bin/yum', 'changelog', '1', 'updates'], stdout=subprocess.PIPE, shell=False, env={'LANG': 'en_US.UTF-8'}).communicate()[0];
+
+        simplejson.dump({'data': changelog.decode('utf-8')}, sys.stdout)
+
+    except Exception, e:
+        print simplejson.dumps({'error':"%s"%e})
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
+

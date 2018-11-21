@@ -26,7 +26,7 @@ use warnings;
 use strict;
 use esmith::NetworksDB;
 
-my $ret = {"status" => undef, "configuration" => {'green' => [], 'red' => [] , 'orange' => [], 'blue' => [], 'free' => [], 'other' => [] }};
+my $ret = {"status" => undef, "configuration" => {'green' => [], 'red' => [] , 'orange' => [], 'blue' => [], 'free' => [], 'other' => [], 'missing' => [] }};
 our $ndb = esmith::NetworksDB->open_ro();
 
 sub list_free_interfaces
@@ -40,6 +40,12 @@ sub list_free_interfaces
     }
 
     return @interfaces;
+}
+
+sub interface_exists
+{
+    my $interface = shift;
+    return (-e "/sys/class/net/$interface");
 }
 
 my $input = readInput();
@@ -131,9 +137,9 @@ if($cmd eq 'list') {
         }
 
         # Retrieve IP address of DHCP interfaces and PPPoE
-        if (defined(($props{'bootproto'}) && $props{'bootproto'} eq 'dhcp') || $n->key eq 'ppp0' ) {
+        if ((exists($props{'bootproto'}) && $props{'bootproto'} eq 'dhcp') || $n->key eq 'ppp0' ) {
             my $iname = $n->key;
-            my $ipaddr = `/sbin/ip -o -4 address show $iname primary | head -1 | awk '{print \$4}' | cut -d '/' -f1`;
+            my $ipaddr = `/sbin/ip -o -4 address show $iname primary 2>/dev/null| head -1 | awk '{print \$4}' | cut -d '/' -f1`;
             chomp $ipaddr;
             $status{$iname}{'ipaddr'} = $ipaddr;
         }
@@ -146,7 +152,8 @@ if($cmd eq 'list') {
         my $type = $interface->{'type'};
 
         # children will be handled later
-        next if ($role eq 'alias' || $role eq 'bridged' || $role eq 'slave' || $role eq 'pppoe' || $type eq 'provider');
+        #next if ($role eq 'alias' || $role eq 'bridged' || $role eq 'slave' || $role eq 'pppoe' || $type eq 'provider');
+        next if ($role eq 'alias' || $role eq 'pppoe' || $type eq 'provider');
 
         $interface->{'aliases'} = [];
         $interface->{'devices'} = [];
@@ -175,6 +182,11 @@ if($cmd eq 'list') {
             }
         }
 
+        # handle special case of virtual interfaces with virtual parents
+        if ($role eq 'bridged' || $role eq 'slave') {
+            next;
+        }
+
         # pppoe is enabled, set connected ethernet interface as device
         if ($k eq 'ppp0' && $interface->{'type'} eq 'xdsl') {
             my @tmp = $ndb->get_all_by_prop('role','pppoe');
@@ -183,10 +195,14 @@ if($cmd eq 'list') {
             }
         }
 
-        if (exists($ret->{'configuration'}{$role})) {
-            push($ret->{'configuration'}{$role}, $interface);
+        if (interface_exists($k)) {
+            if (exists($ret->{'configuration'}{$role})) {
+                 push($ret->{'configuration'}{$role}, $interface);
+            } else {
+                push($ret->{'configuration'}{'other'}, $interface);
+            }
         } else {
-            push($ret->{'configuration'}{'other'}, $interface);
+            push($ret->{'configuration'}{'missing'}, $interface);
         }
     }
 
@@ -204,7 +220,7 @@ if($cmd eq 'list') {
     foreach my $n ($ndb->get_all()) {
         my %props = $n->props;
         my $role = $props{'role'} || '';
-        next if ($props{'type'} eq 'xdsl-disabled');
+        next if ($props{'type'} eq 'xdsl-disabled' || $props{'type'} eq 'provider');
         if ($role eq '') {
             push(@interfaces, $n->key);
             next;

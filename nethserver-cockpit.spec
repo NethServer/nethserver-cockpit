@@ -38,6 +38,7 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %doc README.rst
 %config /etc/sudoers.d/30_cockpit
 %config /etc/nethserver/cockpit/authorization/roles.json
+%config /usr/share/cockpit/nethserver/categories/categories.json
 %dir %{_nseventsdir}/%{name}-update
 %dir /usr/libexec/nethserver/api/
 
