@@ -90,7 +90,7 @@
                   <div class="list-view-pf-body">
                     <div class="list-view-pf-description">
                       <div :class="['list-group-item-heading', roleKey]">
-                        {{i.name}}
+                        <span @click="toggleOpen(i)">{{i.name}} <span v-if="i.nslabel">({{i.nslabel}})</span></span>
                       </div>
                       <div class="list-group-item-text details-ip">
                         <span class="pficon pficon-screen"></span>
@@ -728,6 +728,12 @@
                   </div>
                   <form class="form-horizontal" v-on:submit.prevent="saveLogicInterface()">
                     <div class="modal-body">
+                      <div class="form-group">
+                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.label')}}</label>
+                        <div class="col-sm-6">
+                          <input required v-model="wizard.review.nslabel" class="form-control" type="text">
+                        </div>
+                      </div>
                       <div v-if="wizard.role.choice == 'red'" class="form-group">
                         <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.bootproto')}}</label>
                         <input class="col-sm-1" type="radio" v-model="wizard.review.bootproto" value="dhcp">
@@ -921,6 +927,12 @@
                     <div class="modal-body">
                       <!-- ETHERNET -->
                       <div v-if="wizardPhysical.type.choice == 'ethernet'">
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.label')}}</label>
+                          <div class="col-sm-6">
+                            <input required v-model="wizardPhysical.review.nslabel" class="form-control" type="text">
+                          </div>
+                        </div>
                         <div v-if="wizardPhysical.role.choice == 'green' || wizardPhysical.role.choice == 'red'" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.bootproto')}}</label>
                           <input class="col-sm-1" type="radio" v-model="wizardPhysical.review.bootproto" value="dhcp">
@@ -1162,6 +1174,7 @@ export default {
           netmask: b && b.netmask ? b.netmask : "255.255.255.0",
           gateway: b && b.gateway ? b.gateway : "",
           bootproto: b && b.bootproto ? b.bootproto : "none",
+          nslabel: b && b.nslabel ? b.nslabel : "",
           errors: {
             ipaddr: {
               hasError: false,
@@ -1199,6 +1212,7 @@ export default {
           username: b && b.user ? b.user : "",
           password: b && b.Password ? b.Password : "",
           auth_type: b && b.AuthType ? b.AuthType : "auto",
+          nslabel: b && b.nslabel ? b.nslabel : "",
           errors: {
             ipaddr: {
               hasError: false,
@@ -1877,7 +1891,8 @@ export default {
             context.wizardPhysical.role.choice == "green" ||
             context.wizardPhysical.role.choice == "red"
               ? context.wizardPhysical.review.gateway
-              : ""
+              : "",
+          nslabel: context.wizardPhysical.review.nslabel
         };
       }
 
@@ -1958,7 +1973,8 @@ export default {
         parent:
           context.wizard.type.choice == "vlan"
             ? context.wizard.type.vlan.device
-            : null
+            : null,
+        nslabel: context.wizard.review.nslabel
       };
 
       context.wizard.isLoading = true;
