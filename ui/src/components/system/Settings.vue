@@ -195,6 +195,49 @@
       </form>
 
       <div v-if="view.isRoot" class="divider"></div>
+      <h3 v-if="view.isRoot">{{$t('settings.logrotate')}}</h3>
+      <form v-if="view.isRoot" class="form-horizontal" v-on:submit.prevent="saveSettings('logrotate')">
+        <div :class="['form-group', errors.Times.hasError ? 'has-error' : '']">
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.log_times')}}</label>
+          <div class="col-sm-5">
+            <input required type="number" v-model="settings.logrotate.Times" class="form-control">
+            <span v-if="errors.Times.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+errors.Times.message)}}</span>
+          </div>
+        </div>
+
+          <div :class="['form-group', errors.Rotate.hasError ? 'has-error' : '']">
+            <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.log_rotate')}}</label>
+            <div class="col-sm-5">
+              <select required type="text" v-model="settings.logrotate.Rotate" class="combobox form-control">
+                            <option value="daily">{{$t('settings.rotation_daily')}}</option>
+                            <option value="weekly">{{$t('settings.rotation_weekly')}}</option>
+                            <option value="monthly">{{$t('settings.rotation_monthly')}}</option>
+              </select>
+              <span v-if="errors.Rotate.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+errors.Rotate.message)}}</span>
+            </div>
+          </div>
+
+          <div :class="['form-group', errors.Compression.hasError ? 'has-error' : '']">
+            <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.log_compression')}}</label>
+            <div class="col-sm-5">
+              <input type="checkbox" :value="settings.logrotate.Compression == 'enabled'" v-model="settings.logrotate.Compression"
+                class="form-control">
+              <span v-if="errors.Compression.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+errors.Compression.message)}}</span>
+            </div>
+          </div>
+
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">
+            <div v-if="loaders.logrotate" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
+          </label>
+          <div class="col-sm-5">
+            <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+          </div>
+        </div>
+      </form>
+
+      <div v-if="view.isRoot" class="divider"></div>
       <h3 v-if="view.isRoot">{{$t('settings.hints')}}</h3>
       <form v-if="view.isRoot" class="form-horizontal" v-on:submit.prevent="saveSettings('hints')">
         <div :class="['form-group', errors.ShowHints.hasError ? 'has-error' : '']">
@@ -215,7 +258,6 @@
           </div>
         </div>
       </form>
-
     </div>
   </div>
 </template>
@@ -279,6 +321,11 @@ export default {
           LimitAccess: "",
           ShowHints: true,
           access: false
+        },
+        logrotate: {
+          Times: 4,
+          Rotate: 'weekly',
+          Compression: 'disabled'
         }
       },
       loaders: {
@@ -286,7 +333,8 @@ export default {
         smarthost: false,
         root: false,
         cockpit: false,
-        hints: false
+        hints: false,
+        logrotate: false
       },
       errors: this.initErrors(),
       newUser: {
@@ -349,6 +397,18 @@ export default {
         EmailAddress: {
           hasError: false,
           message: ""
+        },
+        Times:{
+            hasError: false,
+            message: ""
+        },
+        Compression:{
+            hasError: false,
+            message: ""
+        },
+        Rotate:{
+            hasError: false,
+            message: ""
         }
       };
     },
@@ -411,6 +471,10 @@ export default {
               context.settings.smarthost.SmartHostStatus == "enabled";
             context.settings.smarthost.SmartHostTlsStatus =
               context.settings.smarthost.SmartHostTlsStatus == "enabled";
+
+              //logrotate
+              context.settings.logrotate.Compression =
+                context.settings.logrotate.Compression == "enabled";
 
             // cockpit
             context.settings.cockpit.access =
@@ -476,6 +540,17 @@ export default {
               : "disabled"
           };
           break;
+
+          case "logrotate":
+            settingsObj = {
+              action: "logrotate",
+              Rotate: context.settings.logrotate.Rotate,
+              Times: context.settings.logrotate.Times,
+              Compression: context.settings.logrotate.Compression
+                ? "enabled"
+                : "disabled"
+            };
+            break;
 
         case "root":
           settingsObj = {

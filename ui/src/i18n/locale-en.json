@@ -657,7 +657,14 @@
       "settings_updated_ok": "Settings updated successfully!",
       "settings_updated_error": "Settings not updated.",
       "cannot_change_password": "User can't change password",
-      "remote_account_provider_password": "The current logged user is member of remote account provider"
+      "remote_account_provider_password": "The current logged user is member of remote account provider",
+      "logrotate": "Logs",
+      "log_times": "Maximum log retention (weeks)",
+      "log_compression": "Enable the log compression",
+      "rotation_daily": "daily",
+      "rotation_weekly": "weekly",
+      "rotation_monthly": "monthly",
+      "log_rotate": "Frequency of rotation"
     },
     "logs": {
       "title": "Logs"
