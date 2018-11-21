@@ -514,18 +514,42 @@ Example:
 }
 ```
 
+##### download-backup-config
+
+Download the selected configuration backup from local history.
+The `name` field should contain the name of the backup.
+
+Example:
+```json
+{
+  "action": "download-backup-config",
+  "name": "c00"
+}
+```
+
 #### restore-backup-config
 
 Execute a configuration restore.
 The `name` field should contain the id of configuration backup to restore.
-The `InstallPackages` can be `enabled` or `disabled`.
+The `InstallPackages` field can be `enabled` or `disabled`.
+
+The `data` backup can contain multiple information based on the `mode` field.
+The `mode` field can be:
+
+- `url`: retrieve the backup from given url.
+   The `data` field contains a valid HTTP url.
+- `file`: retrieve the backup from the uploaded file.
+   The `data` field contains the uploaded file in base64 format.
+- `backup`: retrieve the backup from local configuration backup history.
+   The `data` field contains the name of the backup, like `c00}.
 
 Example:
 ```json
 {
   "action": "restore-backup-config",
   "InstallPackages": "enabled",
-  "name": "c00"
+  "mode": "backup",
+  "data": "c00"
 }
 ```
 
