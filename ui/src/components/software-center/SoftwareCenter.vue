@@ -112,7 +112,7 @@
         </div>
       </div>
       <div class="form-group">
-        <button class="btn btn-default btn-lg" type="submit"><span class="fa fa-search"></span></button>
+        <button class="btn btn-default btn-lg"><span class="fa fa-search"></span></button>
       </div>
     </form>
     <div v-if="view.appsLoaded" class="row row-cards-pf adjust-top">
@@ -282,25 +282,29 @@
           </div>
           <form class="form-horizontal" v-on:submit.prevent="saveConfiguration()">
             <div class="modal-body">
-              <p>{{$t('software_center.updates_origin')}}</p>
               <div class="form-group">
-                <input class="col-sm-3" type="radio" value="unlocked" v-model="updatesConfig.origin">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('software_center.updates_origin')}}</label>
+              </div>
+              <div class="form-group">
+                <input class="col-sm-4" type="radio" value="unlocked" v-model="updatesConfig.origin">
                 <label class="control-label col-sm-2 text-align-left">{{$t('software_center.unlocked')}}</label>
                 <div class="col-sm-6 control-label text-align-left">{{$t('software_center.unlocked_description')}}</div>
               </div>
               <div class="form-group">
-                <input class="col-sm-3" type="radio" value="locked" v-model="updatesConfig.origin">
+                <input class="col-sm-4" type="radio" value="locked" v-model="updatesConfig.origin">
                 <label class="control-label col-sm-2 text-align-left">{{$t('software_center.locked')}}</label>
                 <div class="col-sm-6 control-label text-align-left">{{$t('software_center.locked_description')}}</div>
               </div>
               <p class="divider"></p>
-              <p>{{$t('software_center.when_updates_available')}}</p>
               <div class="form-group">
-                <input class="col-sm-3" type="radio" value="download" v-model="updatesConfig.install">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('software_center.when_updates_available')}}</label>
+              </div>
+              <div class="form-group">
+                <input class="col-sm-4" type="radio" value="download" v-model="updatesConfig.install">
                 <label class="control-label col-sm-6 text-align-left">{{$t('software_center.download')}}</label>
               </div>
               <div class="form-group">
-                <input class="col-sm-3" type="radio" value="install" v-model="updatesConfig.install">
+                <input class="col-sm-4" type="radio" value="install" v-model="updatesConfig.install">
                 <label class="control-label col-sm-6 text-align-left">{{$t('software_center.download_install')}}</label>
               </div>
               <p class="divider"></p>

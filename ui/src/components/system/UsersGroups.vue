@@ -267,7 +267,11 @@
                   <password-meter></password-meter>
                 </div>
               </div>
-              <p v-if="!newUser.isPassEdit">{{$t('users_groups.advanced_options')}}</p>
+              <div v-if="!newUser.isPassEdit" class="advanced">
+                <span>{{$t('users_groups.advanced_options')}}</span>
+                <div class="divider divider-advanced"></div>
+              </div>
+              <!-- <p v-if="!newUser.isPassEdit">{{$t('users_groups.advanced_options')}}</p> -->
               <div v-if="!newUser.isPassEdit" class="form-group">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.password_expiration')}}</label>
                 <div class="col-sm-9">

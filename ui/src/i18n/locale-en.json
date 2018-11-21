@@ -244,7 +244,8 @@
       "data_excludes": "Exclude paths",
       "data_includes": "Include paths",
       "data_custom_excludes": "Custom exclude paths (one per line)",
-      "data_custom_includes": "Custom include paths (one per line)"
+      "data_custom_includes": "Custom include paths (one per line)",
+      "remap_interface_config": "Remap interfaces"
     },
     "disk_usage": {
       "title": "Disk usage",
@@ -496,15 +497,7 @@
       "password_policy_error": "Password policy not changed.",
       "set_valid_hostname": "Set valid hostname",
       "hostname_save_ok": "Hostname changed successfully!",
-      "hostname_save_error": "Hostname not changed.",
-      "ip_address_already_in_use": "IP address already in use",
-      "non_existing_interface": "Selected interface doesn't exists",
-      "invalid_role": "Invalid role",
-      "interface_already_in_use": "One ore more selected interface are already in use",
-      "one_green_interface_must_always_exists": "The system must have at least one green interface",
-      "invalid_vlan_parent": "Invalid parent for a VLAN",
-      "vlan_tag_already_used": "This tag is already used by another VLAN",
-      "bond_valid_mode_between_0_and_6": "Bond mode must be a number between 0 and 6"
+      "hostname_save_error": "Hostname not changed."
     },
     "network": {
       "title": "Network",
@@ -595,7 +588,8 @@
       "routes": "Routes",
       "description": "Description",
       "metric": "Metric",
-      "router": "Router"
+      "router": "Router",
+      "label": "Label"
     },
     "ssh": {
       "title": "SSH",
@@ -695,7 +689,12 @@
       "icon": "Logo",
       "settings": "Settings",
       "remove": "Remove",
-      "refresh": "Refresh"
+      "refresh": "Refresh",
+      "list": "List",
+      "application": "Application",
+      "remove_applications_warn": "This action will remove these packages",
+      "remove_ok": "Application removed successfully!",
+      "remove_error": "Application not removed."
     },
     "software_center": {
       "title": "Software Center",
@@ -735,7 +734,7 @@
       "categories": "Categories",
       "selected": "Selected",
       "updates_origin": "Updates origin",
-      "when_updates_available": "When updates are available",
+      "when_updates_available": "Updates available",
       "unlocked": "Unlocked",
       "unlocked_description": "Consider updates from all available software repositories until the next CentOS distribution release is available",
       "locked": "Locked",
@@ -855,7 +854,15 @@
       "usb_write_failed": "Can't write files inside the disk",
       "usb_delete_failed": "Can't delete files from the disk",
       "valid_cidrBlock": "Must be a valid CIDR network",
-      "route_key_exists": "Given route alrady exists"
+      "route_key_exists": "Given route alrady exists",
+      "ip_address_already_in_use": "IP address already in use",
+      "non_existing_interface": "Selected interface doesn't exists",
+      "invalid_role": "Invalid role",
+      "interface_already_in_use": "One ore more selected interface are already in use",
+      "one_green_interface_must_always_exists": "The system must have at least one green interface",
+      "invalid_vlan_parent": "Invalid parent for a VLAN",
+      "vlan_tag_already_used": "This tag is already used by another VLAN",
+      "bond_valid_mode_between_0_and_6": "Bond mode must be a number between 0 and 6"
     }
   }
 }

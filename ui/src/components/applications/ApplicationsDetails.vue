@@ -1,9 +1,9 @@
 <template>
   <div>
-    <h2>{{info.name}} {{info.release && info.release.version || ''}}</h2>
-    <button v-if="view.isLoaded" @click="isShortcut ? removeShortcut(application,info.name) : addShortcut(application, info.name)" :class="['btn', isShortcut ? 'btn-danger' : 'btn-primary', 'shortcut']">{{isShortcut
+    <h2>{{info.name || '-'}} {{info.release && info.release.version || ''}}</h2>
+    <button v-if="view.isLoaded && info.editable == 1" @click="info.shortcut == 1 ? removeShortcut(application) : addShortcut(application)" :class="['btn', info.shortcut == 1 ? 'btn-danger' : 'btn-primary', 'shortcut']">{{info.shortcut == 1
       ? $t('remove_shortcut') : $t('add_shortcut')}}</button>
-    <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner spinner-inverse"></div>
+    <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner spinner-inverse adjust-spinner-top"></div>
     <iframe id="app-frame" class="iframe-embedded" :src="'/cockpit/@localhost/'+application+'/index.html'"></iframe>
     <div v-if="view.modalFake" class="fake-modal-backdrop"></div>
   </div>
@@ -100,7 +100,6 @@ export default {
         modalFake: false
       },
       application: this.$route.params.name,
-      isShortcut: false,
       info: {}
     };
   },
@@ -123,6 +122,7 @@ export default {
       context.exec(
         ["system-apps/read"],
         {
+          action: "info",
           name: context.application
         },
         null,
@@ -136,6 +136,52 @@ export default {
           console.error(error);
         }
       );
+    },
+    addShortcut() {
+      var context = this;
+
+      context.view.isLoaded = false;
+      context.exec(
+        ["system-apps/update"],
+        {
+          action: "add-shortcut",
+          name: context.application
+        },
+        null,
+        function(success) {
+          context.refresh();
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+    removeShortcut() {
+      var context = this;
+
+      context.view.isLoaded = false;
+      context.exec(
+        ["system-apps/update"],
+        {
+          action: "remove-shortcut",
+          name: context.application
+        },
+        null,
+        function(success) {
+          context.refresh();
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+    refresh() {
+      cockpit
+        .dbus(null, {
+          bus: "internal"
+        })
+        .call("/packages", "cockpit.Packages", "Reload", []);
+      this.getAppInfo();
     }
   }
 };
@@ -151,5 +197,8 @@ export default {
 .shortcut {
   margin-top: -36px;
   float: right;
+}
+.adjust-spinner-top {
+  margin-top: -30px;
 }
 </style>

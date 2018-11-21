@@ -972,6 +972,10 @@ input[type="checkbox"].form-control {
   display: inline-block;
 }
 
+.display-block {
+  display: block;
+}
+
 .dhcp-int {
   display: inline;
   margin-right: 10px;
@@ -1000,6 +1004,10 @@ input[type="checkbox"].form-control {
 @media screen and (max-width: 768px) {
   .adjust-label-wizard {
     margin-top: 15px;
+  }
+
+  .divider-advanced {
+    display: none !important;
   }
 }
 

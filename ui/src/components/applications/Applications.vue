@@ -25,14 +25,14 @@
             <span class="fa fa-cogs"></span>
             {{$t('applications.settings')}}
           </a>
-          <div class="dropup pull-right dropdown-kebab-pf">
+          <div v-if="props.row.editable == 1" class="dropup pull-right dropdown-kebab-pf">
             <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="true">
               <span class="fa fa-ellipsis-v"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
               <li>
-                <a @click="removeApp(props.row)">
+                <a @click="openRemoveApp(props.row)">
                   <span class="fa fa-times action-icon-menu"></span>
                   {{$t('applications.remove')}}</a>
               </li>
@@ -41,6 +41,38 @@
         </td>
       </template>
     </vue-good-table>
+
+    <div class="modal" id="removeAppModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('applications.remove')}} {{currentApp.name}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="removeApp()">
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+              </div>
+              <div class="alert alert-warning alert-dismissable">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>{{$t('warning')}}.</strong> {{$t('applications.remove_applications_warn')}}.
+              </div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('applications.list')}}</label>
+                <div class="col-sm-9">
+                  <div v-if="!currentApp.listRemoveRead" class="spinner spinner-sm"></div>
+                  <pre v-if="currentApp.listRemoveRead" class="prettyprint">{{currentApp.listRemoveRead}}</pre>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button :disabled="!currentApp.listRemoveRead" class="btn btn-danger" type="submit">{{$t('delete')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -81,7 +113,11 @@ export default {
           sortable: false
         }
       ],
-      rows: []
+      rows: [],
+      currentApp: {
+        listRemove: [],
+        listRemoveRead: null
+      }
     };
   },
   mounted() {
@@ -108,7 +144,9 @@ export default {
       context.view.isLoaded = false;
       context.exec(
         ["system-apps/read"],
-        null,
+        {
+          action: "list"
+        },
         null,
         function(success) {
           success = JSON.parse(success);
@@ -121,7 +159,59 @@ export default {
         }
       );
     },
-    removeApp() {},
+    openRemoveApp(app) {
+      var context = this;
+      this.currentApp = app;
+
+      $("#removeAppModal").modal("show");
+      context.exec(
+        ["system-packages/read"],
+        {
+          action: "list-removed",
+          packages: [app.id]
+        },
+        null,
+        function(success) {
+          success = JSON.parse(success);
+          context.currentApp.listRemove = success.packages;
+          context.currentApp.listRemoveRead = success.packages.join("\n");
+          context.$forceUpdate();
+          console.log(context.currentApp.listRemoveRead);
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+    removeApp() {
+      var context = this;
+
+      $("#removeAppModal").modal("hide");
+      context.exec(
+        ["system-packages/update"],
+        {
+          action: "remove",
+          packages: context.currentApp.listRemove
+        },
+        function(stream) {
+          console.info("packages-remove", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "applications.remove_ok"
+          );
+
+          context.refresh();
+        },
+        function(error) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "applications.remove_error"
+          );
+        }
+      );
+    },
     refresh() {
       cockpit
         .dbus(null, {
