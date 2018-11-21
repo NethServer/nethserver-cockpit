@@ -46,26 +46,11 @@ sub read_json
     return decode_json($json);
 }
 
-sub app_info
-{
-    my $app = shift;
-    my $file = "$path$app.json";
-    my $data = read_json($file);
-    $data->{'editable'} = is_editable();
-    $data->{'shortcut'} = has_shortcut($app);
-    return $data;
-}
-
-sub is_editable
-{
-    return ($< == 0) ? 1 : 0; # map to integer
-}
 
 sub has_shortcut
 {
     my $app = shift;
-    return 0 if ($< != 0); # non-root users can't access the config db
-    my $db = esmith::ConfigDB->open_ro();
+    my $db = shift;
     my $shortcuts = $db->get_prop('cockpit.socket', 'Shortcuts') || '';
     foreach (split(",",$shortcuts)) {
         return 1 if ($_ eq $app);
@@ -73,21 +58,42 @@ sub has_shortcut
     return 0;
 }
 
-if($cmd eq 'list') {
-
-    my @apps;
-
-    foreach my $f (glob("$path*.json")) {
-        my ($name,$path,$suffix) = fileparse($f,(".json"));
-        my $data = app_info($name) || next;
-        push(@apps, $data);
+sub apply
+{
+    my $out = `/sbin/e-smith/expand-template /usr/share/cockpit/nethserver/manifest.json`;
+    if ($? > 0) {
+        error("EventFailed", "");
+    } else {
+        success();
     }
+}
 
-    print encode_json(\@apps);
+if ($< != 0) {
+    error()
+}
 
-} elsif ($cmd eq 'info') {
+my $db = esmith::ConfigDB->open();
+if($cmd eq 'remove-shortcut') {
 
-    print encode_json(app_info($input->{'name'}));
+    my $app = $input->{'name'};
+    if (has_shortcut($app, $db)) {
+        my $shortcuts = $db->get_prop('cockpit.socket', 'Shortcuts') || '';
+        my @tmp = split(",",$shortcuts);
+        @tmp = grep(!/^$app$/, @tmp);
+        $db->set_prop('cockpit.socket', 'Shortcuts', join(",",@tmp));
+    }
+    apply();
+
+} elsif ($cmd eq 'add-shortcut') {
+
+    my $app = $input->{'name'};
+    if (!has_shortcut($app, $db)) {
+        my $shortcuts = $db->get_prop('cockpit.socket', 'Shortcuts') || '';
+        my @tmp = split(",",$shortcuts);
+        push(@tmp, $app);
+        $db->set_prop('cockpit.socket', 'Shortcuts', join(",",@tmp));
+    }
+    apply();
 
 } else {
     error();
