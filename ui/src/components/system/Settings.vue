@@ -195,27 +195,6 @@
       </form>
 
       <div v-if="view.isRoot" class="divider"></div>
-      <h3 v-if="view.isRoot">{{$t('settings.hints')}}</h3>
-      <form v-if="view.isRoot" class="form-horizontal" v-on:submit.prevent="saveSettings('hints')">
-        <div :class="['form-group', errors.ShowHints.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.show_hints')}}</label>
-          <div class="col-sm-5">
-            <toggle-button class="min-toggle" :width="40" :height="20" :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
-              :value="settings.cockpit.ShowHints" :sync="true" @change="toggleSettingsHints()" />
-            <span v-if="errors.ShowHints.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-              {{$t('validation.'+errors.ShowHints.message)}}</span>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">
-            <div v-if="loaders.hints" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
-          </label>
-          <div class="col-sm-5">
-            <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
-          </div>
-        </div>
-      </form>
-      <div v-if="view.isRoot" class="divider"></div>
       <h3 v-if="view.isRoot">{{$t('settings.logrotate')}}</h3>
       <form v-if="view.isRoot" class="form-horizontal" v-on:submit.prevent="saveSettings('logrotate')">
         <div :class="['form-group', errors.Times.hasError ? 'has-error' : '']">
@@ -248,6 +227,28 @@
           </div>
 
 
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">
+            <div v-if="loaders.logrotate" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
+          </label>
+          <div class="col-sm-5">
+            <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+          </div>
+        </div>
+      </form>
+
+      <div v-if="view.isRoot" class="divider"></div>
+      <h3 v-if="view.isRoot">{{$t('settings.hints')}}</h3>
+      <form v-if="view.isRoot" class="form-horizontal" v-on:submit.prevent="saveSettings('hints')">
+        <div :class="['form-group', errors.ShowHints.hasError ? 'has-error' : '']">
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.show_hints')}}</label>
+          <div class="col-sm-5">
+            <toggle-button class="min-toggle" :width="40" :height="20" :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+              :value="settings.cockpit.ShowHints" :sync="true" @change="toggleSettingsHints()" />
+            <span v-if="errors.ShowHints.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.ShowHints.message)}}</span>
+          </div>
+        </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
             <div v-if="loaders.hints" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
