@@ -34,7 +34,6 @@ nav:
       - api/system-dns.md
       - api/system-hostname.md
       - api/system-hosts.md
-      - api/system-logrotate.md
       - api/system-network.md
       - api/system-openssh.md
       - api/system-password.md
