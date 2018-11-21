@@ -1,0 +1,67 @@
+\{
+  "version": 0,
+  "name": "nethserver",
+
+  "menu": \{
+    "index": \{
+      "label": "System",
+      "order": 10
+    \},
+    "#/applications": \{
+      "label": "Applications",
+      "order": 20
+    \},
+    "/#/software-center": \{
+      "label": "Software Center",
+      "order": 30
+    \},
+    "//#/terminal": \{
+      "label": "Terminal",
+      "order": 40
+    \}
+  \},
+
+  "tools": \{
+{
+    use JSON;
+    binmode STDOUT, ":utf8";
+    use utf8;
+ 
+    sub get_application_name {
+         my $id = shift;
+         my $file = "/usr/share/cockpit/nethserver/applications/$id.json";
+         return '' if ( ! -e $file );
+
+         my $json;
+         {
+             local $/; #Enable 'slurp' mode
+             open my $fh, "<", $file;
+             $json = <$fh>;
+             close $fh;
+         }
+         my $data = decode_json($json);
+
+         return $data->{'name'};
+    }
+
+    my $shortcuts = ${'cockpit.socket'}{'Shortcuts'} || '';
+    if ($shortcuts ne '') {
+        my $i = 0;
+        my @tmp = split(",",$shortcuts);
+        $OUT .= "";
+        foreach my $a (@tmp) {
+            my $name = get_application_name($a) || next;
+            $OUT .= '    "';
+            for (my $k=0; $k<$i+3; $k++) {
+                 $OUT .= "/";
+            }
+            $OUT .= "#/applications/$a\" : {\"label\": \"$name\"},";
+        }
+        chop $OUT; # remove extra comma
+    }
+
+}
+  \},
+
+  "content-security-policy": "default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:"
+\}
