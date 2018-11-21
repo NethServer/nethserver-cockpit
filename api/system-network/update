@@ -45,6 +45,7 @@ if($cmd eq 'release-role') {
     $i->set_prop('ipaddr', $input->{'ipaddr'} || '');
     $i->set_prop('netmask', $input->{'netmask'} || '');
     $i->set_prop('gateway', $input->{'gateway'} || '');
+    $i->set_prop('nslabel', $input->{'nslabel'} || '');
 
     my $devices = $input->{'devices'} || undef;
 

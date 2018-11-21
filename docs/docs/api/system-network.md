@@ -177,7 +177,8 @@ Example:
         "type": "bond",
         "netmask": "255.255.255.0",
         "role": "green",
-        "ipaddr": "192.168.4.246"
+        "ipaddr": "192.168.4.246",
+        "nslabel": "MyMightyGreen"
       },
       {
         "bootproto": "none",
@@ -487,6 +488,7 @@ Example:
   "interface": "br1",
   "ipaddr": "192.168.1.246",
   "netmask": "255.255.255.0",
+  'nslabel': "MyGuests"
   "BondOptMode": 0,
   "devices": [
     "enp0s9"
