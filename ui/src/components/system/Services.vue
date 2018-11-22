@@ -170,7 +170,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
 
           if (success.system.indexOf(to.path.substring(1)) == -1) {
             window.location.hash = "#/";
@@ -325,7 +329,11 @@ export default {
         },
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.view.isLoaded = true;
           for (var c in success.configuration) {
             var config = success.configuration[c];
@@ -517,7 +525,11 @@ export default {
         },
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.currentDetails.status = success.data;
 
           context.currentDetails.isLoading = false;

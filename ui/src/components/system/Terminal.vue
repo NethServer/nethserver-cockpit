@@ -17,7 +17,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
 
           if (success.system.indexOf(to.path.substring(1)) == -1) {
             window.location.hash = "#/";

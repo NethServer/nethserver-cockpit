@@ -34,7 +34,11 @@ export default {
       },
       null,
       function(success) {
-        var success = JSON.parse(success);
+        try {
+          success = JSON.parse(success);
+        } catch (e) {
+          $("#error-popup", window.parent.document).modal("show");
+        }
         if (success.state == "success") {
           context.view.isLoaded = true;
         } else {
@@ -127,7 +131,11 @@ export default {
         },
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.info = success;
           context.view.isLoaded = true;
           context.initGraphics();

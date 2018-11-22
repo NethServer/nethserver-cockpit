@@ -257,7 +257,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
 
           if (success.system.indexOf(to.path.substring(1)) == -1) {
             window.location.hash = "#/";
@@ -416,7 +420,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.view.isLoaded = true;
           context.ranges = success.configuration.ranges;
 
@@ -462,7 +470,11 @@ export default {
             rangeObj,
             null,
             function(success) {
-              success = JSON.parse(success);
+              try {
+                success = JSON.parse(success);
+              } catch (e) {
+                $("#error-popup", window.parent.document).modal("show");
+              }
 
               // get ranges
               context.getRanges();
@@ -526,7 +538,12 @@ export default {
           );
         },
         function(error, data) {
-          var errorData = JSON.parse(data);
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.currentRange.isLoading = false;
           context.currentRange.errors.DhcpRangeStart.hasError = false;
           context.currentRange.errors.DhcpRangeEnd.hasError = false;
@@ -553,7 +570,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.view.isLoaded = true;
           var results = success.configuration.reservations;
 
@@ -664,7 +685,12 @@ export default {
           }
         },
         function(error, data) {
-          var errorData = JSON.parse(data);
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.newReservation.isLoading = false;
           context.newReservation.errors.name.hasError = false;
           context.newReservation.errors.IpAddress.hasError = false;

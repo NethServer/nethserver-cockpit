@@ -605,7 +605,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.system.summary.hardware = success.status.hardware;
           context.system.summary.kernelRelease = success.status.kernel;
           context.system.summary.osRelease = success.status.release;
@@ -652,7 +656,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.system.summary.hostname = success.hostname;
           context.system.summary.newHostname = success.hostname;
           context.system.summary.hostnameIsEdit = success.editable == 1;
@@ -691,7 +699,12 @@ export default {
               resolve();
             },
             function(error, data) {
-              var errorData = JSON.parse(data);
+              var errorData = {};
+              try {
+                errorData = JSON.parse(data);
+              } catch (e) {
+                $("#error-popup", window.parent.document).modal("show");
+              }
               context.system.errors.hostname.hasError = true;
               context.system.errors.hostname.message =
                 errorData.attributes[0].error;
@@ -731,7 +744,12 @@ export default {
               resolve();
             },
             function(error, data) {
-              var errorData = JSON.parse(data);
+              var errorData = {};
+              try {
+                errorData = JSON.parse(data);
+              } catch (e) {
+                $("#error-popup", window.parent.document).modal("show");
+              }
               for (var a in errorData.attributes) {
                 var attr = errorData.attributes[a];
                 var i = 0;
@@ -849,7 +867,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.system.summary.aliases = [];
           for (var i in success.configuration) {
             var alias = success.configuration[i].name;
@@ -879,7 +901,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           if (
             success.configuration.props.NameServers.split(",")[0] !== undefined
           ) {
@@ -959,7 +985,12 @@ export default {
           );
         },
         function(error, data) {
-          var errorData = JSON.parse(data);
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.system.errors.dns1.isLoading = false;
 
           context.system.errors.dns1.hasError = false;
@@ -980,7 +1011,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.system.summary.datetime = success.status.datetime;
           context.system.summary.date = success.status.date;
           context.system.summary.time = success.status.time;
@@ -1077,7 +1112,12 @@ export default {
           );
         },
         function(error, data) {
-          var errorData = JSON.parse(data);
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.system.errors.datetime.isLoading = false;
 
           context.system.errors.datetime.date.hasError;
@@ -1098,7 +1138,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.system.organization = {
             company: success.configuration.props.Company,
             city: success.configuration.props.City,
@@ -1177,7 +1221,12 @@ export default {
           );
         },
         function(error, data) {
-          var errorData = JSON.parse(data);
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.system.errors.company.isLoading = false;
           context.system.errors.company.hasError = true;
           context.system.errors.company.message =

@@ -204,7 +204,7 @@
       "no_config_backup_found_title": "No backups found",
       "no_config_backup_found_desc": "There is no configuration backups found",
       "no_data_backup_found_title": "No backups found",
-      "no_data_backup_found_desc": "There is no data backups found. Click to Configure to create new one",
+      "no_data_backup_found_desc": "There is no data backups found. Click to Create to create new one",
       "backup_create_ok": "Backup created successfully!",
       "backup_create_error": "Backup not created.",
       "backup_update_ok": "Backup updated successfully!",
@@ -688,6 +688,7 @@
       "new_version": "New version",
       "icon": "Logo",
       "settings": "Settings",
+      "open": "Open",
       "remove": "Remove",
       "refresh": "Refresh",
       "list": "List",
@@ -862,7 +863,8 @@
       "one_green_interface_must_always_exists": "The system must have at least one green interface",
       "invalid_vlan_parent": "Invalid parent for a VLAN",
       "vlan_tag_already_used": "This tag is already used by another VLAN",
-      "bond_valid_mode_between_0_and_6": "Bond mode must be a number between 0 and 6"
+      "bond_valid_mode_between_0_and_6": "Bond mode must be a number between 0 and 6",
+      "valid_macAddress": "Must be a valid MAC address"
     }
   }
 }

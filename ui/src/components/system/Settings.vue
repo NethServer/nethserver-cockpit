@@ -277,7 +277,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
 
           if (success.system.indexOf(to.path.substring(1)) == -1) {
             window.location.hash = "#/";
@@ -324,8 +328,8 @@ export default {
         },
         logrotate: {
           Times: 4,
-          Rotate: 'weekly',
-          Compression: 'disabled'
+          Rotate: "weekly",
+          Compression: "disabled"
         }
       },
       loaders: {
@@ -398,17 +402,17 @@ export default {
           hasError: false,
           message: ""
         },
-        Times:{
-            hasError: false,
-            message: ""
+        Times: {
+          hasError: false,
+          message: ""
         },
-        Compression:{
-            hasError: false,
-            message: ""
+        Compression: {
+          hasError: false,
+          message: ""
         },
-        Rotate:{
-            hasError: false,
-            message: ""
+        Rotate: {
+          hasError: false,
+          message: ""
         }
       };
     },
@@ -444,7 +448,11 @@ export default {
         },
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.settings = success.configuration;
 
           context.view.isRoot = success.status.isRoot == 1;
@@ -472,9 +480,9 @@ export default {
             context.settings.smarthost.SmartHostTlsStatus =
               context.settings.smarthost.SmartHostTlsStatus == "enabled";
 
-              //logrotate
-              context.settings.logrotate.Compression =
-                context.settings.logrotate.Compression == "enabled";
+            //logrotate
+            context.settings.logrotate.Compression =
+              context.settings.logrotate.Compression == "enabled";
 
             // cockpit
             context.settings.cockpit.access =
@@ -541,16 +549,16 @@ export default {
           };
           break;
 
-          case "logrotate":
-            settingsObj = {
-              action: "logrotate",
-              Rotate: context.settings.logrotate.Rotate,
-              Times: context.settings.logrotate.Times,
-              Compression: context.settings.logrotate.Compression
-                ? "enabled"
-                : "disabled"
-            };
-            break;
+        case "logrotate":
+          settingsObj = {
+            action: "logrotate",
+            Rotate: context.settings.logrotate.Rotate,
+            Times: context.settings.logrotate.Times,
+            Compression: context.settings.logrotate.Compression
+              ? "enabled"
+              : "disabled"
+          };
+          break;
 
         case "root":
           settingsObj = {
@@ -629,7 +637,12 @@ export default {
           );
         },
         function(error, data) {
-          var errorData = JSON.parse(data);
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.loaders[type] = false;
           context.errors = context.initErrors();
 

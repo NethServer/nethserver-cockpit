@@ -1049,7 +1049,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
 
           if (success.system.indexOf(to.path.substring(1)) == -1) {
             window.location.hash = "#/";
@@ -1612,7 +1616,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.currentProxy.status =
             success.configuration.props.host.length > 0;
           context.currentProxy.configuration = success.configuration;
@@ -1631,7 +1639,11 @@ export default {
         },
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.wizard.type.vlan.devicesList = success;
           context.wizard.type.vlan.device = context.wizard.type.vlan.device
             ? context.wizard.type.vlan.device
@@ -1651,7 +1663,11 @@ export default {
         },
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.wizard.type.bond.devicesList = context.wizard.type.bond.devicesList
             .concat(success)
             .sort();
@@ -1673,7 +1689,11 @@ export default {
         },
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.wizard.type.bond.modes = success;
           context.wizard.type.bond.mode = success[0];
         },
@@ -1689,7 +1709,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.routes = success.configuration;
         },
         function(error) {
@@ -1751,7 +1775,11 @@ export default {
         },
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.view.isLoaded = true;
 
           context.interfaceStatus = success.status;
@@ -1847,7 +1875,11 @@ export default {
         },
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.currentInterface.successorList = success;
           context.currentInterface.successor =
             context.currentInterface.successorList[0];
@@ -1931,7 +1963,12 @@ export default {
           );
         },
         function(error, data) {
-          var errorData = JSON.parse(data);
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.wizardPhysical.isLoading = false;
           context.wizardPhysical.review.errors = context.initWizardPhysical().review.errors;
 
@@ -2012,7 +2049,12 @@ export default {
           );
         },
         function(error, data) {
-          var errorData = JSON.parse(data);
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.wizard.isLoading = false;
           context.wizard.review.errors = context.initWizard().review.errors;
 
@@ -2069,7 +2111,12 @@ export default {
           );
         },
         function(error, data) {
-          var errorData = JSON.parse(data);
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.newInterface.isLoading = false;
           context.newInterface.errors = context.initInterface().errors;
 
@@ -2129,7 +2176,12 @@ export default {
           );
         },
         function(error, data) {
-          var errorData = JSON.parse(data);
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.newRoute.isLoading = false;
           context.newRoute.errors = context.initRoute().errors;
 
@@ -2396,7 +2448,12 @@ export default {
           );
         },
         function(error, data) {
-          var errorData = JSON.parse(data);
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.currentProxy.isLoading = false;
           context.currentProxy.errors = context.initProxy().errors;
 

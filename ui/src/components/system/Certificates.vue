@@ -323,7 +323,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
 
           if (success.system.indexOf(to.path.substring(1)) == -1) {
             window.location.hash = "#/";
@@ -492,7 +496,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.rows = success.configuration.certificates;
           context.view.isLoaded = true;
           context.selfSignedCertificate.SubjectAltName =
@@ -610,7 +618,12 @@ export default {
           );
         },
         function(error, data) {
-          var errorData = JSON.parse(data);
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.newCertificate.errors.isLoading = false;
           context.newCertificate.errors.name.hasError = false;
           context.newCertificate.errors.certificate.hasError = false;
@@ -695,7 +708,12 @@ export default {
           );
         },
         function(error, data) {
-          var errorData = JSON.parse(data);
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.selfSignedCertificate.errors.isLoading = false;
           context.selfSignedCertificate.errors.CountryCode.hasError = false;
           context.selfSignedCertificate.errors.State.hasError = false;
@@ -784,7 +802,12 @@ export default {
           );
         },
         function(error, data) {
-          var errorData = JSON.parse(data);
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.letsEncryptCertificate.errors.isLoading = false;
           context.letsEncryptCertificate.errors.LetsEncryptMail.hasError = false;
           context.letsEncryptCertificate.errors.LetsEncryptRenewDays.hasError = false;
@@ -863,7 +886,11 @@ export default {
         },
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.currentCertificate = atob(success.certificate);
         },
         function(error) {

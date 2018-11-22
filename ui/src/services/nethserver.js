@@ -30,7 +30,7 @@ var NethServerService = {
         process.input(JSON.stringify(input))
       }
 
-      console.info("echo '" + JSON.stringify(input) + "' | " + args.join(' '))
+      console.info("echo '" + JSON.stringify(input) + "' | " + args.join(' ') + " | python -m json.tool")
 
       if (stream) {
         process.stream(function (data) {
@@ -63,7 +63,7 @@ var NethServerService = {
               ) {
                 systemCheck = false
                 ns.$children[0].notifications.event.steps = 0
-                ns.$children[0].notifications.event.progress = progress * 100;
+                ns.$children[0].notifications.event.progress = Math.round(progress * 100)
               }
 
               ns.$children[0].notifications.event.steps = j.steps

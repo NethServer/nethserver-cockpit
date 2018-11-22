@@ -440,7 +440,11 @@ export default {
         },
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.updatesConfig.origin =
             success.NsReleaseLock == "disabled" ? "unlocked" : "locked";
           context.updatesConfig.install =
@@ -468,7 +472,11 @@ export default {
         },
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
 
           for (var u in success.updates) {
             var update = success.updates[u];
@@ -510,9 +518,14 @@ export default {
 
             var content = "<pre>";
 
-            var keys = Object.keys(app.mandatory_packages);
-            for (var k in keys) {
-              var key = keys[k];
+            var keysM = Object.keys(app.mandatory_packages);
+            for (var k in keysM) {
+              var key = keysM[k];
+              content += key + "<br/>";
+            }
+            var keysO = Object.keys(app.optional_packages);
+            for (var k in keysO) {
+              var key = keysO[k];
               content += key + "<br/>";
             }
             app.content = content + "</pre>";
@@ -565,7 +578,11 @@ export default {
           },
           null,
           function(success) {
-            success = JSON.parse(success);
+            try {
+              success = JSON.parse(success);
+            } catch (e) {
+              $("#error-popup", window.parent.document).modal("show");
+            }
             context.currentPackage.details = success.data || "-";
           },
           function(error) {

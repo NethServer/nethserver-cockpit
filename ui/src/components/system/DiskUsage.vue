@@ -34,7 +34,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
 
           if (success.system.indexOf(to.path.substring(1)) == -1) {
             window.location.hash = "#/";
@@ -94,14 +98,14 @@ export default {
 
           // Breadcrumb dimensions: width, height, spacing, width of tip/tail.
           var b = {
-            w: window.innerWidth * 80 / 1920,
+            w: (window.innerWidth * 80) / 1920,
             h: 20,
             s: 3,
             t: 10
           };
 
           var total = 0;
-          var breadCumbText = window.innerWidth * 6 / 1920;
+          var breadCumbText = (window.innerWidth * 6) / 1920;
 
           var baseDir = "/";
           var arcDefault;
@@ -242,8 +246,7 @@ export default {
             d3.selectAll("path").on("mouseover", null);
 
             // Transition each segment to full opacity and then reactivate it.
-            d3
-              .selectAll("path")
+            d3.selectAll("path")
               .transition()
               .duration(10)
               .style("opacity", 1)
@@ -251,15 +254,15 @@ export default {
                 d3.select(this).on("mouseover", mouseover);
               });
 
-            d3
-              .select("#sizeFolder")
-              .text(context.$options.filters.byteFormat(d.size_actual));
+            d3.select("#sizeFolder").text(
+              context.$options.filters.byteFormat(d.size_actual)
+            );
           }
 
           function mouseover(d) {
-            d3
-              .select("#sizeFolder")
-              .text(context.$options.filters.byteFormat(d.data.size_actual));
+            d3.select("#sizeFolder").text(
+              context.$options.filters.byteFormat(d.data.size_actual)
+            );
 
             d3.select("#explanation").style("visibility", "");
 
@@ -376,7 +379,11 @@ export default {
         null,
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.view.isLoaded = true;
 
           var cv = $.duc();
