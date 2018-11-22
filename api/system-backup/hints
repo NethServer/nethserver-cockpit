@@ -28,11 +28,25 @@ use JSON;
 
 require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
 
+my $hints = undef;
+
 my $db = esmith::ConfigDB->open_ro('backups');
+my $count = 0;
+my $enabled = 0;
 foreach my $b ($db->get_all()) {
-    my $status = $b->prop('status');
+    $count++;
+    my $status = $b->prop('status') || 'disabled';
     if ($status eq 'enabled') {
-        hints();
+        $enabled++;
     }
 }
-hints('must_configure_backup_data', undef, 'http://docs.nethserver.org/en/v7/backup.html');
+
+if ($count == 0 || ($count > 0 && $enabled == 0)) {
+    $hints->{'backup'} = "must_configure_backup_data";
+}
+
+if ($hints) {
+    hints(undef, $hints, 'http://docs.nethserver.org/en/v7/backup.html');
+} else {
+    hints();
+}

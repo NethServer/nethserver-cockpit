@@ -771,7 +771,8 @@
       "must_configure_backup_data": "You must configure at least one backup data",
       "change_default_ssh_port": "Change the default SSH port to lower brute force attack rates",
       "limit_red_access_by_ip": "Limit access to server manager specifying IP addresses allowed",
-      "LimitAccess": "Limit access"
+      "LimitAccess": "Limit access",
+      "backup": "Backup"
     },
     "validation": {
       "weak_password": "Password too weak, it could be inside a dictinary or too similar to the previous one",
