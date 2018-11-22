@@ -11,7 +11,7 @@
       :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder" :ofText="tableLangsTexts.ofText">
       <template slot="table-row" slot-scope="props">
         <td class="fancy">
-          <img class="apps-icon" :src="'../'+props.row.url+'/logo.png'">
+          <img class="apps-icon" :src="props.row.legacy ? 'static/assets/legacy.png' : '../'+props.row.url+'/logo.png'">
         </td>
         <td class="fancy">
           <strong>{{ props.row.name}}</strong>
@@ -21,11 +21,11 @@
           <strong>{{props.row.release.version}}</strong>
         </td>
         <td>
-          <a :href="'#/applications/'+props.row.url" class="btn btn-primary button-minimum">
-            <span class="fa fa-cogs"></span>
-            {{$t('applications.settings')}}
+          <a :target="props.row.legacy ? '_blank' : ''" :href="props.row.legacy ? legacyUrl+props.row.url : '#/applications/'+props.row.url" class="btn btn-primary button-minimum">
+            <span :class="['fa', props.row.legacy ? 'fa-external-link' : 'fa-cogs']"></span>
+            {{props.row.legacy ? $t('applications.open') : $t('applications.settings')}}
           </a>
-          <div v-if="props.row.editable == 1" class="dropup pull-right dropdown-kebab-pf">
+          <div v-if="props.row.editable == 1 && !props.row.legacy" class="dropup pull-right dropdown-kebab-pf">
             <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="true">
               <span class="fa fa-ellipsis-v"></span>
@@ -117,7 +117,9 @@ export default {
       currentApp: {
         listRemove: [],
         listRemoveRead: null
-      }
+      },
+      legacyUrl:
+        window.location.protocol + "//" + window.location.hostname + ":980/en-US/"
     };
   },
   mounted() {
@@ -149,7 +151,11 @@ export default {
         },
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.rows = success;
           context.view.isLoaded = true;
           context.initGraphics();
@@ -172,7 +178,11 @@ export default {
         },
         null,
         function(success) {
-          success = JSON.parse(success);
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            $("#error-popup", window.parent.document).modal("show");
+          }
           context.currentApp.listRemove = success.packages;
           context.currentApp.listRemoveRead = success.packages.join("\n");
           context.$forceUpdate();
