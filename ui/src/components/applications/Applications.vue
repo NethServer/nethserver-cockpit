@@ -18,7 +18,7 @@
         </td>
         <td class="fancy">{{ props.row.description}}</td>
         <td class="fancy">
-          <strong>{{props.row.release.version}}</strong>
+          <strong>{{props.row.release.version | capitalize}}</strong>
         </td>
         <td>
           <a :target="props.row.legacy ? '_blank' : ''" :href="props.row.legacy ? legacyUrl+props.row.url : '#/applications/'+props.row.url" class="btn btn-primary button-minimum">
