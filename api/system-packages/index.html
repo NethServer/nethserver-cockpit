@@ -1569,12 +1569,24 @@ The command will list all packages removed as dependencies.</p>
 
 
 <h4 id="get-config_1">get-config<a class="headerlink" href="#get-config_1" title="Permanent link">&para;</a></h4>
-<p>Example:</p>
+<p>Example for super user:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;editable&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
   <span class="nt">&quot;messages&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
   <span class="nt">&quot;NsReleaseLock&quot;</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span><span class="p">,</span>
   <span class="nt">&quot;applyUpdate&quot;</span><span class="p">:</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span>
   <span class="nt">&quot;download&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Example for normal user:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;messages&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;editable&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="nt">&quot;NsReleaseLock&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;applyUpdate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;download&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
