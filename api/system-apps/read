@@ -109,25 +109,27 @@ if($cmd eq 'list') {
         }
     }
 
-    my @installed = `rpm -qa --queryformat "%{NAME}\n" | grep nethserver`;
-    chomp @installed;
-    my $legacy_apps = read_json("/usr/libexec/nethserver/api/system-apps/legacy-apps");
-    foreach my $app (keys(%$legacy_apps)) {
-        next if (!is_installed($app, \@installed));
-        my $id = $app;
-        $app =~ s/nethserver-//g;
-        $app =~ s/-/ /g;
-        push(@apps, {
-                "editable" => 0,
-                "shortcut" => 0,
-                "release" => { "version" => "legacy" },
-                "legacy" => 1,
-                "description" => "-",
-                "icon" => "legacy.png",
-                "name" => ucfirst($app),
-                "url" => $legacy_apps->{$id},
-                "id" => $id
-            });
+    if (is_editable()) {
+        my @installed = `rpm -qa --queryformat "%{NAME}\n" | grep nethserver`;
+        chomp @installed;
+        my $legacy_apps = read_json("/etc/nethserver/cockpit/legacy-apps.json");
+        foreach my $app (keys(%$legacy_apps)) {
+            next if (!is_installed($app, \@installed));
+            my $id = $app;
+            $app =~ s/nethserver-//g;
+            $app =~ s/-/ /g;
+            push(@apps, {
+                    "editable" => 0,
+                    "shortcut" => 0,
+                    "release" => { "version" => "legacy" },
+                    "legacy" => 1,
+                    "description" => "-",
+                    "icon" => "legacy.png",
+                    "name" => ucfirst($app),
+                    "url" => $legacy_apps->{$id},
+                    "id" => $id
+                });
+        }
     }
 
     print encode_json(\@apps);
