@@ -1,0 +1,115 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+use strict;
+use warnings;
+use esmith::NetworksDB;
+use JSON;
+
+require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
+
+our $tmpdir = "/tmp/cockpit-restore-".time();
+our $db_file = "var/lib/nethserver/db/networks";
+my $file = $ARGV[0] || error();
+
+sub cleanup
+{
+    system("rm -rf $tmpdir 2>/dev/null");
+}
+
+
+sub get_available_interfaces
+{
+    my @interfaces;
+    my @lines = `/usr/libexec/nethserver/nic-info`;
+    foreach (@lines) {
+        my @tmp = split(",",$_);
+        push(@interfaces, $tmp[0]);
+    }
+    return @interfaces;
+}
+
+sub get_map_info
+{
+    my @ret;
+    my @interfaces = shift;
+    foreach (@interfaces) {
+        push(@ret, {
+                "name" => $_->key,
+                "nslabel" => $_->prop('nslabel') || '',
+                "ipaddr" => $_->prop('ipaddr') || '',
+                "role" => $_->prop('role') || '',
+            });
+    }
+    return \@ret;
+}
+
+if ( ! -e $file) {
+    error();
+} else {
+    mkdir($tmpdir);
+    system("tar xf $file -C $tmpdir $db_file 2>/dev/null");
+    if ($? > 0) {
+        cleanup();
+        error();
+    }
+}
+
+my $ret = { "remap" => 0, "restore" => (), "current" => () };
+my $restore_db = esmith::NetworksDB->open_ro($tmpdir."/".$db_file);
+
+my @available_interfaces = get_available_interfaces();
+foreach ($restore_db->ethernets) {
+    # check if interface from restore is present
+    if (!grep(/^$_->key$/, @available_interfaces)) {
+        $ret->{'remap'} = 1;
+    }
+}
+if ($ret->{'remap'}) {
+    my @restore;
+    my @current;
+    foreach ($restore_db->ethernets) {
+        push(@restore, {
+                "name" => $_->key,
+                "nslabel" => $_->prop('nslabel') || '',
+                "ipaddr" => $_->prop('ipaddr') || '',
+                "role" => $_->prop('role') || '',
+            });
+    }
+    my $ndb = esmith::NetworksDB->open_ro();
+    foreach (@available_interfaces) {
+        my $i = $ndb->get($_) || next;
+        push(@current, {
+                "name" => $i->key,
+                "nslabel" => $i->prop('nslabel') || '',
+                "ipaddr" => $i->prop('ipaddr') || '',
+                "role" => $i->prop('role') || '',
+            });
+
+    }
+    $ret->{'restore'} = \@restore;
+    $ret->{'current'} = \@current;
+
+    print encode_json($ret);
+}
+
+cleanup();

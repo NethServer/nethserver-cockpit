@@ -13,6 +13,7 @@ Valid actions:
 - `list-disks`
 - `last-log`
 - `running-info`
+- `remapping-backup-config`
 
 Example:
 ```json
@@ -33,6 +34,30 @@ Example:
   "name": "local119"
 }
 ```
+
+#### remapping-backup-config
+
+Check if the backup to be restored needs network remapping.
+
+The `data` backup can contain multiple information based on the `mode` field.
+The `mode` field can be:
+
+- `url`: retrieve the backup from given url.
+   The `data` field contains a valid HTTP url.
+- `file`: retrieve the backup from the uploaded file.
+   The `data` field contains the uploaded file in base64 format.
+- `backup`: retrieve the backup from local configuration backup history.
+   The `data` field contains the name of the backup, like `c00`.
+
+Example:
+```json
+{
+  "action": "restore-backup-config",
+  "mode": "backup",
+  "data": "c00"
+}
+```
+
 
 ### Output
 
@@ -187,6 +212,36 @@ Example:
 {
   "restore-data": 0,
   "backup-data": 1
+}
+```
+
+
+#### remapping-backup-config
+
+The `remap` field is set to `1` if remap is needed, `0` otherwise.
+The `current` field contains the list of ethernet interfaces present inside the system,
+while `restore` field contains the list of ethernet interfaces from the backup.
+
+Example:
+```json
+{
+  "remap": 1,
+  "current": [
+    {
+      "nslabel": "",
+      "name": "enp0s3",
+      "role": "bridged",
+      "ipaddr": ""
+    }
+  ],
+  "restore": [
+    {
+      "nslabel": "",
+      "name": "eth0",
+      "role": "green",
+      "ipaddr": "1.2.3.4"
+    }
+  ]
 }
 ```
 
@@ -530,7 +585,6 @@ Example:
 #### restore-backup-config
 
 Execute a configuration restore.
-The `name` field should contain the id of configuration backup to restore.
 The `InstallPackages` field can be `enabled` or `disabled`.
 
 The `data` backup can contain multiple information based on the `mode` field.
@@ -541,7 +595,9 @@ The `mode` field can be:
 - `file`: retrieve the backup from the uploaded file.
    The `data` field contains the uploaded file in base64 format.
 - `backup`: retrieve the backup from local configuration backup history.
-   The `data` field contains the name of the backup, like `c00}.
+   The `data` field contains the name of the backup, like `c00`.
+
+The `remap` field can contain a map of network interfaces to remap at the end of the restore.
 
 Example:
 ```json
@@ -549,6 +605,7 @@ Example:
   "action": "restore-backup-config",
   "InstallPackages": "enabled",
   "mode": "backup",
+  "remap": { "eth0" : "enp0s1" }
   "data": "c00"
 }
 ```

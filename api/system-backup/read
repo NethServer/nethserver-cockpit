@@ -255,4 +255,23 @@ if($cmd eq 'backup-info') {
         close $fh;
     }
     print encode_json($ret);
+} elsif ($cmd eq 'remapping-backup-config') {
+
+    my $tmp_file = "/tmp/cockpit-temp-backup-config.tar.xz";
+    my $data = $input->{'data'};
+    my $mode = $input->{'mode'};
+
+    if ($mode eq 'url') {
+        system("wget --quiet '$data' -O $tmp_file");
+    } elsif ($mode eq 'backup') {
+        system("/bin/cp /var/lib/nethserver/backup/history/$data.tar.xz $tmp_file");
+    } elsif ($mode eq 'file') {
+        system("echo $data | base64 -d > $tmp_file");
+    }
+
+    system("/usr/libexec/nethserver/api/system-backup/need-remap $tmp_file");
+    unlink($tmp_file);
+
+} else {
+    error();
 }
