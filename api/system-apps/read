@@ -53,6 +53,7 @@ sub app_info
     my $data = read_json($file);
     $data->{'editable'} = is_editable();
     $data->{'shortcut'} = has_shortcut($app);
+    $data->{'legacy'} = 0;
     return $data;
 }
 
@@ -84,6 +85,16 @@ sub has_shortcut
     return 0;
 }
 
+sub is_installed
+{
+    my $app = shift;
+    my $installed = shift;
+    foreach (@$installed) {
+        return 1 if ($app eq $_);
+    }
+    return 0;
+}
+
 if($cmd eq 'list') {
 
     my @apps;
@@ -96,6 +107,27 @@ if($cmd eq 'list') {
             my $data = app_info($name) || next;
             push(@apps, $data);
         }
+    }
+
+    my @installed = `rpm -qa --queryformat "%{NAME}\n" | grep nethserver`;
+    chomp @installed;
+    my $legacy_apps = read_json("/usr/libexec/nethserver/api/system-apps/legacy-apps");
+    foreach my $app (keys(%$legacy_apps)) {
+        next if (!is_installed($app, \@installed));
+        my $id = $app;
+        $app =~ s/nethserver-//g;
+        $app =~ s/-/ /g;
+        push(@apps, {
+                "editable" => 0,
+                "shortcut" => 0,
+                "release" => { "version" => "legacy" },
+                "legacy" => 1,
+                "description" => "-",
+                "icon" => "legacy.png",
+                "name" => ucfirst($app),
+                "url" => $legacy_apps->{$id},
+                "id" => $id
+            });
     }
 
     print encode_json(\@apps);

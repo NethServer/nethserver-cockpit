@@ -7,6 +7,7 @@ Return information about installed NethServer apps (or modules).
 The `action` field must have one of the following values:
 
 - `list`: list all available applications. The list contains only the applications accessible to user running the script.
+  Also legacy installed applications are listed.
 - `info`: retrieve information of the given application
 
 Each application object contains 2 special fields:
@@ -84,7 +85,21 @@ Example:
         "image": "http://my.screenshot.org/data.png"
       }
     ],
-    "shortcut": 1
+    "shortcut": 1,
+    "legacy": 0,
+  },
+  {
+    "icon": "legacy.png",
+    "name": "Fail2ban",
+    "release": {
+      "version": "-"
+    },
+    "description": "-",
+    "legacy": 1,
+    "editable": 0,
+    "url": "Fail2Ban",
+    "id": "nethserver-fail2ban",
+    "shortcut": 0
   },
   ...
 ]
