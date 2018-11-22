@@ -119,7 +119,10 @@ export default {
         listRemoveRead: null
       },
       legacyUrl:
-        window.location.protocol + "//" + window.location.hostname + ":980/en-US/"
+        window.location.protocol +
+        "//" +
+        window.location.hostname +
+        ":980/en-US/"
     };
   },
   mounted() {
@@ -162,7 +165,8 @@ export default {
         },
         function(error) {
           context.view.isLoaded = true;
-        }
+        },
+        false
       );
     },
     openRemoveApp(app) {

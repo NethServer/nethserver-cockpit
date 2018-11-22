@@ -270,33 +270,6 @@ export default {
   components: {
     PasswordMeter
   },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      vm.exec(
-        ["system-authorization/read"],
-        null,
-        null,
-        function(success) {
-          try {
-            success = JSON.parse(success);
-          } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
-          }
-
-          if (success.system.indexOf(to.path.substring(1)) == -1) {
-            window.location.hash = "#/";
-            vm.$router.push("/");
-          }
-
-          vm.view.isAuth = true;
-        },
-        function(error) {
-          console.error(error);
-        },
-        false
-      );
-    });
-  },
   mounted() {
     this.getSettings();
     this.getHints();

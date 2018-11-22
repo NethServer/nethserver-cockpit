@@ -41,13 +41,22 @@ export default {
         }
         if (success.state == "success") {
           context.view.isLoaded = true;
+          setTimeout(function() {
+            context.initGraphics();
+          }, 50);
+
+          context.getAppInfo();
         } else {
+          $("#app").css("background", "");
+          $("#app").css("color", "");
           window.location.hash = "#/applications";
           context.$router.push("/applications");
         }
       },
       function(error) {
         console.error(error);
+        $("#app").css("background", "");
+        $("#app").css("color", "");
         window.location.hash = "#/applications";
         context.$router.push("/applications");
       },
@@ -85,12 +94,6 @@ export default {
       // pass in the target node, as well as the observer options
       observer.observe(target, config);
     });
-
-    setTimeout(function() {
-      context.initGraphics();
-    }, 50);
-
-    context.getAppInfo();
   },
   watch: {
     $route(to, from) {
@@ -142,7 +145,8 @@ export default {
         },
         function(error) {
           console.error(error);
-        }
+        },
+        false
       );
     },
     addShortcut() {
