@@ -754,7 +754,9 @@
       "install_ok_s": "Application installed successfully! Go to Applications page to configure it.",
       "install_error_s": "Application not installed.",
       "config_ok": "Configuration saved successfully!",
-      "config_error": "Configuration not saved."
+      "config_error": "Configuration not saved.",
+      "forbidden": "Forbidden",
+      "permission_denied": "You don't have permissions to view this page"
     },
     "terminal": {
       "title": "Terminal"

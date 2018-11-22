@@ -2,184 +2,192 @@
   <div>
     <h2>{{$t('software_center.title')}}</h2>
 
-    <h3>{{$t('software_center.updates')}}</h3>
-    <div v-if="!view.updatesLoaded" class="spinner spinner-lg spinner-margin"></div>
-    <div v-if="view.updatesLoaded" class="panel panel-default" id="provider-markup">
-      <div :class="['panel-heading', (updates.nethserver.length + updates.other.length) > 0 ? 'has-updates' : '']">
-        <button :disabled="view.isUpdating" data-toggle="modal" data-target="#configureUpdatesModal" class="btn btn-default right">{{$t('software_center.configure')}}</button>
-        <button :disabled="(updates.nethserver.length + updates.other.length) == 0" @click="viewPackage('changelog')" class="btn btn-default right panel-icon">{{$t('software_center.changelog')}}</button>
-        <button :disabled="view.isUpdating || view.isInstalling || (updates.nethserver.length + updates.other.length) == 0" data-toggle="modal" data-target="#updateAllModal"
-          class="btn btn-primary right starred-marging">{{$t('software_center.update_all')}}</button>
-        <span class="panel-title">
-          <span v-if="(updates.nethserver.length + updates.other.length) > 0" class="pficon pficon-warning-triangle-o starred-marging"></span>{{$t('software_center.updates_available')}}:
-          {{updates.nethserver.length +
-          updates.other.length}}</span>
-        <span class="provider-details margin-left-md" data-toggle="collapse" data-parent="#provider-markup" href="#providerDetails">{{$t('software_center.details')}}</span>
-        <div v-if="view.isUpdating" class="progress-description progress-install-all">
-          <div class="spinner spinner-xs spinner-inline"></div> <strong>{{$t('software_center.updating')}}...</strong>
-        </div>
-        <div v-if="view.isUpdating" class="progress progress-label-top-right progress-xs progress-striped active">
-          <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
-            :style="'width: '+view.updateProgress+'%;'">
-            <span v-if="false">{{view.updateProgress}}%</span>
+    <div v-if="!view.isEditable" class="alert alert-warning alert-dismissable">
+      <span class="pficon pficon-warning-triangle-o"></span>
+      <strong>{{$t('software_center.forbidden')}}.</strong> {{$t('software_center.permission_denied')}}.
+    </div>
+
+    <div v-if="view.isEditable">
+      <h3>{{$t('software_center.updates')}}</h3>
+      <div v-if="!view.updatesLoaded" class="spinner spinner-lg spinner-margin"></div>
+      <div v-if="view.updatesLoaded" class="panel panel-default" id="provider-markup">
+        <div :class="['panel-heading', (updates.nethserver.length + updates.other.length) > 0 ? 'has-updates' : '']">
+          <button :disabled="view.isUpdating" data-toggle="modal" data-target="#configureUpdatesModal" class="btn btn-default right">{{$t('software_center.configure')}}</button>
+          <button :disabled="(updates.nethserver.length + updates.other.length) == 0" @click="viewPackage('changelog')"
+            class="btn btn-default right panel-icon">{{$t('software_center.changelog')}}</button>
+          <button :disabled="view.isUpdating || view.isInstalling || (updates.nethserver.length + updates.other.length) == 0"
+            data-toggle="modal" data-target="#updateAllModal" class="btn btn-primary right starred-marging">{{$t('software_center.update_all')}}</button>
+          <span class="panel-title">
+            <span v-if="(updates.nethserver.length + updates.other.length) > 0" class="pficon pficon-warning-triangle-o starred-marging"></span>{{$t('software_center.updates_available')}}:
+            {{updates.nethserver.length +
+            updates.other.length}}</span>
+          <span class="provider-details margin-left-md" data-toggle="collapse" data-parent="#provider-markup" href="#providerDetails">{{$t('software_center.details')}}</span>
+          <div v-if="view.isUpdating" class="progress-description progress-install-all">
+            <div class="spinner spinner-xs spinner-inline"></div> <strong>{{$t('software_center.updating')}}...</strong>
+          </div>
+          <div v-if="view.isUpdating" class="progress progress-label-top-right progress-xs progress-striped active">
+            <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
+              :style="'width: '+view.updateProgress+'%;'">
+              <span v-if="false">{{view.updateProgress}}%</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div id="providerDetails" class="list-group list-view-pf wizard-pf-contents-title collapse">
-        <div class="list-group-item" v-for="u in updates.nethserver" v-bind:key="u">
-          <div class="list-group-item-header">
-            <div class="list-view-pf-actions compact-list-actions">
-              <button :disabled="view.isUpdating || view.isInstalling" @click="openUpdateSingle(u)" class="btn btn-primary">
-                <span class="fa fa-download span-right-margin"></span>
-                {{$t('software_center.update')}}
-              </button>
-            </div>
-            <div class="list-view-pf-main-info compact-list-info">
-              <div class="list-view-pf-left">
-                <img class="logo-app" src="static/assets/icon.png">
+        <div id="providerDetails" class="list-group list-view-pf wizard-pf-contents-title collapse">
+          <div class="list-group-item" v-for="u in updates.nethserver" v-bind:key="u">
+            <div class="list-group-item-header">
+              <div class="list-view-pf-actions compact-list-actions">
+                <button :disabled="view.isUpdating || view.isInstalling" @click="openUpdateSingle(u)" class="btn btn-primary">
+                  <span class="fa fa-download span-right-margin"></span>
+                  {{$t('software_center.update')}}
+                </button>
               </div>
-              <div class="list-view-pf-body">
-                <div class="list-view-pf-description">
-                  <div class="list-group-item-heading">
-                    <a class="app-name">{{u.name}}</a>
+              <div class="list-view-pf-main-info compact-list-info">
+                <div class="list-view-pf-left">
+                  <img class="logo-app" src="static/assets/icon.png">
+                </div>
+                <div class="list-view-pf-body">
+                  <div class="list-view-pf-description">
+                    <div class="list-group-item-heading">
+                      <a class="app-name">{{u.name}}</a>
+                    </div>
+                    <div class="list-group-item-text">
+                      <span>{{u.description}}</span>
+                    </div>
                   </div>
-                  <div class="list-group-item-text">
-                    <span>{{u.description}}</span>
+                  <div class="list-view-pf-additional-info">
+
+                    <div v-if="!u.isUpdating" class="list-view-pf-additional-info-item">
+                      <a @click="toggleOpen(u)">{{$t('details')}}</a>
+                    </div>
+                    <div v-if="u.isUpdating" class="progress-description progress-install">
+                      <div class="spinner spinner-xs spinner-inline"></div> <strong>{{$t('software_center.updating')}}...</strong>
+                    </div>
+                    <div v-if="u.isUpdating" class="progress progress-label-top-right progress-xs progress-striped active">
+                      <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
+                        :style="'width: '+u.progress+'%;'">
+                        <span v-if="false">{{u.progress}}%</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="list-view-pf-additional-info">
-
-                  <div v-if="!u.isUpdating" class="list-view-pf-additional-info-item">
-                    <a @click="toggleOpen(u)">{{$t('details')}}</a>
-                  </div>
-                  <div v-if="u.isUpdating" class="progress-description progress-install">
-                    <div class="spinner spinner-xs spinner-inline"></div> <strong>{{$t('software_center.updating')}}...</strong>
-                  </div>
-                  <div v-if="u.isUpdating" class="progress progress-label-top-right progress-xs progress-striped active">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
-                      :style="'width: '+u.progress+'%;'">
-                      <span v-if="false">{{u.progress}}%</span>
+              </div>
+            </div>
+            <div :class="['list-group-item-container container-fluid', u.isOpen ? 'active' : 'hidden']">
+              <div class="row">
+                <div v-for="l in u.updates" v-bind:key="l" class="col-xs-12">
+                  <div class="list-view-pf-additional-info-item">
+                    <h4 class="col-xs-4 text-align-right">{{l.name}}</h4>
+                    <div class="version-details col-xs-8 text-align-left">
+                      <span class="fa fa-info"></span>
+                      <strong>{{l.installed_version}}-{{l.installed_release}}</strong>
+                      <span class="fa fa-arrow-right"></span>
+                      <strong>{{l.version}}-{{l.release}}</strong>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div :class="['list-group-item-container container-fluid', u.isOpen ? 'active' : 'hidden']">
-            <div class="row">
-              <div v-for="l in u.updates" v-bind:key="l" class="col-xs-12">
-                <div class="list-view-pf-additional-info-item">
-                  <h4 class="col-xs-4 text-align-right">{{l.name}}</h4>
-                  <div class="version-details col-xs-8 text-align-left">
-                    <span class="fa fa-info"></span>
-                    <strong>{{l.installed_version}}-{{l.installed_release}}</strong>
-                    <span class="fa fa-arrow-right"></span>
-                    <strong>{{l.version}}-{{l.release}}</strong>
+          <p class="addtional-updates">
+            {{updates.other.length == 1 ? $t('software_center.there_is') : $t('software_center.there_are')}} <b class="addtional-number">{{updates.other.length}}</b>
+            {{updates.other.length == 1 ? $t('software_center.update_base_system') :
+            $t('software_center.updates_base_system')}}
+            <button v-if="updates.other.length > 0" @click="viewPackage()" class="btn btn-primary margin-left-md">
+              <span class="fa fa-search span-right-margin"></span>
+              {{$t('software_center.view')}}
+            </button>
+          </p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+
+      <h3>{{$t('software_center.applications')}} ({{filteredAppsList.length}} {{$t('found')}})</h3>
+      <div class="right">
+        <button @click="openInstallPackages()" :disabled="selectedApps == 0 || view.isInstalling || view.isUpdating"
+          class="btn btn-primary btn-lg">
+          <span class="fa fa-download starred-marging"></span>
+          {{$t('software_center.install')}} {{selectedApps}} {{selectedApps == 1 ?
+          $t('software_center.application_low')
+          : $t('software_center.applications_low')}}
+        </button>
+      </div>
+      <form class="search-pf has-button">
+        <div class="form-group has-clear toolbar-pf-filter">
+          <div class="input-group full-width">
+            <input v-model="searchString" type="text" class="form-control input-lg" id="filter" :placeholder="$t('search')+' '+$t('software_center.applications_low')">
+          </div>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-default btn-lg"><span class="fa fa-search"></span></button>
+        </div>
+      </form>
+      <div v-if="view.appsLoaded" class="row row-cards-pf adjust-top">
+        <div v-for="c in categories" v-bind:key="c" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+          <div @click="selectCategory(c)" :class="['card-pf card-pf-accented selectable-cat', c.selected ? 'selected' : '']"
+            :style="'border-top-color: '+c.color+'; background: '+c.color+'; color: white;'">
+            <div class="card-pf-heading">
+              <h2 class="card-pf-title title-category">
+                {{c.name}}
+                <span class="right">
+                  <input type="checkbox" v-model="c.selected">
+                </span>
+                <img :src="c.icon" class="right filter-app panel-icon">
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="view.appsLoaded" class="">
+        <button :disabled="view.isInstalling" @click="selectAll()" class="btn btn-default starred-marging">
+          <span class="fa fa-circle starred-marging"></span>
+          {{$t('software_center.select_all')}}
+        </button>
+        <button :disabled="view.isInstalling" @click="deselectAll()" class="btn btn-default">
+          <span class="fa fa-circle-o starred-marging"></span>
+          {{$t('software_center.deselect_all')}}
+        </button>
+      </div>
+
+      <div v-if="!view.appsLoaded" class="spinner spinner-lg spinner-margin"></div>
+      <div v-if="view.appsLoaded" class="apps-container">
+        <div class="row row-cards-pf">
+          <div v-for="(a,ai) in filteredAppsList" v-bind:key="ai" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <div :class="['card-pf card-pf-accented', view.isInstalling ? '' : 'selectable', a.selected ? 'selected' : '']"
+              :style="'border-top-color: '+categoryColors[a.category]+';'">
+              <h2 @click="view.isInstalling ? undefined : selectApp(a)" class="card-pf-title">
+                {{a.name}}
+                <span class="right">
+                  <input type="checkbox" v-model="a.selected">
+                </span>
+              </h2>
+              <div @click="view.isInstalling ? undefined : selectApp(a)" :class="['card-pf-body', '']">
+                <p>{{a.description}}</p>
+              </div>
+              <div class="card-pf-footer">
+                <div class="dropdown card-pf-time-frame-filter app-details">
+                  <a :id="'app-'+a.id" href="#" class="info-general popovers" data-toggle="popover" data-html="true"
+                    data-placement="top" data-close="true" data-trigger="focus" data-container="body" :title="$t('software_center.contains')"
+                    :data-content="a.content">
+                    <span class="pficon pficon-info"></span>
+                  </a>
+                </div>
+                <div v-if="a.isInstalling" class="progress-description progress-install">
+                  <div class="spinner spinner-xs spinner-inline"></div> <strong>{{$t('software_center.installing')}}...</strong>
+                </div>
+                <div v-if="a.isInstalling" class="progress progress-label-top-right progress-xs progress-striped active limit-progress">
+                  <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
+                    :style="'width: '+view.installProgress+'%;'">
+                    <span v-if="false">{{view.installProgress}}%</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <p class="addtional-updates">
-          {{updates.other.length == 1 ? $t('software_center.there_is') : $t('software_center.there_are')}} <b class="addtional-number">{{updates.other.length}}</b>
-          {{updates.other.length == 1 ? $t('software_center.update_base_system') :
-          $t('software_center.updates_base_system')}}
-          <button v-if="updates.other.length > 0" @click="viewPackage()" class="btn btn-primary margin-left-md">
-            <span class="fa fa-search span-right-margin"></span>
-            {{$t('software_center.view')}}
-          </button>
-        </p>
       </div>
     </div>
-
-    <div class="divider"></div>
-
-
-    <h3>{{$t('software_center.applications')}} ({{filteredAppsList.length}} {{$t('found')}})</h3>
-    <div class="right">
-      <button @click="openInstallPackages()" :disabled="selectedApps == 0 || view.isInstalling || view.isUpdating"
-        class="btn btn-primary btn-lg">
-        <span class="fa fa-download starred-marging"></span>
-        {{$t('software_center.install')}} {{selectedApps}} {{selectedApps == 1 ? $t('software_center.application_low')
-        : $t('software_center.applications_low')}}
-      </button>
-    </div>
-    <form class="search-pf has-button">
-      <div class="form-group has-clear toolbar-pf-filter">
-        <div class="input-group full-width">
-          <input v-model="searchString" type="text" class="form-control input-lg" id="filter" :placeholder="$t('search')+' '+$t('software_center.applications_low')">
-        </div>
-      </div>
-      <div class="form-group">
-        <button class="btn btn-default btn-lg"><span class="fa fa-search"></span></button>
-      </div>
-    </form>
-    <div v-if="view.appsLoaded" class="row row-cards-pf adjust-top">
-      <div v-for="c in categories" v-bind:key="c" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-        <div @click="selectCategory(c)" :class="['card-pf card-pf-accented selectable-cat', c.selected ? 'selected' : '']"
-          :style="'border-top-color: '+c.color+'; background: '+c.color+'; color: white;'">
-          <div class="card-pf-heading">
-            <h2 class="card-pf-title title-category">
-              {{c.name}}
-              <span class="right">
-                <input type="checkbox" v-model="c.selected">
-              </span>
-              <img :src="c.icon" class="right filter-app panel-icon">
-            </h2>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-if="view.appsLoaded" class="">
-      <button :disabled="view.isInstalling" @click="selectAll()" class="btn btn-default starred-marging">
-        <span class="fa fa-circle starred-marging"></span>
-        {{$t('software_center.select_all')}}
-      </button>
-      <button :disabled="view.isInstalling" @click="deselectAll()" class="btn btn-default">
-        <span class="fa fa-circle-o starred-marging"></span>
-        {{$t('software_center.deselect_all')}}
-      </button>
-    </div>
-
-    <div v-if="!view.appsLoaded" class="spinner spinner-lg spinner-margin"></div>
-    <div v-if="view.appsLoaded" class="apps-container">
-      <div class="row row-cards-pf">
-        <div v-for="(a,ai) in filteredAppsList" v-bind:key="ai" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-          <div :class="['card-pf card-pf-accented', view.isInstalling ? '' : 'selectable', a.selected ? 'selected' : '']"
-            :style="'border-top-color: '+categoryColors[a.category]+';'">
-            <h2 @click="view.isInstalling ? undefined : selectApp(a)" class="card-pf-title">
-              {{a.name}}
-              <span class="right">
-                <input type="checkbox" v-model="a.selected">
-              </span>
-            </h2>
-            <div @click="view.isInstalling ? undefined : selectApp(a)" :class="['card-pf-body', '']">
-              <p>{{a.description}}</p>
-            </div>
-            <div class="card-pf-footer">
-              <div class="dropdown card-pf-time-frame-filter app-details">
-                <a :id="'app-'+a.id" href="#" class="info-general popovers" data-toggle="popover" data-html="true"
-                  data-placement="top" data-close="true" data-trigger="focus" data-container="body" :title="$t('software_center.contains')"
-                  :data-content="a.content">
-                  <span class="pficon pficon-info"></span>
-                </a>
-              </div>
-              <div v-if="a.isInstalling" class="progress-description progress-install">
-                <div class="spinner spinner-xs spinner-inline"></div> <strong>{{$t('software_center.installing')}}...</strong>
-              </div>
-              <div v-if="a.isInstalling" class="progress progress-label-top-right progress-xs progress-striped active limit-progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
-                  :style="'width: '+view.installProgress+'%;'">
-                  <span v-if="false">{{view.installProgress}}%</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="modal" id="viewDetailsModal" tabindex="-1" role="dialog" data-backdrop="static">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -338,7 +346,8 @@ export default {
         isUpdating: false,
         isInstalling: false,
         updateProgress: 100,
-        installProgress: 100
+        installProgress: 100,
+        isEditable: true
       },
       applications: [],
       categories: [],
@@ -445,6 +454,7 @@ export default {
           } catch (e) {
             $("#error-popup", window.parent.document).modal("show");
           }
+          context.view.isEditable = success.editable == 1;
           context.updatesConfig.origin =
             success.NsReleaseLock == "disabled" ? "unlocked" : "locked";
           context.updatesConfig.install =
