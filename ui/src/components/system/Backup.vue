@@ -2,6 +2,16 @@
   <div v-if="view.isAuth">
     <h2>{{$t('backup.title')}}</h2>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
+
+    <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
+      <span class="pficon pficon-warning-triangle-o"></span>
+      <strong>{{$t('hints_suggested')}}:</strong>
+      <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{$t('hints.'+t)}}</strong>: {{$t('hints.'+m)}}</li>
+      <span v-if="hints.message && hints.message.length > 0">
+        {{hints.message && $t('hints.'+hints.message)}}
+      </span>
+    </div>
+
     <div v-if="view.isLoaded">
       <div v-show="status['restore-data'] > 0 || status['backup-data'] > 0" class="alert alert-warning">
         <button type="button" class="close">
@@ -88,15 +98,6 @@
       </div>
 
       <h3 v-if="backupData.length > 0">{{$t('list')}}</h3>
-
-      <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
-        <span class="pficon pficon-warning-triangle-o"></span>
-        <strong>{{$t('hints_suggested')}}:</strong>
-        <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{$t('hints.'+t)}}</strong>: {{$t('hints.'+m)}}</li>
-        <span v-if="hints.message && hints.message.length > 0">
-          {{hints.message && $t('hints.'+hints.message)}}
-        </span>
-      </div>
 
       <div v-if="backupData.length == 0" class="blank-slate-pf blank-state-backup" id="">
         <div class="blank-slate-pf-icon">
@@ -277,7 +278,8 @@
               <div class="form-group">
                 <label class="col-sm-4 control-label" for="textInput-modal-markup">{{$t('backup.config')}}</label>
                 <div class="col-sm-4 password-hints">
-                  <button :disabled="(currentConfigBackup.restoreURL.length == 0 && currentConfigBackup.restoreFile.length == 0 && currentConfigBackup.restoreBackup.length == 0) || currentConfigBackup.isChecking" @click="checkConfiguration()" type="button" class="btn btn-primary">{{$t('backup.check')}}</button>
+                  <button :disabled="(currentConfigBackup.restoreURL.length == 0 && currentConfigBackup.restoreFile.length == 0 && currentConfigBackup.restoreBackup.length == 0) || currentConfigBackup.isChecking"
+                    @click="checkConfiguration()" type="button" class="btn btn-primary">{{$t('backup.check')}}</button>
                 </div>
                 <div v-if="currentConfigBackup.isChecking" class="col-sm-1">
                   <div class="spinner"></div>
@@ -287,7 +289,8 @@
                 <span>{{$t('backup.remap_interface_config')}}</span>
                 <div class="divider divider-advanced"></div>
               </div>
-              <div v-if="currentConfigBackup.remap" v-for="o in currentConfigBackup.remapInterfaces.old" v-bind:key="o" class="form-group">
+              <div v-if="currentConfigBackup.remap" v-for="o in currentConfigBackup.remapInterfaces.old" v-bind:key="o"
+                class="form-group">
                 <div class="col-sm-4">
                   <label class="control-label display-block">
                     <span :class="o.role">{{o.name}} <span v-if="o.nslabel">({{o.nslabel}})</span></span>
@@ -310,7 +313,8 @@
             <div class="modal-footer">
               <div v-if="currentConfigBackup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
-              <button :disabled="currentConfigBackup.isChecking || !currentConfigBackup.remapCalled" class="btn btn-primary" type="submit">{{$t('backup.restore')}}</button>
+              <button :disabled="currentConfigBackup.isChecking || !currentConfigBackup.remapCalled" class="btn btn-primary"
+                type="submit">{{$t('backup.restore')}}</button>
             </div>
           </form>
         </div>
