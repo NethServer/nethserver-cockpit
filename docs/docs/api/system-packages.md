@@ -198,13 +198,25 @@ Example:
 
 #### get-config
 
-Example:
+Example for super user:
 ```json
 {
+  "editable": 1,
   "messages": "yes",
   "NsReleaseLock": "disabled",
   "applyUpdate": "no",
   "download": "yes"
+}
+```
+
+Example for normal user:
+```json
+{
+  "messages": "",
+  "editable": 0,
+  "NsReleaseLock": "",
+  "applyUpdate": "",
+  "download": ""
 }
 ```
 
