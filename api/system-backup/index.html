@@ -454,6 +454,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#remapping-backup-config" title="remapping-backup-config" class="md-nav__link">
+    remapping-backup-config
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -491,6 +498,13 @@
           <li class="md-nav__item">
   <a href="#running-info" title="running-info" class="md-nav__link">
     running-info
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remapping-backup-config_1" title="remapping-backup-config" class="md-nav__link">
+    remapping-backup-config
   </a>
   
 </li>
@@ -717,6 +731,19 @@
     run-backup-config
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-backup-config" title="download-backup-config" class="md-nav__link">
+    download-backup-config
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -894,18 +921,6 @@
   <li class="md-nav__item">
     <a href="../system-hosts/" title="system-hosts" class="md-nav__link">
       system-hosts
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-logrotate/" title="system-logrotate" class="md-nav__link">
-      system-logrotate
     </a>
   </li>
 
@@ -1359,6 +1374,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#remapping-backup-config" title="remapping-backup-config" class="md-nav__link">
+    remapping-backup-config
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1396,6 +1418,13 @@
           <li class="md-nav__item">
   <a href="#running-info" title="running-info" class="md-nav__link">
     running-info
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remapping-backup-config_1" title="remapping-backup-config" class="md-nav__link">
+    remapping-backup-config
   </a>
   
 </li>
@@ -1622,6 +1651,19 @@
     run-backup-config
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-backup-config" title="download-backup-config" class="md-nav__link">
+    download-backup-config
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1726,6 +1768,7 @@ Valid actions:</p>
 <li><code>list-disks</code></li>
 <li><code>last-log</code></li>
 <li><code>running-info</code></li>
+<li><code>remapping-backup-config</code></li>
 </ul>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
@@ -1741,6 +1784,27 @@ The <code>name</code> field must contain the backup name.</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;last-log&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;local119&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="remapping-backup-config">remapping-backup-config<a class="headerlink" href="#remapping-backup-config" title="Permanent link">&para;</a></h4>
+<p>Check if the backup to be restored needs network remapping.</p>
+<p>The <code>data</code> backup can contain multiple information based on the <code>mode</code> field.
+The <code>mode</code> field can be:</p>
+<ul>
+<li><code>url</code>: retrieve the backup from given url.
+   The <code>data</code> field contains a valid HTTP url.</li>
+<li><code>file</code>: retrieve the backup from the uploaded file.
+   The <code>data</code> field contains the uploaded file in base64 format.</li>
+<li><code>backup</code>: retrieve the backup from local configuration backup history.
+   The <code>data</code> field contains the name of the backup, like <code>c00</code>.</li>
+</ul>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;restore-backup-config&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;backup&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;c00&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -1893,6 +1957,33 @@ If the disk alredy has a formatted partition, the <code>formatted</code> flag is
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;restore-data&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
   <span class="nt">&quot;backup-data&quot;</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="remapping-backup-config_1">remapping-backup-config<a class="headerlink" href="#remapping-backup-config_1" title="Permanent link">&para;</a></h4>
+<p>The <code>remap</code> field is set to <code>1</code> if remap is needed, <code>0</code> otherwise.
+The <code>current</code> field contains the list of ethernet interfaces present inside the system,
+while <code>restore</code> field contains the list of ethernet interfaces from the backup.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;remap&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nt">&quot;current&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;nslabel&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;enp0s3&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;bridged&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;ipaddr&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;restore&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;nslabel&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;eth0&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;ipaddr&quot;</span><span class="p">:</span> <span class="s2">&quot;1.2.3.4&quot;</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -2182,15 +2273,38 @@ The <code>name</code> field should contain a description for the backup; the fie
 </pre></div>
 
 
+<h5 id="download-backup-config">download-backup-config<a class="headerlink" href="#download-backup-config" title="Permanent link">&para;</a></h5>
+<p>Download the selected configuration backup from local history.
+The <code>name</code> field should contain the name of the backup.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;download-backup-config&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;c00&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h4 id="restore-backup-config">restore-backup-config<a class="headerlink" href="#restore-backup-config" title="Permanent link">&para;</a></h4>
 <p>Execute a configuration restore.
-The <code>name</code> field should contain the id of configuration backup to restore.
-The <code>InstallPackages</code> can be <code>enabled</code> or <code>disabled</code>.</p>
+The <code>InstallPackages</code> field can be <code>enabled</code> or <code>disabled</code>.</p>
+<p>The <code>data</code> backup can contain multiple information based on the <code>mode</code> field.
+The <code>mode</code> field can be:</p>
+<ul>
+<li><code>url</code>: retrieve the backup from given url.
+   The <code>data</code> field contains a valid HTTP url.</li>
+<li><code>file</code>: retrieve the backup from the uploaded file.
+   The <code>data</code> field contains the uploaded file in base64 format.</li>
+<li><code>backup</code>: retrieve the backup from local configuration backup history.
+   The <code>data</code> field contains the name of the backup, like <code>c00</code>.</li>
+</ul>
+<p>The <code>remap</code> field can contain a map of network interfaces to remap at the end of the restore.</p>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;restore-backup-config&quot;</span><span class="p">,</span>
   <span class="nt">&quot;InstallPackages&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;c00&quot;</span>
+  <span class="nt">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;backup&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;remap&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&quot;eth0&quot;</span> <span class="p">:</span> <span class="s2">&quot;enp0s1&quot;</span> <span class="p">}</span>
+  <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;c00&quot;</span>
 <span class="p">}</span>
 </pre></div>
 

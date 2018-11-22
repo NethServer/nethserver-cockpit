@@ -513,18 +513,6 @@
 
 
   <li class="md-nav__item">
-    <a href="../system-logrotate/" title="system-logrotate" class="md-nav__link">
-      system-logrotate
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../system-network/" title="system-network" class="md-nav__link">
       system-network
     </a>
@@ -745,6 +733,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#logrotate" title="logrotate" class="md-nav__link">
+    logrotate
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -795,6 +790,13 @@
           <li class="md-nav__item">
   <a href="#hints_2" title="hints" class="md-nav__link">
     hints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logrotate_1" title="logrotate" class="md-nav__link">
+    logrotate
   </a>
   
 </li>
@@ -1256,6 +1258,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#logrotate" title="logrotate" class="md-nav__link">
+    logrotate
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1306,6 +1315,13 @@
           <li class="md-nav__item">
   <a href="#hints_2" title="hints" class="md-nav__link">
     hints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logrotate_1" title="logrotate" class="md-nav__link">
+    logrotate
   </a>
   
 </li>
@@ -1365,6 +1381,7 @@
 <li>smart host configuration</li>
 <li>mail forward</li>
 <li>cockpit configuration</li>
+<li>log rotation configuration</li>
 </ul>
 <p>This API returns different output based on the running user.
 Do not invoke the helpers using <code>sudo</code>.</p>
@@ -1423,6 +1440,11 @@ Requires an <code>action</code> field.</p>
       <span class="nt">&quot;SenderAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;no-reply@nethserver.org&quot;</span><span class="p">,</span>
       <span class="nt">&quot;KeepMessageCopy&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
       <span class="nt">&quot;EmailAddress&quot;</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;logrotate&quot;</span><span class="p">:{</span>
+        <span class="nt">&quot;Compression&quot;</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;Rotate&quot;</span><span class="p">:</span> <span class="s2">&quot;weekly&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;Times&quot;</span><span class="p">:</span> <span class="s2">&quot;52&quot;</span>
     <span class="p">}</span>
   <span class="p">}</span>
 <span class="p">}</span>
@@ -1445,6 +1467,7 @@ Valid actions are:</p>
 <li><code>cockpit</code></li>
 <li><code>smarthost</code></li>
 <li><code>hints</code></li>
+<li><code>logrotate</code></li>
 </ul>
 <h3 id="constraints">Constraints<a class="headerlink" href="#constraints" title="Permanent link">&para;</a></h3>
 <p>Constraints for <code>root</code> action:</p>
@@ -1468,6 +1491,12 @@ Valid actions are:</p>
 <p>Constraints for <code>hints</code> action:</p>
 <ul>
 <li>ShowHints: can be "enabled" or "disabled"</li>
+</ul>
+<p>Constraints for <code>logrotate</code> action:</p>
+<ul>
+<li>Compression: can be "enabled" or "disabled"</li>
+<li>Rotate: can be "daily", "weekly" or "monthly"</li>
+<li>Times: must be a positive integer number</li>
 </ul>
 <h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
 <p>Takes the same parameters from read output plus an action field.</p>
@@ -1521,6 +1550,17 @@ Valid actions are:</p>
 </pre></div>
 
 
+<h4 id="logrotate">logrotate<a class="headerlink" href="#logrotate" title="Permanent link">&para;</a></h4>
+<p>Input example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;logrotate&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Compression&quot;</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Rotate&quot;</span><span class="p">:</span> <span class="s2">&quot;weekly&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Times&quot;</span><span class="p">:</span> <span class="s2">&quot;52&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
 <p>Use same input from validate.</p>
 <h3 id="input_2">Input<a class="headerlink" href="#input_2" title="Permanent link">&para;</a></h3>
@@ -1533,6 +1573,8 @@ Valid actions are:</p>
 <p>Same as validate.</p>
 <h4 id="hints_2">hints<a class="headerlink" href="#hints_2" title="Permanent link">&para;</a></h4>
 <p>Same as validate.</p>
+<h4 id="logrotate_1">logrotate<a class="headerlink" href="#logrotate_1" title="Permanent link">&para;</a></h4>
+<p>Same as validate</p>
 <h2 id="hints_3">hints<a class="headerlink" href="#hints_3" title="Permanent link">&para;</a></h2>
 <p>Available hints:</p>
 <ul>

@@ -420,10 +420,97 @@
     Input
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list" title="list" class="md-nav__link">
+    list
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#info" title="info" class="md-nav__link">
+    info
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
   <a href="#output" title="Output" class="md-nav__link">
+    Output
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list_1" title="list" class="md-nav__link">
+    list
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#info_1" title="info" class="md-nav__link">
+    info
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update" title="update" class="md-nav__link">
+    update
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input_1" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-shortcut" title="add-shortcut" class="md-nav__link">
+    add-shortcut
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-shortcut" title="remove-shortcut" class="md-nav__link">
+    remove-shortcut
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output_1" title="Output" class="md-nav__link">
     Output
   </a>
   
@@ -561,18 +648,6 @@
   <li class="md-nav__item">
     <a href="../system-hosts/" title="system-hosts" class="md-nav__link">
       system-hosts
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-logrotate/" title="system-logrotate" class="md-nav__link">
-      system-logrotate
     </a>
   </li>
 
@@ -1016,10 +1091,97 @@
     Input
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list" title="list" class="md-nav__link">
+    list
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#info" title="info" class="md-nav__link">
+    info
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
   <a href="#output" title="Output" class="md-nav__link">
+    Output
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list_1" title="list" class="md-nav__link">
+    list
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#info_1" title="info" class="md-nav__link">
+    info
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update" title="update" class="md-nav__link">
+    update
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input_1" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-shortcut" title="add-shortcut" class="md-nav__link">
+    add-shortcut
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-shortcut" title="remove-shortcut" class="md-nav__link">
+    remove-shortcut
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output_1" title="Output" class="md-nav__link">
     Output
   </a>
   
@@ -1050,57 +1212,175 @@
                 
                 
                 <h1 id="system-apps">system-apps<a class="headerlink" href="#system-apps" title="Permanent link">&para;</a></h1>
-<p>Return installed NethServer apps (or modules).</p>
-<p>The response is composed by:</p>
-<ul>
-<li>Name</li>
-<li>Id (rpm package name)</li>
-<li>Description, Author, Summary, License, Tags, Bugs</li>
-<li>URL</li>
-<li>Repository reference</li>
-<li>Version</li>
-<li>Icon</li>
-</ul>
+<p>Return information about installed NethServer apps (or modules).</p>
 <h2 id="read">read<a class="headerlink" href="#read" title="Permanent link">&para;</a></h2>
-<p>List all available applications.</p>
+<p>The <code>action</code> field must have one of the following values:</p>
+<ul>
+<li><code>list</code>: list all available applications. The list contains only the applications accessible to user running the script.
+  Also legacy installed applications are listed.</li>
+<li><code>info</code>: retrieve information of the given application</li>
+</ul>
+<p>Each application object contains 2 special fields:</p>
+<ul>
+<li><code>editable</code>: is set to <code>1</code> if the running user is root, <code>0</code> otherwise</li>
+<li><code>shortcut</code>: is set to <code>1</code> if application is inside the shortcut list, <code>0</code> otherwise</li>
+</ul>
+<p>The <code>id</code> field is the name of the RPM package.</p>
 <h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
-<p>If no input has been provided, the helper will return the list
-of all available applications.</p>
-<p>To retrieve a application, pass the <code>name</code> parameter to the read helper.</p>
+<h4 id="list">list<a class="headerlink" href="#list" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="nb">echo</span> <span class="s1">&#39;{&quot;name&quot;:&quot;nethserver-cockpit-empty&quot;}&#39;</span> <span class="p">|</span> ./read
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;list&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="info">info<a class="headerlink" href="#info" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;info&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;nethserver-firewall&quot;</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
+<h4 id="list_1">list<a class="headerlink" href="#list_1" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">[</span>
-    <span class="p">{</span>
-        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Very very very very very long description of NethServer Cockpit Empty&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;license&quot;</span><span class="p">:</span> <span class="s2">&quot;GPL-3.0&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;tags&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;tag1&quot;</span><span class="p">,</span> <span class="s2">&quot;tag2&quot;</span><span class="p">,</span> <span class="s2">&quot;tag3&quot;</span><span class="p">],</span>
-        <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;nethserver-cockpit-empty&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;author&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/NethServer/nethserver-cockpit-empty&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Author&#39;s name of NethServer Cockpit Empty&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;Author&#39;s email of NethServer Cockpit Empty&quot;</span>
-        <span class="p">},</span>
-        <span class="nt">&quot;bugs&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/NethServer/dev/issues&quot;</span>
-        <span class="p">},</span>
-        <span class="nt">&quot;summary&quot;</span><span class="p">:</span> <span class="s2">&quot;Short description of NethServer Cockpit Empty&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;provides&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;nethserver-cockpit-empty&quot;</span><span class="p">],</span>
-        <span class="nt">&quot;release&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span>
-        <span class="p">},</span>
-        <span class="nt">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;icon.png&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;homepage&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/NethServer/nethserver-cockpit-empty&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;nethserver-cockpit-empty&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;NethServer Cockpit Empty&quot;</span>
-    <span class="p">},</span>
-    <span class="err">...</span>
-<span class="p">]</span>
+<div class="codehilite"><pre><span></span><span class="o">[</span>
+  <span class="o">{</span>
+    <span class="s2">&quot;icon&quot;</span>: <span class="s2">&quot;icon.png&quot;</span>,
+    <span class="s2">&quot;author&quot;</span>: <span class="o">{</span>
+      <span class="s2">&quot;email&quot;</span>: <span class="s2">&quot;Author&#39;s email of NethServer Firewall&quot;</span>,
+      <span class="s2">&quot;url&quot;</span>: <span class="s2">&quot;https://github.com/NethServer/nethserver-firewall&quot;</span>,
+      <span class="s2">&quot;name&quot;</span>: <span class="s2">&quot;Author&#39;s name of NethServer Firewall&quot;</span>
+    <span class="o">}</span>,
+    <span class="s2">&quot;bugs&quot;</span>: <span class="o">{</span>
+      <span class="s2">&quot;url&quot;</span>: <span class="s2">&quot;https://github.com/NethServer/dev/issues&quot;</span>
+    <span class="o">}</span>,
+    <span class="s2">&quot;summary&quot;</span>: <span class="s2">&quot;Short description of NethServer Firewall&quot;</span>,
+    <span class="s2">&quot;url&quot;</span>: <span class="s2">&quot;nethserver-firewall&quot;</span>,
+    <span class="s2">&quot;id&quot;</span>: <span class="s2">&quot;nethserver-firewall&quot;</span>,
+    <span class="s2">&quot;name&quot;</span>: <span class="s2">&quot;NethServer Firewall&quot;</span>,
+    <span class="s2">&quot;release&quot;</span>: <span class="o">{</span>
+      <span class="s2">&quot;version&quot;</span>: <span class="s2">&quot;1.0.0&quot;</span>
+    <span class="o">}</span>,
+    <span class="s2">&quot;description&quot;</span>: <span class="s2">&quot;Very very very very very long description of NethServer Firewall&quot;</span>,
+    <span class="s2">&quot;license&quot;</span>: <span class="s2">&quot;GPL-3.0&quot;</span>,
+    <span class="s2">&quot;tags&quot;</span>: <span class="o">[</span>
+      <span class="s2">&quot;tag1&quot;</span>,
+      <span class="s2">&quot;tag2&quot;</span>,
+      <span class="s2">&quot;tag3&quot;</span>
+    <span class="o">]</span>,
+    <span class="s2">&quot;homepage&quot;</span>: <span class="s2">&quot;https://github.com/NethServer/nethserver-firewall&quot;</span>,
+    <span class="s2">&quot;provides&quot;</span>: <span class="o">[</span>
+      <span class="s2">&quot;nethserver-firewall&quot;</span>
+    <span class="o">]</span>,
+    <span class="s2">&quot;editable&quot;</span>: <span class="m">1</span>,
+    <span class="s2">&quot;screenshots&quot;</span>: <span class="o">[</span>
+      <span class="o">{</span>
+        <span class="s2">&quot;caption&quot;</span>: <span class="s2">&quot;Login&quot;</span>,
+        <span class="s2">&quot;image&quot;</span>: <span class="s2">&quot;http://my.screenshot.org/login.png&quot;</span>
+      <span class="o">}</span>,
+      <span class="o">{</span>
+        <span class="s2">&quot;caption&quot;</span>: <span class="s2">&quot;Share data&quot;</span>,
+        <span class="s2">&quot;image&quot;</span>: <span class="s2">&quot;http://my.screenshot.org/data.png&quot;</span>
+      <span class="o">}</span>
+    <span class="o">]</span>,
+    <span class="s2">&quot;shortcut&quot;</span>: <span class="m">1</span>,
+    <span class="s2">&quot;legacy&quot;</span>: <span class="m">0</span>,
+  <span class="o">}</span>,
+  <span class="o">{</span>
+    <span class="s2">&quot;icon&quot;</span>: <span class="s2">&quot;legacy.png&quot;</span>,
+    <span class="s2">&quot;name&quot;</span>: <span class="s2">&quot;Fail2ban&quot;</span>,
+    <span class="s2">&quot;release&quot;</span>: <span class="o">{</span>
+      <span class="s2">&quot;version&quot;</span>: <span class="s2">&quot;-&quot;</span>
+    <span class="o">}</span>,
+    <span class="s2">&quot;description&quot;</span>: <span class="s2">&quot;-&quot;</span>,
+    <span class="s2">&quot;legacy&quot;</span>: <span class="m">1</span>,
+    <span class="s2">&quot;editable&quot;</span>: <span class="m">0</span>,
+    <span class="s2">&quot;url&quot;</span>: <span class="s2">&quot;Fail2Ban&quot;</span>,
+    <span class="s2">&quot;id&quot;</span>: <span class="s2">&quot;nethserver-fail2ban&quot;</span>,
+    <span class="s2">&quot;shortcut&quot;</span>: <span class="m">0</span>
+  <span class="o">}</span>,
+  ...
+<span class="o">]</span>
 </pre></div>
+
+
+<h4 id="info_1">info<a class="headerlink" href="#info_1" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;icon.png&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;author&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;Author&#39;s email of NethServer Firewall&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/NethServer/nethserver-firewall&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Author&#39;s name of NethServer Firewall&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;bugs&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/NethServer/dev/issues&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;summary&quot;</span><span class="p">:</span> <span class="s2">&quot;Short description of NethServer Firewall&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;nethserver-firewall&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;nethserver-firewall&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;NethServer Firewall&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;release&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Very very very very very long description of NethServer Firewall&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;license&quot;</span><span class="p">:</span> <span class="s2">&quot;GPL-3.0&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;tags&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;tag1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tag2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tag3&quot;</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;homepage&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/NethServer/nethserver-firewall&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;provides&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;nethserver-firewall&quot;</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;editable&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nt">&quot;screenshots&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;caption&quot;</span><span class="p">:</span> <span class="s2">&quot;Login&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;image&quot;</span><span class="p">:</span> <span class="s2">&quot;http://my.screenshot.org/login.png&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;caption&quot;</span><span class="p">:</span> <span class="s2">&quot;Share data&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;image&quot;</span><span class="p">:</span> <span class="s2">&quot;http://my.screenshot.org/data.png&quot;</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;shortcut&quot;</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
+<p>Take an <code>action</code> field. Valid actions are:</p>
+<ul>
+<li><code>add-shortcut</code>: add given application to left menu</li>
+<li><code>remove-shortcut</code>: remove given application form the left menu</li>
+</ul>
+<h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
+<h5 id="add-shortcut">add-shortcut<a class="headerlink" href="#add-shortcut" title="Permanent link">&para;</a></h5>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add-shortcut&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;nethserver-firewall&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h5 id="remove-shortcut">remove-shortcut<a class="headerlink" href="#remove-shortcut" title="Permanent link">&para;</a></h5>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;remove-shortcut&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;nethserver-firewall&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="output_1">Output<a class="headerlink" href="#output_1" title="Permanent link">&para;</a></h3>
+<p>Each actions return a standard success or error object.</p>
                 
                   
                 
