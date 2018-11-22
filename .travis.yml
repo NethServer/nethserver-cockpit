@@ -3,6 +3,8 @@ sudo: required
 language: node_js
 node_js:
   - "8"
+git:
+  depth: false
 
 services:
     - docker
