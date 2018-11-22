@@ -42,7 +42,8 @@ def compsdump(yb):
     installed_groups, available_groups = yb.doGroupLists()
 
     for g in yb.comps.get_groups():
-        if not g.user_visible or g in installed_groups:
+        # hide installed, not visible and server-manager releated packages
+        if not g.user_visible or g in installed_groups or 'nethserver-l10n' in g.groupid:
             continue
         tmp = {
             'id' : g.groupid,
