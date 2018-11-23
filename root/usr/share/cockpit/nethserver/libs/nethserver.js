@@ -1,3 +1,4 @@
+var ns = window.ns || parent.window.ns
 nethserver = {
     exec(args, input, stream, success, error, superuser = true) {
         var systemCheck = false
@@ -140,6 +141,35 @@ nethserver = {
         process.done(function (successResp) {
             success(JSON.parse(successResp))
         }).
+        fail(function (errorResp, errorData) {
+            error(errorResp, errorData)
+        });
+    },
+    readLogs(input, stream, success, error, superuser = true) {
+        var args = []
+
+        if (superuser) {
+            args[0] = "/usr/bin/sudo"
+            args[1] = "/usr/libexec/nethserver/api/system-logs/execute"
+        } else {
+            args[0] = "/usr/libexec/nethserver/api/system-logs/execute"
+        }
+
+        console.info("echo '" + JSON.stringify(input) + "' | " + args.join(' '))
+
+        var process = cockpit.spawn(args, input ? {} : {
+            pty: true,
+            environ: ["TERM=dumb"],
+        })
+
+        if (input) {
+            process.input(JSON.stringify(input))
+        }
+
+        if (stream) {
+            process.stream(stream)
+        }
+        process.done(success).
         fail(function (errorResp, errorData) {
             error(errorResp, errorData)
         });
