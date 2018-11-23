@@ -260,7 +260,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
 
           if (success.system.indexOf(to.path.substring(1)) == -1) {
@@ -423,7 +423,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.view.isLoaded = true;
           context.ranges = success.configuration.ranges;
@@ -473,7 +473,7 @@ export default {
               try {
                 success = JSON.parse(success);
               } catch (e) {
-                $("#error-popup", window.parent.document).modal("show");
+                console.error(e);
               }
 
               // get ranges
@@ -542,7 +542,7 @@ export default {
           try {
             errorData = JSON.parse(data);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.currentRange.isLoading = false;
           context.currentRange.errors.DhcpRangeStart.hasError = false;
@@ -573,7 +573,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.view.isLoaded = true;
           var results = success.configuration.reservations;
@@ -689,7 +689,7 @@ export default {
           try {
             errorData = JSON.parse(data);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.newReservation.isLoading = false;
           context.newReservation.errors.name.hasError = false;

@@ -326,7 +326,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
 
           if (success.system.indexOf(to.path.substring(1)) == -1) {
@@ -499,7 +499,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.rows = success.configuration.certificates;
           context.view.isLoaded = true;
@@ -622,7 +622,7 @@ export default {
           try {
             errorData = JSON.parse(data);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.newCertificate.errors.isLoading = false;
           context.newCertificate.errors.name.hasError = false;
@@ -712,7 +712,7 @@ export default {
           try {
             errorData = JSON.parse(data);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.selfSignedCertificate.errors.isLoading = false;
           context.selfSignedCertificate.errors.CountryCode.hasError = false;
@@ -806,7 +806,7 @@ export default {
           try {
             errorData = JSON.parse(data);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.letsEncryptCertificate.errors.isLoading = false;
           context.letsEncryptCertificate.errors.LetsEncryptMail.hasError = false;
@@ -889,7 +889,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.currentCertificate = atob(success.certificate);
         },

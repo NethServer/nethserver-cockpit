@@ -1052,7 +1052,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
 
           if (success.system.indexOf(to.path.substring(1)) == -1) {
@@ -1619,7 +1619,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.currentProxy.status =
             success.configuration.props.host.length > 0;
@@ -1642,7 +1642,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.wizard.type.vlan.devicesList = success;
           context.wizard.type.vlan.device = context.wizard.type.vlan.device
@@ -1666,7 +1666,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.wizard.type.bond.devicesList = context.wizard.type.bond.devicesList
             .concat(success)
@@ -1692,7 +1692,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.wizard.type.bond.modes = success;
           context.wizard.type.bond.mode = success[0];
@@ -1712,7 +1712,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.routes = success.configuration;
         },
@@ -1778,7 +1778,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.view.isLoaded = true;
 
@@ -1878,7 +1878,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.currentInterface.successorList = success;
           context.currentInterface.successor =
@@ -1967,7 +1967,7 @@ export default {
           try {
             errorData = JSON.parse(data);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.wizardPhysical.isLoading = false;
           context.wizardPhysical.review.errors = context.initWizardPhysical().review.errors;
@@ -2053,7 +2053,7 @@ export default {
           try {
             errorData = JSON.parse(data);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.wizard.isLoading = false;
           context.wizard.review.errors = context.initWizard().review.errors;
@@ -2115,7 +2115,7 @@ export default {
           try {
             errorData = JSON.parse(data);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.newInterface.isLoading = false;
           context.newInterface.errors = context.initInterface().errors;
@@ -2180,7 +2180,7 @@ export default {
           try {
             errorData = JSON.parse(data);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.newRoute.isLoading = false;
           context.newRoute.errors = context.initRoute().errors;
@@ -2452,7 +2452,7 @@ export default {
           try {
             errorData = JSON.parse(data);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.currentProxy.isLoading = false;
           context.currentProxy.errors = context.initProxy().errors;

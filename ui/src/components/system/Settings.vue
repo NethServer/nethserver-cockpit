@@ -424,7 +424,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.settings = success.configuration;
 
@@ -614,7 +614,7 @@ export default {
           try {
             errorData = JSON.parse(data);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.loaders[type] = false;
           context.errors = context.initErrors();

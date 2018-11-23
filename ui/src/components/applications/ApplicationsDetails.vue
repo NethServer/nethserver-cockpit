@@ -37,7 +37,7 @@ export default {
         try {
           success = JSON.parse(success);
         } catch (e) {
-          $("#error-popup", window.parent.document).modal("show");
+          console.error(e);
         }
         if (success.state == "success") {
           context.view.isLoaded = true;
@@ -137,7 +137,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.info = success;
           context.view.isLoaded = true;

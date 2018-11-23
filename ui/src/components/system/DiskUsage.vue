@@ -37,7 +37,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
 
           if (success.system.indexOf(to.path.substring(1)) == -1) {
@@ -382,7 +382,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.view.isLoaded = true;
 

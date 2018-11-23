@@ -608,7 +608,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.system.summary.hardware = success.status.hardware;
           context.system.summary.kernelRelease = success.status.kernel;
@@ -659,7 +659,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.system.summary.hostname = success.hostname;
           context.system.summary.newHostname = success.hostname;
@@ -703,7 +703,7 @@ export default {
               try {
                 errorData = JSON.parse(data);
               } catch (e) {
-                $("#error-popup", window.parent.document).modal("show");
+                console.error(e);
               }
               context.system.errors.hostname.hasError = true;
               context.system.errors.hostname.message =
@@ -748,7 +748,7 @@ export default {
               try {
                 errorData = JSON.parse(data);
               } catch (e) {
-                $("#error-popup", window.parent.document).modal("show");
+                console.error(e);
               }
               for (var a in errorData.attributes) {
                 var attr = errorData.attributes[a];
@@ -870,7 +870,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.system.summary.aliases = [];
           for (var i in success.configuration) {
@@ -904,7 +904,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           if (
             success.configuration.props.NameServers.split(",")[0] !== undefined
@@ -989,7 +989,7 @@ export default {
           try {
             errorData = JSON.parse(data);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.system.errors.dns1.isLoading = false;
 
@@ -1014,7 +1014,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.system.summary.datetime = success.status.datetime;
           context.system.summary.date = success.status.date;
@@ -1116,7 +1116,7 @@ export default {
           try {
             errorData = JSON.parse(data);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.system.errors.datetime.isLoading = false;
 
@@ -1141,7 +1141,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.system.organization = {
             company: success.configuration.props.Company,
@@ -1225,7 +1225,7 @@ export default {
           try {
             errorData = JSON.parse(data);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.system.errors.company.isLoading = false;
           context.system.errors.company.hasError = true;

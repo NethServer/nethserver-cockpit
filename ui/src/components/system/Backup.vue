@@ -1152,7 +1152,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
 
           if (success.system.indexOf(to.path.substring(1)) == -1) {
@@ -1507,7 +1507,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
 
           var usbName =
@@ -1705,7 +1705,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.status = success;
         },
@@ -1732,7 +1732,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.view.isLoaded = true;
 
@@ -1854,7 +1854,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.currentConfigBackup.isChecking = false;
           context.currentConfigBackup.remapCalled = true;
@@ -2067,7 +2067,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.currentDataBackup.lastLog = success.data;
         },
@@ -2277,7 +2277,7 @@ export default {
           try {
             errorData = JSON.parse(data);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
 
           context.wizard.isLoading = false;

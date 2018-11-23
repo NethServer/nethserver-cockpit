@@ -452,7 +452,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
           context.view.isEditable = success.editable == 1;
           context.updatesConfig.origin =
@@ -485,7 +485,7 @@ export default {
           try {
             success = JSON.parse(success);
           } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+            console.error(e);
           }
 
           for (var u in success.updates) {
@@ -591,7 +591,7 @@ export default {
             try {
               success = JSON.parse(success);
             } catch (e) {
-              $("#error-popup", window.parent.document).modal("show");
+              console.error(e);
             }
             context.currentPackage.details = success.data || "-";
           },
