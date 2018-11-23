@@ -11,17 +11,27 @@
       :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder" :ofText="tableLangsTexts.ofText">
       <template slot="table-row" slot-scope="props">
         <td class="fancy">
-          <img class="apps-icon" :src="props.row.legacy ? 'static/assets/legacy.png' : '../'+props.row.url+'/logo.png'">
+          <a v-if="(props.row.url || props.row.url.length > 0 ) && !props.row.legacy" target="_blank" :href="'/'+props.row.url">
+            <img class="apps-icon" :src="props.row.legacy ? 'static/assets/legacy.png' : '../'+props.row.id+'/logo.png'">
+          </a>
+          <span v-if="!props.row.url || props.row.url.length == 0 || props.row.legacy">
+            <img class="apps-icon" :src="props.row.legacy ? 'static/assets/legacy.png' : '../'+props.row.id+'/logo.png'">
+          </span>
         </td>
         <td class="fancy">
-          <strong>{{ props.row.name}}</strong>
+          <strong>
+            <a v-if="(props.row.url || props.row.url.length > 0 ) && !props.row.legacy" target="_blank" :href="'/'+props.row.url">{{props.row.name}}
+            </a>
+            <span v-if="!props.row.url || props.row.url.length == 0 || props.row.legacy">{{props.row.name}}</span>
+          </strong>
         </td>
         <td class="fancy">{{ props.row.description}}</td>
         <td class="fancy">
           <strong>{{props.row.release.version | capitalize}}</strong>
         </td>
         <td>
-          <a :target="props.row.legacy ? '_blank' : ''" :href="props.row.legacy ? legacyUrl+props.row.url : '#/applications/'+props.row.url" class="btn btn-primary button-minimum">
+          <a :target="props.row.legacy ? '_blank' : ''" :href="props.row.legacy ? legacyUrl+props.row.url : '#/applications/'+props.row.id"
+            class="btn btn-primary button-minimum">
             <span :class="['fa', props.row.legacy ? 'fa-external-link' : 'fa-cogs']"></span>
             {{props.row.legacy ? $t('applications.open') : $t('applications.settings')}}
           </a>
@@ -77,165 +87,160 @@
 </template>
 
 <script>
-export default {
-  name: "Applications",
-  data() {
-    return {
-      view: {
-        isLoaded: false
-      },
-      tableLangsTexts: this.tableLangs(),
-      columns: [
-        {
-          label: this.$i18n.t("applications.icon"),
-          field: "icon",
-          filterable: false
+  export default {
+    name: "Applications",
+    data() {
+      return {
+        view: {
+          isLoaded: false
         },
-        {
-          label: this.$i18n.t("applications.name"),
-          field: "name",
-          filterable: true
-        },
-        {
-          label: this.$i18n.t("applications.description"),
-          field: "name",
-          filterable: true
-        },
-        {
-          label: this.$i18n.t("applications.version"),
-          field: "release.version",
-          filterable: true
-        },
-        {
-          label: this.$i18n.t("action"),
-          field: "",
-          filterable: true,
-          sortable: false
-        }
-      ],
-      rows: [],
-      currentApp: {
-        listRemove: [],
-        listRemoveRead: null
-      },
-      legacyUrl:
-        window.location.protocol +
-        "//" +
-        window.location.hostname +
-        ":980/en-US/"
-    };
-  },
-  mounted() {
-    var context = this;
-    setTimeout(function() {
-      context.initGraphics();
-    }, 150);
-
-    // get list of installed apps
-    context.getApps();
-  },
-  methods: {
-    initGraphics() {
-      $(parent.document.getElementById("sidebar-menu").children[1]).addClass(
-        "active"
-      );
-      $(parent.document.getElementById("sidebar-menu").children[0]).removeClass(
-        "active"
-      );
-    },
-    getApps() {
-      var context = this;
-
-      context.view.isLoaded = false;
-      context.exec(
-        ["system-apps/read"],
-        {
-          action: "list"
-        },
-        null,
-        function(success) {
-          try {
-            success = JSON.parse(success);
-          } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+        tableLangsTexts: this.tableLangs(),
+        columns: [{
+            label: this.$i18n.t("applications.icon"),
+            field: "icon",
+            filterable: false
+          },
+          {
+            label: this.$i18n.t("applications.name"),
+            field: "name",
+            filterable: true
+          },
+          {
+            label: this.$i18n.t("applications.description"),
+            field: "name",
+            filterable: true
+          },
+          {
+            label: this.$i18n.t("applications.version"),
+            field: "release.version",
+            filterable: true
+          },
+          {
+            label: this.$i18n.t("action"),
+            field: "",
+            filterable: true,
+            sortable: false
           }
-          context.rows = success;
-          context.view.isLoaded = true;
-          context.initGraphics();
+        ],
+        rows: [],
+        currentApp: {
+          listRemove: [],
+          listRemoveRead: null
         },
-        function(error) {
-          context.view.isLoaded = true;
-        },
-        false
-      );
+        legacyUrl: window.location.protocol +
+          "//" +
+          window.location.hostname +
+          ":980/en-US/"
+      };
     },
-    openRemoveApp(app) {
+    mounted() {
       var context = this;
-      this.currentApp = app;
+      setTimeout(function () {
+        context.initGraphics();
+      }, 250);
 
-      $("#removeAppModal").modal("show");
-      context.exec(
-        ["system-packages/read"],
-        {
-          action: "list-removed",
-          packages: [app.id]
-        },
-        null,
-        function(success) {
-          try {
-            success = JSON.parse(success);
-          } catch (e) {
-            $("#error-popup", window.parent.document).modal("show");
+      // get list of installed apps
+      context.getApps();
+    },
+    methods: {
+      initGraphics() {
+        $(parent.document.getElementById("sidebar-menu").children[1]).addClass(
+          "active"
+        );
+        $(parent.document.getElementById("sidebar-menu").children[0]).removeClass(
+          "active"
+        );
+      },
+      getApps() {
+        var context = this;
+
+        context.view.isLoaded = false;
+        context.exec(
+          ["system-apps/read"], {
+            action: "list"
+          },
+          null,
+          function (success) {
+            try {
+              success = JSON.parse(success);
+            } catch (e) {
+              console.error(e);
+            }
+            context.rows = success;
+            context.view.isLoaded = true;
+            context.initGraphics();
+          },
+          function (error) {
+            context.view.isLoaded = true;
+          },
+          false
+        );
+      },
+      openRemoveApp(app) {
+        var context = this;
+        this.currentApp = app;
+
+        $("#removeAppModal").modal("show");
+        context.exec(
+          ["system-packages/read"], {
+            action: "list-removed",
+            packages: [app.id]
+          },
+          null,
+          function (success) {
+            try {
+              success = JSON.parse(success);
+            } catch (e) {
+              console.error(e);
+            }
+            context.currentApp.listRemove = success.packages;
+            context.currentApp.listRemoveRead = success.packages.join("\n");
+            context.$forceUpdate();
+            console.log(context.currentApp.listRemoveRead);
+          },
+          function (error) {
+            console.error(error);
           }
-          context.currentApp.listRemove = success.packages;
-          context.currentApp.listRemoveRead = success.packages.join("\n");
-          context.$forceUpdate();
-          console.log(context.currentApp.listRemoveRead);
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
-    },
-    removeApp() {
-      var context = this;
+        );
+      },
+      removeApp() {
+        var context = this;
 
-      $("#removeAppModal").modal("hide");
-      context.exec(
-        ["system-packages/update"],
-        {
-          action: "remove",
-          packages: context.currentApp.listRemove
-        },
-        function(stream) {
-          console.info("packages-remove", stream);
-        },
-        function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "applications.remove_ok"
-          );
+        $("#removeAppModal").modal("hide");
+        context.exec(
+          ["system-packages/update"], {
+            action: "remove",
+            packages: context.currentApp.listRemove
+          },
+          function (stream) {
+            console.info("packages-remove", stream);
+          },
+          function (success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "applications.remove_ok"
+            );
 
-          context.refresh();
-        },
-        function(error) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "applications.remove_error"
-          );
-        }
-      );
-    },
-    refresh() {
-      cockpit
-        .dbus(null, {
-          bus: "internal"
-        })
-        .call("/packages", "cockpit.Packages", "Reload", []);
-      this.getApps();
+            context.refresh();
+          },
+          function (error) {
+            // notification
+            context.$parent.notifications.error.message = context.$i18n.t(
+              "applications.remove_error"
+            );
+          }
+        );
+      },
+      refresh() {
+        cockpit
+          .dbus(null, {
+            bus: "internal"
+          })
+          .call("/packages", "cockpit.Packages", "Reload", []);
+        this.getApps();
+      }
     }
-  }
-};
+  };
 </script>
 
 <style>
