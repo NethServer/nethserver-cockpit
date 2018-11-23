@@ -25,6 +25,7 @@ require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
 use warnings;
 use strict;
 
+my $TIMEOUT=300;
 my $input = readInput();
 my $cmd = $input->{'action'};
 my $lines = $input->{'lines'} || '50';
@@ -50,7 +51,16 @@ sub dump_logs
     } else {
         $cmd .= " -n $lines";
     }
-    system("$cmd $args"); 
+
+    # Make sure there is only one instance running
+    my $pid = `pgrep -o -f /usr/libexec/nethserver/api/system-logs/execute`;
+    chomp $pid;
+    if ($pid != $$) {
+        system("kill -9 $pid");
+    }
+
+    # Make sure process is killed after the timeout
+    system("timeout -k ".($TIMEOUT+5)." $TIMEOUT $cmd $args"); 
 }
 
 
