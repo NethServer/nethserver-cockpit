@@ -1964,21 +1964,21 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.wizardPhysical.isLoading = false;
           context.wizardPhysical.review.errors = context.initWizardPhysical().review.errors;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.wizardPhysical.review.errors[
-              attr.parameter
-            ].hasError = true;
-            context.wizardPhysical.review.errors[attr.parameter].message =
-              attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.wizardPhysical.review.errors[
+                attr.parameter
+              ].hasError = true;
+              context.wizardPhysical.review.errors[attr.parameter].message =
+                attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );
@@ -2050,18 +2050,18 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.wizard.isLoading = false;
           context.wizard.review.errors = context.initWizard().review.errors;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.wizard.review.errors[attr.parameter].hasError = true;
-            context.wizard.review.errors[attr.parameter].message = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.wizard.review.errors[attr.parameter].hasError = true;
+              context.wizard.review.errors[attr.parameter].message = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );
@@ -2112,18 +2112,18 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.newInterface.isLoading = false;
           context.newInterface.errors = context.initInterface().errors;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.currentProxy.errors[attr.parameter].hasError = true;
-            context.currentProxy.errors[attr.parameter].message = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.currentProxy.errors[attr.parameter].hasError = true;
+              context.currentProxy.errors[attr.parameter].message = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );
@@ -2177,18 +2177,18 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.newRoute.isLoading = false;
           context.newRoute.errors = context.initRoute().errors;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.newRoute.errors[attr.parameter].hasError = true;
-            context.newRoute.errors[attr.parameter].message = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.newRoute.errors[attr.parameter].hasError = true;
+              context.newRoute.errors[attr.parameter].message = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );
@@ -2449,18 +2449,18 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.currentProxy.isLoading = false;
           context.currentProxy.errors = context.initProxy().errors;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.currentProxy.errors[attr.parameter].hasError = true;
-            context.currentProxy.errors[attr.parameter].message = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.currentProxy.errors[attr.parameter].hasError = true;
+              context.currentProxy.errors[attr.parameter].message = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );

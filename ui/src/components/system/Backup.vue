@@ -2274,19 +2274,18 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
-
           context.wizard.isLoading = false;
           context.wizard.review.errors.name.hasError = false;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.wizard.review.errors[attr.parameter].hasError = true;
-            context.wizard.review.errors[attr.parameter].message = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.wizard.review.errors[attr.parameter].hasError = true;
+              context.wizard.review.errors[attr.parameter].message = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );

@@ -619,21 +619,22 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.newCertificate.errors.isLoading = false;
           context.newCertificate.errors.name.hasError = false;
           context.newCertificate.errors.certificate.hasError = false;
           context.newCertificate.errors.key.hasError = false;
           context.newCertificate.errors.chain.hasError = false;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.newCertificate.errors[attr.parameter].hasError = true;
-            context.newCertificate.errors[attr.parameter].message = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.newCertificate.errors[attr.parameter].hasError = true;
+              context.newCertificate.errors[attr.parameter].message =
+                attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );
@@ -709,11 +710,6 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.selfSignedCertificate.errors.isLoading = false;
           context.selfSignedCertificate.errors.CountryCode.hasError = false;
           context.selfSignedCertificate.errors.State.hasError = false;
@@ -725,13 +721,18 @@ export default {
           context.selfSignedCertificate.errors.SubjectAltName.hasError = false;
           context.selfSignedCertificate.errors.CertificateDuration.hasError = false;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.selfSignedCertificate.errors[
-              attr.parameter
-            ].hasError = true;
-            context.selfSignedCertificate.errors[attr.parameter].message =
-              attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.selfSignedCertificate.errors[
+                attr.parameter
+              ].hasError = true;
+              context.selfSignedCertificate.errors[attr.parameter].message =
+                attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );
@@ -803,25 +804,25 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.letsEncryptCertificate.errors.isLoading = false;
           context.letsEncryptCertificate.errors.LetsEncryptMail.hasError = false;
           context.letsEncryptCertificate.errors.LetsEncryptRenewDays.hasError = false;
           context.letsEncryptCertificate.errors.LetsEncryptDomains.hasError = false;
 
-          for (var a in errorData.attributes) {
-            var attr = errorData.attributes[a];
-            var i = 0;
+          try {
+            errorData = JSON.parse(data);
+            for (var a in errorData.attributes) {
+              var attr = errorData.attributes[a];
+              var i = 0;
 
-            context.letsEncryptCertificate.errors[
-              attr.parameter
-            ].hasError = true;
-            context.letsEncryptCertificate.errors[attr.parameter].message =
-              attr.error;
+              context.letsEncryptCertificate.errors[
+                attr.parameter
+              ].hasError = true;
+              context.letsEncryptCertificate.errors[attr.parameter].message =
+                attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );

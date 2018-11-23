@@ -327,21 +327,21 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.newDns.isLoading = false;
           context.newDns.errors.name.hasError = false;
           context.newDns.errors.IpAddress.hasError = false;
           context.newDns.errors.Description.hasError = false;
           context.newDns.errors.WildcardMode.hasError = false;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.newDns.errors[attr.parameter].hasError = true;
-            context.newDns.errors[attr.parameter].message = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.newDns.errors[attr.parameter].hasError = true;
+              context.newDns.errors[attr.parameter].message = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );

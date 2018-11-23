@@ -611,18 +611,18 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.loaders[type] = false;
           context.errors = context.initErrors();
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.errors[attr.parameter].hasError = true;
-            context.errors[attr.parameter].message = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.errors[attr.parameter].hasError = true;
+              context.errors[attr.parameter].message = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         },
         false

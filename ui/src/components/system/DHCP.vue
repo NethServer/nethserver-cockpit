@@ -539,11 +539,6 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.currentRange.isLoading = false;
           context.currentRange.errors.DhcpRangeStart.hasError = false;
           context.currentRange.errors.DhcpRangeEnd.hasError = false;
@@ -555,10 +550,15 @@ export default {
           context.currentRange.errors.DhcpNTP.hasError = false;
           context.currentRange.errors.DhcpTFTP.hasError = false;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.currentRange.errors[attr.parameter].hasError = true;
-            context.currentRange.errors[attr.parameter].message = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.currentRange.errors[attr.parameter].hasError = true;
+              context.currentRange.errors[attr.parameter].message = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );
@@ -686,21 +686,22 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.newReservation.isLoading = false;
           context.newReservation.errors.name.hasError = false;
           context.newReservation.errors.IpAddress.hasError = false;
           context.newReservation.errors.MacAddress.hasError = false;
           context.newReservation.errors.Description.hasError = false;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.newReservation.errors[attr.parameter].hasError = true;
-            context.newReservation.errors[attr.parameter].message = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.newReservation.errors[attr.parameter].hasError = true;
+              context.newReservation.errors[attr.parameter].message =
+                attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );

@@ -297,23 +297,23 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.newNetwork.isLoading = false;
           context.newNetwork.errors.name.hasError = false;
           context.newNetwork.errors.Mask.hasError = false;
           context.newNetwork.errors.Description.hasError = false;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
 
-            if (context.newNetwork.errors[attr.parameter]) {
-              context.newNetwork.errors[attr.parameter].hasError = true;
-              context.newNetwork.errors[attr.parameter].message = attr.error;
+              if (context.newNetwork.errors[attr.parameter]) {
+                context.newNetwork.errors[attr.parameter].hasError = true;
+                context.newNetwork.errors[attr.parameter].message = attr.error;
+              }
             }
+          } catch (e) {
+            console.error(e);
           }
         }
       );

@@ -1202,18 +1202,17 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
-
           context.users.hostname.errors.hasError = true;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.users.hostname.errors.hasError = true;
-            context.users.hostname.errors.message = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.users.hostname.errors.hasError = true;
+              context.users.hostname.errors.message = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );
@@ -1491,17 +1490,16 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.newUser.isLoading = false;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-
-            context.newUser.errorProps[attr.parameter] = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.newUser.errorProps[attr.parameter] = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );
@@ -1596,17 +1594,16 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.newUser.isLoading = false;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-
-            context.newUser.errorProps[attr.parameter] = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.newUser.errorProps[attr.parameter] = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );
@@ -1773,17 +1770,16 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.newGroup.isLoading = false;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-
-            context.newGroup.errorProps[attr.parameter] = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.newGroup.errorProps[attr.parameter] = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );
@@ -1867,17 +1863,16 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.newGroup.isLoading = false;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-
-            context.newGroup.errorProps[attr.parameter] = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.newGroup.errorProps[attr.parameter] = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );
@@ -2074,14 +2069,15 @@ export default {
           },
           function(error, data) {
             var errorData = {};
+            context.newProvider.isChecking = false;
+            context.newProvider.isValid = false;
+            context.newProvider.probeError = true;
+
             try {
               errorData = JSON.parse(data);
             } catch (e) {
               console.error(e);
             }
-            context.newProvider.isChecking = false;
-            context.newProvider.isValid = false;
-            context.newProvider.probeError = true;
             context.$forceUpdate();
           }
         );
@@ -2180,14 +2176,15 @@ export default {
           },
           function(error, data) {
             var errorData = {};
+            context.newProvider.isChecking = false;
+            context.newProvider.isValid = false;
+            context.newProvider.joinError = true;
+
             try {
               errorData = JSON.parse(data);
             } catch (e) {
               console.error(e);
             }
-            context.newProvider.isChecking = false;
-            context.newProvider.isValid = false;
-            context.newProvider.joinError = true;
             context.$forceUpdate();
           }
         );

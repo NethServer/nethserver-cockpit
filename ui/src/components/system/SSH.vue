@@ -237,20 +237,20 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.SSHConfig.isLoading = false;
           context.SSHConfig.errors.TCPPort.hasError = false;
           context.SSHConfig.errors.PermitRootLogin.hasError = false;
           context.SSHConfig.errors.PasswordAuthentication.hasError = false;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.SSHConfig.errors[attr.parameter].hasError = true;
-            context.SSHConfig.errors[attr.parameter].message = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.SSHConfig.errors[attr.parameter].hasError = true;
+              context.SSHConfig.errors[attr.parameter].message = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );

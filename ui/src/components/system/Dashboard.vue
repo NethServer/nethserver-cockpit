@@ -700,15 +700,16 @@ export default {
             },
             function(error, data) {
               var errorData = {};
+              context.system.errors.hostname.hasError = true;
+
               try {
                 errorData = JSON.parse(data);
+                context.system.errors.hostname.message =
+                  errorData.attributes[0].error;
               } catch (e) {
                 console.error(e);
               }
-              context.system.errors.hostname.hasError = true;
-              context.system.errors.hostname.message =
-                errorData.attributes[0].error;
-              reject(error);
+              reject();
             }
           );
         })
@@ -747,26 +748,26 @@ export default {
               var errorData = {};
               try {
                 errorData = JSON.parse(data);
+                for (var a in errorData.attributes) {
+                  var attr = errorData.attributes[a];
+                  var i = 0;
+                  for (var l in context.system.summary.aliases) {
+                    var al = context.system.summary.aliases[l];
+                    context.system.summary.aliases[l].hasError = false;
+                    if (al.key == attr.value) {
+                      i = l;
+                    }
+                  }
+
+                  context.system.summary.aliases[i].hasError = true;
+                  context.system.summary.aliases[i].message = attr.error;
+
+                  context.$forceUpdate();
+                }
               } catch (e) {
                 console.error(e);
               }
-              for (var a in errorData.attributes) {
-                var attr = errorData.attributes[a];
-                var i = 0;
-                for (var l in context.system.summary.aliases) {
-                  var al = context.system.summary.aliases[l];
-                  context.system.summary.aliases[l].hasError = false;
-                  if (al.key == attr.value) {
-                    i = l;
-                  }
-                }
-
-                context.system.summary.aliases[i].hasError = true;
-                context.system.summary.aliases[i].message = attr.error;
-
-                context.$forceUpdate();
-              }
-              reject(error);
+              reject();
             }
           );
         })
@@ -986,20 +987,19 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.system.errors.dns1.isLoading = false;
 
           context.system.errors.dns1.hasError = false;
           context.system.errors.dns2.hasError = false;
-
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.system.errors[attr.parameter].hasError = true;
-            context.system.errors[attr.parameter].message = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.system.errors[attr.parameter].hasError = true;
+              context.system.errors[attr.parameter].message = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );
@@ -1113,20 +1113,22 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.system.errors.datetime.isLoading = false;
 
-          context.system.errors.datetime.date.hasError;
-          context.system.errors.datetime.time.hasError;
-          context.system.errors.datetime.NTPServer.hasError;
-          for (var a in errorData.attributes) {
-            var attr = errorData.attributes[a];
-            context.system.errors.datetime[attr.parameter].hasError = true;
-            context.system.errors.datetime[attr.parameter].message = attr.error;
+          context.system.errors.datetime.date.hasError = false;
+          context.system.errors.datetime.time.hasError = false;
+          context.system.errors.datetime.NTPServer.hasError = false;
+
+          try {
+            errorData = JSON.parse(data);
+            for (var a in errorData.attributes) {
+              var attr = errorData.attributes[a];
+              context.system.errors.datetime[attr.parameter].hasError = true;
+              context.system.errors.datetime[attr.parameter].message =
+                attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );
@@ -1222,15 +1224,16 @@ export default {
         },
         function(error, data) {
           var errorData = {};
+          context.system.errors.company.isLoading = false;
+          context.system.errors.company.hasError = true;
+
           try {
             errorData = JSON.parse(data);
+            context.system.errors.company.message =
+              errorData.attributes.name[0][0];
           } catch (e) {
             console.error(e);
           }
-          context.system.errors.company.isLoading = false;
-          context.system.errors.company.hasError = true;
-          context.system.errors.company.message =
-            errorData.attributes.name[0][0];
         }
       );
     },

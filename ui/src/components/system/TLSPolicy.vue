@@ -180,18 +180,18 @@ export default {
         },
         function(error, data) {
           var errorData = {};
-          try {
-            errorData = JSON.parse(data);
-          } catch (e) {
-            console.error(e);
-          }
           context.TLSPolicy.isLoading = false;
           context.TLSPolicy.errors.policy.hasError = false;
 
-          for (var e in errorData.attributes) {
-            var attr = errorData.attributes[e];
-            context.TLSPolicy.errors[attr.parameter].hasError = true;
-            context.TLSPolicy.errors[attr.parameter].message = attr.error;
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.TLSPolicy.errors[attr.parameter].hasError = true;
+              context.TLSPolicy.errors[attr.parameter].message = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       );
