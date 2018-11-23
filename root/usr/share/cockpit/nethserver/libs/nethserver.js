@@ -173,5 +173,7 @@ nethserver = {
         fail(function (errorResp, errorData) {
             error(errorResp, errorData)
         });
+
+        return process
     }
 };
