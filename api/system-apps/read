@@ -95,6 +95,12 @@ sub is_installed
     return 0;
 }
 
+sub has_cockpit_support
+{
+    my $app = shift;
+    return (-f "$path$app.json");
+}
+
 if($cmd eq 'list') {
 
     my @apps;
@@ -115,6 +121,7 @@ if($cmd eq 'list') {
         my $legacy_apps = read_json("/etc/nethserver/cockpit/legacy-apps.json");
         foreach my $app (keys(%$legacy_apps)) {
             next if (!is_installed($app, \@installed));
+            next if (has_cockpit_support($app));
             my $id = $app;
             $app =~ s/nethserver-//g;
             $app =~ s/-/ /g;
