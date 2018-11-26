@@ -20,7 +20,7 @@
         </td>
         <td class="fancy">
           <strong>
-            <a v-if="(props.row.url || props.row.url.length > 0 ) && !props.row.legacy" target="_blank" :href="'/'+props.row.url">{{props.row.name}}
+            <a v-if="(props.row.url || props.row.url.length > 0 ) && !props.row.legacy" target="_blank" :href="props.row.url">{{props.row.name}}
             </a>
             <span v-if="!props.row.url || props.row.url.length == 0 || props.row.legacy">{{props.row.name}}</span>
           </strong>
@@ -170,6 +170,16 @@ export default {
             success = JSON.parse(success);
           } catch (e) {
             console.error(e);
+          }
+          for (var a in success) {
+            var app = success[a];
+            if (app.url.length > 0 && app.url.startsWith("/")) {
+              app.url =
+                window.location.protocol +
+                "//" +
+                window.location.hostname +
+                app.url;
+            }
           }
           context.rows = success;
           context.view.isLoaded = true;
