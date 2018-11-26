@@ -127,11 +127,11 @@
       <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
         <div class="row adjust-top">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <span class="plot-unit" id="server_cpu_unit">%</span> CPU
+            <span class="plot-unit" id="server_cpu_unit">%</span> <span id="link-cpu"></span> x CPU (Core)
             <div id="server_cpu_graph" class="graph zoomable-plot"></div>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 adjust-top-col">
-            <span class="plot-unit" id="server_memory_unit"></span> {{$t('dashboard.memory')}}
+            <span class="plot-unit" id="server_memory_unit"></span> {{$t('dashboard.memory')}} & SWAP
             <div id="server_memory_graph" class="graph zoomable-plot"></div>
           </div>
         </div>
@@ -434,6 +434,7 @@
 
 <script>
 var plot = require("./../../lib/plotter.js");
+var machine_info = require("./../../lib/machine-info.js");
 require("jquery.flot");
 require("jquery.flot/jquery.flot.selection");
 require("jquery.flot/jquery.flot.time");
@@ -1348,7 +1349,6 @@ export default {
       });
       this.cpu_plot = new plot.Plot($("#server_cpu_graph"), 300);
       this.cpu_plot.set_options(cpu_options);
-      series = this.cpu_plot.add_metrics_sum_series(cpu_data, {});
 
       /* Memory graph */
       var memory_data = {
@@ -1370,6 +1370,45 @@ export default {
       this.memory_plot = new plot.Plot($("#server_memory_graph"), 300);
       this.memory_plot.set_options(memory_options);
       series = this.memory_plot.add_metrics_sum_series(memory_data, {});
+
+      var context = this;
+      machine_info.cpu_ram_info().done(function(info) {
+        $("#link-cpu").text(info.cpus);
+        cpu_data.factor = 0.1 / info.cpus; // millisec / sec -> percent
+        context.cpu_plot.add_metrics_sum_series(cpu_data, {});
+
+        if (info.swap) {
+          memory_options.yaxis.max = info.memory + info.swap * 0.25;
+          memory_options.yaxis.tickFormatter = function(v) {
+            return v <= info.memory
+              ? plot.format_bytes_tick_no_unit(v, memory_options.yaxis)
+              : plot.format_bytes_tick_no_unit(
+                  v + (v - info.memory) * 4,
+                  memory_options.yaxis
+                );
+          };
+          memory_options.colors[1] = "#CC0000";
+          memory_options.grid.markings = [
+            {
+              yaxis: { from: info.memory, to: info.memory + info.swap * 0.25 },
+              color: "#ededed"
+            }
+          ];
+          var swap_data = {
+            internal: ["memory.swap-used"],
+            units: "bytes",
+            factor: 0.25,
+            threshold: info.memory,
+            offset: info.memory
+          };
+          context.memory_plot.add_metrics_sum_series(swap_data, {});
+          $("#link-memory").hide();
+          $("#link-memory-and-swap").show();
+        } else {
+          memory_options.yaxis.max = info.memory;
+        }
+        context.memory_plot.set_options(memory_options);
+      });
 
       /* Network graph */
       var network_data = {

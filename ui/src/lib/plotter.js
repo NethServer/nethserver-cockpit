@@ -17,6 +17,7 @@
  * along with Cockpit; If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 const C_ = cockpit.gettext;
 
 /* A thin abstraction over flot and metrics channels.  It mostly
@@ -688,7 +689,7 @@ export class Plot {
 
 export function plot_simple_template() {
   var plot_colors = [
-    '#006bb4',
+    '#39a5dc',
     '#008ff0',
     '#2daaff',
     '#69c2ff',
@@ -707,7 +708,7 @@ export function plot_simple_template() {
       shadowSize: 0,
       lines: {
         lineWidth: 2.0,
-        fill: 0.4
+        fill: 1
       }
     },
     xaxis: {
