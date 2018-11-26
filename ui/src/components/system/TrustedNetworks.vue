@@ -144,6 +144,7 @@ export default {
     next();
   },
   mounted() {
+    this.initGraphics();
     this.getNetworks();
   },
   data() {
@@ -204,6 +205,10 @@ export default {
     };
   },
   methods: {
+    initGraphics() {
+      $("#app").css("background", "");
+      $("#app").css("color", "");
+    },
     getNetworks() {
       var context = this;
       context.exec(

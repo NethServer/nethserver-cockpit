@@ -429,6 +429,8 @@ export default {
       $(parent.document.getElementById("sidebar-menu").children[0]).removeClass(
         "active"
       );
+      $("#app").css("background", "");
+      $("#app").css("color", "");
     },
     toggleOpen(u) {
       u.isOpen = !u.isOpen;

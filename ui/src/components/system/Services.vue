@@ -195,6 +195,7 @@ export default {
     next();
   },
   mounted() {
+    this.initGraphics();
     this.getServices();
     this.getHints();
   },
@@ -295,6 +296,10 @@ export default {
     };
   },
   methods: {
+    initGraphics() {
+      $("#app").css("background", "");
+      $("#app").css("color", "");
+    },
     getHints(callback) {
       var context = this;
       context.execHints(

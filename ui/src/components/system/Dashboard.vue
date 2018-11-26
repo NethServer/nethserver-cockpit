@@ -445,6 +445,7 @@ export default {
     next();
   },
   mounted() {
+    this.initGraphics();
     this.getHints("hostname");
     this.getHints("dns");
     this.getHints("company");
@@ -570,6 +571,10 @@ export default {
     };
   },
   methods: {
+    initGraphics() {
+      $("#app").css("background", "");
+      $("#app").css("color", "");
+    },
     getHints(type, callback) {
       var context = this;
 

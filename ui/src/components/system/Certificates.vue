@@ -348,6 +348,7 @@ export default {
     next();
   },
   mounted() {
+    this.initGraphics();
     this.getCertificates();
   },
   data() {
@@ -489,6 +490,10 @@ export default {
     };
   },
   methods: {
+    initGraphics() {
+      $("#app").css("background", "");
+      $("#app").css("color", "");
+    },
     getCertificates() {
       var context = this;
       context.exec(

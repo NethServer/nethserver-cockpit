@@ -55,6 +55,7 @@ export default {
     });
   },
   mounted() {
+    this.initGraphics();
     this.getJSONUsage();
     this.drawChart();
   },
@@ -71,6 +72,10 @@ export default {
     };
   },
   methods: {
+    initGraphics() {
+      $("#app").css("background", "");
+      $("#app").css("color", "");
+    },
     copyPath() {
       var context = this;
       context.$copyText($("#baseBread").html()).then(

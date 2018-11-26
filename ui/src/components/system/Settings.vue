@@ -271,6 +271,7 @@ export default {
     PasswordMeter
   },
   mounted() {
+    this.initGraphics();
     this.getSettings();
     this.getHints();
   },
@@ -325,6 +326,10 @@ export default {
     };
   },
   methods: {
+    initGraphics() {
+      $("#app").css("background", "");
+      $("#app").css("color", "");
+    },
     initErrors() {
       return {
         ShowHints: {

@@ -1177,6 +1177,7 @@ export default {
     next();
   },
   mounted() {
+    this.initGraphics();
     this.getBackupInfo();
     this.getBackupStatus();
     this.pollingStatus();
@@ -1288,6 +1289,10 @@ export default {
     };
   },
   methods: {
+    initGraphics() {
+      $("#app").css("background", "");
+      $("#app").css("color", "");
+    },
     refresh() {
       cockpit
         .dbus(null, {

@@ -96,6 +96,7 @@ export default {
     });
   },
   mounted() {
+    this.initGraphics();
     this.getSSHConfig();
     this.getHints();
   },
@@ -133,6 +134,10 @@ export default {
     };
   },
   methods: {
+    initGraphics() {
+      $("#app").css("background", "");
+      $("#app").css("color", "");
+    },
     getHints(callback) {
       var context = this;
       context.execHints(

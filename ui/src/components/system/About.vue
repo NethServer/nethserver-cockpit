@@ -39,6 +39,10 @@
 <script>
 export default {
   name: "About",
+  mounted() {
+    $("#app").css("background", "");
+    $("#app").css("color", "");
+  },
   data() {
     return {};
   }

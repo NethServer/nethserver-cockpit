@@ -79,6 +79,8 @@ export default {
       // pass in the target node, as well as the observer options
       observer.observe(target, config);
     });
+    $("#app").css("background", "");
+    $("#app").css("color", "");
 
     setTimeout(function() {
       $(parent.document.getElementById("sidebar-menu").children[3]).addClass(

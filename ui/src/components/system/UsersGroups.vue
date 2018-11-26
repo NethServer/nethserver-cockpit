@@ -920,6 +920,7 @@ export default {
     next();
   },
   mounted() {
+    this.initGraphics();
     this.getInfo();
     this.getPasswordPolicy();
   },
@@ -988,6 +989,10 @@ export default {
     };
   },
   methods: {
+    initGraphics() {
+      $("#app").css("background", "");
+      $("#app").css("color", "");
+    },
     selectProvider(provider) {
       this.users.chooseProvider = provider;
       this.users.chooseBind = null;

@@ -282,6 +282,7 @@ export default {
     next();
   },
   mounted() {
+    this.initGraphics();
     this.getRanges();
     this.getReservations();
   },
@@ -332,6 +333,10 @@ export default {
     };
   },
   methods: {
+    initGraphics() {
+      $("#app").css("background", "");
+      $("#app").css("color", "");
+    },
     initReservation() {
       return {
         isLoading: false,

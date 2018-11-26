@@ -87,160 +87,167 @@
 </template>
 
 <script>
-  export default {
-    name: "Applications",
-    data() {
-      return {
-        view: {
-          isLoaded: false
+export default {
+  name: "Applications",
+  data() {
+    return {
+      view: {
+        isLoaded: false
+      },
+      tableLangsTexts: this.tableLangs(),
+      columns: [
+        {
+          label: this.$i18n.t("applications.icon"),
+          field: "icon",
+          filterable: false
         },
-        tableLangsTexts: this.tableLangs(),
-        columns: [{
-            label: this.$i18n.t("applications.icon"),
-            field: "icon",
-            filterable: false
-          },
-          {
-            label: this.$i18n.t("applications.name"),
-            field: "name",
-            filterable: true
-          },
-          {
-            label: this.$i18n.t("applications.description"),
-            field: "name",
-            filterable: true
-          },
-          {
-            label: this.$i18n.t("applications.version"),
-            field: "release.version",
-            filterable: true
-          },
-          {
-            label: this.$i18n.t("action"),
-            field: "",
-            filterable: true,
-            sortable: false
-          }
-        ],
-        rows: [],
-        currentApp: {
-          listRemove: [],
-          listRemoveRead: null
+        {
+          label: this.$i18n.t("applications.name"),
+          field: "name",
+          filterable: true
         },
-        legacyUrl: window.location.protocol +
-          "//" +
-          window.location.hostname +
-          ":980/en-US/"
-      };
+        {
+          label: this.$i18n.t("applications.description"),
+          field: "name",
+          filterable: true
+        },
+        {
+          label: this.$i18n.t("applications.version"),
+          field: "release.version",
+          filterable: true
+        },
+        {
+          label: this.$i18n.t("action"),
+          field: "",
+          filterable: true,
+          sortable: false
+        }
+      ],
+      rows: [],
+      currentApp: {
+        listRemove: [],
+        listRemoveRead: null
+      },
+      legacyUrl:
+        window.location.protocol +
+        "//" +
+        window.location.hostname +
+        ":980/en-US/"
+    };
+  },
+  mounted() {
+    var context = this;
+    setTimeout(function() {
+      context.initGraphics();
+    }, 250);
+
+    // get list of installed apps
+    context.getApps();
+  },
+  methods: {
+    initGraphics() {
+      $(parent.document.getElementById("sidebar-menu").children[1]).addClass(
+        "active"
+      );
+      $(parent.document.getElementById("sidebar-menu").children[0]).removeClass(
+        "active"
+      );
+      $("#app").css("background", "");
+      $("#app").css("color", "");
     },
-    mounted() {
+    getApps() {
       var context = this;
-      setTimeout(function () {
-        context.initGraphics();
-      }, 250);
 
-      // get list of installed apps
-      context.getApps();
+      context.view.isLoaded = false;
+      context.exec(
+        ["system-apps/read"],
+        {
+          action: "list"
+        },
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+          context.rows = success;
+          context.view.isLoaded = true;
+          context.initGraphics();
+        },
+        function(error) {
+          context.view.isLoaded = true;
+        },
+        false
+      );
     },
-    methods: {
-      initGraphics() {
-        $(parent.document.getElementById("sidebar-menu").children[1]).addClass(
-          "active"
-        );
-        $(parent.document.getElementById("sidebar-menu").children[0]).removeClass(
-          "active"
-        );
-      },
-      getApps() {
-        var context = this;
+    openRemoveApp(app) {
+      var context = this;
+      this.currentApp = app;
 
-        context.view.isLoaded = false;
-        context.exec(
-          ["system-apps/read"], {
-            action: "list"
-          },
-          null,
-          function (success) {
-            try {
-              success = JSON.parse(success);
-            } catch (e) {
-              console.error(e);
-            }
-            context.rows = success;
-            context.view.isLoaded = true;
-            context.initGraphics();
-          },
-          function (error) {
-            context.view.isLoaded = true;
-          },
-          false
-        );
-      },
-      openRemoveApp(app) {
-        var context = this;
-        this.currentApp = app;
-
-        $("#removeAppModal").modal("show");
-        context.exec(
-          ["system-packages/read"], {
-            action: "list-removed",
-            packages: [app.id]
-          },
-          null,
-          function (success) {
-            try {
-              success = JSON.parse(success);
-            } catch (e) {
-              console.error(e);
-            }
-            context.currentApp.listRemove = success.packages;
-            context.currentApp.listRemoveRead = success.packages.join("\n");
-            context.$forceUpdate();
-            console.log(context.currentApp.listRemoveRead);
-          },
-          function (error) {
-            console.error(error);
+      $("#removeAppModal").modal("show");
+      context.exec(
+        ["system-packages/read"],
+        {
+          action: "list-removed",
+          packages: [app.id]
+        },
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
           }
-        );
-      },
-      removeApp() {
-        var context = this;
+          context.currentApp.listRemove = success.packages;
+          context.currentApp.listRemoveRead = success.packages.join("\n");
+          context.$forceUpdate();
+          console.log(context.currentApp.listRemoveRead);
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+    removeApp() {
+      var context = this;
 
-        $("#removeAppModal").modal("hide");
-        context.exec(
-          ["system-packages/update"], {
-            action: "remove",
-            packages: context.currentApp.listRemove
-          },
-          function (stream) {
-            console.info("packages-remove", stream);
-          },
-          function (success) {
-            // notification
-            context.$parent.notifications.success.message = context.$i18n.t(
-              "applications.remove_ok"
-            );
+      $("#removeAppModal").modal("hide");
+      context.exec(
+        ["system-packages/update"],
+        {
+          action: "remove",
+          packages: context.currentApp.listRemove
+        },
+        function(stream) {
+          console.info("packages-remove", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "applications.remove_ok"
+          );
 
-            context.refresh();
-          },
-          function (error) {
-            // notification
-            context.$parent.notifications.error.message = context.$i18n.t(
-              "applications.remove_error"
-            );
-          }
-        );
-      },
-      refresh() {
-        cockpit
-          .dbus(null, {
-            bus: "internal"
-          })
-          .call("/packages", "cockpit.Packages", "Reload", []);
-        this.getApps();
-      }
+          context.refresh();
+        },
+        function(error) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "applications.remove_error"
+          );
+        }
+      );
+    },
+    refresh() {
+      cockpit
+        .dbus(null, {
+          bus: "internal"
+        })
+        .call("/packages", "cockpit.Packages", "Reload", []);
+      this.getApps();
     }
-  };
+  }
+};
 </script>
 
 <style>

@@ -1078,6 +1078,7 @@ export default {
   },
   mounted() {
     var context = this;
+    this.initGraphics();
     this.getInterfaces(function(names) {
       context.initGraphs(names);
     });
@@ -1104,6 +1105,10 @@ export default {
     };
   },
   methods: {
+    initGraphics() {
+      $("#app").css("background", "");
+      $("#app").css("color", "");
+    },
     deviceAlreadyAdded(device, type) {
       return this.wizard.type[type].devices.indexOf(device) > -1;
     },

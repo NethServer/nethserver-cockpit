@@ -158,6 +158,7 @@ export default {
     next();
   },
   mounted() {
+    this.initGraphics();
     this.getDns();
   },
   data() {
@@ -227,6 +228,10 @@ export default {
     };
   },
   methods: {
+    initGraphics() {
+      $("#app").css("background", "");
+      $("#app").css("color", "");
+    },
     getDns() {
       var context = this;
       context.exec(
