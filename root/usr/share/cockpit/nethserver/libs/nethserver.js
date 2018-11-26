@@ -89,6 +89,7 @@ nethserver = {
         process.done(function (successResp) {
             if (stream && !systemCheck) {
                 ns.$children[0].notifications.success.show = true
+                ns.$children[0].notifications.success.message = nethserver.notifications.success || null
                 setTimeout(function () {
                     ns.$children[0].notifications.success.show = false;
                 }, 3000)
@@ -101,6 +102,7 @@ nethserver = {
             if (stream) {
                 ns.$children[0].notifications.success.show = false
                 ns.$children[0].notifications.error.show = true
+                ns.$children[0].notifications.error.message = nethserver.notifications.error || null
                 ns.$children[0].taskInProgress = false
             }
             error(errorResp, errorData)
@@ -175,5 +177,9 @@ nethserver = {
         });
 
         return process
+    },
+    notifications: {
+        success: null,
+        error: null
     }
 };
