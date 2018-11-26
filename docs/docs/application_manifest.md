@@ -24,7 +24,14 @@ Manifest must be placed under `/usr/share/cockpit/nethserver/applications` direc
 - **bugs**: the url of project's issue tracker and / or the email address to which issues should be reported (optional)
 - **author**: the name of of the author with optional email and urls fields. (recommended)
 
-Images like screenshots and icons must be placed under `/usr/share/cockpit/<application-id>/assets` directory.
+Images like screenshots and icons must be placed under `/usr/share/cockpit/<application-id>/` directory.
+
+The `url` field should contain the URL to access the installed Web application. It should
+
+- be empty, if the application doesn't have its own external Web interface
+- start with `/`, if the application is hosted under the default virtualhost; example: `/webtop`
+- contain a full URL if the application is hosted inside a dedicated virtual host, example: `https://mattermost.nethserver.org`.
+  In this case, the application should take care to update is own application manifest using a template
 
 ### Example
 
