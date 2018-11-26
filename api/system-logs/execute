@@ -38,6 +38,7 @@ sub dump_logs
     my $follow = shift;
     my $cmd = '';
     my $args = '';
+    my $watchdog = '';
 
     if ($mode eq 'systemd') {
         $cmd .= "journalctl ";
@@ -48,6 +49,8 @@ sub dump_logs
     }
     if ($follow) {
         $cmd .= " -f ";
+        # Make sure process is killed after the timeout
+        $watchdog= "timeout -k ".($TIMEOUT+5)." $TIMEOUT ";
     } else {
         $cmd .= " -n $lines";
     }
@@ -59,8 +62,7 @@ sub dump_logs
         system("kill -9 $pid");
     }
 
-    # Make sure process is killed after the timeout
-    system("timeout -k ".($TIMEOUT+5)." $TIMEOUT $cmd $args"); 
+    system("$watchdog $cmd $args");
 }
 
 
