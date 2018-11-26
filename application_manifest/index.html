@@ -509,6 +509,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../api/system-logs/" title="system-logs" class="md-nav__link">
+      system-logs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../api/system-network/" title="system-network" class="md-nav__link">
       system-network
     </a>
@@ -1041,7 +1053,14 @@ and <a href="https://docs.npmjs.com/files/package.json">NPM package.json</a> for
 <li><strong>bugs</strong>: the url of project's issue tracker and / or the email address to which issues should be reported (optional)</li>
 <li><strong>author</strong>: the name of of the author with optional email and urls fields. (recommended)</li>
 </ul>
-<p>Images like screenshots and icons must be placed under <code>/usr/share/cockpit/&lt;application-id&gt;/assets</code> directory.</p>
+<p>Images like screenshots and icons must be placed under <code>/usr/share/cockpit/&lt;application-id&gt;/</code> directory.</p>
+<p>The <code>url</code> field should contain the URL to access the installed Web application. It should</p>
+<ul>
+<li>be empty, if the application doesn't have its own external Web interface</li>
+<li>start with <code>/</code>, if the application is hosted under the default virtualhost; example: <code>/webtop</code></li>
+<li>contain a full URL if the application is hosted inside a dedicated virtual host, example: <code>https://mattermost.nethserver.org</code>.
+  In this case, the application should take care to update is own application manifest using a template</li>
+</ul>
 <h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
 <p>File <code>/usr/share/cockpit/nethserver/applications/nextcloud.json</code>:</p>
 <div class="codehilite"><pre><span></span>{
