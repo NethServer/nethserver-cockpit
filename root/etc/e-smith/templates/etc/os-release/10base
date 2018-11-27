@@ -2,7 +2,7 @@ NAME="{{ $sysconfig{'ProductName'} }}"
 VERSION="{{ $sysconfig{'Version'} }}"
 VERSION_ID="{{ substr($sysconfig{'Version'},0,1) }}"
 PRETTY_NAME="{{ $sysconfig{'ProductName'}." ".$sysconfig{'Version'}  }}"
-ID="{{ lc($sysconfig{'ProductName'}) }}"
+ID="{{ do { (my $tmp = $sysconfig{'ProductName'}) =~ s/ /\-/g; lc($tmp) } }}"
 HOME_URL="{{ $sysconfig{'Url'} || "http://www.nethserver.org" }}"
 
 ID_LIKE="rhel fedora centos"
