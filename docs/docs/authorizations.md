@@ -20,7 +20,7 @@ The UI is split into 2 main sections:
 
 - `Applications`: contains all modules shipped with extra RPM packages.
   Each application is a complete set of features.
-  Some exampled os applications can be: the firewall module, nextcloud or the mail server.
+  Some examples of applications can be: the firewall module, nextcloud or the mail server.
 
 A user can be granted access to specific applications or system modules.
 
