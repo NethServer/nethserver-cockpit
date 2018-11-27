@@ -431,7 +431,6 @@ export default {
       this.getHints("system-hostname", "hostname");
       this.getHints("system-dns", "upstreamDns");
       this.getHints("system-company", "company");
-      this.getHints("system-users", "users_groups");
       this.getHints("system-services", "services");
       this.getHints("system-backup", "backup");
       this.getHints("system-openssh", "ssh");
