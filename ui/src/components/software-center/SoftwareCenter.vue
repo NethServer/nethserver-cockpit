@@ -943,7 +943,7 @@ export default {
 
 .selectable-cat:hover {
   cursor: pointer;
-  background: #8b8d8f !important;
+  background: #7dc3e8 !important;
 }
 
 .selectable:hover {
