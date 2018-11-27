@@ -1151,7 +1151,8 @@ export default {
         name: "",
         expires: false,
         shell: false,
-        isLoading: false
+        isLoading: false,
+        canChangePassword: true
       };
     },
     initGroup() {
