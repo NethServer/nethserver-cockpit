@@ -682,6 +682,9 @@ export default {
         function(error, data) {
           context.view.isInstalling = false;
 
+          // get updates
+          context.getApplications();
+
           // notification
           context.$parent.notifications.error.message = context.$i18n.t(
             appToInstall.length == 1
