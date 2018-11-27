@@ -64,8 +64,8 @@ def compsdump(yb):
         # hide server-manager related packages
         if c.categoryid == "server-manager-languages":
             continue;
-        color = "#ffffff"
-        icon = "icon.png"
+        color = "#33a0de"
+        icon = "base.png"
         if c.categoryid in categories_metadata:
             color =  categories_metadata[c.categoryid]['color']
             icon =  categories_metadata[c.categoryid]['icon']
