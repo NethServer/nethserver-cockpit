@@ -15,6 +15,7 @@ Valid actions are:
 - `available`
 - `bond-types`
 - `vlan-available`
+- `routing`
 
 #### list
 
@@ -39,45 +40,6 @@ Example:
   "parent": "br0"
 }
 ```
-
-#### bond-types
-
-List the avaialbe bond types.
-
-Example:
-```json
-[
-  {
-    "value": 3,
-    "name": "broadcast"
-  },
-  {
-    "value": 6,
-    "name": "balance-alb"
-  },
-  {
-    "value": 5,
-    "name": "balance-tlb"
-  },
-  {
-    "value": 1,
-    "name": "active-backup"
-  },
-  {
-    "value": 0,
-    "name": "balance-rr"
-  },
-  {
-    "value": 4,
-    "name": "802.3ad"
-  },
-  {
-    "value": 2,
-    "name": "balance-xor"
-  }
-]
-```
-
 #### available
 
 List all interfaces without a role.
@@ -89,20 +51,40 @@ Example:
 }
 ```
 
+#### bond-types
+
+List the available bond types.
+
+Example:
+```json
+{
+  "action": "bond-types"
+} 
+```
+
 #### vlan-available
 
 List all interfaces suitable for a vlan.
 
 Example:
 ```json
-[
-  "bond0",
-  "br0",
-  "enp0s3",
-  "enp0s8",
-  "enp0s9"
-]
+{
+  "action": "vlan-availables"
+}
 ```
+
+
+#### routing
+
+List routing table (`route -n`)
+
+Example:
+```json
+{
+  "action": "routing"
+}
+```
+
 
 ### Output
 
@@ -299,6 +281,65 @@ Example:
   "enp0s9"
 ]
 ```
+
+#### bond-types
+
+Example:
+```json
+[
+  {
+    "value": 3,
+    "name": "broadcast"
+  },
+  {
+    "value": 6,
+    "name": "balance-alb"
+  },
+  {
+    "value": 5,
+    "name": "balance-tlb"
+  },
+  {
+    "value": 1,
+    "name": "active-backup"
+  },
+  {
+    "value": 0,
+    "name": "balance-rr"
+  },
+  {
+    "value": 4,
+    "name": "802.3ad"
+  },
+  {
+    "value": 2,
+    "name": "balance-xor"
+  }
+]
+```
+
+#### vlan-available
+
+Example:
+```json
+[
+  "bond0",
+  "br0",
+  "enp0s3",
+  "enp0s8",
+  "enp0s9"
+]
+```
+
+#### routing
+
+Example:
+```json
+{
+  "data": "Kernel IP routing table\nDestination     Gateway         Genmask         Flags Metric Ref    Use Iface\n0.0.0.0         192.168.5.253   0.0.0.0         UG    0      0        0 br0\n169.254.0.0     0.0.0.0         255.255.0.0     U     1010   0        0 br0\n192.168.5.0     0.0.0.0         255.255.255.0   U     0      0        0 br0\n"
+}
+```
+
 
 ## validate
 
