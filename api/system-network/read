@@ -268,7 +268,10 @@ if($cmd eq 'list') {
         push(@tmp, { "name" => $_, "value" => $types{$_} });
     }
     $ret = \@tmp;
+} elsif ($cmd eq 'routing') {
 
+   $ret = undef;
+   $ret->{'data'} = `route -n`;
 } else {
     error();
 }
