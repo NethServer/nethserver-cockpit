@@ -5,6 +5,14 @@ body.login-pf {
     padding-top: 60px;
 }
 
+#authorized-input {
+    display: none !important;
+}
+
+[for="authorized-input"] {
+    display: none !important;
+}
+
 #main-navbar a {
     text-decoration: none;
 }
@@ -193,4 +201,8 @@ li.credential-lock>a:first-child {
 .nav-pf-vertical .list-group-item.active>a,
 .nav-pf-vertical .list-group-item:hover>a {
     background-color: #4d5258;
+}
+
+input[type="checkbox"].form-control {
+    width: 6% !important;
 }

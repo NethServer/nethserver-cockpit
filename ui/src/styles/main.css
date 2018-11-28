@@ -1099,3 +1099,9 @@ input[type="checkbox"].form-control {
   color: white;
   margin-left: 4px;
 }
+
+.disabled {
+  color: #8b8d8f;
+  cursor: not-allowed;
+  text-decoration: none;
+}

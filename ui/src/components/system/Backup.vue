@@ -25,7 +25,7 @@
       <div class="panel panel-default" id="provider-markup">
         <div class="panel-heading">
           <button @click="openConfigureConfig()" class="btn btn-default right">{{$t('backup.configure')}}</button>
-          <button @click="openRestoreConfig(b)" class="btn btn-primary right panel-icon">{{$t('backup.restore')}}</button>
+          <button :disabled="backupConfigurations.length == 0" @click="openRestoreConfig(b)" class="btn btn-primary right panel-icon">{{$t('backup.restore')}}</button>
           <button @click="openExecuteConfig(b)" class="btn btn-primary right span-right-margin">{{$t('backup.execute_now')}}</button>
           <span class="panel-title">{{$t('backup.configured_backup')}}: {{backupConfigurations.length}}</span>
           <span class="provider-details margin-left-md" data-toggle="collapse" data-parent="#provider-markup" href="#providerDetails">{{$t('backup.details')}}</span>
@@ -89,7 +89,7 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <button @click="openConfigureData()" class="btn btn-default right">{{$t('backup.configure')}}</button>
-          <button @click="openRestoreData(b)" class="btn btn-primary right panel-icon">{{$t('backup.restore')}}</button>
+          <button :disabled="backupData.length == 0" @click="openRestoreData(b)" class="btn btn-primary right panel-icon">{{$t('backup.restore')}}</button>
           <button @click="openCreateData(b)" class="btn btn-primary right span-right-margin">{{$t('create')}}</button>
           <span class="panel-title">
             <span>{{$t('backup.configured_backup')}}:</span> {{backupData.length}}
@@ -1346,10 +1346,10 @@ export default {
         isLoading: false,
         currentStep: 1,
         when: {
-          every: "hour",
-          minute: 0,
-          hour: 0,
-          hour_minute: "1:00",
+          every: "day",
+          minute: 5,
+          hour: 1,
+          hour_minute: "1:05",
           week_day: 0,
           day: 0,
           crontab: b && b.props.BackupTime ? b.props.BackupTime : ""

@@ -17,7 +17,7 @@
           <dl class="dl-horizontal details-container">
             <span v-if="!(k == 'isAD' || k == 'isLdap')" v-for="(v,k) in users.providerInfo" v-bind:key="k">
               <dt v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal'">{{k | capitalize}}</dt>
-              <dd v-if="k != 'NsdcIp' && k != 'oldIp' && k != 'newIp' && k != 'IsLocal'">{{v}}</dd>
+              <dd v-if="k != 'NsdcIp' && k != 'oldIp' && k != 'newIp' && k != 'IsLocal'">{{v | normalize(k)}}</dd>
               <dd v-if="k == 'NsdcIp' && users.provider.isAD">
                 <a data-toggle="modal" data-target="#nsdcIpChangeModal" href="#">{{v}}</a>
               </dd>
@@ -34,8 +34,8 @@
         <div class="panel-heading">
           <button id="change-provider-btn" @click="openPasswordPolicy()" class="btn btn-primary">{{$t('users_groups.change_policy')}}</button>
           <span class="panel-title">
-            <span>{{$t('users_groups.strong_password')}}</span> <span :class="['fa', passwordPolicy.Users == 'yes' ? 'fa-check green' : 'fa-times red']"></span>
-            <span class="margin-left-md">{{$t('users_groups.expiration_password')}}</span> <span :class="['fa', passwordPolicy.PassExpires == 'yes' ? 'fa-check green' : 'fa-times red']"></span>
+            <span>{{$t('users_groups.strong_password')}}</span> <span :class="['fa', passwordPolicy.Users == true || passwordPolicy.Users == 'yes' ? 'fa-check green' : 'fa-times red']"></span>
+            <span class="margin-left-md">{{$t('users_groups.expiration_password')}}</span> <span :class="['fa', passwordPolicy.PassExpires == true || passwordPolicy.PassExpires == 'yes' ? 'fa-check green' : 'fa-times red']"></span>
           </span>
         </div>
       </div>
@@ -130,10 +130,10 @@
             <div class="list-view-pf-body">
               <div class="list-view-pf-description">
                 <div @click="users.providerInfo.IsLocal ? openEditUser(ku, u) : null" class="list-group-item-heading">
-                  <a :class="[u.locked == 1 ? 'disabled' : '']">{{ku}}</a>
+                  <a :class="[!users.providerInfo.IsLocal ? 'disabled' : '']">{{ku}}</a>
                 </div>
                 <div class="list-group-item-text">
-                  <span :class="[u.locked == 1 ? 'disabled' : '']">{{u.gecos}}</span>
+                  <span :class="[u.locked == 1 || !users.providerInfo.IsLocal ? 'disabled' : '']">{{u.gecos}}</span>
                 </div>
                 <div class="list-group-item-text">
                   <span :class="[u.expired ? 'fa fa-clock-o red' : 'fa fa-clock-o']"></span>
@@ -723,7 +723,7 @@
                           </div>
                         </div> -->
 
-                        <div v-if="newProvider.isChecked && k!='action' && k != 'NsdcIp' && k!='DiscoverDcType' && k!='port' && k!='isAD' && k!='isLdap' && k!='host' && k!='Provider' && !((newProvider.info.BindType == 'anonymous' && k=='BindPassword') || (newProvider.info.BindType == 'anonymous' && k=='BindDN'))"
+                        <div v-if="newProvider.isChecked && k!='action' && k != 'NsdcIp' && k!='DiscoverDcType' && k!='port' && k!='IsLocal' && k!='isAD' && k!='isLdap' && k!='host' && k!='Provider' && !((newProvider.info.BindType == 'anonymous' && k=='BindPassword') || (newProvider.info.BindType == 'anonymous' && k=='BindDN'))"
                           v-for="(v,k) in newProvider.info" v-bind:key="k" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{k | camelToSentence}}</label>
                           <div class="col-sm-9">
@@ -1292,9 +1292,9 @@ export default {
 
     openPasswordPolicy() {
       this.passwordPolicy.Users =
-        this.passwordPolicy.Users == "yes" ? true : false;
+        (this.passwordPolicy.Users == true || this.passwordPolicy.Users == "yes") ? true : false;
       this.passwordPolicy.PassExpires =
-        this.passwordPolicy.PassExpires == "yes" ? true : false;
+        (this.passwordPolicy.PassExpires == true || this.passwordPolicy.PassExpires == "yes") ? true : false;
       $("#passwordPolicyModal").modal("show");
     },
 

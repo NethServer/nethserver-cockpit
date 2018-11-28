@@ -67,6 +67,29 @@ var Filters = {
     return value && cronstrue.toString(value, {
       locale: ns.$options.currentLocale
     });
+  },
+  normalize: function (value, arg) {
+    if (arg == 'StartTls' && value.length == 0) {
+      return ns._i18n.t('users_groups.disabled')
+    }
+
+    if (!value || value.length == 0) {
+      return '-'
+    }
+
+    if (typeof value === "boolean") {
+      return value.toString()
+    }
+
+    if (value == 1) {
+      return ns._i18n.t('users_groups.enabled')
+    }
+
+    if (value == 0) {
+      return ns._i18n.t('users_groups.disabled')
+    }
+
+    return value
   }
 };
 

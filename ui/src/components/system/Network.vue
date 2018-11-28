@@ -1581,6 +1581,13 @@ export default {
     toggleOpen(i) {
       i.isOpened = !i.isOpened;
       this.$forceUpdate();
+      setTimeout(function() {
+        if (i.isOpened) {
+          window.scrollTo(0, document.body.scrollHeight);
+        } else {
+          window.scrollTo(0, 0);
+        }
+      }, 100);
     },
     initProxy() {
       return {

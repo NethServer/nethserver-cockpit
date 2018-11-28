@@ -497,7 +497,9 @@
       "password_policy_error": "Password policy not changed.",
       "set_valid_hostname": "Set valid hostname",
       "hostname_save_ok": "Hostname changed successfully!",
-      "hostname_save_error": "Hostname not changed."
+      "hostname_save_error": "Hostname not changed.",
+      "enabled": "Enabled",
+      "disabled": "Disabled"
     },
     "network": {
       "title": "Network",
