@@ -111,6 +111,7 @@ if($cmd eq 'list') {
     # prepare interface map with hardware info
     foreach my $n ($ndb->get_all()) {
         my %props = $n->props;
+        my $iname = $n->key;
         next if ($props{'type'} eq 'xdsl-disabled');
         if ($props{'type'} eq 'vlan') {
             my @tmp = split(/\./,$n->key);
@@ -136,12 +137,15 @@ if($cmd eq 'list') {
             }
         }
 
+        # read address in cidr format
+        my $cidr = `/sbin/ip -o -4 address show $iname primary 2>/dev/null| head -1 | awk '{print \$4}'`;
+        chomp $cidr;
+        $props{'cidr'} = $cidr;
+
         # Retrieve IP address of DHCP interfaces and PPPoE
         if ((exists($props{'bootproto'}) && $props{'bootproto'} eq 'dhcp') || $n->key eq 'ppp0' ) {
-            my $iname = $n->key;
-            my $ipaddr = `/sbin/ip -o -4 address show $iname primary 2>/dev/null| head -1 | awk '{print \$4}' | cut -d '/' -f1`;
-            chomp $ipaddr;
-            $status{$iname}{'ipaddr'} = $ipaddr;
+            $cidr =~ /^(.*)\/(.*)$/;
+            $status{$iname}{'ipaddr'} = $1;
         }
         $ret->{'status'} = \%status;
     }

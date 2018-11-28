@@ -206,7 +206,8 @@ Example:
         "type": "bridge",
         "netmask": "255.255.255.0",
         "role": "green",
-        "ipaddr": "192.168.5.246"
+        "ipaddr": "192.168.5.246",
+        "cidr": "192.168.5.246/24"
       }
     ],
     "free": [],
