@@ -16,9 +16,10 @@
         <div id="providerDetails" class="panel-collapse collapse">
           <dl class="dl-horizontal details-container">
             <span v-if="!(k == 'isAD' || k == 'isLdap')" v-for="(v,k) in users.providerInfo" v-bind:key="k">
-              <dt v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal'">{{k | capitalize}}</dt>
-              <dd v-if="k != 'NsdcIp' && k != 'oldIp' && k != 'newIp' && k != 'IsLocal'">{{v | normalize(k)}}</dd>
-              <dd v-if="k == 'NsdcIp' && users.provider.isAD">
+              <dt v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal' && k != 'NsdcIp'">{{k | capitalize}}</dt>
+              <dd v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal' && k != 'NsdcIp'">{{v | normalize(k)}}</dd>
+              <dt v-if="k == 'NsdcIp' && users.provider.isAD && users.providerInfo.IsLocal">{{k | capitalize}}</dt>
+              <dd v-if="k == 'NsdcIp' && users.provider.isAD && users.providerInfo.IsLocal">
                 <a data-toggle="modal" data-target="#nsdcIpChangeModal" href="#">{{v}}</a>
               </dd>
             </span>
@@ -129,11 +130,11 @@
             </div>
             <div class="list-view-pf-body">
               <div class="list-view-pf-description">
-                <div @click="users.providerInfo.IsLocal ? openEditUser(ku, u) : null" class="list-group-item-heading">
-                  <a :class="[!users.providerInfo.IsLocal ? 'disabled' : '']">{{ku}}</a>
+                <div class="list-group-item-heading">
+                  <a @click="users.providerInfo.IsLocal ? openEditUser(ku, u) : null" :class="[u.locked == 1 ? 'disabled' : !users.providerInfo.IsLocal ? 'not-local-user' : '']">{{ku}}</a>
                 </div>
                 <div class="list-group-item-text">
-                  <span :class="[u.locked == 1 || !users.providerInfo.IsLocal ? 'disabled' : '']">{{u.gecos}}</span>
+                  <span :class="[u.locked == 1 ? 'disabled' : !users.providerInfo.IsLocal ? 'not-local-user' : '']">{{u.gecos}}</span>
                 </div>
                 <div class="list-group-item-text">
                   <span :class="[u.expired ? 'fa fa-clock-o red' : 'fa fa-clock-o']"></span>
@@ -174,8 +175,8 @@
             </div>
             <div class="list-view-pf-body">
               <div class="list-view-pf-description">
-                <div @click="users.providerInfo.IsLocal ? openEditGroup(kg, g) : null" class="list-group-item-heading">
-                  <a>{{kg}}</a>
+                <div class="list-group-item-heading">
+                  <a @click="users.providerInfo.IsLocal ? openEditGroup(kg, g) : null" :class="[!users.providerInfo.IsLocal ? 'not-local-user' : '']">{{kg}}</a>
                 </div>
                 <div class="list-group-item-text">
 
@@ -1292,9 +1293,14 @@ export default {
 
     openPasswordPolicy() {
       this.passwordPolicy.Users =
-        (this.passwordPolicy.Users == true || this.passwordPolicy.Users == "yes") ? true : false;
+        this.passwordPolicy.Users == true || this.passwordPolicy.Users == "yes"
+          ? true
+          : false;
       this.passwordPolicy.PassExpires =
-        (this.passwordPolicy.PassExpires == true || this.passwordPolicy.PassExpires == "yes") ? true : false;
+        this.passwordPolicy.PassExpires == true ||
+        this.passwordPolicy.PassExpires == "yes"
+          ? true
+          : false;
       $("#passwordPolicyModal").modal("show");
     },
 

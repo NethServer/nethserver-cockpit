@@ -90,7 +90,7 @@
                   <div class="list-view-pf-body">
                     <div class="list-view-pf-description">
                       <div :class="['list-group-item-heading', roleKey]">
-                        <span @click="toggleOpen(i)">{{i.name}} <span v-if="i.nslabel">({{i.nslabel}})</span></span>
+                        <span class="pointer" @click="toggleOpen(i)">{{i.name}} <span v-if="i.nslabel">({{i.nslabel}})</span></span>
                       </div>
                       <div class="list-group-item-text details-ip">
                         <span class="pficon pficon-screen"></span>
@@ -1581,13 +1581,6 @@ export default {
     toggleOpen(i) {
       i.isOpened = !i.isOpened;
       this.$forceUpdate();
-      setTimeout(function() {
-        if (i.isOpened) {
-          window.scrollTo(0, document.body.scrollHeight);
-        } else {
-          window.scrollTo(0, 0);
-        }
-      }, 100);
     },
     initProxy() {
       return {

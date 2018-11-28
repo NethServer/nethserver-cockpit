@@ -1105,3 +1105,22 @@ input[type="checkbox"].form-control {
   cursor: not-allowed;
   text-decoration: none;
 }
+
+.list-group-item-header {
+  cursor: initial !important;
+}
+
+.pointer:hover {
+  cursor: pointer;
+}
+
+.not-local-user {
+  color: rgb(54, 54, 54) !important;
+  text-decoration: none !important;
+}
+
+.not-local-user:hover {
+  color: rgb(54, 54, 54) !important;
+  text-decoration: none !important;
+  cursor: initial !important;
+}
