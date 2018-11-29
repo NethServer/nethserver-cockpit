@@ -24,7 +24,7 @@
 
         <li v-if="checkAuth('network')" v-b-toggle.object-collapse v-bind:class="[getCurrentPath('network') ? 'active' : '', 'list-group-item']">
           <a href="#/network">
-            <span class="fa fa-plug"></span>
+            <span class="pficon pficon-network"></span>
             <span class="list-group-item-value">{{$t('menu.network')}}</span>
             <span v-if="hints.network.count > 0" class="badge badge-small">{{hints.network.count}}</span>
           </a>

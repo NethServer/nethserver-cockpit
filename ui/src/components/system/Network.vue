@@ -104,7 +104,7 @@
                         <br />
                         <span v-if="interfaces.red.length == 0 || roleKey == 'red'">
                           <span class="pficon pficon-middleware starred-marging"></span>
-                          <span class="icon-net-margin">GW</span> <strong>{{i.gateway || interfaceStatus[i.name].gateway}}</strong>
+                          <span class="icon-net-margin">GW</span> <strong>{{i.gateway || interfaceStatus[i.name] && interfaceStatus[i.name].gateway}}</strong>
                         </span>
                       </div>
                     </div>
@@ -114,8 +114,8 @@
                         <strong>{{i.role == 'pppoe' ? 'PPPoE' : i.role | capitalize}}</strong>
                       </div>
                       <div class="list-view-pf-additional-info-item">
-                        <span :class="['pficon', interfaceStatus[i.name].link == 1 ? 'pficon-plugged' : 'pficon-unplugged']"></span>
-                        <strong>{{interfaceStatus[i.name].link == 1 ? 'UP' : 'DOWN'}}</strong>
+                        <span :class="['pficon', interfaceStatus[i.name] && interfaceStatus[i.name].link == 1 ? 'pficon-plugged' : 'pficon-unplugged']"></span>
+                        <strong>{{interfaceStatus[i.name] && interfaceStatus[i.name].link == 1 ? 'UP' : 'DOWN'}}</strong>
                       </div>
                       <div v-if="i.aliases.length > 0" class="list-view-pf-additional-info-item">
                         <span class="fa fa-clone"></span>
@@ -1603,11 +1603,11 @@ export default {
           break;
 
         case "orange":
-          return "pficon pficon-security";
+          return "fa fa-shield";
           break;
 
         case "free":
-          return "pficon pficon-unlocked";
+          return "fa fa-unlock";
           break;
 
         case "other":
