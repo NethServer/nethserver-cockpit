@@ -36,7 +36,12 @@
 
     <div class="row">
       <div class="col-sm-12">
-        <h3>{{$t('network.interface_list')}}</h3>
+        <h3>
+          {{$t('network.interface_list')}}
+          <a id="routing-info" data-toggle="modal" data-target="#routingInfoModal" :class="['right', !routingInfo ? 'disabled' : '']">
+            <span class="pficon pficon-route starred-marging"></span>{{$t('network.routing_info')}}
+          </a>
+        </h3>
         <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
 
         <div v-for="(role,roleKey) in interfaces" v-bind:key="roleKey">
@@ -93,14 +98,24 @@
                         <span class="pointer" @click="toggleOpen(i)">{{i.name}} <span v-if="i.nslabel">({{i.nslabel}})</span></span>
                       </div>
                       <div class="list-group-item-text details-ip">
-                        <span class="pficon pficon-screen"></span>
-                        <strong>{{i.ipaddr || interfaceStatus[i.name] && interfaceStatus[i.name].ipaddr || '-'}}</strong>
+                        <span class="pficon pficon-screen starred-marging"></span>
+                        <span class="">CIDR</span> <strong>{{i.cidr || interfaceStatus[i.name] &&
+                          interfaceStatus[i.name].ipaddr || '-'}}</strong>
+                        <br />
+                        <span v-if="interfaces.red.length == 0 || roleKey == 'red'">
+                          <span class="pficon pficon-middleware starred-marging"></span>
+                          <span class="icon-net-margin">GW</span> <strong>{{i.gateway || interfaceStatus[i.name].gateway}}</strong>
+                        </span>
                       </div>
                     </div>
                     <div class="list-view-pf-additional-info">
                       <div v-if="roleKey == 'other'" class="list-view-pf-additional-info-item">
                         <span class="fa fa-cube"></span>
                         <strong>{{i.role == 'pppoe' ? 'PPPoE' : i.role | capitalize}}</strong>
+                      </div>
+                      <div class="list-view-pf-additional-info-item">
+                        <span :class="['pficon', interfaceStatus[i.name].link == 1 ? 'pficon-plugged' : 'pficon-unplugged']"></span>
+                        <strong>{{interfaceStatus[i.name].link == 1 ? 'UP' : 'DOWN'}}</strong>
                       </div>
                       <div v-if="i.aliases.length > 0" class="list-view-pf-additional-info-item">
                         <span class="fa fa-clone"></span>
@@ -154,7 +169,8 @@
                       <dd v-if="i.devices.length > 1">
                         <button @click="openDeleteDevice(a)" class="btn btn-danger btn-xs">{{$t('delete')}}</button>
                       </dd>
-                      <dd v-for="(c,ci) in a.devices" v-bind:key="ci"><span :class="[ci == 0 ? '' : 'transparent', 'fa fa-arrow-right', 'span-right-margin']"></span> <b>{{c.name}}<b></dd>
+                      <dd v-for="(c,ci) in a.devices" v-bind:key="ci"><span :class="[ci == 0 ? '' : 'transparent', 'fa fa-arrow-right', 'span-right-margin']"></span>
+                        <b>{{c.name}}<b></dd>
                     </dl>
                     <dl v-if="i.devices.length == 0" class="dl-horizontal int-details">
                       <dt>-</dt>
@@ -183,6 +199,29 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="routingInfoModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('network.routing_info')}}</h4>
+          </div>
+          <form class="form-horizontal">
+            <div class="modal-body">
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <div v-if="!routingInfo" class="spinner spinner-sm"></div>
+                  <pre v-if="routingInfo" class="prettyprint">{{routingInfo}}</pre>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -1084,6 +1123,7 @@ export default {
     });
     this.getRoutes();
     this.getProxy();
+    this.getRoutingInfo();
   },
   data() {
     return {
@@ -1101,7 +1141,8 @@ export default {
       newRoute: this.initRoute(),
       wizard: this.initWizard(),
       wizardPhysical: this.initWizardPhysical(),
-      routes: {}
+      routes: {},
+      routingInfo: null
     };
   },
   methods: {
@@ -1720,6 +1761,27 @@ export default {
             console.error(e);
           }
           context.routes = success.configuration;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+    getRoutingInfo() {
+      var context = this;
+      context.exec(
+        ["system-network/read"],
+        {
+          action: "routing"
+        },
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+          context.routingInfo = success.data;
         },
         function(error) {
           console.error(error);

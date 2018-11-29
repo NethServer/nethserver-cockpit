@@ -591,7 +591,9 @@
       "description": "Description",
       "metric": "Metric",
       "router": "Router",
-      "label": "Label"
+      "label": "Label",
+      "routing_info": "Routing info",
+      "status_link": "Link"
     },
     "ssh": {
       "title": "SSH",
