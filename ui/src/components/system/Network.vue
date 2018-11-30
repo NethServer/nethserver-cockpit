@@ -420,7 +420,7 @@
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.select_successor')}}</label>
                 <div class="col-sm-9">
                   <div v-if="!currentInterface.successorListLoaded" class="spinner spinner-sm"></div>
-                  <select v-show="currentInterface.successorListLoaded" required v-model="currentInterface.successor"
+                  <select v-show="currentInterface.successorListLoaded" v-model="currentInterface.successor"
                     class="combobox form-control">
                     <option v-for="s in currentInterface.successorList" v-bind:key="s">
                       {{s}}
