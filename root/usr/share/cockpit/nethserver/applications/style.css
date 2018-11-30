@@ -12,6 +12,10 @@ a {
     cursor: pointer;
 }
 
+input[type="checkbox"].form-control {
+    width: 6% !important;
+}
+
 .container-cards-pf {
     margin-left: 55px !important;
     margin-top: 0px !important;
