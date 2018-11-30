@@ -189,7 +189,7 @@ export default {
   name: "App",
   mounted() {
     console.clear();
-    console.log(this.msg);
+    console.log("%c" + this.msg, "background: #39a5dc; color: white;");
 
     // get authorization for routes
     this.getAuths();
