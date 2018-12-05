@@ -430,8 +430,7 @@
           <form class="form-horizontal">
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.last_log')}}</label>
-                <div class="col-sm-9">
+                <div class="col-sm-12">
                   <div v-if="!currentDataBackup.lastLog" class="spinner spinner-sm"></div>
                   <pre v-if="currentDataBackup.lastLog" class="prettyprint">{{currentDataBackup.lastLog}}</pre>
                 </div>
