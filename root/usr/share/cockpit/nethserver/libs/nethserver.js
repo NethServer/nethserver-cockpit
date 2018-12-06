@@ -30,7 +30,7 @@ nethserver = {
             process.input(JSON.stringify(input))
         }
 
-        console.info("%c  API: " + api + "  \n  %cecho '" + JSON.stringify(input) + "' | " + args.join(' ') + " | python -m json.tool  ", "background: black; color: yellow;", "background: black; color: white; font-size: large, font-family: 'monospace")
+        console.info("%cAPI: " + api + "\n%c$ echo '" + JSON.stringify(input) + "' | " + args.join(' ') + " | python -m json.tool", "background: #1f2123; color: yellow;", "background: #1f2123; color: white; font-size: large, font-family: 'monospace';")
 
         if (stream) {
             process.stream(function (data) {

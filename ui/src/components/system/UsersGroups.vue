@@ -253,11 +253,11 @@
               <div v-if="!(newUser.isEdit && !newUser.isPassEdit)" :class="['form-group', newUser.errorProps['newPassword'] ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.password')}}</label>
                 <div class="col-sm-7">
-                  <input required :type="newUser.togglePass ? 'text' : 'password'" v-model="newUser.newPassword" class="form-control">
+                  <input tabindex="0" required :type="newUser.togglePass ? 'text' : 'password'" v-model="newUser.newPassword" class="form-control">
                   <span v-if="newUser.errorProps['newPassword']" class="help-block">{{newUser.errorProps['newPassword']}}</span>
                 </div>
                 <div class="col-sm-2">
-                  <button @click="togglePass()" type="button" class="btn btn-primary">
+                  <button tabindex="-1" @click="togglePass()" type="button" class="btn btn-primary">
                     <span :class="[!newUser.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"></span>
                   </button>
                 </div>
