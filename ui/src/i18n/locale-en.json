@@ -660,9 +660,9 @@
       "logrotate": "Log files",
       "log_times": "Logs to keep",
       "log_compression": "Compress logs",
-      "rotation_daily": "daily",
-      "rotation_weekly": "weekly",
-      "rotation_monthly": "monthly",
+      "rotation_daily": "Daily",
+      "rotation_weekly": "Weekly",
+      "rotation_monthly": "Monthly",
       "log_rotate": "Rotate logs"
     },
     "logs": {

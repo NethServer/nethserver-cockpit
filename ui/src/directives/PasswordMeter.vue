@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input id="pass-meter-input" :disabled="!canChangePassword" v-model="confirmPassword" @input="updateMeter()" :type="$parent.newUser.togglePass ? 'text' : 'password'" class="form-control" />
+    <input tabindex="0" id="pass-meter-input" :disabled="!canChangePassword" v-model="confirmPassword" @input="updateMeter()" :type="$parent.newUser.togglePass ? 'text' : 'password'" class="form-control" />
     <div class="password-hints">
       <span :class="[ lowercase ? 'password-meter-check' : 'password-meter-uncheck']">{{$t('lowercase')}}</span>
       <span :class="[ uppercase ? 'password-meter-check' : 'password-meter-uncheck']">{{$t('uppercase')}}</span>

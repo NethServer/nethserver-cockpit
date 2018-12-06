@@ -16,17 +16,18 @@
       <h3>{{$t('settings.password')}}</h3>
       <div v-if="!newUser.canChangePassword" class="alert alert-info alert-dismissable">
         <span class="pficon pficon-info"></span>
-        <strong>{{$t('settings.cannot_change_password')}}.</strong> {{$t('settings.remote_account_provider_password')}}.
+        <strong>{{$t('settings.cannot_change_password')}}.</strong>
+        {{$t('settings.remote_account_provider_password')}}.
       </div>
       <form class="form-horizontal" v-on:submit.prevent="saveSettings('password')">
         <div v-if="!view.isRoot" class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.old_password')}}</label>
           <div class="col-sm-5">
-            <input :disabled="!newUser.canChangePassword" required :type="newUser.togglePass ? 'text' : 'password'" v-model="newUser.oldPassword"
-              class="form-control">
+            <input tabindex="0" :disabled="!newUser.canChangePassword" required :type="newUser.togglePass ? 'text' : 'password'"
+              v-model="newUser.oldPassword" class="form-control">
           </div>
           <div class="col-sm-2">
-            <button @click="togglePass()" type="button" class="btn btn-primary adjust-top-min">
+            <button tabindex="-1" @click="togglePass()" type="button" class="btn btn-primary adjust-top-min">
               <span :class="[!newUser.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"></span>
             </button>
           </div>
@@ -34,13 +35,13 @@
         <div :class="['form-group', errors.newPassword.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.new_password')}}</label>
           <div class="col-sm-5">
-            <input :disabled="!newUser.canChangePassword" required :type="newUser.togglePass ? 'text' : 'password'" v-model="newUser.newPassword"
-              class="form-control">
+            <input tabindex="0" :disabled="!newUser.canChangePassword" required :type="newUser.togglePass ? 'text' : 'password'"
+              v-model="newUser.newPassword" class="form-control">
             <span v-if="errors.newPassword.hasError" class="help-block">{{$t('validation.validation_failed')}}:
               {{$t('validation.'+errors.newPassword.message)}}</span>
           </div>
           <div v-show="view.isRoot" class="col-sm-2">
-            <button @click="togglePass()" type="button" class="btn btn-primary">
+            <button tabindex="-1" @click="togglePass()" type="button" class="btn btn-primary">
               <span :class="[!newUser.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"></span>
             </button>
           </div>
@@ -197,34 +198,37 @@
       <div v-if="view.isRoot" class="divider"></div>
       <h3 v-if="view.isRoot">{{$t('settings.logrotate')}}</h3>
       <form v-if="view.isRoot" class="form-horizontal" v-on:submit.prevent="saveSettings('logrotate')">
+        <div :class="['form-group', errors.Rotate.hasError ? 'has-error' : '']">
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.log_rotate')}}</label>
+          <div class="col-sm-5">
+            <select required type="text" v-model="settings.logrotate.Rotate" class="combobox form-control">
+              <option value="daily">{{$t('settings.rotation_daily')}}</option>
+              <option value="weekly">{{$t('settings.rotation_weekly')}}</option>
+              <option value="monthly">{{$t('settings.rotation_monthly')}}</option>
+            </select>
+            <span v-if="errors.Rotate.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.Rotate.message)}}</span>
+          </div>
+        </div>
+
         <div :class="['form-group', errors.Times.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.log_times')}}</label>
           <div class="col-sm-5">
             <input required type="number" v-model="settings.logrotate.Times" class="form-control">
-            <span v-if="errors.Times.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+errors.Times.message)}}</span>
+            <span v-if="errors.Times.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.Times.message)}}</span>
           </div>
         </div>
 
-          <div :class="['form-group', errors.Rotate.hasError ? 'has-error' : '']">
-            <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.log_rotate')}}</label>
-            <div class="col-sm-5">
-              <select required type="text" v-model="settings.logrotate.Rotate" class="combobox form-control">
-                            <option value="daily">{{$t('settings.rotation_daily')}}</option>
-                            <option value="weekly">{{$t('settings.rotation_weekly')}}</option>
-                            <option value="monthly">{{$t('settings.rotation_monthly')}}</option>
-              </select>
-              <span v-if="errors.Rotate.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+errors.Rotate.message)}}</span>
-            </div>
+        <div :class="['form-group', errors.Compression.hasError ? 'has-error' : '']">
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.log_compression')}}</label>
+          <div class="col-sm-5">
+            <input type="checkbox" :value="settings.logrotate.Compression == 'enabled'" v-model="settings.logrotate.Compression"
+              class="form-control">
+            <span v-if="errors.Compression.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.Compression.message)}}</span>
           </div>
-
-          <div :class="['form-group', errors.Compression.hasError ? 'has-error' : '']">
-            <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.log_compression')}}</label>
-            <div class="col-sm-5">
-              <input type="checkbox" :value="settings.logrotate.Compression == 'enabled'" v-model="settings.logrotate.Compression"
-                class="form-control">
-              <span v-if="errors.Compression.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+errors.Compression.message)}}</span>
-            </div>
-          </div>
+        </div>
 
 
         <div class="form-group">
