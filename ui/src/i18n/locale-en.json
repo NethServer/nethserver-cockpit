@@ -245,7 +245,8 @@
       "data_includes": "Included paths",
       "data_custom_excludes": "Custom excluded paths (one per line)",
       "data_custom_includes": "Custom included paths (one per line)",
-      "remap_interface_config": "Remap interfaces"
+      "remap_interface_config": "Remap interfaces",
+      "password_is_the_key": "SFTP use the SSH key. Click to change password"
     },
     "disk_usage": {
       "title": "Disk usage",

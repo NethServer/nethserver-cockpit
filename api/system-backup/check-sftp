@@ -33,4 +33,4 @@ if [ ! -f $PASSWORD ]; then
 fi
 
 tmp=$(mktemp -u -p $DIR)
-timeout 5 sshpass -f $PASSWORD ssh -p $PORT $USER@$HOST "touch $tmp && rm -f $tmp"
+timeout 5 sshpass -f $PASSWORD ssh -o StrictHostKeyChecking=no -p $PORT $USER@$HOST "touch $tmp && rm -f $tmp"

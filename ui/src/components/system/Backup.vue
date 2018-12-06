@@ -144,8 +144,8 @@
                     <span class="fa fa-edit span-right-margin"></span>
                     {{$t('backup.edit_backup')}}</a>
                 </li>
-                <li>
-                  <a @click="openLastLogData(b)">
+                <li :class="b.status.result == 'unknown' ? 'disabled' : ''">
+                  <a @click="b.status.result == 'unknown' ? undefined : openLastLogData(b)">
                     <span class="fa fa-list span-right-margin"></span>
                     {{$t('backup.view_last_log')}}</a>
                 </li>
@@ -374,7 +374,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('backup.execute_data_backup_now')}} {{$t('of')}} {{currentDataBackup.name}}</h4>
+            <h4 class="modal-title">{{$t('backup.execute_data_backup_now')}} {{currentDataBackup.name}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="executeDataBackup(currentDataBackup)">
 
@@ -806,13 +806,6 @@
                       <!-- SFTP -->
                       <div v-if="wizard.where.choice == 'sftp'">
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SFTPDirectory' |
-                            camelToSentence}}</label>
-                          <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.sftp.SftpDirectory" class="form-control">
-                          </div>
-                        </div>
-                        <div class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SFTPHost' |
                             camelToSentence}}</label>
                           <div class="col-sm-9">
@@ -826,18 +819,37 @@
                             <input required type="text" v-model="wizard.where.sftp.SftpPort" class="form-control">
                           </div>
                         </div>
-                        <div v-if="!wizard.isEdit" class="form-group">
+                        <div class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SFTPUser' |
                             camelToSentence}}</label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.sftp.SftpUser" class="form-control">
+                            <input required type="text" v-model="wizard.where.sftp.SftpUser"
+                              class="form-control">
                           </div>
                         </div>
-                        <div v-if="!wizard.isEdit" class="form-group">
+                        <div class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SFTPPassword' |
                             camelToSentence}}</label>
+                          <div class="col-sm-7">
+                            <input :disabled="wizard.isEdit && !wizard.where.sftp.toggleEdit" required :type="wizard.where.sftp.togglePass ? 'text' : 'password'" v-model="wizard.where.sftp.SftpPassword"
+                              class="form-control" :placeholder="$t('backup.password_is_the_key')">
+                          </div>
+                          <div class="col-sm-1">
+                            <button tabindex="-1" @click="toggleEdit()" type="button" class="btn btn-primary adjust-top-min">
+                              <span :class="[!wizard.where.sftp.toggleEdit ? 'fa fa-edit' : 'fa fa-ban']"></span>
+                            </button>
+                          </div>
+                          <div class="col-sm-1">
+                            <button :disabled="!wizard.where.sftp.toggleEdit" tabindex="-1" @click="togglePass()" type="button" class="btn btn-primary adjust-top-min">
+                              <span :class="[!wizard.where.sftp.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"></span>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SFTPDirectory' |
+                            camelToSentence}}</label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.sftp.SftpPassword" class="form-control">
+                            <input required type="text" v-model="wizard.where.sftp.SftpDirectory" class="form-control">
                           </div>
                         </div>
                       </div>
@@ -1054,7 +1066,7 @@
                       {{$t('backup.wizard_choose_config')}}
                     </h1>
                   </div>
-                  <form id="local-ldap" class="form-horizontal" v-on:submit.prevent="createDataBackup()">
+                  <form id="local-data" class="form-horizontal" v-on:submit.prevent="createDataBackup()">
                     <div class="modal-body">
                       <div :class="['form-group', wizard.review.errors.name.hasError ? 'has-error' : '']">
                         <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.name')}}</label>
@@ -1081,10 +1093,12 @@
                           <label class="col-sm-10 col-xs-10 control-label text-align-left">{{$t('backup.custom_email')}}</label>
                         </div>
                       </div>
-                      <div v-if="wizard.review.notifyToChoice == 'custom'" class="form-group">
+                      <div v-if="wizard.review.notifyToChoice == 'custom'" :class="['form-group', wizard.review.errors.NotifyTo.hasError ? 'has-error' : '']">
                         <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.email_address')}}</label>
                         <div class="col-sm-6">
                           <textarea :required="wizard.review.notifyToChoice == 'custom'" class="form-control" v-model="wizard.review.NotifyTo"></textarea>
+                          <span v-if="wizard.review.errors.NotifyTo.hasError" class="help-block">{{$t('validation.validation_failed')}}:
+                            {{$t('validation.'+wizard.review.errors.NotifyTo.message)}}</span>
                         </div>
                       </div>
                     </div>
@@ -1101,7 +1115,7 @@
               <span class="i fa fa-angle-left"></span>
               {{$t('back')}}
             </button>
-            <button :disabled="checkIfDisabled()" @click="nextStep()" type="button" class="btn btn-primary wizard-pf-next">
+            <button :disabled="checkIfDisabled()" @click="nextStep()" type="submit" class="btn btn-primary wizard-pf-next">
               {{wizard.currentStep == 4 ? (wizard.isEdit ? $t('edit') : $t('create')) : $t('next')}}
               <span class="i fa fa-angle-right"></span>
             </button>
@@ -1173,6 +1187,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     $(".modal").modal("hide");
+    clearInterval(this.pollingIntervalId);
     next();
   },
   mounted() {
@@ -1284,7 +1299,8 @@ export default {
         "restore-data": 0,
         "backup-data": 0
       },
-      hints: {}
+      hints: {},
+      pollingIntervalId: null
     };
   },
   methods: {
@@ -1314,10 +1330,10 @@ export default {
     },
     editCronTab() {
       this.wizard.when = {
-        every: "hour",
-        minute: 0,
-        hour: 0,
-        hour_minute: "1:00",
+        every: "day",
+        minute: 5,
+        hour: 1,
+        hour_minute: "1:05",
         week_day: 0,
         day: 0,
         crontab: ""
@@ -1384,7 +1400,9 @@ export default {
             SftpPassword:
               b && b.props.SftpPassword ? b.props.SftpPassword : null,
             SftpHost: b && b.props.SftpHost ? b.props.SftpHost : null,
-            SftpPort: b && b.props.SftpPort ? b.props.SftpPort : null
+            SftpPort: b && b.props.SftpPort ? b.props.SftpPort : "22",
+            togglePass: false,
+            toggleEdit: false
           },
           b2: {
             B2AccountId: b && b.props.B2AccountId ? b.props.B2AccountId : null,
@@ -1414,7 +1432,7 @@ export default {
             cleanups: ["never", "7D", "14D", "28D", "56D", "168D", "364D"]
           },
           restic: {
-            Prune: b && b.props.Prune ? parseInt(b.props.Prune) + 1 : 0,
+            Prune: b && b.props.Prune ? parseInt(b.props.Prune) + 1 : 1,
             prunes: ["always"].concat(this.weekdays()),
             CleanupOlderThan:
               b && b.props.CleanupOlderThan
@@ -1432,19 +1450,36 @@ export default {
           NotifyTo:
             b && b.props.NotifyTo
               ? b.props.NotifyTo == "root"
-                ? "root"
-                : b.props.NotifyTo.join("\n")
+                ? ""
+                : b.props.NotifyTo.split(",").join("\n")
               : "",
-          notifyToChoice: "root",
+          notifyToChoice:
+            b && b.props.NotifyTo
+              ? b.props.NotifyTo == "root"
+                ? "root"
+                : "custom"
+              : "root",
           notifyTypes: ["error", "always", "never"],
           errors: {
             name: {
+              hasError: false,
+              message: ""
+            },
+            NotifyTo: {
               hasError: false,
               message: ""
             }
           }
         }
       };
+    },
+    togglePass() {
+      this.wizard.where.sftp.togglePass = !this.wizard.where.sftp.togglePass;
+    },
+    toggleEdit() {
+      this.wizard.where.sftp.toggleEdit = !this.wizard.where.sftp.toggleEdit;
+      this.wizard.where.isValid = false;
+      this.wizard.where.configError = false;
     },
     weekdays() {
       var moment = require("moment");
@@ -1720,7 +1755,7 @@ export default {
     },
     pollingStatus() {
       var context = this;
-      setInterval(function() {
+      context.pollingIntervalId = setInterval(function() {
         context.getBackupStatus();
       }, 2500);
     },
@@ -2201,10 +2236,10 @@ export default {
         Notify: context.wizard.review.Notify,
         NotifyTo:
           context.wizard.review.notifyToChoice == "root"
-            ? "root"
+            ? ""
             : context.wizard.review.NotifyTo.length > 0
-              ? context.wizard.review.NotifyTo.split("\n")
-              : [],
+              ? context.wizard.review.NotifyTo.split("\n").join(",")
+              : "",
         BackupTime: context.wizard.when.crontab,
         VFSType: context.wizard.where.choice,
         SMBShare: context.wizard.where.cifs.SMBShare,
@@ -2214,7 +2249,6 @@ export default {
         SftpHost: context.wizard.where.sftp.SftpHost,
         SftpPort: context.wizard.where.sftp.SftpPort,
         SftpUser: context.wizard.where.sftp.SftpUser,
-        SftpPassword: context.wizard.where.sftp.SftpPassword,
         SftpDirectory: context.wizard.where.sftp.SftpDirectory,
         B2AccountId: context.wizard.where.b2.B2AccountId,
         B2AccountKey: context.wizard.where.b2.B2AccountKey,
@@ -2235,6 +2269,10 @@ export default {
             : context.wizard.how.restic.Prune - 1
       };
 
+      if (!context.wizard.isEdit || context.wizard.where.sftp.toggleEdit) {
+        backupObj["SftpPassword"] = context.wizard.where.sftp.SftpPassword;
+      }
+
       if (context.wizard.how.choice != "rsync") {
         backupObj["CleanupOlderThan"] =
           context.wizard.how[context.wizard.how.choice].CleanupOlderThan;
@@ -2242,6 +2280,17 @@ export default {
 
       context.wizard.isLoading = true;
       context.wizard.review.errors.name.hasError = false;
+      context.wizard.review.errors.NotifyTo.hasError = false;
+
+      if (
+        context.wizard.review.notifyToChoice == "custom" &&
+        context.wizard.review.NotifyTo.length == 0
+      ) {
+        context.wizard.review.errors.NotifyTo.hasError = true;
+        context.wizard.review.errors.NotifyTo.message = "not_empty";
+        context.wizard.isLoading = false;
+        return;
+      }
 
       context.exec(
         ["system-backup/validate"],
