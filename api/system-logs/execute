@@ -50,7 +50,7 @@ sub dump_logs
     if ($follow) {
         $cmd .= " -f ";
         # Make sure process is killed after the timeout
-        $watchdog= "timeout -k ".($TIMEOUT+5)." $TIMEOUT ";
+        $watchdog= "timeout --foreground -k ".($TIMEOUT+5)." $TIMEOUT ";
     } else {
         $cmd .= " -n $lines";
     }

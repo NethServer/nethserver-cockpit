@@ -30,7 +30,7 @@ nethserver = {
             process.input(JSON.stringify(input))
         }
 
-        console.info("%cAPI: " + api + "\n%c$ echo '" + JSON.stringify(input) + "' | " + args.join(' ') + " | python -m json.tool", "background: #1f2123; color: yellow;", "background: #1f2123; color: white; font-size: large, font-family: 'monospace';")
+        console.info("%cAPI exec: " + api + "\n%c$ echo '" + JSON.stringify(input) + "' | " + args.join(' ') + " | python -m json.tool", "background: #1f2123; color: yellow;", "background: #1f2123; color: white; font-size: large, font-family: 'monospace';")
 
         if (stream) {
             process.stream(function (data) {
@@ -127,6 +127,8 @@ nethserver = {
             process.input(JSON.stringify(input))
         }
 
+        console.info("%cAPI execRaw: " + api + "\n%c$ echo '" + JSON.stringify(input) + "' | " + args.join(' ') + " | python -m json.tool", "background: #1f2123; color: yellow;", "background: #1f2123; color: white; font-size: large, font-family: 'monospace';")
+
         if (stream) {
             process.stream(stream)
         }
@@ -157,8 +159,6 @@ nethserver = {
             args[0] = "/usr/libexec/nethserver/api/system-logs/execute"
         }
 
-        console.info("echo '" + JSON.stringify(input) + "' | " + args.join(' '))
-
         var process = cockpit.spawn(args, input ? {} : {
             pty: true,
             environ: ["TERM=dumb"],
@@ -167,6 +167,8 @@ nethserver = {
         if (input) {
             process.input(JSON.stringify(input))
         }
+
+        console.info("%cAPI logs: system-logs/execute\n%c$ echo '" + JSON.stringify(input) + "' | " + args.join(' '), "background: #1f2123; color: yellow;", "background: #1f2123; color: white; font-size: large, font-family: 'monospace';")
 
         if (stream) {
             process.stream(stream)
