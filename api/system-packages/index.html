@@ -1495,7 +1495,12 @@ The command will list all packages removed as dependencies.</p>
 
 <h4 id="list-updates_1">list-updates<a class="headerlink" href="#list-updates_1" title="Permanent link">&para;</a></h4>
 <p>Retrieve the list of available updates.</p>
-<p>Special <code>nethserver</code> fiels is set to <code>true</code> if the groups comes fron NethServer repositories.</p>
+<p>Special fields:</p>
+<ul>
+<li><code>nethserver</code> field is set to <code>true</code> if the groups comes fron NethServer repositories</li>
+<li><code>centos_upgrade</code> is set to 1 if a new CentOS release is available, 0 otherwise</li>
+<li><code>nethserver_upgrade</code> is set to 1 if a new NethServer release is available, 0 otherwise</li>
+</ul>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;updates&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -1556,7 +1561,20 @@ The command will list all packages removed as dependencies.</p>
       <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;other&quot;</span><span class="p">,</span>
       <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Other&quot;</span>
     <span class="p">}</span>
-  <span class="p">]</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;hints&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;nethserver&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;new_release&quot;</span><span class="p">:</span> <span class="s2">&quot;7.6.1810&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;current_release&quot;</span><span class="p">:</span> <span class="s2">&quot;7.5.1804&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;centos&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;new_release&quot;</span><span class="p">:</span> <span class="s2">&quot;7.6.1810&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;current_release&quot;</span><span class="p">:</span> <span class="s2">&quot;7.5.1804&quot;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 
