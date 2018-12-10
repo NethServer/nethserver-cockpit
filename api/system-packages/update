@@ -35,6 +35,9 @@ function _get
 
 
 case $action in
+    "upgrade")
+        /sbin/e-smith/signal-event -j software-repos-upgrade
+        ;;
     "update")
         action="--update"
         lock=$(/sbin/e-smith/config getprop sysconfig NsReleaseLock)
