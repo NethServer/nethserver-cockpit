@@ -106,7 +106,11 @@ Example:
 
 Retrieve the list of available updates.
 
-Special `nethserver` fiels is set to `true` if the groups comes fron NethServer repositories.
+Special fields:
+
+- `nethserver` field is set to `true` if the groups comes fron NethServer repositories
+- `centos_upgrade` is set to 1 if a new CentOS release is available, 0 otherwise
+- `nethserver_upgrade` is set to 1 if a new NethServer release is available, 0 otherwise
 
 Example:
 ```json
@@ -169,7 +173,20 @@ Example:
       "id": "other",
       "name": "Other"
     }
-  ]
+  ],
+  "hints": {
+    "count": 2,
+    "details": {
+      "nethserver": {
+        "new_release": "7.6.1810",
+        "current_release": "7.5.1804"
+      },
+      "centos": {
+        "new_release": "7.6.1810",
+        "current_release": "7.5.1804"
+      }
+    }
+  }
 }
 ```
 

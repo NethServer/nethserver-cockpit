@@ -33,7 +33,52 @@ my $cmd = $input->{'action'};
 
 if($cmd eq 'list-updates') {
 
-    system("/usr/libexec/nethserver/api/system-packages/list-updates");
+    my $centos_upgrade = 0;
+    my $centos_cur_release = '';
+    my $centos_new_release = '';
+    my $nethserver_upgrade = 0;
+    my $nethserver_cur_release = '';
+    my $nethserver_new_release = '';
+    my $out = `/usr/libexec/nethserver/api/system-packages/list-updates`;
+
+    $ret = decode_json($out);
+    $ret->{'nethserver_upgrade'} = 0;
+    my $tmp = $ret->{'updates'};
+
+    # search for centos upgrade
+    foreach my $group (@$tmp) {
+        my $updates = $group->{updates};
+        foreach my $package (@$updates) {
+            if ($package->{'name'} eq 'centos-release') {
+                my @installed = split('\.', $package->{'installed_release'});
+                my @release = split('\.', $package->{'release'});
+                $centos_cur_release = $package->{'installed_version'}.".".$installed[0].".".$installed[1];
+                $centos_new_release = $package->{'version'}.".".$release[0].".".$release[1];
+                if ($centos_cur_release ne $centos_new_release) {
+                    $centos_upgrade = 1;
+                }
+           }
+        }
+    }
+
+    # search for nethserver upgrade
+    my $db = esmith::ConfigDB->open_ro();
+    $nethserver_cur_release = $db->get_prop('sysconfig', 'Version');
+    $nethserver_new_release = $db->get_prop('subscription', 'NsRelease') || '';
+    my @nsVersion = split('\.', $nethserver_cur_release);
+    my @sbVersion = split('\.', $nethserver_new_release);
+    if (int($sbVersion[0].$sbVersion[1]) > int($nsVersion[0].$nsVersion[1])) {
+        $nethserver_upgrade = 1;
+    }
+
+    $ret->{'hints'}{'count'} = $centos_upgrade + $nethserver_upgrade;
+    if ($centos_upgrade) {
+       $ret->{'hints'}{'details'}{'centos'} = {"current_release" => $centos_cur_release, "new_release" => $centos_new_release};
+    }
+    if ($nethserver_upgrade) {
+       $ret->{'hints'}{'details'}{'nethserver'} = {"current_release" => $nethserver_cur_release, "new_release" => $nethserver_new_release};
+    }
+    print encode_json($ret);
 
 } elsif ($cmd eq 'list-available') {
 
