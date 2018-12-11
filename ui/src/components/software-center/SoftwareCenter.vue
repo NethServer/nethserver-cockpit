@@ -1,6 +1,21 @@
 <template>
   <div>
     <h2>{{$t('software_center.title')}}</h2>
+    <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
+      <span class="pficon pficon-warning-triangle-o"></span>
+      <strong>{{$t('hints_suggested')}}:</strong>
+      <li v-if="hints.details && hints.details.centos">
+        <strong>{{$t('software_center.centos_upgrade')}}</strong>. {{$t('hints.centos_upgrade')}}. <a data-toggle="modal"
+          data-target="#configureUpdatesModal">{{$t('software_center.configure')}}</a>
+      </li>
+      <li v-if="hints.details && hints.details.nethserver">
+        <strong>{{$t('software_center.nethserver_upgrade')}}</strong>: {{$t('software_center.there_is_upgrade_from')}}
+        <b>{{hints.details && hints.details.nethserver && hints.details.nethserver.current_release}}</b>
+        {{$t('software_center.to')}} <b>{{hints.details && hints.details.nethserver &&
+          hints.details.nethserver.new_release}}</b>.
+        <a data-toggle="modal" data-target="#upgradeModal">{{$t('software_center.upgrade_now')}}</a>
+      </li>
+    </div>
 
     <div v-if="!view.isEditable" class="alert alert-warning alert-dismissable">
       <span class="pficon pficon-warning-triangle-o"></span>
@@ -281,6 +296,31 @@
       </div>
     </div>
 
+    <div class="modal" id="upgradeModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('software_center.upgrade_nethserver')}} {{$t('software_center.to')}}
+              {{hints.details && hints.details.nethserver && hints.details.nethserver.new_release}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="upgradeSystem()">
+            <div class="modal-body">
+              <div class="alert alert-warning alert-dismissable compact">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>{{$t('software_center.upgrade')}} {{$t('software_center.to')}}
+                  {{hints.details && hints.details.nethserver && hints.details.nethserver.new_release}}</strong>.
+                {{$t('software_center.nethserver_upgrade_message')}}.
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-primary" type="submit">{{$t('software_center.upgrade')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <div class="modal" id="configureUpdatesModal" tabindex="-1" role="dialog" data-backdrop="static">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -348,6 +388,7 @@ export default {
         installProgress: 100,
         isEditable: true
       },
+      hints: {},
       applications: [],
       categories: [],
       categoryColors: {},
@@ -487,6 +528,14 @@ export default {
             success = JSON.parse(success);
           } catch (e) {
             console.error(e);
+          }
+
+          context.hints = success.hints || {};
+          if (
+            context.hints.details.nethserver &&
+            context.hints.details.nethserver.new_release.length > 0
+          ) {
+            $("#upgradeModal").modal("show");
           }
 
           for (var u in success.updates) {
@@ -776,6 +825,43 @@ export default {
           // notification
           context.$parent.notifications.error.message = context.$i18n.t(
             "software_center.updates_error"
+          );
+        }
+      );
+    },
+    upgradeSystem() {
+      var context = this;
+      $("#upgradeModal").modal("hide");
+
+      context.exec(
+        ["system-packages/update"],
+        {
+          action: "upgrade"
+        },
+        function(stream) {
+          context.view.isUpdating = true;
+          context.view.updateProgress = 100;
+          console.info("packages-upgrade", stream);
+        },
+        function(success) {
+          context.view.isUpdating = false;
+
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "software_center.upgrade_ok"
+          );
+
+          context.$parent.checkSystemTaks();
+
+          // get updates
+          context.getUpdates();
+        },
+        function(error, data) {
+          context.view.isUpdating = false;
+
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "software_center.upgrade_error"
           );
         }
       );

@@ -760,8 +760,17 @@
       "install_error_s": "Application not installed.",
       "config_ok": "Configuration saved successfully!",
       "config_error": "Configuration not saved.",
+      "upgrade_ok": "System upgraded successfully!",
+      "upgrade_error": "System not upgraded.",
       "forbidden": "Forbidden",
-      "permission_denied": "You don't have permissions to view this page"
+      "permission_denied": "You don't have permissions to view this page",
+      "centos_upgrade": "CentOS upgrade",
+      "nethserver_upgrade": "NethServer upgrade",
+      "upgrade_nethserver": "Upgrade NethServer",
+      "nethserver_upgrade_message": "A system upgrade for NethServer is available. \nThe system upgrade procedure switches to \"unlocked\" software updates origin and updates all installed packages",
+      "there_is_upgrade_from": "There is an upgrade from",
+      "to": "to",
+      "upgrade_now": "Upgrade now"
     },
     "terminal": {
       "title": "Terminal"
@@ -779,7 +788,8 @@
       "change_default_ssh_port": "Change the default SSH port to lower brute force attack rates",
       "limit_red_access_by_ip": "Limit access to server manager specifying the allowed IP addresses",
       "LimitAccess": "Limit access",
-      "backup": "Backup"
+      "backup": "Backup",
+      "centos_upgrade": "A new upstream distribution release is available as update. To avoid installing it, switch the software updates origin to \"Locked\""
     },
     "validation": {
       "weak_password": "Password too weak, it could be inside a dictinary or too similar to the previous one",
