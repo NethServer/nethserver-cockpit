@@ -1,6 +1,6 @@
 Name:           nethserver-cockpit
-Version:        0.0.5
-Release:        1%{?dist}
+Version: 0.1.0
+Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
 License:        GPLv3
@@ -43,5 +43,8 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %dir /usr/libexec/nethserver/api/
 
 %changelog
+* Tue Dec 11 2018 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.1.0-1
+- Cockpit Alpha 1 - NethServer/dev#5660
+
 * Fri Sep 15 2017 Davide Principi <davide.principi@nethesis.it> - 0.0.0-1.ns7
 - Initial version
