@@ -532,6 +532,7 @@ export default {
 
           context.hints = success.hints || {};
           if (
+            context.hints.details &&
             context.hints.details.nethserver &&
             context.hints.details.nethserver.new_release.length > 0
           ) {
