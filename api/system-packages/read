@@ -42,7 +42,6 @@ if($cmd eq 'list-updates') {
     my $out = `/usr/libexec/nethserver/api/system-packages/list-updates`;
 
     $ret = decode_json($out);
-    $ret->{'nethserver_upgrade'} = 0;
     my $tmp = $ret->{'updates'};
 
     # search for centos upgrade
