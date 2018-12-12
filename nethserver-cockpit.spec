@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.1.0
+Version: 0.1.1
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -43,6 +43,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %dir /usr/libexec/nethserver/api/
 
 %changelog
+* Wed Dec 12 2018 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.1.1-1
+- Fix Software Center behavior if no updates are available
+
 * Tue Dec 11 2018 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.1.0-1
 - Cockpit Alpha 1 - NethServer/dev#5660
 
