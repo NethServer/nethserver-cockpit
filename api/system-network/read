@@ -146,7 +146,7 @@ if($cmd eq 'list') {
         if ((exists($props{'bootproto'}) && $props{'bootproto'} eq 'dhcp') || $n->key eq 'ppp0' ) {
             $cidr =~ /^(.*)\/(.*)$/;
             $status{$iname}{'ipaddr'} = $1;
-            my $gw = `ip -o route list dev $iname  | tail -n 1 | awk '{print \1}'`;
+            my $gw = `ip -o route list dev $iname  | tail -n 1 | awk '{print \$1}'`;
             chomp $gw;
             $status{$iname}{'gateway'} = $gw;
         }
