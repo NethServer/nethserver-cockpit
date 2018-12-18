@@ -46,6 +46,7 @@ nav:
       - api/system-settings.md
       - api/system-shutdown.md
       - api/system-status.md
+      - api/system-subscription.md
       - api/system-task.md
       - api/system-time.md
       - api/system-tls-policy.md
