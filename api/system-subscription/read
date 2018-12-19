@@ -43,10 +43,12 @@ if ( $secret ) {
 }
 
 my $url = $portal->scheme."://".$portal->host."/";
-if ( $portal->host =~ m/nethesis/ ) {
-    $url .= "#/server/".$ret->{'status'}{'id'};
-} else {
-    $url .= "servers/".$ret->{'status'}{'id'};
+if (defined($ret->{'status'}{'id'})) {
+    if ( $portal->host =~ m/nethesis/ ) {
+        $url .= "#/server/".$ret->{'status'}{'id'};
+    } else {
+        $url .= "servers/".$ret->{'status'}{'id'};
+    }
 }
 
 $ret->{'configuration'} = { 'PortalURL' => $url, 'PricingUrl' => $pricing, 'SystemId' => $id };
