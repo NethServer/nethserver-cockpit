@@ -42,6 +42,13 @@ if ( $secret ) {
     $ret->{'status'} = undef;
 }
 
-$ret->{'configuration'} = { 'PortalURL' => $portal->scheme."://".$portal->host, 'PricingUrl' => $pricing, 'SystemId' => $id };
+my $url = $portal->scheme."://".$portal->host."/";
+if ( $portal->host =~ m/nethesis/ ) {
+    $url .= "#/server/".$ret->{'status'}{'id'};
+} else {
+    $url .= "servers/".$ret->{'status'}{'id'};
+}
+
+$ret->{'configuration'} = { 'PortalURL' => $url, 'PricingUrl' => $pricing, 'SystemId' => $id };
 
 print encode_json($ret);
