@@ -25,7 +25,7 @@
             <div v-if="SubscriptionConfig.isLoading" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
           </label>
           <div class="col-sm-5">
-            <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+            <button class="btn btn-primary" type="submit">{{$t('register')}}</button>
           </div>
         </div>
       </form>

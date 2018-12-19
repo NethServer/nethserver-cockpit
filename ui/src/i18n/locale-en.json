@@ -47,6 +47,7 @@
     "remove_shortcut": "Remove shortcut",
     "found": "found",
     "never_expires": "Never expires",
+    "register": "Register",
     "menu": {
       "dashboard": "Dashboard",
       "backup": "Backup",
