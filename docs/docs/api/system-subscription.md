@@ -61,12 +61,39 @@ Output example:
 
 ### Input
 
+Example:
 ```json
 {
-  "Secret": "75f99f440450a89a75fb5c9ebae7457f47bd42bc5cb940b4e142b50a5bb9cbae"
+  "action": register,
+  "Secret": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 }
 ```
 
 ## update
 
-Same input from validate helper.
+Each request must have an `action` field.
+Available actions:
+
+- `register`: register the server to the Dartagnan server
+- `send`: send inventory to the Dartagnan server
+
+### Input
+
+#### register
+
+Example:
+```json
+{
+  "action": "register",
+  "Secret": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}
+```
+
+#### send
+
+Example:
+```json
+{
+  "action": "send"
+}
+```

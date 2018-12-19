@@ -22,21 +22,35 @@
 
 . /usr/libexec/nethserver/api/lib/helper_functions
 
-secret=$(cat /dev/stdin | jq -r ".Secret")
-status=$(/usr/libexec/nethserver/subscription-info $secret)
+data=$(cat /dev/stdin)
+action=$(echo $data | jq -r '.action')
 
-if [ $? -gt 0 ]; then
-    error "EventFailed" "See /var/log/messages"
-fi
+case $action in
 
-uuid=$(echo $status | jq -r ".uuid")
-/sbin/e-smith/config setprop subscription Secret "$secret" SystemId "$uuid"
+    "register")
+        secret=$(echo $data | jq -r ".Secret")
+        status=$(/usr/libexec/nethserver/subscription-info $secret)
 
-if [ $? -gt 0 ]; then
-    invalid_error
-fi
+        if [ $? -gt 0 ]; then
+            error "EventFailed" "See /var/log/messages"
+        fi
 
-/sbin/e-smith/signal-event -j nethserver-subscription-save
+        uuid=$(echo $status | jq -r ".uuid")
+        /sbin/e-smith/config setprop subscription Secret "$secret" SystemId "$uuid"
+
+        if [ $? -gt 0 ]; then
+            invalid_error
+        fi
+
+        /sbin/e-smith/signal-event -j nethserver-subscription-save
+    ;;
+
+    "send")
+        /etc/e-smith/events/actions/nethserver-inventory-send && systemctl restart collectd nms
+    ;;
+
+esac
+
 if [ $? -gt 0 ]; then
     error "EventFailed" "See /var/log/messages"
 else
