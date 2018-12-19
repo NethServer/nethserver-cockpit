@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/perl
 
 #
 # Copyright (C) 2018 Nethesis S.r.l.
@@ -20,11 +20,28 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-prop=$(/sbin/e-smith/config getjson subscription)
-secret=$(/sbin/e-smith/config getprop subscription Secret)
-if [ ! -z "$secret" ]; then
-    status=$(/usr/libexec/nethserver/subscription-info $secret)
-else
-    status="{}"
-fi
-printf '{"status": %s,"configuration":%s}' "$status" "$prop"
+use warnings;
+use strict;
+use esmith::ConfigDB;
+use JSON;
+use URI;
+
+my $db = esmith::ConfigDB->open_ro();
+
+my $ret = {};
+
+my $pricing = $db->get_prop('subscription','PricingUrl');
+my $portal = URI->new($pricing);
+my $id = $db->get_prop('subscription','SystemId');
+my $secret = $db->get_prop('subscription','Secret');
+
+if ( $secret ) {
+    my $out = `/usr/libexec/nethserver/subscription-info $secret`;
+    $ret->{'status'} = decode_json($out);
+} else {
+    $ret->{'status'} = undef;
+}
+
+$ret->{'configuration'} = { 'PortalURL' => $portal->scheme."://".$portal->host, 'PricingUrl' => $pricing, 'SystemId' => $id };
+
+print encode_json($ret);

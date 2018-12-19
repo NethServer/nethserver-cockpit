@@ -6,7 +6,7 @@ Manage server subscription on a [Dartagnan](https://nethesis.github.io/dartagnan
 
 ### Output
 
-The `configuration` field contains the `subscription` record.
+The `configuration` field contains info about the subscription.
 If the server is already registered, the `status` field contains all info retrieved from `subscription-info` script.
 
 Output example:
@@ -46,18 +46,9 @@ Output example:
     }
   },
   "configuration": {
-    "props": {
-      "InventoryUrl": "https://my.nethserver.com/api/machine/inventories/store/",
-      "AlertsAutoUpdates": "enabled",
-      "ApiUrl": "https://my.nethserver.com/api/",
-      "PricingUrl": "https://my.nethserver.com/?action=newServer",
-      "AlertsUrl": "https://my.nethserver.com/api/machine/",
-      "SystemId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-      "NsRelease": "7.6.1810",
-      "Secret": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-    },
-    "name": "subscription",
-    "type": "configuration"
+    "PricingUrl": "https://my.nethserver.com/?action=newServer",
+    "SystemId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "PortalURL": "https://my.nethserver.com"
   }
 }
 ```
