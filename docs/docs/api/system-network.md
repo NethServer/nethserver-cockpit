@@ -16,6 +16,7 @@ Valid actions are:
 - `bond-types`
 - `vlan-available`
 - `routing`
+- `info`
 
 #### list
 
@@ -85,6 +86,18 @@ Example:
 }
 ```
 
+#### info
+
+Retrieve info from [ifconfig.co](https://ifconfig.co).
+The `name` field contains the name of the interface to use.
+
+Example:
+```json
+{
+  "action": "info",
+  "name": "eth0"
+}
+```
 
 ### Output
 
@@ -340,6 +353,22 @@ Example:
 }
 ```
 
+#### info
+
+Example:
+```json
+{
+  "country": "Italy",
+  "longitude": 12.8835,
+  "ip": "80.17.99.73",
+  "hostname": "nethsecurity.nethesis.it",
+  "country_eu": true,
+  "ip_decimal": 1343316809,
+  "city": "Cartoceto",
+  "country_iso": "IT",
+  "latitude": 43.7657
+}
+```
 
 ## validate
 

@@ -272,6 +272,14 @@ if($cmd eq 'list') {
 
    $ret = undef;
    $ret->{'data'} = `route -n`;
+} elsif ($cmd eq 'info') {
+
+   my $i = $input->{'name'};
+   $ret = {};
+   my $out = `curl -L --connect-timeout 5 --interface $i ifconfig.co/json 2>/dev/null`;
+   if ($out) {
+       $ret = decode_json($out);
+   }
 } else {
     error();
 }
