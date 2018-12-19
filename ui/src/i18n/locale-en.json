@@ -594,7 +594,16 @@
       "router": "Router",
       "label": "Label",
       "routing_info": "Routing info",
-      "status_link": "Link"
+      "status_link": "Link",
+      "more_info": "More info...",
+      "additional_info": "Additional info",
+      "public_ip": "Public IP",
+      "reverse_lookup": "Reverse lookup",
+      "country": "Country",
+      "int_model": "Model",
+      "int_speed": "Speed",
+      "int_driver": "Driver",
+      "int_mac": "MAC"
     },
     "ssh": {
       "title": "SSH",
