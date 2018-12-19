@@ -48,6 +48,17 @@ sub interface_exists
     return (-e "/sys/class/net/$interface");
 }
 
+sub cat
+{
+    my $file = shift;
+    my $ret = '';
+    open my $fh, '<', $file or return $ret;
+    $ret = do { local $/; <$fh> };
+    close $fh;
+    chomp $ret;
+    return $ret;
+}
+
 my $input = readInput();
 my $cmd = $input->{'action'};
 
@@ -134,6 +145,12 @@ if($cmd eq 'list') {
             my $i = $info{$n->key};
             foreach my $k (keys(%$i)) {
                  $status{$n->key}{$k} = $i->{$k}
+            }
+        } else {
+            # retrieve info for virtual interfaces
+            my $carrier_file = "/sys/class/net/".$n->key."/carrier";
+            if (-f $carrier_file) {
+                $status{$n->key}{'link'} = cat($carrier_file);
             }
         }
 
@@ -272,6 +289,14 @@ if($cmd eq 'list') {
 
    $ret = undef;
    $ret->{'data'} = `route -n`;
+} elsif ($cmd eq 'info') {
+
+   my $i = $input->{'name'};
+   $ret = {};
+   my $out = `curl -L --connect-timeout 5 --interface $i ifconfig.co/json 2>/dev/null`;
+   if ($out) {
+       $ret = decode_json($out);
+   }
 } else {
     error();
 }
