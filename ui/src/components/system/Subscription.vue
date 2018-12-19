@@ -39,13 +39,15 @@
         <div class="form-group compact">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('subscription.plan')}}</label>
           <div class="col-sm-7 adjust-li">
-            <p>{{SubscriptionConfig.status.subscription && SubscriptionConfig.status.subscription.subscription_plan.name}}</p>
+            <p>{{SubscriptionConfig.status.subscription &&
+              SubscriptionConfig.status.subscription.subscription_plan.name}}</p>
           </div>
         </div>
         <div class="form-group compact">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('subscription.expiration')}}</label>
           <div class="col-sm-7 adjust-li">
-            <p>{{SubscriptionConfig.status.subscription && SubscriptionConfig.status.subscription.valid_until | dateFormat}}</p>
+            <p>{{SubscriptionConfig.status.subscription && SubscriptionConfig.status.subscription.valid_until |
+              dateFormat}}</p>
           </div>
         </div>
         <div class="form-group compact">
@@ -58,6 +60,17 @@
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('subscription.cloud_portal')}}</label>
           <div class="col-sm-7 adjust-li">
             <a v-if="SubscriptionConfig.status" :href="SubscriptionConfig.portalURL" target="_blank" class="alert-link">{{$t('subscription.access')}}</a>
+          </div>
+        </div>
+      </form>
+      <h3 v-if="SubscriptionConfig.status">{{$t('subscription.connection')}}</h3>
+      <form v-if="SubscriptionConfig.status" class="form-horizontal">
+        <div class="form-group compact">
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('subscription.check_connection')}}</label>
+          <div class="col-sm-2 adjust-li">
+            <button :disabled="view.isChecking" @click="checkConnection()" type="button" class="btn btn-primary">{{$t('subscription.check')}}</button>
+            <span v-if="view.isChecked && !view.isChecking" class="fa fa-check green copy-ok"></span>
+            <div v-if="view.isChecking" class="spinner spinner-sm adjust-spinner-top"></div>
           </div>
         </div>
       </form>
@@ -111,7 +124,9 @@ export default {
     return {
       view: {
         isLoaded: false,
-        isAuth: false
+        isAuth: false,
+        isChecking: false,
+        isChecked: false
       },
       SubscriptionConfig: {
         isLoading: false,
@@ -158,7 +173,8 @@ export default {
       var context = this;
 
       var subscriptionConfig = {
-        Secret: this.SubscriptionConfig.secret
+        Secret: this.SubscriptionConfig.secret,
+        action: "register"
       };
 
       context.SubscriptionConfig.isLoading = true;
@@ -211,6 +227,31 @@ export default {
           } catch (e) {
             console.error(e);
           }
+        }
+      );
+    },
+    checkConnection() {
+      var context = this;
+
+      context.view.isChecking = true;
+      context.exec(
+        ["system-subscription/update"],
+        { action: "send" },
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+          context.view.isChecking = false;
+          context.view.isChecked = true;
+          setTimeout(function() {
+            context.view.isChecked = false;
+          }, 2000);
+        },
+        function(error) {
+          console.error(error);
         }
       );
     }

@@ -791,7 +791,10 @@
       "expiration": "Expiration",
       "status": "Status",
       "cloud_portal": "Cloud portal",
-      "access": "Access"
+      "access": "Access",
+      "connection": "Connection",
+      "check_connection": "Check connection",
+      "check": "Check"
     },
     "hints": {
       "Password": "Password",

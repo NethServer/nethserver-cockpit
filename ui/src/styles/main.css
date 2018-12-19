@@ -815,6 +815,10 @@ input[type="checkbox"].form-control {
   margin-bottom: 10px;
 }
 
+.adjust-spinner-top {
+  margin-top: -21px !important;
+}
+
 .pre-inline {
   display: inline-grid !important;
   padding: 2px !important
