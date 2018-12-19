@@ -104,8 +104,12 @@
                         <br />
                         <span v-if="interfaces.red.length == 0 || roleKey == 'red'">
                           <span class="pficon pficon-middleware starred-marging"></span>
-                          <span class="icon-net-margin">GW</span> <strong>{{i.gateway || interfaceStatus[i.name] && interfaceStatus[i.name].gateway}}</strong>
+                          <span class="icon-net-margin">GW</span> <strong>{{i.gateway || interfaceStatus[i.name] &&
+                            interfaceStatus[i.name].gateway}}</strong>
                         </span>
+                        <br />
+                        <a href="#" @click="getMoreInfo(i)" :id="'popover-'+i.name" class="alert-link" data-placement="top" data-toggle="popover" data-html="true" :title="$t('network.additional_info')"
+                          data-content="">{{$t('network.more_info')}}</a>
                       </div>
                     </div>
                     <div class="list-view-pf-additional-info">
@@ -420,8 +424,7 @@
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.select_successor')}}</label>
                 <div class="col-sm-9">
                   <div v-if="!currentInterface.successorListLoaded" class="spinner spinner-sm"></div>
-                  <select v-show="currentInterface.successorListLoaded" v-model="currentInterface.successor"
-                    class="combobox form-control">
+                  <select v-show="currentInterface.successorListLoaded" v-model="currentInterface.successor" class="combobox form-control">
                     <option v-for="s in currentInterface.successorList" v-bind:key="s">
                       {{s}}
                     </option>
@@ -1857,6 +1860,7 @@ export default {
             for (var i in context.interfaces[role]) {
               var int = context.interfaces[role][i];
               int.isOpened = false;
+              int.moreInfoOpened = false;
               interfaceNames.push(int.name);
             }
           }
@@ -1873,12 +1877,94 @@ export default {
           context.getFreeDevices();
           context.getFreeDevicesVLAN();
           context.getBondModes();
+          setTimeout(function() {
+            $("[data-toggle=popover]")
+              .popovers()
+              .popovers()
+              .on("hidden.bs.popover", function(e) {
+                $(e.target).data("bs.popover").inState.click = false;
+              });
+          }, 250);
           callback ? callback(interfaceNames) : null;
         },
         function(error) {
           console.error(error);
         }
       );
+    },
+    getMoreInfo(int) {
+      int.moreInfoOpened = !int.moreInfoOpened;
+      var popover = $("#popover-" + int.name).data("bs.popover");
+
+      if (int.moreInfoOpened) {
+        popover.options.content = '<div class="spinner spinner-sm"></div>';
+        popover.show();
+
+        var context = this;
+        context.exec(
+          ["system-network/read"],
+          { action: "info", name: int.name },
+          null,
+          function(success) {
+            try {
+              success = JSON.parse(success);
+            } catch (e) {
+              console.error(e);
+            }
+            popover.options.content =
+              '<b class="col-sm-6">' +
+              context.$i18n.t("network.public_ip") +
+              '</b><span class="col-sm-6">' +
+              success.ip +
+              "</span>";
+            popover.options.content +=
+              '<b class="col-sm-6">' +
+              context.$i18n.t("network.reverse_lookup") +
+              '</b><span class="col-sm-6">' +
+              success.hostname +
+              "</span>";
+            popover.options.content +=
+              '<b class="col-sm-6 advanced">' +
+              context.$i18n.t("network.country") +
+              '</b><span class="col-sm-6 advanced">' +
+              success.country_iso +
+              "</span>";
+
+            popover.options.content += '<div class="divider col-sm-12"></div>';
+
+            popover.options.content +=
+              '<b class="col-sm-6 stats-text">' +
+              context.$i18n.t("network.int_model") +
+              '</b><span class="col-sm-6 stats-text">' +
+              context.interfaceStatus[int.name].model +
+              "</span>";
+            popover.options.content +=
+              '<b class="col-sm-6">' +
+              context.$i18n.t("network.int_speed") +
+              '</b><span class="col-sm-6">' +
+              context.interfaceStatus[int.name].speed +
+              "</span>";
+            popover.options.content +=
+              '<b class="col-sm-6">' +
+              context.$i18n.t("network.int_driver") +
+              '</b><span class="col-sm-6">' +
+              context.interfaceStatus[int.name].driver +
+              "</span>";
+            popover.options.content +=
+              '<b class="col-sm-6">' +
+              context.$i18n.t("network.int_mac") +
+              '</b><span class="col-sm-6">' +
+              context.interfaceStatus[int.name].mac +
+              "</span>";
+            popover.show();
+          },
+          function(error) {
+            console.error(error);
+          }
+        );
+      } else {
+        popover.hide();
+      }
     },
     openConfigureInterface(i) {
       if (i.virtual == 1 && i.type != "xdsl") {
