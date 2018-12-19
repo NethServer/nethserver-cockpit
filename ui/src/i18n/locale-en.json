@@ -46,6 +46,7 @@
     "add_shortcut": "Add shortcut",
     "remove_shortcut": "Remove shortcut",
     "found": "found",
+    "never_expires": "Never expires",
     "menu": {
       "dashboard": "Dashboard",
       "backup": "Backup",
@@ -775,6 +776,22 @@
     "terminal": {
       "title": "Terminal"
     },
+    "subscription": {
+      "title": "Subscription",
+      "registration": "Registration",
+      "registration_description": "The NethServer Subscription by Nethesis enables exclusive access to the Stable Updates repository, monitoring tools and immediate professional support services for your NethServer deployments. It enables you to successfully deploy, monitor and manage your NethServer instances, complementing your IT resources and increasing the efficiency and reliability of your services",
+      "registration_description_2": "Do you already have an authorization token? Copy and paste it in the field below",
+      "subscribe": "Subscribe",
+      "token": "Token",
+      "subscription_edit_ok": "Subscription saved successfully",
+      "subscription_edit_error": "Subscription not saved.",
+      "system_id": "System ID",
+      "plan": "Plan",
+      "expiration": "Expiration",
+      "status": "Status",
+      "cloud_portal": "Cloud portal",
+      "access": "Access"
+    },
     "hints": {
       "Password": "Password",
       "change_default_root_password": "Change the default root password",
@@ -882,7 +899,8 @@
       "invalid_vlan_parent": "Invalid parent for a VLAN",
       "vlan_tag_already_used": "This tag is already used by another VLAN",
       "bond_valid_mode_between_0_and_6": "Bond mode must be a number between 0 and 6",
-      "valid_macAddress": "Must be a valid MAC address"
+      "valid_macAddress": "Must be a valid MAC address",
+      "invalid_secret": "Invalid secret"
     }
   }
 }

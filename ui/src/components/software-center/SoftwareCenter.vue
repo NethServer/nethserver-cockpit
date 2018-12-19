@@ -410,6 +410,10 @@ export default {
       searchString: ""
     };
   },
+  beforeRouteLeave(to, from, next) {
+    $(".modal").modal("hide");
+    next();
+  },
   mounted() {
     var context = this;
     setTimeout(function() {

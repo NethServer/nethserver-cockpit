@@ -325,6 +325,7 @@ iframe>.breadcrumb {
 
 .adjust-li {
   padding-top: 2px;
+  min-height: 32px;
 }
 
 .compact {

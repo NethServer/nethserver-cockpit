@@ -83,7 +83,7 @@ export default {
     $("#app").css("color", "");
 
     setTimeout(function() {
-      $(parent.document.getElementById("sidebar-menu").children[3]).addClass(
+      $(parent.document.getElementById("sidebar-menu").children[4]).addClass(
         "active"
       );
       $(parent.document.getElementById("sidebar-menu").children[0]).removeClass(

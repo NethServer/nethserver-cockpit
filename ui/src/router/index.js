@@ -33,6 +33,10 @@ import ApplicationsDetails from '@/components/applications/ApplicationsDetails'
 import SoftwareCenter from '@/components/software-center/SoftwareCenter'
 /* */
 
+/* SUBSCRIPTION */
+import Subscription from '@/components/system/Subscription'
+/* */
+
 /* TERMINAL */
 import Terminal from '@/components/system/Terminal'
 /* */
@@ -140,6 +144,12 @@ export default new Router({
       path: '/software-center',
       name: 'SoftwareCenter',
       component: SoftwareCenter
+    },
+
+    {
+      path: '/subscription',
+      name: 'Subscription',
+      component: Subscription
     },
 
     {
