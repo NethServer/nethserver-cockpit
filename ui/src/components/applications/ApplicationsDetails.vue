@@ -19,6 +19,7 @@ export default {
     next();
   },
   beforeRouteLeave(to, from, next) {
+    $(".modal").modal("hide");
     $("#app").css("background", "");
     $("#app").css("color", "");
     next();

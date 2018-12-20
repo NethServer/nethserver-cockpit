@@ -15,9 +15,13 @@
       "label": "Software Center",
       "order": 30
     \},
-    "//#/terminal": \{
-      "label": "Terminal",
+    "//#/subscription": \{
+      "label": "Subscription",
       "order": 40
+    \},
+    "///#/terminal": \{
+      "label": "Terminal",
+      "order": 50
     \}
   \},
 
@@ -26,7 +30,7 @@
     use JSON;
     binmode STDOUT, ":utf8";
     use utf8;
- 
+
     sub get_application_name {
          my $id = shift;
          my $file = "/usr/share/cockpit/nethserver/applications/$id.json";
@@ -52,7 +56,7 @@
         foreach my $a (@tmp) {
             my $name = get_application_name($a) || next;
             $OUT .= '    "';
-            for (my $k=0; $k<$i+3; $k++) {
+            for (my $k=0; $k<$i+4; $k++) {
                  $OUT .= "/";
             }
             $OUT .= "#/applications/$a\" : {\"label\": \"$name\"},";

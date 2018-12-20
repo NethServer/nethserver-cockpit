@@ -325,6 +325,7 @@ iframe>.breadcrumb {
 
 .adjust-li {
   padding-top: 2px;
+  min-height: 32px;
 }
 
 .compact {
@@ -812,6 +813,10 @@ input[type="checkbox"].form-control {
 
 .advanced {
   margin-bottom: 10px;
+}
+
+.adjust-spinner-top {
+  margin-top: -21px !important;
 }
 
 .pre-inline {

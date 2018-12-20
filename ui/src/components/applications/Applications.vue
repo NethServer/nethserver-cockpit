@@ -135,6 +135,10 @@ export default {
         ":980/en-US/"
     };
   },
+  beforeRouteLeave(to, from, next) {
+    $(".modal").modal("hide");
+    next();
+  },
   mounted() {
     var context = this;
     setTimeout(function() {
