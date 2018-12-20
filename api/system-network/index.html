@@ -609,6 +609,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#info" title="info" class="md-nav__link">
+    info
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -660,6 +667,13 @@
           <li class="md-nav__item">
   <a href="#routing_1" title="routing" class="md-nav__link">
     routing
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#info_1" title="info" class="md-nav__link">
+    info
   </a>
   
 </li>
@@ -972,6 +986,18 @@
   <li class="md-nav__item">
     <a href="../system-status/" title="system-status" class="md-nav__link">
       system-status
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../system-subscription/" title="system-subscription" class="md-nav__link">
+      system-subscription
     </a>
   </li>
 
@@ -1328,6 +1354,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#info" title="info" class="md-nav__link">
+    info
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1379,6 +1412,13 @@
           <li class="md-nav__item">
   <a href="#routing_1" title="routing" class="md-nav__link">
     routing
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#info_1" title="info" class="md-nav__link">
+    info
   </a>
   
 </li>
@@ -1596,6 +1636,7 @@
 <li><code>bond-types</code></li>
 <li><code>vlan-available</code></li>
 <li><code>routing</code></li>
+<li><code>info</code></li>
 </ul>
 <h4 id="list">list<a class="headerlink" href="#list" title="Permanent link">&para;</a></h4>
 <p>It takes only the <code>action</code> argument.</p>
@@ -1649,6 +1690,17 @@ The <code>parent</code> contains the name of the interface which will be deleted
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;routing&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="info">info<a class="headerlink" href="#info" title="Permanent link">&para;</a></h4>
+<p>Retrieve info from <a href="https://ifconfig.co">ifconfig.co</a>.
+The <code>name</code> field contains the name of the interface to use.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;info&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;eth0&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -1893,6 +1945,22 @@ the current address is contained inside the <code>ipaddr</code> field.</p>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;Kernel IP routing table\nDestination     Gateway         Genmask         Flags Metric Ref    Use Iface\n0.0.0.0         192.168.5.253   0.0.0.0         UG    0      0        0 br0\n169.254.0.0     0.0.0.0         255.255.0.0     U     1010   0        0 br0\n192.168.5.0     0.0.0.0         255.255.255.0   U     0      0        0 br0\n&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="info_1">info<a class="headerlink" href="#info_1" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;country&quot;</span><span class="p">:</span> <span class="s2">&quot;Italy&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;longitude&quot;</span><span class="p">:</span> <span class="mf">12.8835</span><span class="p">,</span>
+  <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;80.17.99.73&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;hostname&quot;</span><span class="p">:</span> <span class="s2">&quot;nethsecurity.nethesis.it&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;country_eu&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nt">&quot;ip_decimal&quot;</span><span class="p">:</span> <span class="mi">1343316809</span><span class="p">,</span>
+  <span class="nt">&quot;city&quot;</span><span class="p">:</span> <span class="s2">&quot;Cartoceto&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;country_iso&quot;</span><span class="p">:</span> <span class="s2">&quot;IT&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;latitude&quot;</span><span class="p">:</span> <span class="mf">43.7657</span>
 <span class="p">}</span>
 </pre></div>
 
