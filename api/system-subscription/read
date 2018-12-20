@@ -1,0 +1,56 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+use warnings;
+use strict;
+use esmith::ConfigDB;
+use JSON;
+use URI;
+
+my $db = esmith::ConfigDB->open_ro();
+
+my $ret = {};
+
+my $pricing = $db->get_prop('subscription','PricingUrl');
+my $portal = URI->new($pricing);
+my $id = $db->get_prop('subscription','SystemId');
+my $secret = $db->get_prop('subscription','Secret');
+
+if ( $secret ) {
+    my $out = `/usr/libexec/nethserver/subscription-info $secret`;
+    $ret->{'status'} = decode_json($out);
+} else {
+    $ret->{'status'} = undef;
+}
+
+my $url = $portal->scheme."://".$portal->host."/";
+if (defined($ret->{'status'}{'id'})) {
+    if ( $portal->host =~ m/nethesis/ ) {
+        $url .= "#/server/".$ret->{'status'}{'id'};
+    } else {
+        $url .= "servers/".$ret->{'status'}{'id'};
+    }
+}
+
+$ret->{'configuration'} = { 'PortalURL' => $url, 'PricingUrl' => $pricing, 'SystemId' => $id };
+
+print encode_json($ret);

@@ -1,0 +1,58 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+. /usr/libexec/nethserver/api/lib/helper_functions
+
+data=$(cat /dev/stdin)
+action=$(echo $data | jq -r '.action')
+
+case $action in
+
+    "register")
+        secret=$(echo $data | jq -r ".Secret")
+        status=$(/usr/libexec/nethserver/subscription-info $secret)
+
+        if [ $? -gt 0 ]; then
+            error "EventFailed" "See /var/log/messages"
+        fi
+
+        uuid=$(echo $status | jq -r ".uuid")
+        /sbin/e-smith/config setprop subscription Secret "$secret" SystemId "$uuid"
+
+        if [ $? -gt 0 ]; then
+            invalid_error
+        fi
+
+        /sbin/e-smith/signal-event -j nethserver-subscription-save
+    ;;
+
+    "send")
+        /etc/e-smith/events/actions/nethserver-inventory-send && systemctl restart collectd nms
+    ;;
+
+esac
+
+if [ $? -gt 0 ]; then
+    error "EventFailed" "See /var/log/messages"
+else
+    success
+fi
