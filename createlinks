@@ -52,6 +52,13 @@ event_services('certificate-update', qw(
     cockpit restart
 ));
 
+#
+# nethserver-subscription-save
+#
+
+event_templates('nethserver-subscription-save', qw(
+   /etc/os-release
+));
 
 #
 # Test events for development
