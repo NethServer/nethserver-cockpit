@@ -16,7 +16,14 @@
       "order": 30
     \},
     "//#/subscription": \{
-      "label": "Subscription",
+      "label": {
+        $url = $subscription{'ApiUrl'} || '';
+        if ($url =~ m/nethesis/) {
+          $OUT .= '"Registration"';
+        } else {
+          $OUT .= '"Subscription"'
+        }
+     },
       "order": 40
     \},
     "///#/terminal": \{

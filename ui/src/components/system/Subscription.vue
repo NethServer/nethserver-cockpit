@@ -1,22 +1,22 @@
 <template>
   <div v-if="view.isAuth">
-    <h2>{{$t('subscription.title')}}</h2>
+    <h2>{{SubscriptionConfig.enterprise ? $t('subscription.title_ent') : $t('subscription.title')}}</h2>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <div v-if="view.isLoaded">
-      <h3>{{$t('subscription.registration')}}</h3>
+      <h3>{{SubscriptionConfig.enterprise ? $t('subscription.registration_ent') : $t('subscription.registration')}}</h3>
       <div v-if="!SubscriptionConfig.status" class="alert alert-info alert-dismissable">
         <span class="pficon pficon-info"></span>
-        {{$t('subscription.registration_description')}}.
+        {{SubscriptionConfig.enterprise ? $t('subscription.registration_description_ent') : $t('subscription.registration_description')}}.
         <br>
         <br>
         <a
           target="_blank"
           :href="SubscriptionConfig.pricingUrl"
-          class="btn btn-primary btn-lg"
-        >{{$t('subscription.subscribe')}}</a>
+          class="btn btn-primary"
+        >{{SubscriptionConfig.enterprise ? $t('subscription.subscribe_ent') : $t('subscription.subscribe')}}</a>
         <br>
         <br>
-        {{$t('subscription.registration_description_2')}}.
+        {{SubscriptionConfig.enterprise ? $t('subscription.registration_description_2_ent') : $t('subscription.registration_description_2')}}.
         <br>
       </div>
       <form
@@ -28,7 +28,7 @@
           <label
             class="col-sm-2 control-label"
             for="textInput-modal-markup"
-          >{{$t('subscription.token')}}</label>
+          >{{SubscriptionConfig.enterprise ? $t('subscription.token_ent') : $t('subscription.token')}}</label>
           <div class="col-sm-7">
             <input required type="text" v-model="SubscriptionConfig.secret" class="form-control">
             <span v-if="SubscriptionConfig.errors.secret.hasError" class="help-block">
@@ -193,7 +193,8 @@ export default {
           }
         },
         secret: "",
-        status: {}
+        status: {},
+        enterprise: false
       }
     };
   },
@@ -219,6 +220,8 @@ export default {
             success.configuration.PortalURL;
           context.SubscriptionConfig.pricingUrl =
             success.configuration.PricingUrl;
+          context.SubscriptionConfig.enterprise =
+            success.configuration.enterprise == 1;
         },
         function(error) {
           console.error(error);
@@ -253,7 +256,9 @@ export default {
             function(success) {
               // notification
               context.$parent.notifications.success.message = context.$i18n.t(
-                "subscription.subscription_edit_ok"
+                context.SubscriptionConfig.enterprise
+                  ? "subscription.subscription_edit_ok_ent"
+                  : "subscription.subscription_edit_ok"
               );
 
               // get subscription
@@ -262,7 +267,9 @@ export default {
             function(error, data) {
               // notification
               context.$parent.notifications.error.message = context.$i18n.t(
-                "subscription.subscription_edit_error"
+                context.SubscriptionConfig.enterprise
+                  ? "subscription.subscription_edit_error_ent"
+                  : "subscription.subscription_edit_error"
               );
             }
           );
