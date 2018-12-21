@@ -34,6 +34,7 @@ my $pricing = $db->get_prop('subscription','PricingUrl');
 my $portal = URI->new($pricing);
 my $id = $db->get_prop('subscription','SystemId');
 my $secret = $db->get_prop('subscription','Secret');
+my $enterprise = ($portal->host =~ m/nethesis/) ? 1 : 0;
 
 if ( $secret ) {
     my $out = `/usr/libexec/nethserver/subscription-info $secret`;
@@ -51,6 +52,6 @@ if (defined($ret->{'status'}{'id'})) {
     }
 }
 
-$ret->{'configuration'} = { 'PortalURL' => $url, 'PricingUrl' => $pricing, 'SystemId' => $id };
+$ret->{'configuration'} = { 'PortalURL' => $url, 'PricingUrl' => $pricing, 'SystemId' => $id, 'enterprise' => $enterprise };
 
 print encode_json($ret);

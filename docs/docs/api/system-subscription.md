@@ -48,7 +48,8 @@ Output example:
   "configuration": {
     "PricingUrl": "https://my.nethserver.com/?action=newServer",
     "SystemId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-    "PortalURL": "https://my.nethserver.com"
+    "PortalURL": "https://my.nethserver.com",
+    "enterprise": 0
   }
 }
 ```
