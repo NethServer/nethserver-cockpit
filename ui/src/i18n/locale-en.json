@@ -788,7 +788,7 @@
     },
     "subscription": {
       "title": "Subscription",
-      "title_ent": "Registration",
+      "title_ent": "Enterprise registration",
       "registration": "Registration",
       "registration_ent": "Registration",
       "registration_description": "The NethServer Subscription by Nethesis enables exclusive access to the Stable Updates repository, monitoring tools and immediate professional support services for your NethServer deployments. It enables you to successfully deploy, monitor and manage your NethServer instances, complementing your IT resources and increasing the efficiency and reliability of your services",
