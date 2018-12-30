@@ -28,7 +28,7 @@ if [ -z "$servers" ]; then
     hints "no_servers_configured"
 fi
 
-for s in $(echo $servers | sed 's/,/ /')
+for s in $(echo $servers | sed 's/,/ /g')
 do
     dig +time=2 +tries=1 +short www.nethserver.org @$s &> /dev/null
     ret=$(($ret+$?))
