@@ -9,7 +9,7 @@
   "nethserver-flashstart": "FlashStart",
   "nethserver-freepbx": "Voice",
   "nethserver-getmail": "Getmail",
-  "nethserver-virtualhosts": "VirtualHosts",
+  "nethserver-httpd-virtualhosts": "VirtualHosts",
   "nethserver-hylafax": "FaxServer",
   "nethserver-iaxmodem": "IaxModem",
   "nethserver-ipsec-tunnels": "IpsecTunnels",
