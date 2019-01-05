@@ -43,12 +43,12 @@ sub read_json
 }
 
 # encode json data and write to file ($umask optional, default 022)
-# do: write_json ($file,$data,$umask)
+# do: write_json ($filePath,$data,$umask)
 
 sub write_json {
 
-    my $file = shift || die 'No file specified';
-    my $dirname = dirname($file);
+    my $filePath = shift || die 'No file path specified';
+    my $dirname = dirname($filePath);
     if (! -d $dirname) {
         die 'No directory to save the json file';
     }
@@ -57,7 +57,7 @@ sub write_json {
     my $umask = shift || 022;
 
     umask $umask;
-    open my $fh, ">", $file;
+    open my $fh, ">", $filePath;
     print $fh encode_json($data);
     close $fh;
 }
