@@ -54,7 +54,7 @@ sub write_json {
     }
     
     my $data = shift || die 'No data to encode to json';
-    my $umask = shift || '022';
+    my $umask = shift || 022;
 
     umask $umask;
     open my $fh, ">", $file;
