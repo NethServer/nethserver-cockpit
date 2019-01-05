@@ -50,7 +50,7 @@ sub write_json {
     my $file = shift || die 'No file specified';
     my $dirname = dirname($file);
     if (! -d $dirname) {
-        die 'No directory to save the json file'
+        die 'No directory to save the json file';
     }
     
     my $data = shift || die 'No data to encode to json';
