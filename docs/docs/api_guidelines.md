@@ -49,7 +49,7 @@ Example: [system-hosts](api/system-hosts.md#create).
 ### read
 
 Read the current system status and configuration.
-It should return an object with `system` and `configuration` field.
+It should return an object with `status` and `configuration` fields.
 
 JSON format:
 ```json
