@@ -1,0 +1,99 @@
+{
+
+    use strict;
+    use warnings;
+    use JSON;
+    #use esmith::ConfigDB;
+
+
+    sub read_json
+    {
+        my $file = shift || return undef;
+        return undef if (! -e $file);
+
+        my $json;
+        {
+            local $/; #Enable 'slurp' mode
+            open my $fh, "<", $file or return undef;
+            $json = <$fh>;
+            close $fh;
+        }
+
+        return decode_json($json);
+    }
+
+
+
+    my $jsonFile = '/etc/nethserver/cockpit/authorization/roles.json';
+    my $data = read_json ($jsonFile); 
+
+    foreach my $key (keys %{$data}) {
+
+        my @systems = @{$data->{$key}->{'system'}};
+        my @applications = @{$data->{$key}->{'applications'}};
+        my @roles = ();
+
+        #Here all default sudo commands
+        my @commands = (
+                "/usr/libexec/nethserver/api/system-*/read"
+            );
+
+        foreach my $system (@systems){
+            push @roles, "system-$system";
+        }
+
+        foreach my $application (@applications){
+            push @roles, $application; 
+        }
+
+        # Hack when the group name gets a space
+        # for example 'domain admins', visudo do not like it
+        (my $Cmnd_Alias = $key) =~ s/ //;
+        $key =~s/ /\\ /;
+
+        $OUT .= "\n#\n# Role delegations for $key\n#";
+        $OUT .= "\nCmnd_Alias ". uc $Cmnd_Alias .'= ';
+
+        foreach my $role (@roles) {
+
+            #Make logic here if role doesnt match api name
+            # or if needs more API
+            if ($role eq 'system-users-groups') {
+                $role = 'system-users'; 
+                push @commands, 
+                    "/usr/libexec/nethserver/api/system-roles/*",
+                    "/usr/libexec/nethserver/api/system-password-policy/read",
+                    "/usr/libexec/nethserver/api/system-accounts-provider/*";
+            }
+            elsif ($role eq 'system-network') {
+                push @commands,
+                    "/usr/libexec/nethserver/api/system-routes/*",
+                    "/usr/libexec/nethserver/api/system-proxy/*";
+            }
+            elsif ($role eq 'system-dns') {
+                $role = 'system-hosts';
+            }
+            elsif ($role eq 'system-certificates') {
+                $role = 'system-certificate';
+            }
+            elsif ($role eq 'system-ssh') {
+                $role = 'system-openssh';
+            }
+            elsif ($role eq 'system-applications') {
+                $role = 'system-apps';
+            }
+            elsif ($role eq 'system-software-center') {
+                $role = 'system-packages';
+            }
+
+            $role = '*' if ($key eq 'admins');
+            push @commands, "/usr/libexec/nethserver/api/$role/*";
+            # we allow all for admins
+            last if ($key eq 'admins');
+        }
+
+        $OUT .= join (', ',@commands);
+        $OUT .= "\n\n%".$key." ALL=NOPASSWD: ". uc $Cmnd_Alias;
+        $OUT .= "\nDefaults:%".$key." !requiretty\n";
+    }
+}

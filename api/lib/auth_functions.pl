@@ -24,6 +24,7 @@ use strict;
 use warnings;
 use JSON;
 use POSIX qw(getgroups);
+use File::Basename;
 
 sub read_json
 {
@@ -39,6 +40,25 @@ sub read_json
     }
 
     return decode_json($json);
+}
+
+# encode json data and write to file ($umask optional)
+# write_json ($file,$data,$umask)
+sub write_json {
+
+      my $file = shift || warn 'No specified file to write';
+      my $dirname = dirname($file);
+      if (! -d $dirname) {
+          warn 'No directory to save the json file'
+      }
+      my $data = shift || warn 'No data to encode to json';
+      my $umask = shift || 022;
+
+      umask $umask;
+      open my $fh, ">", $file || return 0;
+      print $fh encode_json($data);
+      close $fh;
+      return 1;
 }
 
 sub whoami

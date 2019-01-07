@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 #
-# Copyright (C) 2018 Nethesis S.r.l.
+# Copyright (C) 2019 Nethesis S.r.l.
 # http://www.nethesis.it - nethserver@nethesis.it
 #
 # This script is part of NethServer.
@@ -20,25 +20,24 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-use strict;
+require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
+require "/usr/libexec/nethserver/api/lib/auth_functions.pl";
+
 use warnings;
+use strict;
 use JSON;
 
-require '/usr/libexec/nethserver/api/lib/auth_functions.pl';
+my $input = readInput();
+my $role = $input->{'role'} || '';
+my $cmd = $input->{'action'} || '';
 
-my $ret = {"system" => [], "applications" => []};
-my $user = whoami();
-my $is_root = ($< == 0);
+if ($cmd eq 'listApplications') {
 
-my @apps = list_applications();
-my @system_routes = list_system_routes();
+    my $ret = {"system" => [], "applications" => []};
+    my @apps = list_applications();
+    my @system_routes = list_system_routes();
+    my $system_routes = read_json("/etc/nethserver/cockpit/authorization/system-routes.json");
 
-my $system_routes = read_json("/etc/nethserver/cockpit/authorization/system-routes.json");
-
-my $role = get_role($user);
-
-# root can always access everything
-if ($user eq 'root') {
     foreach my $r (@system_routes) {
         push($ret->{"system"}, $r)
     }
@@ -46,12 +45,17 @@ if ($user eq 'root') {
         push($ret->{"applications"}, $a);
     }
 
-    $ret->{'status'}->{'isRoot'} = int($is_root);
     print encode_json($ret);
     exit(0);
+
 }
 
-$ret = get_acl($user, $role);
-$ret->{'status'}->{'isRoot'} = int($is_root);
+my $data = read_json("/etc/nethserver/cockpit/authorization/roles.json");
 
-print encode_json($ret);
+if(exists($data->{$role})) {
+    print encode_json ($data->{$role});
+}
+
+else {
+    print '{"system": [],"applications": []}';
+}
