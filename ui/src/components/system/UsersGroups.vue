@@ -348,6 +348,74 @@
                 </div>
               </div>
             </div>
+              <div v-if="view.isRoot" class="advanced">
+                <span>{{$t('users_groups.role_delegation')}}</span>
+                <div class="divider divider-advanced"></div>
+              </div>
+            <div v-if="view.isRoot" class="modal-body">
+              <div :class="['form-group', newGroup.errorProps['members'] ? 'has-error' : '']">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.system_roles')}}</label>
+                <div class="col-sm-9">
+                  <select @change="addSystemToGroup(newGroup.selectedSystem)" v-model="newGroup.selectedSystem" class="combobox form-control">
+                    <option>-</option>
+                    <option v-for="value in roles.list.system" >{{value}}</option>
+                  </select>
+                  <span v-if="newGroup.errorProps['system']" class="help-block">{{newGroup.errorProps['system']}}</span>
+                </div>
+              </div>
+              <div v-if="newGroup.loadMembers" class="form-group">
+                <div class="col-sm-12">
+                  <div class="spinner"></div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup"></label>
+                <div class="col-sm-9">
+                  <ul class="list-inline compact">
+                    <li v-for="(u,i) in newGroup.system" v-bind:key="i">
+                      <span class="label label-info">
+                        {{u}}
+                        <a @click="removeSystemFromGroup(i)" class="remove-item-inline">
+                          <span class="fa fa-times"></span>
+                        </a>
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div :class="['form-group', newGroup.errorProps['members'] ? 'has-error' : '']">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.applications_roles')}}</label>
+                <div class="col-sm-9">
+                  <select @change="addApplicationsToGroup(newGroup.selectedApp)" v-model="newGroup.selectedApp" class="combobox form-control">
+                    <option>-</option>
+                    <option v-for="value in roles.list.applications" >{{value}}</option>
+                  </select>
+                  <span v-if="newGroup.errorProps['applications']" class="help-block">{{newGroup.errorProps['applications']}}</span>
+                </div>
+              </div>
+              <div v-if="newGroup.loadMembers" class="form-group">
+                <div class="col-sm-12">
+                  <div class="spinner"></div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup"></label>
+                <div class="col-sm-9">
+                  <ul class="list-inline compact">
+                    <li v-for="(u,i) in newGroup.applications" v-bind:key="i">
+                      <span class="label label-info">
+                        {{u}}
+                        <a @click="removeApplicationsFromGroup(i)" class="remove-item-inline">
+                          <span class="fa fa-times"></span>
+                        </a>
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
             <div class="modal-footer">
               <div v-if="newGroup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
@@ -441,7 +509,6 @@
         </div>
       </div>
     </div>
-
     <div class="modal" id="passwordPolicyModal" tabindex="-1" role="dialog" data-backdrop="static">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -905,6 +972,8 @@ export default {
           }
 
           vm.view.isAuth = true;
+          vm.view.isRoot = success.status.isRoot == 1;
+
         },
         function(error) {
           console.error(error);
@@ -924,6 +993,7 @@ export default {
     this.initGraphics();
     this.getInfo();
     this.getPasswordPolicy();
+    this.getRoles();
   },
   computed: {
     filteredUserList() {
@@ -951,7 +1021,8 @@ export default {
     return {
       view: {
         isLoaded: false,
-        isAuth: false
+        isAuth: false,
+        isRoot: false
       },
       searchString: "",
       currentSearchFilter: "user",
@@ -959,6 +1030,9 @@ export default {
         user: "Users",
         group: "Groups"
       },
+        roles: {
+            list:{}
+        },
       users: {
         list: {},
         provider: null,
@@ -1117,6 +1191,14 @@ export default {
       return this.newGroup.members.indexOf(user) > -1;
     },
 
+    systemAlreadyAdded(index) {
+      return this.newGroup.system.indexOf(index) > -1;
+    },
+
+    applicationsAlreadyAdded(index) {
+      return this.newGroup.applications.indexOf(index) > -1;
+    },
+
     cancelWizard() {
       $("#accountProviderWizard").modal("hide");
       this.$router.push("/");
@@ -1156,14 +1238,21 @@ export default {
         canChangePassword: true
       };
     },
+
     initGroup() {
       return {
+        selectedApp: null,
+        selectedSystem: null,
+        system: [],
+        applications: [],
         selectedUser: null,
         members: [],
         loadMembers: false,
         isEdit: false,
         name: "",
         errorProps: {
+          system: "",
+          applications: "",
           name: "",
           members: ""
         },
@@ -1371,6 +1460,30 @@ export default {
       );
     },
 
+    getRoles() {
+      var context = this;
+      context.view.isLoaded = false;
+      context.exec(
+        ["system-roles/read"],
+        {
+          action: "listApplications"
+        },
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+
+          context.roles.list = success;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+
     getUsers() {
       var context = this;
       context.view.isLoaded = false;
@@ -1443,6 +1556,30 @@ export default {
 
     removeUserFromGroup(index) {
       this.newGroup.members.splice(index, 1);
+    },
+
+    addSystemToGroup(index) {
+      if (index.length > 0 && index != "-") {
+        if (!this.systemAlreadyAdded(index)) {
+          this.newGroup.system.push(index);
+        }
+      }
+    },
+
+    removeSystemFromGroup(index) {
+      this.newGroup.system.splice(index, 1);
+    },
+
+    addApplicationsToGroup(index) {
+      if (index.length > 0 && index != "-") {
+        if (!this.applicationsAlreadyAdded(index)) {
+          this.newGroup.applications.push(index);
+        }
+      }
+    },
+
+    removeApplicationsFromGroup(index) {
+      this.newGroup.applications.splice(index, 1);
     },
 
     openCreateUser() {
@@ -1745,6 +1882,12 @@ export default {
         members: group.members
       };
 
+      var roleObj = {
+        role: group.name,
+        system: group.system,
+        applications: group.applications
+      };
+
       // validate object
       context.newGroup.isLoading = true;
       context.exec(
@@ -1754,6 +1897,25 @@ export default {
         function(success) {
           context.newGroup.isLoading = false;
           $("#createGroupModal").modal("hide");
+
+          // update role
+          context.exec(
+            ["system-roles/update"],
+            roleObj,
+            null,
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "users_groups.role_updated_ok"
+              );
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "users_groups.role_updated_error"
+              );
+            }
+          );
 
           context.exec(
             ["system-users/create"],
@@ -1826,6 +1988,28 @@ export default {
         }
       );
 
+        context.exec(
+        ["system-roles/read"],
+        {
+            role: kg
+        },
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+          context.newGroup.system = success.system;
+          context.newGroup.applications = success.applications;
+          context.newGroup.loadMembers = false;
+        },
+        function(error) {
+          console.error(error);
+          context.newGroup.loadMembers = false;
+        }
+      );
+
       $("#createGroupModal").modal("show");
     },
 
@@ -1838,6 +2022,14 @@ export default {
         members: group.members
       };
 
+      var roleObj = {
+        role: group.name,
+        system: group.system,
+        applications: group.applications
+      };
+
+
+
       // validate object
       context.newGroup.isLoading = true;
       context.exec(
@@ -1847,6 +2039,26 @@ export default {
         function(success) {
           context.newGroup.isLoading = false;
           $("#createGroupModal").modal("hide");
+
+
+        // update role
+        context.exec(
+            ["system-roles/update"],
+            roleObj,
+            null,
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "users_groups.role_updated_ok"
+              );
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "users_groups.role_updated_error"
+              );
+            }
+          );
 
           context.exec(
             ["system-users/update"],
@@ -1901,6 +2113,27 @@ export default {
       var context = this;
 
       $("#deleteModal").modal("hide");
+      context.exec(
+        ["system-roles/delete"],
+        {
+          role: group.name
+        },
+        null,
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "users_groups.role_deleted_ok"
+          );
+
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "users_groups.role_deleted_error"
+          );
+        }
+      );
+
       context.exec(
         ["system-users/delete"],
         {
