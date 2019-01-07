@@ -57,11 +57,10 @@ sub write_json {
     my $umask = shift || 022;
 
     umask $umask;
-    open my $fh, ">", $filePath || return 0;
+    open my $fh, ">", $filePath;
     print $fh encode_json($data);
     close $fh;
-    return 1;
-}
+    }
 
 sub whoami
 {
