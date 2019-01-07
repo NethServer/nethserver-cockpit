@@ -50,16 +50,17 @@ sub write_json {
     my $filePath = shift || die 'No file path specified';
     my $dirname = dirname($filePath);
     if (! -d $dirname) {
-        die 'No directory to save the json file';
+        warn 'No directory to save the json file';
     }
     
-    my $data = shift || die 'No data to encode to json';
+    my $data = shift || warn 'No data to encode to json';
     my $umask = shift || 022;
 
     umask $umask;
-    open my $fh, ">", $filePath;
+    open my $fh, ">", $filePath || return 0;
     print $fh encode_json($data);
     close $fh;
+    return 1;
 }
 
 sub whoami
