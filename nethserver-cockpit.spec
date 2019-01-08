@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.2.0
+Version: 0.2.1
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -44,6 +44,11 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %dir /usr/libexec/nethserver/api/
 
 %changelog
+* Tue Jan 08 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.2.1-1
+- CIFS Backup fails after upgrade to 7.6 - NethServer/dev#5687
+- DNS hint: use all name servers (thanks mikeBOLD)
+- Adjust correct name for legacy in application menu (thanks StephDL)
+
 * Fri Dec 21 2018 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.2.0-1
 - Cockpit: support Community and Enterprise registration - NethServer/dev#5676
 
