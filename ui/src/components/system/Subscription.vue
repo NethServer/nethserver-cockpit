@@ -129,6 +129,24 @@
             >{{$t('subscription.access')}}</a>
           </div>
         </div>
+        <div class="form-group compact">
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{SubscriptionConfig.enterprise ? $t('subscription.proceed_unsubscribe_ent') : $t('subscription.proceed_unsubscribe')}}</label>
+          <div class="col-sm-2 adjust-li">
+            <button
+              :disabled="view.isChecking"
+              data-toggle="modal"
+              data-target="#unsubscribeModal"
+              type="button"
+              class="btn btn-danger"
+            >{{SubscriptionConfig.enterprise ? $t('subscription.unsubscribe_ent') : $t('subscription.unsubscribe')}}</button>
+            <span v-if="view.isChecked && !view.isChecking" class="fa fa-check green copy-ok"></span>
+            <span v-if="view.isCheckFail && !view.isChecking" class="fa fa-times red copy-ok"></span>
+            <div v-if="view.isChecking" class="spinner spinner-sm adjust-spinner-top"></div>
+          </div>
+        </div>
       </form>
       <h3 v-if="SubscriptionConfig.status">{{$t('subscription.connection')}}</h3>
       <form v-if="SubscriptionConfig.status" class="form-horizontal">
@@ -150,29 +168,6 @@
           </div>
         </div>
       </form>
-      <h3
-        v-if="SubscriptionConfig.status"
-      >{{SubscriptionConfig.enterprise ? $t('subscription.unsubscribe_ent') : $t('subscription.unsubscribe')}}</h3>
-      <form v-if="SubscriptionConfig.status" class="form-horizontal">
-        <div class="form-group compact">
-          <label
-            class="col-sm-2 control-label"
-            for="textInput-modal-markup"
-          >{{SubscriptionConfig.enterprise ? $t('subscription.proceed_unsubscribe_ent') : $t('subscription.proceed_unsubscribe')}}</label>
-          <div class="col-sm-2 adjust-li">
-            <button
-              :disabled="view.isChecking"
-              data-toggle="modal"
-              data-target="#unsubscribeModal"
-              type="button"
-              class="btn btn-danger"
-            >{{SubscriptionConfig.enterprise ? $t('subscription.unsubscribe_ent') : $t('subscription.unsubscribe')}}</button>
-            <span v-if="view.isChecked && !view.isChecking" class="fa fa-check green copy-ok"></span>
-            <span v-if="view.isCheckFail && !view.isChecking" class="fa fa-times red copy-ok"></span>
-            <div v-if="view.isChecking" class="spinner spinner-sm adjust-spinner-top"></div>
-          </div>
-        </div>
-      </form>
     </div>
     <div class="modal" id="unsubscribeModal" tabindex="-1" role="dialog" data-backdrop="static">
       <div class="modal-dialog">
@@ -180,7 +175,7 @@
           <div class="modal-header">
             <h4
               class="modal-title"
-            >{{SubscriptionConfig.enterprise ? $t('subscription.unsubscribe_ent') : $t('subscription.unsubscribe')}}</h4>
+            >{{SubscriptionConfig.enterprise ? $t('subscription.proceed_unsubscribe_ent') : $t('subscription.proceed_unsubscribe')}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="removeSubscription()">
             <div class="modal-body">
