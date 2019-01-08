@@ -45,6 +45,11 @@ case $action in
         /sbin/e-smith/signal-event -j nethserver-subscription-save
     ;;
 
+    "unregister")
+        /sbin/e-smith/config setprop subscription Secret '' SystemId ''
+        /sbin/e-smith/signal-event -j nethserver-subscription-save
+    ;;
+
     "send")
         /etc/e-smith/events/actions/nethserver-inventory-send && systemctl restart collectd nms
     ;;
