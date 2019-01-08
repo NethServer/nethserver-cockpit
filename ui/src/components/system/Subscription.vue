@@ -307,8 +307,6 @@ export default {
             success.configuration.SystemId &&
             success.configuration.SystemId.length > 0;
           context.SubscriptionConfig.systemId = success.configuration.SystemId;
-
-          console.log(context.SubscriptionConfig.missingToken);
         },
         function(error) {
           console.error(error);
@@ -382,6 +380,8 @@ export default {
     },
     removeSubscription() {
       var context = this;
+
+      $("#unsubscribeModal").modal("hide");
       context.exec(
         ["system-subscription/update"],
         {
