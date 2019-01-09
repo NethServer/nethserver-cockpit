@@ -770,12 +770,6 @@
                   </div>
                   <form class="form-horizontal" v-on:submit.prevent="saveLogicInterface()">
                     <div class="modal-body">
-                      <div class="form-group">
-                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.label')}}</label>
-                        <div class="col-sm-6">
-                          <input required v-model="wizard.review.nslabel" class="form-control" type="text">
-                        </div>
-                      </div>
                       <div v-if="wizard.role.choice == 'red'" class="form-group">
                         <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.bootproto')}}</label>
                         <input class="col-sm-1" type="radio" v-model="wizard.review.bootproto" value="dhcp">
@@ -805,6 +799,12 @@
                           <input required v-model="wizard.review.gateway" class="form-control" type="text">
                           <span v-if="wizard.review.errors.gateway.hasError" class="help-block">{{$t('validation.validation_failed')}}:
                             {{$t('validation.'+wizard.review.errors.gateway.message)}}</span>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.label')}} <span class="optional-label">({{$t('optional')}})</span></label>
+                        <div class="col-sm-6">
+                          <input required v-model="wizard.review.nslabel" class="form-control" type="text">
                         </div>
                       </div>
                     </div>
@@ -969,12 +969,6 @@
                     <div class="modal-body">
                       <!-- ETHERNET -->
                       <div v-if="wizardPhysical.type.choice == 'ethernet'">
-                        <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.label')}}</label>
-                          <div class="col-sm-6">
-                            <input required v-model="wizardPhysical.review.nslabel" class="form-control" type="text">
-                          </div>
-                        </div>
                         <div v-if="wizardPhysical.role.choice == 'green' || wizardPhysical.role.choice == 'red'" class="form-group">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.bootproto')}}</label>
                           <input class="col-sm-1" type="radio" v-model="wizardPhysical.review.bootproto" value="dhcp">
@@ -1005,6 +999,12 @@
                             <input required v-model="wizardPhysical.review.gateway" class="form-control" type="text">
                             <span v-if="wizardPhysical.review.errors.gateway.hasError" class="help-block">{{$t('validation.validation_failed')}}:
                               {{$t('validation.'+wizardPhysical.review.errors.gateway.message)}}</span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.label')}} <span class="optional-label">({{$t('optional')}})</span></label>
+                          <div class="col-sm-6">
+                            <input required v-model="wizardPhysical.review.nslabel" class="form-control" type="text">
                           </div>
                         </div>
                       </div>
