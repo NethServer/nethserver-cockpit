@@ -4,7 +4,10 @@
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <div v-if="view.isLoaded">
       <h3>{{SubscriptionConfig.enterprise ? $t('subscription.registration_ent') : $t('subscription.registration')}}</h3>
-      <div v-if="!SubscriptionConfig.status" class="alert alert-info alert-dismissable">
+      <div
+        v-if="!SubscriptionConfig.status && !SubscriptionConfig.missingToken"
+        class="alert alert-info alert-dismissable"
+      >
         <span class="pficon pficon-info"></span>
         {{SubscriptionConfig.enterprise ? $t('subscription.registration_description_ent') : $t('subscription.registration_description')}}.
         <br>
@@ -17,6 +20,21 @@
         <br>
         <br>
         {{SubscriptionConfig.enterprise ? $t('subscription.registration_description_2_ent') : $t('subscription.registration_description_2')}}.
+        <br>
+      </div>
+      <div
+        v-if="!SubscriptionConfig.status && SubscriptionConfig.enterprise && SubscriptionConfig.missingToken"
+        class="alert alert-info alert-dismissable"
+      >
+        <span class="pficon pficon-info"></span>
+        {{$t('subscription.registration_description_ent_partial')}}.
+        <br>
+        <br>
+        {{$t('subscription.registration_description_2_ent_partial')}}
+        <a
+          target="_blank"
+          :href="'https://my.nethesis.it/#/servers?q='+SubscriptionConfig.systemId"
+        >{{$t('subscription.here')}}</a>.
         <br>
       </div>
       <form
@@ -45,7 +63,10 @@
             ></div>
           </label>
           <div class="col-sm-5">
-            <button class="btn btn-primary" type="submit">{{$t('register')}}</button>
+            <button
+              class="btn btn-primary"
+              type="submit"
+            >{{SubscriptionConfig.missingToken ? $t('add') : $t('register')}}</button>
           </div>
         </div>
       </form>
@@ -108,6 +129,20 @@
             >{{$t('subscription.access')}}</a>
           </div>
         </div>
+        <div class="form-group compact">
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{SubscriptionConfig.enterprise ? $t('subscription.proceed_unsubscribe_ent') : $t('subscription.proceed_unsubscribe')}}</label>
+          <div class="col-sm-2 adjust-li">
+            <button
+              data-toggle="modal"
+              data-target="#unsubscribeModal"
+              type="button"
+              class="btn btn-danger"
+            >{{SubscriptionConfig.enterprise ? $t('subscription.unsubscribe_ent') : $t('subscription.unsubscribe')}}</button>
+          </div>
+        </div>
       </form>
       <h3 v-if="SubscriptionConfig.status">{{$t('subscription.connection')}}</h3>
       <form v-if="SubscriptionConfig.status" class="form-horizontal">
@@ -129,6 +164,39 @@
           </div>
         </div>
       </form>
+    </div>
+    <div class="modal" id="unsubscribeModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4
+              class="modal-title"
+            >{{SubscriptionConfig.enterprise ? $t('subscription.proceed_unsubscribe_ent') : $t('subscription.proceed_unsubscribe')}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="removeSubscription()">
+            <div class="modal-body">
+              <div class="form-group">
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
+              </div>
+              <div class="alert alert-warning alert-dismissable">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>{{$t('warning')}}.</strong>
+                {{SubscriptionConfig.enterprise ? $t('subscription.remove_subscription_warn_ent') : $t('subscription.remove_subscription_warn')}}.
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button
+                class="btn btn-danger"
+                type="submit"
+              >{{SubscriptionConfig.enterprise ? $t('subscription.unsubscribe_ent') : $t('subscription.unsubscribe')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -194,7 +262,9 @@ export default {
         },
         secret: "",
         status: {},
-        enterprise: false
+        enterprise: false,
+        missingToken: false,
+        systemId: ""
       }
     };
   },
@@ -222,6 +292,12 @@ export default {
             success.configuration.PricingUrl;
           context.SubscriptionConfig.enterprise =
             success.configuration.enterprise == 1;
+          context.SubscriptionConfig.missingToken =
+            success.status &&
+            !success.status.subscription &&
+            success.configuration.SystemId &&
+            success.configuration.SystemId.length > 0;
+          context.SubscriptionConfig.systemId = success.configuration.SystemId;
         },
         function(error) {
           console.error(error);
@@ -261,6 +337,8 @@ export default {
                   : "subscription.subscription_edit_ok"
               );
 
+              context.SubscriptionConfig.secret = "";
+
               // get subscription
               context.getSubscriptionConfig();
             },
@@ -290,6 +368,39 @@ export default {
           } catch (e) {
             console.error(e);
           }
+        }
+      );
+    },
+    removeSubscription() {
+      var context = this;
+
+      $("#unsubscribeModal").modal("hide");
+      context.exec(
+        ["system-subscription/update"],
+        {
+          action: "unregister"
+        },
+        function(stream) {
+          console.info("subscription", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            context.SubscriptionConfig.enterprise
+              ? "subscription.unsubscription_ok_ent"
+              : "subscription.unsubscription_ok"
+          );
+
+          // get subscription
+          context.getSubscriptionConfig();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            context.SubscriptionConfig.enterprise
+              ? "subscription.unsubscription_error_ent"
+              : "subscription.unsubscription_error"
+          );
         }
       );
     },
