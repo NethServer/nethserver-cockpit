@@ -49,6 +49,7 @@
     "never_expires": "Never expires",
     "register": "Register",
     "add": "Add",
+    "optional": "optional",
     "menu": {
       "dashboard": "Dashboard",
       "backup": "Backup",
@@ -138,6 +139,7 @@
       "status": "Status",
       "details": "Details",
       "configure": "Configure",
+      "setup": "Setup",
       "restore": "Restore",
       "execute": "Run",
       "execute_now": "Run now",

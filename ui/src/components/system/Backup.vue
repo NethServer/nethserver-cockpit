@@ -90,7 +90,7 @@
         <div class="panel-heading">
           <button @click="openConfigureData()" class="btn btn-default right">{{$t('backup.configure')}}</button>
           <button :disabled="backupData.length == 0" @click="openRestoreData(b)" class="btn btn-primary right panel-icon">{{$t('backup.restore')}}</button>
-          <button @click="openCreateData(b)" class="btn btn-primary right span-right-margin">{{$t('create')}}</button>
+          <button @click="openCreateData(b)" class="btn btn-primary right span-right-margin">{{$t('backup.setup')}}</button>
           <span class="panel-title">
             <span>{{$t('backup.configured_backup')}}:</span> {{backupData.length}}
           </span>
@@ -110,7 +110,7 @@
           {{$t('backup.no_data_backup_found_desc')}}
         </p>
         <div class="blank-slate-pf-main-action">
-          <button @click="openCreateData()" class="btn btn-primary btn-lg">{{$t('create')}}</button>
+          <button @click="openCreateData()" class="btn btn-primary btn-lg">{{$t('backup.setup')}}</button>
         </div>
       </div>
 
@@ -1116,7 +1116,7 @@
               {{$t('back')}}
             </button>
             <button :disabled="checkIfDisabled()" @click="nextStep()" type="submit" class="btn btn-primary wizard-pf-next">
-              {{wizard.currentStep == 4 ? (wizard.isEdit ? $t('edit') : $t('create')) : $t('next')}}
+              {{wizard.currentStep == 4 ? (wizard.isEdit ? $t('edit') : $t('backup.setup')) : $t('next')}}
               <span class="i fa fa-angle-right"></span>
             </button>
             <button type="button" class="btn btn-primary hidden wizard-pf-close wizard-pf-dismiss">{{$t('close')}}</button>
