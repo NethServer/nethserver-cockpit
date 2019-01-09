@@ -53,7 +53,7 @@ case $action in
         echo -e "KEY=$KEY\nSECRET=$SECRET" > $DATA
         /sbin/e-smith/config setprop subscription Secret '' SystemId ''
         /sbin/e-smith/signal-event -j nethserver-subscription-save $DATA
-        rm $DATA
+        rm -f $DATA
     ;;
 
     "send")
