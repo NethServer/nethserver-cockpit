@@ -136,15 +136,11 @@
           >{{SubscriptionConfig.enterprise ? $t('subscription.proceed_unsubscribe_ent') : $t('subscription.proceed_unsubscribe')}}</label>
           <div class="col-sm-2 adjust-li">
             <button
-              :disabled="view.isChecking"
               data-toggle="modal"
               data-target="#unsubscribeModal"
               type="button"
               class="btn btn-danger"
             >{{SubscriptionConfig.enterprise ? $t('subscription.unsubscribe_ent') : $t('subscription.unsubscribe')}}</button>
-            <span v-if="view.isChecked && !view.isChecking" class="fa fa-check green copy-ok"></span>
-            <span v-if="view.isCheckFail && !view.isChecking" class="fa fa-times red copy-ok"></span>
-            <div v-if="view.isChecking" class="spinner spinner-sm adjust-spinner-top"></div>
           </div>
         </div>
       </form>
@@ -340,6 +336,8 @@ export default {
                   ? "subscription.subscription_edit_ok_ent"
                   : "subscription.subscription_edit_ok"
               );
+
+              context.SubscriptionConfig.secret = "";
 
               // get subscription
               context.getSubscriptionConfig();
