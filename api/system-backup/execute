@@ -74,7 +74,7 @@ case $action in
             systemctl reset-failed $unit >/dev/null
         fi
 
-        systemd-run --unit=$unit /sbin/e-smith/backup-data-wrapper "$(_get name)"
+        systemd-run --setenv=HOME=/root --unit=$unit /sbin/e-smith/backup-data-wrapper "$(_get name)"
         ;;
 
     "run-backup-config")
