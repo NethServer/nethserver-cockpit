@@ -148,7 +148,7 @@
       "status": "Status",
       "details": "Details",
       "configure": "Configure",
-      "setup": "Setup",
+      "schedule": "Schedule",
       "restore": "Restore",
       "execute": "Run",
       "execute_now": "Run now",
