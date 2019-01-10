@@ -569,7 +569,7 @@ Example:
 }
 ```
 
-##### download-backup-config
+#### download-backup-config
 
 Download the selected configuration backup from local history.
 The `name` field should contain the name of the backup.
