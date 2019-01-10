@@ -155,7 +155,7 @@ sub list_disks
         }
 
         # exclude mounted parition and blacklist the parent
-        if ($disk{'mountpoint'} ne '') {
+        if ($disk{'mountpoint'} ne '' || $disk{'fstype'} eq 'linux_raid_member') {
             push(@blacklist, $disk{'pkname'});
             next;
         }
