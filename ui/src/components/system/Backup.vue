@@ -1970,10 +1970,7 @@ export default {
             break;
           case "day":
             cronString =
-              this.wizard.when.minute +
-              " " +
-              this.wizard.when.hour +
-              " */1 * *";
+              this.wizard.when.minute + " " + this.wizard.when.hour + " * * *";
             break;
 
           case "week":
@@ -1986,7 +1983,7 @@ export default {
               (hour && !isNaN(parseInt(hour)))
             ) {
               cronString =
-                minute + " " + hour + " */1 * " + this.wizard.when.week_day;
+                minute + " " + hour + " * * " + this.wizard.when.week_day;
             } else {
               cronString = "";
             }
@@ -2003,7 +2000,7 @@ export default {
               (hour && !isNaN(parseInt(hour)))
             ) {
               cronString =
-                minute + " " + hour + " " + this.wizard.when.day + " */1 *";
+                minute + " " + hour + " " + this.wizard.when.day + " * *";
             } else {
               cronString = "";
             }
@@ -2036,6 +2033,7 @@ export default {
         "restore-data": 0,
         "backup-data": 0
       },
+      statusFlag: false,
       hints: {},
       pollingIntervalId: null
     };
@@ -2484,6 +2482,22 @@ export default {
             console.error(e);
           }
           context.status = success;
+
+          if (
+            context.status["backup-data"] > 0 ||
+            context.status["restore-data"] > 0
+          ) {
+            context.statusFlag = true;
+          }
+
+          if (
+            context.statusFlag &&
+            (context.status["backup-data"] == 0 &&
+              context.status["restore-data"] == 0)
+          ) {
+            context.getBackupInfo();
+            context.statusFlag = false;
+          }
         },
         function(error) {
           console.error(error);
