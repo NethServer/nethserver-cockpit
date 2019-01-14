@@ -123,7 +123,7 @@ if($cmd eq 'list') {
     foreach my $n ($ndb->get_all()) {
         my %props = $n->props;
         my $iname = $n->key;
-        next if ($props{'type'} eq 'xdsl-disabled');
+        next if ($props{'type'} eq 'xdsl-disabled' || $props{'type'} eq 'network');
         if ($props{'type'} eq 'vlan') {
             my @tmp = split(/\./,$n->key);
             $props{'parent'} = $tmp[0];
