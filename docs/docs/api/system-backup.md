@@ -22,6 +22,28 @@ Example:
 }
 ```
 
+#### backup-info
+
+Return status and configuration of all backups.
+
+Example:
+```json
+{
+  "action": "backup-info"
+}
+```
+
+#### list-disks
+
+List attached disks which can be used for the backup.
+
+Example:
+```json
+{
+  "action": "list-disks"
+}
+```
+
 #### last-log
 
 Return the content of most recent log of the given log.
@@ -32,6 +54,17 @@ Example:
 {
   "action": "last-log",
   "name": "local119"
+}
+```
+
+#### running-info
+
+Check if there are backups running in background.
+
+Example:
+```json
+{
+  "action": "running-info"
 }
 ```
 
@@ -92,7 +125,12 @@ Output example
         "id": "local119sftp",
         "log": "/var/log/backup/backup-local119sftp-201807050800.log",
         "last-run": 1539088300,
-        "result": "success"
+        "result": "success",
+        "destination": {
+          "used": 2472765161472,
+          "percentage": 83,
+          "total": 2948785504256
+        }
       }
       ...
     ]
@@ -259,6 +297,7 @@ The request must contain an `action` field. Valid actions are:
 - `s3-credentials`
 - `nfs-credentials`
 - `cifs-credentials`
+- `webdav-credentials`
 - `disk-access`
 
 Constraints for `create-backup-data`:
@@ -316,6 +355,11 @@ Constraints for `cifs-credentials`:
 - SMBShare: not empty
 - SMBHost: an IP or a host name
 - SMBLogin, SMBPassword: anything
+
+Constraints for `webdav-credentials`:
+
+- WebDAVUrl: not empty
+- WebDAVLogin, WebDAVPassword: anything
 
 Constraints for `disk-access`:
 
@@ -428,6 +472,19 @@ Example:
   "SMBPassword": "mypass"
 }
 ```
+
+#### webdav-credentials
+
+Example:
+```json
+{
+  "action": "webdav-credentials",
+  "WebDAVLogin": "myuser",
+  "WebDAVPassword": "mypass",
+  "WebDAVUrl": "https//nextcloud.nethserver.org/nextcloud/remote.php/webdav/"
+}
+```
+
 
 #### disk-access
 
