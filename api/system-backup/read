@@ -106,7 +106,7 @@ sub find_latest_log
 sub get_latest_stats
 {
     my $name = shift;
-    my %status = ('id' => $name, 'log' => '', 'last-run' => 0, 'result' => 'unknown');
+    my %status = ('id' => $name, 'log' => '', 'last-run' => 0, 'result' => 'unknown', 'destination' => undef);
 
     my @log_stats = find_latest_log($name);
     if ($log_stats[0] eq '') {
@@ -116,7 +116,7 @@ sub get_latest_stats
         $status{'last-run'} = $log_stats[1];
     }
 
-    open my $fh, '<:encoding(UTF-8)', $log_stats[0] or die;
+    open my $fh, '<:encoding(UTF-8)', $log_stats[0] or return %status;
     while (my $line = <$fh>) {
         if ($line =~ /^Backup status: (.*)/) {
             if ($1 eq 'SUCCESS') {
@@ -126,6 +126,21 @@ sub get_latest_stats
             }
         }
     }
+
+    my $du_file = "/var/spool/backup/disk_usage-$name";
+    if (-f $du_file) {
+        local $/; #Enable 'slurp' mode
+        open my $fh, '<:encoding(UTF-8)', $du_file or  return %status;
+        my $json = <$fh>;
+        close($fh);
+        my $data = decode_json($json);
+        $status{'destination'} = {
+            "total" => $data->{'size'} ? int($data->{'size'})*1024 : undef,
+            'used' => $data->{'used'} ? int($data->{'used'})*1024 : undef,
+            'percentage' =>  $data->{'pcent'} ? int($data->{'pcent'}) : undef
+        };
+    }
+
     return %status;
 }
 
