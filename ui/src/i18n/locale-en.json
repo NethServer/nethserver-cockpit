@@ -846,7 +846,7 @@
       "centos_upgrade": "A new upstream distribution release is available as update. To avoid installing it, switch the software updates origin to \"Locked\""
     },
     "validation": {
-      "weak_password": "Password too weak, it could be inside a dictinary or too similar to the previous one",
+      "weak_password": "Password too weak, it could be inside a dictionary or too similar to the previous one",
       "no_json_data_available": "No JSON data available",
       "The password is too similar to the old one": "The password is too similar to the old one",
       "The password is the same as the old one": "The password is the same as the old one",
