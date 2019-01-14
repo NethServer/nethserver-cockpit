@@ -22,6 +22,28 @@ Example:
 }
 ```
 
+#### backup-info
+
+Return status and configuration of all backups.
+
+Example:
+```json
+{
+  "action": "backup-info"
+}
+```
+
+#### list-disks
+
+List attached disks which can be used for the backup.
+
+Example:
+```json
+{
+  "action": "list-disks"
+}
+```
+
 #### last-log
 
 Return the content of most recent log of the given log.
@@ -32,6 +54,17 @@ Example:
 {
   "action": "last-log",
   "name": "local119"
+}
+```
+
+#### running-info
+
+Check if there are backups running in background.
+
+Example:
+```json
+{
+  "action": "running-info"
 }
 ```
 
