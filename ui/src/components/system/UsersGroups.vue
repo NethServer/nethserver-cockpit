@@ -464,7 +464,7 @@
           <form class="form-horizontal" v-on:submit.prevent="editRole(newRole)">
 
             <div class="modal-body">
-              <div :class="['form-group', newRole.errorProps['system'] ? 'has-error' : '']">
+              <div :class="['form-group', newGroup.errorProps['members'] ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.system_roles')}}</label>
                 <div class="col-sm-9">
                   <select @change="addSystemToGroup(newRole.selectedRole)" v-model="newRole.selectedRole" class="combobox form-control">
@@ -495,7 +495,7 @@
                 </div>
               </div>
 
-              <div :class="['form-group', newRole.errorProps['applications'] ? 'has-error' : '']">
+              <div :class="['form-group', newGroup.errorProps['members'] ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.applications_roles')}}</label>
                 <div class="col-sm-9">
                   <select @change="addApplicationsToGroup(newRole.selectedApp)" v-model="newRole.selectedApp" class="combobox form-control">
