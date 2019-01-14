@@ -92,7 +92,12 @@ Output example
         "id": "local119sftp",
         "log": "/var/log/backup/backup-local119sftp-201807050800.log",
         "last-run": 1539088300,
-        "result": "success"
+        "result": "success",
+        "destination": {
+          "used": 2472765161472,
+          "percentage": 83,
+          "total": 2948785504256
+        }
       }
       ...
     ]
