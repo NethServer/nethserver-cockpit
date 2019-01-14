@@ -1,0 +1,39 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+URL=$1
+USER=$2
+PASSWORD=$3 # a file containing the password
+
+exit_code=1
+tmp_dir=$(mktemp -d)
+tmp_file=$(mktemp -u -p $tmp_dir)
+
+timeout 10 /usr/libexec/nethserver/api/system-backup/mount-webdav $URL $USER $PASSWORD $tmp_dir
+exit_code=$?
+if [ $exit_code == 0 ]; then
+    touch  $tmp_file
+    exit_code=$?
+fi
+
+# preserve exit code using $exit_code
+trap "{ rm -f $tmp_file; umount $tmp_dir 2>/dev/null; rmdir $tmp_dir 2>/dev/null; exit $exit_code; }" EXIT SIGINT SIGTERM
