@@ -22,7 +22,7 @@
 
 require_once("/usr/libexec/nethserver/api/lib/dhcp_functions.php");
 
-$vfstypes = array('usb','cifs','nfs','b2','s3','sftp');
+$vfstypes = array('usb','cifs','nfs','b2','s3','sftp','webdav');
 $engines = array('duplicity','restic','rsync');
 $cleanuptypes = array('never','7D','14D','28D','56D','168D','364D');
 
@@ -125,6 +125,10 @@ if ($action == 'create-backup-data' || $action == 'update-backup-data') {
         $v->declareParameter('B2AccountKey', Validate::NOTEMPTY);
         $v->declareParameter('B2Bucket', Validate::NOTEMPTY);
         break;
+    case 'webdav':
+        $v->declareParameter('WebDAVUrl', Validate::NOTEMPTY);
+        $v->declareParameter('WebDAVLogin', Validate::ANYTHING);
+        $v->declareParameter('WebDAVPassword', Validate::ANYTHING);
     }
 
 } else if ($action == 'sftp-credentials') {
@@ -180,6 +184,16 @@ if ($action == 'create-backup-data' || $action == 'update-backup-data') {
     unlink($pass_file);
     if ($ret > 0) {
         fail("SMBHost","cifs_unauthorized");
+    } else {
+        success();
+    }
+} else if ($action == 'webdav-credentials') {
+    $pass_file = tempnam("/tmp","WEBDAV");
+    file_put_contents($pass_file, $data['WebDAVPassword']);
+    exec("/usr/libexec/nethserver/api/system-backup/check-webdav ".escapeshellarg($data['WebDAVUrl'])." ".escapeshellarg($data['WebDAVLogin'])." $pass_file", $output, $ret);
+    unlink($pass_file);
+    if ($ret > 0) {
+        fail("WebDAVUrl","webdav_unauthorized");
     } else {
         success();
     }

@@ -297,6 +297,7 @@ The request must contain an `action` field. Valid actions are:
 - `s3-credentials`
 - `nfs-credentials`
 - `cifs-credentials`
+- `webdav-credentials`
 - `disk-access`
 
 Constraints for `create-backup-data`:
@@ -354,6 +355,11 @@ Constraints for `cifs-credentials`:
 - SMBShare: not empty
 - SMBHost: an IP or a host name
 - SMBLogin, SMBPassword: anything
+
+Constraints for `webdav-credentials`:
+
+- WebDAVUrl: not empty
+- WebDAVLogin, WebDAVPassword: anything
 
 Constraints for `disk-access`:
 
@@ -466,6 +472,19 @@ Example:
   "SMBPassword": "mypass"
 }
 ```
+
+#### webdav-credentials
+
+Example:
+```json
+{
+  "action": "webdav-credentials",
+  "WebDAVLogin": "myuser",
+  "WebDAVPassword": "mypass",
+  "WebDAVUrl": "https//nextcloud.nethserver.org/nextcloud/remote.php/webdav/"
+}
+```
+
 
 #### disk-access
 
