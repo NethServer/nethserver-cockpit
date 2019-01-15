@@ -20,7 +20,7 @@ nav:
       - api_guidelines.md
       - api_protocol.md
       - api_libraries.md
-    - Helpers:
+    - System helpers:
       - api/system-accounts-provider.md
       - api/system-aliases.md
       - api/system-apps.md
@@ -53,6 +53,9 @@ nav:
       - api/system-tls-policy.md
       - api/system-trusted-networks.md
       - api/system-users.md
+    - Firewall helpers:
+      - api/nethserver-firewall-base/dashboard.md
+      - api/nethserver-firewall-base/wan.md
 - UI:
   - ui_guidelines.md
   - i18n.md
