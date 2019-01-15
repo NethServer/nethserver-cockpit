@@ -92,6 +92,9 @@ var Filters = {
     }
 
     return value
+  },
+  sanitize: function (value) {
+    return value.replace(/^[^a-z]+|[^\w-]+/gi, "");
   }
 };
 

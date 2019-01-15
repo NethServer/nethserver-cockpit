@@ -310,6 +310,14 @@ textarea {
   text-align: left;
 }
 
+.small-font {
+  font-size: 12px !important;
+}
+
+.popover-title.closable .close .pficon.pficon-close {
+  margin-right: 0px !important;
+}
+
 iframe>.breadcrumb {
   display: none;
 }
