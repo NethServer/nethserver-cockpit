@@ -46,8 +46,13 @@
             push @roles, $application; 
         }
 
+        # Hack when the group name gets a space
+        # for example 'domain admins', visudo do not like it
+        (my $Cmnd_Alias = $key) =~ s/ //;
+        $key =~s/ /\\ /;
+
         $OUT .= "\n#\n# Role delegations for $key\n#";
-        $OUT .= "\nCmnd_Alias ". uc $key .'= ';
+        $OUT .= "\nCmnd_Alias ". uc $Cmnd_Alias .'= ';
 
         foreach my $role (@roles) {
 
@@ -88,7 +93,7 @@
         }
 
         $OUT .= join (', ',@commands);
-        $OUT .= "\n\n%".$key." ALL=NOPASSWD: ". uc $key;
+        $OUT .= "\n\n%".$key." ALL=NOPASSWD: ". uc $Cmnd_Alias;
         $OUT .= "\nDefaults:%".$key." !requiretty\n";
     }
 }
