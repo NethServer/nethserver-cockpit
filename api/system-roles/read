@@ -29,6 +29,26 @@ use JSON;
 
 my $input = readInput();
 my $role = $input->{'role'} || '';
+my $cmd = $input->{'action'} || '';
+
+if ($cmd eq 'listApplications') {
+
+    my $ret = {"system" => [], "applications" => []};
+    my @apps = list_applications();
+    my @system_routes = list_system_routes();
+    my $system_routes = read_json("/etc/nethserver/cockpit/authorization/system-routes.json");
+
+    foreach my $r (@system_routes) {
+        push($ret->{"system"}, $r)
+    }
+    foreach my $a (@apps) {
+        push($ret->{"applications"}, $a);
+    }
+
+    print encode_json($ret);
+    exit(0);
+
+}
 
 my $data = read_json("/etc/nethserver/cockpit/authorization/roles.json");
 

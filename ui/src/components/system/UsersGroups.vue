@@ -1461,8 +1461,10 @@ export default {
       var context = this;
       context.view.isLoaded = false;
       context.exec(
-        ["system-roles/listApplications"],
-        null,
+        ["system-roles/read"],
+        {
+          action: "listApplications"
+        },
         null,
         function(success) {
           try {
