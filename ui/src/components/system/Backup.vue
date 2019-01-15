@@ -24,9 +24,9 @@
           <div class="spinner"></div>
         </button>
         <span class="pficon pficon-warning-triangle-o"></span>
-        <strong>{{$t('backup.task_in_progress')}}.</strong>
+        <strong>{{$t('backup.task_in_progress')}}:</strong>
         {{status['restore-data'] > 0 ?
-        $t('backup.restore_data_progress') : status['backup-data'] > 0 ? $t('backup.backup_data_progress') : ''}}
+        $t('backup.restore_data_progress') : status['backup-data'] > 0 ? $t('backup.backup_data_progress') : ''}}.
       </div>
       <h3>{{$t('backup.config')}}</h3>
       <div class="panel panel-default" id="provider-markup">
@@ -248,7 +248,20 @@
                 </div>
                 <div class="list-view-pf-additional-info-item">
                   <span class="fa fa-space-shuttle panel-icon"></span>
-                  <b>{{b.props.VFSType | uppercase}}</b>
+                  <a
+                    v-if="b.props.VFSType == 'usb' || b.props.VFSType == 'cifs' || b.props.VFSType == 'nfs'"
+                    tabindex="0"
+                    class="provider-details"
+                    data-placement="top"
+                    data-toggle="popover"
+                    data-trigger="focus"
+                    data-html="true"
+                    :title="$t('backup.storage_usage')"
+                    :data-content="b.storageInfo"
+                  ><b>{{b.props.VFSType | uppercase}}</b></a>
+                  <b
+                    v-if="b.props.VFSType != 'usb' && b.props.VFSType != 'cifs' && b.props.VFSType != 'nfs'"
+                  >{{b.props.VFSType | uppercase}}</b>
                   |
                   <b>{{b.props.type | capitalize}}</b>
                 </div>
@@ -400,11 +413,10 @@
                     v-model="currentConfigBackup.restoreBackup"
                     class="combobox form-control"
                   >
-                    <option
-                      v-for="t in backupConfigurations"
-                      v-bind:key="t"
-                      :value="t.id"
-                    >{{t.type | capitalize}} - {{t.description}}</option>
+                    <option v-for="t in backupConfigurations" v-bind:key="t" :value="t.id">
+                      {{t.type | capitalize}} -
+                      {{t.description}}
+                    </option>
                   </select>
                 </div>
               </div>
@@ -945,7 +957,7 @@
                     <div class="blank-slate-pf-main-action row wizard-where-choices">
                       <div
                         @click="selectWhere('nfs')"
-                        :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 'nfs' ? 'active-choose' : '']"
+                        :class="['col-xs-12 col-sm-3 col-md-3 col-lg-3 card-pf', wizard.where.choice == 'nfs' ? 'active-choose' : '']"
                       >
                         <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
@@ -964,7 +976,7 @@
                       </div>
                       <div
                         @click="selectWhere('cifs')"
-                        :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 'cifs' ? 'active-choose' : '']"
+                        :class="['col-xs-12 col-sm-3 col-md-3 col-lg-3 card-pf', wizard.where.choice == 'cifs' ? 'active-choose' : '']"
                       >
                         <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
@@ -983,7 +995,7 @@
                       </div>
                       <div
                         @click="selectWhere('usb')"
-                        :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 'usb' ? 'active-choose' : '']"
+                        :class="['col-xs-12 col-sm-3 col-md-3 col-lg-3 card-pf', wizard.where.choice == 'usb' ? 'active-choose' : '']"
                       >
                         <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
@@ -996,6 +1008,25 @@
                               :title="$t('backup.disk')"
                               :chapter="'backup'"
                               :section="'usb'"
+                            ></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                      <div
+                        @click="selectWhere('webdav')"
+                        :class="['col-xs-12 col-sm-3 col-md-3 col-lg-3 card-pf', wizard.where.choice == 'webdav' ? 'active-choose' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="fa fa-cloud"></span>
+                          </div>
+                          <h3>{{$t('backup.webdav')}}</h3>
+                          <p>
+                            <doc-info
+                              :placement="'top'"
+                              :title="$t('backup.webdav')"
+                              :chapter="'backup'"
+                              :section="'webdav'"
                             ></doc-info>
                           </p>
                         </div>
@@ -1252,6 +1283,52 @@
                           </div>
                           <div class="col-sm-3">
                             <button @click="editUSBDevice()" class="btn btn-primary">{{$t('edit')}}</button>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- -->
+                      <!-- WEBDAV -->
+                      <div v-if="wizard.where.choice == 'webdav'">
+                        <div class="form-group">
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{'WebDAV User'}}</label>
+                          <div class="col-sm-9">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.webdav.WebDAVLogin"
+                              class="form-control"
+                            >
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'WebDAV Password'
+                            }}
+                          </label>
+                          <div class="col-sm-9">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.webdav.WebDAVPassword"
+                              class="form-control"
+                            >
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'WebDAV URL'
+                            }}
+                          </label>
+                          <div class="col-sm-9">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.webdav.WebDAVUrl"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                       </div>
@@ -2128,6 +2205,12 @@ export default {
             isFormatting: false,
             isRefreshingUSB: false
           },
+          webdav: {
+            WebDAVLogin: b && b.props.WebDAVLogin ? b.props.WebDAVLogin : null,
+            WebDAVPassword:
+              b && b.props.WebDAVPassword ? b.props.WebDAVPassword : null,
+            WebDAVUrl: b && b.props.WebDAVUrl ? b.props.WebDAVUrl : null
+          },
           sftp: {
             SftpDirectory:
               b && b.props.SftpDirectory ? b.props.SftpDirectory : null,
@@ -2230,6 +2313,9 @@ export default {
       if (this.wizard.currentStep == 4) {
         this.createDataBackup();
       } else {
+        if (this.wizard.currentStep == 1) {
+          this.getUSBDevices();
+        }
         this.wizard.currentStep++;
       }
     },
@@ -2535,6 +2621,44 @@ export default {
               return i.id == id;
             })[0];
             context.backupData[b].status = status;
+
+            context.backupData[b].storageInfo = [
+              '<div class="progress-description compact">',
+              '<strong class="small-font">' +
+                context.$i18n.t("backup.destination_usage") +
+                ":</strong>" +
+                context.$options.filters.byteFormat(
+                  (context.backupData[b].status.destination &&
+                    context.backupData[b].status.destination.used) ||
+                    0
+                ),
+              "</div>",
+              '<div class="progress progress-label-top-right progress-xs">',
+              '<div class="progress-bar" role="progressbar" aria-valuenow="' +
+                ((context.backupData[b].status.destination &&
+                  context.backupData[b].status.destination.percentage) ||
+                  0) +
+                '" aria-valuemin="0" aria-valuemax="100" style="width: ' +
+                ((context.backupData[b].status.destination &&
+                  context.backupData[b].status.destination.percentage) ||
+                  0) +
+                '%;">',
+              "<span>" +
+                ((context.backupData[b].status.destination &&
+                  context.backupData[b].status.destination.percentage) ||
+                  0) +
+                "% (" +
+                context.$i18n.t("of") +
+                " " +
+                context.$options.filters.byteFormat(
+                  (context.backupData[b].status.destination &&
+                    context.backupData[b].status.destination.total) ||
+                    0
+                ) +
+                ")</span>",
+              "</div>",
+              "</div>"
+            ].join("");
           }
 
           context.globalConfigBackup = success.configuration["backup-config"];
@@ -2556,6 +2680,17 @@ export default {
             "enabled"
               ? true
               : false;
+
+          // visualize storage info
+
+          setTimeout(function() {
+            $("[data-toggle=popover]")
+              .popovers()
+              .popovers()
+              .on("hidden.bs.popover", function(e) {
+                $(e.target).data("bs.popover").inState.click = false;
+              });
+          }, 250);
         },
         function(error) {
           console.error(error);
@@ -2997,6 +3132,9 @@ export default {
         SMBHost: context.wizard.where.cifs.SMBHost,
         SMBLogin: context.wizard.where.cifs.SMBLogin,
         SMBPassword: context.wizard.where.cifs.SMBPassword,
+        WebDAVLogin: context.wizard.where.cifs.WebDAVLogin,
+        WebDAVPassword: context.wizard.where.cifs.WebDAVPassword,
+        WebDAVUrl: context.wizard.where.cifs.WebDAVUrl,
         SftpHost: context.wizard.where.sftp.SftpHost,
         SftpPort: context.wizard.where.sftp.SftpPort,
         SftpUser: context.wizard.where.sftp.SftpUser,
