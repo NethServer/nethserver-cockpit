@@ -28,6 +28,7 @@ require '/usr/libexec/nethserver/api/lib/auth_functions.pl';
 
 my $ret = {"system" => [], "applications" => []};
 my $user = whoami();
+my $is_root = ($< == 0);
 
 my @apps = list_applications();
 my @system_routes = list_system_routes();
@@ -45,10 +46,12 @@ if ($user eq 'root') {
         push($ret->{"applications"}, $a);
     }
 
+    $ret->{'status'}->{'isRoot'} = int($is_root);
     print encode_json($ret);
     exit(0);
 }
 
 $ret = get_acl($user, $role);
+$ret->{'status'}->{'isRoot'} = int($is_root);
 
 print encode_json($ret);
