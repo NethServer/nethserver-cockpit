@@ -348,11 +348,11 @@
                 </div>
               </div>
             </div>
-              <div class="advanced">
+              <div v-if="view.isRoot" class="advanced">
                 <span>{{$t('users_groups.role_delegation')}}</span>
                 <div class="divider divider-advanced"></div>
               </div>
-            <div class="modal-body">
+            <div v-if="view.isRoot" class="modal-body">
               <div :class="['form-group', newGroup.errorProps['members'] ? 'has-error' : '']">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.system_roles')}}</label>
                 <div class="col-sm-9">
@@ -972,6 +972,8 @@ export default {
           }
 
           vm.view.isAuth = true;
+          vm.view.isRoot = success.status.isRoot == 1;
+
         },
         function(error) {
           console.error(error);
@@ -1019,7 +1021,8 @@ export default {
     return {
       view: {
         isLoaded: false,
-        isAuth: false
+        isAuth: false,
+        isRoot: false
       },
       searchString: "",
       currentSearchFilter: "user",
