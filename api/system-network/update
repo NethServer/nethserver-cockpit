@@ -31,9 +31,33 @@ my $ndb = esmith::NetworksDB->open();
 my $input = readInput();
 my $cmd = $input->{'action'};
 
+sub cleanup_providers
+{
+    my $interface = shift;
+    my $db = shift;
+
+    foreach ($ndb->get_all_by_prop('type' => 'provider')) {
+        if (($_->prop('interface') || '') eq $interface) {
+            $_->delete();
+        }
+    }
+}
+
+sub create_provider
+{
+    my $interface = shift;
+    my $db = shift;
+
+    my $max = scalar $ndb->get_all_by_prop('type' => 'provider');
+    my $name = "red".($max+1);
+    $db->new_record($name, {'type' => 'provider', 'weight' => 1, 'interface' => $interface});
+}
+
 if($cmd eq 'release-role') {
 
     $ndb->set_prop($input->{'interface'}, 'role', '');
+
+    cleanup_providers($input->{'interface'}, $ndb);
     system("/sbin/e-smith/signal-event -j interface-update");
 
 } elsif($cmd eq 'change-properties') {
@@ -93,7 +117,11 @@ if($cmd eq 'release-role') {
                 $d->set_prop('bridge', $i->key);
             }
         }
+    }
 
+    # auto-configure the provider
+    if ($i->prop('role') eq 'red') {
+        create_provider($input->{'interface'}, $ndb);
     }
 
     system("/sbin/e-smith/signal-event -j interface-update");
@@ -118,6 +146,7 @@ if($cmd eq 'release-role') {
     $ppp->set_prop('provider', $input->{'provider'});
 
     $ndb->set_prop($input->{'parent'}, 'role', 'pppoe');
+    create_provider('ppp0', $ndb);
 
     system("/sbin/e-smith/signal-event -j interface-update");
 
@@ -129,6 +158,7 @@ if($cmd eq 'release-role') {
     my @tmp = $ndb->get_all_by_prop('role', 'pppoe');
     $tmp[0]->set_prop('role', '');
 
+    cleanup_providers('ppp0', $ndb);
     system("/sbin/e-smith/signal-event -j interface-update");
 } else {
     error();
