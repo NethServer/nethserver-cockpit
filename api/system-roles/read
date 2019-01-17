@@ -50,12 +50,12 @@ if ($cmd eq 'applications') {
 
 }
 
-my $data = read_json("/etc/nethserver/cockpit/authorization/roles.json");
+if ($cmd eq 'role') {
+    my $data = read_json("/etc/nethserver/cockpit/authorization/roles.json");
 
-if(exists($data->{$role})) {
-    print encode_json ($data->{$role});
-}
-
-else {
-    print '{"system": [],"applications": []}';
+    if(exists($data->{$role})) {
+        print encode_json ($data->{$role});
+    } else {
+        print '{"system": [],"applications": []}';
+    }
 }
