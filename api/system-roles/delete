@@ -35,8 +35,6 @@ my $data = read_json($jsonFile);
 if(exists($data->{$role})) {
     delete ($data->{$role});
     write_json ($jsonFile,$data);
-}
-
-else {
-       error('NotValidRole','This role does not exist');
+} else {
+    error('NotValidRole','This role does not exist');
 }

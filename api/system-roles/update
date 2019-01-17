@@ -43,8 +43,6 @@ if ($role ne '') {
     } else {
         success();
     }
-}
-
-else {
+} else {
    error('NotValidAction','The action value is not valid');
 }
