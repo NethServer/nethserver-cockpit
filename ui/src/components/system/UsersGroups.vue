@@ -588,7 +588,11 @@
                       class="combobox form-control"
                     >
                       <option>-</option>
-                      <option v-for="value in roles.list.system">{{$t('menu.'+value)}}</option>
+                      <option
+                        :value="value"
+                        v-for="value in roles.list.system"
+                        v-bind:key="value"
+                      >{{$t('menu.'+value)}}</option>
                     </select>
                     <span
                       v-if="newGroup.errorProps['system']"
@@ -607,7 +611,7 @@
                     <ul class="list-inline compact">
                       <li v-for="(u,i) in newGroup.system" v-bind:key="i">
                         <span class="label label-info">
-                          {{u}}
+                          {{$t('menu.'+u)}}
                           <a @click="removeSystemFromGroup(i)" class="remove-item-inline">
                             <span class="fa fa-times"></span>
                           </a>
