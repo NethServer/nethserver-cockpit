@@ -443,7 +443,12 @@
                   for="textInput-modal-markup"
                 >{{$t('users_groups.password_expiration')}}</label>
                 <div class="col-sm-9">
-                  <input type="checkbox" class="form-control" v-model="newUser.expires">
+                  <input
+                    type="checkbox"
+                    id="expires"
+                    class="form-control"
+                    v-model="newUser.expires"
+                  >
                 </div>
               </div>
               <div v-if="!newUser.isPassEdit" class="form-group">
@@ -452,7 +457,7 @@
                   for="textInput-modal-markup"
                 >{{$t('users_groups.remote_shell')}}</label>
                 <div class="col-sm-9">
-                  <input type="checkbox" class="form-control" v-model="newUser.shell">
+                  <input type="checkbox" id="shell" class="form-control" v-model="newUser.shell">
                 </div>
               </div>
             </div>
@@ -785,7 +790,12 @@
                   for="textInput-modal-markup"
                 >{{$t('users_groups.strong_password')}}</label>
                 <div class="col-sm-6">
-                  <input type="checkbox" v-model="passwordPolicy.Users" class="form-control">
+                  <input
+                    type="checkbox"
+                    id="Users"
+                    v-model="passwordPolicy.Users"
+                    class="form-control"
+                  >
                 </div>
               </div>
               <div class="form-group">
@@ -794,7 +804,12 @@
                   for="textInput-modal-markup"
                 >{{$t('users_groups.expiration_password')}}</label>
                 <div class="col-sm-6">
-                  <input type="checkbox" v-model="passwordPolicy.PassExpires" class="form-control">
+                  <input
+                    type="checkbox"
+                    id="PassExpires"
+                    v-model="passwordPolicy.PassExpires"
+                    class="form-control"
+                  >
                 </div>
               </div>
               <div class="form-group">
@@ -1167,6 +1182,7 @@
                             <input
                               v-if="k == 'BindType'"
                               type="radio"
+                              id="BindType-2"
                               v-model="newProvider.info.BindType"
                               value="anonymous"
                               @click="changeBindType('anonymous')"

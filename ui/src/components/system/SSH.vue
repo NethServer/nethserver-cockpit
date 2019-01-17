@@ -36,17 +36,17 @@
           </div>
         </div>
         <div :class="['form-group', SSHConfig.errors.PermitRootLogin.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('ssh.allow_root_login')}}</label>
+          <label class="col-sm-2 control-label" for="PermitRootLogin">{{$t('ssh.allow_root_login')}}</label>
           <div class="col-sm-5">
-            <input type="checkbox" :value="SSHConfig.PermitRootLogin == 'yes'" v-model="SSHConfig.PermitRootLogin"
+            <input type="checkbox" id="PermitRootLogin" :value="SSHConfig.PermitRootLogin == 'yes'" v-model="SSHConfig.PermitRootLogin"
               class="form-control">
             <span v-if="SSHConfig.errors.PermitRootLogin.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+SSHConfig.errors.PermitRootLogin.message)}}</span>
           </div>
         </div>
         <div :class="['form-group', SSHConfig.errors.PasswordAuthentication.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('ssh.allow_password_auth')}}</label>
+          <label class="col-sm-2 control-label" for="PasswordAuthentication">{{$t('ssh.allow_password_auth')}}</label>
           <div class="col-sm-5">
-            <input type="checkbox" :value="SSHConfig.PasswordAuthentication == 'yes'" v-model="SSHConfig.PasswordAuthentication"
+            <input type="checkbox" id="PasswordAuthentication" :value="SSHConfig.PasswordAuthentication == 'yes'" v-model="SSHConfig.PasswordAuthentication"
               class="form-control">
             <span v-if="SSHConfig.errors.PasswordAuthentication.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+SSHConfig.errors.PasswordAuthentication.message)}}</span>
           </div>

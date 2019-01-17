@@ -106,9 +106,9 @@
           </div>
         </div>
         <div v-if="settings.smarthost.SmartHostStatus" :class="['form-group', errors.SmartHostTlsStatus.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.smarthost_encrypt')}}</label>
+          <label class="col-sm-2 control-label" for="SmartHostTlsStatus">{{$t('settings.smarthost_encrypt')}}</label>
           <div class="col-sm-5">
-            <input type="checkbox" v-model="settings.smarthost.SmartHostTlsStatus" class="form-control">
+            <input type="checkbox" id="SmartHostTlsStatus" v-model="settings.smarthost.SmartHostTlsStatus" class="form-control">
             <span v-if="errors.SmartHostTlsStatus.hasError" class="help-block">{{errors.SmartHostTlsStatus.message}}</span>
           </div>
         </div>
@@ -221,9 +221,9 @@
         </div>
 
         <div :class="['form-group', errors.Compression.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.log_compression')}}</label>
+          <label class="col-sm-2 control-label" for="Compression">{{$t('settings.log_compression')}}</label>
           <div class="col-sm-5">
-            <input type="checkbox" :value="settings.logrotate.Compression == 'enabled'" v-model="settings.logrotate.Compression"
+            <input type="checkbox" id="Compression"  :value="settings.logrotate.Compression == 'enabled'" v-model="settings.logrotate.Compression"
               class="form-control">
             <span v-if="errors.Compression.hasError" class="help-block">{{$t('validation.validation_failed')}}:
               {{$t('validation.'+errors.Compression.message)}}</span>

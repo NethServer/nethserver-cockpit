@@ -258,10 +258,15 @@
                     data-html="true"
                     :title="$t('backup.storage_usage')"
                     :data-content="b.storageInfo"
-                  ><b>{{b.props.VFSType | uppercase}}</b></a>
+                  >
+                    <b>{{b.props.VFSType | uppercase}}</b>
+                  </a>
                   <b
                     v-if="b.props.VFSType != 'usb' && b.props.VFSType != 'cifs' && b.props.VFSType != 'nfs'"
-                  >{{b.props.VFSType | uppercase}}</b>
+                  >
+                    {{b.props.VFSType
+                    | uppercase}}
+                  </b>
                   |
                   <b>{{b.props.type | capitalize}}</b>
                 </div>
@@ -333,13 +338,13 @@
                   required
                   class="col-xs-2 col-sm-4 control-label"
                   type="radio"
-                  id="restoreURL"
+                  id="restoreURL-1"
                   value="url"
                   v-model="currentConfigBackup.restoreMode"
                 >
                 <label
                   :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'url' ? 'gray' : '']"
-                  for="restoreURL"
+                  for="restoreURL-1"
                 >{{$t('backup.from_url')}}</label>
                 <div class="col-sm-6">
                   <input
@@ -361,13 +366,13 @@
                   required
                   class="col-xs-2 col-sm-4 control-label"
                   type="radio"
-                  id="restoreFile"
+                  id="restoreFile-1"
                   value="file"
                   v-model="currentConfigBackup.restoreMode"
                 >
                 <label
                   :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'file' ? 'gray' : '']"
-                  for="restoreFile"
+                  for="restoreFile-1"
                 >{{$t('backup.from_file')}}</label>
                 <div class="col-sm-6">
                   <label
@@ -398,13 +403,13 @@
                   required
                   class="col-xs-2 col-sm-4 control-label"
                   type="radio"
-                  id="restoreBackup"
+                  id="restoreBackup-1"
                   value="backup"
                   v-model="currentConfigBackup.restoreMode"
                 >
                 <label
                   :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'backup' ? 'gray' : '']"
-                  for="restoreBackup"
+                  for="restoreBackup-1"
                 >{{$t('backup.from_backup')}}</label>
                 <div class="col-sm-6">
                   <select
@@ -424,10 +429,11 @@
               <div class="form-group">
                 <label
                   class="col-sm-4 control-label"
-                  for="restoreURL"
+                  for="restoreInstallPackages"
                 >{{$t('backup.reinstall_packages')}}</label>
                 <div class="col-sm-4">
                   <input
+                    id="restoreInstallPackages"
                     type="checkbox"
                     v-model="currentConfigBackup.restoreInstallPackages"
                     class="form-control"
@@ -721,10 +727,11 @@
               <div class="form-group">
                 <label
                   class="col-sm-3 control-label"
-                  for="textInput-modal-markup"
+                  for="IncludeLogs"
                 >{{$t('backup.include_logs')}}</label>
                 <div class="col-sm-6">
                   <input
+                    id="IncludeLogs"
                     type="checkbox"
                     v-model="globalDataBackup.IncludeLogs"
                     class="form-control"
@@ -1845,10 +1852,11 @@
                       <div class="form-group">
                         <label
                           class="col-sm-3 control-label"
-                          for="textInput-modal-markup"
+                          for="notifyToChoice-1"
                         >{{$t('backup.notify_to')}}</label>
                         <div class="col-sm-9">
                           <input
+                            id="notifyToChoice-1"
                             class="col-sm-2 col-xs-2"
                             type="radio"
                             v-model="wizard.review.notifyToChoice"
@@ -1856,8 +1864,10 @@
                           >
                           <label
                             class="col-sm-10 col-xs-10 control-label text-align-left"
+                            for="notifyToChoice-2"
                           >{{$t('backup.root')}}</label>
                           <input
+                            id="notifyToChoice-2"
                             class="col-sm-2 col-xs-2"
                             type="radio"
                             v-model="wizard.review.notifyToChoice"

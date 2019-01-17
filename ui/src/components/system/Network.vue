@@ -773,11 +773,11 @@
                   <form class="form-horizontal" v-on:submit.prevent="saveLogicInterface()">
                     <div class="modal-body">
                       <div v-if="wizard.role.choice == 'red'" class="form-group">
-                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.bootproto')}}</label>
-                        <input class="col-sm-1" type="radio" v-model="wizard.review.bootproto" value="dhcp">
-                        <label class="col-sm-2 control-label text-align-left">{{$t('network.boot_dhcp')}}</label>
-                        <input class="col-sm-1" type="radio" v-model="wizard.review.bootproto" value="none">
-                        <label class="col-sm-2 control-label text-align-left">{{$t('network.boot_static')}}</label>
+                        <label class="col-sm-3 control-label">{{$t('network.bootproto')}}</label>
+                        <input class="col-sm-1" type="radio" id="bootproto-1" v-model="wizard.review.bootproto" value="dhcp">
+                        <label class="col-sm-2 control-label text-align-left" for="bootproto-1">{{$t('network.boot_dhcp')}}</label>
+                        <input class="col-sm-1" type="radio" id="bootproto-2" v-model="wizard.review.bootproto" value="none">
+                        <label class="col-sm-2 control-label text-align-left" for="bootproto-2">{{$t('network.boot_static')}}</label>
                       </div>
                       <div v-if="wizard.review.bootproto == 'none'" :class="['form-group', wizard.review.errors.ipaddr.hasError ? 'has-error' : '']">
                         <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.ip_address')}}</label>
@@ -972,11 +972,11 @@
                       <!-- ETHERNET -->
                       <div v-if="wizardPhysical.type.choice == 'ethernet'">
                         <div v-if="wizardPhysical.role.choice == 'green' || wizardPhysical.role.choice == 'red'" class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.bootproto')}}</label>
-                          <input class="col-sm-1" type="radio" v-model="wizardPhysical.review.bootproto" value="dhcp">
-                          <label class="col-sm-2 control-label text-align-left">{{$t('network.boot_dhcp')}}</label>
-                          <input class="col-sm-1" type="radio" v-model="wizardPhysical.review.bootproto" value="none">
-                          <label class="col-sm-2 control-label text-align-left">{{$t('network.boot_static')}}</label>
+                          <label class="col-sm-3 control-label">{{$t('network.bootproto')}}</label>
+                          <input class="col-sm-1" type="radio" id="bootproto-3" v-model="wizardPhysical.review.bootproto" value="dhcp">
+                          <label class="col-sm-2 control-label text-align-left" for="bootproto-3">{{$t('network.boot_dhcp')}}</label>
+                          <input class="col-sm-1" type="radio" id="bootproto-4" v-model="wizardPhysical.review.bootproto" value="none">
+                          <label class="col-sm-2 control-label text-align-left" for="bootproto-4">{{$t('network.boot_static')}}</label>
                         </div>
                         <div v-if="wizardPhysical.review.bootproto == 'none'" :class="['form-group', wizardPhysical.review.errors.ipaddr.hasError ? 'has-error' : '']">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.ip_address')}}</label>

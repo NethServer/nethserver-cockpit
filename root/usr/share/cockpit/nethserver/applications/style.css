@@ -14,6 +14,49 @@ a {
 
 input[type="checkbox"].form-control {
     width: 6% !important;
+    box-shadow: none;
+}
+
+.form-spinner-loader {
+    display: inline-block;
+    top: 6px;
+    right: 4px;
+}
+
+.vue-js-switch .v-switch-core {
+    border: 1px solid #bbbbbb !important;
+    border-radius: 0px !important;
+}
+
+.vue-js-switch .v-switch-core .v-switch-button {
+    border-radius: 0px !important;
+    height: 18px !important;
+}
+
+.vue-js-switch.min-toggle .v-switch-core .v-switch-button {
+    border-radius: 0px !important;
+    height: 12px !important;
+}
+
+.vue-js-switch.toggled .v-switch-core .v-switch-button {
+    transform: translate3d(30px, 3px, 0px) !important;
+}
+
+.vue-js-switch.toggled.min-toggle .v-switch-core .v-switch-button {
+    transform: translate3d(21px, 3px, 0px) !important;
+}
+
+.modal {
+    z-index: 3;
+    margin-left: 55px !important;
+}
+
+.modal-backdrop {
+    z-index: 2 !important;
+}
+
+.modal-open .modal {
+    padding-right: 0px !important;
 }
 
 .container-cards-pf {
