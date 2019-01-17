@@ -148,7 +148,6 @@
               </ul>
             </div>
             <input
-              v-focus
               v-model="searchString"
               type="text"
               class="form-control input-lg"
@@ -225,9 +224,10 @@
                 </div>
                 <div class="list-group-item-text">
                   <span :class="[u.expired ? 'fa fa-clock-o red' : 'fa fa-clock-o']"></span>
-                  <span
-                    :class="[u.expired ? 'red' : '']"
-                  >{{u.expired ? $t('users_groups.expired') : $t('users_groups.not_expired')}}</span>
+                  <span :class="[u.expired ? 'red' : '']">
+                    {{u.expired ? $t('users_groups.expired') :
+                    $t('users_groups.not_expired')}}
+                  </span>
                 </div>
               </div>
               <div class="list-view-pf-additional-info"></div>
@@ -444,10 +444,11 @@
                   />
                 </div>
               </div>
-              <div v-if="!newUser.isPassEdit && newUser.advanced" class="form-group">
+              <!-- <p v-if="!newUser.isPassEdit">{{$t('users_groups.advanced_options')}}</p> -->
+              <div v-if="!newUser.isPassEdit" class="form-group">
                 <label
                   class="col-sm-3 control-label"
-                  for="expires"
+                  for="textInput-modal-markup"
                 >{{$t('users_groups.password_expiration')}}</label>
                 <div class="col-sm-9">
                   <input
@@ -458,10 +459,10 @@
                   >
                 </div>
               </div>
-              <div v-if="!newUser.isPassEdit && newUser.advanced" class="form-group">
+              <div v-if="!newUser.isPassEdit" class="form-group">
                 <label
                   class="col-sm-3 control-label"
-                  for="shell"
+                  for="textInput-modal-markup"
                 >{{$t('users_groups.remote_shell')}}</label>
                 <div class="col-sm-9">
                   <input type="checkbox" id="shell" class="form-control" v-model="newUser.shell">
@@ -565,75 +566,103 @@
                   </ul>
                 </div>
               </div>
-            </div>
               <div v-if="view.isRoot" class="advanced">
                 <span>{{$t('users_groups.role_delegation')}}</span>
                 <div class="divider divider-advanced"></div>
               </div>
-            <div v-if="view.isRoot" class="modal-body">
-              <div :class="['form-group', newGroup.errorProps['members'] ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.system_roles')}}</label>
-                <div class="col-sm-9">
-                  <select @change="addSystemToGroup(newGroup.selectedSystem)" v-model="newGroup.selectedSystem" class="combobox form-control">
-                    <option>-</option>
-                    <option v-for="value in roles.list.system" >{{value}}</option>
-                  </select>
-                  <span v-if="newGroup.errorProps['system']" class="help-block">{{newGroup.errorProps['system']}}</span>
+              <div v-if="view.isRoot">
+                <div class="alert alert-info alert-dismissable">
+                  <span class="pficon pficon-info"></span>
+                  <strong>{{$t('users_groups.define_authorization')}}.</strong>
+                  {{$t('users_groups.define_authorization_description')}}.
                 </div>
-              </div>
-              <div v-if="newGroup.loadMembers" class="form-group">
-                <div class="col-sm-12">
-                  <div class="spinner"></div>
+                <div :class="['form-group', newGroup.errorProps['members'] ? 'has-error' : '']">
+                  <label
+                    class="col-sm-3 control-label"
+                    for="textInput-modal-markup"
+                  >{{$t('users_groups.system_roles')}}</label>
+                  <div class="col-sm-9">
+                    <select
+                      @change="addSystemToGroup(newGroup.selectedSystem)"
+                      v-model="newGroup.selectedSystem"
+                      class="combobox form-control"
+                    >
+                      <option>-</option>
+                      <option v-for="value in roles.list.system">{{$t('menu.'+value)}}</option>
+                    </select>
+                    <span
+                      v-if="newGroup.errorProps['system']"
+                      class="help-block"
+                    >{{newGroup.errorProps['system']}}</span>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup"></label>
-                <div class="col-sm-9">
-                  <ul class="list-inline compact">
-                    <li v-for="(u,i) in newGroup.system" v-bind:key="i">
-                      <span class="label label-info">
-                        {{u}}
-                        <a @click="removeSystemFromGroup(i)" class="remove-item-inline">
-                          <span class="fa fa-times"></span>
-                        </a>
-                      </span>
-                    </li>
-                  </ul>
+                <div v-if="newGroup.loadMembers" class="form-group">
+                  <div class="col-sm-12">
+                    <div class="spinner"></div>
+                  </div>
                 </div>
-              </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label" for="textInput-modal-markup"></label>
+                  <div class="col-sm-9">
+                    <ul class="list-inline compact">
+                      <li v-for="(u,i) in newGroup.system" v-bind:key="i">
+                        <span class="label label-info">
+                          {{u}}
+                          <a @click="removeSystemFromGroup(i)" class="remove-item-inline">
+                            <span class="fa fa-times"></span>
+                          </a>
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
 
-              <div :class="['form-group', newGroup.errorProps['members'] ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('users_groups.applications_roles')}}</label>
-                <div class="col-sm-9">
-                  <select @change="addApplicationsToGroup(newGroup.selectedApp)" v-model="newGroup.selectedApp" class="combobox form-control">
-                    <option>-</option>
-                    <option v-for="value in roles.list.applications" >{{value}}</option>
-                  </select>
-                  <span v-if="newGroup.errorProps['applications']" class="help-block">{{newGroup.errorProps['applications']}}</span>
+                <div :class="['form-group', newGroup.errorProps['members'] ? 'has-error' : '']">
+                  <label
+                    class="col-sm-3 control-label"
+                    for="textInput-modal-markup"
+                  >{{$t('users_groups.applications_roles')}}</label>
+                  <div class="col-sm-9">
+                    <select
+                      @change="addApplicationsToGroup(newGroup.selectedApp)"
+                      v-model="newGroup.selectedApp"
+                      class="combobox form-control"
+                    >
+                      <option>-</option>
+                      <option v-for="value in roles.list.applications">{{value}}</option>
+                    </select>
+                    <span
+                      v-if="newGroup.errorProps['applications']"
+                      class="help-block"
+                    >{{newGroup.errorProps['applications']}}</span>
+                  </div>
+                </div>
+                <div v-if="newGroup.loadMembers" class="form-group">
+                  <div class="col-sm-12">
+                    <div class="spinner"></div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label" for="textInput-modal-markup"></label>
+                  <div class="col-sm-9">
+                    <ul class="list-inline compact">
+                      <li v-for="(u,i) in newGroup.applications" v-bind:key="i">
+                        <span class="label label-info">
+                          {{u}}
+                          <a
+                            @click="removeApplicationsFromGroup(i)"
+                            class="remove-item-inline"
+                          >
+                            <span class="fa fa-times"></span>
+                          </a>
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
-              <div v-if="newGroup.loadMembers" class="form-group">
-                <div class="col-sm-12">
-                  <div class="spinner"></div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup"></label>
-                <div class="col-sm-9">
-                  <ul class="list-inline compact">
-                    <li v-for="(u,i) in newGroup.applications" v-bind:key="i">
-                      <span class="label label-info">
-                        {{u}}
-                        <a @click="removeApplicationsFromGroup(i)" class="remove-item-inline">
-                          <span class="fa fa-times"></span>
-                        </a>
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
             </div>
+
             <div class="modal-footer">
               <div v-if="newGroup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
@@ -762,7 +791,7 @@
               <div class="form-group">
                 <label
                   class="col-sm-6 control-label"
-                  for="Users"
+                  for="textInput-modal-markup"
                 >{{$t('users_groups.strong_password')}}</label>
                 <div class="col-sm-6">
                   <input
@@ -776,7 +805,7 @@
               <div class="form-group">
                 <label
                   class="col-sm-6 control-label"
-                  for="PassExpires"
+                  for="textInput-modal-markup"
                 >{{$t('users_groups.expiration_password')}}</label>
                 <div class="col-sm-6">
                   <input
@@ -1145,13 +1174,11 @@
                             <input
                               v-if="k == 'BindType'"
                               type="radio"
-                              id="BindType-1"
                               v-model="newProvider.info.BindType"
                               value="authenticated"
                               @click="changeBindType('authenticated')"
                             >
                             <span
-                              for="BindType-1"
                               class="span-right-margin-lg"
                               v-if="k == 'BindType'"
                             >{{$t('users_groups.authenticated')}}</span>
@@ -1159,15 +1186,11 @@
                             <input
                               v-if="k == 'BindType'"
                               type="radio"
-                              id="BindType-2"
                               v-model="newProvider.info.BindType"
                               value="anonymous"
                               @click="changeBindType('anonymous')"
                             >
-                            <span
-                              for="BindType-2"
-                              v-if="k == 'BindType'"
-                            >{{$t('users_groups.anonymous')}}</span>
+                            <span v-if="k == 'BindType'">{{$t('users_groups.anonymous')}}</span>
                           </div>
                         </div>
                         <div class="form-group">
@@ -1434,7 +1457,6 @@ export default {
 
           vm.view.isAuth = true;
           vm.view.isRoot = success.status.isRoot == 1;
-
         },
         function(error) {
           console.error(error);
@@ -1491,9 +1513,9 @@ export default {
         user: "Users",
         group: "Groups"
       },
-        roles: {
-            list:{}
-        },
+      roles: {
+        list: {}
+      },
       users: {
         list: {},
         provider: null,
@@ -2454,10 +2476,10 @@ export default {
         }
       );
 
-        context.exec(
+      context.exec(
         ["system-roles/read"],
         {
-            role: kg
+          role: kg
         },
         null,
         function(success) {
@@ -2494,8 +2516,6 @@ export default {
         applications: group.applications
       };
 
-
-
       // validate object
       context.newGroup.isLoading = true;
       context.exec(
@@ -2506,9 +2526,8 @@ export default {
           context.newGroup.isLoading = false;
           $("#createGroupModal").modal("hide");
 
-
-        // update role
-        context.exec(
+          // update role
+          context.exec(
             ["system-roles/update"],
             roleObj,
             null,
@@ -2590,7 +2609,6 @@ export default {
           context.$parent.notifications.success.message = context.$i18n.t(
             "users_groups.role_deleted_ok"
           );
-
         },
         function(error, data) {
           // notification
