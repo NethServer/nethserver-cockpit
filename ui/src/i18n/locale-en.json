@@ -513,7 +513,7 @@
       "enabled": "Enabled",
       "disabled": "Disabled",
       "role_delegation": "Role delegations",
-      "system_roles": "Systems views",
+      "system_roles": "System views",
       "applications_roles": "Applications",
       "role_updated_ok": "Role update OK",
       "role_updated_error": "Role update errors",
