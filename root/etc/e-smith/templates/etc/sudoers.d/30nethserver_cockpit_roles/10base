@@ -3,26 +3,8 @@
     use strict;
     use warnings;
     use JSON;
-    #use esmith::ConfigDB;
 
-
-    sub read_json
-    {
-        my $file = shift || return undef;
-        return undef if (! -e $file);
-
-        my $json;
-        {
-            local $/; #Enable 'slurp' mode
-            open my $fh, "<", $file or return undef;
-            $json = <$fh>;
-            close $fh;
-        }
-
-        return decode_json($json);
-    }
-
-
+    require "/usr/libexec/nethserver/api/lib/auth_functions.pl";
 
     my $jsonFile = '/etc/nethserver/cockpit/authorization/roles.json';
     my $data = read_json ($jsonFile); 
