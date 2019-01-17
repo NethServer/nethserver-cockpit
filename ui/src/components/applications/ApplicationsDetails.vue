@@ -1,10 +1,23 @@
 <template>
   <div>
     <h2>{{info.name || '-'}} {{info.release && info.release.version || ''}}</h2>
-    <button v-if="view.isLoaded && info.editable == 1" @click="info.shortcut == 1 ? removeShortcut(application) : addShortcut(application)" :class="['btn', info.shortcut == 1 ? 'btn-danger' : 'btn-primary', 'shortcut']">{{info.shortcut == 1
-      ? $t('remove_shortcut') : $t('add_shortcut')}}</button>
-    <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner spinner-inverse adjust-spinner-top"></div>
-    <iframe id="app-frame" class="iframe-embedded" :src="'/cockpit/@localhost/'+application+'/index.html'"></iframe>
+    <button
+      v-if="view.isLoaded && info.editable == 1"
+      @click="info.shortcut == 1 ? removeShortcut(application) : addShortcut(application)"
+      :class="['btn', info.shortcut == 1 ? 'btn-danger' : 'btn-primary', 'shortcut']"
+    >
+      {{info.shortcut == 1
+      ? $t('remove_shortcut') : $t('add_shortcut')}}
+    </button>
+    <div
+      v-if="!view.isLoaded"
+      class="spinner spinner-lg view-spinner spinner-inverse adjust-spinner-top"
+    ></div>
+    <iframe
+      id="app-frame"
+      class="iframe-embedded"
+      :src="'/cockpit/@localhost/'+application+'/index.html'"
+    ></iframe>
     <div v-if="view.modalFake" class="fake-modal-backdrop"></div>
   </div>
 </template>
@@ -63,38 +76,6 @@ export default {
       },
       false
     );
-
-    $("#app-frame").on("load", function() {
-      // select the target node
-      var target = document.querySelector("#app-frame").contentDocument.body;
-
-      // create an observer instance
-      var observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-          if ($(mutation.target).hasClass("modal-open")) {
-            context.view.modalFake = true;
-          } else if (
-            $(mutation.target)[0].children[
-              $(mutation.target)[0].children.length - 1
-            ].id == "cockpit_modal_dialog"
-          ) {
-            context.view.modalFake = true;
-          } else {
-            context.view.modalFake = false;
-          }
-        });
-      });
-
-      // configuration of the observer:
-      var config = {
-        attributes: true,
-        childList: true,
-        characterData: true
-      };
-
-      // pass in the target node, as well as the observer options
-      observer.observe(target, config);
-    });
   },
   watch: {
     $route(to, from) {
