@@ -1958,7 +1958,7 @@ export default {
       context.exec(
         ["system-roles/read"],
         {
-          action: "listApplications"
+          action: "applications"
         },
         null,
         function(success) {
@@ -2483,7 +2483,8 @@ export default {
       context.exec(
         ["system-roles/read"],
         {
-          role: kg
+          role: kg,
+          action: "role"
         },
         null,
         function(success) {
