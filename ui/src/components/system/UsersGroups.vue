@@ -1930,7 +1930,7 @@ export default {
       context.exec(
         ["system-roles/read"],
         {
-          action: "listApplications"
+          action: "applications"
         },
         null,
         function(success) {
