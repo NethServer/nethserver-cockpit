@@ -2455,7 +2455,8 @@ export default {
       context.exec(
         ["system-roles/read"],
         {
-          role: kg
+          role: kg,
+          action: "role"
         },
         null,
         function(success) {
