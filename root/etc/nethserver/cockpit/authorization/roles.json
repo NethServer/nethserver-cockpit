@@ -1,5 +1,5 @@
 {
-  "admins": {
+  "domain admins": {
     "system": [
       "storage",
       "disk-usage",
@@ -18,13 +18,6 @@
       "software-center",
       "subscription",
       "terminal"
-    ],
-    "applications": []
-  },
-  "managers": {
-    "system": [
-      "services",
-      "users-groups"
     ],
     "applications": []
   }

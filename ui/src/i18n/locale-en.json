@@ -330,6 +330,8 @@
       "host_edit_error": "Host not edited.",
       "host_save_ok": "Host saved successfully!",
       "host_save_error": "Host not saved.",
+      "host_create_ok": "Host created successfully!",
+      "host_create_error": "Host not created.",
       "host_delete_ok": "Host deleted successfully!",
       "host_delete_error": "Host not deleted."
     },
