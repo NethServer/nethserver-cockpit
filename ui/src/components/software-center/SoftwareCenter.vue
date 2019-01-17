@@ -5,44 +5,87 @@
       <span class="pficon pficon-warning-triangle-o"></span>
       <strong>{{$t('hints_suggested')}}:</strong>
       <li v-if="hints.details && hints.details.centos">
-        <strong>{{$t('software_center.centos_upgrade')}}</strong>. {{$t('hints.centos_upgrade')}}. <a data-toggle="modal"
-          data-target="#configureUpdatesModal">{{$t('software_center.configure')}}</a>
+        <strong>{{$t('software_center.centos_upgrade')}}</strong>
+        . {{$t('hints.centos_upgrade')}}.
+        <a
+          data-toggle="modal"
+          data-target="#configureUpdatesModal"
+        >{{$t('software_center.configure')}}</a>
       </li>
       <li v-if="hints.details && hints.details.nethserver">
-        <strong>{{$t('software_center.nethserver_upgrade')}}</strong>: {{$t('software_center.there_is_upgrade_from')}}
+        <strong>{{$t('software_center.nethserver_upgrade')}}</strong>
+        : {{$t('software_center.there_is_upgrade_from')}}
         <b>{{hints.details && hints.details.nethserver && hints.details.nethserver.current_release}}</b>
-        {{$t('software_center.to')}} <b>{{hints.details && hints.details.nethserver &&
-          hints.details.nethserver.new_release}}</b>.
+        {{$t('software_center.to')}}
+        <b>
+          {{hints.details && hints.details.nethserver &&
+          hints.details.nethserver.new_release}}
+        </b>.
         <a data-toggle="modal" data-target="#upgradeModal">{{$t('software_center.upgrade_now')}}</a>
       </li>
     </div>
 
     <div v-if="!view.isEditable" class="alert alert-warning alert-dismissable">
       <span class="pficon pficon-warning-triangle-o"></span>
-      <strong>{{$t('software_center.forbidden')}}.</strong> {{$t('software_center.permission_denied')}}.
+      <strong>{{$t('software_center.forbidden')}}.</strong>
+      {{$t('software_center.permission_denied')}}.
     </div>
 
     <div v-if="view.isEditable">
       <h3>{{$t('software_center.updates')}}</h3>
       <div v-if="!view.updatesLoaded" class="spinner spinner-lg spinner-margin"></div>
       <div v-if="view.updatesLoaded" class="panel panel-default" id="provider-markup">
-        <div :class="['panel-heading', (updates.nethserver.length + updates.other.length) > 0 ? 'has-updates' : '']">
-          <button :disabled="view.isUpdating" data-toggle="modal" data-target="#configureUpdatesModal" class="btn btn-default right">{{$t('software_center.configure')}}</button>
-          <button :disabled="(updates.nethserver.length + updates.other.length) == 0" @click="viewPackage('changelog')"
-            class="btn btn-default right panel-icon">{{$t('software_center.changelog')}}</button>
-          <button :disabled="view.isUpdating || view.isInstalling || (updates.nethserver.length + updates.other.length) == 0"
-            data-toggle="modal" data-target="#updateAllModal" class="btn btn-primary right starred-marging">{{$t('software_center.update_all')}}</button>
+        <div
+          :class="['panel-heading', (updates.nethserver.length + updates.other.length) > 0 ? 'has-updates' : '']"
+        >
+          <button
+            :disabled="view.isUpdating"
+            data-toggle="modal"
+            data-target="#configureUpdatesModal"
+            class="btn btn-default right"
+          >{{$t('software_center.configure')}}</button>
+          <button
+            :disabled="(updates.nethserver.length + updates.other.length) == 0"
+            @click="viewPackage('changelog')"
+            class="btn btn-default right panel-icon"
+          >{{$t('software_center.changelog')}}</button>
+          <button
+            :disabled="view.isUpdating || view.isInstalling || (updates.nethserver.length + updates.other.length) == 0"
+            data-toggle="modal"
+            data-target="#updateAllModal"
+            class="btn btn-primary right starred-marging"
+          >{{$t('software_center.update_all')}}</button>
           <span class="panel-title">
-            <span v-if="(updates.nethserver.length + updates.other.length) > 0" class="pficon pficon-warning-triangle-o starred-marging"></span>{{$t('software_center.updates_available')}}:
+            <span
+              v-if="(updates.nethserver.length + updates.other.length) > 0"
+              class="pficon pficon-warning-triangle-o starred-marging"
+            ></span>
+            {{$t('software_center.updates_available')}}:
             {{updates.nethserver.length +
-            updates.other.length}}</span>
-          <span class="provider-details margin-left-md" data-toggle="collapse" data-parent="#provider-markup" href="#providerDetails">{{$t('software_center.details')}}</span>
+            updates.other.length}}
+          </span>
+          <span
+            class="provider-details margin-left-md"
+            data-toggle="collapse"
+            data-parent="#provider-markup"
+            href="#providerDetails"
+          >{{$t('software_center.details')}}</span>
           <div v-if="view.isUpdating" class="progress-description progress-install-all">
-            <div class="spinner spinner-xs spinner-inline"></div> <strong>{{$t('software_center.updating')}}...</strong>
+            <div class="spinner spinner-xs spinner-inline"></div>
+            <strong>{{$t('software_center.updating')}}...</strong>
           </div>
-          <div v-if="view.isUpdating" class="progress progress-label-top-right progress-xs progress-striped active">
-            <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
-              :style="'width: '+view.updateProgress+'%;'">
+          <div
+            v-if="view.isUpdating"
+            class="progress progress-label-top-right progress-xs progress-striped active"
+          >
+            <div
+              class="progress-bar"
+              role="progressbar"
+              aria-valuenow="100"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              :style="'width: '+view.updateProgress+'%;'"
+            >
               <span v-if="false">{{view.updateProgress}}%</span>
             </div>
           </div>
@@ -51,7 +94,11 @@
           <div class="list-group-item" v-for="u in updates.nethserver" v-bind:key="u">
             <div class="list-group-item-header">
               <div class="list-view-pf-actions compact-list-actions">
-                <button :disabled="view.isUpdating || view.isInstalling" @click="openUpdateSingle(u)" class="btn btn-primary">
+                <button
+                  :disabled="view.isUpdating || view.isInstalling"
+                  @click="openUpdateSingle(u)"
+                  class="btn btn-primary"
+                >
                   <span class="fa fa-download span-right-margin"></span>
                   {{$t('software_center.update')}}
                 </button>
@@ -70,16 +117,25 @@
                     </div>
                   </div>
                   <div class="list-view-pf-additional-info">
-
                     <div v-if="!u.isUpdating" class="list-view-pf-additional-info-item">
                       <a @click="toggleOpen(u)">{{$t('details')}}</a>
                     </div>
                     <div v-if="u.isUpdating" class="progress-description progress-install">
-                      <div class="spinner spinner-xs spinner-inline"></div> <strong>{{$t('software_center.updating')}}...</strong>
+                      <div class="spinner spinner-xs spinner-inline"></div>
+                      <strong>{{$t('software_center.updating')}}...</strong>
                     </div>
-                    <div v-if="u.isUpdating" class="progress progress-label-top-right progress-xs progress-striped active">
-                      <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
-                        :style="'width: '+u.progress+'%;'">
+                    <div
+                      v-if="u.isUpdating"
+                      class="progress progress-label-top-right progress-xs progress-striped active"
+                    >
+                      <div
+                        class="progress-bar"
+                        role="progressbar"
+                        aria-valuenow="100"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        :style="'width: '+u.progress+'%;'"
+                      >
                         <span v-if="false">{{u.progress}}%</span>
                       </div>
                     </div>
@@ -87,7 +143,9 @@
                 </div>
               </div>
             </div>
-            <div :class="['list-group-item-container container-fluid', u.isOpen ? 'active' : 'hidden']">
+            <div
+              :class="['list-group-item-container container-fluid', u.isOpen ? 'active' : 'hidden']"
+            >
               <div class="row">
                 <div v-for="l in u.updates" v-bind:key="l" class="col-xs-12">
                   <div class="list-view-pf-additional-info-item">
@@ -104,10 +162,15 @@
             </div>
           </div>
           <p class="addtional-updates">
-            {{updates.other.length == 1 ? $t('software_center.there_is') : $t('software_center.there_are')}} <b class="addtional-number">{{updates.other.length}}</b>
+            {{updates.other.length == 1 ? $t('software_center.there_is') : $t('software_center.there_are')}}
+            <b class="addtional-number">{{updates.other.length}}</b>
             {{updates.other.length == 1 ? $t('software_center.update_base_system') :
             $t('software_center.updates_base_system')}}
-            <button v-if="updates.other.length > 0" @click="viewPackage()" class="btn btn-primary margin-left-md">
+            <button
+              v-if="updates.other.length > 0"
+              @click="viewPackage()"
+              class="btn btn-primary margin-left-md"
+            >
               <span class="fa fa-search span-right-margin"></span>
               {{$t('software_center.view')}}
             </button>
@@ -117,11 +180,13 @@
 
       <div class="divider"></div>
 
-
       <h3>{{$t('software_center.applications')}} ({{filteredAppsList.length}} {{$t('found')}})</h3>
       <div class="right">
-        <button @click="openInstallPackages()" :disabled="selectedApps == 0 || view.isInstalling || view.isUpdating"
-          class="btn btn-primary btn-lg">
+        <button
+          @click="openInstallPackages()"
+          :disabled="selectedApps == 0 || view.isInstalling || view.isUpdating"
+          class="btn btn-primary btn-lg"
+        >
           <span class="fa fa-download starred-marging"></span>
           {{$t('software_center.install')}} {{selectedApps}} {{selectedApps == 1 ?
           $t('software_center.application_low')
@@ -131,17 +196,28 @@
       <form class="search-pf has-button">
         <div class="form-group has-clear toolbar-pf-filter">
           <div class="input-group full-width">
-            <input v-model="searchString" type="text" class="form-control input-lg" id="filter" :placeholder="$t('search')+' '+$t('software_center.applications_low')">
+            <input
+              v-model="searchString"
+              type="text"
+              class="form-control input-lg"
+              id="filter"
+              :placeholder="$t('search')+' '+$t('software_center.applications_low')"
+            >
           </div>
         </div>
         <div class="form-group">
-          <button class="btn btn-default btn-lg"><span class="fa fa-search"></span></button>
+          <button class="btn btn-default btn-lg">
+            <span class="fa fa-search"></span>
+          </button>
         </div>
       </form>
       <div v-if="view.appsLoaded" class="row row-cards-pf adjust-top">
         <div v-for="c in categories" v-bind:key="c" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-          <div @click="selectCategory(c)" :class="['card-pf card-pf-accented selectable-cat', c.selected ? 'selected' : '']"
-            :style="'border-top-color: '+c.color+'; background: '+c.color+'; color: white;'">
+          <div
+            @click="selectCategory(c)"
+            :class="['card-pf card-pf-accented selectable-cat', c.selected ? 'selected' : '']"
+            :style="'border-top-color: '+c.color+'; background: '+c.color+'; color: white;'"
+          >
             <div class="card-pf-heading">
               <h2 class="card-pf-title title-category">
                 {{c.name}}
@@ -154,8 +230,12 @@
           </div>
         </div>
       </div>
-      <div v-if="view.appsLoaded" class="">
-        <button :disabled="view.isInstalling" @click="selectAll()" class="btn btn-default starred-marging">
+      <div v-if="view.appsLoaded" class>
+        <button
+          :disabled="view.isInstalling"
+          @click="selectAll()"
+          class="btn btn-default starred-marging"
+        >
           <span class="fa fa-circle starred-marging"></span>
           {{$t('software_center.select_all')}}
         </button>
@@ -168,32 +248,61 @@
       <div v-if="!view.appsLoaded" class="spinner spinner-lg spinner-margin"></div>
       <div v-if="view.appsLoaded" class="apps-container">
         <div class="row row-cards-pf">
-          <div v-for="(a,ai) in filteredAppsList" v-bind:key="ai" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <div :class="['card-pf card-pf-accented', view.isInstalling ? '' : 'selectable', a.selected ? 'selected' : '']"
-              :style="'border-top-color: '+categoryColors[a.category]+';'">
+          <div
+            v-for="(a,ai) in filteredAppsList"
+            v-bind:key="ai"
+            class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
+          >
+            <div
+              :class="['card-pf card-pf-accented', view.isInstalling ? '' : 'selectable', a.selected ? 'selected' : '']"
+              :style="'border-top-color: '+categoryColors[a.category]+';'"
+            >
               <h2 @click="view.isInstalling ? undefined : selectApp(a)" class="card-pf-title">
                 {{a.name}}
                 <span class="right">
                   <input type="checkbox" v-model="a.selected">
                 </span>
               </h2>
-              <div @click="view.isInstalling ? undefined : selectApp(a)" :class="['card-pf-body', '']">
+              <div
+                @click="view.isInstalling ? undefined : selectApp(a)"
+                :class="['card-pf-body', '']"
+              >
                 <p>{{a.description}}</p>
               </div>
               <div class="card-pf-footer">
                 <div class="dropdown card-pf-time-frame-filter app-details">
-                  <a :id="'app-'+a.id" href="#" class="info-general popovers" data-toggle="popover" data-html="true"
-                    data-placement="top" data-close="true" data-trigger="focus" data-container="body" :title="$t('software_center.contains')"
-                    :data-content="a.content">
+                  <a
+                    :id="'app-'+a.id"
+                    href="#"
+                    class="info-general popovers"
+                    data-toggle="popover"
+                    data-html="true"
+                    data-placement="top"
+                    data-close="true"
+                    data-trigger="focus"
+                    data-container="body"
+                    :title="$t('software_center.contains')"
+                    :data-content="a.content"
+                  >
                     <span class="pficon pficon-info"></span>
                   </a>
                 </div>
                 <div v-if="a.isInstalling" class="progress-description progress-install">
-                  <div class="spinner spinner-xs spinner-inline"></div> <strong>{{$t('software_center.installing')}}...</strong>
+                  <div class="spinner spinner-xs spinner-inline"></div>
+                  <strong>{{$t('software_center.installing')}}...</strong>
                 </div>
-                <div v-if="a.isInstalling" class="progress progress-label-top-right progress-xs progress-striped active limit-progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
-                    :style="'width: '+view.installProgress+'%;'">
+                <div
+                  v-if="a.isInstalling"
+                  class="progress progress-label-top-right progress-xs progress-striped active limit-progress"
+                >
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    aria-valuenow="100"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    :style="'width: '+view.installProgress+'%;'"
+                  >
                     <span v-if="false">{{view.installProgress}}%</span>
                   </div>
                 </div>
@@ -219,7 +328,12 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button @click="cleanDetails()" class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button
+                @click="cleanDetails()"
+                class="btn btn-default"
+                type="button"
+                data-dismiss="modal"
+              >{{$t('cancel')}}</button>
             </div>
           </form>
         </div>
@@ -235,7 +349,10 @@
           <form class="form-horizontal" v-on:submit.prevent="updateSingle()">
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
               </div>
             </div>
             <div class="modal-footer">
@@ -257,12 +374,19 @@
             <div class="modal-body">
               <div class="alert alert-warning alert-dismissable">
                 <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>{{$t('warning')}}.</strong> {{$t('software_center.this_action_will_install')}} <b>{{updates.nethserver.length
-                  + updates.other.length}}</b>
+                <strong>{{$t('warning')}}.</strong>
+                {{$t('software_center.this_action_will_install')}}
+                <b>
+                  {{updates.nethserver.length
+                  + updates.other.length}}
+                </b>
                 {{updates.other.length == 1 ? $t('software_center.update_low') : $t('software_center.updates_low')}}.
               </div>
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
               </div>
             </div>
             <div class="modal-footer">
@@ -278,13 +402,18 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('software_center.install')}} {{selectedApps}}
-              {{$t('software_center.applications_low')}}</h4>
+            <h4 class="modal-title">
+              {{$t('software_center.install')}} {{selectedApps}}
+              {{$t('software_center.applications_low')}}
+            </h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="installPackages()">
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
               </div>
             </div>
             <div class="modal-footer">
@@ -300,15 +429,20 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('software_center.upgrade_nethserver')}} {{$t('software_center.to')}}
-              {{hints.details && hints.details.nethserver && hints.details.nethserver.new_release}}</h4>
+            <h4 class="modal-title">
+              {{$t('software_center.upgrade_nethserver')}} {{$t('software_center.to')}}
+              {{hints.details && hints.details.nethserver && hints.details.nethserver.new_release}}
+            </h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="upgradeSystem()">
             <div class="modal-body">
               <div class="alert alert-warning alert-dismissable compact">
                 <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>{{$t('software_center.upgrade')}} {{$t('software_center.to')}}
-                  {{hints.details && hints.details.nethserver && hints.details.nethserver.new_release}}</strong>.
+                <strong>
+                  {{$t('software_center.upgrade')}} {{$t('software_center.to')}}
+                  {{hints.details && hints.details.nethserver && hints.details.nethserver.new_release}}
+                </strong>
+                .
                 {{$t('software_center.nethserver_upgrade_message')}}.
               </div>
             </div>
@@ -321,44 +455,106 @@
       </div>
     </div>
 
-    <div class="modal" id="configureUpdatesModal" tabindex="-1" role="dialog" data-backdrop="static">
+    <div
+      class="modal"
+      id="configureUpdatesModal"
+      tabindex="-1"
+      role="dialog"
+      data-backdrop="static"
+    >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('software_center.configure')}} {{$t('software_center.updates_low')}}</h4>
+            <h4
+              class="modal-title"
+            >{{$t('software_center.configure')}} {{$t('software_center.updates_low')}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="saveConfiguration()">
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('software_center.updates_origin')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('software_center.updates_origin')}}</label>
               </div>
               <div class="form-group">
-                <input class="col-sm-4" type="radio" value="unlocked" v-model="updatesConfig.origin">
-                <label class="control-label col-sm-2 text-align-left">{{$t('software_center.unlocked')}}</label>
-                <div class="col-sm-6 control-label text-align-left">{{$t('software_center.unlocked_description')}}</div>
+                <input
+                  class="col-sm-4"
+                  type="radio"
+                  id="origin-1"
+                  value="unlocked"
+                  v-model="updatesConfig.origin"
+                >
+                <label
+                  for="origin-1"
+                  class="control-label col-sm-2 text-align-left"
+                >{{$t('software_center.unlocked')}}</label>
+                <div
+                  class="col-sm-6 control-label text-align-left"
+                >{{$t('software_center.unlocked_description')}}</div>
               </div>
               <div class="form-group">
-                <input class="col-sm-4" type="radio" value="locked" v-model="updatesConfig.origin">
-                <label class="control-label col-sm-2 text-align-left">{{$t('software_center.locked')}}</label>
-                <div class="col-sm-6 control-label text-align-left">{{$t('software_center.locked_description')}}</div>
+                <input
+                  class="col-sm-4"
+                  type="radio"
+                  id="origin-2"
+                  value="locked"
+                  v-model="updatesConfig.origin"
+                >
+                <label
+                  for="origin-2"
+                  class="control-label col-sm-2 text-align-left"
+                >{{$t('software_center.locked')}}</label>
+                <div
+                  class="col-sm-6 control-label text-align-left"
+                >{{$t('software_center.locked_description')}}</div>
               </div>
               <p class="divider"></p>
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('software_center.when_updates_available')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('software_center.when_updates_available')}}</label>
               </div>
               <div class="form-group">
-                <input class="col-sm-4" type="radio" value="download" v-model="updatesConfig.install">
-                <label class="control-label col-sm-6 text-align-left">{{$t('software_center.download')}}</label>
+                <input
+                  class="col-sm-4"
+                  type="radio"
+                  id="install-1"
+                  value="download"
+                  v-model="updatesConfig.install"
+                >
+                <label
+                  for="install-1"
+                  class="control-label col-sm-6 text-align-left"
+                >{{$t('software_center.download')}}</label>
               </div>
               <div class="form-group">
-                <input class="col-sm-4" type="radio" value="install" v-model="updatesConfig.install">
-                <label class="control-label col-sm-6 text-align-left">{{$t('software_center.download_install')}}</label>
+                <input
+                  class="col-sm-4"
+                  type="radio"
+                  id="origin-2"
+                  value="install"
+                  v-model="updatesConfig.install"
+                >
+                <label
+                  for="install-2"
+                  class="control-label col-sm-6 text-align-left"
+                >{{$t('software_center.download_install')}}</label>
               </div>
               <p class="divider"></p>
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('software_center.email_to_sysadmin')}}?</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="sendEmail"
+                >{{$t('software_center.email_to_sysadmin')}}?</label>
                 <div class="col-sm-6">
-                  <input type="checkbox" v-model="updatesConfig.sendEmail" class="form-control">
+                  <input
+                    type="checkbox"
+                    id="sendEmail"
+                    v-model="updatesConfig.sendEmail"
+                    class="form-control"
+                  >
                 </div>
               </div>
             </div>
@@ -370,7 +566,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -898,8 +1093,8 @@ export default {
             this.updatesConfig.install == "download"
               ? "yes"
               : this.updatesConfig.install == "install"
-                ? "yes"
-                : "no",
+              ? "yes"
+              : "no",
           messages: this.updatesConfig.sendEmail ? "yes" : "no"
         },
         function(stream) {

@@ -609,10 +609,6 @@ circle {
   border: 2px solid #ec7a08 !important;
 }
 
-input[type="checkbox"].form-control {
-  box-shadow: none;
-}
-
 .details-container {
   margin-bottom: 0px;
 }
@@ -780,12 +776,6 @@ input[type="checkbox"].form-control {
   margin-top: 25px;
 }
 
-.form-spinner-loader {
-  display: inline-block;
-  top: 6px;
-  right: 4px;
-}
-
 .list-spinner-loader {
   display: inline-block;
   top: 2px;
@@ -799,10 +789,6 @@ input[type="checkbox"].form-control {
 
 .form-group.compact>label {
   margin-bottom: 0px !important;
-}
-
-.modal-open .modal {
-  padding-right: 0px !important;
 }
 
 .prettyprint {
@@ -878,15 +864,6 @@ input[type="checkbox"].form-control {
   margin-left: 10px;
 }
 
-.modal {
-  z-index: 3;
-  margin-left: 55px !important;
-}
-
-.modal-backdrop {
-  z-index: 2 !important;
-}
-
 .span-right-margin-lg {
   margin-right: 20px;
 }
@@ -960,29 +937,6 @@ input[type="checkbox"].form-control {
 
 .password-hints {
   text-align: center
-}
-
-.vue-js-switch .v-switch-core {
-  border: 1px solid #bbbbbb !important;
-  border-radius: 0px !important;
-}
-
-.vue-js-switch .v-switch-core .v-switch-button {
-  border-radius: 0px !important;
-  height: 18px !important;
-}
-
-.vue-js-switch.min-toggle .v-switch-core .v-switch-button {
-  border-radius: 0px !important;
-  height: 12px !important;
-}
-
-.vue-js-switch.toggled .v-switch-core .v-switch-button {
-  transform: translate3d(30px, 3px, 0px) !important;
-}
-
-.vue-js-switch.toggled.min-toggle .v-switch-core .v-switch-button {
-  transform: translate3d(21px, 3px, 0px) !important;
 }
 
 .display-inline-block {
