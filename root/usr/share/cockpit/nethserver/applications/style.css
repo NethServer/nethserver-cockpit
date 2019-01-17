@@ -72,7 +72,7 @@ input[type="checkbox"].form-control {
 
 #navbar-left:hover+.container-fluid.container-cards-pf {
     margin-left: 180px;
-    z-index: 3;
+    z-index: 4;
 }
 
 #navbar-left:hover {
@@ -81,12 +81,12 @@ input[type="checkbox"].form-control {
     -moz-transition: width 0.25s ease-in-out;
     -o-transition: width 0.25s ease-in-out;
     transition: width 0.25s ease-in-out;
-    z-index: 3;
+    z-index: 4;
 }
 
 #navbar-left:hover ul li a .list-group-item-value {
     display: block !important;
-    z-index: 3;
+    z-index: 4;
 }
 
 #navbar-left {
