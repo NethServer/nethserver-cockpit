@@ -31,7 +31,7 @@ my $input = readInput();
 my $role = $input->{'role'} || '';
 my $cmd = $input->{'action'} || '';
 
-if ($cmd eq 'listApplications') {
+if ($cmd eq 'applications') {
 
     my $ret = {"system" => [], "applications" => []};
     my @apps = list_applications();
