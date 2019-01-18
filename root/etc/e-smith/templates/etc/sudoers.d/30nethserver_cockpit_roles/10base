@@ -1,5 +1,4 @@
 {
-
     use strict;
     use warnings;
     use JSON;
@@ -9,6 +8,22 @@
     my $jsonFile = '/etc/nethserver/cockpit/authorization/roles.json';
     my $data = read_json ($jsonFile); 
 
+    # Here make links between system and API
+    # when system needs several API
+    # when system name doesn't match API name
+    my %controllers = (
+        "users-groups" => ["system-roles",
+			                   "system-password-policy",
+			                   "system-accounts-provider",
+                               "system-users"],
+        'network'      => ["system-routes",
+                               "system-proxy"],
+        'dns'          => ["system-hosts"],
+        'certificates' => ["system-certificate"],
+        'ssh'          => ["system-openssh"],
+        'applications' => ["system-apps"],
+    );
+    
     foreach my $key (keys %{$data}) {
 
         my @systems = @{$data->{$key}->{'system'}};
@@ -21,7 +36,7 @@
             );
 
         foreach my $system (@systems){
-            push @roles, "system-$system";
+            push @roles, $system;
         }
 
         foreach my $application (@applications){
@@ -29,49 +44,31 @@
         }
 
         # Hack when the group name gets a space
-        # for example 'domain admins', visudo do not like it
+        # for example 'domain admins', visudo doesn't like it
         (my $Cmnd_Alias = $key) =~ s/ //;
         $key =~s/ /\\ /;
 
         $OUT .= "\n#\n# Role delegations for $key\n#";
         $OUT .= "\nCmnd_Alias ". uc $Cmnd_Alias .'= ';
 
+
         foreach my $role (@roles) {
 
-            #Make logic here if role doesnt match api name
-            # or if needs more API
-            if ($role eq 'system-users-groups') {
-                $role = 'system-users'; 
-                push @commands, 
-                    "/usr/libexec/nethserver/api/system-roles/*",
-                    "/usr/libexec/nethserver/api/system-password-policy/read",
-                    "/usr/libexec/nethserver/api/system-accounts-provider/*";
-            }
-            elsif ($role eq 'system-network') {
-                push @commands,
-                    "/usr/libexec/nethserver/api/system-routes/*",
-                    "/usr/libexec/nethserver/api/system-proxy/*";
-            }
-            elsif ($role eq 'system-dns') {
-                $role = 'system-hosts';
-            }
-            elsif ($role eq 'system-certificates') {
-                $role = 'system-certificate';
-            }
-            elsif ($role eq 'system-ssh') {
-                $role = 'system-openssh';
-            }
-            elsif ($role eq 'system-applications') {
-                $role = 'system-apps';
-            }
-            elsif ($role eq 'system-software-center') {
-                $role = 'system-packages';
-            }
+            $role = '*' if ($key eq 'domain\ admins');
 
-            $role = '*' if ($key eq 'admins');
-            push @commands, "/usr/libexec/nethserver/api/$role/*";
+            if (! exists $controllers{$role}){
+                if ($role =~ /^nethserver-/) {
+                    push @commands, "/usr/libexec/nethserver/api/$role/*";
+                } else {
+                    push @commands, "/usr/libexec/nethserver/api/system-$role/*";
+                }
+            } else { 
+                foreach my $api (@{$controllers{$role}}) {
+                    push @commands, "/usr/libexec/nethserver/api/$api/*";
+                }
+            }  
             # we allow all for admins
-            last if ($key eq 'admins');
+            last if ($key eq 'domain\ admins');
         }
 
         $OUT .= join (', ',@commands);
