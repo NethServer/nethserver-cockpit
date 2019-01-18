@@ -20,22 +20,20 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-. /usr/libexec/nethserver/api/lib/helper_functions
+URL=$1
+USER=$2
+PASSWORD=$3 # a file containing the password
 
-servers=$(/sbin/e-smith/config getprop dns NameServers)
+exit_code=1
+tmp_dir=$(mktemp -d)
+tmp_file=$(mktemp -u -p $tmp_dir)
 
-if [ -z "$servers" ]; then
-    hints "no_servers_configured"
+timeout 10 /usr/libexec/nethserver/api/system-backup/mount-webdav $URL $USER $PASSWORD $tmp_dir
+exit_code=$?
+if [ $exit_code == 0 ]; then
+    touch  $tmp_file
+    exit_code=$?
 fi
 
-for s in $(echo $servers | sed 's/,/ /g')
-do
-    dig +time=2 +tries=1 +short www.nethserver.org @$s &> /dev/null
-    ret=$(($ret+$?))
-done
-
-if [ $ret -gt 0 ]; then
-    hints "one_or_more_dns_not_working"
-else
-    hints
-fi
+# preserve exit code using $exit_code
+trap "{ rm -f $tmp_file; umount $tmp_dir 2>/dev/null; rmdir $tmp_dir 2>/dev/null; exit $exit_code; }" EXIT SIGINT SIGTERM

@@ -108,7 +108,7 @@
                             interfaceStatus[i.name].gateway}}</strong>
                         </span>
                         <br />
-                        <a href="#" @click="getMoreInfo(i)" :id="'popover-'+i.name" class="alert-link" data-placement="top" data-toggle="popover" data-html="true" :title="$t('network.additional_info')"
+                        <a tabindex="0" href="#" @click="getMoreInfo(i)" :id="'popover-'+i.name | sanitize" class="alert-link" data-trigger="focus" data-placement="top" data-toggle="popover" data-html="true" :title="$t('network.additional_info')"
                           data-content="">{{$t('network.more_info')}}</a>
                       </div>
                     </div>
@@ -173,8 +173,10 @@
                       <dd v-if="i.devices.length > 1">
                         <button @click="openDeleteDevice(a)" class="btn btn-danger btn-xs">{{$t('delete')}}</button>
                       </dd>
-                      <dd v-for="(c,ci) in a.devices" v-bind:key="ci"><span :class="[ci == 0 ? '' : 'transparent', 'fa fa-arrow-right', 'span-right-margin']"></span>
-                        <b>{{c.name}}<b></dd>
+                      <dd v-for="(c,ci) in a.devices" v-bind:key="ci">
+                        <span :class="[ci == 0 ? '' : 'transparent', 'fa fa-arrow-right', 'span-right-margin']"></span>
+                        <b>{{c.name}}<b>
+                      </dd>
                     </dl>
                     <dl v-if="i.devices.length == 0" class="dl-horizontal int-details">
                       <dt>-</dt>
@@ -770,18 +772,12 @@
                   </div>
                   <form class="form-horizontal" v-on:submit.prevent="saveLogicInterface()">
                     <div class="modal-body">
-                      <div class="form-group">
-                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.label')}}</label>
-                        <div class="col-sm-6">
-                          <input required v-model="wizard.review.nslabel" class="form-control" type="text">
-                        </div>
-                      </div>
                       <div v-if="wizard.role.choice == 'red'" class="form-group">
-                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.bootproto')}}</label>
-                        <input class="col-sm-1" type="radio" v-model="wizard.review.bootproto" value="dhcp">
-                        <label class="col-sm-2 control-label text-align-left">{{$t('network.boot_dhcp')}}</label>
-                        <input class="col-sm-1" type="radio" v-model="wizard.review.bootproto" value="none">
-                        <label class="col-sm-2 control-label text-align-left">{{$t('network.boot_static')}}</label>
+                        <label class="col-sm-3 control-label">{{$t('network.bootproto')}}</label>
+                        <input class="col-sm-1" type="radio" id="bootproto-1" v-model="wizard.review.bootproto" value="dhcp">
+                        <label class="col-sm-2 control-label text-align-left" for="bootproto-1">{{$t('network.boot_dhcp')}}</label>
+                        <input class="col-sm-1" type="radio" id="bootproto-2" v-model="wizard.review.bootproto" value="none">
+                        <label class="col-sm-2 control-label text-align-left" for="bootproto-2">{{$t('network.boot_static')}}</label>
                       </div>
                       <div v-if="wizard.review.bootproto == 'none'" :class="['form-group', wizard.review.errors.ipaddr.hasError ? 'has-error' : '']">
                         <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.ip_address')}}</label>
@@ -805,6 +801,12 @@
                           <input required v-model="wizard.review.gateway" class="form-control" type="text">
                           <span v-if="wizard.review.errors.gateway.hasError" class="help-block">{{$t('validation.validation_failed')}}:
                             {{$t('validation.'+wizard.review.errors.gateway.message)}}</span>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.label')}} <span class="optional-label">({{$t('optional')}})</span></label>
+                        <div class="col-sm-6">
+                          <input required v-model="wizard.review.nslabel" class="form-control" type="text">
                         </div>
                       </div>
                     </div>
@@ -969,18 +971,12 @@
                     <div class="modal-body">
                       <!-- ETHERNET -->
                       <div v-if="wizardPhysical.type.choice == 'ethernet'">
-                        <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.label')}}</label>
-                          <div class="col-sm-6">
-                            <input required v-model="wizardPhysical.review.nslabel" class="form-control" type="text">
-                          </div>
-                        </div>
                         <div v-if="wizardPhysical.role.choice == 'green' || wizardPhysical.role.choice == 'red'" class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.bootproto')}}</label>
-                          <input class="col-sm-1" type="radio" v-model="wizardPhysical.review.bootproto" value="dhcp">
-                          <label class="col-sm-2 control-label text-align-left">{{$t('network.boot_dhcp')}}</label>
-                          <input class="col-sm-1" type="radio" v-model="wizardPhysical.review.bootproto" value="none">
-                          <label class="col-sm-2 control-label text-align-left">{{$t('network.boot_static')}}</label>
+                          <label class="col-sm-3 control-label">{{$t('network.bootproto')}}</label>
+                          <input class="col-sm-1" type="radio" id="bootproto-3" v-model="wizardPhysical.review.bootproto" value="dhcp">
+                          <label class="col-sm-2 control-label text-align-left" for="bootproto-3">{{$t('network.boot_dhcp')}}</label>
+                          <input class="col-sm-1" type="radio" id="bootproto-4" v-model="wizardPhysical.review.bootproto" value="none">
+                          <label class="col-sm-2 control-label text-align-left" for="bootproto-4">{{$t('network.boot_static')}}</label>
                         </div>
                         <div v-if="wizardPhysical.review.bootproto == 'none'" :class="['form-group', wizardPhysical.review.errors.ipaddr.hasError ? 'has-error' : '']">
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.ip_address')}}</label>
@@ -1005,6 +1001,12 @@
                             <input required v-model="wizardPhysical.review.gateway" class="form-control" type="text">
                             <span v-if="wizardPhysical.review.errors.gateway.hasError" class="help-block">{{$t('validation.validation_failed')}}:
                               {{$t('validation.'+wizardPhysical.review.errors.gateway.message)}}</span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.label')}} <span class="optional-label">({{$t('optional')}})</span></label>
+                          <div class="col-sm-6">
+                            <input required v-model="wizardPhysical.review.nslabel" class="form-control" type="text">
                           </div>
                         </div>
                       </div>
@@ -1893,10 +1895,9 @@ export default {
       );
     },
     getMoreInfo(int) {
-      int.moreInfoOpened = !int.moreInfoOpened;
-      var popover = $("#popover-" + int.name).data("bs.popover");
+      var popover = $('#'+this.$options.filters.sanitize("popover-" + int.name)).data("bs.popover");
 
-      if (int.moreInfoOpened) {
+      if (!int.moreInfoOpened && popover) {
         popover.options.content = '<div class="spinner spinner-sm"></div>';
         popover.show();
 
@@ -1915,55 +1916,56 @@ export default {
               '<b class="col-sm-6">' +
               context.$i18n.t("network.public_ip") +
               '</b><span class="col-sm-6">' +
-              success.ip +
+              (success.ip || '-') +
               "</span>";
             popover.options.content +=
               '<b class="col-sm-6">' +
               context.$i18n.t("network.reverse_lookup") +
               '</b><span class="col-sm-6">' +
-              success.hostname +
+              (success.hostname || '-') +
               "</span>";
             popover.options.content +=
               '<b class="col-sm-6 advanced">' +
               context.$i18n.t("network.country") +
               '</b><span class="col-sm-6 advanced">' +
-              success.country_iso +
+              (success.country_iso || '-') +
               "</span>";
 
-            popover.options.content += '<div class="divider col-sm-12"></div>';
+            if(int.virtual == 0) {
+              popover.options.content += '<div class="divider col-sm-12"></div>';
 
-            popover.options.content +=
-              '<b class="col-sm-6 stats-text">' +
-              context.$i18n.t("network.int_model") +
-              '</b><span class="col-sm-6 stats-text">' +
-              context.interfaceStatus[int.name].model +
-              "</span>";
-            popover.options.content +=
-              '<b class="col-sm-6">' +
-              context.$i18n.t("network.int_speed") +
-              '</b><span class="col-sm-6">' +
-              context.interfaceStatus[int.name].speed +
-              "</span>";
-            popover.options.content +=
-              '<b class="col-sm-6">' +
-              context.$i18n.t("network.int_driver") +
-              '</b><span class="col-sm-6">' +
-              context.interfaceStatus[int.name].driver +
-              "</span>";
-            popover.options.content +=
-              '<b class="col-sm-6">' +
-              context.$i18n.t("network.int_mac") +
-              '</b><span class="col-sm-6">' +
-              context.interfaceStatus[int.name].mac +
-              "</span>";
+              popover.options.content +=
+                '<b class="col-sm-6 stats-text">' +
+                context.$i18n.t("network.int_model") +
+                '</b><span class="col-sm-6 stats-text">' +
+                context.interfaceStatus[int.name].model +
+                "</span>";
+              popover.options.content +=
+                '<b class="col-sm-6">' +
+                context.$i18n.t("network.int_speed") +
+                '</b><span class="col-sm-6">' +
+                context.interfaceStatus[int.name].speed +
+                "</span>";
+              popover.options.content +=
+                '<b class="col-sm-6">' +
+                context.$i18n.t("network.int_driver") +
+                '</b><span class="col-sm-6">' +
+                context.interfaceStatus[int.name].driver +
+                "</span>";
+              popover.options.content +=
+                '<b class="col-sm-6">' +
+                context.$i18n.t("network.int_mac") +
+                '</b><span class="col-sm-6">' +
+                context.interfaceStatus[int.name].mac +
+                "</span>";
+            }
+            int.moreInfoOpened = true
             popover.show();
           },
           function(error) {
             console.error(error);
           }
         );
-      } else {
-        popover.hide();
       }
     },
     openConfigureInterface(i) {

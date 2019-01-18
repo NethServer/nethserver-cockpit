@@ -20,22 +20,9 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-. /usr/libexec/nethserver/api/lib/helper_functions
+URL=$1
+USER=$2
+PASSWORD=$3 # a file containing the password
+DIR=$4
 
-servers=$(/sbin/e-smith/config getprop dns NameServers)
-
-if [ -z "$servers" ]; then
-    hints "no_servers_configured"
-fi
-
-for s in $(echo $servers | sed 's/,/ /g')
-do
-    dig +time=2 +tries=1 +short www.nethserver.org @$s &> /dev/null
-    ret=$(($ret+$?))
-done
-
-if [ $ret -gt 0 ]; then
-    hints "one_or_more_dns_not_working"
-else
-    hints
-fi
+cat $PASSWORD | mount.davfs -o username=$USER $URL $DIR 2>/dev/null

@@ -6,32 +6,59 @@
     <div v-if="view.isLoaded && hints.count > 0" class="alert alert-warning alert-dismissable">
       <span class="pficon pficon-warning-triangle-o"></span>
       <strong>{{$t('hints_suggested')}}:</strong>
-      <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{$t('hints.'+t)}}</strong>: {{$t('hints.'+m)}}</li>
-      <span v-if="hints.message && hints.message.length > 0">
-        {{hints.message && $t('hints.'+hints.message)}}
-      </span>
+      <li v-for="(m,t) in hints.details" v-bind:key="t">
+        <strong>{{$t('hints.'+t)}}</strong>
+        : {{$t('hints.'+m)}}
+      </li>
+      <span
+        v-if="hints.message && hints.message.length > 0"
+      >{{hints.message && $t('hints.'+hints.message)}}</span>
     </div>
 
     <div v-if="view.isLoaded">
-      <div v-show="status['restore-data'] > 0 || status['backup-data'] > 0" class="alert alert-warning">
+      <div
+        v-show="status['restore-data'] > 0 || status['backup-data'] > 0"
+        class="alert alert-warning"
+      >
         <button type="button" class="close">
           <div class="spinner"></div>
         </button>
         <span class="pficon pficon-warning-triangle-o"></span>
-        <strong>{{$t('backup.task_in_progress')}}.</strong> {{status['restore-data'] > 0 ?
-        $t('backup.restore_data_progress') : status['backup-data'] > 0 ? $t('backup.backup_data_progress') : ''}}
+        <strong>{{$t('backup.task_in_progress')}}:</strong>
+        {{status['restore-data'] > 0 ?
+        $t('backup.restore_data_progress') : status['backup-data'] > 0 ? $t('backup.backup_data_progress') : ''}}.
       </div>
       <h3>{{$t('backup.config')}}</h3>
       <div class="panel panel-default" id="provider-markup">
         <div class="panel-heading">
-          <button @click="openConfigureConfig()" class="btn btn-default right">{{$t('backup.configure')}}</button>
-          <button :disabled="backupConfigurations.length == 0" @click="openRestoreConfig(b)" class="btn btn-primary right panel-icon">{{$t('backup.restore')}}</button>
-          <button @click="openExecuteConfig(b)" class="btn btn-primary right span-right-margin">{{$t('backup.execute_now')}}</button>
-          <span class="panel-title">{{$t('backup.configured_backup')}}: {{backupConfigurations.length}}</span>
-          <span class="provider-details margin-left-md" data-toggle="collapse" data-parent="#provider-markup" href="#providerDetails">{{$t('backup.details')}}</span>
+          <button
+            @click="openConfigureConfig()"
+            class="btn btn-default right"
+          >{{$t('backup.configure')}}</button>
+          <button
+            :disabled="backupConfigurations.length == 0"
+            @click="openRestoreConfig(b)"
+            class="btn btn-primary right panel-icon"
+          >{{$t('backup.restore')}}</button>
+          <button
+            @click="openExecuteConfig(b)"
+            class="btn btn-primary right span-right-margin"
+          >{{$t('backup.execute_now')}}</button>
+          <span
+            class="panel-title"
+          >{{$t('backup.configured_backup')}}: {{backupConfigurations.length}}</span>
+          <span
+            class="provider-details margin-left-md"
+            data-toggle="collapse"
+            data-parent="#provider-markup"
+            href="#providerDetails"
+          >{{$t('backup.details')}}</span>
         </div>
         <div id="providerDetails" class="panel-collapse collapse list-group list-view-pf">
-          <div v-if="backupConfigurations.length == 0" class="alert alert-info alert-dismissable compact">
+          <div
+            v-if="backupConfigurations.length == 0"
+            class="alert alert-info alert-dismissable compact"
+          >
             <span class="pficon pficon-info"></span>
             <strong>{{$t('backup.no_config_backup_found_title')}}.</strong>
             {{$t('backup.no_config_backup_found_desc')}}.
@@ -43,22 +70,30 @@
                 {{$t('backup.download')}}
               </button>
               <div class="dropdown pull-right dropdown-kebab-pf">
-                <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-                  aria-expanded="true">
+                <button
+                  class="btn btn-link dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="true"
+                >
                   <span class="fa fa-ellipsis-v"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right">
                   <li>
                     <a @click="openDeleteConfig(b)">
                       <span class="fa fa-times span-right-margin"></span>
-                      {{$t('delete')}}</a>
+                      {{$t('delete')}}
+                    </a>
                   </li>
                 </ul>
               </div>
             </div>
             <div class="list-view-pf-main-info">
               <div class="list-view-pf-left">
-                <span :class="['fa', b.type == 'cron' ? 'fa-cog' : 'fa-camera', 'list-view-pf-icon-sm']"></span>
+                <span
+                  :class="['fa', b.type == 'cron' ? 'fa-cog' : 'fa-camera', 'list-view-pf-icon-sm']"
+                ></span>
               </div>
               <div class="list-view-pf-body">
                 <div class="list-view-pf-description">
@@ -71,10 +106,12 @@
                 </div>
                 <div class="list-view-pf-additional-info">
                   <div class="list-view-pf-additional-info-item">
-                    <span class="fa fa-clock-o panel-icon"></span>{{b.push_ts | dateFormat}}
+                    <span class="fa fa-clock-o panel-icon"></span>
+                    {{b.push_ts | dateFormat}}
                   </div>
                   <div class="list-view-pf-additional-info-item">
-                    <span class="fa fa-archive panel-icon"></span>{{b.size | byteFormat}}
+                    <span class="fa fa-archive panel-icon"></span>
+                    {{b.size | byteFormat}}
                   </div>
                 </div>
               </div>
@@ -88,29 +125,36 @@
       <h3>{{$t('backup.data')}}</h3>
       <div class="panel panel-default">
         <div class="panel-heading">
-          <button @click="openConfigureData()" class="btn btn-default right">{{$t('backup.configure')}}</button>
-          <button :disabled="backupData.length == 0" @click="openRestoreData(b)" class="btn btn-primary right panel-icon">{{$t('backup.restore')}}</button>
-          <button @click="openCreateData(b)" class="btn btn-primary right span-right-margin">{{$t('create')}}</button>
+          <button
+            @click="openConfigureData()"
+            class="btn btn-default right"
+          >{{$t('backup.configure')}}</button>
+          <button
+            :disabled="backupData.length == 0"
+            @click="openRestoreData(b)"
+            class="btn btn-primary right panel-icon"
+          >{{$t('backup.restore')}}</button>
+          <button
+            @click="openCreateData(b)"
+            class="btn btn-primary right span-right-margin"
+          >{{$t('backup.schedule')}}</button>
           <span class="panel-title">
-            <span>{{$t('backup.configured_backup')}}:</span> {{backupData.length}}
+            <span>{{$t('backup.configured_backup')}}:</span>
+            {{backupData.length}}
           </span>
         </div>
       </div>
 
       <h3 v-if="backupData.length > 0">{{$t('list')}}</h3>
 
-      <div v-if="backupData.length == 0" class="blank-slate-pf blank-state-backup" id="">
+      <div v-if="backupData.length == 0" class="blank-slate-pf blank-state-backup" id>
         <div class="blank-slate-pf-icon">
           <span class="fa fa-database"></span>
         </div>
-        <h1>
-          {{$t('backup.no_data_backup_found_title')}}
-        </h1>
-        <p>
-          {{$t('backup.no_data_backup_found_desc')}}
-        </p>
+        <h1>{{$t('backup.no_data_backup_found_title')}}</h1>
+        <p>{{$t('backup.no_data_backup_found_desc')}}</p>
         <div class="blank-slate-pf-main-action">
-          <button @click="openCreateData()" class="btn btn-primary btn-lg">{{$t('create')}}</button>
+          <button @click="openCreateData()" class="btn btn-primary btn-lg">{{$t('backup.schedule')}}</button>
         </div>
       </div>
 
@@ -118,49 +162,71 @@
         <div class="form-group has-clear">
           <div class="search-pf-input-group">
             <label class="sr-only">Search</label>
-            <input type="search" v-model="searchString" class="form-control input-lg" :placeholder="$t('search')+'...'">
+            <input
+              type="search"
+              v-model="searchString"
+              class="form-control input-lg"
+              :placeholder="$t('search')+'...'"
+            >
           </div>
         </div>
         <div class="form-group">
-          <button class="btn btn-default btn-lg" type="button"><span class="fa fa-search"></span></button>
+          <button class="btn btn-default btn-lg" type="button">
+            <span class="fa fa-search"></span>
+          </button>
         </div>
       </form>
 
       <div class="list-group list-view-pf">
-        <div v-if="backupData.length > 0" class="list-group-item" v-for="b in filteredBackupList" v-bind:key="b">
+        <div
+          v-if="backupData.length > 0"
+          class="list-group-item"
+          v-for="b in filteredBackupList"
+          v-bind:key="b"
+        >
           <div class="list-view-pf-actions">
             <button @click="openExecuteData(b)" class="btn btn-default">
               <span class="fa fa-play span-right-margin"></span>
               {{$t('backup.execute_now')}}
             </button>
             <div class="dropdown pull-right dropdown-kebab-pf">
-              <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="true">
+              <button
+                class="btn btn-link dropdown-toggle"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="true"
+              >
                 <span class="fa fa-ellipsis-v"></span>
               </button>
               <ul class="dropdown-menu dropdown-menu-right">
                 <li>
                   <a @click="openEditBackupData(b)">
                     <span class="fa fa-edit span-right-margin"></span>
-                    {{$t('backup.edit_backup')}}</a>
+                    {{$t('backup.edit_backup')}}
+                  </a>
                 </li>
                 <li :class="b.status.result == 'unknown' ? 'disabled' : ''">
                   <a @click="b.status.result == 'unknown' ? undefined : openLastLogData(b)">
                     <span class="fa fa-list span-right-margin"></span>
-                    {{$t('backup.view_last_log')}}</a>
+                    {{$t('backup.view_last_log')}}
+                  </a>
                 </li>
                 <li role="presentation" class="divider"></li>
                 <li>
                   <a @click="openDeleteData(b)">
                     <span class="fa fa-times span-right-margin"></span>
-                    {{$t('delete')}}</a>
+                    {{$t('delete')}}
+                  </a>
                 </li>
               </ul>
             </div>
           </div>
           <div class="list-view-pf-main-info">
             <div class="list-view-pf-left">
-              <span :class="['fa fa-database list-view-pf-icon-sm', b.status.result == 'success' ? 'border-green' : b.status.result == 'unknown' ? 'border-gray' : 'border-red']"></span>
+              <span
+                :class="['fa fa-database list-view-pf-icon-sm', b.status.result == 'success' ? 'border-green' : b.status.result == 'unknown' ? 'border-gray' : 'border-red']"
+              ></span>
             </div>
             <div class="list-view-pf-body">
               <div class="list-view-pf-description">
@@ -173,12 +239,36 @@
               </div>
               <div class="list-view-pf-additional-info">
                 <div class="list-view-pf-additional-info-item">
-                  <span :title="$t('backup.last_backup_status') + ': ' + b.status.result" :class="['fa', b.status.result == 'success' ? 'fa-check green' : b.status.result == 'unknown' ? 'fa-question gray' : 'fa-times red', 'panel-icon']"></span>{{b.status['last-run']
+                  <span
+                    :title="$t('backup.last_backup_status') + ': ' + b.status.result"
+                    :class="['fa', b.status.result == 'success' ? 'fa-check green' : b.status.result == 'unknown' ? 'fa-question gray' : 'fa-times red', 'panel-icon']"
+                  ></span>
+                  {{b.status['last-run']
                   | dateFormat}}
                 </div>
                 <div class="list-view-pf-additional-info-item">
-                  <span class="fa fa-space-shuttle panel-icon"></span><b>{{b.props.VFSType | uppercase}}</b>
-                  | <b>{{b.props.type | capitalize}}</b>
+                  <span class="fa fa-space-shuttle panel-icon"></span>
+                  <a
+                    v-if="b.props.VFSType == 'usb' || b.props.VFSType == 'cifs' || b.props.VFSType == 'nfs'"
+                    tabindex="0"
+                    class="provider-details"
+                    data-placement="top"
+                    data-toggle="popover"
+                    data-trigger="focus"
+                    data-html="true"
+                    :title="$t('backup.storage_usage')"
+                    :data-content="b.storageInfo"
+                  >
+                    <b>{{b.props.VFSType | uppercase}}</b>
+                  </a>
+                  <b
+                    v-if="b.props.VFSType != 'usb' && b.props.VFSType != 'cifs' && b.props.VFSType != 'nfs'"
+                  >
+                    {{b.props.VFSType
+                    | uppercase}}
+                  </b>
+                  |
+                  <b>{{b.props.type | capitalize}}</b>
                 </div>
               </div>
             </div>
@@ -194,22 +284,34 @@
           <div class="modal-header">
             <h4 class="modal-title">{{$t('backup.execute_configuration_backup_now')}}</h4>
           </div>
-          <form class="form-horizontal" v-on:submit.prevent="executeConfigBackup(currentConfigBackup)">
-
+          <form
+            class="form-horizontal"
+            v-on:submit.prevent="executeConfigBackup(currentConfigBackup)"
+          >
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.description')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('backup.description')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="currentConfigBackup.Description" class="form-control">
+                  <input
+                    required
+                    type="text"
+                    v-model="currentConfigBackup.Description"
+                    class="form-control"
+                  >
                 </div>
               </div>
             </div>
             <div class="modal-footer">
-              <div v-if="currentConfigBackup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <div
+                v-if="currentConfigBackup.isLoading"
+                class="spinner spinner-sm form-spinner-loader"
+              ></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('backup.execute')}}</button>
             </div>
-
           </form>
         </div>
       </div>
@@ -220,18 +322,39 @@
           <div class="modal-header">
             <h4 class="modal-title">{{$t('backup.restore_configuration_backup')}}</h4>
           </div>
-          <form class="form-horizontal" v-on:submit.prevent="restoreConfigBackup(currentConfigBackup)">
+          <form
+            class="form-horizontal"
+            v-on:submit.prevent="restoreConfigBackup(currentConfigBackup)"
+          >
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.choose_from')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('backup.choose_from')}}</label>
               </div>
               <div class="form-group">
-                <input required class="col-xs-2 col-sm-4 control-label" type="radio" id="restoreURL" value="url"
-                  v-model="currentConfigBackup.restoreMode">
-                <label :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'url' ? 'gray' : '']" for="restoreURL">{{$t('backup.from_url')}}</label>
+                <input
+                  required
+                  class="col-xs-2 col-sm-4 control-label"
+                  type="radio"
+                  id="restoreURL-1"
+                  value="url"
+                  v-model="currentConfigBackup.restoreMode"
+                >
+                <label
+                  :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'url' ? 'gray' : '']"
+                  for="restoreURL-1"
+                >{{$t('backup.from_url')}}</label>
                 <div class="col-sm-6">
-                  <input :required="currentConfigBackup.restoreMode == 'url'" :disabled="currentConfigBackup.restoreMode != 'url'"
-                    type="url" v-model="currentConfigBackup.restoreURL" class="form-control" placeholder="https://mysite.com/archive/backup-last.tar.xz">
+                  <input
+                    :required="currentConfigBackup.restoreMode == 'url'"
+                    :disabled="currentConfigBackup.restoreMode != 'url'"
+                    type="url"
+                    v-model="currentConfigBackup.restoreURL"
+                    class="form-control"
+                    placeholder="https://mysite.com/archive/backup-last.tar.xz"
+                  >
                 </div>
               </div>
               <div class="advanced">
@@ -239,16 +362,36 @@
                 <div class="divider divider-advanced"></div>
               </div>
               <div class="form-group">
-                <input required class="col-xs-2 col-sm-4 control-label" type="radio" id="restoreFile" value="file"
-                  v-model="currentConfigBackup.restoreMode">
-                <label :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'file' ? 'gray' : '']" for="restoreFile">{{$t('backup.from_file')}}</label>
+                <input
+                  required
+                  class="col-xs-2 col-sm-4 control-label"
+                  type="radio"
+                  id="restoreFile-1"
+                  value="file"
+                  v-model="currentConfigBackup.restoreMode"
+                >
+                <label
+                  :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'file' ? 'gray' : '']"
+                  for="restoreFile-1"
+                >{{$t('backup.from_file')}}</label>
                 <div class="col-sm-6">
-                  <label for="file-upload-cert" :class="['custom-file-upload', currentConfigBackup.restoreMode != 'file' ? 'gray' : '']">
-                    <i class="fa fa-cloud-upload span-right-margin"></i>{{$t('backup.choose_file')}}
+                  <label
+                    for="file-upload-cert"
+                    :class="['custom-file-upload', currentConfigBackup.restoreMode != 'file' ? 'gray' : '']"
+                  >
+                    <i class="fa fa-cloud-upload span-right-margin"></i>
+                    {{$t('backup.choose_file')}}
                   </label>
-                  <input :required="currentConfigBackup.restoreMode == 'file'" :disabled="currentConfigBackup.restoreMode != 'file'"
-                    class="inputfile" @change="onChangeInput($event)" id="backup-file" name="file-upload-backup" type="file"
-                    accept=".tar.xz" />
+                  <input
+                    :required="currentConfigBackup.restoreMode == 'file'"
+                    :disabled="currentConfigBackup.restoreMode != 'file'"
+                    class="inputfile"
+                    @change="onChangeInput($event)"
+                    id="backup-file"
+                    name="file-upload-backup"
+                    type="file"
+                    accept=".tar.xz"
+                  >
                 </div>
               </div>
               <div class="advanced">
@@ -256,30 +399,59 @@
                 <div class="divider divider-advanced"></div>
               </div>
               <div class="form-group">
-                <input required class="col-xs-2 col-sm-4 control-label" type="radio" id="restoreBackup" value="backup"
-                  v-model="currentConfigBackup.restoreMode">
-                <label :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'backup' ? 'gray' : '']"
-                  for="restoreBackup">{{$t('backup.from_backup')}}</label>
+                <input
+                  required
+                  class="col-xs-2 col-sm-4 control-label"
+                  type="radio"
+                  id="restoreBackup-1"
+                  value="backup"
+                  v-model="currentConfigBackup.restoreMode"
+                >
+                <label
+                  :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'backup' ? 'gray' : '']"
+                  for="restoreBackup-1"
+                >{{$t('backup.from_backup')}}</label>
                 <div class="col-sm-6">
-                  <select :required="currentConfigBackup.restoreMode == 'backup'" :disabled="currentConfigBackup.restoreMode != 'backup'"
-                    v-model="currentConfigBackup.restoreBackup" class="combobox form-control">
+                  <select
+                    :required="currentConfigBackup.restoreMode == 'backup'"
+                    :disabled="currentConfigBackup.restoreMode != 'backup'"
+                    v-model="currentConfigBackup.restoreBackup"
+                    class="combobox form-control"
+                  >
                     <option v-for="t in backupConfigurations" v-bind:key="t" :value="t.id">
-                      {{t.type | capitalize}} - {{t.description}}</option>
+                      {{t.type | capitalize}} -
+                      {{t.description}}
+                    </option>
                   </select>
                 </div>
               </div>
               <p class="divider"></p>
               <div class="form-group">
-                <label class="col-sm-4 control-label" for="restoreURL">{{$t('backup.reinstall_packages')}}</label>
+                <label
+                  class="col-sm-4 control-label"
+                  for="restoreInstallPackages"
+                >{{$t('backup.reinstall_packages')}}</label>
                 <div class="col-sm-4">
-                  <input type="checkbox" v-model="currentConfigBackup.restoreInstallPackages" class="form-control">
+                  <input
+                    id="restoreInstallPackages"
+                    type="checkbox"
+                    v-model="currentConfigBackup.restoreInstallPackages"
+                    class="form-control"
+                  >
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-4 control-label" for="textInput-modal-markup">{{$t('backup.config')}}</label>
+                <label
+                  class="col-sm-4 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('backup.config')}}</label>
                 <div class="col-sm-4 password-hints">
-                  <button :disabled="(currentConfigBackup.restoreURL.length == 0 && currentConfigBackup.restoreFile.length == 0 && currentConfigBackup.restoreBackup.length == 0) || currentConfigBackup.isChecking"
-                    @click="checkConfiguration()" type="button" class="btn btn-primary">{{$t('backup.check')}}</button>
+                  <button
+                    :disabled="(currentConfigBackup.restoreURL.length == 0 && currentConfigBackup.restoreFile.length == 0 && currentConfigBackup.restoreBackup.length == 0) || currentConfigBackup.isChecking"
+                    @click="checkConfiguration()"
+                    type="button"
+                    class="btn btn-primary"
+                  >{{$t('backup.check')}}</button>
                 </div>
                 <div v-if="currentConfigBackup.isChecking" class="col-sm-1">
                   <div class="spinner"></div>
@@ -289,11 +461,18 @@
                 <span>{{$t('backup.remap_interface_config')}}</span>
                 <div class="divider divider-advanced"></div>
               </div>
-              <div v-if="currentConfigBackup.remap" v-for="o in currentConfigBackup.remapInterfaces.old" v-bind:key="o"
-                class="form-group">
+              <div
+                v-if="currentConfigBackup.remap"
+                v-for="o in currentConfigBackup.remapInterfaces.old"
+                v-bind:key="o"
+                class="form-group"
+              >
                 <div class="col-sm-4">
                   <label class="control-label display-block">
-                    <span :class="o.role">{{o.name}} <span v-if="o.nslabel">({{o.nslabel}})</span></span>
+                    <span :class="o.role">
+                      {{o.name}}
+                      <span v-if="o.nslabel">({{o.nslabel}})</span>
+                    </span>
                     <br>
                     {{o.ipaddr}}
                     <br>
@@ -301,20 +480,36 @@
                   </label>
                 </div>
                 <div class="col-sm-1">
-                  <span :class="['fa', view.windowResize ? 'fa-arrow-down' : 'fa-arrow-right', 'margin-left-md']"></span>
+                  <span
+                    :class="['fa', view.windowResize ? 'fa-arrow-down' : 'fa-arrow-right', 'margin-left-md']"
+                  ></span>
                 </div>
                 <div class="col-sm-6">
-                  <select @change="setRemapping(o)" v-model="o.newInt" class="combobox form-control">
-                    <option v-for="n in currentConfigBackup.remapInterfaces.new" v-bind:key="n" :value="n.name">{{n.name}}</option>
+                  <select
+                    @change="setRemapping(o)"
+                    v-model="o.newInt"
+                    class="combobox form-control"
+                  >
+                    <option
+                      v-for="n in currentConfigBackup.remapInterfaces.new"
+                      v-bind:key="n"
+                      :value="n.name"
+                    >{{n.name}}</option>
                   </select>
                 </div>
               </div>
             </div>
             <div class="modal-footer">
-              <div v-if="currentConfigBackup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <div
+                v-if="currentConfigBackup.isLoading"
+                class="spinner spinner-sm form-spinner-loader"
+              ></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
-              <button :disabled="currentConfigBackup.isChecking || !currentConfigBackup.remapCalled" class="btn btn-primary"
-                type="submit">{{$t('backup.restore')}}</button>
+              <button
+                :disabled="currentConfigBackup.isChecking || !currentConfigBackup.remapCalled"
+                class="btn btn-primary"
+                type="submit"
+              >{{$t('backup.restore')}}</button>
             </div>
           </form>
         </div>
@@ -326,18 +521,31 @@
           <div class="modal-header">
             <h4 class="modal-title">{{$t('backup.configure_configuration_backup')}}</h4>
           </div>
-          <form class="form-horizontal" v-on:submit.prevent="configureConfigBackup(currentConfigBackup)">
-
+          <form
+            class="form-horizontal"
+            v-on:submit.prevent="configureConfigBackup(currentConfigBackup)"
+          >
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-6 control-label" for="textInput-modal-markup">{{$t('backup.automatic_backups_keep')}}</label>
+                <label
+                  class="col-sm-6 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('backup.automatic_backups_keep')}}</label>
                 <div class="col-sm-6">
-                  <input type="number" min="0" v-model="currentConfigBackup.HistoryLength" class="form-control">
+                  <input
+                    type="number"
+                    min="0"
+                    v-model="currentConfigBackup.HistoryLength"
+                    class="form-control"
+                  >
                 </div>
               </div>
             </div>
             <div class="modal-footer">
-              <div v-if="currentConfigBackup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <div
+                v-if="currentConfigBackup.isLoading"
+                class="spinner spinner-sm form-spinner-loader"
+              ></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
             </div>
@@ -349,17 +557,28 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('backup.delete_config_backup')}}
-              {{currentConfigBackup.type | capitalize}} - {{currentConfigBackup.description}}</h4>
+            <h4 class="modal-title">
+              {{$t('backup.delete_config_backup')}}
+              {{currentConfigBackup.type | capitalize}} - {{currentConfigBackup.description}}
+            </h4>
           </div>
-          <form class="form-horizontal" v-on:submit.prevent="deleteConfigBackup(currentConfigBackup)">
+          <form
+            class="form-horizontal"
+            v-on:submit.prevent="deleteConfigBackup(currentConfigBackup)"
+          >
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
               </div>
             </div>
             <div class="modal-footer">
-              <div v-if="currentConfigBackup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <div
+                v-if="currentConfigBackup.isLoading"
+                class="spinner spinner-sm form-spinner-loader"
+              ></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-danger" type="submit">{{$t('delete')}}</button>
             </div>
@@ -368,27 +587,32 @@
       </div>
     </div>
     <!-- END BACKUP CONFIGURATION -->
-
     <!-- BACKUP DATA -->
     <div class="modal" id="executeDataModal" tabindex="-1" role="dialog" data-backdrop="static">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('backup.execute_data_backup_now')}} {{currentDataBackup.name}}</h4>
+            <h4
+              class="modal-title"
+            >{{$t('backup.execute_data_backup_now')}} {{currentDataBackup.name}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="executeDataBackup(currentDataBackup)">
-
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
               </div>
             </div>
             <div class="modal-footer">
-              <div v-if="currentDataBackup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <div
+                v-if="currentDataBackup.isLoading"
+                class="spinner spinner-sm form-spinner-loader"
+              ></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('backup.execute')}}</button>
             </div>
-
           </form>
         </div>
       </div>
@@ -402,18 +626,26 @@
           <form class="form-horizontal" v-on:submit.prevent="restoreDataBackup(currentDataBackup)">
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.from_backup')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('backup.from_backup')}}</label>
                 <div class="col-sm-9">
                   <select v-model="currentDataBackup.restoreBackup" class="combobox form-control">
-                    <option v-for="t in backupData" v-bind:key="t" :value="t.name">{{t.name}} - {{t.props.VFSType |
+                    <option v-for="t in backupData" v-bind:key="t" :value="t.name">
+                      {{t.name}} - {{t.props.VFSType |
                       uppercase}}
-                      {{$t('with')}} {{t.props.type | capitalize}}</option>
+                      {{$t('with')}} {{t.props.type | capitalize}}
+                    </option>
                   </select>
                 </div>
               </div>
             </div>
             <div class="modal-footer">
-              <div v-if="currentDataBackup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <div
+                v-if="currentDataBackup.isLoading"
+                class="spinner spinner-sm form-spinner-loader"
+              ></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('backup.restore')}}</button>
             </div>
@@ -437,7 +669,12 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button @click="cleanLastLog()" class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button
+                @click="cleanLastLog()"
+                class="btn btn-default"
+                type="button"
+                data-dismiss="modal"
+              >{{$t('cancel')}}</button>
             </div>
           </form>
         </div>
@@ -452,33 +689,53 @@
           <form class="form-horizontal" v-on:submit.prevent="configureDataBackup()">
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.data_excludes')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('backup.data_excludes')}}</label>
                 <div class="col-sm-9">
                   <pre class="prettyprint">{{globalDataBackup.excludes}}</pre>
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.data_includes')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('backup.data_includes')}}</label>
                 <div class="col-sm-9">
                   <pre class="prettyprint">{{globalDataBackup.includes}}</pre>
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.data_custom_excludes')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('backup.data_custom_excludes')}}</label>
                 <div class="col-sm-9">
                   <textarea v-model="globalDataBackup['custom-excludes']" class="form-control"></textarea>
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.data_custom_includes')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('backup.data_custom_includes')}}</label>
                 <div class="col-sm-9">
                   <textarea v-model="globalDataBackup['custom-includes']" class="form-control"></textarea>
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.include_logs')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="IncludeLogs"
+                >{{$t('backup.include_logs')}}</label>
                 <div class="col-sm-6">
-                  <input type="checkbox" v-model="globalDataBackup.IncludeLogs" class="form-control">
+                  <input
+                    id="IncludeLogs"
+                    type="checkbox"
+                    v-model="globalDataBackup.IncludeLogs"
+                    class="form-control"
+                  >
                 </div>
               </div>
             </div>
@@ -494,35 +751,48 @@
       <div class="modal-dialog modal-lg wizard-pf">
         <div class="modal-content">
           <div class="modal-header">
-            <dt class="modal-title">{{wizard.isEdit ? $t('backup.edit_data_backup') : $t('backup.create_data_backup')}}</dt>
+            <dt
+              class="modal-title"
+            >{{wizard.isEdit ? $t('backup.edit_data_backup') : $t('backup.create_data_backup')}}</dt>
           </div>
 
           <div class="modal-body wizard-pf-body clearfix">
             <div class="wizard-pf-steps">
               <ul class="wizard-pf-steps-indicator">
-
-                <li :class="['wizard-pf-step', wizard.currentStep == 1 ? 'active' : '']" data-tabgroup="1">
+                <li
+                  :class="['wizard-pf-step', wizard.currentStep == 1 ? 'active' : '']"
+                  data-tabgroup="1"
+                >
                   <a>
                     <span class="wizard-pf-step-number">1</span>
                     <span class="wizard-pf-step-title">{{$t('backup.when')}}</span>
                   </a>
                 </li>
 
-                <li :class="['wizard-pf-step', wizard.currentStep == 2 ? 'active' : '']" data-tabgroup="2">
+                <li
+                  :class="['wizard-pf-step', wizard.currentStep == 2 ? 'active' : '']"
+                  data-tabgroup="2"
+                >
                   <a>
                     <span class="wizard-pf-step-number">2</span>
                     <span class="wizard-pf-step-title">{{$t('backup.where')}}</span>
                   </a>
                 </li>
 
-                <li :class="['wizard-pf-step', wizard.currentStep == 3 ? 'active' : '']" data-tabgroup="3">
+                <li
+                  :class="['wizard-pf-step', wizard.currentStep == 3 ? 'active' : '']"
+                  data-tabgroup="3"
+                >
                   <a>
                     <span class="wizard-pf-step-number">3</span>
                     <span class="wizard-pf-step-title">{{$t('backup.how')}}</span>
                   </a>
                 </li>
 
-                <li :class="['wizard-pf-step', wizard.currentStep == 4 ? 'active' : '']" data-tabgroup="3">
+                <li
+                  :class="['wizard-pf-step', wizard.currentStep == 4 ? 'active' : '']"
+                  data-tabgroup="3"
+                >
                   <a>
                     <span class="wizard-pf-step-number">4</span>
                     <span class="wizard-pf-step-title">{{$t('backup.final')}}</span>
@@ -534,20 +804,25 @@
             <div class="wizard-pf-row">
               <div class="wizard-pf-main">
                 <div :class="['wizard-pf-contents', wizard.currentStep == 1 ? '' : 'hidden']">
-                  <div class="blank-slate-pf " id="">
+                  <div class="blank-slate-pf" id>
                     <div class="blank-slate-pf-icon">
                       <span class="fa fa-clock-o"></span>
                     </div>
-                    <h1>
-                      {{$t('backup.wizard_choose_when_title')}}
-                    </h1>
+                    <h1>{{$t('backup.wizard_choose_when_title')}}</h1>
                   </div>
                   <form id="local-ldap" class="form-horizontal" v-on:submit.prevent="nextStep()">
                     <div class="modal-body">
                       <div v-show="!wizard.isEditCron" class="form-group">
-                        <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('backup.every')}}</label>
+                        <label
+                          class="col-sm-2 control-label"
+                          for="textInput-modal-markup"
+                        >{{$t('backup.every')}}</label>
                         <div class="col-sm-2">
-                          <select @change="resetCronTab()" v-model="wizard.when.every" class="combobox form-control">
+                          <select
+                            @change="resetCronTab()"
+                            v-model="wizard.when.every"
+                            class="combobox form-control"
+                          >
                             <option value="hour">{{$t('backup.hour')}}</option>
                             <option value="day">{{$t('backup.day')}}</option>
                             <option value="week">{{$t('backup.week')}}</option>
@@ -555,56 +830,125 @@
                           </select>
                         </div>
                         <!-- HOUR -->
-                        <label v-if="wizard.when.every == 'hour'" class="col-sm-2 control-label adjust-label-wizard"
-                          for="textInput-modal-markup">{{$t('backup.at_minute')}}</label>
+                        <label
+                          v-if="wizard.when.every == 'hour'"
+                          class="col-sm-2 control-label adjust-label-wizard"
+                          for="textInput-modal-markup"
+                        >{{$t('backup.at_minute')}}</label>
                         <div v-if="wizard.when.every == 'hour'" class="col-sm-6">
-                          <input v-model="wizard.when.minute" type="number" min="0" max="59" class="form-control">
+                          <input
+                            v-model="wizard.when.minute"
+                            type="number"
+                            min="0"
+                            max="59"
+                            class="form-control"
+                          >
                         </div>
                         <!-- -->
                         <!-- DAY -->
-                        <label v-if="wizard.when.every == 'day'" class="col-sm-2 control-label adjust-label-wizard" for="textInput-modal-markup">{{$t('backup.at_hour')}}</label>
+                        <label
+                          v-if="wizard.when.every == 'day'"
+                          class="col-sm-2 control-label adjust-label-wizard"
+                          for="textInput-modal-markup"
+                        >{{$t('backup.at_hour')}}</label>
                         <div v-if="wizard.when.every == 'day'" class="col-sm-2">
-                          <input v-model="wizard.when.hour" type="number" min="0" max="23" class="form-control">
+                          <input
+                            v-model="wizard.when.hour"
+                            type="number"
+                            min="0"
+                            max="23"
+                            class="form-control"
+                          >
                         </div>
-                        <label v-if="wizard.when.every == 'day'" class="col-sm-2 control-label adjust-label-wizard" for="textInput-modal-markup">{{$t('backup.at_minute')}}</label>
+                        <label
+                          v-if="wizard.when.every == 'day'"
+                          class="col-sm-2 control-label adjust-label-wizard"
+                          for="textInput-modal-markup"
+                        >{{$t('backup.at_minute')}}</label>
                         <div v-if="wizard.when.every == 'day'" class="col-sm-2">
-                          <input v-model="wizard.when.minute" type="number" min="0" max="59" class="form-control">
+                          <input
+                            v-model="wizard.when.minute"
+                            type="number"
+                            min="0"
+                            max="59"
+                            class="form-control"
+                          >
                         </div>
                         <!-- -->
                         <!-- WEEK -->
-                        <label v-if="wizard.when.every == 'week'" class="col-sm-2 control-label adjust-label-wizard"
-                          for="textInput-modal-markup">{{$t('backup.on_day')}}</label>
+                        <label
+                          v-if="wizard.when.every == 'week'"
+                          class="col-sm-2 control-label adjust-label-wizard"
+                          for="textInput-modal-markup"
+                        >{{$t('backup.on_day')}}</label>
                         <div v-if="wizard.when.every == 'week'" class="col-sm-2">
                           <select v-model="wizard.when.week_day" class="combobox form-control">
-                            <option v-for="(w,i) in weekdays()" v-bind:key="w" :value="i">{{w | capitalize}}</option>
+                            <option
+                              v-for="(w,i) in weekdays()"
+                              v-bind:key="w"
+                              :value="i"
+                            >{{w | capitalize}}</option>
                           </select>
                         </div>
-                        <label v-if="wizard.when.every == 'week'" class="col-sm-1 control-label adjust-label-wizard"
-                          for="textInput-modal-markup">{{$t('backup.at')}}</label>
+                        <label
+                          v-if="wizard.when.every == 'week'"
+                          class="col-sm-1 control-label adjust-label-wizard"
+                          for="textInput-modal-markup"
+                        >{{$t('backup.at')}}</label>
                         <div v-if="wizard.when.every == 'week'" class="col-sm-3">
-                          <input v-model="wizard.when.hour_minute" type="text" class="col-sm-1 form-control reset-width">
+                          <input
+                            v-model="wizard.when.hour_minute"
+                            type="text"
+                            class="col-sm-1 form-control reset-width"
+                          >
                         </div>
                         <!-- -->
                         <!-- MONTH -->
-                        <label v-if="wizard.when.every == 'month'" class="col-sm-2 control-label adjust-label-wizard"
-                          for="textInput-modal-markup">{{$t('backup.on_day')}}</label>
+                        <label
+                          v-if="wizard.when.every == 'month'"
+                          class="col-sm-2 control-label adjust-label-wizard"
+                          for="textInput-modal-markup"
+                        >{{$t('backup.on_day')}}</label>
                         <div v-if="wizard.when.every == 'month'" class="col-sm-2">
-                          <input v-model="wizard.when.day" type="number" min="1" max="31" class="form-control">
+                          <input
+                            v-model="wizard.when.day"
+                            type="number"
+                            min="1"
+                            max="31"
+                            class="form-control"
+                          >
                         </div>
-                        <label v-if="wizard.when.every == 'month'" class="col-sm-1 control-label adjust-label-wizard"
-                          for="textInput-modal-markup">{{$t('backup.at')}}</label>
+                        <label
+                          v-if="wizard.when.every == 'month'"
+                          class="col-sm-1 control-label adjust-label-wizard"
+                          for="textInput-modal-markup"
+                        >{{$t('backup.at')}}</label>
                         <div v-if="wizard.when.every == 'month'" class="col-sm-3">
-                          <input v-model="wizard.when.hour_minute" type="text" class="col-sm-1 form-control reset-width">
+                          <input
+                            v-model="wizard.when.hour_minute"
+                            type="text"
+                            class="col-sm-1 form-control reset-width"
+                          >
                         </div>
                         <!-- -->
                       </div>
                       <p class="cron-human-text">{{crontabComputed | cronToHuman}}</p>
                       <div class="form-group">
                         <div :class="[wizard.isEditCron ? 'col-sm-10' : 'col-sm-12']">
-                          <input disabled type="text" class="form-control input-lg password-hints" v-model="wizard.when.crontab">
+                          <input
+                            disabled
+                            type="text"
+                            class="form-control input-lg password-hints"
+                            v-model="wizard.when.crontab"
+                          >
                         </div>
                         <div class="col-sm-2">
-                          <button v-if="wizard.isEditCron" type="button" @click="editCronTab()" class="btn btn-primary btn-lg">{{$t('edit')}}</button>
+                          <button
+                            v-if="wizard.isEditCron"
+                            type="button"
+                            @click="editCronTab()"
+                            class="btn btn-primary btn-lg"
+                          >{{$t('edit')}}</button>
                         </div>
                       </div>
                     </div>
@@ -612,99 +956,154 @@
                 </div>
 
                 <div :class="['wizard-pf-contents', wizard.currentStep == 2 ? '' : 'hidden']">
-                  <div class="blank-slate-pf " id="">
+                  <div class="blank-slate-pf" id>
                     <div class="blank-slate-pf-icon">
                       <span class="pficon pficon-volume"></span>
                     </div>
-                    <h1>
-                      {{$t('backup.wizard_choose_where_title')}}
-                    </h1>
+                    <h1>{{$t('backup.wizard_choose_where_title')}}</h1>
                     <div class="blank-slate-pf-main-action row wizard-where-choices">
-                      <div @click="selectWhere('nfs')" :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 'nfs' ? 'active-choose' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectWhere('nfs')"
+                        :class="['col-xs-12 col-sm-3 col-md-3 col-lg-3 card-pf', wizard.where.choice == 'nfs' ? 'active-choose' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-hdd-o"></span>
                           </div>
-                          <h3>
-                            NFS
-                          </h3>
+                          <h3>NFS</h3>
                           <p>
-                            <doc-info :placement="'top'" :title="'NFS'" :chapter="'backup'" :section="'nfs'"></doc-info>
+                            <doc-info
+                              :placement="'top'"
+                              :title="'NFS'"
+                              :chapter="'backup'"
+                              :section="'nfs'"
+                            ></doc-info>
                           </p>
                         </div>
                       </div>
-                      <div @click="selectWhere('cifs')" :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 'cifs' ? 'active-choose' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectWhere('cifs')"
+                        :class="['col-xs-12 col-sm-3 col-md-3 col-lg-3 card-pf', wizard.where.choice == 'cifs' ? 'active-choose' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-folder-open"></span>
                           </div>
-                          <h3>
-                            CIFS
-                          </h3>
+                          <h3>CIFS</h3>
                           <p>
-                            <doc-info :placement="'top'" :title="'CIFS'" :chapter="'backup'" :section="'cifs'"></doc-info>
+                            <doc-info
+                              :placement="'top'"
+                              :title="'CIFS'"
+                              :chapter="'backup'"
+                              :section="'cifs'"
+                            ></doc-info>
                           </p>
                         </div>
                       </div>
-                      <div @click="selectWhere('usb')" :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 'usb' ? 'active-choose' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectWhere('usb')"
+                        :class="['col-xs-12 col-sm-3 col-md-3 col-lg-3 card-pf', wizard.where.choice == 'usb' ? 'active-choose' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-usb"></span>
                           </div>
-                          <h3>
-                            {{$t('backup.disk')}}
-                          </h3>
+                          <h3>{{$t('backup.disk')}}</h3>
                           <p>
-                            <doc-info :placement="'top'" :title="$t('backup.disk')" :chapter="'backup'" :section="'usb'"></doc-info>
+                            <doc-info
+                              :placement="'top'"
+                              :title="$t('backup.disk')"
+                              :chapter="'backup'"
+                              :section="'usb'"
+                            ></doc-info>
+                          </p>
+                        </div>
+                      </div>
+                      <div
+                        @click="selectWhere('webdav')"
+                        :class="['col-xs-12 col-sm-3 col-md-3 col-lg-3 card-pf', wizard.where.choice == 'webdav' ? 'active-choose' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
+                          <div class="blank-slate-pf-icon small-size-wizard">
+                            <span class="fa fa-cloud"></span>
+                          </div>
+                          <h3>{{$t('backup.webdav')}}</h3>
+                          <p>
+                            <doc-info
+                              :placement="'top'"
+                              :title="$t('backup.webdav')"
+                              :chapter="'backup'"
+                              :section="'webdav'"
+                            ></doc-info>
                           </p>
                         </div>
                       </div>
                     </div>
                     <div class="blank-slate-pf-main-action row wizard-where-choices adjust-top-col">
-                      <div @click="selectWhere('sftp')" :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 'sftp' ? 'active-choose' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectWhere('sftp')"
+                        :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 'sftp' ? 'active-choose' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-terminal"></span>
                           </div>
-                          <h3>
-                            SFTP
-                          </h3>
+                          <h3>SFTP</h3>
                           <p>
-                            <doc-info :placement="'top'" :title="'SFTP'" :chapter="'backup'" :section="'sftp'"></doc-info>
+                            <doc-info
+                              :placement="'top'"
+                              :title="'SFTP'"
+                              :chapter="'backup'"
+                              :section="'sftp'"
+                            ></doc-info>
                           </p>
                         </div>
                       </div>
-                      <div @click="selectWhere('b2')" :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 'b2' ? 'active-choose' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectWhere('b2')"
+                        :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 'b2' ? 'active-choose' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-fire"></span>
                           </div>
-                          <h3>
-                            Backblaze B2
-                          </h3>
+                          <h3>Backblaze B2</h3>
                           <p>
-                            <doc-info :placement="'top'" :title="'Backblaze B2'" :chapter="'backup'" :section="'b2'"></doc-info>
+                            <doc-info
+                              :placement="'top'"
+                              :title="'Backblaze B2'"
+                              :chapter="'backup'"
+                              :section="'b2'"
+                            ></doc-info>
                           </p>
                         </div>
                       </div>
-                      <div @click="selectWhere('s3')" :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 's3' ? 'active-choose' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectWhere('s3')"
+                        :class="['col-xs-12 col-sm-4 col-md-4 col-lg-4 card-pf', wizard.where.choice == 's3' ? 'active-choose' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-amazon"></span>
                           </div>
-                          <h3>
-                            Amazon S3
-                          </h3>
+                          <h3>Amazon S3</h3>
                           <p>
-                            <doc-info :placement="'top'" :title="'Amazon S3'" :chapter="'backup'" :section="'s3'"></doc-info>
+                            <doc-info
+                              :placement="'top'"
+                              :title="'Amazon S3'"
+                              :chapter="'backup'"
+                              :section="'s3'"
+                            ></doc-info>
                           </p>
                         </div>
                       </div>
                     </div>
-
                   </div>
                   <form class="form-horizontal" v-on:submit.prevent="checkWhereConfiguration()">
-                    <div v-if="wizard.where.configError && !wizard.where.isChecking" class="alert alert-danger alert-dismissable compact">
+                    <div
+                      v-if="wizard.where.configError && !wizard.where.isChecking"
+                      class="alert alert-danger alert-dismissable compact"
+                    >
                       <span class="pficon pficon-error-circle-o"></span>
                       <strong>{{$t('backup.where_config_error')}}.</strong>
                       {{$t('backup.where_config_error_description')}}.
@@ -713,18 +1112,31 @@
                       <!-- NFS -->
                       <div v-if="wizard.where.choice == 'nfs'">
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'NFSShare' |
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'NFSShare' |
                             camelToSentence}}
                           </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.nfs.NFSShare" class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.nfs.NFSShare"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'NFSHost' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'NFSHost' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.nfs.NFSHost" class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.nfs.NFSHost"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                       </div>
@@ -732,31 +1144,59 @@
                       <!-- CIFS -->
                       <div v-if="wizard.where.choice == 'cifs'">
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SMBShare' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'SMBShare' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.cifs.SMBShare" class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.cifs.SMBShare"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SMBHost' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'SMBHost' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.cifs.SMBHost" class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.cifs.SMBHost"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SMBLogin' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'SMBLogin' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.cifs.SMBLogin" class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.cifs.SMBLogin"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SMBPassword' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'SMBPassword' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.cifs.SMBPassword" class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.cifs.SMBPassword"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                       </div>
@@ -764,38 +1204,89 @@
                       <!-- USB -->
                       <div v-if="wizard.where.choice == 'usb'">
                         <div v-show="!wizard.isEditUSB" class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.usb_list')}}</label>
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('backup.usb_list')}}</label>
                           <div class="col-sm-6">
                             <div v-if="wizard.where.usb.isRefreshingUSB" class="spinner spinner-sm"></div>
-                            <select v-show="!wizard.where.usb.isRefreshingUSB" title="-" required v-model="wizard.where.usb.USBDevice"
-                              @change="getUSBDevicePartitions()" class="combobox form-control">
-                              <option v-for="d in wizard.where.usb.devices" v-bind:key="d" :value="d">{{d.name}} -
-                                {{d.model}} | {{d.size | byteFormat}}</option>
+                            <select
+                              v-show="!wizard.where.usb.isRefreshingUSB"
+                              title="-"
+                              required
+                              v-model="wizard.where.usb.USBDevice"
+                              @change="getUSBDevicePartitions()"
+                              class="combobox form-control"
+                            >
+                              <option
+                                v-for="d in wizard.where.usb.devices"
+                                v-bind:key="d"
+                                :value="d"
+                              >
+                                {{d.name}} -
+                                {{d.model}} | {{d.size | byteFormat}}
+                              </option>
                             </select>
                           </div>
                           <div class="col-sm-3">
-                            <button type="button" @click="getUSBDevices()" class="btn btn-default">{{$t('backup.refresh')}}</button>
+                            <button
+                              type="button"
+                              @click="getUSBDevices()"
+                              class="btn btn-default"
+                            >{{$t('backup.refresh')}}</button>
                           </div>
                         </div>
-                        <div v-show="!wizard.isEditUSB && !wizard.where.usb.isRefreshingUSB" v-if="wizard.where.usb.partitions.length > 0"
-                          v-for="(p,i) in wizard.where.usb.partitions" v-bind:key="i" class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup"><span v-if="i == 0">{{$t('backup.usb_partitions')}}</span></label>
+                        <div
+                          v-show="!wizard.isEditUSB && !wizard.where.usb.isRefreshingUSB"
+                          v-if="wizard.where.usb.partitions.length > 0"
+                          v-for="(p,i) in wizard.where.usb.partitions"
+                          v-bind:key="i"
+                          class="form-group"
+                        >
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            <span v-if="i == 0">{{$t('backup.usb_partitions')}}</span>
+                          </label>
                           <div class="col-sm-9">
-                            <span class="provider-details" @click="selectUSBDevicePartition(p)">{{p.label}}: {{p.fstype
-                              | uppercase}} | {{p.size | byteFormat}}</span>
+                            <span class="provider-details" @click="selectUSBDevicePartition(p)">
+                              {{p.label}}: {{p.fstype
+                              | uppercase}} | {{p.size | byteFormat}}
+                            </span>
                           </div>
                         </div>
-                        <div v-if="!wizard.isEditUSB && wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.formatted && !wizard.where.usb.isRefreshingUSB"
-                          class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.usb_label')}}</label>
+                        <div
+                          v-if="!wizard.isEditUSB && wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.formatted && !wizard.where.usb.isRefreshingUSB"
+                          class="form-group"
+                        >
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('backup.usb_label')}}</label>
                           <div class="col-sm-9">
-                            <input required disabled type="text" v-model="wizard.where.usb.USBLabel" class="form-control">
+                            <input
+                              required
+                              disabled
+                              type="text"
+                              v-model="wizard.where.usb.USBLabel"
+                              class="form-control"
+                            >
                           </div>
                         </div>
-                        <div v-if="wizard.isEditUSB && !wizard.where.usb.isRefreshingUSB" class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.usb_label')}}</label>
+                        <div
+                          v-if="wizard.isEditUSB && !wizard.where.usb.isRefreshingUSB"
+                          class="form-group"
+                        >
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('backup.usb_label')}}</label>
                           <div class="col-sm-6">
-                            <input required disabled type="text" v-model="wizard.where.usb.USBLabel" class="form-control">
+                            <input
+                              required
+                              disabled
+                              type="text"
+                              v-model="wizard.where.usb.USBLabel"
+                              class="form-control"
+                            >
                           </div>
                           <div class="col-sm-3">
                             <button @click="editUSBDevice()" class="btn btn-primary">{{$t('edit')}}</button>
@@ -803,53 +1294,149 @@
                         </div>
                       </div>
                       <!-- -->
+                      <!-- WEBDAV -->
+                      <div v-if="wizard.where.choice == 'webdav'">
+                        <div class="form-group">
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{'WebDAV User'}}</label>
+                          <div class="col-sm-9">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.webdav.WebDAVLogin"
+                              class="form-control"
+                            >
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'WebDAV Password'
+                            }}
+                          </label>
+                          <div class="col-sm-9">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.webdav.WebDAVPassword"
+                              class="form-control"
+                            >
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'WebDAV URL'
+                            }}
+                          </label>
+                          <div class="col-sm-9">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.webdav.WebDAVUrl"
+                              class="form-control"
+                            >
+                          </div>
+                        </div>
+                      </div>
+                      <!-- -->
                       <!-- SFTP -->
                       <div v-if="wizard.where.choice == 'sftp'">
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SFTPHost' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'SFTPHost' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.sftp.SftpHost" class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.sftp.SftpHost"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SFTPPort' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'SFTPPort' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.sftp.SftpPort" class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.sftp.SftpPort"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SFTPUser' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'SFTPUser' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.sftp.SftpUser"
-                              class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.sftp.SftpUser"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SFTPPassword' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'SFTPPassword' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-7">
-                            <input :disabled="wizard.isEdit && !wizard.where.sftp.toggleEdit" required :type="wizard.where.sftp.togglePass ? 'text' : 'password'" v-model="wizard.where.sftp.SftpPassword"
-                              class="form-control" :placeholder="$t('backup.password_is_the_key')">
+                            <input
+                              :disabled="wizard.isEdit && !wizard.where.sftp.toggleEdit"
+                              required
+                              :type="wizard.where.sftp.togglePass ? 'text' : 'password'"
+                              v-model="wizard.where.sftp.SftpPassword"
+                              class="form-control"
+                              :placeholder="$t('backup.password_is_the_key')"
+                            >
                           </div>
                           <div class="col-sm-1">
-                            <button tabindex="-1" @click="toggleEdit()" type="button" class="btn btn-primary adjust-top-min">
-                              <span :class="[!wizard.where.sftp.toggleEdit ? 'fa fa-edit' : 'fa fa-ban']"></span>
+                            <button
+                              tabindex="-1"
+                              @click="toggleEdit()"
+                              type="button"
+                              class="btn btn-primary adjust-top-min"
+                            >
+                              <span
+                                :class="[!wizard.where.sftp.toggleEdit ? 'fa fa-edit' : 'fa fa-ban']"
+                              ></span>
                             </button>
                           </div>
                           <div class="col-sm-1">
-                            <button :disabled="!wizard.where.sftp.toggleEdit" tabindex="-1" @click="togglePass()" type="button" class="btn btn-primary adjust-top-min">
-                              <span :class="[!wizard.where.sftp.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"></span>
+                            <button
+                              :disabled="!wizard.where.sftp.toggleEdit"
+                              tabindex="-1"
+                              @click="togglePass()"
+                              type="button"
+                              class="btn btn-primary adjust-top-min"
+                            >
+                              <span
+                                :class="[!wizard.where.sftp.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"
+                              ></span>
                             </button>
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'SFTPDirectory' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'SFTPDirectory' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.sftp.SftpDirectory" class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.sftp.SftpDirectory"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                       </div>
@@ -857,24 +1444,45 @@
                       <!-- B2 -->
                       <div v-if="wizard.where.choice == 'b2'">
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'B2Bucket' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'B2Bucket' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.b2.B2Bucket" class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.b2.B2Bucket"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'B2AccountId' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'B2AccountId' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.b2.B2AccountId" class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.b2.B2AccountId"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'B2AccountKey' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'B2AccountKey' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.b2.B2AccountKey" class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.b2.B2AccountKey"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                       </div>
@@ -882,41 +1490,75 @@
                       <!-- S3 -->
                       <div v-if="wizard.where.choice == 's3'">
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'S3Bucket' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'S3Bucket' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.s3.S3Bucket" class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.s3.S3Bucket"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'S3Host' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'S3Host' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.s3.S3Host" class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.s3.S3Host"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'S3AccessKey' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'S3AccessKey' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.s3.S3AccessKey" class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.s3.S3AccessKey"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{'S3SecretKey' |
-                            camelToSentence}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{'S3SecretKey' |
+                            camelToSentence}}
+                          </label>
                           <div class="col-sm-9">
-                            <input required type="text" v-model="wizard.where.s3.S3SecretKey" class="form-control">
+                            <input
+                              required
+                              type="text"
+                              v-model="wizard.where.s3.S3SecretKey"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                       </div>
                       <!-- -->
-                      <div v-if="wizard.where.choice != 'usb' || (wizard.where.choice == 'usb' && wizard.where.usb.USBDevice)"
-                        class="form-group">
+                      <div
+                        v-if="wizard.where.choice != 'usb' || (wizard.where.choice == 'usb' && wizard.where.usb.USBDevice)"
+                        class="form-group"
+                      >
                         <label class="col-sm-3 control-label" for="textInput-modal-markup"></label>
                         <div class="col-sm-2">
-                          <button v-if="!wizard.where.usb.isRefreshingUSB" :disabled="wizard.where.isChecking || (wizard.where.choice == 'usb' && (wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.formatted == 1) && wizard.where.usb.USBLabel.length == 0)"
-                            type="submit" class="btn btn-primary">
+                          <button
+                            v-if="!wizard.where.usb.isRefreshingUSB"
+                            :disabled="wizard.where.isChecking || (wizard.where.choice == 'usb' && (wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.formatted == 1) && wizard.where.usb.USBLabel.length == 0)"
+                            type="submit"
+                            class="btn btn-primary"
+                          >
                             {{wizard.where.choice == 'usb' && wizard.where.usb.USBDevice &&
                             !wizard.where.usb.USBDevice.formatted ? $t('backup.format') : $t('backup.check')}}
                           </button>
@@ -927,11 +1569,20 @@
                         </div>
                       </div>
                       <!-- OUTPUT -->
-                      <div v-show="wizard.where.usb.isFormatting && wizard.where.choice == 'usb' && wizard.where.usb.USBDevice && !wizard.where.usb.USBDevice.formatted"
-                        class="form-group">
-                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('output')}}</label>
+                      <div
+                        v-show="wizard.where.usb.isFormatting && wizard.where.choice == 'usb' && wizard.where.usb.USBDevice && !wizard.where.usb.USBDevice.formatted"
+                        class="form-group"
+                      >
+                        <label
+                          class="col-sm-3 control-label"
+                          for="textInput-modal-markup"
+                        >{{$t('output')}}</label>
                         <div class="col-sm-9">
-                          <textarea id="format-output" class="form-control command-output" v-model="wizard.where.usb.formatOutput"></textarea>
+                          <textarea
+                            id="format-output"
+                            class="form-control command-output"
+                            v-model="wizard.where.usb.formatOutput"
+                          ></textarea>
                         </div>
                       </div>
                       <!-- -->
@@ -940,89 +1591,153 @@
                 </div>
 
                 <div :class="['wizard-pf-contents', wizard.currentStep == 3 ? '' : 'hidden']">
-                  <div class="blank-slate-pf " id="">
+                  <div class="blank-slate-pf" id>
                     <div class="blank-slate-pf-icon">
                       <span class="fa fa-space-shuttle"></span>
                     </div>
-                    <h1>
-                      {{$t('backup.wizard_choose_how_title')}}
-                    </h1>
+                    <h1>{{$t('backup.wizard_choose_how_title')}}</h1>
                     <div class="blank-slate-pf-main-action row wizard-where-choices">
-                      <div v-show="handleHow().duplicity" @click="selectHow('duplicity')" :class="['col-xs-12', 'col-sm-'+(12/handleHow().num), 'col-md-'+(12/handleHow().num), 'col-lg-'+(12/handleHow().num), 'card-pf', wizard.how.choice == 'duplicity' ? 'active-choose' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        v-show="handleHow().duplicity"
+                        @click="selectHow('duplicity')"
+                        :class="['col-xs-12', 'col-sm-'+(12/handleHow().num), 'col-md-'+(12/handleHow().num), 'col-lg-'+(12/handleHow().num), 'card-pf', wizard.how.choice == 'duplicity' ? 'active-choose' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-clone"></span>
                           </div>
-                          <h3>
-                            Duplicity
-                          </h3>
+                          <h3>Duplicity</h3>
                           <p>
-                            <doc-info :placement="'top'" :title="'Duplicity'" :chapter="'backup'" :section="'duplicity'"></doc-info>
+                            <doc-info
+                              :placement="'top'"
+                              :title="'Duplicity'"
+                              :chapter="'backup'"
+                              :section="'duplicity'"
+                            ></doc-info>
                           </p>
                         </div>
                       </div>
-                      <div v-show="handleHow().restic" @click="selectHow('restic')" :class="['col-xs-12', 'col-sm-'+(12/handleHow().num), 'col-md-'+(12/handleHow().num), 'col-lg-'+(12/handleHow().num), 'card-pf', wizard.how.choice == 'restic' ? 'active-choose' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        v-show="handleHow().restic"
+                        @click="selectHow('restic')"
+                        :class="['col-xs-12', 'col-sm-'+(12/handleHow().num), 'col-md-'+(12/handleHow().num), 'col-lg-'+(12/handleHow().num), 'card-pf', wizard.how.choice == 'restic' ? 'active-choose' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-rocket"></span>
                           </div>
-                          <h3>
-                            Restic
-                          </h3>
+                          <h3>Restic</h3>
                           <p>
-                            <doc-info :placement="'top'" :title="'Restic'" :chapter="'backup'" :section="'restic'"></doc-info>
+                            <doc-info
+                              :placement="'top'"
+                              :title="'Restic'"
+                              :chapter="'backup'"
+                              :section="'restic'"
+                            ></doc-info>
                           </p>
                         </div>
                       </div>
-                      <div v-show="handleHow().rsync" @click="selectHow('rsync')" :class="['col-xs-12', 'col-sm-'+(12/handleHow().num), 'col-md-'+(12/handleHow().num), 'col-lg-'+(12/handleHow().num), 'card-pf', wizard.how.choice == 'rsync' ? 'active-choose' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        v-show="handleHow().rsync"
+                        @click="selectHow('rsync')"
+                        :class="['col-xs-12', 'col-sm-'+(12/handleHow().num), 'col-md-'+(12/handleHow().num), 'col-lg-'+(12/handleHow().num), 'card-pf', wizard.how.choice == 'rsync' ? 'active-choose' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-refresh"></span>
                           </div>
-                          <h3>
-                            rSync
-                          </h3>
+                          <h3>rSync</h3>
                           <p>
-                            <doc-info :placement="'top'" :title="'rSync'" :chapter="'backup'" :section="'rsync'"></doc-info>
+                            <doc-info
+                              :placement="'top'"
+                              :title="'rSync'"
+                              :chapter="'backup'"
+                              :section="'rsync'"
+                            ></doc-info>
                           </p>
                         </div>
                       </div>
                     </div>
-
                   </div>
                   <form class="form-horizontal" v-on:submit.prevent="nextStep()">
                     <div class="modal-body">
                       <!-- DUPLICITY -->
                       <div v-if="wizard.how.choice == 'duplicity'">
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.type')}}</label>
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('backup.type')}}</label>
                           <div class="col-sm-9">
-                            <select required v-model="wizard.how.duplicity.Type" class="combobox form-control">
-                              <option v-for="d in wizard.how.duplicity.types" v-bind:key="d" :value="d">{{d |
-                                capitalize}}</option>
+                            <select
+                              required
+                              v-model="wizard.how.duplicity.Type"
+                              class="combobox form-control"
+                            >
+                              <option
+                                v-for="d in wizard.how.duplicity.types"
+                                v-bind:key="d"
+                                :value="d"
+                              >
+                                {{d |
+                                capitalize}}
+                              </option>
                             </select>
                           </div>
                         </div>
                         <div v-if="wizard.how.duplicity.Type == 'incremental'" class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.full_day')}}</label>
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('backup.full_day')}}</label>
                           <div class="col-sm-9">
-                            <select required v-model="wizard.how.duplicity.FullDay" class="combobox form-control">
-                              <option v-for="(d,i) in wizard.how.duplicity.days" v-bind:key="i" :value="i">{{d |
-                                capitalize}}</option>
+                            <select
+                              required
+                              v-model="wizard.how.duplicity.FullDay"
+                              class="combobox form-control"
+                            >
+                              <option
+                                v-for="(d,i) in wizard.how.duplicity.days"
+                                v-bind:key="i"
+                                :value="i"
+                              >
+                                {{d |
+                                capitalize}}
+                              </option>
                             </select>
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.vol_size')}}</label>
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('backup.vol_size')}}</label>
                           <div class="col-sm-9">
-                            <input required type="number" min="2" v-model="wizard.how.duplicity.VolSize" class="form-control">
+                            <input
+                              required
+                              type="number"
+                              min="2"
+                              v-model="wizard.how.duplicity.VolSize"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.cleanup_older_than')}}</label>
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('backup.cleanup_older_than')}}</label>
                           <div class="col-sm-9">
-                            <select required v-model="wizard.how.duplicity.CleanupOlderThan" class="combobox form-control">
-                              <option v-for="d in wizard.how.duplicity.cleanups" v-bind:key="d" :value="d">{{$t('backup.'+d)}}</option>
+                            <select
+                              required
+                              v-model="wizard.how.duplicity.CleanupOlderThan"
+                              class="combobox form-control"
+                            >
+                              <option
+                                v-for="d in wizard.how.duplicity.cleanups"
+                                v-bind:key="d"
+                                :value="d"
+                              >{{$t('backup.'+d)}}</option>
                             </select>
                           </div>
                         </div>
@@ -1031,74 +1746,156 @@
                       <!-- RESTIC -->
                       <div v-if="wizard.how.choice == 'restic'">
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.prune')}}</label>
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('backup.prune')}}</label>
                           <div class="col-sm-9">
-                            <select title="-" required v-model="wizard.how.restic.Prune" class="combobox form-control">
-                              <option v-for="(d,i) in wizard.how.restic.prunes" v-bind:key="i" :value="i">{{d |
-                                capitalize}}</option>
+                            <select
+                              title="-"
+                              required
+                              v-model="wizard.how.restic.Prune"
+                              class="combobox form-control"
+                            >
+                              <option
+                                v-for="(d,i) in wizard.how.restic.prunes"
+                                v-bind:key="i"
+                                :value="i"
+                              >
+                                {{d |
+                                capitalize}}
+                              </option>
                             </select>
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.cleanup_older_than')}}</label>
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('backup.cleanup_older_than')}}</label>
                           <div class="col-sm-9">
-                            <select required v-model="wizard.how.restic.CleanupOlderThan" class="combobox form-control">
-                              <option v-for="d in wizard.how.restic.cleanups" v-bind:key="d" :value="d">{{$t('backup.'+d)}}</option>
+                            <select
+                              required
+                              v-model="wizard.how.restic.CleanupOlderThan"
+                              class="combobox form-control"
+                            >
+                              <option
+                                v-for="d in wizard.how.restic.cleanups"
+                                v-bind:key="d"
+                                :value="d"
+                              >{{$t('backup.'+d)}}</option>
                             </select>
                           </div>
                         </div>
                       </div>
                       <!-- -->
                       <!-- RSYNC -->
-                      <div v-if="wizard.how.choice == 'rsync'">
-                      </div>
+                      <div v-if="wizard.how.choice == 'rsync'"></div>
                       <!-- -->
                     </div>
                   </form>
                 </div>
 
                 <div :class="['wizard-pf-contents', wizard.currentStep == 4 ? '' : 'hidden']">
-                  <div class="blank-slate-pf " id="">
+                  <div class="blank-slate-pf" id>
                     <div class="blank-slate-pf-icon">
                       <span class="fa fa-database"></span>
                     </div>
-                    <h1>
-                      {{$t('backup.wizard_choose_config')}}
-                    </h1>
+                    <h1>{{$t('backup.wizard_choose_config')}}</h1>
                   </div>
-                  <form id="local-data" class="form-horizontal" v-on:submit.prevent="createDataBackup()">
+                  <form
+                    id="local-data"
+                    class="form-horizontal"
+                    v-on:submit.prevent="createDataBackup()"
+                  >
                     <div class="modal-body">
-                      <div :class="['form-group', wizard.review.errors.name.hasError ? 'has-error' : '']">
-                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.name')}}</label>
+                      <div
+                        :class="['form-group', wizard.review.errors.name.hasError ? 'has-error' : '']"
+                      >
+                        <label
+                          class="col-sm-3 control-label"
+                          for="textInput-modal-markup"
+                        >{{$t('backup.name')}}</label>
                         <div class="col-sm-6">
-                          <input :disabled="wizard.isEdit" required type="text" v-model="wizard.review.Name" class="form-control">
-                          <span v-if="wizard.review.errors.name.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                            {{$t('validation.'+wizard.review.errors.name.message)}}</span>
+                          <input
+                            :disabled="wizard.isEdit"
+                            required
+                            type="text"
+                            v-model="wizard.review.Name"
+                            class="form-control"
+                          >
+                          <span v-if="wizard.review.errors.name.hasError" class="help-block">
+                            {{$t('validation.validation_failed')}}:
+                            {{$t('validation.'+wizard.review.errors.name.message)}}
+                          </span>
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.notify_on')}}</label>
+                        <label
+                          class="col-sm-3 control-label"
+                          for="textInput-modal-markup"
+                        >{{$t('backup.notify_on')}}</label>
                         <div class="col-sm-6">
-                          <select required v-model="wizard.review.Notify" class="combobox form-control">
-                            <option v-for="d in wizard.review.notifyTypes" v-bind:key="d" :value="d">{{$t('backup.'+d)}}</option>
+                          <select
+                            required
+                            v-model="wizard.review.Notify"
+                            class="combobox form-control"
+                          >
+                            <option
+                              v-for="d in wizard.review.notifyTypes"
+                              v-bind:key="d"
+                              :value="d"
+                            >{{$t('backup.'+d)}}</option>
                           </select>
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.notify_to')}}</label>
+                        <label
+                          class="col-sm-3 control-label"
+                          for="notifyToChoice-1"
+                        >{{$t('backup.notify_to')}}</label>
                         <div class="col-sm-9">
-                          <input class="col-sm-2 col-xs-2" type="radio" v-model="wizard.review.notifyToChoice" value="root">
-                          <label class="col-sm-10 col-xs-10 control-label text-align-left">{{$t('backup.root')}}</label>
-                          <input class="col-sm-2 col-xs-2" type="radio" v-model="wizard.review.notifyToChoice" value="custom">
-                          <label class="col-sm-10 col-xs-10 control-label text-align-left">{{$t('backup.custom_email')}}</label>
+                          <input
+                            id="notifyToChoice-1"
+                            class="col-sm-2 col-xs-2"
+                            type="radio"
+                            v-model="wizard.review.notifyToChoice"
+                            value="root"
+                          >
+                          <label
+                            class="col-sm-10 col-xs-10 control-label text-align-left"
+                            for="notifyToChoice-2"
+                          >{{$t('backup.root')}}</label>
+                          <input
+                            id="notifyToChoice-2"
+                            class="col-sm-2 col-xs-2"
+                            type="radio"
+                            v-model="wizard.review.notifyToChoice"
+                            value="custom"
+                          >
+                          <label
+                            class="col-sm-10 col-xs-10 control-label text-align-left"
+                          >{{$t('backup.custom_email')}}</label>
                         </div>
                       </div>
-                      <div v-if="wizard.review.notifyToChoice == 'custom'" :class="['form-group', wizard.review.errors.NotifyTo.hasError ? 'has-error' : '']">
-                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('backup.email_address')}}</label>
+                      <div
+                        v-if="wizard.review.notifyToChoice == 'custom'"
+                        :class="['form-group', wizard.review.errors.NotifyTo.hasError ? 'has-error' : '']"
+                      >
+                        <label
+                          class="col-sm-3 control-label"
+                          for="textInput-modal-markup"
+                        >{{$t('backup.email_address')}}</label>
                         <div class="col-sm-6">
-                          <textarea :required="wizard.review.notifyToChoice == 'custom'" class="form-control" v-model="wizard.review.NotifyTo"></textarea>
-                          <span v-if="wizard.review.errors.NotifyTo.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                            {{$t('validation.'+wizard.review.errors.NotifyTo.message)}}</span>
+                          <textarea
+                            :required="wizard.review.notifyToChoice == 'custom'"
+                            class="form-control"
+                            v-model="wizard.review.NotifyTo"
+                          ></textarea>
+                          <span v-if="wizard.review.errors.NotifyTo.hasError" class="help-block">
+                            {{$t('validation.validation_failed')}}:
+                            {{$t('validation.'+wizard.review.errors.NotifyTo.message)}}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -1110,16 +1907,35 @@
 
           <div class="modal-footer wizard-pf-footer">
             <div v-if="wizard.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
-            <button @click="cancelWizard()" type="button" class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss">{{$t('cancel')}}</button>
-            <button :disabled="wizard.currentStep == 1" @click="prevStep()" type="button" class="btn btn-default wizard-pf-back">
+            <button
+              @click="cancelWizard()"
+              type="button"
+              class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss"
+            >{{$t('cancel')}}</button>
+            <button
+              :disabled="wizard.currentStep == 1"
+              @click="prevStep()"
+              type="button"
+              class="btn btn-default wizard-pf-back"
+            >
               <span class="i fa fa-angle-left"></span>
               {{$t('back')}}
             </button>
-            <button :disabled="checkIfDisabled()" @click="nextStep()" type="submit" class="btn btn-primary wizard-pf-next">
-              {{wizard.currentStep == 4 ? (wizard.isEdit ? $t('edit') : $t('create')) : $t('next')}}
-              <span class="i fa fa-angle-right"></span>
+            <button
+              :disabled="checkIfDisabled()"
+              @click="nextStep()"
+              type="submit"
+              class="btn btn-primary wizard-pf-next"
+            >
+              {{wizard.currentStep == 4 ? (wizard.isEdit ? $t('edit') : $t('backup.schedule')) : $t('next')}}
+              <span
+                class="i fa fa-angle-right"
+              ></span>
             </button>
-            <button type="button" class="btn btn-primary hidden wizard-pf-close wizard-pf-dismiss">{{$t('close')}}</button>
+            <button
+              type="button"
+              class="btn btn-primary hidden wizard-pf-close wizard-pf-dismiss"
+            >{{$t('close')}}</button>
           </div>
         </div>
       </div>
@@ -1128,17 +1944,25 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('backup.delete_data_backup')}}
-              {{currentDataBackup.name}}</h4>
+            <h4 class="modal-title">
+              {{$t('backup.delete_data_backup')}}
+              {{currentDataBackup.name}}
+            </h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="deleteDataBackup(currentDataBackup)">
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
               </div>
             </div>
             <div class="modal-footer">
-              <div v-if="currentDataBackup.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <div
+                v-if="currentDataBackup.isLoading"
+                class="spinner spinner-sm form-spinner-loader"
+              ></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-danger" type="submit">{{$t('delete')}}</button>
             </div>
@@ -1233,10 +2057,7 @@ export default {
             break;
           case "day":
             cronString =
-              this.wizard.when.minute +
-              " " +
-              this.wizard.when.hour +
-              " */1 * *";
+              this.wizard.when.minute + " " + this.wizard.when.hour + " * * *";
             break;
 
           case "week":
@@ -1249,7 +2070,7 @@ export default {
               (hour && !isNaN(parseInt(hour)))
             ) {
               cronString =
-                minute + " " + hour + " */1 * " + this.wizard.when.week_day;
+                minute + " " + hour + " * * " + this.wizard.when.week_day;
             } else {
               cronString = "";
             }
@@ -1266,7 +2087,7 @@ export default {
               (hour && !isNaN(parseInt(hour)))
             ) {
               cronString =
-                minute + " " + hour + " " + this.wizard.when.day + " */1 *";
+                minute + " " + hour + " " + this.wizard.when.day + " * *";
             } else {
               cronString = "";
             }
@@ -1299,6 +2120,7 @@ export default {
         "restore-data": 0,
         "backup-data": 0
       },
+      statusFlag: false,
       hints: {},
       pollingIntervalId: null
     };
@@ -1392,6 +2214,12 @@ export default {
             formatOutput: "",
             isFormatting: false,
             isRefreshingUSB: false
+          },
+          webdav: {
+            WebDAVLogin: b && b.props.WebDAVLogin ? b.props.WebDAVLogin : null,
+            WebDAVPassword:
+              b && b.props.WebDAVPassword ? b.props.WebDAVPassword : null,
+            WebDAVUrl: b && b.props.WebDAVUrl ? b.props.WebDAVUrl : null
           },
           sftp: {
             SftpDirectory:
@@ -1495,6 +2323,9 @@ export default {
       if (this.wizard.currentStep == 4) {
         this.createDataBackup();
       } else {
+        if (this.wizard.currentStep == 1) {
+          this.getUSBDevices();
+        }
         this.wizard.currentStep++;
       }
     },
@@ -1747,6 +2578,22 @@ export default {
             console.error(e);
           }
           context.status = success;
+
+          if (
+            context.status["backup-data"] > 0 ||
+            context.status["restore-data"] > 0
+          ) {
+            context.statusFlag = true;
+          }
+
+          if (
+            context.statusFlag &&
+            (context.status["backup-data"] == 0 &&
+              context.status["restore-data"] == 0)
+          ) {
+            context.getBackupInfo();
+            context.statusFlag = false;
+          }
         },
         function(error) {
           console.error(error);
@@ -1784,6 +2631,44 @@ export default {
               return i.id == id;
             })[0];
             context.backupData[b].status = status;
+
+            context.backupData[b].storageInfo = [
+              '<div class="progress-description compact">',
+              '<strong class="small-font">' +
+                context.$i18n.t("backup.destination_usage") +
+                ":</strong>" +
+                context.$options.filters.byteFormat(
+                  (context.backupData[b].status.destination &&
+                    context.backupData[b].status.destination.used) ||
+                    0
+                ),
+              "</div>",
+              '<div class="progress progress-label-top-right progress-xs">',
+              '<div class="progress-bar" role="progressbar" aria-valuenow="' +
+                ((context.backupData[b].status.destination &&
+                  context.backupData[b].status.destination.percentage) ||
+                  0) +
+                '" aria-valuemin="0" aria-valuemax="100" style="width: ' +
+                ((context.backupData[b].status.destination &&
+                  context.backupData[b].status.destination.percentage) ||
+                  0) +
+                '%;">',
+              "<span>" +
+                ((context.backupData[b].status.destination &&
+                  context.backupData[b].status.destination.percentage) ||
+                  0) +
+                "% (" +
+                context.$i18n.t("of") +
+                " " +
+                context.$options.filters.byteFormat(
+                  (context.backupData[b].status.destination &&
+                    context.backupData[b].status.destination.total) ||
+                    0
+                ) +
+                ")</span>",
+              "</div>",
+              "</div>"
+            ].join("");
           }
 
           context.globalConfigBackup = success.configuration["backup-config"];
@@ -1805,6 +2690,17 @@ export default {
             "enabled"
               ? true
               : false;
+
+          // visualize storage info
+
+          setTimeout(function() {
+            $("[data-toggle=popover]")
+              .popovers()
+              .popovers()
+              .on("hidden.bs.popover", function(e) {
+                $(e.target).data("bs.popover").inState.click = false;
+              });
+          }, 250);
         },
         function(error) {
           console.error(error);
@@ -2238,14 +3134,17 @@ export default {
           context.wizard.review.notifyToChoice == "root"
             ? ""
             : context.wizard.review.NotifyTo.length > 0
-              ? context.wizard.review.NotifyTo.split("\n").join(",")
-              : "",
+            ? context.wizard.review.NotifyTo.split("\n").join(",")
+            : "",
         BackupTime: context.wizard.when.crontab,
         VFSType: context.wizard.where.choice,
         SMBShare: context.wizard.where.cifs.SMBShare,
         SMBHost: context.wizard.where.cifs.SMBHost,
-        SMBUser: context.wizard.where.cifs.SMBUser,
-        SMBPassord: context.wizard.where.cifs.SMBPassord,
+        SMBLogin: context.wizard.where.cifs.SMBLogin,
+        SMBPassword: context.wizard.where.cifs.SMBPassword,
+        WebDAVLogin: context.wizard.where.cifs.WebDAVLogin,
+        WebDAVPassword: context.wizard.where.cifs.WebDAVPassword,
+        WebDAVUrl: context.wizard.where.cifs.WebDAVUrl,
         SftpHost: context.wizard.where.sftp.SftpHost,
         SftpPort: context.wizard.where.sftp.SftpPort,
         SftpUser: context.wizard.where.sftp.SftpUser,
