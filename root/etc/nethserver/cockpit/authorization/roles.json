@@ -1,24 +1,2 @@
 {
-  "domain admins": {
-    "system": [
-      "storage",
-      "disk-usage",
-      "certificates",
-      "backup",
-      "dns",
-      "dhcp",
-      "services",
-      "users-groups",
-      "network",
-      "ssh",
-      "tls-policy",
-      "trusted-networks",
-      "logs",
-      "applications",
-      "software-center",
-      "subscription",
-      "terminal"
-    ],
-    "applications": []
-  }
 }

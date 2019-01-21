@@ -5,6 +5,11 @@
 
     require "/usr/libexec/nethserver/api/lib/auth_functions.pl";
 
+    # Following the user's permissions 
+    # we could not be granted to the esmith API
+    my $groupAdmins = `sudo /sbin/e-smith/db configuration getprop admins group`;
+    chop $groupAdmins; # clean EOL
+
     my $jsonFile = '/etc/nethserver/cockpit/authorization/roles.json';
     my $data = read_json ($jsonFile); 
 
@@ -23,9 +28,26 @@
         'ssh'          => ["system-openssh"],
         'applications' => ["system-apps"],
     );
+
+    (my $groupAdminsAlias = uc $groupAdmins) =~ s/ //;
+    (my $groupAdminsSudo = $groupAdmins) =~ s/ /\\ /;
+
+    $OUT .= qq (
+#
+# default group administrator $groupAdmins
+#
+
+Cmnd_Alias $groupAdminsAlias = /usr/libexec/nethserver/api/*/*
+
+%$groupAdminsSudo ALL=NOPASSWD: $groupAdminsAlias
+
+# server-manager does not require a tty
+Defaults:%$groupAdminsSudo !requiretty
+);
     
     foreach my $key (keys %{$data}) {
 
+        next if ($key eq $groupAdmins);
         my @systems = @{$data->{$key}->{'system'}};
         my @applications = @{$data->{$key}->{'applications'}};
         my @roles = ();
@@ -54,8 +76,6 @@
 
         foreach my $role (@roles) {
 
-            $role = '*' if ($key eq 'domain\ admins');
-
             if (! exists $controllers{$role}){
                 if ($role =~ /^nethserver-/) {
                     push @commands, "/usr/libexec/nethserver/api/$role/*";
@@ -67,8 +87,6 @@
                     push @commands, "/usr/libexec/nethserver/api/$api/*";
                 }
             }  
-            # we allow all for admins
-            last if ($key eq 'domain\ admins');
         }
 
         $OUT .= join (', ',@commands);
