@@ -35,7 +35,6 @@ my @system_routes = list_system_routes();
 my $system_routes = read_json("/etc/nethserver/cockpit/authorization/system-routes.json");
 
 my $role = get_role($user);
-$ret->{'status'}->{'isRoot'} = int($user eq 'root');
 
 # root can always access everything
 if ($user eq 'root') {
@@ -45,10 +44,12 @@ if ($user eq 'root') {
     foreach my $a (@apps) {
         push($ret->{"applications"}, $a);
     }
-
+    
+    $ret->{'status'}->{'isRoot'} = int($user eq 'root');
     print encode_json($ret);
     exit(0);
 }
 
 $ret = get_acl($user, $role);
+$ret->{'status'}->{'isRoot'} = int($user eq 'root');
 print encode_json($ret);
