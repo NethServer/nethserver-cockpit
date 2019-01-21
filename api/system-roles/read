@@ -31,7 +31,13 @@ my $input = readInput();
 my $role = $input->{'role'} || '';
 my $cmd = $input->{'action'} || '';
 
-if ($cmd eq 'applications') {
+# Following the user's permissions 
+# we could not be granted to the esmith API
+my $groupAdmins = `sudo /sbin/e-smith/db configuration getprop admins group`;
+chop $groupAdmins; # clean EOL
+
+if (($cmd eq 'applications') ||
+        ($role eq $groupAdmins)) {
 
     my $ret = {"system" => [], "applications" => []};
     my @apps = list_applications();
@@ -45,6 +51,7 @@ if ($cmd eq 'applications') {
         push($ret->{"applications"}, $a);
     }
 
+    $ret->{"status"}->{"isAdmin"} = int($role eq $groupAdmins);
     print encode_json($ret);
     exit(0);
 
@@ -54,6 +61,7 @@ if ($cmd eq 'role') {
     my $data = read_json("/etc/nethserver/cockpit/authorization/roles.json");
 
     if(exists($data->{$role})) {
+        $data->{$role}->{"status"}->{"isAdmin"} = int($role eq $groupAdmins);
         print encode_json ($data->{$role});
     } else {
         print '{"system": [],"applications": []}';

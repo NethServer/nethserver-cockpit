@@ -31,13 +31,20 @@ my $jsonFile = '/etc/nethserver/cockpit/authorization/roles.json';
 my $input = readInput();
 my $role = $input->{'role'} || '';
 
+# Following the user's permissions 
+# we could not be granted to the esmith API
+my $groupAdmins = `sudo /sbin/e-smith/db configuration getprop admins group`;
+chop $groupAdmins; # clean EOL
+
 my $data = read_json ($jsonFile); 
 
 if ($role ne '') {
-    $data->{$role}->{'system'} = $input->{'system'};
-    $data->{$role}->{'applications'} = $input->{'applications'};
 
-    write_json ($jsonFile,$data);
+    if ($role ne  $groupAdmins) {
+        $data->{$role}->{'system'} = $input->{'system'};
+        $data->{$role}->{'applications'} = $input->{'applications'};
+        write_json ($jsonFile,$data);
+    }
 
     my $out = `/sbin/e-smith/expand-template /etc/sudoers.d/30nethserver_cockpit_roles`;
 

@@ -34,6 +34,7 @@ event_templates('nethserver-cockpit-update', qw(
     /etc/os-release
     /etc/cockpit/ws-certs.d/99-nethserver.cert
     /usr/share/cockpit/nethserver/manifest.json
+    /etc/sudoers.d/30nethserver_cockpit_roles
 ));
 
 event_services('nethserver-cockpit-update', qw(

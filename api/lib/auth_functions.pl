@@ -79,6 +79,18 @@ sub list_applications
     return @apps;
 }
 
+
+sub get_groups {
+    my @gnames;
+    my @groups = getgroups();
+    foreach my $g (getgroups()) {
+        my $gname = getgrgid($g);
+        $gname =~ s/@.*$//; # strip domain
+        push @gnames, $gname;
+    }
+    return @gnames;
+}
+
 sub get_acl
 {
     my $user = shift;
