@@ -30,16 +30,19 @@ use JSON;
 my $jsonFile = '/etc/nethserver/cockpit/authorization/roles.json';
 my $input = readInput();
 my $role = $input->{'role'} || '';
+my $groupAdmins = get_adminGroup();
 
 my $data = read_json ($jsonFile); 
 
 if ($role ne '') {
-    $data->{$role}->{'system'} = $input->{'system'};
-    $data->{$role}->{'applications'} = $input->{'applications'};
 
-    write_json ($jsonFile,$data);
+    if ($role ne  $groupAdmins) {
+        $data->{$role}->{'system'} = $input->{'system'};
+        $data->{$role}->{'applications'} = $input->{'applications'};
+        write_json ($jsonFile,$data);
+    }
 
-    my $out = `/sbin/e-smith/expand-template /etc/sudoers.d/30nethserver_cockpit_roles`;
+    my $out = `/sbin/e-smith/expand-template /etc/sudoers.d/30_nethserver_cockpit_roles`;
 
     if ($? > 0) {
         error("EventFailed", "");

@@ -79,6 +79,24 @@ sub list_applications
     return @apps;
 }
 
+sub get_adminGroup {
+    #Following the user's permissions we could not be granted to the esmith API
+    my $groupAdmins = `sudo /sbin/e-smith/db configuration getprop admins group`;
+    chop $groupAdmins; # clean EOL
+    return $groupAdmins
+}
+
+sub get_groups {
+    my @gnames;
+    my @groups = getgroups();
+    foreach my $g (getgroups()) {
+        my $gname = getgrgid($g);
+        $gname =~ s/@.*$//; # strip domain
+        push @gnames, $gname;
+    }
+    return @gnames;
+}
+
 sub get_acl
 {
     my $user = shift;
@@ -89,7 +107,7 @@ sub get_acl
         return $roles->{$role}
     }
 
-    return {};
+    return decode_json '{"system":[],"applications":[]}';
 }
 
 sub list_system_routes

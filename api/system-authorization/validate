@@ -30,9 +30,11 @@ my $input = readInput();
 my $cmd = $input->{'action'};
 my $name = $input->{'name'};
 my $user = whoami();
+my $groupAdmins = get_adminGroup();
 
 # root can always access everything
-if ($user eq 'root') {
+if (($user eq 'root') ||
+        (grep /^$groupAdmins$/, get_groups())) {
     success();
 }
 
