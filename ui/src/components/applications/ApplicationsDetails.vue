@@ -18,7 +18,6 @@
       class="iframe-embedded"
       :src="'/cockpit/@localhost/'+application+'/index.html'"
     ></iframe>
-    <div v-if="view.modalFake" class="fake-modal-backdrop"></div>
   </div>
 </template>
 
@@ -85,8 +84,7 @@ export default {
   data() {
     return {
       view: {
-        isLoaded: false,
-        modalFake: false
+        isLoaded: false
       },
       application: this.$route.params.name,
       info: {}
