@@ -54,6 +54,7 @@ nav:
       - api/system-users.md
     - Firewall helpers:
       - api/nethserver-firewall-base/dashboard.md
+      - api/nethserver-firewall-base/traffic-shaping.md
       - api/nethserver-firewall-base/wan.md
 - UI:
   - ui_guidelines.md
