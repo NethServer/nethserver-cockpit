@@ -51,7 +51,7 @@ if (($cmd eq 'applications') ||
         push($ret->{"applications"}, $a);
     }
 
-    $ret->{"status"}->{"isAdmin"} = int($role eq $groupAdmins);
+    $ret->{"status"}->{"editable"} = int($role ne $groupAdmins);
     print encode_json($ret);
     exit(0);
 
@@ -61,7 +61,7 @@ if ($cmd eq 'role') {
     my $data = read_json("/etc/nethserver/cockpit/authorization/roles.json");
 
     if(exists($data->{$role})) {
-        $data->{$role}->{"status"}->{"isAdmin"} = int($role eq $groupAdmins);
+        $data->{$role}->{"status"}->{"editable"} = int($role ne $groupAdmins);
         print encode_json ($data->{$role});
     } else {
         print '{"system": [],"applications": []}';

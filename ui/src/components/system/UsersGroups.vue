@@ -605,7 +605,7 @@
                       <li v-for="(u,i) in newGroup.system" v-bind:key="i">
                         <span class="label label-info">
                           {{$t('menu.'+u)}}
-                          <a @click="roles.isAdmin ? undefined : removeSystemFromGroup(i)" 
+                          <a @click="roles.editable ? removeSystemFromGroup(i) : undefined" 
                              class="remove-item-inline"
                           >
                             <span class="fa fa-times"></span>
@@ -649,7 +649,7 @@
                         <span class="label label-info">
                           {{u}}
                           <a
-                            @click="roles.isAdmin ? undefined : removeApplicationsFromGroup(i)"
+                            @click="roles.editable ? removeSystemFromGroup(i) : undefined"
                             class="remove-item-inline"
                           >
                             <span class="fa fa-times"></span>
@@ -1520,7 +1520,7 @@ export default {
       },
       roles: {
         list: {},
-        isAdmin: false
+        editable: true
       },
       users: {
         list: {},
@@ -2494,7 +2494,7 @@ export default {
           context.newGroup.system = success.system;
           context.newGroup.applications = success.applications;
           context.newGroup.loadMembers = false;
-          context.roles.isAdmin = success.status.isAdmin == 1;
+          context.roles.editable = success.status.editable == 1;
         },
         function(error) {
           console.error(error);
