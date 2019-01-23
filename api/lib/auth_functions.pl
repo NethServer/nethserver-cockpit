@@ -79,6 +79,12 @@ sub list_applications
     return @apps;
 }
 
+sub get_adminGroup {
+    #Following the user's permissions we could not be granted to the esmith API
+    my $groupAdmins = `sudo /sbin/e-smith/db configuration getprop admins group`;
+    chop $groupAdmins; # clean EOL
+    return $groupAdmins
+}
 
 sub get_groups {
     my @gnames;

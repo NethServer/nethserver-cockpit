@@ -32,12 +32,7 @@ my $user = whoami();
 my @apps = list_applications();
 my @system_routes = list_system_routes();
 my $system_routes = read_json("/etc/nethserver/cockpit/authorization/system-routes.json");
-
-# Following the user's permissions
-# we could not be granted to the esmith API
-my $groupAdmins = `sudo /sbin/e-smith/db configuration getprop admins group`;
-chop $groupAdmins; # clean EOL
-
+my $groupAdmins = get_adminGroup();
 my $role = get_role($user);
 
 # root can always access everything
