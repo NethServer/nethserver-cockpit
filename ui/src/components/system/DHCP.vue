@@ -7,7 +7,9 @@
       <div class="stats-container card-pf-utilization-details">
         <span class="card-pf-utilization-card-details-count">{{stats.reservations}}</span>
         <span class="card-pf-utilization-card-details-description">
-          <span class="card-pf-utilization-card-details-line-2 stats-text">{{$t('dhcp.reservations')}}</span>
+          <span
+            class="card-pf-utilization-card-details-line-2 stats-text"
+          >{{$t('dhcp.reservations')}}</span>
         </span>
       </div>
       <div class="stats-container card-pf-utilization-details">
@@ -20,26 +22,55 @@
     <h3>{{$t('dhcp.interfaces')}}</h3>
     <div v-for="i in ranges" v-bind:key="i">
       <h4 class="dhcp-int">{{i.name}}</h4>
-      <toggle-button class="min-toggle" :width="40" :height="20" :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
-        :value="i.props.status" :sync="true" @change="toggleInterface(i)" />
-      <button v-if="i.props.status" @click="toggleInterface(i, false, true)" class="btn btn-primary dhcp-mod-btn">{{$t('modify')}}</button>
+      <toggle-button
+        class="min-toggle"
+        :width="40"
+        :height="20"
+        :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+        :value="i.props.status"
+        :sync="true"
+        @change="toggleInterface(i)"
+      />
+      <button
+        v-if="i.props.status"
+        @click="toggleInterface(i, false, true)"
+        class="btn btn-primary dhcp-mod-btn"
+      >{{$t('modify')}}</button>
     </div>
 
     <h3>{{$t('action')}}</h3>
-    <button @click="newIPReservation()" class="btn btn-primary btn-lg shutdown-privileged" data-action="restart"
-      data-container="body">
-      {{$t('dhcp.add_ip_reservation')}}
-    </button>
+    <button
+      @click="newIPReservation()"
+      class="btn btn-primary btn-lg shutdown-privileged"
+      data-action="restart"
+      data-container="body"
+    >{{$t('dhcp.add_ip_reservation')}}</button>
 
     <h3>{{$t('dhcp.ip_reservations')}}</h3>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
-    <vue-good-table v-if="view.isLoaded" :customRowsPerPageDropdown="[25,50,100]" :perPage="25" :columns="columns"
-      :rows="rows" :lineNumbers="false" :defaultSortBy="{field: 'name', type: 'asc'}" :globalSearch="true" :paginate="true"
-      styleClass="table" :nextText="tableLangsTexts.nextText" :prevText="tableLangsTexts.prevText" :rowsPerPageText="tableLangsTexts.rowsPerPageText"
-      :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder" :ofText="tableLangsTexts.ofText">
+    <vue-good-table
+      v-if="view.isLoaded"
+      :customRowsPerPageDropdown="[25,50,100]"
+      :perPage="25"
+      :columns="columns"
+      :rows="rows"
+      :lineNumbers="false"
+      :defaultSortBy="{field: 'name', type: 'asc'}"
+      :globalSearch="true"
+      :paginate="true"
+      styleClass="table"
+      :nextText="tableLangsTexts.nextText"
+      :prevText="tableLangsTexts.prevText"
+      :rowsPerPageText="tableLangsTexts.rowsPerPageText"
+      :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
+      :ofText="tableLangsTexts.ofText"
+    >
       <template slot="table-row" slot-scope="props">
         <td class="fancy">
-          <a :class="[props.row.type == 'disabled' ? 'disabled' : '']" @click="props.row.type == 'disabled' ? null : editReservation(props.row)">
+          <a
+            :class="[props.row.type == 'disabled' ? 'disabled' : '']"
+            @click="props.row.type == 'disabled' ? null : editReservation(props.row)"
+          >
             <strong>{{ props.row.name}}</strong>
           </a>
         </td>
@@ -53,17 +84,30 @@
           {{props.row.props.MacAddress}}
         </td>
         <td>
-          <button v-if="props.row.type == 'disabled'" @click="addReservation(props.row)" class="btn btn-default btn-primary">
+          <button
+            v-if="props.row.type == 'disabled'"
+            @click="addReservation(props.row)"
+            class="btn btn-default btn-primary"
+          >
             <span class="pficon pficon-network span-right-margin"></span>
             {{$t('dhcp.ip_reservation')}}
           </button>
-          <button v-if="props.row.type != 'disabled'" @click="editReservation(props.row)" class="btn btn-default">
+          <button
+            v-if="props.row.type != 'disabled'"
+            @click="editReservation(props.row)"
+            class="btn btn-default"
+          >
             <span class="fa fa-pencil span-right-margin"></span>
             {{$t('edit')}}
           </button>
           <div v-if="props.row.type != 'disabled'" class="dropup pull-right dropdown-kebab-pf">
-            <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="true">
+            <button
+              class="btn btn-link dropdown-toggle"
+              type="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="true"
+            >
               <span class="fa fa-ellipsis-v"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
@@ -83,38 +127,89 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{newReservation.isEdit ? $t('dhcp.edit_ip_reservation') + ' '+ newReservation.name
-              : $t('dhcp.add_ip_reservation')}}</h4>
+            <h4 class="modal-title">
+              {{newReservation.isEdit ? $t('dhcp.edit_ip_reservation') + ' '+ newReservation.name
+              : $t('dhcp.add_ip_reservation')}}
+            </h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="saveReservation(newReservation)">
-
             <div class="modal-body">
               <div :class="['form-group', newReservation.errors.name.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dhcp.hostname')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dhcp.hostname')}}</label>
                 <div class="col-sm-9">
-                  <input :disabled="newReservation.isEdit" required type="text" v-model="newReservation.name" class="form-control">
-                  <span v-if="newReservation.errors.name.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newReservation.errors.name.message)}}</span>
+                  <input
+                    :disabled="newReservation.isEdit"
+                    required
+                    type="text"
+                    v-model="newReservation.name"
+                    class="form-control"
+                  >
+                  <span
+                    v-if="newReservation.errors.name.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newReservation.errors.name.message)}}</span>
                 </div>
               </div>
-              <div :class="['form-group', newReservation.errors.IpAddress.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dhcp.ip_address')}}</label>
+              <div
+                :class="['form-group', newReservation.errors.IpAddress.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dhcp.ip_address')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="newReservation.props.IpAddress" class="form-control">
-                  <span v-if="newReservation.errors.IpAddress.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newReservation.errors.IpAddress.message)}}</span>
+                  <input
+                    required
+                    type="text"
+                    v-model="newReservation.props.IpAddress"
+                    class="form-control"
+                  >
+                  <span
+                    v-if="newReservation.errors.IpAddress.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newReservation.errors.IpAddress.message)}}</span>
                 </div>
               </div>
-              <div :class="['form-group', newReservation.errors.MacAddress.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dhcp.mac_address')}}</label>
+              <div
+                :class="['form-group', newReservation.errors.MacAddress.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dhcp.mac_address')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="newReservation.props.MacAddress" class="form-control">
-                  <span v-if="newReservation.errors.MacAddress.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newReservation.errors.MacAddress.message)}}</span>
+                  <input
+                    required
+                    type="text"
+                    v-model="newReservation.props.MacAddress"
+                    class="form-control"
+                  >
+                  <span
+                    v-if="newReservation.errors.MacAddress.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newReservation.errors.MacAddress.message)}}</span>
                 </div>
               </div>
-              <div :class="['form-group', newReservation.errors.Description.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dhcp.description')}}</label>
+              <div
+                :class="['form-group', newReservation.errors.Description.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dhcp.description')}}</label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="newReservation.props.Description" class="form-control">
-                  <span v-if="newReservation.errors.Description.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newReservation.errors.Description.message)}}</span>
+                  <input
+                    type="text"
+                    v-model="newReservation.props.Description"
+                    class="form-control"
+                  >
+                  <span
+                    v-if="newReservation.errors.Description.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newReservation.errors.Description.message)}}</span>
                 </div>
               </div>
             </div>
@@ -124,57 +219,96 @@
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
             </div>
-
           </form>
         </div>
       </div>
     </div>
 
-    <div class="modal" id="deleteReservationModal" tabindex="-1" role="dialog" data-backdrop="static">
+    <div
+      class="modal"
+      id="deleteReservationModal"
+      tabindex="-1"
+      role="dialog"
+      data-backdrop="static"
+    >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">{{$t('dhcp.delete_ip_reservation')}} {{currentReservation.name}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="deleteReservation(currentReservation)">
-
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
               </div>
             </div>
             <div class="modal-footer">
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-danger" type="submit">{{$t('delete')}}</button>
             </div>
-
           </form>
         </div>
       </div>
     </div>
 
-    <div class="modal" id="dhcpInterfaceSetModal" tabindex="-1" role="dialog" data-backdrop="static">
+    <div
+      class="modal"
+      id="dhcpInterfaceSetModal"
+      tabindex="-1"
+      role="dialog"
+      data-backdrop="static"
+    >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('dhcp.'+ currentRange.isEdit ? 'edit' : 'enable' +'_dhcp_on')}}
-              {{currentRange.name}}</h4>
+            <h4 class="modal-title">
+              {{$t('dhcp.'+ currentRange.isEdit ? 'edit' : 'enable' +'_dhcp_on')}}
+              {{currentRange.name}}
+            </h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="saveRange(currentRange)">
-
             <div class="modal-body">
-              <div :class="['form-group', currentRange.errors.DhcpRangeStart.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dhcp.range_ip_start')}}</label>
+              <div
+                :class="['form-group', currentRange.errors.DhcpRangeStart.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dhcp.range_ip_start')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="currentRange.DhcpRangeStart" class="form-control">
-                  <span v-if="currentRange.errors.DhcpRangeStart.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpRangeStart.message)}}</span>
+                  <input
+                    required
+                    type="text"
+                    v-model="currentRange.DhcpRangeStart"
+                    class="form-control"
+                  >
+                  <span
+                    v-if="currentRange.errors.DhcpRangeStart.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpRangeStart.message)}}</span>
                 </div>
               </div>
-              <div :class="['form-group', currentRange.errors.DhcpRangeEnd.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dhcp.range_ip_end')}}</label>
+              <div
+                :class="['form-group', currentRange.errors.DhcpRangeEnd.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dhcp.range_ip_end')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="currentRange.DhcpRangeEnd" class="form-control">
-                  <span v-if="currentRange.errors.DhcpRangeEnd.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpRangeEnd.message)}}</span>
+                  <input
+                    required
+                    type="text"
+                    v-model="currentRange.DhcpRangeEnd"
+                    class="form-control"
+                  >
+                  <span
+                    v-if="currentRange.errors.DhcpRangeEnd.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpRangeEnd.message)}}</span>
                 </div>
               </div>
 
@@ -183,63 +317,122 @@
                 <div class="divider divider-advanced"></div>
               </div>
 
-              <div :class="['form-group', currentRange.errors.DhcpGatewayIP.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dhcp.gateway_ip')}}</label>
+              <div
+                :class="['form-group', currentRange.errors.DhcpGatewayIP.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dhcp.gateway_ip')}}</label>
                 <div class="col-sm-9">
                   <input type="text" v-model="currentRange.DhcpGatewayIP" class="form-control">
-                  <span v-if="currentRange.errors.DhcpGatewayIP.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpGatewayIP.message)}}</span>
+                  <span
+                    v-if="currentRange.errors.DhcpGatewayIP.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpGatewayIP.message)}}</span>
                 </div>
               </div>
-              <div :class="['form-group', currentRange.errors.DhcpLeaseTime.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dhcp.lease_time')}}</label>
+              <div
+                :class="['form-group', currentRange.errors.DhcpLeaseTime.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dhcp.lease_time')}}</label>
                 <div class="col-sm-9">
                   <input type="text" v-model="currentRange.DhcpLeaseTime" class="form-control">
-                  <span v-if="currentRange.errors.DhcpLeaseTime.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpLeaseTime.message)}}</span>
+                  <span
+                    v-if="currentRange.errors.DhcpLeaseTime.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpLeaseTime.message)}}</span>
                 </div>
               </div>
-              <div :class="['form-group', currentRange.errors.DhcpDomain.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dhcp.domain')}}</label>
+              <div
+                :class="['form-group', currentRange.errors.DhcpDomain.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dhcp.domain')}}</label>
                 <div class="col-sm-9">
                   <input type="text" v-model="currentRange.DhcpDomain" class="form-control">
-                  <span v-if="currentRange.errors.DhcpDomain.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpDomain.message)}}</span>
+                  <span
+                    v-if="currentRange.errors.DhcpDomain.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpDomain.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', currentRange.errors.DhcpDNS.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dhcp.dns_servers')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dhcp.dns_servers')}}</label>
                 <div class="col-sm-9">
                   <input type="text" v-model="currentRange.DhcpDNS" class="form-control">
-                  <span v-if="currentRange.errors.DhcpDNS.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpDNS.message)}}</span>
+                  <span
+                    v-if="currentRange.errors.DhcpDNS.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpDNS.message)}}</span>
                 </div>
               </div>
-              <div :class="['form-group', currentRange.errors.DhcpWINS.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dhcp.wins_servers')}}</label>
+              <div
+                :class="['form-group', currentRange.errors.DhcpWINS.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dhcp.wins_servers')}}</label>
                 <div class="col-sm-9">
                   <input type="text" v-model="currentRange.DhcpWINS" class="form-control">
-                  <span v-if="currentRange.errors.DhcpWINS.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpWINS.message)}}</span>
+                  <span
+                    v-if="currentRange.errors.DhcpWINS.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpWINS.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', currentRange.errors.DhcpNTP.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dhcp.ntp_servers')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dhcp.ntp_servers')}}</label>
                 <div class="col-sm-9">
                   <input type="text" v-model="currentRange.DhcpNTP" class="form-control">
-                  <span v-if="currentRange.errors.DhcpNTP.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpNTP.message)}}</span>
+                  <span
+                    v-if="currentRange.errors.DhcpNTP.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpNTP.message)}}</span>
                 </div>
               </div>
-              <div :class="['form-group', currentRange.errors.DhcpTFTP.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dhcp.tftp_servers')}}</label>
+              <div
+                :class="['form-group', currentRange.errors.DhcpTFTP.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dhcp.tftp_servers')}}</label>
                 <div class="col-sm-9">
                   <input type="text" v-model="currentRange.DhcpTFTP" class="form-control">
-                  <span v-if="currentRange.errors.DhcpTFTP.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpTFTP.message)}}</span>
+                  <span
+                    v-if="currentRange.errors.DhcpTFTP.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpTFTP.message)}}</span>
                 </div>
               </div>
             </div>
 
             <div class="modal-footer">
               <div v-if="currentRange.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
-              <button class="btn btn-default" @click="toggleInterface(currentRange, true)" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
-              <button class="btn btn-primary" type="submit">{{currentRange.isEdit ? $t('modify') : $t('save')}}</button>
+              <button
+                class="btn btn-default"
+                @click="toggleInterface(currentRange, true)"
+                type="button"
+                data-dismiss="modal"
+              >{{$t('cancel')}}</button>
+              <button
+                class="btn btn-primary"
+                type="submit"
+              >{{currentRange.isEdit ? $t('modify') : $t('save')}}</button>
             </div>
-
           </form>
         </div>
       </div>
@@ -307,7 +500,15 @@ export default {
         {
           label: this.$i18n.t("dhcp.ip_address"),
           field: "props.IpAddress",
-          filterable: true
+          filterable: true,
+          sortFn: function(a, b, col, rowX, rowY) {
+            a = a.split(".");
+            b = b.split(".");
+            for (var i = 0; i < a.length; i++) {
+              if ((a[i] = parseInt(a[i])) < (b[i] = parseInt(b[i]))) return -1;
+              else if (a[i] > b[i]) return 1;
+            }
+          }
         },
         {
           label: this.$i18n.t("dhcp.mac_address"),
