@@ -31,8 +31,14 @@ my $cmd = $input->{'action'};
 my $name = $input->{'name'};
 my $user = whoami();
 
+# Following the user's permissions
+# we could not be granted to the esmith API
+my $groupAdmins = `sudo /sbin/e-smith/db configuration getprop admins group`;
+chop $groupAdmins; # clean EOL
+
 # root can always access everything
-if ($user eq 'root') {
+if (($user eq 'root') ||
+        (grep /^$groupAdmins$/, get_groups())) {
     success();
 }
 
