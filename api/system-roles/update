@@ -42,7 +42,7 @@ if ($role ne '') {
         write_json ($jsonFile,$data);
     }
 
-    my $out = `/sbin/e-smith/expand-template /etc/sudoers.d/30nethserver_cockpit_roles`;
+    my $out = `/sbin/e-smith/expand-template /etc/sudoers.d/30_nethserver_cockpit_roles`;
 
     if ($? > 0) {
         error("EventFailed", "");
