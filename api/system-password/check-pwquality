@@ -22,7 +22,7 @@ if len (sys.argv) < 2:
 passfile = sys.argv[1]
 
 if not os.path.isfile(passfile):
-    eprint("No such firle or directory: %s" % passfile);
+    eprint("No such file or directory: %s" % passfile);
     sys.exit(1)
 
 # read file
