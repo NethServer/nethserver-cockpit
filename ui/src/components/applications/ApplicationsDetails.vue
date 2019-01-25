@@ -1,18 +1,5 @@
 <template>
   <div>
-    <h2>{{info.name || '-'}} {{info.release && info.release.version || ''}}</h2>
-    <button
-      v-if="view.isLoaded && info.editable == 1"
-      @click="info.shortcut == 1 ? removeShortcut(application) : addShortcut(application)"
-      :class="['btn', info.shortcut == 1 ? 'btn-danger' : 'btn-primary', 'shortcut']"
-    >
-      {{info.shortcut == 1
-      ? $t('remove_shortcut') : $t('add_shortcut')}}
-    </button>
-    <div
-      v-if="!view.isLoaded"
-      class="spinner spinner-lg view-spinner spinner-inverse adjust-spinner-top"
-    ></div>
     <iframe
       id="app-frame"
       class="iframe-embedded"
@@ -24,16 +11,8 @@
 <script>
 export default {
   name: "ApplicationsDetails",
-  beforeRouteEnter(to, from, next) {
-    $("#app").css("background", "#393f43");
-    $("#app").css("color", "white");
-    $("#app-frame").css("border-top", "1px solid #4d5258;");
-    next();
-  },
   beforeRouteLeave(to, from, next) {
     $(".modal").modal("hide");
-    $("#app").css("background", "");
-    $("#app").css("color", "");
     next();
   },
   mounted() {
@@ -60,16 +39,12 @@ export default {
 
           context.getAppInfo();
         } else {
-          $("#app").css("background", "");
-          $("#app").css("color", "");
           window.location.hash = "#/applications";
           context.$router.push("/applications");
         }
       },
       function(error) {
         console.error(error);
-        $("#app").css("background", "");
-        $("#app").css("color", "");
         window.location.hash = "#/applications";
         context.$router.push("/applications");
       },
@@ -98,9 +73,29 @@ export default {
       $(parent.document.getElementById("sidebar-menu").children[0]).removeClass(
         "active"
       );
-      $("#app").css("background", "#393f43");
-      $("#app").css("color", "white");
-      $("#app-frame").css("border-top", "1px solid #4d5258;");
+
+      var context = this;
+      $("#sidebar-menu", window.parent.document)
+        .children("li")
+        .each(function() {
+          $(this).removeClass("active");
+        });
+
+      $("#sidebar-tools", window.parent.document)
+        .children("li")
+        .each(function() {
+          $(this).removeClass("active");
+
+          var href = $(this)
+            .children()
+            .first()
+            .attr("href");
+
+          var appName = href.substr(href.lastIndexOf("/") + 1);
+          if (appName == context.application) {
+            $(this).addClass("active");
+          }
+        });
     },
     getAppInfo() {
       var context = this;
@@ -128,52 +123,6 @@ export default {
         },
         false
       );
-    },
-    addShortcut() {
-      var context = this;
-
-      context.view.isLoaded = false;
-      context.exec(
-        ["system-apps/update"],
-        {
-          action: "add-shortcut",
-          name: context.application
-        },
-        null,
-        function(success) {
-          context.refresh();
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
-    },
-    removeShortcut() {
-      var context = this;
-
-      context.view.isLoaded = false;
-      context.exec(
-        ["system-apps/update"],
-        {
-          action: "remove-shortcut",
-          name: context.application
-        },
-        null,
-        function(success) {
-          context.refresh();
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
-    },
-    refresh() {
-      cockpit
-        .dbus(null, {
-          bus: "internal"
-        })
-        .call("/packages", "cockpit.Packages", "Reload", []);
-      this.getAppInfo();
     }
   }
 };
@@ -181,16 +130,7 @@ export default {
 
 <style>
 #app-frame {
-  margin-top: 8px;
   width: 100%;
-  height: calc(100% - 62px);
-  border-top: 1px solid #4d5258;
-}
-.shortcut {
-  margin-top: -36px;
-  float: right;
-}
-.adjust-spinner-top {
-  margin-top: -30px;
+  height: 100%;
 }
 </style>
