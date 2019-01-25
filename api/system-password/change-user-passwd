@@ -1,24 +1,66 @@
-#!/usr/bin/expect -f
+#!/usr/bin/perl
 
-#
-# Expect a file in the format containing: the new, confirm and current passwords
-# The password must be one per line.
-#
+use strict;
+use warnings;
 
-set pass_file [lindex $argv 0]
-set fp [open $pass_file r]
-gets $fp new_pass
-gets $fp confirm_pass
-gets $fp current_pass
+use JSON;
+use Net::LDAP;
+use Net::LDAP::Extension::SetPassword;
 
-spawn passwd
+sub read_json
+{
+    my $file = shift || undef;
+    die("No such file or directory: $file") if (! -e $file);
 
-expect "urrent* password: "
-send -- "$current_pass\n"
-expect  "ew password: "
-send -- "$new_pass\n"
-expect  "etype new password: "
-send -- "$confirm_pass\n"
-expect eof
+    my $json;
+    {
+        local $/; #Enable 'slurp' mode
+        open my $fh, "<", $file or return undef;
+        $json = <$fh>;
+        close $fh;
+    }
 
-set exitstatus [lindex [wait] 3]
+    return decode_json($json);
+}
+
+# Read password file
+# Expected format: one password per line, first line for old password, second line for the new one
+my $passfile = shift || die("No passfile given");;
+if (! -e $passfile) {
+    die("No such file or directory: $passfile");
+}
+my $handle;
+my @passwords;
+open $handle, "<:encoding(utf8)", $passfile || die("Could not open file '$passfile': $!\n");
+chomp(@passwords = <$handle>);
+close $handle;
+
+# Read sssd configuration
+my $config = read_json("sssd.json");
+
+
+my $ldap = Net::LDAP->new( $config->{'ldapURI'} );
+my $user = getpwuid( $< );
+$user =~ s/(@.*)//; # strip domain
+my $dn;
+my $ret = 0;
+
+if ($config->{'isLdap'}) {
+    $dn = "uid=$user,".$config->{'userDN'}.",".$config->{'baseDN'};
+} elsif ($config->{'isAD'}) {
+    # TODO ad
+}
+
+print "$dn\n";
+# TODO: tls
+$ldap->bind($dn, password => $passwords[0]);
+
+my $mesg = $ldap->set_password( oldpasswd => $passwords[0], newpasswd => $passwords[1] );
+
+if ($mesg->code()) {
+    print STDERR "[ERROR] ".$mesg->error()."(".$mesg->code.")\n";
+    $ret = 1;
+}
+
+#unlink($passfile);
+exit($ret);
