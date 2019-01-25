@@ -32,20 +32,24 @@ function _get
 }
 
 id=$(id -u)
-pass_file=$(mktemp)
-echo $data | jq -r ".newPassword" >> $pass_file
-echo $data | jq -r ".confirmNewPassword" >> $pass_file
-if [ $id -gt 0 ]; then
-    echo $data | jq -r ".currentPassword" >> $pass_file
-    LANG=C timeout 3 /usr/libexec/nethserver/api/system-password/change-user-passwd $pass_file &>/dev/null
-else
-    LANG=C timeout 3 /usr/libexec/nethserver/api/system-password/change-root-passwd $pass_file &>/dev/null
+new_password="$(jq -r '.newPassword' <<<"${data}")"
+confirm_password="$(jq -r '.confirmNewPassword' <<<"${data}")"
+if [[ $new_password -ne $confirm_password ]]; then
+    echo '{"id":1548426069,"type":"NotValid","message":"validation_failed","attributes":[{"parameter":"confirmNewPassword","value":null,"error":"passwords_dont_match"}]}'
+    error
 fi
-tmp=$?
-rm -f $pass_file
 
-if [ $tmp -gt 0 ]; then
-    {"id":1540482967,"type":"NotValid","message":"validation_failed","attributes":[{"parameter":"newPassword","value":null,"error":"weak_password"}]}
+if [[ $id -eq 0 ]]; then
+    LANG=C /usr/libexec/nethserver/api/system-password/change-root-passwd >/dev/null <<<"$new_password"
+else
+    current_password="$(jq -r '.currentPassword' <<<"${data}")"
+    LANG=C /usr/libexec/nethserver/api/system-password/change-user-passwd >/dev/null >/dev/null <<EOF
+$current_password
+$new_password
+EOF
+fi
+
+if [[ $? -ne 0 ]]; then
     error
 else
     success

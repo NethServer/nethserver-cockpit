@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/bin/bash
 
 #
 # Copyright (C) 2018 Nethesis S.r.l.
@@ -20,67 +20,13 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-use strict;
-use warnings;
+read old_password
+read new_password
 
-use JSON;
-use Net::LDAP;
-use Net::LDAP::Extension::SetPassword;
+if klist -s; then
+    echo -en "${old_password}\n${new_password}\n${new_password}" | kpasswd
+else
+    LDAPCONF=/etc/nethserver/ldap.conf ldappasswd -t <(echo ${old_password}) -T <(echo ${new_password})
+fi
 
-sub read_json
-{
-    my $file = shift || undef;
-    die("No such file or directory: $file") if (! -e $file);
-
-    my $json;
-    {
-        local $/; #Enable 'slurp' mode
-        open my $fh, "<", $file or return undef;
-        $json = <$fh>;
-        close $fh;
-    }
-
-    return decode_json($json);
-}
-
-# Read password file
-# Expected format: one password per line, first line for old password, second line for the new one
-my $passfile = shift || die("No passfile given");;
-if (! -e $passfile) {
-    die("No such file or directory: $passfile");
-}
-my $handle;
-my @passwords;
-open $handle, "<:encoding(utf8)", $passfile || die("Could not open file '$passfile': $!\n");
-chomp(@passwords = <$handle>);
-close $handle;
-
-# Read sssd configuration
-my $config = read_json("sssd.json");
-
-
-my $ldap = Net::LDAP->new( $config->{'ldapURI'} );
-my $user = getpwuid( $< );
-$user =~ s/(@.*)//; # strip domain
-my $dn;
-my $ret = 0;
-
-if ($config->{'isLdap'}) {
-    $dn = "uid=$user,".$config->{'userDN'}.",".$config->{'baseDN'};
-} elsif ($config->{'isAD'}) {
-    # TODO ad
-}
-
-print "$dn\n";
-# TODO: tls
-$ldap->bind($dn, password => $passwords[0]);
-
-my $mesg = $ldap->set_password( oldpasswd => $passwords[0], newpasswd => $passwords[1] );
-
-if ($mesg->code()) {
-    print STDERR "[ERROR] ".$mesg->error()."(".$mesg->code.")\n";
-    $ret = 1;
-}
-
-#unlink($passfile);
-exit($ret);
+exit $?
