@@ -33,6 +33,9 @@ if (!$v->validate()) {
     error($v);
 }
 
+# Make private temp files:
+umask(077);
+
 # Use pwquality helper
 $tmpFilePath = @tempnam(sys_get_temp_dir(), 'ng-');
 $tmpFile = fopen($tmpFilePath, 'w');
