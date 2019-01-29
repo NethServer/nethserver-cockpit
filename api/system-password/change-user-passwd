@@ -20,13 +20,25 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-read old_password
-read new_password
+read -r old_password
+read -r new_password
 
 if klist -s; then
     echo -en "${old_password}\n${new_password}\n${new_password}" | kpasswd
 else
-    LDAPCONF=/etc/nethserver/ldap.conf ldappasswd -t <(echo ${old_password}) -T <(echo ${new_password})
+    domain_suffix="@$(hostname -d)"
+    conf_file=/etc/nethserver/ldappasswd.conf
+    branch_suffix="$(sed -r -n '/^BASE/ {s/BASE\s+(\w+)/\1/; p}' <${conf_file})"
+
+    # override /etc/openldap/ldap.conf settings
+    export LDAPCONF="${conf_file}"
+    export LDAPBINDDN="${LDAPBINDDN:-uid=${USER%%${domain_suffix}},${branch_suffix}}"
+
+    if ! grep -E -q '^URI\s+ldap://127\.0\.0\.1' ${conf_file}; then
+        is_remote=1
+    fi
+
+    ldappasswd -x ${is_remote:+-Z} -y <(echo -n "${old_password}") -t <(echo -n "${old_password}") -T <(echo -n "${new_password}")
 fi
 
 exit $?

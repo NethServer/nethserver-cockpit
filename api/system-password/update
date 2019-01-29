@@ -23,36 +23,43 @@
 . /usr/libexec/nethserver/api/lib/helper_functions
 
 data=$(cat /dev/stdin)
-action=$(echo $data | jq -r '.action')
 
-function _get
-{
-    field=$1
-    echo $data | jq -r ".$field"
-}
-
-id=$(id -u)
 new_password="$(jq -r '.newPassword' <<<"${data}")"
 confirm_password="$(jq -r '.confirmNewPassword' <<<"${data}")"
-if [[ $new_password -ne $confirm_password ]]; then
-    echo '{"id":1548426069,"type":"NotValid","message":"validation_failed","attributes":[{"parameter":"confirmNewPassword","value":null,"error":"passwords_dont_match"}]}'
-    error
+current_password="$(jq -r '.currentPassword' <<<"${data}")"
+
+if [[ "${new_password}" != "${confirm_password}" ]]; then
+    echo '{
+        "id": 1548426069,
+        "type": "NotValid",
+        "message": "validation_failed",
+        "attributes": [{
+            "parameter": "confirmNewPassword",
+            "value": null,
+            "error": "passwords_dont_match"
+        }]
+    }'
+    exit 1
 fi
 
-if [[ $id -eq 0 ]]; then
-    LANG=C /usr/libexec/nethserver/api/system-password/change-root-passwd >/dev/null <<<"$new_password"
+if [[ $(id -u) == 0 ]]; then
+    /usr/libexec/nethserver/api/system-password/change-root-passwd 1>&2 <<<"$new_password"
 else
-    current_password="$(jq -r '.currentPassword' <<<"${data}")"
-    LANG=C /usr/libexec/nethserver/api/system-password/change-user-passwd >/dev/null >/dev/null <<EOF
+    /usr/libexec/nethserver/api/system-password/change-user-passwd 1>&2 >/dev/null <<EOF
 $current_password
 $new_password
 EOF
 fi
 
-if [[ $? -ne 0 ]]; then
-    error
-else
+exit_code=$?
+if [[ $exit_code == 0 ]]; then
     success
+elif [[ $exit_code == 1 ]]; then
+    error
+elif [[ $exit_code == 49 ]]; then
+    error "AuthError" "invalid_credentials"
+else
+    error "UnknownError" "exit_code $exit_code"
 fi
 
 
