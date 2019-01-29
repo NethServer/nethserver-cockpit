@@ -34,11 +34,11 @@ else
     export LDAPCONF="${conf_file}"
     export LDAPBINDDN="${LDAPBINDDN:-uid=${USER%%${domain_suffix}},${branch_suffix}}"
 
-    if ! grep -E -q '^URI\s+ldap://127\.0\.0\.1' ${conf_file}; then
-        is_remote=1
+    if ! grep -E -q '^URI\s+(ldap://127\.0\.0\.1\s*$|ldaps://)' ${conf_file}; then
+        starttls=1
     fi
 
-    ldappasswd -x ${is_remote:+-Z} -y <(echo -n "${old_password}") -t <(echo -n "${old_password}") -T <(echo -n "${new_password}")
+    ldappasswd -x ${starttls:+-ZZ} -y <(echo -n "${old_password}") -t <(echo -n "${old_password}") -T <(echo -n "${new_password}")
 fi
 
 exit $?
