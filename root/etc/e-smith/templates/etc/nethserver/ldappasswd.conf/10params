@@ -2,6 +2,14 @@
 # 10params
 #
 
-URI     { $sssd_object->ldapURI(); }
-BASE    { $sssd_object->userDN(); }
+DOMAIN   { $DomainName; }
+URI      { $sssd_object->ldapURI(); }
+{
+    if($sssd_object->startTls()) {
+        $OUT='STARTTLS 1';
+    } else {
+        $OUT = '';
+    }
+}
+BASE     { $sssd_object->userDN(); }
 

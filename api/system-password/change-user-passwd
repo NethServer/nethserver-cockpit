@@ -26,19 +26,21 @@ read -r new_password
 if klist -s; then
     echo -en "${old_password}\n${new_password}\n${new_password}" | kpasswd
 else
-    domain_suffix="@$(hostname -d)"
-    conf_file=/etc/nethserver/ldappasswd.conf
-    branch_suffix="$(sed -r -n '/^BASE/ {s/BASE\s+(\w+)/\1/; p}' <${conf_file})"
+    # Parse ldappasswd.conf as a multi line key-val file in ldapconf hashmap:
+    declare -A ldapconf
+    exec </etc/nethserver/ldappasswd.conf
+    while read pkey pval; do
+        if [[ ${pkey} != [A-Z]* ]]; then
+            continue # skip comments, empty lines and other garbage
+        fi
+        ldapconf[${pkey}]="${pval}"
+    done
 
-    # override /etc/openldap/ldap.conf settings
-    export LDAPCONF="${conf_file}"
-    export LDAPBINDDN="${LDAPBINDDN:-uid=${USER%%${domain_suffix}},${branch_suffix}}"
+    export LDAPBASE="${LDAPBASE:-${ldapconf[BASE]}}"
+    export LDAPBINDDN="${LDAPBINDDN:-uid=${USER%%@${ldapconf[DOMAIN]}},${ldapconf[BASE]}}"
+    export LDAPURI="${LDAPURI:-${ldapconf[URI]}}"
 
-    if ! grep -E -q '^URI\s+(ldap://127\.0\.0\.1\s*$|ldaps://)' ${conf_file}; then
-        starttls=1
-    fi
-
-    ldappasswd -x ${starttls:+-ZZ} -y <(echo -n "${old_password}") -t <(echo -n "${old_password}") -T <(echo -n "${new_password}")
+    ldappasswd -x ${ldapconf[STARTTLS]:+-ZZ} -y <(echo -n "${old_password}") -t <(echo -n "${old_password}") -T <(echo -n "${new_password}")
 fi
 
 exit $?
