@@ -64,7 +64,7 @@ event_templates('nethserver-subscription-save', qw(
 #
 # nethserver-sssd-save event
 #
-event_templates('nethserver-sssd-save' qw(
+event_templates('nethserver-sssd-save', qw(
     /etc/nethserver/ldappasswd.conf
 ));
 
