@@ -961,7 +961,8 @@
       "vlan_tag_already_used": "This tag is already used by another VLAN",
       "bond_valid_mode_between_0_and_6": "Bond mode must be a number between 0 and 6",
       "valid_macAddress": "Must be a valid MAC address",
-      "invalid_secret": "Invalid secret"
+      "invalid_secret": "Invalid secret",
+      "valid_lessThan_90": "Days must be less than 90"
     }
   }
 }
