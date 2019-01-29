@@ -1,0 +1,8 @@
+{
+    #
+    # 00template_vars
+    #
+    use NethServer::SSSD;
+    our $sssd_object = NethServer::SSSD->new();
+    '';
+}
