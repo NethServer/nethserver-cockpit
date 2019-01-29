@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Copyright (C) 2018 Nethesis S.r.l.
+# Copyright (C) 2019 Nethesis S.r.l.
 # http://www.nethesis.it - nethserver@nethesis.it
 #
 # This script is part of NethServer.
@@ -23,32 +23,43 @@
 . /usr/libexec/nethserver/api/lib/helper_functions
 
 data=$(cat /dev/stdin)
-action=$(echo $data | jq -r '.action')
 
-function _get
-{
-    field=$1
-    echo $data | jq -r ".$field"
-}
+new_password="$(jq -r '.newPassword' <<<"${data}")"
+confirm_password="$(jq -r '.confirmNewPassword' <<<"${data}")"
+current_password="$(jq -r '.currentPassword' <<<"${data}")"
 
-id=$(id -u)
-pass_file=$(mktemp)
-echo $data | jq -r ".newPassword" >> $pass_file
-echo $data | jq -r ".confirmNewPassword" >> $pass_file
-if [ $id -gt 0 ]; then
-    echo $data | jq -r ".currentPassword" >> $pass_file
-    LANG=C timeout 3 /usr/libexec/nethserver/api/system-password/change-user-passwd $pass_file &>/dev/null
-else
-    LANG=C timeout 3 /usr/libexec/nethserver/api/system-password/change-root-passwd $pass_file &>/dev/null
+if [[ "${new_password}" != "${confirm_password}" ]]; then
+    echo '{
+        "id": 1548426069,
+        "type": "NotValid",
+        "message": "validation_failed",
+        "attributes": [{
+            "parameter": "confirmNewPassword",
+            "value": null,
+            "error": "passwords_dont_match"
+        }]
+    }'
+    exit 1
 fi
-tmp=$?
-rm -f $pass_file
 
-if [ $tmp -gt 0 ]; then
-    {"id":1540482967,"type":"NotValid","message":"validation_failed","attributes":[{"parameter":"newPassword","value":null,"error":"weak_password"}]}
-    error
+if [[ $(id -u) == 0 ]]; then
+    /usr/libexec/nethserver/api/system-password/change-root-passwd 1>&2 <<<"$new_password"
 else
+    /usr/libexec/nethserver/api/system-password/change-user-passwd 1>&2 >/dev/null <<EOF
+$current_password
+$new_password
+EOF
+fi
+
+exit_code=$?
+if [[ $exit_code == 0 ]]; then
     success
+elif [[ $exit_code == 1 ]]; then
+    error
+elif [[ $exit_code == 49 ]]; then
+    error "AuthError" "invalid_credentials"
+else
+    error "UnknownError" "exit_code $exit_code"
 fi
 
 

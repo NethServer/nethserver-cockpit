@@ -1,21 +1,25 @@
-#!/usr/bin/expect -f
+#!/bin/bash
 
 #
-# Expect a file in the format containing: the new and confirm password
-# The password must be one per line.
+# Copyright (C) 2019 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
 #
 
-set pass_file [lindex $argv 0]
-set fp [open $pass_file r]
-gets $fp new_pass
-gets $fp confirm_pass
-
-spawn passwd
-
-expect  "ew password: "
-send -- "$new_pass\n"
-expect  "etype new password: "
-send -- "$confirm_pass\n"
-expect eof
-
-set exitstatus [lindex [wait] 3]
+read secret
+echo -e "$secret\n$secret" | passwd
+exit $?
