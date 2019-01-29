@@ -34,6 +34,7 @@ event_templates('nethserver-cockpit-update', qw(
     /etc/os-release
     /etc/cockpit/ws-certs.d/99-nethserver.cert
     /usr/share/cockpit/nethserver/manifest.json
+    /etc/nethserver/ldappasswd.conf
 ));
 
 event_services('nethserver-cockpit-update', qw(
@@ -58,6 +59,13 @@ event_services('certificate-update', qw(
 
 event_templates('nethserver-subscription-save', qw(
    /etc/os-release
+));
+
+#
+# nethserver-sssd-save event
+#
+event_templates('nethserver-sssd-save' qw(
+    /etc/nethserver/ldappasswd.conf
 ));
 
 #

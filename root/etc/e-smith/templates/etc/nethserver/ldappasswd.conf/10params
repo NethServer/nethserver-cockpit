@@ -1,0 +1,7 @@
+#
+# 10params
+#
+
+URI     { $sssd_object->ldapURI(); }
+BASE    { $sssd_object->userDN(); }
+
