@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.2.2
+Version: 0.3.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -44,6 +44,12 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %dir /usr/libexec/nethserver/api/
 
 %changelog
+* Wed Jan 30 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.3.0-1
+- Remove single backup data - NethServer/dev#5691
+- Users can now change their password on local or remote account provider - NethServer/nethserver-cockpit#38
+- DHCP improvements
+- Edit Let's Encrypt certificate
+
 * Thu Jan 10 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.2.2-1
 - Subscription: implement unsubscribe - NethServer/dev#5688
 
