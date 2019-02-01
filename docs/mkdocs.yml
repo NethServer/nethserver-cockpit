@@ -57,6 +57,7 @@ nav:
       - api/nethserver-firewall-base/objects.md
       - api/nethserver-firewall-base/traffic-shaping.md
       - api/nethserver-firewall-base/wan.md
+      - api/nethserver-firewall-base/port-forward.md
 - UI:
   - ui_guidelines.md
   - i18n.md
