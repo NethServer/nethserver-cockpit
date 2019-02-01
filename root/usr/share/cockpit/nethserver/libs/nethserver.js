@@ -30,7 +30,7 @@ nethserver = {
             process.input(JSON.stringify(input))
         }
 
-        console.info("%cAPI exec: " + api + "\n%c$ echo '" + JSON.stringify(input) + "' | " + args.join(' ') + " | jq", "background: #1f2123; color: yellow;", "background: #1f2123; color: white; font-size: large, font-family: 'monospace';")
+        console.info("%cAPI exec: " + api + "\n%c$ " + (input ? " echo '" + JSON.stringify(input) + "' | " : "") + args.join(' ') + " | jq", "background: #1f2123; color: yellow;", "background: #1f2123; color: white; font-size: large, font-family: 'monospace';")
 
         if (stream) {
             process.stream(function (data) {
@@ -127,7 +127,7 @@ nethserver = {
             process.input(JSON.stringify(input))
         }
 
-        console.info("%cAPI execRaw: " + api + "\n%c$ echo '" + JSON.stringify(input) + "' | " + args.join(' ') + " | jq", "background: #1f2123; color: yellow;", "background: #1f2123; color: white; font-size: large, font-family: 'monospace';")
+        console.info("%cAPI execRaw: " + api + "\n%c$ " + (input ? " echo '" + JSON.stringify(input) + "' | " : "") + args.join(' ') + " | jq", "background: #1f2123; color: yellow;", "background: #1f2123; color: white; font-size: large, font-family: 'monospace';")
 
         if (stream) {
             process.stream(stream)
@@ -168,7 +168,7 @@ nethserver = {
             process.input(JSON.stringify(input))
         }
 
-        console.info("%cAPI logs: system-logs/execute\n%c$ echo '" + JSON.stringify(input) + "' | " + args.join(' '), "background: #1f2123; color: yellow;", "background: #1f2123; color: white; font-size: large, font-family: 'monospace';")
+        console.info("%cAPI logs: system-logs/execute\n%c$ " + (input ? " echo '" + JSON.stringify(input) + "' | " : "") + args.join(' ') + " | jq", "background: #1f2123; color: yellow;", "background: #1f2123; color: white; font-size: large, font-family: 'monospace';")
 
         if (stream) {
             process.stream(stream)

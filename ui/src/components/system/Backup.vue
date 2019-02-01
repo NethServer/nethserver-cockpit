@@ -163,6 +163,7 @@
           <div class="search-pf-input-group">
             <label class="sr-only">Search</label>
             <input
+              v-focus
               type="search"
               v-model="searchString"
               class="form-control input-lg"

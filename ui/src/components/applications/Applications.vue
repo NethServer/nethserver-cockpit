@@ -89,7 +89,7 @@
                   @click="props.row.shortcut == 1 ? removeShortcut(props.row.id) : addShortcut(props.row.id)"
                 >
                   <span
-                    :class="['fa', props.row.shortcut == 1 ? 'fa-cut' : 'fa-plus', 'action-icon-menu']"
+                    :class="['fa', props.row.shortcut == 1 ? 'fa-unlink' : 'fa-link', 'action-icon-menu']"
                   ></span>
                   {{props.row.shortcut == 1
                   ? $t('remove_shortcut') : $t('add_shortcut')}}

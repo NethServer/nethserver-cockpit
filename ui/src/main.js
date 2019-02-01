@@ -22,6 +22,11 @@ Vue.use(VueGoodTable);
 Vue.use(VueClipboard)
 Vue.use(VueToggleButton)
 Vue.use(BootstrapVue);
+Vue.directive('focus', {
+  inserted: function (el) {
+    el.focus()
+  }
+})
 
 import NethServer from "./services/nethserver"
 import UtilService from "./services/util"

@@ -163,7 +163,9 @@
           </div>
           <p class="addtional-updates">
             {{updates.other.length == 1 ? $t('software_center.there_is') : $t('software_center.there_are')}}
-            <b class="addtional-number">{{updates.other.length}}</b>
+            <b
+              class="addtional-number"
+            >{{updates.other.length}}</b>
             {{updates.other.length == 1 ? $t('software_center.update_base_system') :
             $t('software_center.updates_base_system')}}
             <button
@@ -197,6 +199,7 @@
         <div class="form-group has-clear toolbar-pf-filter">
           <div class="input-group full-width">
             <input
+              v-focus
               v-model="searchString"
               type="text"
               class="form-control input-lg"
@@ -204,11 +207,6 @@
               :placeholder="$t('search')+' '+$t('software_center.applications_low')"
             >
           </div>
-        </div>
-        <div class="form-group">
-          <button class="btn btn-default btn-lg">
-            <span class="fa fa-search"></span>
-          </button>
         </div>
       </form>
       <div v-if="view.appsLoaded" class="row row-cards-pf adjust-top">

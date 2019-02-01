@@ -148,6 +148,7 @@
               </ul>
             </div>
             <input
+              v-focus
               v-model="searchString"
               type="text"
               class="form-control input-lg"
