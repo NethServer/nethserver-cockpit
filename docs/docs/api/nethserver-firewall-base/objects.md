@@ -10,6 +10,9 @@ The read API requires an action field.
 Valid actions:
 
 - `hosts`
+- `services`
+- `wans`
+- `protocols`
 
 #### hosts
 
@@ -22,12 +25,103 @@ Example:
 }
 ```
 
+#### services
+
+Return the list of services from `fwservices` db.
+
+Example:
+```json
+{
+  "action": "services"
+}
+```
+
+#### wans
+
+Return the list of red IPs.
+
+Example:
+```json
+{
+  "action": "wans"
+}
+```
+
+#### protocols
+
+Return the list of protocols from `/etc/protocols`.
+
+Example:
+```json
+{
+  "action": "protocols"
+}
+```
+
 ### Output
 
 #### hosts
 
 Output example:
 ```json
+{
+  "hosts": [
+    {
+      "IpAddress": "192.168.1.1",
+      "name": "a123",
+      "Description": "123"
+    },
+    ...
+  ]
+}
+```
+#### services
+
+Example:
+```json
+{
+  "services": [
+    {
+      "Ports": [
+        "67",
+        "68"
+      ],
+      "name": "dhcp",
+      "Protocol": "tcpudp",
+      "type": "fwservice",
+      "Description": ""
+    },
+    ...
+  ]
+}
+```
+
+#### wans
+
+Example:
+```json
+{
+  "wans": [
+    "192.168.100.194",
+    "10.0.0.212",
+    "1.2.3.4"
+  ]
+}
+```
+
+#### protocols
+
+Example:
+```json
+{
+  "protocols": [
+    "ip",
+    "hopopt",
+    "icmp",
+    "igmp",
+    ...
+  ]
+}
 ```
 
 ## validate
@@ -36,15 +130,26 @@ Output example:
 
 The request must contain an `action` field. Valid actions are:
 
-- `host`
+- `create-host`
+- `update-host`
+- `delete-host`
 
-Constraints for `create`:
+Constraints for `create-host`:
 
 - name: must be a non-existing class
+- IpAddress: must be valid ipv4
+- Description: optional description
 
-Constraints for `update`:
+Constraints for `update-host`:
 
-- name: must be an existing class
+- name: must be an existing host
+- IpAddress: must be valid ipv4
+- Description: optional description
+
+Constraints for `update-host`:
+
+- name: must be an existing host
+
 
 ### Input
 
