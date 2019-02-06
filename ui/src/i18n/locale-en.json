@@ -839,6 +839,8 @@
       "change_default_root_password": "Change the default root password",
       "Company": "Company",
       "company": "company",
+      "dns": "DNS",
+      "Dns": "DNS",
       "change_default_company": "Change the default company",
       "one_or_more_dns_not_working": "One or more DNS servers are not responding",
       "TCPPort": "TCP port",

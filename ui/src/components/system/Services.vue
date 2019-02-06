@@ -7,19 +7,25 @@
       <div class="stats-container card-pf-utilization-details">
         <span class="card-pf-utilization-card-details-count">{{stats.servicesCount}}</span>
         <span class="card-pf-utilization-card-details-description">
-          <span class="card-pf-utilization-card-details-line-2 stats-text">{{$t('services.configured')}}</span>
+          <span
+            class="card-pf-utilization-card-details-line-2 stats-text"
+          >{{$t('services.configured')}}</span>
         </span>
       </div>
       <div class="stats-container card-pf-utilization-details">
         <span class="card-pf-utilization-card-details-count">{{stats.servicesEnabledCount}}</span>
         <span class="card-pf-utilization-card-details-description">
-          <span class="card-pf-utilization-card-details-line-2 stats-text">{{$t('services.enabled')}}</span>
+          <span
+            class="card-pf-utilization-card-details-line-2 stats-text"
+          >{{$t('services.enabled')}}</span>
         </span>
       </div>
       <div class="stats-container card-pf-utilization-details">
         <span class="card-pf-utilization-card-details-count">{{stats.servicesRunningCount}}</span>
         <span class="card-pf-utilization-card-details-description">
-          <span class="card-pf-utilization-card-details-line-2 stats-text">{{$t('services.running')}}</span>
+          <span
+            class="card-pf-utilization-card-details-line-2 stats-text"
+          >{{$t('services.running')}}</span>
         </span>
       </div>
     </div>
@@ -28,19 +34,38 @@
     <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
       <span class="pficon pficon-warning-triangle-o"></span>
       <strong>{{$t('hints_suggested')}}:</strong>
-      <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{t}}</strong>: {{$t('hints.'+m)}}</li>
-      <span v-if="hints.message && hints.message.length > 0">
-        {{hints.message && $t('hints.'+hints.message)}}
-      </span>
+      <li v-for="(m,t) in hints.details" v-bind:key="t">
+        <strong>{{t}}</strong>
+        : {{$t('hints.'+m)}}
+      </li>
+      <span
+        v-if="hints.message && hints.message.length > 0"
+      >{{hints.message && $t('hints.'+hints.message)}}</span>
     </div>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
-    <vue-good-table v-if="view.isLoaded" :customRowsPerPageDropdown="[25,50,100]" :perPage="25" :columns="columns"
-      :rows="rows" :lineNumbers="false" :defaultSortBy="{field: 'name', type: 'asc'}" :globalSearch="true" :paginate="true"
-      styleClass="table" :nextText="tableLangsTexts.nextText" :prevText="tableLangsTexts.prevText" :rowsPerPageText="tableLangsTexts.rowsPerPageText"
-      :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder" :ofText="tableLangsTexts.ofText">
+    <vue-good-table
+      v-if="view.isLoaded"
+      :customRowsPerPageDropdown="[25,50,100]"
+      :perPage="25"
+      :columns="columns"
+      :rows="rows"
+      :lineNumbers="false"
+      :defaultSortBy="{field: 'name', type: 'asc'}"
+      :globalSearch="true"
+      :paginate="true"
+      styleClass="table"
+      :nextText="tableLangsTexts.nextText"
+      :prevText="tableLangsTexts.prevText"
+      :rowsPerPageText="tableLangsTexts.rowsPerPageText"
+      :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
+      :ofText="tableLangsTexts.ofText"
+    >
       <template slot="table-row" slot-scope="props">
         <td class="fancy">
-          <span v-if="checkHints(props.row.name)" class="pficon pficon-warning-triangle-o panel-icon"></span>
+          <span
+            v-if="checkHints(props.row.name)"
+            class="pficon pficon-warning-triangle-o panel-icon"
+          ></span>
           <strong>{{ props.row.name}}</strong>
         </td>
         <td class="fancy">{{ props.row.description}}</td>
@@ -56,25 +81,40 @@
           </a>
         </td>
         <td>
-          <button @click="props.row.running ? restartService(props.row.name) : startService(props.row.name)" class="btn btn-default button-minimum">
-            <span :class="['fa', props.row.running ? 'fa-refresh' : 'fa-play', 'span-right-margin']"></span>
+          <button
+            @click="props.row.running ? restartService(props.row.name) : startService(props.row.name)"
+            class="btn btn-default button-minimum"
+          >
+            <span
+              :class="['fa', props.row.running ? 'fa-refresh' : 'fa-play', 'span-right-margin']"
+            ></span>
             {{props.row.running ? $t('services.restart') : $t('services.start') }}
           </button>
           <div class="dropup pull-right dropdown-kebab-pf">
-            <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="true">
+            <button
+              class="btn btn-link dropdown-toggle"
+              type="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="true"
+            >
               <span class="fa fa-ellipsis-v"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
               <li>
                 <a @click="statusService(props.row.name)">
                   <span class="fa fa-search action-icon-menu"></span>
-                  {{$t('services.status')}}</a>
+                  {{$t('services.status')}}
+                </a>
               </li>
               <li role="separator" class="divider"></li>
               <li>
-                <a @click="props.row.enabled ? disableService(props.row.name) : enableService(props.row.name)">
-                  <span :class="['fa', props.row.enabled ? 'fa-times' : 'fa-check', 'action-icon-menu']"></span>
+                <a
+                  @click="props.row.enabled ? disableService(props.row.name) : enableService(props.row.name)"
+                >
+                  <span
+                    :class="['fa', props.row.enabled ? 'fa-times' : 'fa-check', 'action-icon-menu']"
+                  ></span>
                   {{props.row.enabled ? $t('services.disable') : $t('services.enable') }}
                 </a>
               </li>
@@ -106,7 +146,12 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button @click="cleanStatus()" class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button
+                @click="cleanStatus()"
+                class="btn btn-default"
+                type="button"
+                data-dismiss="modal"
+              >{{$t('cancel')}}</button>
             </div>
           </form>
         </div>
@@ -120,10 +165,12 @@
             <h4 class="modal-title">{{$t('services.details_of')}} {{currentDetails.name}}</h4>
           </div>
           <form class="form-horizontal">
-
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-top" for="textInput-modal-markup">{{$t('services.properties')}}</label>
+                <label
+                  class="col-sm-3 control-label no-padding-top"
+                  for="textInput-modal-markup"
+                >{{$t('services.properties')}}</label>
                 <div class="col-sm-9">
                   <dl class="dl-horizontal">
                     <span v-for="(p,kp) in currentDetails.props" v-bind:key="kp">
@@ -138,7 +185,10 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-top" for="textInput-modal-markup">{{$t('services.network')}}</label>
+                <label
+                  class="col-sm-3 control-label no-padding-top"
+                  for="textInput-modal-markup"
+                >{{$t('services.network')}}</label>
                 <div class="col-sm-9">
                   <dl class="dl-horizontal">
                     <span v-for="(p,kp) in currentDetails.ports" v-bind:key="kp">
@@ -221,18 +271,20 @@ export default {
         },
         {
           label: this.$i18n.t("services.description"),
-          field: "name",
+          field: "description",
           filterable: true
         },
         {
           label: this.$i18n.t("services.enabled"),
-          field: "name",
-          filterable: true
+          field: "enabled",
+          filterable: true,
+          type: "number"
         },
         {
           label: this.$i18n.t("services.running"),
-          field: "name",
-          filterable: true
+          field: "running",
+          filterable: true,
+          type: "number"
         },
         {
           label: this.$i18n.t("details"),
@@ -247,38 +299,7 @@ export default {
           sortable: false
         }
       ],
-      rows: [
-        {
-          id: 1,
-          name: "amavisd",
-          description:
-            "Amavisd-new is an interface between MTA and content checkers.",
-          enabled: true,
-          running: true,
-          props: {
-            SpamTag2Level: "5.0",
-            SenderBlackList: null
-          },
-          ports: {
-            access: "green",
-            UDP: [],
-            TCP: []
-          }
-        },
-        {
-          id: 2,
-          name: "postfix",
-          description: "Postfix Mail Transport Agent",
-          enabled: false,
-          running: false,
-          props: [],
-          ports: {
-            access: "green",
-            UDP: [],
-            TCP: []
-          }
-        }
-      ],
+      rows: [],
       currentDetails: {
         props: {},
         ports: {},
@@ -537,6 +558,7 @@ export default {
           context.currentDetails.status = success.data;
 
           context.currentDetails.isLoading = false;
+          context.$forceUpdate();
         },
         function(error) {
           console.log(error);
