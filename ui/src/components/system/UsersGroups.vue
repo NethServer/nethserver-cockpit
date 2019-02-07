@@ -649,7 +649,7 @@
                         <span class="label label-info">
                           {{u}}
                           <a
-                            @click="roles.editable ? removeSystemFromGroup(i) : undefined"
+                            @click="roles.editable ? removeApplicationsFromGroup(i) : undefined"
                             class="remove-item-inline"
                           >
                             <span class="fa fa-times"></span>
