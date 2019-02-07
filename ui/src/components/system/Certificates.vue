@@ -490,12 +490,25 @@
                 </div>
               </div>
 
-              <div class="advanced">
-                <span>{{$t('advanced')}}</span>
-                <div class="divider divider-advanced"></div>
+              <div class="form-group">
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('advanced_mode')}}</label>
+                <div class="col-sm-8">
+                  <toggle-button
+                    class="min-toggle"
+                    :width="40"
+                    :height="20"
+                    :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+                    :value="letsEncryptCertificate.advanced"
+                    :sync="true"
+                    @change="toggleAdvancedMode()"
+                  />
+                </div>
               </div>
 
-              <div class="form-group">
+              <div v-show="letsEncryptCertificate.advanced" class="form-group">
                 <label
                   class="col-sm-3 control-label"
                   for="textInput-modal-markup"
@@ -509,6 +522,7 @@
                 </div>
               </div>
               <div
+                v-show="letsEncryptCertificate.advanced"
                 :class="['form-group', letsEncryptCertificate.errors.LetsEncryptRenewDays.hasError ? 'has-error' : '']"
               >
                 <label
@@ -745,11 +759,17 @@ export default {
           }
         ],
         LetsEncryptMail: "",
-        LetsEncryptRenewDays: 0
+        LetsEncryptRenewDays: 0,
+        advanced: false
       }
     };
   },
   methods: {
+    toggleAdvancedMode() {
+      this.letsEncryptCertificate.advanced = !this.letsEncryptCertificate
+        .advanced;
+      this.$forceUpdate();
+    },
     initGraphics() {
       $("#app").css("background", "");
       $("#app").css("color", "");

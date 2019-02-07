@@ -427,12 +427,24 @@
                   <password-meter></password-meter>
                 </div>
               </div>
-              <div v-if="!newUser.isPassEdit" class="advanced">
-                <span>{{$t('users_groups.advanced_options')}}</span>
-                <div class="divider divider-advanced"></div>
+              <div class="form-group">
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('advanced_mode')}}</label>
+                <div class="col-sm-8">
+                  <toggle-button
+                    class="min-toggle"
+                    :width="40"
+                    :height="20"
+                    :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+                    :value="newUser.advanced"
+                    :sync="true"
+                    @change="toggleAdvancedMode()"
+                  />
+                </div>
               </div>
-              <!-- <p v-if="!newUser.isPassEdit">{{$t('users_groups.advanced_options')}}</p> -->
-              <div v-if="!newUser.isPassEdit" class="form-group">
+              <div v-if="!newUser.isPassEdit && newUser.advanced" class="form-group">
                 <label
                   class="col-sm-3 control-label"
                   for="expires"
@@ -446,7 +458,7 @@
                   >
                 </div>
               </div>
-              <div v-if="!newUser.isPassEdit" class="form-group">
+              <div v-if="!newUser.isPassEdit && newUser.advanced" class="form-group">
                 <label
                   class="col-sm-3 control-label"
                   for="shell"
@@ -1439,6 +1451,10 @@ export default {
     };
   },
   methods: {
+    toggleAdvancedMode() {
+      this.newUser.advanced = !this.newUser.advanced;
+      this.$forceUpdate();
+    },
     initGraphics() {
       $("#app").css("background", "");
       $("#app").css("color", "");
@@ -1602,7 +1618,8 @@ export default {
         expires: false,
         shell: false,
         isLoading: false,
-        canChangePassword: true
+        canChangePassword: true,
+        advanced: false
       };
     },
     initGroup() {

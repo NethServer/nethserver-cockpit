@@ -312,12 +312,26 @@
                 </div>
               </div>
 
-              <div class="advanced">
-                <span>{{$t('advanced')}}</span>
-                <div class="divider divider-advanced"></div>
+              <div class="form-group">
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('advanced_mode')}}</label>
+                <div class="col-sm-8">
+                  <toggle-button
+                    class="min-toggle"
+                    :width="40"
+                    :height="20"
+                    :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+                    :value="currentRange.advanced"
+                    :sync="true"
+                    @change="toggleAdvancedMode()"
+                  />
+                </div>
               </div>
 
               <div
+                v-show="currentRange.advanced"
                 :class="['form-group', currentRange.errors.DhcpGatewayIP.hasError ? 'has-error' : '']"
               >
                 <label
@@ -333,6 +347,7 @@
                 </div>
               </div>
               <div
+                v-show="currentRange.advanced"
                 :class="['form-group', currentRange.errors.DhcpLeaseTime.hasError ? 'has-error' : '']"
               >
                 <label
@@ -348,6 +363,7 @@
                 </div>
               </div>
               <div
+                v-show="currentRange.advanced"
                 :class="['form-group', currentRange.errors.DhcpDomain.hasError ? 'has-error' : '']"
               >
                 <label
@@ -362,7 +378,10 @@
                   >{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpDomain.message)}}</span>
                 </div>
               </div>
-              <div :class="['form-group', currentRange.errors.DhcpDNS.hasError ? 'has-error' : '']">
+              <div
+                v-show="currentRange.advanced"
+                :class="['form-group', currentRange.errors.DhcpDNS.hasError ? 'has-error' : '']"
+              >
                 <label
                   class="col-sm-3 control-label"
                   for="textInput-modal-markup"
@@ -376,6 +395,7 @@
                 </div>
               </div>
               <div
+                v-show="currentRange.advanced"
                 :class="['form-group', currentRange.errors.DhcpWINS.hasError ? 'has-error' : '']"
               >
                 <label
@@ -390,7 +410,10 @@
                   >{{$t('validation.validation_failed')}}: {{$t('validation.'+currentRange.errors.DhcpWINS.message)}}</span>
                 </div>
               </div>
-              <div :class="['form-group', currentRange.errors.DhcpNTP.hasError ? 'has-error' : '']">
+              <div
+                v-show="currentRange.advanced"
+                :class="['form-group', currentRange.errors.DhcpNTP.hasError ? 'has-error' : '']"
+              >
                 <label
                   class="col-sm-3 control-label"
                   for="textInput-modal-markup"
@@ -404,6 +427,7 @@
                 </div>
               </div>
               <div
+                v-show="currentRange.advanced"
                 :class="['form-group', currentRange.errors.DhcpTFTP.hasError ? 'has-error' : '']"
               >
                 <label
@@ -534,6 +558,10 @@ export default {
     };
   },
   methods: {
+    toggleAdvancedMode() {
+      this.currentRange.advanced = !this.currentRange.advanced;
+      this.$forceUpdate();
+    },
     initGraphics() {
       $("#app").css("background", "");
       $("#app").css("color", "");
@@ -578,6 +606,7 @@ export default {
         DhcpWINS: "",
         DhcpNTP: "",
         DhcpTFTP: "",
+        advanced: false,
         errors: {
           DhcpRangeStart: {
             hasError: false,

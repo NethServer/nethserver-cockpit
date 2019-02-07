@@ -13,7 +13,7 @@ a {
 }
 
 input[type="checkbox"].form-control {
-    width: 6% !important;
+    width: 20px !important;
     box-shadow: none;
 }
 
