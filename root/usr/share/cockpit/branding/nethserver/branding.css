@@ -5,6 +5,10 @@ body.login-pf {
     padding-top: 60px;
 }
 
+#sidebar-menu li{
+display: none;
+}
+
 #sidebar-menu {
 display: none;
 }

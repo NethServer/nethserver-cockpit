@@ -322,36 +322,24 @@ export default {
             console.error(e);
           }
           context.auths = success.system || [];
-          context.applications = success.applications || [];
-          context.isRoot = success.status.isRoot == 1;
 
-            if (context.isRoot) {
-                $('#sidebar-menu', window.parent.document).show();
-                $('#sidebar-tools', window.parent.document).show();
-            }
-            else {
-                // 0-> system 1->applications 2->software-center 3->subscription 4->terminal
-                var liElement = ['0','1','2','3','4'];
+         var UserPermissions = {};
+         UserPermissions.system = success.system || [];
+         UserPermissions.applications = success.applications || [];
+         UserPermissions.status = success.status;
 
-                if (context.applications.length > 0) {
-                    delete liElement[1];
-                }
-                if (context.auths.indexOf("software-center") != -1) {
-                    delete liElement[2]
-                }
-                if (context.auths.indexOf("subscription") != -1) {
-                    delete liElement[3]
-                }
-                if (context.auths.indexOf("terminal") != -1) {
-                    delete liElement[4]
-                }
+        // Put the array into storage
+        localStorage.setItem('UserPermissions', JSON.stringify(UserPermissions));
 
-                $('#sidebar-menu', window.parent.document).show();
-                for (var i in liElement) {
-                    $('#sidebar-menu', window.parent.document).children().eq(i).hide();
-                }
-                $('#sidebar-tools', window.parent.document).show();
-            }
+        var liElement = context.checkMenuPermission();
+        // show before to hide
+        $('#sidebar-menu', window.parent.document).show();
+        $('#sidebar-menu li', window.parent.document).show();
+
+        for (var i in liElement) {
+            $('#sidebar-menu', window.parent.document).children().eq(i).hide();
+        }
+        $('#sidebar-tools', window.parent.document).show();
         },
         function(error) {
           console.error(error);
