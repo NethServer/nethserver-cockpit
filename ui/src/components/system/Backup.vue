@@ -427,7 +427,7 @@
                   class="col-sm-4 control-label"
                   for="restoreInstallPackages"
                 >{{$t('backup.reinstall_packages')}}</label>
-                <div class="col-sm-4">
+                <div class="col-sm-8">
                   <input
                     id="restoreInstallPackages"
                     type="checkbox"
@@ -725,7 +725,7 @@
                   class="col-sm-3 control-label"
                   for="IncludeLogs"
                 >{{$t('backup.include_logs')}}</label>
-                <div class="col-sm-6">
+                <div class="col-sm-9">
                   <input
                     id="IncludeLogs"
                     type="checkbox"
