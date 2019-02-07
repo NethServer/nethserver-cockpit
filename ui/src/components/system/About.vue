@@ -42,6 +42,9 @@ export default {
   mounted() {
     $("#app").css("background", "");
     $("#app").css("color", "");
+                  $('#sidebar-menu', window.parent.document).hide();
+                  $('#sidebar-tools', window.parent.document).hide();
+
   },
   data() {
     return {};
