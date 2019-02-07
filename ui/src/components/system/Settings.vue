@@ -435,6 +435,20 @@ export default {
           } catch (e) {
             console.error(e);
           }
+          // Retrieve the object liElement from storage
+          // and hide the index
+          var liElement = context.checkMenuPermission();
+
+          // first show then hide
+          $('#sidebar-menu', window.parent.document).show();
+          $('#sidebar-menu li', window.parent.document).show();
+
+          // hide the child of #sidebar-menu following permissions
+          for (var i in liElement) {
+              $('#sidebar-menu', window.parent.document).children().eq(i).hide();
+          }
+          $('#sidebar-tools', window.parent.document).show();
+          
           context.settings = success.configuration;
 
           context.view.isRoot = success.status.isRoot == 1;
