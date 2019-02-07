@@ -348,6 +348,9 @@ export default {
 
                 $('#sidebar-menu', window.parent.document).show();
                 for (var i in liElement) {
+                    if (i === '0') {
+                        continue;
+                    }
                     $('#sidebar-menu', window.parent.document).children().eq(i).hide();
                 }
                 $('#sidebar-tools', window.parent.document).show();
