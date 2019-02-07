@@ -436,6 +436,24 @@ export default {
             console.error(e);
           }
           context.auths = success.system || [];
+
+         var UserPermissions = {};
+         UserPermissions.system = success.system || [];
+         UserPermissions.applications = success.applications || [];
+         UserPermissions.status = success.status;
+
+        // Put the array into storage
+        localStorage.setItem('UserPermissions', JSON.stringify(UserPermissions));
+
+        var liElement = context.checkMenuPermission();
+        // show before to hide
+        $('#sidebar-menu', window.parent.document).show();
+        $('#sidebar-menu li', window.parent.document).show();
+
+        for (var i in liElement) {
+            $('#sidebar-menu', window.parent.document).children().eq(i).hide();
+        }
+        $('#sidebar-tools', window.parent.document).show();
         },
         function(error) {
           console.error(error);
