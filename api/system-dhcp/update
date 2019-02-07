@@ -38,8 +38,6 @@ case $action in
         /sbin/e-smith/db hosts set "$(_get name)" local IpAddress "$(_get IpAddress)" MacAddress "$(_get MacAddress)" Description "$(_get Description)"
         if [ $? -gt 0 ]; then
             error "EventFailed" "See /var/log/messages"
-        else
-            success
         fi
         /sbin/e-smith/signal-event -j host-modify
         ;;

@@ -1,24 +1,46 @@
-#!/usr/bin/expect -f
+#!/bin/bash
 
 #
-# Expect a file in the format containing: the new, confirm and current passwords
-# The password must be one per line.
+# Copyright (C) 2019 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
 #
 
-set pass_file [lindex $argv 0]
-set fp [open $pass_file r]
-gets $fp new_pass
-gets $fp confirm_pass
-gets $fp current_pass
+read -r old_password
+read -r new_password
 
-spawn passwd
+if klist -s; then
+    echo -en "${old_password}\n${new_password}\n${new_password}" | kpasswd
+else
+    # Parse ldappasswd.conf as a multi line key-val file in ldapconf hashmap:
+    declare -A ldapconf
+    exec </etc/nethserver/ldappasswd.conf
+    while read pkey pval; do
+        if [[ ${pkey} != [A-Z]* ]]; then
+            continue # skip comments, empty lines and other garbage
+        fi
+        ldapconf[${pkey}]="${pval}"
+    done
 
-expect "urrent* password: "
-send -- "$current_pass\n"
-expect  "ew password: "
-send -- "$new_pass\n"
-expect  "etype new password: "
-send -- "$confirm_pass\n"
-expect eof
+    export LDAPBASE="${LDAPBASE:-${ldapconf[BASE]}}"
+    export LDAPBINDDN="${LDAPBINDDN:-uid=${USER%%@${ldapconf[DOMAIN]}},${ldapconf[BASE]}}"
+    export LDAPURI="${LDAPURI:-${ldapconf[URI]}}"
 
-set exitstatus [lindex [wait] 3]
+    ldappasswd -x ${ldapconf[STARTTLS]:+-ZZ} -y <(echo -n "${old_password}") -t <(echo -n "${old_password}") -T <(echo -n "${new_password}")
+fi
+
+exit $?

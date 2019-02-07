@@ -20,7 +20,7 @@ input[type="checkbox"].form-control {
 .form-spinner-loader {
     display: inline-block;
     top: 6px;
-    right: 4px;
+    right: 6px;
 }
 
 .vue-js-switch .v-switch-core {

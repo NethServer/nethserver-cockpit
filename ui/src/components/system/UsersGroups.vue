@@ -156,11 +156,6 @@
             >
           </div>
         </div>
-        <div class="form-group">
-          <button class="btn btn-default btn-lg" type="submit">
-            <span class="fa fa-search"></span>
-          </button>
-        </div>
       </form>
 
       <div class="list-group list-view-pf">

@@ -170,11 +170,6 @@
             >
           </div>
         </div>
-        <div class="form-group">
-          <button class="btn btn-default btn-lg" type="button">
-            <span class="fa fa-search"></span>
-          </button>
-        </div>
       </form>
 
       <div class="list-group list-view-pf">
@@ -3142,9 +3137,9 @@ export default {
         SMBHost: context.wizard.where.cifs.SMBHost,
         SMBLogin: context.wizard.where.cifs.SMBLogin,
         SMBPassword: context.wizard.where.cifs.SMBPassword,
-        WebDAVLogin: context.wizard.where.cifs.WebDAVLogin,
-        WebDAVPassword: context.wizard.where.cifs.WebDAVPassword,
-        WebDAVUrl: context.wizard.where.cifs.WebDAVUrl,
+        WebDAVLogin: context.wizard.where.webdav.WebDAVLogin,
+        WebDAVPassword: context.wizard.where.webdav.WebDAVPassword,
+        WebDAVUrl: context.wizard.where.webdav.WebDAVUrl,
         SftpHost: context.wizard.where.sftp.SftpHost,
         SftpPort: context.wizard.where.sftp.SftpPort,
         SftpUser: context.wizard.where.sftp.SftpUser,

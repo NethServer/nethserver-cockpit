@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 /*
- * Copyright (C) 2018 Nethesis S.r.l.
+ * Copyright (C) 2019 Nethesis S.r.l.
  * http://www.nethesis.it - nethserver@nethesis.it
  *
  * This script is part of NethServer.
@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NethServer.  If not, see COPYING.
-*/
+ */
 
 /** Include common functions **/
 
@@ -32,6 +32,9 @@ check_password($data, $v);
 if (!$v->validate()) {
     error($v);
 }
+
+# Make private temp files:
+umask(077);
 
 # Use pwquality helper
 $tmpFilePath = @tempnam(sys_get_temp_dir(), 'ng-');

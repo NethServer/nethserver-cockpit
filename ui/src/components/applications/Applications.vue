@@ -3,26 +3,58 @@
     <h2>{{$t('applications.title')}}</h2>
 
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
-    <button v-if="view.isLoaded" @click="refresh()" class="btn btn-primary apps-refresh">{{$t('applications.refresh')}}</button>
+    <button
+      v-if="view.isLoaded"
+      @click="refresh()"
+      class="btn btn-primary apps-refresh"
+    >{{$t('applications.refresh')}}</button>
 
-    <vue-good-table v-if="view.isLoaded" :customRowsPerPageDropdown="[25,50,100]" :perPage="25" :columns="columns"
-      :rows="rows" :lineNumbers="false" :defaultSortBy="{field: 'name', type: 'asc'}" :globalSearch="true" :paginate="true"
-      styleClass="table" :nextText="tableLangsTexts.nextText" :prevText="tableLangsTexts.prevText" :rowsPerPageText="tableLangsTexts.rowsPerPageText"
-      :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder" :ofText="tableLangsTexts.ofText">
+    <vue-good-table
+      v-if="view.isLoaded"
+      :customRowsPerPageDropdown="[25,50,100]"
+      :perPage="25"
+      :columns="columns"
+      :rows="rows"
+      :lineNumbers="false"
+      :defaultSortBy="{field: 'name', type: 'asc'}"
+      :globalSearch="true"
+      :paginate="true"
+      styleClass="table"
+      :nextText="tableLangsTexts.nextText"
+      :prevText="tableLangsTexts.prevText"
+      :rowsPerPageText="tableLangsTexts.rowsPerPageText"
+      :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
+      :ofText="tableLangsTexts.ofText"
+    >
       <template slot="table-row" slot-scope="props">
         <td class="fancy">
-          <a v-if="(props.row.url || props.row.url.length > 0 ) && !props.row.legacy" target="_blank" :href="'/'+props.row.url">
-            <img class="apps-icon" :src="props.row.legacy ? 'static/assets/legacy.png' : '../'+props.row.id+'/logo.png'">
+          <a
+            v-if="(props.row.url || props.row.url.length > 0 ) && !props.row.legacy"
+            target="_blank"
+            :href="'/'+props.row.url"
+          >
+            <img
+              class="apps-icon"
+              :src="props.row.legacy ? 'static/assets/legacy.png' : '../'+props.row.id+'/logo.png'"
+            >
           </a>
           <span v-if="!props.row.url || props.row.url.length == 0 || props.row.legacy">
-            <img class="apps-icon" :src="props.row.legacy ? 'static/assets/legacy.png' : '../'+props.row.id+'/logo.png'">
+            <img
+              class="apps-icon"
+              :src="props.row.legacy ? 'static/assets/legacy.png' : '../'+props.row.id+'/logo.png'"
+            >
           </span>
         </td>
         <td class="fancy">
           <strong>
-            <a v-if="(props.row.url || props.row.url.length > 0 ) && !props.row.legacy" target="_blank" :href="props.row.url">{{props.row.name}}
-            </a>
-            <span v-if="!props.row.url || props.row.url.length == 0 || props.row.legacy">{{props.row.name}}</span>
+            <a
+              v-if="(props.row.url || props.row.url.length > 0 ) && !props.row.legacy"
+              target="_blank"
+              :href="props.row.url"
+            >{{props.row.name}}</a>
+            <span
+              v-if="!props.row.url || props.row.url.length == 0 || props.row.legacy"
+            >{{props.row.name}}</span>
           </strong>
         </td>
         <td class="fancy">{{ props.row.description}}</td>
@@ -30,21 +62,45 @@
           <strong>{{props.row.release.version | capitalize}}</strong>
         </td>
         <td>
-          <a :target="props.row.legacy ? '_blank' : ''" :href="props.row.legacy ? legacyUrl+props.row.url : '#/applications/'+props.row.id"
-            class="btn btn-primary button-minimum">
+          <a
+            :target="props.row.legacy ? '_blank' : ''"
+            :href="props.row.legacy ? legacyUrl+props.row.url : '#/applications/'+props.row.id"
+            class="btn btn-primary button-minimum"
+          >
             <span :class="['fa', props.row.legacy ? 'fa-external-link' : 'fa-cogs']"></span>
             {{props.row.legacy ? $t('applications.open') : $t('applications.settings')}}
           </a>
-          <div v-if="props.row.editable == 1 && !props.row.legacy" class="dropup pull-right dropdown-kebab-pf">
-            <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="true">
+          <div
+            v-if="props.row.editable == 1 && !props.row.legacy"
+            class="dropup pull-right dropdown-kebab-pf"
+          >
+            <button
+              class="btn btn-link dropdown-toggle"
+              type="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="true"
+            >
               <span class="fa fa-ellipsis-v"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
+              <li v-if="props.row.editable == 1" role="presentation">
+                <a
+                  @click="props.row.shortcut == 1 ? removeShortcut(props.row.id) : addShortcut(props.row.id)"
+                >
+                  <span
+                    :class="['fa', props.row.shortcut == 1 ? 'fa-cut' : 'fa-plus', 'action-icon-menu']"
+                  ></span>
+                  {{props.row.shortcut == 1
+                  ? $t('remove_shortcut') : $t('add_shortcut')}}
+                </a>
+              </li>
+              <li v-if="props.row.editable == 1" role="presentation" class="divider"></li>
               <li>
                 <a @click="openRemoveApp(props.row)">
                   <span class="fa fa-times action-icon-menu"></span>
-                  {{$t('applications.remove')}}</a>
+                  {{$t('applications.remove')}}
+                </a>
               </li>
             </ul>
           </div>
@@ -61,14 +117,21 @@
           <form class="form-horizontal" v-on:submit.prevent="removeApp()">
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
               </div>
               <div class="alert alert-warning alert-dismissable">
                 <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>{{$t('warning')}}.</strong> {{$t('applications.remove_applications_warn')}}.
+                <strong>{{$t('warning')}}.</strong>
+                {{$t('applications.remove_applications_warn')}}.
               </div>
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('applications.list')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('applications.list')}}</label>
                 <div class="col-sm-9">
                   <div v-if="!currentApp.listRemoveRead" class="spinner spinner-sm"></div>
                   <pre v-if="currentApp.listRemoveRead" class="prettyprint">{{currentApp.listRemoveRead}}</pre>
@@ -77,7 +140,11 @@
             </div>
             <div class="modal-footer">
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
-              <button :disabled="!currentApp.listRemoveRead" class="btn btn-danger" type="submit">{{$t('delete')}}</button>
+              <button
+                :disabled="!currentApp.listRemoveRead"
+                class="btn btn-danger"
+                type="submit"
+              >{{$t('delete')}}</button>
             </div>
           </form>
         </div>
@@ -216,7 +283,6 @@ export default {
           context.currentApp.listRemove = success.packages;
           context.currentApp.listRemoveRead = success.packages.join("\n");
           context.$forceUpdate();
-          console.log(context.currentApp.listRemoveRead);
         },
         function(error) {
           console.error(error);
@@ -249,6 +315,44 @@ export default {
           context.$parent.notifications.error.message = context.$i18n.t(
             "applications.remove_error"
           );
+        }
+      );
+    },
+    addShortcut(application) {
+      var context = this;
+
+      context.view.isLoaded = false;
+      context.exec(
+        ["system-apps/update"],
+        {
+          action: "add-shortcut",
+          name: application
+        },
+        null,
+        function(success) {
+          context.refresh();
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+    removeShortcut(application) {
+      var context = this;
+
+      context.view.isLoaded = false;
+      context.exec(
+        ["system-apps/update"],
+        {
+          action: "remove-shortcut",
+          name: application
+        },
+        null,
+        function(success) {
+          context.refresh();
+        },
+        function(error) {
+          console.error(error);
         }
       );
     },
