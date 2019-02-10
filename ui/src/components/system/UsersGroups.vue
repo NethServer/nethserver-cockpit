@@ -600,7 +600,7 @@
                       <li v-for="(u,i) in newGroup.system" v-bind:key="i">
                         <span class="label label-info">
                           {{$t('menu.'+u)}}
-                          <a @click="roles.editable ? removeSystemFromGroup(i) : undefined" 
+                          <a @click="roles.editable ? removeSystemFromGroup(i) : undefined"
                              class="remove-item-inline"
                           >
                             <span class="fa fa-times"></span>
@@ -1457,6 +1457,26 @@ export default {
 
           vm.view.isAuth = true;
           vm.view.isRoot = success.status.isRoot == 1;
+
+          if (vm.view.isRoot) {
+                  $('#sidebar-menu', window.parent.document).show();
+                  $('#sidebar-tools', window.parent.document).show();
+                  $('#sidebar-menu li', window.parent.document).show();
+          } else {
+              // Retrieve the object liElement from storage
+              // and hide the index
+              var liElement = vm.checkMenuPermission();
+
+              // first show then hide
+              $('#sidebar-menu', window.parent.document).show();
+              $('#sidebar-menu li', window.parent.document).show();
+
+              // hide the child of #sidebar-menu following permissions
+              for (var i in liElement) {
+                  $('#sidebar-menu', window.parent.document).children().eq(i).hide();
+              }
+              $('#sidebar-tools', window.parent.document).show();
+          }
         },
         function(error) {
           console.error(error);
