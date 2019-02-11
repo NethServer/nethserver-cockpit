@@ -13,6 +13,9 @@ Valid actions:
 - `services`
 - `wans`
 - `protocols`
+- `zones`
+- `time-conditions`
+- `interfaces`
 
 #### hosts
 
@@ -55,6 +58,39 @@ Example:
 ```json
 {
   "action": "protocols"
+}
+```
+
+#### zones
+
+Return the list of zones from `networks` db.
+
+Example:
+```json
+{
+  "action": "zones"
+}
+```
+
+#### time-conditions
+
+Return the list of time conditions from `fwtimes` db.
+
+Example:
+```json
+{
+  "action": "time-conditions"
+}
+```
+
+#### time-conditions
+
+Return the list of interfaces from `networks` db.
+
+Example:
+```json
+{
+  "action": "interfaces"
 }
 ```
 
@@ -119,6 +155,63 @@ Example:
     "hopopt",
     "icmp",
     "igmp",
+    ...
+  ]
+}
+```
+
+#### zones
+
+Example:
+```json
+{
+  "zones": [
+    {
+      "Network": "192.168.66.3/14",
+      "name": "test",
+      "Description": "test",
+      "Interface": "eth0"
+    },
+    ...
+  ]
+}
+
+```
+
+#### time-conditions
+
+Example:
+```json
+{
+  "time-conditions": [
+    {
+      "WeekDays": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "TimeStart": "00:00",
+      "TimeStop": "02:30",
+      "name": "test",
+      "Description": "test"
+    },
+    ...
+  ]
+}
+```
+
+#### interfaces
+
+Example:
+```json
+{
+  "interfaces": [
+    "eth0",
+    "eth1",
     ...
   ]
 }
