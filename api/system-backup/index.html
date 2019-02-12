@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.3, mkdocs-material-3.0.4">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-3.0.4">
     
     
       
@@ -448,8 +448,29 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#backup-info" title="backup-info" class="md-nav__link">
+    backup-info
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-disks" title="list-disks" class="md-nav__link">
+    list-disks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#last-log" title="last-log" class="md-nav__link">
     last-log
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-info" title="running-info" class="md-nav__link">
+    running-info
   </a>
   
 </li>
@@ -475,14 +496,14 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#backup-info" title="backup-info" class="md-nav__link">
+  <a href="#backup-info_1" title="backup-info" class="md-nav__link">
     backup-info
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#list-disks" title="list-disks" class="md-nav__link">
+  <a href="#list-disks_1" title="list-disks" class="md-nav__link">
     list-disks
   </a>
   
@@ -496,7 +517,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#running-info" title="running-info" class="md-nav__link">
+  <a href="#running-info_1" title="running-info" class="md-nav__link">
     running-info
   </a>
   
@@ -594,6 +615,13 @@
           <li class="md-nav__item">
   <a href="#cifs-credentials" title="cifs-credentials" class="md-nav__link">
     cifs-credentials
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#webdav-credentials" title="webdav-credentials" class="md-nav__link">
+    webdav-credentials
   </a>
   
 </li>
@@ -1386,8 +1414,29 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#backup-info" title="backup-info" class="md-nav__link">
+    backup-info
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-disks" title="list-disks" class="md-nav__link">
+    list-disks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#last-log" title="last-log" class="md-nav__link">
     last-log
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-info" title="running-info" class="md-nav__link">
+    running-info
   </a>
   
 </li>
@@ -1413,14 +1462,14 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#backup-info" title="backup-info" class="md-nav__link">
+  <a href="#backup-info_1" title="backup-info" class="md-nav__link">
     backup-info
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#list-disks" title="list-disks" class="md-nav__link">
+  <a href="#list-disks_1" title="list-disks" class="md-nav__link">
     list-disks
   </a>
   
@@ -1434,7 +1483,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#running-info" title="running-info" class="md-nav__link">
+  <a href="#running-info_1" title="running-info" class="md-nav__link">
     running-info
   </a>
   
@@ -1532,6 +1581,13 @@
           <li class="md-nav__item">
   <a href="#cifs-credentials" title="cifs-credentials" class="md-nav__link">
     cifs-credentials
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#webdav-credentials" title="webdav-credentials" class="md-nav__link">
+    webdav-credentials
   </a>
   
 </li>
@@ -1789,6 +1845,24 @@ Valid actions:</p>
 </pre></div>
 
 
+<h4 id="backup-info">backup-info<a class="headerlink" href="#backup-info" title="Permanent link">&para;</a></h4>
+<p>Return status and configuration of all backups.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;backup-info&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="list-disks">list-disks<a class="headerlink" href="#list-disks" title="Permanent link">&para;</a></h4>
+<p>List attached disks which can be used for the backup.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;list-disks&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h4 id="last-log">last-log<a class="headerlink" href="#last-log" title="Permanent link">&para;</a></h4>
 <p>Return the content of most recent log of the given log.
 The <code>name</code> field must contain the backup name.</p>
@@ -1796,6 +1870,15 @@ The <code>name</code> field must contain the backup name.</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;last-log&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;local119&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="running-info">running-info<a class="headerlink" href="#running-info" title="Permanent link">&para;</a></h4>
+<p>Check if there are backups running in background.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;running-info&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -1822,7 +1905,7 @@ The <code>mode</code> field can be:</p>
 
 
 <h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
-<h4 id="backup-info">backup-info<a class="headerlink" href="#backup-info" title="Permanent link">&para;</a></h4>
+<h4 id="backup-info_1">backup-info<a class="headerlink" href="#backup-info_1" title="Permanent link">&para;</a></h4>
 <p>The output is composed by <code>configuration</code> and <code>status</code> fields.
 Both fields contain <code>backup-data</code> and <code>backup-config</code> fields.</p>
 <p>Output example</p>
@@ -1850,7 +1933,12 @@ Both fields contain <code>backup-data</code> and <code>backup-config</code> fiel
         <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;local119sftp&quot;</span><span class="p">,</span>
         <span class="nt">&quot;log&quot;</span><span class="p">:</span> <span class="s2">&quot;/var/log/backup/backup-local119sftp-201807050800.log&quot;</span><span class="p">,</span>
         <span class="nt">&quot;last-run&quot;</span><span class="p">:</span> <span class="mi">1539088300</span><span class="p">,</span>
-        <span class="nt">&quot;result&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span>
+        <span class="nt">&quot;result&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;destination&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;used&quot;</span><span class="p">:</span> <span class="mi">2472765161472</span><span class="p">,</span>
+          <span class="nt">&quot;percentage&quot;</span><span class="p">:</span> <span class="mi">83</span><span class="p">,</span>
+          <span class="nt">&quot;total&quot;</span><span class="p">:</span> <span class="mi">2948785504256</span>
+        <span class="p">}</span>
       <span class="p">}</span>
       <span class="err">...</span>
     <span class="p">]</span>
@@ -1932,7 +2020,7 @@ Both fields contain <code>backup-data</code> and <code>backup-config</code> fiel
 </ul>
 </li>
 </ul>
-<h4 id="list-disks">list-disks<a class="headerlink" href="#list-disks" title="Permanent link">&para;</a></h4>
+<h4 id="list-disks_1">list-disks<a class="headerlink" href="#list-disks_1" title="Permanent link">&para;</a></h4>
 <p>List all disks without a mounted partition.
 If the disk alredy has a formatted partition, the <code>formatted</code> flag is set to 1, othwerise is set to 0.</p>
 <p>Example:</p>
@@ -1963,7 +2051,7 @@ If the disk alredy has a formatted partition, the <code>formatted</code> flag is
 </pre></div>
 
 
-<h4 id="running-info">running-info<a class="headerlink" href="#running-info" title="Permanent link">&para;</a></h4>
+<h4 id="running-info_1">running-info<a class="headerlink" href="#running-info_1" title="Permanent link">&para;</a></h4>
 <p>It indicates if there are background jobs (restore-data or backup-data) started by the UI.</p>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
@@ -2012,6 +2100,7 @@ while <code>restore</code> field contains the list of ethernet interfaces from t
 <li><code>s3-credentials</code></li>
 <li><code>nfs-credentials</code></li>
 <li><code>cifs-credentials</code></li>
+<li><code>webdav-credentials</code></li>
 <li><code>disk-access</code></li>
 </ul>
 <p>Constraints for <code>create-backup-data</code>:</p>
@@ -2069,6 +2158,11 @@ while <code>restore</code> field contains the list of ethernet interfaces from t
 <li>SMBShare: not empty</li>
 <li>SMBHost: an IP or a host name</li>
 <li>SMBLogin, SMBPassword: anything</li>
+</ul>
+<p>Constraints for <code>webdav-credentials</code>:</p>
+<ul>
+<li>WebDAVUrl: not empty</li>
+<li>WebDAVLogin, WebDAVPassword: anything</li>
 </ul>
 <p>Constraints for <code>disk-access</code>:</p>
 <ul>
@@ -2168,6 +2262,17 @@ while <code>restore</code> field contains the list of ethernet interfaces from t
   <span class="nt">&quot;SMBShare&quot;</span><span class="p">:</span> <span class="s2">&quot;mybackup&quot;</span><span class="p">,</span>
   <span class="nt">&quot;SMBLogin&quot;</span><span class="p">:</span> <span class="s2">&quot;myuser&quot;</span><span class="p">,</span>
   <span class="nt">&quot;SMBPassword&quot;</span><span class="p">:</span> <span class="s2">&quot;mypass&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="webdav-credentials">webdav-credentials<a class="headerlink" href="#webdav-credentials" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;webdav-credentials&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;WebDAVLogin&quot;</span><span class="p">:</span> <span class="s2">&quot;myuser&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;WebDAVPassword&quot;</span><span class="p">:</span> <span class="s2">&quot;mypass&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;WebDAVUrl&quot;</span><span class="p">:</span> <span class="s2">&quot;https//nextcloud.nethserver.org/nextcloud/remote.php/webdav/&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -2416,7 +2521,7 @@ The <code>name</code> field should contain the name of data backup to restore.</
     
       <script src="../../assets/javascripts/application.583bbe55.js"></script>
       
-      <script>app.initialize({version:"1.0.3",url:{base:"../.."}})</script>
+      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
       
     
     

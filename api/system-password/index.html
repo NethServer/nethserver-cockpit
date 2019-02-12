@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.3, mkdocs-material-3.0.4">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-3.0.4">
     
     
       
@@ -600,6 +600,26 @@
     update
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input_1" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output" title="Output" class="md-nav__link">
+    Output
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
       
@@ -1040,6 +1060,26 @@
     update
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input_1" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output" title="Output" class="md-nav__link">
+    Output
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
       
@@ -1090,7 +1130,33 @@
 
 
 <h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
-<p>Same input as vaidate.</p>
+<p>Implements the self password change. It handles two use cases:</p>
+<ul>
+<li>change local root's password with <code>passwd</code></li>
+<li>change user's password in the accounts provider DB (both local and remote)</li>
+</ul>
+<p>The latter checks if a user kerberos ticket is available. If so it assumes an AD
+accounts provider is configured and runs the <code>kpasswd</code> command.</p>
+<p>Otherwise it attempts to connect the LDAP server configured in
+/etc/nethserver/ldappasswd.conf and runs the ldappasswd command with the user's
+credentials. The LDAP BIND operation uses a DN in the following default form:</p>
+<div class="codehilite"><pre><span></span>uid=&lt;short username&gt;,&lt;user DN branch suffix&gt;
+</pre></div>
+
+
+<p>For instance</p>
+<div class="codehilite"><pre><span></span>uid=davidep,ou=People,dc=directory,dc=nh
+</pre></div>
+
+
+<p>The DN can be overridden with the environment variable LDAPBINDDN. The default
+form suits ns6 and ns7 configuration.</p>
+<p>Remote LDAP providers are always connected with STARTTLS or LDAPS. See the
+Perl <code>NethServer::SSSD::startTls</code> method for details.</p>
+<h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
+<p>See the <code>validate</code> helper.</p>
+<h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
+<p>A simple <code>success</code> message, or specific Error codes.</p>
                 
                   
                 
@@ -1164,7 +1230,7 @@
     
       <script src="../../assets/javascripts/application.583bbe55.js"></script>
       
-      <script>app.initialize({version:"1.0.3",url:{base:"../.."}})</script>
+      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
       
     
     
