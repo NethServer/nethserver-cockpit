@@ -151,10 +151,9 @@ Example:
 ```json
 {
   "protocols": [
-    "ip",
-    "hopopt",
-    "icmp",
-    "igmp",
+    "gre",
+    "ah",
+    "tcp",
     ...
   ]
 }
