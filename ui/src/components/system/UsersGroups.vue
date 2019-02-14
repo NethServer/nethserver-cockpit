@@ -148,6 +148,7 @@
               </ul>
             </div>
             <input
+              v-focus
               v-model="searchString"
               type="text"
               class="form-control input-lg"
@@ -228,6 +229,7 @@
                     {{u.expired ? $t('users_groups.expired') :
                     $t('users_groups.not_expired')}}
                   </span>
+
                 </div>
               </div>
               <div class="list-view-pf-additional-info"></div>
@@ -444,11 +446,10 @@
                   />
                 </div>
               </div>
-              <!-- <p v-if="!newUser.isPassEdit">{{$t('users_groups.advanced_options')}}</p> -->
-              <div v-if="!newUser.isPassEdit" class="form-group">
+              <div v-if="!newUser.isPassEdit && newUser.advanced" class="form-group">
                 <label
                   class="col-sm-3 control-label"
-                  for="textInput-modal-markup"
+                  for="expires"
                 >{{$t('users_groups.password_expiration')}}</label>
                 <div class="col-sm-9">
                   <input
@@ -459,10 +460,10 @@
                   >
                 </div>
               </div>
-              <div v-if="!newUser.isPassEdit" class="form-group">
+              <div v-if="!newUser.isPassEdit && newUser.advanced" class="form-group">
                 <label
                   class="col-sm-3 control-label"
-                  for="textInput-modal-markup"
+                  for="shell"
                 >{{$t('users_groups.remote_shell')}}</label>
                 <div class="col-sm-9">
                   <input type="checkbox" id="shell" class="form-control" v-model="newUser.shell">
@@ -797,7 +798,7 @@
               <div class="form-group">
                 <label
                   class="col-sm-6 control-label"
-                  for="textInput-modal-markup"
+                  for="Users"
                 >{{$t('users_groups.strong_password')}}</label>
                 <div class="col-sm-6">
                   <input
@@ -811,7 +812,7 @@
               <div class="form-group">
                 <label
                   class="col-sm-6 control-label"
-                  for="textInput-modal-markup"
+                  for="PassExpires"
                 >{{$t('users_groups.expiration_password')}}</label>
                 <div class="col-sm-6">
                   <input
@@ -1180,11 +1181,13 @@
                             <input
                               v-if="k == 'BindType'"
                               type="radio"
+                              id="BindType-1"
                               v-model="newProvider.info.BindType"
                               value="authenticated"
                               @click="changeBindType('authenticated')"
                             >
                             <span
+                              for="BindType-1"
                               class="span-right-margin-lg"
                               v-if="k == 'BindType'"
                             >{{$t('users_groups.authenticated')}}</span>
@@ -1192,11 +1195,15 @@
                             <input
                               v-if="k == 'BindType'"
                               type="radio"
+                              id="BindType-2"
                               v-model="newProvider.info.BindType"
                               value="anonymous"
                               @click="changeBindType('anonymous')"
                             >
-                            <span v-if="k == 'BindType'">{{$t('users_groups.anonymous')}}</span>
+                            <span
+                              for="BindType-2"
+                              v-if="k == 'BindType'"
+                            >{{$t('users_groups.anonymous')}}</span>
                           </div>
                         </div>
                         <div class="form-group">
