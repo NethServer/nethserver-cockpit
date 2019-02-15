@@ -16,7 +16,7 @@ var UtilService = {
       //li element
 
       // Retrieve the object from storage
-      var retrievedObject = JSON.parse(localStorage.getItem('UserPermissions'));
+      var retrievedObject = JSON.parse(localStorage.getItem('UserPermissions')|| '{"system":[],"applications":[],"status":{"isRoot":0}}');
       //0-> system 1->applications 2->software-center
       //3->subscription 4->terminal
       var liElement = ['0','1','2','3','4'];
