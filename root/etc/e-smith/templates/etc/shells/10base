@@ -3,4 +3,3 @@
 /bin/false
 /sbin/nologin
 /bin/sh
-/usr/libexec/openssh/sftp-server
