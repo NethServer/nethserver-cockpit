@@ -55,11 +55,13 @@ nav:
       - api/system-users.md
     - Firewall helpers:
       - api/nethserver-firewall-base/dashboard.md
+      - api/nethserver-firewall-base/local-rules.md
       - api/nethserver-firewall-base/objects.md
+      - api/nethserver-firewall-base/port-forward.md
+      - api/nethserver-firewall-base/rules.md
+      - api/nethserver-firewall-base/snat.md
       - api/nethserver-firewall-base/traffic-shaping.md
       - api/nethserver-firewall-base/wan.md
-      - api/nethserver-firewall-base/snat.md
-      - api/nethserver-firewall-base/port-forward.md
 - UI:
   - ui_guidelines.md
   - i18n.md

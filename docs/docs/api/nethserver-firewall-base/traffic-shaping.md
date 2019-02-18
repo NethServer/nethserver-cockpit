@@ -11,6 +11,7 @@ Valid actions:
 
 - `classes`
 - `stats`
+- `rules`
 
 #### classes
 
@@ -33,6 +34,23 @@ Example:
   "action": "stats"
 }
 ```
+
+#### rules
+
+List the traffic shaping rules.
+
+The `rules` action takes an extra parameter `expand`.
+If `expand` is set to `true`, the api will try to expand all objects involved in the rules
+returning information about IP address, zone, etc.
+
+Example:
+```json
+{
+  "action": "rules",
+  "expand": true
+}
+```
+
 
 ### Output
 
@@ -212,6 +230,69 @@ If data for red interfaces is not available (e.g. netdata is not running):
 }
 ```
 
+#### rules
+
+Example with `expand` set to `true`:
+```json
+{
+  "rules": [
+    {
+      "Log": "none",
+      "Time": null,
+      "Position": 640,
+      "status": "enabled",
+      "Service": {
+        "name": "any",
+        "type": "fwservice"
+      },
+      "Action": "class;high",
+      "Dst": {
+        "zone": "red",
+        "IpAddress": "90.147.160.70-90.147.160.73",
+        "name": "garr",
+        "type": "iprange"
+      },
+      "id": "34",
+      "type": "rule",
+      "Src": {
+        "name": "any",
+        "type": "any"
+      }
+    }
+    ...
+  ]
+}
+```
+
+Example with `expand` set to `false`:
+```json
+{
+  "rules": [
+    {
+      "Log": "none",
+      "Time": null,
+      "Position": 640,
+      "status": "enabled",
+      "Service": {
+        "name": "any",
+        "type": "fwservice"
+      },
+      "Action": "class;high",
+      "Dst": {
+        "name": "garr",
+        "type": "iprange"
+      },
+      "id": "34",
+      "type": "rule",
+      "Src": {
+        "name": "any",
+        "type": "any"
+      }
+    }
+    ...
+  ]
+}
+```
 
 ## validate
 

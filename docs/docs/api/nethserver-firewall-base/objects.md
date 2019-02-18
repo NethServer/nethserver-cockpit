@@ -16,6 +16,8 @@ Valid actions:
 - `zones`
 - `time-conditions`
 - `interfaces`
+- `applications`
+- `local-services`
 
 #### hosts
 
@@ -72,6 +74,17 @@ Example:
 }
 ```
 
+#### applications
+
+Return the list of NDPI applications/protocols.
+
+Example:
+```json
+{
+  "action": "applications"
+}
+```
+
 #### time-conditions
 
 Return the list of time conditions from `fwtimes` db.
@@ -83,7 +96,7 @@ Example:
 }
 ```
 
-#### time-conditions
+#### interfaces
 
 Return the list of interfaces from `networks` db.
 
@@ -91,6 +104,17 @@ Example:
 ```json
 {
   "action": "interfaces"
+}
+```
+
+#### local-services
+
+Return the list of services running on the firewall itself (from `configuration` db).
+
+Example:
+```json
+{
+  "action": "local-services"
 }
 ```
 
@@ -215,6 +239,54 @@ Example:
   ]
 }
 ```
+
+#### applications
+
+Return the list of NDPI applications/protocols.
+Each protocol has an associated icon, icon mapping is configured inside the `ndpi-icons.json` file.
+
+Example:
+```json
+{
+  "applications": [
+    {
+      "icon": "fa-circle",
+      "name": "Unknown",
+      "id": "00"
+    },
+    {
+      "icon": "fa-cloud-download",
+      "name": "FTP_CONTROL",
+      "id": "01"
+    },
+    ...
+  ]
+}
+```
+
+#### local-services
+
+Return the list of services running on the firewall itself.
+
+Example:
+```json
+{
+  "local-services": [
+    {
+      "Ports": [
+        "123"
+      ],
+      "name": "chronyd",
+      "Protocol": "udp",
+      "type": "service",
+      "Description": ""
+    },
+    ...
+  ]
+}
+```
+
+
 
 ## validate
 

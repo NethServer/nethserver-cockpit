@@ -12,6 +12,7 @@ Valid actions:
 - `providers`
 - `speedtest`
 - `stats`
+- `rules`
 
 #### providers
 
@@ -44,6 +45,22 @@ Example:
 ```json
 {
   "action": "stats"
+}
+```
+
+#### rules
+
+List the divert rules.
+
+The `rules` action takes an extra parameter `expand`.
+If `expand` is set to `true`, the api will try to expand all objects involved in the rules
+returning information about IP address, zone, etc.
+
+Example:
+```json
+{
+  "action": "rules",
+  "expand": true
 }
 ```
 
@@ -136,6 +153,75 @@ Example of good output:
     "out": "1.4245779",
     "in": "0.6062033"
   }
+}
+```
+
+#### rules
+
+Example with `expand` set to `true`:
+```json
+{
+  "rules": [
+    {
+      "Log": "none",
+      "Time": null,
+      "Position": 256,
+      "status": "enabled",
+      "Service": {
+        "name": "any",
+        "type": "fwservice"
+      },
+      "Action": "provider;red2",
+      "Dst": {
+        "zone": "red",
+        "name": "red",
+        "type": "role",
+        "Interfaces": [
+          "ens7",
+          "ens8"
+        ]
+      },
+      "id": "42",
+      "type": "rule",
+      "Src": {
+        "zone": "green",
+        "IpAddress": "192.168.5.8",
+        "name": "davidem",
+        "type": "host"
+      }
+    }
+    ...
+  ]
+}
+```
+
+Example with `expand` set to `false`:
+```json
+{
+  "rules": [
+    {
+      "Log": "none",
+      "Time": null,
+      "Position": 256,
+      "status": "enabled",
+      "Service": {
+        "name": "any",
+        "type": "fwservice"
+      },
+      "Action": "provider;red2",
+      "Dst": {
+        "name": "red",
+        "type": "role"
+      },
+      "id": "42",
+      "type": "rule",
+      "Src": {
+        "name": "davidem",
+        "type": "host"
+      }
+    }
+    ...
+  ]
 }
 ```
 
