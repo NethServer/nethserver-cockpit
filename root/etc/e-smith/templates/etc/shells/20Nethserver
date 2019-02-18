@@ -1,0 +1,2 @@
+# Allow simple user to login in cockpit
+/usr/libexec/openssh/sftp-server

@@ -36,6 +36,7 @@ event_templates('nethserver-cockpit-update', qw(
     /usr/share/cockpit/nethserver/manifest.json
     /etc/nethserver/ldappasswd.conf
     /etc/sudoers.d/30_nethserver_cockpit_roles
+    /etc/shells
 ));
 
 event_services('nethserver-cockpit-update', qw(
