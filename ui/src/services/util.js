@@ -9,40 +9,7 @@ var UtilService = {
         globalSearchPlaceholder: this.$i18n.t("search"),
         allText: this.$i18n.t("all")
       };
-  },
-  checkMenuPermission() {
-      //this function is made to hide the liElement in the left menu
-      // following the user permissions, it returns the index to hide of
-      //li element
-
-      // Retrieve the object from storage
-      var retrievedObject = JSON.parse(localStorage.getItem('UserPermissions')|| '{"system":[],"applications":[],"status":{"isRoot":0}}');
-      //0-> system 1->applications 2->software-center
-      //3->subscription 4->terminal
-      var liElement = ['0','1','2','3','4'];
-      
-      //Root is always granted to everything
-      if (retrievedObject.status.isRoot == 1) {
-          liElement = [];
-      } else {
-          // everybody is granted to the system menu
-          delete liElement[0];
-
-          if (retrievedObject.applications.length > 0) {
-              delete liElement[1];
-          }
-          if (retrievedObject.system.indexOf("software-center") != -1) {
-              delete liElement[2]
-          }
-          if (retrievedObject.system.indexOf("subscription") != -1) {
-              delete liElement[3]
-          }
-          if (retrievedObject.system.indexOf("terminal") != -1) {
-              delete liElement[4]
-          }
-      }
-      return liElement;
-  },
+    },
     generateUUID() {
       var d = new Date().getTime();
       var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(

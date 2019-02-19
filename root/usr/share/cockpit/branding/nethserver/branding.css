@@ -5,18 +5,6 @@ body.login-pf {
     padding-top: 60px;
 }
 
-#sidebar-menu li{
-display: none;
-}
-
-#sidebar-menu {
-display: none;
-}
-
-#sidebar-tools {
-display: none;
-}
-
 #authorized-input {
     display: none !important;
 }

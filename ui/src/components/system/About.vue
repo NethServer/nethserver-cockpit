@@ -39,40 +39,6 @@
 <script>
 export default {
   name: "About",
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      vm.exec(
-        ["system-authorization/read"],
-        null,
-        null,
-        function(success) {
-          try {
-            success = JSON.parse(success);
-          } catch (e) {
-            console.error(e);
-          }
-
-          // Retrieve the object liElement from storage
-          // and hide the index
-          var liElement = vm.checkMenuPermission();
-
-          // first show then hide
-          $('#sidebar-menu', window.parent.document).show();
-          $('#sidebar-menu li', window.parent.document).show();
-
-          // hide the child of #sidebar-menu following permissions
-          for (var i in liElement) {
-              $('#sidebar-menu', window.parent.document).children().eq(i).hide();
-          }
-          $('#sidebar-tools', window.parent.document).show();
-        },
-        function(error) {
-          console.error(error);
-        },
-        false
-      );
-    });
-  },
   mounted() {
     $("#app").css("background", "");
     $("#app").css("color", "");
