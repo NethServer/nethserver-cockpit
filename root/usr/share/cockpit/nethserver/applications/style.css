@@ -214,6 +214,7 @@ li.active>a>span {
 
 .blank-slate-pf {
     border: 0px;
+    background-color: transparent;
 }
 
 .global-search {
