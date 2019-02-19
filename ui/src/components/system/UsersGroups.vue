@@ -613,10 +613,10 @@
                       <li v-for="(u,i) in newGroup.system" v-bind:key="i">
                         <span class="label label-info">
                           {{$t('menu.'+u)}}
-                          <a @click="roles.editable ? removeSystemFromGroup(i) : undefined"
+                          <a @click="removeSystemFromGroup(i)"
                              class="remove-item-inline"
                           >
-                            <span class="fa fa-times"></span>
+                            <span  v-bind:class="[ roles.editable ? 'fa fa-times' : '']"></span>
                           </a>
                         </span>
                       </li>
@@ -657,10 +657,10 @@
                         <span class="label label-info">
                           {{u}}
                           <a
-                            @click="roles.editable ? removeApplicationsFromGroup(i) : undefined"
+                            @click="removeApplicationsFromGroup(i)"
                             class="remove-item-inline"
                           >
-                            <span class="fa fa-times"></span>
+                            <span  v-bind:class="[ roles.editable ? 'fa fa-times' : '']"></span>
                           </a>
                         </span>
                       </li>
