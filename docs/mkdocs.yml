@@ -59,6 +59,7 @@ nav:
       - api/nethserver-firewall-base/objects.md
       - api/nethserver-firewall-base/port-forward.md
       - api/nethserver-firewall-base/rules.md
+      - api/nethserver-firewall-base/settings.md
       - api/nethserver-firewall-base/snat.md
       - api/nethserver-firewall-base/traffic-shaping.md
       - api/nethserver-firewall-base/wan.md
