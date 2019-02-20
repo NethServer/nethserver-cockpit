@@ -1062,7 +1062,6 @@
                               required
                               type="text"
                               v-model="newProvider.info[k]"
-                              :value="v"
                               @change="updateValues(k,newProvider.info[k])"
                               class="form-control"
                             >
