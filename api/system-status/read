@@ -36,10 +36,10 @@ function readUptime() {
     $data = file_get_contents('/proc/uptime');
     $upsecs = (int)substr($data, 0, strpos($data, ' '));
     $uptime = array (
-        'days' => floor($data/60/60/24),
-        'hours' => $data/60/60%24,
-        'minutes' => $data/60%60,
-        'seconds' => $data%60
+        'days' => floor($upsecs/60/60/24),
+        'hours' => $upsecs/60/60%24,
+        'minutes' => $upsecs/60%60,
+        'seconds' => $upsecs%60
     );
     return $uptime;
 }
