@@ -303,12 +303,14 @@ Constraints for `create-host`:
 - name: must be a non-existing class
 - IpAddress: must be valid ipv4
 - Description: optional description
+- portforwards: optional list of valid portforwards to set host as `DstHost`
 
 Constraints for `update-host`:
 
 - name: must be an existing host
 - IpAddress: must be valid ipv4
 - Description: optional description
+- portforwards: optional list of valid portforwards to set host as `DstHost`
 
 Constraints for `update-host`:
 
