@@ -49,6 +49,8 @@ Prepare the development environment:
 
 ## Build UI
 
+**Note**: Requirements: `nodejs >= 10`
+
 Enter UI directory and build using `npm`:
 
 ```
