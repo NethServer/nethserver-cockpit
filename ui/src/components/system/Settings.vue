@@ -20,7 +20,7 @@
         {{$t('settings.remote_account_provider_password')}}.
       </div>
       <form class="form-horizontal" v-on:submit.prevent="saveSettings('password')">
-        <div v-if="!view.isRoot" class="form-group">
+        <div v-if="!view.isAdmin" class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.old_password')}}</label>
           <div class="col-sm-5">
             <input tabindex="0" :disabled="!newUser.canChangePassword" required :type="newUser.togglePass ? 'text' : 'password'"
@@ -40,7 +40,7 @@
             <span v-if="errors.newPassword.hasError" class="help-block">{{$t('validation.validation_failed')}}:
               {{$t('validation.'+errors.newPassword.message)}}</span>
           </div>
-          <div v-show="view.isRoot" class="col-sm-2">
+          <div v-show="view.isAdmin" class="col-sm-2">
             <button tabindex="-1" @click="togglePass()" type="button" class="btn btn-primary">
               <span :class="[!newUser.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"></span>
             </button>
@@ -62,9 +62,9 @@
         </div>
       </form>
 
-      <div v-if="view.isRoot" class="divider"></div>
-      <h3 v-if="view.isRoot">{{$t('settings.smart_host')}}</h3>
-      <form v-if="view.isRoot" class="form-horizontal" v-on:submit.prevent="saveSettings('smarthost')">
+      <div v-if="view.isAdmin" class="divider"></div>
+      <h3 v-if="view.isAdmin">{{$t('settings.smart_host')}}</h3>
+      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('smarthost')">
         <div :class="['form-group', errors.SmartHostStatus.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.use_smarthost')}}</label>
           <div class="col-sm-5">
@@ -122,9 +122,9 @@
         </div>
       </form>
 
-      <div v-if="view.isRoot" class="divider"></div>
-      <h3 v-if="view.isRoot">{{$t('settings.notifications')}}</h3>
-      <form v-if="view.isRoot" class="form-horizontal" v-on:submit.prevent="saveSettings('root')">
+      <div v-if="view.isAdmin" class="divider"></div>
+      <h3 v-if="view.isAdmin">{{$t('settings.notifications')}}</h3>
+      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('root')">
         <div :class="['form-group', errors.SenderAddress.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.notify_from')}}</label>
           <div class="col-sm-5">
@@ -165,9 +165,9 @@
         </div>
       </form>
 
-      <div v-if="view.isRoot" class="divider"></div>
-      <h3 v-if="view.isRoot">{{$t('settings.web_shell')}}</h3>
-      <form v-if="view.isRoot" class="form-horizontal" v-on:submit.prevent="saveSettings('cockpit')">
+      <div v-if="view.isAdmin" class="divider"></div>
+      <h3 v-if="view.isAdmin">{{$t('settings.web_shell')}}</h3>
+      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('cockpit')">
         <div :class="['form-group', errors.access.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.limit_access')}}</label>
           <div class="col-sm-5">
@@ -195,9 +195,9 @@
         </div>
       </form>
 
-      <div v-if="view.isRoot" class="divider"></div>
-      <h3 v-if="view.isRoot">{{$t('settings.logrotate')}}</h3>
-      <form v-if="view.isRoot" class="form-horizontal" v-on:submit.prevent="saveSettings('logrotate')">
+      <div v-if="view.isAdmin" class="divider"></div>
+      <h3 v-if="view.isAdmin">{{$t('settings.logrotate')}}</h3>
+      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('logrotate')">
         <div :class="['form-group', errors.Rotate.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.log_rotate')}}</label>
           <div class="col-sm-5">
@@ -241,9 +241,9 @@
         </div>
       </form>
 
-      <div v-if="view.isRoot" class="divider"></div>
-      <h3 v-if="view.isRoot">{{$t('settings.hints')}}</h3>
-      <form v-if="view.isRoot" class="form-horizontal" v-on:submit.prevent="saveSettings('hints')">
+      <div v-if="view.isAdmin" class="divider"></div>
+      <h3 v-if="view.isAdmin">{{$t('settings.hints')}}</h3>
+      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('hints')">
         <div :class="['form-group', errors.ShowHints.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.show_hints')}}</label>
           <div class="col-sm-5">
@@ -283,7 +283,7 @@ export default {
     return {
       view: {
         isLoaded: false,
-        isRoot: false
+        isAdmin: false
       },
       hints: {},
       settings: {
@@ -437,11 +437,11 @@ export default {
           }
           context.settings = success.configuration;
 
-          context.view.isRoot = success.status.isRoot == 1;
+          context.view.isAdmin = success.status.isAdmin == 1;
           context.newUser.canChangePassword =
             success.status.canChangePassword == 1;
 
-          if (context.view.isRoot) {
+          if (context.view.isAdmin) {
             // root
             var emails = [{}];
             for (var s in context.settings) {
