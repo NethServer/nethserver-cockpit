@@ -427,7 +427,7 @@
                   <password-meter></password-meter>
                 </div>
               </div>
-              <div class="form-group">
+              <div v-if="!newUser.isPassEdit" class="form-group">
                 <label
                   class="col-sm-3 control-label"
                   for="textInput-modal-markup"
