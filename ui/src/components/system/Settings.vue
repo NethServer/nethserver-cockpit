@@ -20,7 +20,7 @@
         {{$t('settings.remote_account_provider_password')}}.
       </div>
       <form class="form-horizontal" v-on:submit.prevent="saveSettings('password')">
-        <div v-if="!view.isAdmin" class="form-group">
+        <div v-if="!view.isRoot" class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.old_password')}}</label>
           <div class="col-sm-5">
             <input tabindex="0" :disabled="!newUser.canChangePassword" required :type="newUser.togglePass ? 'text' : 'password'"
@@ -40,7 +40,7 @@
             <span v-if="errors.newPassword.hasError" class="help-block">{{$t('validation.validation_failed')}}:
               {{$t('validation.'+errors.newPassword.message)}}</span>
           </div>
-          <div v-show="view.isAdmin" class="col-sm-2">
+          <div v-show="view.isRoot" class="col-sm-2">
             <button tabindex="-1" @click="togglePass()" type="button" class="btn btn-primary">
               <span :class="[!newUser.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"></span>
             </button>
@@ -438,6 +438,8 @@ export default {
           context.settings = success.configuration;
 
           context.view.isAdmin = success.status.isAdmin == 1;
+          context.view.isRoot = success.status.isRoot == 1;
+          
           context.newUser.canChangePassword =
             success.status.canChangePassword == 1;
 

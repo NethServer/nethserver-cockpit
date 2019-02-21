@@ -50,6 +50,7 @@ if($cmd eq 'hints') {
     exit(0);
 } elsif ($cmd eq 'settings') {
     $ret{'status'}{'isAdmin'} = int((grep /^$groupAdmins$/, get_groups()) || $is_root);
+    $ret{'status'}{'isRoot'} = int($is_root);
     $ret{'status'}{'canChangePassword'} = 1;
 
     if (( grep /^$groupAdmins$/, get_groups()) || $is_root) {
