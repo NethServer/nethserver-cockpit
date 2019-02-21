@@ -1239,6 +1239,8 @@ npm install &amp;&amp; npm run dev</code></p>
 
 
 <h2 id="sync-api-and-ui">Sync API and UI<a class="headerlink" href="#sync-api-and-ui" title="Permanent link">&para;</a></h2>
+<p><strong>Note</strong>: during the development, the UI must run on the NethServer server.
+Running the UI on the developer machine will not work due to Cockpit CORS limitations.</p>
 <p>Files can be copied using rsync.</p>
 <p>While UI could be synced without executing the <code>build</code> task each time,
 make sure API is always built before sync.</p>
