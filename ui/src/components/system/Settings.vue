@@ -283,6 +283,7 @@ export default {
     return {
       view: {
         isLoaded: false,
+        isRoot: false,
         isAdmin: false
       },
       hints: {},
