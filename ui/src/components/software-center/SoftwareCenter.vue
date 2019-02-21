@@ -744,9 +744,9 @@ export default {
             update.progress = 100;
 
             if (update.nethserver) {
-              context.updates.nethserver.push(update);
+              context.updates.nethserver.push(update.updates);
             } else {
-              context.updates.other.push(update);
+              context.updates.other.push(update.updates);
             }
           }
           context.view.updatesLoaded = true;
