@@ -37,7 +37,8 @@
 # default group administrator $groupAdmins
 #
 
-Cmnd_Alias $groupAdminsAlias = /usr/libexec/nethserver/api/*/*
+Cmnd_Alias $groupAdminsAlias = /usr/libexec/nethserver/api/*/*, /sbin/e-smith/db, /sbin/e-smith/config, /sbin/e-smith/signal-event
+
 
 %$groupAdminsSudo ALL=NOPASSWD: $groupAdminsAlias
 
