@@ -45,7 +45,7 @@
           v-bind:class="[getCurrentPath('network') ? 'active' : '', 'list-group-item']"
         >
           <a href="#/network">
-            <span class="pficon pficon-plugged"></span>
+            <span class="pficon pficon-topology"></span>
             <span class="list-group-item-value">{{$t('menu.network')}}</span>
             <span v-if="hints.network.count > 0" class="badge badge-small">{{hints.network.count}}</span>
           </a>

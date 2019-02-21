@@ -175,7 +175,7 @@
                       </dd>
                       <dd v-for="(c,ci) in a.devices" v-bind:key="ci">
                         <span :class="[ci == 0 ? '' : 'transparent', 'fa fa-arrow-right', 'span-right-margin']"></span>
-                        <b>{{c.name}}<b>
+                        <b>{{c.name}}</b>
                       </dd>
                     </dl>
                     <dl v-if="i.devices.length == 0" class="dl-horizontal int-details">
@@ -645,7 +645,7 @@
                       <div @click="selectType('bridge')" :class="['col-xs-12', 'col-sm-4', 'col-md-4', 'col-lg-4', 'card-pf', wizard.type.choice == 'bridge' ? 'active-choose' : '']">
                         <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
                           <div class="blank-slate-pf-icon small-size-wizard">
-                            <span class="pficon pficon-plugged"></span>
+                            <span class="pficon pficon pficon-topology"></span>
                           </div>
                           <h3>
                             Bridge
@@ -941,7 +941,7 @@
                       <div @click="selectTypePhysical('ethernet')" :class="['col-xs-12', wizardPhysical.role.choice == 'red' ? 'col-sm-6 col-md-6 col-lg-6' : 'col-sm-12 col-md-12 col-lg-12', 'card-pf', wizardPhysical.type.choice == 'ethernet' ? 'active-choose' : '']">
                         <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
                           <div class="blank-slate-pf-icon small-size-wizard">
-                            <span class="pficon pficon-plugged"></span>
+                            <span class="pficon pficon pficon-topology"></span>
                           </div>
                           <h3>
                             Ethernet

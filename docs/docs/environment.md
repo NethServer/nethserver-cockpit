@@ -49,6 +49,8 @@ Prepare the development environment:
 
 ## Build UI
 
+**Note**: Requirements: `nodejs >= 10`
+
 Enter UI directory and build using `npm`:
 
 ```
@@ -57,6 +59,10 @@ cd ui/ && ./prep-sources
 
 
 ## Sync API and UI
+
+**Note**: during the development, the UI must run on the NethServer server.
+Running the UI on the developer machine will not work due to Cockpit CORS limitations.
+
 
 Files can be copied using rsync.
 
@@ -73,5 +79,6 @@ cd ui/ && rsync -avz --delete dist/* root@192.168.1.20:/usr/share/cockpit/nethse
 ```
 
 ## Code style
+
 Please use configuration from EditorConfig: http://editorconfig.org
 
