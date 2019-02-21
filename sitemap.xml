@@ -176,51 +176,6 @@
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-firewall-base/dashboard/</loc>
-     <lastmod>2019-02-21</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-firewall-base/local-rules/</loc>
-     <lastmod>2019-02-21</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-firewall-base/objects/</loc>
-     <lastmod>2019-02-21</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-firewall-base/port-forward/</loc>
-     <lastmod>2019-02-21</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-firewall-base/rules/</loc>
-     <lastmod>2019-02-21</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-firewall-base/settings/</loc>
-     <lastmod>2019-02-21</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-firewall-base/snat/</loc>
-     <lastmod>2019-02-21</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-firewall-base/traffic-shaping/</loc>
-     <lastmod>2019-02-21</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-firewall-base/wan/</loc>
-     <lastmod>2019-02-21</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/ui_guidelines/</loc>
      <lastmod>2019-02-21</lastmod>
      <changefreq>daily</changefreq>
