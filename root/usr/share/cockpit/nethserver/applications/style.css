@@ -26,24 +26,41 @@ input[type="checkbox"].form-control {
 .vue-js-switch .v-switch-core {
     border: 1px solid #bbbbbb !important;
     border-radius: 0px !important;
+    height: 26px !important;
+    width: 66px !important;
+    background-color: #fafafa !important;
+}
+
+.vue-js-switch.toggled .v-switch-core {
+    background-color: #0088ce !important;
 }
 
 .vue-js-switch .v-switch-core .v-switch-button {
     border-radius: 0px !important;
-    height: 18px !important;
+    height: 24px !important;
+    width: 32px !important;
+    transform: none !important;
+    background: repeat-x #f1f1f1 !important;
+    box-shadow: 0 0 2px rgba(3, 3, 3, .4) !important;
+    background-image: linear-gradient(to bottom, #fafafa 0, #ededed 100%) !important;
 }
 
 .vue-js-switch.min-toggle .v-switch-core .v-switch-button {
     border-radius: 0px !important;
-    height: 12px !important;
+    height: 24px !important;
+    width: 32px !important;
+    transform: none !important;
+    background: repeat-x #f1f1f1 !important;
+    box-shadow: 0 0 2px rgba(3, 3, 3, .4) !important;
+    background-image: linear-gradient(to bottom, #fafafa 0, #ededed 100%) !important;
 }
 
 .vue-js-switch.toggled .v-switch-core .v-switch-button {
-    transform: translate3d(30px, 3px, 0px) !important;
+    transform: translate3d(32px, 0px, 0px) !important;
 }
 
 .vue-js-switch.toggled.min-toggle .v-switch-core .v-switch-button {
-    transform: translate3d(21px, 3px, 0px) !important;
+    transform: translate3d(32px, 0px, 0px) !important;
 }
 
 .modal {

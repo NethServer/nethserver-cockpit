@@ -490,23 +490,15 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label
-                  class="col-sm-3 control-label"
-                  for="textInput-modal-markup"
-                >{{$t('advanced_mode')}}</label>
-                <div class="col-sm-8">
-                  <toggle-button
-                    class="min-toggle"
-                    :width="40"
-                    :height="20"
-                    :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
-                    :value="letsEncryptCertificate.advanced"
-                    :sync="true"
-                    @change="toggleAdvancedMode()"
-                  />
-                </div>
-              </div>
+              <legend class="fields-section-header-pf" aria-expanded="true">
+                <span
+                  :class="['fa fa-angle-right field-section-toggle-pf', letsEncryptCertificate.advanced ? 'fa-angle-down' : '']"
+                ></span>
+                <a
+                  class="field-section-toggle-pf"
+                  @click="toggleAdvancedMode()"
+                >{{$t('advanced_mode')}}</a>
+              </legend>
 
               <div v-show="letsEncryptCertificate.advanced" class="form-group">
                 <label
