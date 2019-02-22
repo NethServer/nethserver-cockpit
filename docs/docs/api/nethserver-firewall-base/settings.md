@@ -89,6 +89,7 @@ Example:
 ## update
 
 Same input format from validate for `settings` action.
+Execute the `firewall-adjust` event.
 
 #### reset
 
