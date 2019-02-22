@@ -23,6 +23,7 @@ NethServer Server Manager Web UI based on Cockpit
 
 %build
 %{makedocs}
+gzip -v root/usr/share/cockpit/nethserver/libs/*.js
 perl createlinks
 
 %install
