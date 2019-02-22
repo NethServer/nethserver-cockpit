@@ -278,6 +278,8 @@ export default {
     this.initGraphics();
     this.getSettings();
     this.getHints();
+    this.getAuthorizations();
+
   },
   data() {
     return {
@@ -420,6 +422,29 @@ export default {
         }
       );
     },
+    getAuthorizations() {
+          var context = this;
+
+          context.view.isLoaded = false;
+          context.exec(
+        ["system-authorization/read"],
+        null,
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+          context.view.isAdmin = success.status.isAdmin == 1;
+          context.view.isRoot = success.status.isRoot == 1;
+        },
+        function(error) {
+          console.error(error);
+        },
+        false
+        );
+    },
     getSettings() {
       var context = this;
 
@@ -437,15 +462,11 @@ export default {
             console.error(e);
           }
           context.settings = success.configuration;
-
-          context.view.isAdmin = success.status.isAdmin == 1;
-          context.view.isRoot = success.status.isRoot == 1;
-          
           context.newUser.canChangePassword =
             success.status.canChangePassword == 1;
 
           if (context.view.isAdmin) {
-            // root
+            // root or members of domain admins group
             var emails = [{}];
             for (var s in context.settings) {
               if (s == "root") {
@@ -486,8 +507,7 @@ export default {
         },
         function(error) {
           console.error(error);
-        },
-        false
+        }
       );
     },
     toggleSettingsHints() {
@@ -507,7 +527,8 @@ export default {
       var context = this;
       var settingsObj = {};
       var endpoint = "settings";
-
+      var sudo = false;
+      
       switch (type) {
         case "password":
           settingsObj = {
@@ -517,6 +538,7 @@ export default {
             currentPassword: this.newUser.oldPassword
           };
           endpoint = "password";
+          sudo = false;
           break;
         case "smarthost":
           settingsObj = {
@@ -532,6 +554,7 @@ export default {
               ? "enabled"
               : "disabled"
           };
+          sudo = true;
           break;
 
         case "logrotate":
@@ -543,6 +566,7 @@ export default {
               ? "enabled"
               : "disabled"
           };
+          sudo = true;
           break;
 
         case "root":
@@ -554,6 +578,7 @@ export default {
               return e.email;
             })
           };
+          sudo = true;
           break;
 
         case "cockpit":
@@ -565,6 +590,7 @@ export default {
                 ? context.settings.cockpit.LimitAccess.split("\n")
                 : []
           };
+          sudo = true;
           break;
 
         case "hints":
@@ -574,6 +600,7 @@ export default {
               ? "enabled"
               : "disabled"
           };
+          sudo = true;
           break;
       }
 
@@ -617,9 +644,9 @@ export default {
               context.$parent.notifications.error.message = context.$i18n.t(
                 "settings.settings_updated_error"
               );
-            },
-            false
-          );
+          },
+            sudo 
+           );
         },
         function(error, data) {
           var errorData = {};
