@@ -36,30 +36,30 @@ case $action in
     "root")
         # convert array to comma-separated string
         mail=$(echo $data | jq -rc '.EmailAddress | map(tostring) | join(",")')
-        /usr/bin/sudo /sbin/e-smith/config setprop root SenderAddress "$(_get SenderAddress)" KeepMessageCopy "$(_get KeepMessageCopy)" EmailAddress "$mail"
-        /usr/bin/sudo /sbin/e-smith/signal-event -j notifications-save
+        /sbin/e-smith/config setprop root SenderAddress "$(_get SenderAddress)" KeepMessageCopy "$(_get KeepMessageCopy)" EmailAddress "$mail"
+        /sbin/e-smith/signal-event -j notifications-save
         ;;
 
     "hints")
-        /usr/bin/sudo /sbin/e-smith/config setprop cockpit.socket ShowHints "$(_get ShowHints)"
+        /sbin/e-smith/config setprop cockpit.socket ShowHints "$(_get ShowHints)"
        ;;
 
     "cockpit")
         # convert array to comma-separated string
         limit=$(echo $data | jq -rc '.LimitAccess | map(tostring) | join(",")')
-        /usr/bin/sudo /sbin/e-smith/config setprop cockpit.socket LimitAccess "$limit" access "$(_get access)"
-        /usr/bin/sudo /sbin/e-smith/signal-event -j firewall-adjust
+        /sbin/e-smith/config setprop cockpit.socket LimitAccess "$limit" access "$(_get access)"
+        /sbin/e-smith/signal-event -j firewall-adjust
         ;;
 
     "smarthost")
-        /usr/bin/sudo /sbin/e-smith/config setprop postfix SmartHostPassword "$(_get SmartHostPassword)" SmartHostPort "$(_get SmartHostPort)" \
+        /sbin/e-smith/config setprop postfix SmartHostPassword "$(_get SmartHostPassword)" SmartHostPort "$(_get SmartHostPort)" \
             SmartHostTlsStatus "$(_get SmartHostTlsStatus)" SmartHostUsername "$(_get SmartHostUsername)" SmartHostName "$(_get SmartHostName)" SmartHostStatus "$(_get SmartHostStatus)"
-        /usr/bin/sudo /sbin/e-smith/signal-event -j nethserver-mail-smarthost-save
+        /sbin/e-smith/signal-event -j nethserver-mail-smarthost-save
         ;;
 
     "logrotate")
-        /usr/bin/sudo /sbin/e-smith/config setprop logrotate Compression "$(_get Compression)" Rotate "$(_get Rotate)" Times "$(_get Times)"
-        /usr/bin/sudo /sbin/e-smith/signal-event -j nethserver-base-update
+        /sbin/e-smith/config setprop logrotate Compression "$(_get Compression)" Rotate "$(_get Rotate)" Times "$(_get Times)"
+        /sbin/e-smith/signal-event -j nethserver-base-update
         ;;
 
 esac

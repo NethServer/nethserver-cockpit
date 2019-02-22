@@ -35,7 +35,7 @@ my $system_routes = read_json("/etc/nethserver/cockpit/authorization/system-rout
 my $groupAdmins = get_adminGroup();
 my $role = get_role($user);
 
-# root can always access everything
+# root and members of domain admins group can always access everything
     if (($user eq 'root') || 
         (grep /^$groupAdmins$/, get_groups())) {
     foreach my $r (@system_routes) {
@@ -44,7 +44,7 @@ my $role = get_role($user);
     foreach my $a (@apps) {
         push($ret->{"applications"}, $a);
     }
-    
+    $ret->{'status'}->{'isAdmin'} = int((grep /^$groupAdmins$/, get_groups()) || int($user eq 'root'));  
     $ret->{'status'}->{'isRoot'} = int($user eq 'root');
     print encode_json($ret);
     exit(0);
@@ -52,4 +52,5 @@ my $role = get_role($user);
 
 $ret = get_acl($user, $role);
 $ret->{'status'}->{'isRoot'} = int($user eq 'root');
+$ret->{'status'}->{'isAdmin'} = int(0);
 print encode_json($ret);

@@ -42,62 +42,67 @@ my $cmd = $input->{'action'};
 if($cmd eq 'hints') {
     my %r;
     if (( grep /^$groupAdmins$/, get_groups()) or ($is_root)) {
-        chomp ($r{'hints'} = `sudo /sbin/e-smith/db configuration getprop cockpit.socket ShowHints`);
+        my $db = esmith::ConfigDB->open("configuration");
+        $r{'hints'} = $db->get_prop('cockpit.socket', 'ShowHints');
     } else {
         $r{'hints'} = 'disabled';
     }
     print encode_json(\%r);
     exit(0);
+
 } elsif ($cmd eq 'settings') {
-    $ret{'status'}{'isAdmin'} = int((grep /^$groupAdmins$/, get_groups()) || $is_root);
-    $ret{'status'}{'isRoot'} = int($is_root);
+
     $ret{'status'}{'canChangePassword'} = 1;
 
-    if (( grep /^$groupAdmins$/, get_groups()) || $is_root) {
+    if (( grep /^$groupAdmins$/, get_groups()) || ($is_root)) {
 
-    my %smarthost = (
-        SmartHostStatus => `sudo /sbin/e-smith/db configuration getprop postfix SmartHostStatus`,
-        SmartHostName => `sudo /sbin/e-smith/db configuration getprop postfix SmartHostName`,
-        SmartHostPort => `sudo /sbin/e-smith/db configuration getprop postfix SmartHostPort`,
-        SmartHostUsername => `sudo /sbin/e-smith/db configuration getprop postfix SmartHostUsername`,
-        SmartHostPassword => `sudo /sbin/e-smith/db configuration getprop postfix SmartHostPassword`,
-        SmartHostTlsStatus => `sudo /sbin/e-smith/db configuration getprop postfix SmartHostTlsStatus`,
-    );
-    chomp (%smarthost);
+        my $db = esmith::ConfigDB->open("configuration");
+        my $postfix = $db->get('postfix');
+        my %smarthost = (
+            SmartHostStatus => $postfix->prop('SmartHostStatus'),
+            SmartHostName => $postfix->prop('SmartHostName'),
+            SmartHostPort => $postfix->prop('SmartHostPort'),
+            SmartHostUsername => $postfix->prop('SmartHostUsername'),
+            SmartHostPassword => $postfix->prop('SmartHostPassword'),
+            SmartHostTlsStatus => $postfix->prop('SmartHostTlsStatus'),
+        );
 
-    my @addresses = ();
-    chomp (my $email_address = `sudo /sbin/e-smith/db configuration getprop root EmailAddress`); 
+        my @addresses = ();
+        my $email_address = $db->get_prop('root', 'EmailAddress');
+        if ($email_address) {
+            @addresses = split(",",$email_address);
+        }
 
-    if ($email_address) {
-        @addresses = split(",",$email_address);
-    }
-    my %root = (
-        EmailAddress => \@addresses,
-        KeepMessageCopy => `sudo /sbin/e-smith/db configuration getprop root KeepMessageCopy`,
-        SenderAddress => `sudo /sbin/e-smith/db configuration getprop root SenderAddress`
-    );
-    chomp (%root);
+        if ($email_address) {
+            @addresses = split(",",$email_address);
+        }
+        my %root = (
+            EmailAddress => \@addresses,
+            KeepMessageCopy => $db->get_prop('root', 'KeepMessageCopy'),
+            SenderAddress => $db->get_prop('root', 'SenderAddress')
+        );
 
-    my %cockpit = (
-        access => `sudo /sbin/e-smith/db configuration getprop cockpit.socket access`,
-        LimitAccess => `sudo /sbin/e-smith/db configuration getprop cockpit.socket LimitAccess`,
-        ShowHints => `sudo /sbin/e-smith/db configuration getprop cockpit.socket ShowHints`
-    );
-    chomp (%cockpit);
+        my %cockpit = (
+            access => $db->get_prop('cockpit.socket', 'access'),
+            LimitAccess => $db->get_prop('cockpit.socket', 'LimitAccess'),
+            ShowHints => $db->get_prop('cockpit.socket', 'ShowHints')
+        );
 
-    my %logrotate = (
-        Compression => `sudo /sbin/e-smith/db configuration getprop logrotate Compression`,
-        Rotate => `sudo /sbin/e-smith/db configuration getprop logrotate Rotate`,
-        Times => `sudo /sbin/e-smith/db configuration getprop logrotate Times`
-    );
-    chomp (%logrotate);
+        my $logrotate = $db->get('logrotate') ||
+                $db->new_record('logrotate', { type => "configuration" });
 
-    $ret{'configuration'}{'smarthost'} = \%smarthost;
-    $ret{'configuration'}{'cockpit'} = \%cockpit;
-    $ret{'configuration'}{'root'} = \%root;
-    $ret{'configuration'}{'logrotate'} = \%logrotate;
+        my %logrotate = (
+            Compression => $logrotate->prop('Compression'),
+            Rotate => $logrotate->prop('Rotate'),
+            Times => $logrotate->prop('Times')
+        );
 
-    print encode_json(\%ret);
+        $ret{'configuration'}{'smarthost'} = \%smarthost;
+        $ret{'configuration'}{'cockpit'} = \%cockpit;
+        $ret{'configuration'}{'root'} = \%root;
+        $ret{'configuration'}{'logrotate'} = \%logrotate;
+
+        print encode_json(\%ret);
     } else {
 
         my $nsdc = system("/usr/bin/systemctl status nsdc &>/dev/null");
