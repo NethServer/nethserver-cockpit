@@ -104,7 +104,8 @@ parent.ns.exec(
     },
     function(error) {
         return error;
-    }
+    },
+    true   // set to `false` if you do not want to launch the API with the sudo command
 );
 
 
@@ -122,7 +123,8 @@ function validate(obj, callback) {
         function(error, data) {
             var errorData = JSON.parse(data);
             callback(errorData);
-        }
+        },
+        false
     );
 }
 
