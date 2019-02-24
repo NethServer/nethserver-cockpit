@@ -61,7 +61,7 @@
             <div class="col-sm-9 adjust-li">
               <div v-if="loaders.hostname" class="spinner spinner-xs list-spinner-loader"></div>
               <p>
-                <a v-if="!loaders.hostname" data-toggle="modal" data-target="#hostnameChangeModal" href="#">{{system.summary.hostname}}</a>
+                <a v-bind:class="{ disable_a_href: !view.isAdmin }" v-if="!loaders.hostname" data-toggle="modal" data-target="#hostnameChangeModal" href="#">{{system.summary.hostname}}</a>
               </p>
             </div>
           </div>
@@ -70,13 +70,13 @@
             <div class="col-sm-9 adjust-li">
               <div v-if="loaders.dns" class="spinner spinner-xs list-spinner-loader"></div>
               <p>
-                <a v-if="!loaders.dns" data-toggle="modal" data-target="#dnsChangeModal" href="#">
+                <a v-bind:class="{ disable_a_href: !view.isAdmin }" v-if="!loaders.dns" data-toggle="modal" data-target="#dnsChangeModal" href="#">
                   <span v-for="(d,i) in system.summary.dns" v-bind:key="i">{{d.readDns}}
                     <span v-if="!i == system.summary.dns.length - 1 && system.summary.dns[1].readDns.length != 0">,
                     </span>
                   </span>
                 </a>
-                <a v-if="!loaders.dns && system.summary.dns[0].readDns.length == 0" data-toggle="modal" data-target="#dnsChangeModal"
+                <a v-bind:class="{ disable_a_href: !view.isAdmin }" v-if="!loaders.dns && system.summary.dns[0].readDns.length == 0" data-toggle="modal" data-target="#dnsChangeModal"
                   href="#">
                   {{$t('edit')}}
                 </a>
@@ -88,7 +88,7 @@
             <div class="col-sm-9 adjust-li">
               <div v-if="loaders.datetime" class="spinner spinner-xs list-spinner-loader"></div>
               <p>
-                <a v-if="!loaders.datetime" @click="openChangeSystime()" href="#">{{system.summary.datetime}}</a>
+                <a v-bind:class="{ disable_a_href: !view.isAdmin }" v-if="!loaders.datetime" @click="openChangeSystime()" href="#">{{system.summary.datetime}}</a>
               </p>
             </div>
           </div>
@@ -97,7 +97,7 @@
             <div class="col-sm-9 adjust-li">
               <div v-if="loaders.company" class="spinner spinner-xs list-spinner-loader"></div>
               <p>
-                <a v-if="!loaders.company" @click="openChangeCompany()" href="#">{{system.organization.company}}</a>
+                <a v-bind:class="{ disable_a_href: !view.isAdmin }" v-if="!loaders.company" @click="openChangeCompany()" href="#">{{system.organization.company}}</a>
               </p>
             </div>
           </div>
@@ -105,18 +105,18 @@
             <label class="col-sm-3 control-label">{{$t('dashboard.power')}}</label>
             <div class="col-sm-9">
               <div class="btn-group">
-                <a href="#" @click="openPowerModal('reboot')" class="btn btn-default">
+                <a v-bind:class="{ disable_a_href: !view.isAdmin }" href="#" @click="openPowerModal('reboot')" class="btn btn-default">
                   {{$t('dashboard.reboot')}}
                 </a>
-                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                <button :disabled="!view.isAdmin" data-toggle="dropdown" class="btn btn-default dropdown-toggle">
                   <span class="caret"></span>
                 </button>
                 <ul role="menu" class="dropdown-menu">
                   <li class="presentation">
-                    <a href="#" @click="openPowerModal('reboot')" role="menuitem" data-action="restart">{{$t('dashboard.reboot')}}</a>
+                    <a v-bind:class="{ disable_a_href: !view.isAdmin }" href="#" @click="openPowerModal('reboot')" role="menuitem" data-action="restart">{{$t('dashboard.reboot')}}</a>
                   </li>
                   <li class="presentation">
-                    <a href="#" @click="openPowerModal('poweroff')" role="menuitem" data-action="shutdown">{{$t('dashboard.power_off')}}</a>
+                    <a v-bind:class="{ disable_a_href: !view.isAdmin }" href="#" @click="openPowerModal('poweroff')" role="menuitem" data-action="shutdown">{{$t('dashboard.power_off')}}</a>
                   </li>
                 </ul>
               </div>
@@ -446,6 +446,7 @@ export default {
     next();
   },
   mounted() {
+    this.getAuthorizations();
     this.initGraphics();
     this.getHints("hostname");
     this.getHints("dns");
@@ -460,6 +461,9 @@ export default {
   },
   data() {
     return {
+      view: {
+        isAdmin: false
+        },
       loaders: {
         summary: true,
         hostname: true,
@@ -575,6 +579,26 @@ export default {
     initGraphics() {
       $("#app").css("background", "");
       $("#app").css("color", "");
+    },
+    getAuthorizations() {
+      var context = this;
+      context.exec(
+        ["system-authorization/read"],
+        null,
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+          context.view.isAdmin = success.status.isAdmin == 1;
+        },
+        function(error) {
+          console.error(error);
+        },
+        false
+        );
     },
     getHints(type, callback) {
       var context = this;
