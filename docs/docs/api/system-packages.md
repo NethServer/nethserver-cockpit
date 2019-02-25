@@ -12,7 +12,7 @@ Take an `action` field. Valid actions are:
 - `list-updates`: calculate the list of dependencies which will be removed along with given packages
 - `list-removed`: list the packages which will be removed
 - `changelog`: retrieve the changelog of all updates
-- `get-config`: retrieve yum-cron and NsReleaseLock configuration
+- `get-config`: retrieve yum-cron configuration
 
 #### list-available
 
@@ -220,7 +220,6 @@ Example for super user:
 {
   "editable": 1,
   "messages": "yes",
-  "NsReleaseLock": "disabled",
   "applyUpdate": "no",
   "download": "yes"
 }
@@ -231,7 +230,6 @@ Example for normal user:
 {
   "messages": "",
   "editable": 0,
-  "NsReleaseLock": "",
   "applyUpdate": "",
   "download": ""
 }
@@ -244,7 +242,7 @@ Available actions:
 - `update`: update one or more packages
 - `install`: install one or more packages
 - `remove`: remove one or more packages
-- `set-config`: configure NsReleaseLock and yum-cron
+- `set-config`: configure yum-cron
 
 ### Input
 
@@ -290,7 +288,6 @@ Example:
 {
   "action": "set-config",
   "messages": "yes",
-  "NsReleaseLock": "disabled",
   "applyUpdate": "no",
   "download": "yes"
 }

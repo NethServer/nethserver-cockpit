@@ -107,10 +107,6 @@ def parse_pkginfo_conf():
 
     return repos
 
-def is_strict_updates():
-    lock = subprocess.check_output(['/sbin/e-smith/config', 'getprop', 'sysconfig', 'NsReleaseLock'])
-    return lock.strip() == 'enabled'
-
 def main():
     try:
         yum.misc.setup_locale()
@@ -121,11 +117,6 @@ def main():
         ypbc.init_plugins = False
         yb = yum.YumBase()
         yb.preconf = ypbc
-
-        # force repository configuration now,
-        # it will not work if invoked after listGroupsEnabled()
-        if is_strict_updates():
-            yb.conf.reposdir = '/etc/nethserver/yum-update.d/'
 
         for r in yb.repos.listGroupsEnabled():
             if not r.id in parse_pkginfo_conf():

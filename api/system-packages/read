@@ -102,10 +102,9 @@ if($cmd eq 'list-updates') {
                 'applyUpdate' => $db->get_prop('yum-cron', 'applyUpdate'),
                 'download' => $db->get_prop('yum-cron', 'download'),
                 'messages' => $db->get_prop('yum-cron', 'messages'),
-                'NsReleaseLock' => $db->get_prop('sysconfig', 'NsReleaseLock')
             });
     } else {
-        print encode_json({'editable' => 0, 'applyUpdate' => '', 'download' => '', 'messages' => '', 'NsReleaseLock' => ''});
+        print encode_json({'editable' => 0, 'applyUpdate' => '', 'download' => '', 'messages' => ''});
     }
 
 

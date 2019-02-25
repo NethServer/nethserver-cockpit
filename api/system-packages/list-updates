@@ -82,10 +82,6 @@ def grouped_updates(yb, updates):
 
     return filter(lambda g: len(g['updates'])>0, groups)
 
-def is_strict_updates():
-    lock = subprocess.check_output(['/sbin/e-smith/config', 'getprop', 'sysconfig', 'NsReleaseLock'])
-    return lock.strip() == 'enabled'
-
 def list_updates(yb):
     # retrieve installed versions
     installed_versions = {}
@@ -118,11 +114,6 @@ def main():
         ypbc.init_plugins = False
         yb = yum.YumBase()
         yb.preconf = ypbc
-
-        # force repository configuration now,
-        # it will not work if invoked after listGroupsEnabled()
-        if is_strict_updates():
-            yb.conf.reposdir = '/etc/nethserver/yum-update.d/'
 
         for r in yb.repos.listGroupsEnabled():
             if not r.id in parse_pkginfo_conf():
