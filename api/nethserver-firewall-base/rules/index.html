@@ -914,6 +914,26 @@
     Input
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-rule" title="create-rule" class="md-nav__link">
+    create-rule
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-rule" title="update-rule" class="md-nav__link">
+    update-rule
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -1322,6 +1342,26 @@
     Input
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-rule" title="create-rule" class="md-nav__link">
+    create-rule
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-rule" title="update-rule" class="md-nav__link">
+    update-rule
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -1544,47 +1584,96 @@ returning information about IP address, zone, etc.</p>
 <h3 id="constraints">Constraints<a class="headerlink" href="#constraints" title="Permanent link">&para;</a></h3>
 <p>The request must contain an <code>action</code> field. Valid actions are:</p>
 <ul>
-<li><code>create</code></li>
-<li><code>update</code></li>
-<li><code>delete</code></li>
+<li><code>create-rule</code></li>
+<li><code>update-rule</code></li>
 </ul>
-<p>Constraints for <code>create</code>:</p>
+<p>Constraints for <code>create-rule</code> and <code>update-rule</code>:</p>
 <ul>
-<li>Proto: <code>tcp</code>, <code>udp</code> or <code>tcpudp</code>, <code>ah</code>, <code>gre</code>, <code>ah</code>, <code>esp</code> </li>
-<li>Src: a port number or a range in the form <code>xxxx:yyyy</code>, must be empty if protocol is not tcp, udp or tcpudp</li>
-<li>Dst: a port number, if empty the value of Src is used, must be empty if protocol is not tcp, udp or tcpudp</li>
-<li>DstHost: a destination host, can be an IP address or a host firewall object</li>
-<li>OriDst: an IP address or empty</li>
-<li>Allow: allowed ip address or network, see SOURCE  at <a href="http://www.shorewall.net/4.2/manpages/shorewall-rules.html">http://www.shorewall.net/4.2/manpages/shorewall-rules.html</a></li>
+<li>Action: must be one between 'accept', 'reject', 'drop'</li>
+<li>Src and Dst: a valid firewall object or an IP/CIDR if type is set to 'raw'</li>
+<li>Time: empty or a time object from fwtimes database</li>
+<li>Position: a positive integer</li>
+<li>Service: a service object from fwservices database or 'any'</li>
 <li>status: can be <code>enabled</code> or <code>disabled</code></li>
-<li>Description: optional description</li>
 <li>Log: <code>none</code> or <code>info</code>. If value is <code>info</code>, all matched packets will be logged in <code>/var/log/firewall.log</code>. Defaults to none</li>
-</ul>
-<p>Constraints for <code>update</code>:</p>
-<p>Same as constraints as action <code>create</code> with addition filed <code>name</code>:</p>
-<ul>
-<li>name: a valid port forward name</li>
-</ul>
-<p>Constraints for <code>delete</code>:</p>
-<ul>
-<li>name: a valid port forward name</li>
+<li>Description: optional description</li>
+<li>id: must exists on update</li>
 </ul>
 <h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
-<p>Example:</p>
+<h4 id="create-rule">create-rule<a class="headerlink" href="#create-rule" title="Permanent link">&para;</a></h4>
+<p>Example with Src using a firewall object:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;update&quot;</span><span class="p">,</span>
   <span class="nt">&quot;Log&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;Proto&quot;</span><span class="p">:</span> <span class="s2">&quot;tcp&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;Service&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;Allow&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;DstHost&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.5.129&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;Dst&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;pf&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;Src&quot;</span><span class="p">:</span> <span class="s2">&quot;88&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;OriDst&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+  <span class="nt">&quot;Time&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="nt">&quot;Position&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabledd&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Service&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;any&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fwservice&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;reject&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Dst&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;role&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;Src&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myhost&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;host&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create-rule&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Example with Src using a raw value:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;Log&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Time&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="nt">&quot;Position&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabledd&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Service&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;any&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fwservice&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;reject&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Dst&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;role&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;Src&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;Value&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raw&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create-rule&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="update-rule">update-rule<a class="headerlink" href="#update-rule" title="Permanent link">&para;</a></h4>
+<p>Example with Src using a firewall object:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;Log&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Time&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="nt">&quot;Position&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabledd&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Service&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;any&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fwservice&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;reject&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Dst&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;role&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;Src&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myhost&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;host&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;id&quot;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create-rule&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -1594,7 +1683,11 @@ returning information about IP address, zone, etc.</p>
 <h2 id="create">create<a class="headerlink" href="#create" title="Permanent link">&para;</a></h2>
 <p>Use the same input from validate.</p>
 <h2 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h2>
-<p>Use the same input from validate.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;123&quot;</span>
+<span class="p">}</span>
+</pre></div>
                 
                   
                 

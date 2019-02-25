@@ -1007,6 +1007,20 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#create-rule" title="create-rule" class="md-nav__link">
+    create-rule
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edit-rule" title="edit-rule" class="md-nav__link">
+    edit-rule
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1020,6 +1034,13 @@
         <li class="md-nav__item">
   <a href="#update" title="update" class="md-nav__link">
     update
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete" title="delete" class="md-nav__link">
+    delete
   </a>
   
 </li>
@@ -1401,6 +1422,20 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#create-rule" title="create-rule" class="md-nav__link">
+    create-rule
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edit-rule" title="edit-rule" class="md-nav__link">
+    edit-rule
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1414,6 +1449,13 @@
         <li class="md-nav__item">
   <a href="#update" title="update" class="md-nav__link">
     update
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete" title="delete" class="md-nav__link">
+    delete
   </a>
   
 </li>
@@ -1651,6 +1693,8 @@ returning information about IP address, zone, etc.</p>
 <ul>
 <li><code>provider</code></li>
 <li><code>wan</code></li>
+<li><code>create-rule</code></li>
+<li><code>update-rule</code></li>
 </ul>
 <p>Constraints for <code>provider</code>:</p>
 <ul>
@@ -1666,6 +1710,14 @@ returning information about IP address, zone, etc.</p>
 <li>MaxNumberPacketLoss: a value between 2 and 99</li>
 <li>MaxPercentPacketLoss: a value between 0 and 100</li>
 <li>PingInterval: a value between 0 and 60</li>
+</ul>
+<p>Constraints for <code>create-rule</code> and <code>update-rule</code>:</p>
+<ul>
+<li>All constraints from <a href="../rules/#validate">firewall rules</a></li>
+<li>Action: must be an existing provider in the form <code>provider;&lt;name&gt;</code></li>
+<li>Src: can't be red role</li>
+<li>Dst: can be red role or host or iprange or zone or cidr</li>
+<li>id: must exists on update</li>
 </ul>
 <h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
 <h4 id="provider">provider<a class="headerlink" href="#provider" title="Permanent link">&para;</a></h4>
@@ -1695,8 +1747,67 @@ returning information about IP address, zone, etc.</p>
 </pre></div>
 
 
+<h4 id="create-rule">create-rule<a class="headerlink" href="#create-rule" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;Log&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Time&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="nt">&quot;Position&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Service&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;any&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fwservice&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;provider;red1&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Dst&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;role&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;Src&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myhost.nethserver.org&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;host&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create-rule&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="edit-rule">edit-rule<a class="headerlink" href="#edit-rule" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;Log&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Time&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="nt">&quot;Position&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Service&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;any&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fwservice&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;provider;red1&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Dst&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;role&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;6&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Src&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myhost.nethserver.org&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;host&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;update-rule&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
 <p>Same input format from validate action.</p>
+<h2 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h2>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;123&quot;</span>
+<span class="p">}</span>
+</pre></div>
                 
                   
                 
