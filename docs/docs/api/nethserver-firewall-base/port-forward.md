@@ -43,7 +43,7 @@ Example:
           "DstHost": "192.168.1.129",
           "Dst": "",
           "type": "pf",
-          "Src": "88",
+          "Src": ["88"],
           "Description": "",
           "OriDst": ""
         }
@@ -66,7 +66,7 @@ Example:
           "DstHost": "host;myhost",
           "Dst": "",
           "type": "pf",
-          "Src": "456",
+          "Src": ["456"],
           "Description": "",
           "OriDst": ""
         },
@@ -125,7 +125,7 @@ Example:
   "DstHost": "192.168.5.129",
   "Dst": "",
   "type": "pf",
-  "Src": "88",
+  "Src": ["88"],
   "Description": "",
   "OriDst": ""
 }
