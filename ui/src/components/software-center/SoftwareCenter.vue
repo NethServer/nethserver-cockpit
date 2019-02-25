@@ -1002,7 +1002,6 @@ export default {
         function(stream) {
           context.view.isUpdating = true;
           context.view.updateProgress = 100;
-          console.info("packages-update", stream);
         },
         function(success) {
           context.view.isUpdating = false;
