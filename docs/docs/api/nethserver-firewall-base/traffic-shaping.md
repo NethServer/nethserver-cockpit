@@ -300,9 +300,10 @@ Example with `expand` set to `false`:
 
 The request must contain an `action` field. Valid actions are:
 
-- `create`
-- `create-default`
-- `update`
+- `create-class`
+- `update-class`
+- `create-rule`
+- `update-rule`
 
 Common constratins:
 
@@ -310,22 +311,36 @@ Common constratins:
 - Unit: can be `kbps` or `%` 
 - BindTo: empty or a list of existing red interfaces
 
-Constraints for `create`:
+Constraints for `create-class`:
 
 - name: must be a non-existing class
 
-Constraints for `update`:
+Constraints for `update-class`:
 
 - name: must be an existing class
 
+Constraints for `delete-class`:
+
+- name: must be an existing class
+- the class must not be used in any firewall rule
+
+Constraints for `create-rule` and `update-rule`:
+
+- All constraints from [firewall rules](/api/nethserver-firewall-base/rules.md#validate)
+- Action: must be an existing class in the form `class;<name>`
+- Src: can't be red role
+- Dst: can be red role or host or iprange or zone or cidr
+- id: must exists on update
+
+
 ### Input
 
-#### create
+#### create-class
 
 Example:
 ```json
 {
-  "action": "create",
+  "action": "create-class",
   "MinOutputRate": "",
   "BindTo": [
     "ens7"
@@ -339,21 +354,12 @@ Example:
 }
 ```
 
-#### create-default
+#### update-class
 
 Example:
 ```json
 {
-  "action": "create-default"
-}
-```
-
-#### update
-
-Example:
-```json
-{
-  "action": "update",
+  "action": "update-class",
   "MinOutputRate": "",
   "BindTo": [
     "ens7",
@@ -368,16 +374,70 @@ Example:
 }
 ```
 
-#### delete
+#### delete-class
 
 Example:
 ```json
 {
-  "action": "delete",
+  "action": "delete-class",
   "name": "myclass"
 }
 ```
 
+#### create-rule
+
+Example:
+```json
+{
+  "Log": "none",
+  "Time": null,
+  "Position": 4,
+  "status": "enabled",
+  "Service": {
+    "name": "any",
+    "type": "fwservice"
+  },
+  "Action": "class;high",
+  "Dst": {
+    "name": "red",
+    "type": "role"
+  },
+  "Src": {
+    "name": "myhost.nethserver.org",
+    "type": "host"
+  },
+  "type": "rule",
+  "action": "create-rule"
+}
+```
+
+#### edit-rule
+
+Example:
+```json
+{
+  "Log": "none",
+  "Time": null,
+  "Position": 4,
+  "status": "enabled",
+  "Service": {
+    "name": "any",
+    "type": "fwservice"
+  },
+  "Action": "class;high",
+  "Dst": {
+    "name": "red",
+    "type": "role"
+  },
+  "id": "6",
+  "Src": {
+    "name": "myhost.nethserver.org",
+    "type": "host"
+  },
+  "type": "rule",
+  "action": "create-rule"
+}
+```
 
 ## update
 
@@ -387,6 +447,22 @@ Same input format from validate action.
 
 It uses the same format from input action.
 
+#### create-default
+
+Create default classes.
+
+Example:
+```json
+{
+  "action": "create-default"
+}
+```
+
 ## delete
 
-It uses the same format from input action.
+Example:
+```json
+{
+    "name": "123"
+}
+```

@@ -233,6 +233,8 @@ The request must contain an `action` field. Valid actions are:
 
 - `provider`
 - `wan`
+- `create-rule`
+- `update-rule`
 
 Constraints for `provider`:
 
@@ -249,6 +251,13 @@ Constraints for `wan`:
 - MaxPercentPacketLoss: a value between 0 and 100
 - PingInterval: a value between 0 and 60
 
+Constraints for `create-rule` and `update-rule`:
+
+- All constraints from [firewall rules](/api/nethserver-firewall-base/rules.md#validate)
+- Action: must be an existing provider in the form `provider;<name>`
+- Src: can't be red role
+- Dst: can be red role or host or iprange or zone or cidr
+- id: must exists on update
 
 ### Input
 
@@ -282,6 +291,70 @@ Example:
 
 ```
 
+#### create-rule
+
+Example:
+```json
+{
+  "Log": "none",
+  "Time": null,
+  "Position": 4,
+  "status": "enabled",
+  "Service": {
+    "name": "any",
+    "type": "fwservice"
+  },
+  "Action": "provider;red1",
+  "Dst": {
+    "name": "red",
+    "type": "role"
+  },
+  "Src": {
+    "name": "myhost.nethserver.org",
+    "type": "host"
+  },
+  "type": "rule",
+  "action": "create-rule"
+}
+```
+
+#### edit-rule
+
+Example:
+```json
+{
+  "Log": "none",
+  "Time": null,
+  "Position": 4,
+  "status": "enabled",
+  "Service": {
+    "name": "any",
+    "type": "fwservice"
+  },
+  "Action": "provider;red1",
+  "Dst": {
+    "name": "red",
+    "type": "role"
+  },
+  "id": "6",
+  "Src": {
+    "name": "myhost.nethserver.org",
+    "type": "host"
+  },
+  "type": "rule",
+  "action": "update-rule"
+}
+```
+
 ## update
 
 Same input format from validate action.
+
+## delete
+
+Example:
+```json
+{
+    "name": "123"
+}
+```

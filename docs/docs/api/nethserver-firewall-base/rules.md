@@ -191,53 +191,105 @@ Example:
 
 The request must contain an `action` field. Valid actions are:
 
-- `create`
-- `update`
-- `delete`
+- `create-rule`
+- `update-rule`
 
-Constraints for `create`:
+Constraints for `create-rule` and `update-rule`:
 
-- Proto: `tcp`, `udp` or `tcpudp`, `ah`, `gre`, `ah`, `esp` 
-- Src: a port number or a range in the form `xxxx:yyyy`, must be empty if protocol is not tcp, udp or tcpudp
-- Dst: a port number, if empty the value of Src is used, must be empty if protocol is not tcp, udp or tcpudp
-- DstHost: a destination host, can be an IP address or a host firewall object
-- OriDst: an IP address or empty
-- Allow: allowed ip address or network, see SOURCE  at <http://www.shorewall.net/4.2/manpages/shorewall-rules.html>
+- Action: must be one between 'accept', 'reject', 'drop'
+- Src and Dst: a valid firewall object or an IP/CIDR if type is set to 'raw'
+- Time: empty or a time object from fwtimes database
+- Position: a positive integer
+- Service: a service object from fwservices database or 'any'
 - status: can be `enabled` or `disabled`
-- Description: optional description
 - Log: `none` or `info`. If value is `info`, all matched packets will be logged in `/var/log/firewall.log`. Defaults to none
-
-Constraints for `update`:
-
-Same as constraints as action `create` with addition filed `name`:
-
-- name: a valid port forward name
-
-Constraints for `delete`:
-
-- name: a valid port forward name
+- Description: optional description
+- id: must exists on update
 
 
 ### Input
 
-Example:
+#### create-rule
+
+Example with Src using a firewall object:
 ```json
 {
-  "action": "update",
   "Log": "none",
-  "Proto": "tcp",
-  "status": "enabled",
-  "name": "3",
-  "Service": "",
-  "Allow": "",
-  "DstHost": "192.168.5.129",
-  "Dst": "",
-  "type": "pf",
-  "Src": "88",
-  "Description": "",
-  "OriDst": ""
+  "Time": null,
+  "Position": 4,
+  "status": "enabledd",
+  "Service": {
+    "name": "any",
+    "type": "fwservice"
+  },
+  "Action": "reject",
+  "Dst": {
+    "name": "red",
+    "type": "role"
+  },
+  "Src": {
+    "name": "myhost",
+    "type": "host"
+  },
+  "type": "rule",
+  "action": "create-rule"
 }
 ```
+
+
+Example with Src using a raw value:
+```json
+{
+  "Log": "none",
+  "Time": null,
+  "Position": 4,
+  "status": "enabledd",
+  "Service": {
+    "name": "any",
+    "type": "fwservice"
+  },
+  "Action": "reject",
+  "Dst": {
+    "name": "red",
+    "type": "role"
+  },
+  "Src": {
+    "Value": "192.168.1.1",
+    "type": "raw"
+  },
+  "type": "rule",
+  "action": "create-rule"
+}
+```
+
+#### update-rule
+
+Example with Src using a firewall object:
+```json
+{
+  "Log": "none",
+  "Time": null,
+  "Position": 4,
+  "status": "enabledd",
+  "Service": {
+    "name": "any",
+    "type": "fwservice"
+  },
+  "Action": "reject",
+  "Dst": {
+    "name": "red",
+    "type": "role"
+  },
+  "Src": {
+    "name": "myhost",
+    "type": "host"
+  },
+  "type": "rule",
+  "id" : 10,
+  "action": "create-rule"
+}
+```
+
 
 ## update
 
@@ -249,5 +301,10 @@ Use the same input from validate.
 
 ## delete
 
-Use the same input from validate.
+Example:
+```json
+{
+    "name": "123"
+}
+```
 
