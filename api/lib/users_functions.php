@@ -93,7 +93,9 @@ function add_to_group($user, $group) {
     foreach ($members as $m) {
         $cmd .= " ".escapeshellarg($m);
     }
-    $cmd .= " ".escapeshellarg($user);
+    if (!in_array($user, $members)) {
+        $cmd .= " ".escapeshellarg($user);
+    }
     passthru($cmd, $ret);
     return $ret;
 }
