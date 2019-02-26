@@ -451,6 +451,7 @@
                     id="expires"
                     class="form-control"
                     v-model="newUser.expires"
+                    :disabled="passwordPolicy.PassExpires == 'no'"
                   >
                 </div>
               </div>
