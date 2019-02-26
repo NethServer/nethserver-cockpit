@@ -1,0 +1,97 @@
+{
+    use strict;
+    use warnings;
+    use JSON;
+
+    require "/usr/libexec/nethserver/api/lib/auth_functions.pl";
+
+    # Following the user's permissions 
+    # we could not be granted to the esmith API
+    my $groupAdmins = `sudo /sbin/e-smith/db configuration getprop admins group`;
+    chop $groupAdmins; # clean EOL
+
+    my $jsonFile = '/etc/nethserver/cockpit/authorization/roles.json';
+    my $data = read_json ($jsonFile); 
+
+    # Here make links between system and API
+    # when system needs several API
+    # when system name doesn't match API name
+    my %controllers = (
+        "users-groups" => ["system-roles",
+			                   "system-password-policy",
+			                   "system-accounts-provider",
+                               "system-users"],
+        'network'      => ["system-routes",
+                               "system-proxy"],
+        'dns'          => ["system-hosts"],
+        'certificates' => ["system-certificate"],
+        'ssh'          => ["system-openssh"],
+        'applications' => ["system-apps"],
+    );
+
+    (my $groupAdminsAlias = uc $groupAdmins) =~ s/ //;
+    (my $groupAdminsSudo = $groupAdmins) =~ s/ /\\ /;
+
+    $OUT .= qq (
+#
+# default group administrator $groupAdmins
+#
+
+Cmnd_Alias $groupAdminsAlias = /usr/libexec/nethserver/api/*/*, /usr/libexec/nethserver/api/*/*/*
+
+
+%$groupAdminsSudo ALL=NOPASSWD: $groupAdminsAlias
+
+# server-manager does not require a tty
+Defaults:%$groupAdminsSudo !requiretty
+);
+    
+    foreach my $key (keys %{$data}) {
+
+        next if ($key eq $groupAdmins);
+        my @systems = @{$data->{$key}->{'system'}};
+        my @applications = @{$data->{$key}->{'applications'}};
+        my @roles = ();
+
+        #Here all default sudo commands
+        my @commands = (
+                "/usr/libexec/nethserver/api/system-*/read"
+            );
+
+        foreach my $system (@systems){
+            push @roles, $system;
+        }
+
+        foreach my $application (@applications){
+            push @roles, $application; 
+        }
+
+        # Hack when the group name gets a space
+        # for example 'domain admins', visudo doesn't like it
+        (my $Cmnd_Alias = $key) =~ s/ //;
+        $key =~s/ /\\ /;
+
+        $OUT .= "\n#\n# Role delegations for $key\n#";
+        $OUT .= "\nCmnd_Alias ". uc $Cmnd_Alias .'= ';
+
+
+        foreach my $role (@roles) {
+
+            if (! exists $controllers{$role}){
+                if ($role =~ /^nethserver-/) {
+                    push @commands, "/usr/libexec/nethserver/api/$role/*";
+                } else {
+                    push @commands, "/usr/libexec/nethserver/api/system-$role/*";
+                }
+            } else { 
+                foreach my $api (@{$controllers{$role}}) {
+                    push @commands, "/usr/libexec/nethserver/api/$api/*";
+                }
+            }  
+        }
+
+        $OUT .= join (', ',@commands);
+        $OUT .= "\n\n%".$key." ALL=NOPASSWD: ". uc $Cmnd_Alias;
+        $OUT .= "\nDefaults:%".$key." !requiretty\n";
+    }
+}

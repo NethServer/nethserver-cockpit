@@ -24,6 +24,7 @@ use strict;
 use warnings;
 use JSON;
 use POSIX qw(getgroups);
+use File::Basename;
 
 sub read_json
 {
@@ -39,6 +40,25 @@ sub read_json
     }
 
     return decode_json($json);
+}
+
+# encode json data and write to file ($umask optional)
+# write_json ($file,$data,$umask)
+sub write_json {
+
+      my $file = shift || warn 'No specified file to write';
+      my $dirname = dirname($file);
+      if (! -d $dirname) {
+          warn 'No directory to save the json file'
+      }
+      my $data = shift || warn 'No data to encode to json';
+      my $umask = shift || 022;
+
+      umask $umask;
+      open my $fh, ">", $file || return 0;
+      print $fh encode_json($data);
+      close $fh;
+      return 1;
 }
 
 sub whoami
@@ -59,6 +79,24 @@ sub list_applications
     return @apps;
 }
 
+sub get_adminGroup {
+    #Following the user's permissions we could not be granted to the esmith API
+    my $groupAdmins = `sudo /sbin/e-smith/db configuration getprop admins group`;
+    chop $groupAdmins; # clean EOL
+    return $groupAdmins
+}
+
+sub get_groups {
+    my @gnames;
+    my @groups = getgroups();
+    foreach my $g (getgroups()) {
+        my $gname = getgrgid($g);
+        $gname =~ s/@.*$//; # strip domain
+        push @gnames, $gname;
+    }
+    return @gnames;
+}
+
 sub get_acl
 {
     my $user = shift;
@@ -69,7 +107,7 @@ sub get_acl
         return $roles->{$role}
     }
 
-    return {};
+    return {"system" => [],"applications" => []};
 }
 
 sub list_system_routes

@@ -5,6 +5,13 @@ body.login-pf {
     padding-top: 60px;
 }
 
+.disable_a_href{
+  color: #363636;
+  cursor: not-allowed;
+  text-decoration: none;
+  pointer-events: none;
+}
+
 #authorized-input {
     display: none !important;
 }

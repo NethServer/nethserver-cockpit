@@ -31,24 +31,26 @@ my $user = whoami();
 
 my @apps = list_applications();
 my @system_routes = list_system_routes();
-
 my $system_routes = read_json("/etc/nethserver/cockpit/authorization/system-routes.json");
-
+my $groupAdmins = get_adminGroup();
 my $role = get_role($user);
 
-# root can always access everything
-if ($user eq 'root') {
+# root and members of domain admins group can always access everything
+    if (($user eq 'root') || 
+        (grep /^$groupAdmins$/, get_groups())) {
     foreach my $r (@system_routes) {
         push($ret->{"system"}, $r)
     }
     foreach my $a (@apps) {
         push($ret->{"applications"}, $a);
     }
-
+    $ret->{'status'}->{'isAdmin'} = int((grep /^$groupAdmins$/, get_groups()) || int($user eq 'root'));  
+    $ret->{'status'}->{'isRoot'} = int($user eq 'root');
     print encode_json($ret);
     exit(0);
 }
 
 $ret = get_acl($user, $role);
-
+$ret->{'status'}->{'isRoot'} = int($user eq 'root');
+$ret->{'status'}->{'isAdmin'} = int(0);
 print encode_json($ret);

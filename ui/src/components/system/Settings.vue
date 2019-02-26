@@ -62,9 +62,9 @@
         </div>
       </form>
 
-      <div v-if="view.isRoot" class="divider"></div>
-      <h3 v-if="view.isRoot">{{$t('settings.smart_host')}}</h3>
-      <form v-if="view.isRoot" class="form-horizontal" v-on:submit.prevent="saveSettings('smarthost')">
+      <div v-if="view.isAdmin" class="divider"></div>
+      <h3 v-if="view.isAdmin">{{$t('settings.smart_host')}}</h3>
+      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('smarthost')">
         <div :class="['form-group', errors.SmartHostStatus.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.use_smarthost')}}</label>
           <div class="col-sm-5">
@@ -122,9 +122,9 @@
         </div>
       </form>
 
-      <div v-if="view.isRoot" class="divider"></div>
-      <h3 v-if="view.isRoot">{{$t('settings.notifications')}}</h3>
-      <form v-if="view.isRoot" class="form-horizontal" v-on:submit.prevent="saveSettings('root')">
+      <div v-if="view.isAdmin" class="divider"></div>
+      <h3 v-if="view.isAdmin">{{$t('settings.notifications')}}</h3>
+      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('root')">
         <div :class="['form-group', errors.SenderAddress.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.notify_from')}}</label>
           <div class="col-sm-5">
@@ -165,9 +165,9 @@
         </div>
       </form>
 
-      <div v-if="view.isRoot" class="divider"></div>
-      <h3 v-if="view.isRoot">{{$t('settings.web_shell')}}</h3>
-      <form v-if="view.isRoot" class="form-horizontal" v-on:submit.prevent="saveSettings('cockpit')">
+      <div v-if="view.isAdmin" class="divider"></div>
+      <h3 v-if="view.isAdmin">{{$t('settings.web_shell')}}</h3>
+      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('cockpit')">
         <div :class="['form-group', errors.access.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.limit_access')}}</label>
           <div class="col-sm-5">
@@ -195,9 +195,9 @@
         </div>
       </form>
 
-      <div v-if="view.isRoot" class="divider"></div>
-      <h3 v-if="view.isRoot">{{$t('settings.logrotate')}}</h3>
-      <form v-if="view.isRoot" class="form-horizontal" v-on:submit.prevent="saveSettings('logrotate')">
+      <div v-if="view.isAdmin" class="divider"></div>
+      <h3 v-if="view.isAdmin">{{$t('settings.logrotate')}}</h3>
+      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('logrotate')">
         <div :class="['form-group', errors.Rotate.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.log_rotate')}}</label>
           <div class="col-sm-5">
@@ -241,9 +241,9 @@
         </div>
       </form>
 
-      <div v-if="view.isRoot" class="divider"></div>
-      <h3 v-if="view.isRoot">{{$t('settings.hints')}}</h3>
-      <form v-if="view.isRoot" class="form-horizontal" v-on:submit.prevent="saveSettings('hints')">
+      <div v-if="view.isAdmin" class="divider"></div>
+      <h3 v-if="view.isAdmin">{{$t('settings.hints')}}</h3>
+      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('hints')">
         <div :class="['form-group', errors.ShowHints.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.show_hints')}}</label>
           <div class="col-sm-5">
@@ -278,12 +278,15 @@ export default {
     this.initGraphics();
     this.getSettings();
     this.getHints();
+    this.getAuthorizations();
+
   },
   data() {
     return {
       view: {
         isLoaded: false,
-        isRoot: false
+        isRoot: false,
+        isAdmin: false
       },
       hints: {},
       settings: {
@@ -419,6 +422,29 @@ export default {
         }
       );
     },
+    getAuthorizations() {
+          var context = this;
+
+          context.view.isLoaded = false;
+          context.exec(
+        ["system-authorization/read"],
+        null,
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+          context.view.isAdmin = success.status.isAdmin == 1;
+          context.view.isRoot = success.status.isRoot == 1;
+        },
+        function(error) {
+          console.error(error);
+        },
+        false
+        );
+    },
     getSettings() {
       var context = this;
 
@@ -436,13 +462,11 @@ export default {
             console.error(e);
           }
           context.settings = success.configuration;
-
-          context.view.isRoot = success.status.isRoot == 1;
           context.newUser.canChangePassword =
             success.status.canChangePassword == 1;
 
-          if (context.view.isRoot) {
-            // root
+          if (context.view.isAdmin) {
+            // root or members of domain admins group
             var emails = [{}];
             for (var s in context.settings) {
               if (s == "root") {
@@ -483,8 +507,7 @@ export default {
         },
         function(error) {
           console.error(error);
-        },
-        false
+        }
       );
     },
     toggleSettingsHints() {
@@ -504,7 +527,8 @@ export default {
       var context = this;
       var settingsObj = {};
       var endpoint = "settings";
-
+      var sudo = false;
+      
       switch (type) {
         case "password":
           settingsObj = {
@@ -514,6 +538,7 @@ export default {
             currentPassword: this.newUser.oldPassword
           };
           endpoint = "password";
+          sudo = false;
           break;
         case "smarthost":
           settingsObj = {
@@ -529,6 +554,7 @@ export default {
               ? "enabled"
               : "disabled"
           };
+          sudo = true;
           break;
 
         case "logrotate":
@@ -540,6 +566,7 @@ export default {
               ? "enabled"
               : "disabled"
           };
+          sudo = true;
           break;
 
         case "root":
@@ -551,6 +578,7 @@ export default {
               return e.email;
             })
           };
+          sudo = true;
           break;
 
         case "cockpit":
@@ -562,6 +590,7 @@ export default {
                 ? context.settings.cockpit.LimitAccess.split("\n")
                 : []
           };
+          sudo = true;
           break;
 
         case "hints":
@@ -571,6 +600,7 @@ export default {
               ? "enabled"
               : "disabled"
           };
+          sudo = true;
           break;
       }
 
@@ -614,9 +644,9 @@ export default {
               context.$parent.notifications.error.message = context.$i18n.t(
                 "settings.settings_updated_error"
               );
-            },
-            false
-          );
+          },
+            sudo 
+           );
         },
         function(error, data) {
           var errorData = {};

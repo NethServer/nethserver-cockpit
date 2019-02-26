@@ -1,0 +1,65 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2019 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
+require "/usr/libexec/nethserver/api/lib/auth_functions.pl";
+
+use warnings;
+use strict;
+use JSON;
+
+my $input = readInput();
+my $role = $input->{'role'} || '';
+my $cmd = $input->{'action'} || '';
+my $groupAdmins = get_adminGroup();
+
+if (($cmd eq 'applications') ||
+        ($role eq $groupAdmins)) {
+
+    my $ret = {"system" => [], "applications" => []};
+    my @apps = list_applications();
+    my @system_routes = list_system_routes();
+    my $system_routes = read_json("/etc/nethserver/cockpit/authorization/system-routes.json");
+
+    foreach my $r (@system_routes) {
+        push($ret->{"system"}, $r)
+    }
+    foreach my $a (@apps) {
+        push($ret->{"applications"}, $a);
+    }
+
+    $ret->{"status"}->{"editable"} = int($role ne $groupAdmins);
+    print encode_json($ret);
+    exit(0);
+
+}
+
+if ($cmd eq 'role') {
+    my $data = read_json("/etc/nethserver/cockpit/authorization/roles.json");
+
+    if(exists($data->{$role})) {
+        $data->{$role}->{"status"}->{"editable"} = int($role ne $groupAdmins);
+        print encode_json ($data->{$role});
+    } else {
+        print encode_json({"system" => [],"applications" => []});
+    }
+}
