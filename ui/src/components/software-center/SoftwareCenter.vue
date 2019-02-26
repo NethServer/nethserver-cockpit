@@ -492,7 +492,7 @@
                 <input
                   class="col-sm-4"
                   type="radio"
-                  id="origin-2"
+                  id="install-2"
                   value="install"
                   v-model="updatesConfig.install"
                 >
