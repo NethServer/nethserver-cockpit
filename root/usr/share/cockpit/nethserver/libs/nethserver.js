@@ -21,10 +21,7 @@ nethserver = {
             args[0] = "/usr/libexec/nethserver/api/" + api
         }
 
-        var process = cockpit.spawn(args, input ? {} : {
-            pty: true,
-            environ: ["TERM=dumb"]
-        })
+        var process = cockpit.spawn(args);
 
         if (input) {
             process.input(JSON.stringify(input))
@@ -118,10 +115,7 @@ nethserver = {
             args[0] = "/usr/libexec/nethserver/api/" + api
         }
 
-        var process = cockpit.spawn(args, input ? {} : {
-            pty: true,
-            environ: ["TERM=dumb"],
-        })
+        var process = cockpit.spawn(args);
 
         if (input) {
             process.input(JSON.stringify(input))
@@ -138,10 +132,7 @@ nethserver = {
         });
     },
     execHints(packName, success, error) {
-        var process = cockpit.spawn(["/usr/bin/sudo", "/usr/libexec/nethserver/api/" + packName + "/hints"], {
-            pty: true,
-            environ: ["TERM=dumb"],
-        });
+        var process = cockpit.spawn(["/usr/bin/sudo", "/usr/libexec/nethserver/api/" + packName + "/hints"]);
         process.done(function (successResp) {
             success(JSON.parse(successResp))
         }).
@@ -159,10 +150,7 @@ nethserver = {
             args[0] = "/usr/libexec/nethserver/api/system-logs/execute"
         }
 
-        var process = cockpit.spawn(args, input ? {} : {
-            pty: true,
-            environ: ["TERM=dumb"],
-        })
+        var process = cockpit.spawn(args);
 
         if (input) {
             process.input(JSON.stringify(input))
