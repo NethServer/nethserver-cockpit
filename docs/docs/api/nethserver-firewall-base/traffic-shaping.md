@@ -460,9 +460,17 @@ Example:
 
 ## delete
 
+Takes an `action` field.
+
+Valid actions are:
+
+- `delete-class`
+- `delete-rule`
+
 Example:
 ```json
 {
+    "action": "delete-class",
     "name": "123"
 }
 ```
