@@ -60,6 +60,6 @@ if ($cmd eq 'role') {
         $data->{$role}->{"status"}->{"editable"} = int($role ne $groupAdmins);
         print encode_json ($data->{$role});
     } else {
-        print '{"system": [],"applications": []}';
+        print encode_json({"system" => [],"applications" => []});
     }
 }

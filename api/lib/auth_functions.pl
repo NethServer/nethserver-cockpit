@@ -107,7 +107,7 @@ sub get_acl
         return $roles->{$role}
     }
 
-    return decode_json '{"system":[],"applications":[]}';
+    return {"system" => [],"applications" => []};
 }
 
 sub list_system_routes
