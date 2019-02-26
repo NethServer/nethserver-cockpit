@@ -473,45 +473,6 @@
                 <label
                   class="col-sm-3 control-label"
                   for="textInput-modal-markup"
-                >{{$t('software_center.updates_origin')}}</label>
-              </div>
-              <div class="form-group">
-                <input
-                  class="col-sm-4"
-                  type="radio"
-                  id="origin-1"
-                  value="unlocked"
-                  v-model="updatesConfig.origin"
-                >
-                <label
-                  for="origin-1"
-                  class="control-label col-sm-2 text-align-left"
-                >{{$t('software_center.unlocked')}}</label>
-                <div
-                  class="col-sm-6 control-label text-align-left"
-                >{{$t('software_center.unlocked_description')}}</div>
-              </div>
-              <div class="form-group">
-                <input
-                  class="col-sm-4"
-                  type="radio"
-                  id="origin-2"
-                  value="locked"
-                  v-model="updatesConfig.origin"
-                >
-                <label
-                  for="origin-2"
-                  class="control-label col-sm-2 text-align-left"
-                >{{$t('software_center.locked')}}</label>
-                <div
-                  class="col-sm-6 control-label text-align-left"
-                >{{$t('software_center.locked_description')}}</div>
-              </div>
-              <p class="divider"></p>
-              <div class="form-group">
-                <label
-                  class="col-sm-3 control-label"
-                  for="textInput-modal-markup"
                 >{{$t('software_center.when_updates_available')}}</label>
               </div>
               <div class="form-group">
@@ -590,7 +551,6 @@ export default {
         other: []
       },
       updatesConfig: {
-        origin: "unlocked",
         install: "download",
         sendEmail: false
       },
@@ -694,8 +654,6 @@ export default {
             console.error(e);
           }
           context.view.isEditable = success.editable == 1;
-          context.updatesConfig.origin =
-            success.NsReleaseLock == "disabled" ? "unlocked" : "locked";
           context.updatesConfig.install =
             success.applyUpdate == "yes" ? "install" : "download";
           context.updatesConfig.sendEmail =
@@ -1083,8 +1041,6 @@ export default {
         ["system-packages/update"],
         {
           action: "set-config",
-          NsReleaseLock:
-            this.updatesConfig.origin == "locked" ? "enabled" : "disabled",
           applyUpdate: this.updatesConfig.install == "install" ? "yes" : "no",
           download:
             this.updatesConfig.install == "download"
