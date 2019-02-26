@@ -38,7 +38,8 @@ mkdir -p %{buildroot}/usr/share/cockpit/nethserver/
 tar xvf %{SOURCE1} -C %{buildroot}/usr/share/cockpit/nethserver/
 mkdir -p %{buildroot}/usr/libexec/nethserver/
 mv api/ %{buildroot}/usr/libexec/nethserver/
-%{genfilelist} --ignoredir /usr/libexec/nethserver/api/lib %{buildroot} > file.lst
+%{genfilelist}  %{buildroot} | \
+    grep -v '^/usr/libexec/nethserver/api/lib' > file.lst
 
 %files -f file.lst
 %license COPYING
