@@ -6,13 +6,13 @@ Summary:        NethServer Server Manager Web UI
 License:        GPLv3
 URL:            %{url_prefix}/%{name}
 Source0:        %{name}-%{version}.tar.gz
-# Execute prep-sources to create Source1
+# Execute ./prep-sources to create Source1
 Source1:        nethserver-cockpit-ui.tar.gz
 BuildArch:      noarch
 
 BuildRequires:  nethserver-devtools
 Requires:       cockpit, cockpit-storaged, cockpit-packagekit
-Requires:	jq, openldap-clients, expect, python-pwquality
+Requires:       jq, openldap-clients, expect, python-pwquality
 Requires:       nethserver-subscription
 
 %description
@@ -25,7 +25,7 @@ BuildRequires:  nethserver-devtools
 Provides code libraries to build the Cockpit-based Server Manager API helpers
 
 %prep
-%setup
+%setup -q
 
 %build
 %{makedocs}
