@@ -18,6 +18,12 @@ Requires:       nethserver-subscription
 %description
 NethServer Server Manager Web UI based on Cockpit
 
+%package lib
+Summary: API libraries for NethServer Server Manager Web UI
+BuildRequires:  nethserver-devtools
+%description lib
+Provides code libraries to build the Cockpit-based Server Manager API helpers
+
 %prep
 %setup
 
@@ -32,10 +38,9 @@ mkdir -p %{buildroot}/usr/share/cockpit/nethserver/
 tar xvf %{SOURCE1} -C %{buildroot}/usr/share/cockpit/nethserver/
 mkdir -p %{buildroot}/usr/libexec/nethserver/
 mv api/ %{buildroot}/usr/libexec/nethserver/
-%{genfilelist} %{buildroot} > filelist
+%{genfilelist} --ignoredir /usr/libexec/nethserver/api/lib %{buildroot} > file.lst
 
-%files -f filelist
-
+%files -f file.lst
 %license COPYING
 %doc README.rst
 %config /etc/sudoers.d/30_cockpit
@@ -43,6 +48,11 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %config /usr/share/cockpit/nethserver/categories/categories.json
 %dir %{_nseventsdir}/%{name}-update
 %dir /usr/libexec/nethserver/api/
+
+%files lib
+%license COPYING
+/usr/libexec/nethserver/api/lib/
+
 
 %changelog
 * Wed Jan 30 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.3.0-1
