@@ -1934,8 +1934,15 @@ returning information about IP address, zone, etc.</p>
 
 
 <h2 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h2>
+<p>Takes an <code>action</code> field.</p>
+<p>Valid actions are:</p>
+<ul>
+<li><code>delete-class</code></li>
+<li><code>delete-rule</code></li>
+</ul>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;delete-class&quot;</span><span class="p">,</span>
     <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;123&quot;</span>
 <span class="p">}</span>
 </pre></div>
