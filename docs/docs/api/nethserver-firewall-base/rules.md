@@ -254,7 +254,7 @@ Example with Src using a raw value:
     "type": "role"
   },
   "Src": {
-    "Value": "192.168.1.1",
+    "name": "192.168.1.1",
     "type": "raw"
   },
   "type": "rule",
