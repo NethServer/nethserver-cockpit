@@ -11,9 +11,5 @@
   "ssh",
   "tls-policy",
   "trusted-networks",
-  "logs",
-  "applications",
-  "software-center",
-  "subscription",
-  "terminal"
+  "logs"
 ]
