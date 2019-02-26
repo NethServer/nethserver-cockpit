@@ -105,9 +105,9 @@
             <label class="col-sm-3 control-label">{{$t('dashboard.power')}}</label>
             <div class="col-sm-9">
               <div class="btn-group">
-                <a v-bind:class="{ disable_a_href: !view.isAdmin }" href="#" @click="openPowerModal('reboot')" class="btn btn-default">
+                <button :disabled="!view.isAdmin" @click="openPowerModal('reboot')" class="btn btn-default">
                   {{$t('dashboard.reboot')}}
-                </a>
+                </button>
                 <button :disabled="!view.isAdmin" data-toggle="dropdown" class="btn btn-default dropdown-toggle">
                   <span class="caret"></span>
                 </button>
