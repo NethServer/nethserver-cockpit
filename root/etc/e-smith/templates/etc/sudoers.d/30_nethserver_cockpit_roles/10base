@@ -26,7 +26,6 @@
         'dns'          => ["system-hosts"],
         'certificates' => ["system-certificate"],
         'ssh'          => ["system-openssh"],
-        'applications' => ["system-apps"],
     );
 
     (my $groupAdminsAlias = uc $groupAdmins) =~ s/ //;
