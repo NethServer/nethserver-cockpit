@@ -90,7 +90,7 @@ The request must contain an `action` field. Valid actions are:
 Constraints for `create`:
 
 - Proto: `tcp`, `udp` or `tcpudp`, `ah`, `gre`, `ah`, `esp` 
-- Src: a port number or a range in the form `xxxx:yyyy`, must be empty if protocol is not tcp, udp or tcpudp
+- Src: a list of port number or ranges in the form `xxxx:yyyy`, must be an empty list if protocol is not tcp, udp or tcpudp
 - Dst: a port number, if empty the value of Src is used, must be empty if protocol is not tcp, udp or tcpudp
 - DstHost: a destination host, can be an IP address or a host firewall object
 - OriDst: an IP address or empty
