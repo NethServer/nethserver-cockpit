@@ -54,6 +54,7 @@ nav:
       - api/system-trusted-networks.md
       - api/system-users.md
     - Firewall helpers:
+      - api/nethserver-firewall-base/connections.md
       - api/nethserver-firewall-base/dashboard.md
       - api/nethserver-firewall-base/local-rules.md
       - api/nethserver-firewall-base/objects.md
