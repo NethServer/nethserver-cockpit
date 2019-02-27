@@ -29,10 +29,6 @@ import sys
 import simplejson
 import yum.misc
 
-def is_strict_updates():
-    lock = subprocess.check_output(['/sbin/e-smith/config', 'getprop', 'sysconfig', 'NsReleaseLock'])
-    return lock.strip() == 'enabled'
-
 def parse_pkginfo_conf():
     repos = []
     try:
@@ -57,10 +53,7 @@ def main():
         yb = yum.YumBase()
         yb.preconf = ypbc
 
-        if is_strict_updates():
-               changelog = subprocess.Popen(['/usr/bin/yum', 'changelog', '1', 'updates', '--setopt=reposdir=/etc/nethserver/yum-update.d/'], stdout=subprocess.PIPE, shell=False, env={'LANG': 'en_US.UTF-8'}).communicate()[0];
-        else:
-            changelog = subprocess.Popen(['/usr/bin/yum', 'changelog', '1', 'updates'], stdout=subprocess.PIPE, shell=False, env={'LANG': 'en_US.UTF-8'}).communicate()[0];
+        changelog = subprocess.Popen(['/usr/bin/yum', 'changelog', '1', 'updates'], stdout=subprocess.PIPE, shell=False, env={'LANG': 'en_US.UTF-8'}).communicate()[0];
 
         simplejson.dump({'data': changelog.decode('utf-8')}, sys.stdout)
 

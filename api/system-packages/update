@@ -40,10 +40,6 @@ case $action in
         ;;
     "update")
         action="--update"
-        lock=$(/sbin/e-smith/config getprop sysconfig NsReleaseLock)
-        if [ "$lock" == "enabled" ]; then
-            action="--strict-update"
-        fi
         if [ -z "$packages" ]; then
             /usr/libexec/nethserver/pkgaction --json $action \*
         else
@@ -67,7 +63,6 @@ case $action in
         ;;
 
     "set-config")
-        /sbin/e-smith/config setprop sysconfig NsReleaseLock "$(_get NsReleaseLock)"
         /sbin/e-smith/config setprop yum-cron messages "$(_get messages)" applyUpdate "$(_get applyUpdate)" download "$(_get download)"
         /sbin/e-smith/signal-event -j software-repos-save
         ;;
