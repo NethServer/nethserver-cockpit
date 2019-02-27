@@ -465,7 +465,7 @@
           <div class="modal-header">
             <h4
               class="modal-title"
-            >{{$t('software_center.configure')}} {{$t('software_center.updates_low')}}</h4>
+            >{{$t('software_center.configure_updates_header')}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="saveConfiguration()">
             <div class="modal-body">
