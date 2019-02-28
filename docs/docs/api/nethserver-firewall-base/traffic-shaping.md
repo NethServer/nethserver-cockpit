@@ -232,9 +232,18 @@ If data for red interfaces is not available (e.g. netdata is not running):
 
 #### rules
 
+List all traffic shaping (QoS) rules.
+
+The `status` section contains the `count` of existing rules,
+and the `next` position available for newly created rule.
+
 Example with `expand` set to `true`:
 ```json
 {
+  "status": {
+    "next": 12,
+    "count": 5
+  },
   "rules": [
     {
       "Log": "none",
@@ -441,7 +450,20 @@ Example:
 
 ## update
 
-Same input format from validate action.
+Use the same input from validate, supports also the `reorder` action.
+
+### reorder
+
+The `rules` field contains an ordered list of rules id.
+The API will update all `Position` properties accordingly to given order.
+
+Input example:
+```json     
+{
+  "action": "reorder",
+  "rules": [24,55,2]
+}
+```
 
 ## create
 

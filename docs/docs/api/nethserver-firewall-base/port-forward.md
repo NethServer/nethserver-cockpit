@@ -30,7 +30,7 @@ Example:
   "portforward": {
     "192.168.1.129": {
       "info": {
-        "type": "ip"
+        "type": "raw"
       },
       "rules": [
         {
@@ -52,7 +52,7 @@ Example:
     "host;myhost": {
       "info": {
         "IpAddress": "192.168.1.22",
-        "type": "object",
+        "type": "host",
         "Description": "this is my myhost"
       },
       "rules": [

@@ -43,9 +43,16 @@ Example:
 
 Return the list of traffic rules from/to the firewall.
 
-Example with `expand` set to `false`:
+The `status` section contains the `count` of existing rules,
+and the `next` position available for newly created rule.
+
+Example with `expand` set to `true`:
 ```json
 {
+  "status": {
+    "next": 12,
+    "count": 5
+  },
   "rules": [
     {
       "Log": "none",
@@ -165,32 +172,111 @@ Example:
 
 The request must contain an `action` field. Valid actions are:
 
-- `create`
-- `update`
-- `delete`
+- `create-rule`
+- `update-rule`
 
-Constraints for `create`:
+Constraints for `create-rule` and `update-rule`:
 
-Constraints for `update`:
-
-Same as constraints as action `create` with addition filed `name`:
-
-- name: a valid port forward name
-
-Constraints for `delete`:
-
-- name: a valid port forward name
+- All constraints from [firewall rules](/api/nethserver-firewall-base/rules.md#validate)
+- Src or Dst must be `fw`
+- If Dst is `fw`, `Service` must be a `service` object type from `configuration` db
 
 
 ### Input
 
+#### create-rule
+
 Example:
 ```json
+{
+  "action": "create-rule",
+  "Log": "none",
+  "Time": null,
+  "Position": 4,
+  "status": "enabled",
+  "Service": {
+    "Ports": [
+      "53",
+      "67",
+      "69",
+      "53"
+    ],
+    "name": "dnsmasq",
+    "Protocol": "tcpudp",
+    "type": "service",
+    "Description": ""
+  },
+  "Action": "accept",
+  "Dst": {
+    "name": "fw",
+    "type": "fw"
+  },
+  "id": null,
+  "Src": {
+    "Address": "11.11.11.0/24",
+    "name": "cidr2",
+    "Description": "",
+    "type": "cidr"
+  },
+  "type": "rule",
+  "Description": ""
+}
 ```
 
+#### update-rule
+
+Example:
+```json
+{
+  "action": "update-rule",
+  "Log": "none",
+  "Time": null,
+  "Position": 4,
+  "status": "enabled",
+  "Service": {
+    "Ports": [
+      "53",
+      "67",
+      "69",
+      "53"
+    ],
+    "name": "dnsmasq",
+    "Protocol": "tcpudp",
+    "type": "service",
+    "Description": ""
+  },
+  "Action": "accept",
+  "Dst": {
+    "name": "fw",
+    "type": "fw"
+  },
+  "id": 44,
+  "Src": {
+    "Address": "11.11.11.0/24",
+    "name": "cidr2",
+    "Description": "",
+    "type": "cidr"
+  },
+  "type": "rule",
+  "Description": ""
+}
+```
 ## update
 
-Use the same input from validate.
+Use the same input from validate, supports also the `reorder` action.
+
+### reorder
+
+The `rules` field contains an ordered list of rules id.
+The API will update all `Position` properties accordingly to given order.
+
+Input example:
+```json
+{
+  "action": "reorder",
+  "rules": [24,55,2]
+}
+```
 
 ## create
 
@@ -198,5 +284,10 @@ Use the same input from validate.
 
 ## delete
 
-Use the same input from validate.
+Example:
+```json
+{
+    "name": "123"
+}
+```
 

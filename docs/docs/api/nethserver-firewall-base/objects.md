@@ -322,13 +322,13 @@ Constraints for `create-host`:
 - IpAddress: must be valid ipv4
 - Description: optional description
 - portforwards: optional list of valid portforwards to set host as `DstHost`
+- rules: optional, if set to "1" substitute all IpAddress inside the fwrules db with newly created host object
 
 Constraints for `update-host`:
 
 - name: must be an existing host
 - IpAddress: must be valid ipv4
 - Description: optional description
-- portforwards: optional list of valid portforwards to set host as `DstHost`
 
 Constraints for `delete-host`:
 
@@ -397,6 +397,7 @@ Constraints for `create-cidr-sub`:
 - name: must be a non-existing cidr subnet
 - Address: must be a valid CIDR block
 - Description: optional description
+- rules: optional, if set to "1" substitute all IpAddress inside the fwrules db with newly created host object
 
 Constraints for `update-cidr-sub`:
 
@@ -453,7 +454,8 @@ Example:
   "IpAddress": "192.168.1.1",
   "name": "a123",
   "Description": "123",
-  "portforwards": [1,3]
+  "portforwards": [1,3],
+  "rules": 1
 }
 ```
 
@@ -466,7 +468,6 @@ Example:
   "IpAddress": "192.168.1.3",
   "name": "a123",
   "Description": "123",
-  "portforwards": [1]
 }
 ```
 
@@ -611,7 +612,8 @@ Example:
   "action": "create-cidr-sub",
   "Address": "10.10.10.0/24",
   "name": "cidr1",
-  "Description": ""
+  "Description": "",
+  "rules": 0
 }
 ```
 

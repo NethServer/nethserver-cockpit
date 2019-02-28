@@ -42,9 +42,16 @@ Example:
 
 Return the list of firewall rules.
 
+The `status` section contains the `count` of existing rules,
+and the `next` position available for newly created rule.
+
 Example with `expand` set to `true`:
 ```json
 {
+  "status": {
+    "next": 12,
+    "count": 5
+  },
   "rules": [
     ...
     {
@@ -134,6 +141,29 @@ Example with `expand` set to `false`:
     },
     ...
   ]
+}
+```
+
+If `Src` or `Dst` is a raw value, is presented in the following format.
+
+The `object` field reppresents the correspective object which can be created
+from the raw value.
+
+Example:
+```json
+{
+  ...
+  "Src": {
+        "name": "192.168.1.1",
+        "type": "raw",
+        "object": "host"
+  },
+  "Dst": {
+        "name": "192.168.20.0/24",
+        "type": "raw",
+        "object": "cidr"
+  },
+  ...
 }
 ```
 
@@ -293,7 +323,20 @@ Example with Src using a firewall object:
 
 ## update
 
-Use the same input from validate.
+Use the same input from validate, supports also the `reorder` action.
+
+### reorder
+
+The `rules` field contains an ordered list of rules id.
+The API will update all `Position` properties accordingly to given order.
+
+Input example:
+```json
+{
+  "action": "reorder",
+  "rules": [24,55,2]
+}
+```
 
 ## create
 

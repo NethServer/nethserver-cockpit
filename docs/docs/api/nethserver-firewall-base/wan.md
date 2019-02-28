@@ -158,9 +158,16 @@ Example of good output:
 
 #### rules
 
+The `status` section contains the `count` of existing rules,
+and the `next` position available for newly created rule.
+
 Example with `expand` set to `true`:
 ```json
 {
+  "status": {
+    "next": 706,
+    "count": 3
+  },
   "rules": [
     {
       "Log": "none",
@@ -318,7 +325,7 @@ Example:
 }
 ```
 
-#### edit-rule
+#### update-rule
 
 Example:
 ```json
@@ -348,7 +355,20 @@ Example:
 
 ## update
 
-Same input format from validate action.
+Use the same input from validate, supports also the `reorder` action.
+
+### reorder
+
+The `rules` field contains an ordered list of rules id.
+The API will update all `Position` properties accordingly to given order.
+
+Input example:
+```json     
+{
+  "action": "reorder",
+  "rules": [24,55,2]
+}
+```
 
 ## delete
 
