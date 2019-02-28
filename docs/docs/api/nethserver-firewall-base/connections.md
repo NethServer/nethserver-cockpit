@@ -11,6 +11,7 @@ Valid actions:
 
 - `conntrack`
 - `protocols`
+- `stats`
 
 #### protocols
 
@@ -39,6 +40,17 @@ Example:
 }
 ```
 
+#### stats
+
+Return the connection number in the last 30 seconds from netdata.
+
+Example:
+```json
+{
+  "action": "stats"
+}
+```
+
 ### Output
 
 #### protocols
@@ -47,16 +59,7 @@ Example:
 ```json
 {
   "protocols": {
-    "udp": [
-      "CLOSED",
-      "COOKIE_WAIT",
-      "COOKIE_ECHOED",
-      "ESTABLISHED",
-      "NONE",
-      "SHUTDOWN_SENT",
-      "SHUTDOWN_RECD",
-      "SHUTDOWN_ACK_SENT"
-    ],
+    "udp": [],
     "tcp": [
       "CLOSE",
       "CLOSE_WAIT",
@@ -76,35 +79,64 @@ Example:
 
 #### conntrack
 
+List active connections sorted in descending order by:
+
+- `bytes_total`, if accounting is enabled
+- `timeout`, if accounting is disabled
+
 Example:
 ```json
 {
   "connections": [
     {
-      "dport_reply": "47394",
-      "dst_reply": "127.0.0.1",
+      "bytes_total": 5328656,
+      "dport_reply": "22",
+      "dst_reply": "192.168.5.246",
       "protocol": "tcp",
+      "bytes": "978988",
       "nat": 0,
       "zone": "0",
       "status": "ASSURED",
-      "sport_reply": "389",
-      "dport": "389",
+      "sport_reply": "55038",
+      "packets": "3993",
+      "packets_reply": "5304",
+      "dport": "55038",
       "state": "ESTABLISHED",
-      "mark": "28672",
+      "mark": "23552",
       "use": "2",
-      "timeout": "431986",
-      "src_reply": "127.0.0.1",
-      "src": "127.0.0.1",
+      "timeout": "299",
+      "src_reply": "192.168.5.22",
+      "src": "192.168.5.246",
       "layer": "ipv4",
-      "sport": "47394",
-      "dst": "127.0.0.1"
+      "bytes_reply": "4349668",
+      "packets_total": 9297,
+      "sport": "22",
+      "dst": "192.168.5.22"
     },
     ...
   ]
 }
 ```
 
+#### stats
 
+Example:
+```json
+{
+  "connections": [
+    "19",
+    "18",
+    "18",
+    ....
+  ],
+  "time": [
+    "1551362111",
+    "1551362110",
+    "1551362109",
+    ...
+  ]
+}
+```
 
 ## delete
 
