@@ -4,7 +4,7 @@
 
 * [Install requirements](#install-requirements)
 * [Code style](#code-style)
-* [Build API and UI](#build-api-and-ui)
+* [Build API and US](#build-api-and-ui)
 * [Sync API and UI](#sync-api-and-ui)
 
 
@@ -16,9 +16,9 @@ Follow these steps:
 
 - do your modification to API or UI
 
-- sync your modification to the server where cockpit is running
+- sync your modification to the server where Cockpit is running
 
-## Install requirements
+## Install UI requirements
 
 Prepare the development environment:
 
@@ -44,10 +44,13 @@ Prepare the development environment:
 
     ```
     cd nethserver-cockpit/ui
-    npm install && npm run dev
+    npm install
     ```
 
-## Build UI
+## Build the UI
+
+**Note**: during the development, the UI must run on the NethServer server.
+Running the UI on the developer machine will not work due to Cockpit CORS limitations.
 
 **Note**: Requirements: `nodejs >= 10`
 
@@ -57,28 +60,29 @@ Enter UI directory and build using `npm`:
 cd ui/ && ./prep-sources
 ```
 
+Make sure to create the `/root/.local/share/cockpit/nethserver` directory inside your NethServer.
+You can do it using this command, assuming the NethServer has IP `192.168.1.20`:
+```text
+ssh root@192.168.1.20  "mkdir -p ~/.local/share/cockpit/nethserver"
+```
 
 ## Sync API and UI
 
-**Note**: during the development, the UI must run on the NethServer server.
-Running the UI on the developer machine will not work due to Cockpit CORS limitations.
-
-
 Files can be copied using rsync.
 
-While UI could be synced without executing the `build` task each time,
-make sure API is always built before sync.
-
-Use the following commands:
-
-```
-ssh root@192.168.1.20  "mkdir -p ~/.local/share/cockpit/nethserver"
-
+To copy the APIs, use the following command:
+```text
 cd api/ && rsync -avz --delete ./* root@192.168.1.20:/usr/libexec/nethserver/api/
-cd ui/ && rsync -avz --delete dist/* root@192.168.1.20:/usr/share/cockpit/nethserver/
+```
+
+Before copying the UI, make sure to compile it as explained in the paragraph above.
+
+To copy the UI, use the following command:
+```text
+cd ui/ && rsync -avz --delete dist/* root@192.168.1.20:~/.local/share/cockpit/nethserver/
 ```
 
 ## Code style
 
-Please use configuration from EditorConfig: http://editorconfig.org
+Please use configuration from [EditorConfig](http://editorconfig.org).
 
