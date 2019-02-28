@@ -753,6 +753,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../connections/" title="connections" class="md-nav__link">
+      connections
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../dashboard/" title="dashboard" class="md-nav__link">
       dashboard
     </a>
@@ -945,6 +957,19 @@
   <a href="#update" title="update" class="md-nav__link">
     update
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reorder" title="reorder" class="md-nav__link">
+    reorder
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1374,6 +1399,19 @@
     update
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reorder" title="reorder" class="md-nav__link">
+    reorder
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1442,8 +1480,14 @@ returning information about IP address, zone, etc.</p>
 <h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
 <h4 id="list_1">list<a class="headerlink" href="#list_1" title="Permanent link">&para;</a></h4>
 <p>Return the list of firewall rules.</p>
+<p>The <code>status</code> section contains the <code>count</code> of existing rules,
+and the <code>next</code> position available for newly created rule.</p>
 <p>Example with <code>expand</code> set to <code>true</code>:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;next&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+    <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">5</span>
+  <span class="p">},</span>
   <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="p">[</span>
     <span class="err">...</span>
     <span class="p">{</span>
@@ -1533,6 +1577,27 @@ returning information about IP address, zone, etc.</p>
     <span class="p">},</span>
     <span class="err">...</span>
   <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>If <code>Src</code> or <code>Dst</code> is a raw value, is presented in the following format.</p>
+<p>The <code>object</code> field reppresents the correspective object which can be created
+from the raw value.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="err">...</span>
+  <span class="nt">&quot;Src&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;object&quot;</span><span class="p">:</span> <span class="s2">&quot;host&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;Dst&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.20.0/24&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;object&quot;</span><span class="p">:</span> <span class="s2">&quot;cidr&quot;</span>
+  <span class="p">},</span>
+  <span class="err">...</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -1679,7 +1744,18 @@ returning information about IP address, zone, etc.</p>
 
 
 <h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
-<p>Use the same input from validate.</p>
+<p>Use the same input from validate, supports also the <code>reorder</code> action.</p>
+<h3 id="reorder">reorder<a class="headerlink" href="#reorder" title="Permanent link">&para;</a></h3>
+<p>The <code>rules</code> field contains an ordered list of rules id.
+The API will update all <code>Position</code> properties accordingly to given order.</p>
+<p>Input example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;reorder&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">24</span><span class="p">,</span><span class="mi">55</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h2 id="create">create<a class="headerlink" href="#create" title="Permanent link">&para;</a></h2>
 <p>Use the same input from validate.</p>
 <h2 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h2>

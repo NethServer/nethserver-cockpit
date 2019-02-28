@@ -753,6 +753,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../connections/" title="connections" class="md-nav__link">
+      connections
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../dashboard/" title="dashboard" class="md-nav__link">
       dashboard
     </a>
@@ -885,6 +897,26 @@
     Input
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-rule" title="create-rule" class="md-nav__link">
+    create-rule
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-rule" title="update-rule" class="md-nav__link">
+    update-rule
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -896,6 +928,19 @@
   <a href="#update" title="update" class="md-nav__link">
     update
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reorder" title="reorder" class="md-nav__link">
+    reorder
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1336,6 +1381,26 @@
     Input
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-rule" title="create-rule" class="md-nav__link">
+    create-rule
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-rule" title="update-rule" class="md-nav__link">
+    update-rule
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -1347,6 +1412,19 @@
   <a href="#update" title="update" class="md-nav__link">
     update
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reorder" title="reorder" class="md-nav__link">
+    reorder
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1417,8 +1495,14 @@ returning information about IP address, zone, etc.</p>
 <h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
 <h4 id="list_1">list<a class="headerlink" href="#list_1" title="Permanent link">&para;</a></h4>
 <p>Return the list of traffic rules from/to the firewall.</p>
-<p>Example with <code>expand</code> set to <code>false</code>:</p>
+<p>The <code>status</code> section contains the <code>count</code> of existing rules,
+and the <code>next</code> position available for newly created rule.</p>
+<p>Example with <code>expand</code> set to <code>true</code>:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;next&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+    <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">5</span>
+  <span class="p">},</span>
   <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="p">[</span>
     <span class="p">{</span>
       <span class="nt">&quot;Log&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
@@ -1530,32 +1614,113 @@ returning information about IP address, zone, etc.</p>
 <h3 id="constraints">Constraints<a class="headerlink" href="#constraints" title="Permanent link">&para;</a></h3>
 <p>The request must contain an <code>action</code> field. Valid actions are:</p>
 <ul>
-<li><code>create</code></li>
-<li><code>update</code></li>
-<li><code>delete</code></li>
+<li><code>create-rule</code></li>
+<li><code>update-rule</code></li>
 </ul>
-<p>Constraints for <code>create</code>:</p>
-<p>Constraints for <code>update</code>:</p>
-<p>Same as constraints as action <code>create</code> with addition filed <code>name</code>:</p>
+<p>Constraints for <code>create-rule</code> and <code>update-rule</code>:</p>
 <ul>
-<li>name: a valid port forward name</li>
-</ul>
-<p>Constraints for <code>delete</code>:</p>
-<ul>
-<li>name: a valid port forward name</li>
+<li>All constraints from <a href="../rules/#validate">firewall rules</a></li>
+<li>Src or Dst must be <code>fw</code></li>
+<li>If Dst is <code>fw</code>, <code>Service</code> must be a <code>service</code> object type from <code>configuration</code> db</li>
 </ul>
 <h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
+<h4 id="create-rule">create-rule<a class="headerlink" href="#create-rule" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create-rule&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Log&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Time&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="nt">&quot;Position&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Service&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;Ports&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;53&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;67&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;69&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;53&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;dnsmasq&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Protocol&quot;</span><span class="p">:</span> <span class="s2">&quot;tcpudp&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;service&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;accept&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Dst&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;fw&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fw&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="nt">&quot;Src&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;Address&quot;</span><span class="p">:</span> <span class="s2">&quot;11.11.11.0/24&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;cidr2&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;cidr&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="update-rule">update-rule<a class="headerlink" href="#update-rule" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;update-rule&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Log&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Time&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="nt">&quot;Position&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Service&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;Ports&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;53&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;67&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;69&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;53&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;dnsmasq&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Protocol&quot;</span><span class="p">:</span> <span class="s2">&quot;tcpudp&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;service&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;accept&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Dst&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;fw&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fw&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">44</span><span class="p">,</span>
+  <span class="nt">&quot;Src&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;Address&quot;</span><span class="p">:</span> <span class="s2">&quot;11.11.11.0/24&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;cidr2&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;cidr&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
-<p>Use the same input from validate.</p>
+<p>Use the same input from validate, supports also the <code>reorder</code> action.</p>
+<h3 id="reorder">reorder<a class="headerlink" href="#reorder" title="Permanent link">&para;</a></h3>
+<p>The <code>rules</code> field contains an ordered list of rules id.
+The API will update all <code>Position</code> properties accordingly to given order.</p>
+<p>Input example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;reorder&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">24</span><span class="p">,</span><span class="mi">55</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h2 id="create">create<a class="headerlink" href="#create" title="Permanent link">&para;</a></h2>
 <p>Use the same input from validate.</p>
 <h2 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h2>
-<p>Use the same input from validate.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;123&quot;</span>
+<span class="p">}</span>
+</pre></div>
                 
                   
                 

@@ -753,6 +753,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../connections/" title="connections" class="md-nav__link">
+      connections
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../dashboard/" title="dashboard" class="md-nav__link">
       dashboard
     </a>
@@ -1016,6 +1028,19 @@
   <a href="#update" title="update" class="md-nav__link">
     update
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reorder" title="reorder" class="md-nav__link">
+    reorder
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1457,6 +1482,19 @@
     update
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reorder" title="reorder" class="md-nav__link">
+    reorder
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1722,8 +1760,15 @@ returning information about IP address, zone, etc.</p>
 
 
 <h4 id="rules_1">rules<a class="headerlink" href="#rules_1" title="Permanent link">&para;</a></h4>
+<p>List all traffic shaping (QoS) rules.</p>
+<p>The <code>status</code> section contains the <code>count</code> of existing rules,
+and the <code>next</code> position available for newly created rule.</p>
 <p>Example with <code>expand</code> set to <code>true</code>:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;next&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+    <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">5</span>
+  <span class="p">},</span>
   <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="p">[</span>
     <span class="p">{</span>
       <span class="nt">&quot;Log&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
@@ -1921,7 +1966,18 @@ returning information about IP address, zone, etc.</p>
 
 
 <h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
-<p>Same input format from validate action.</p>
+<p>Use the same input from validate, supports also the <code>reorder</code> action.</p>
+<h3 id="reorder">reorder<a class="headerlink" href="#reorder" title="Permanent link">&para;</a></h3>
+<p>The <code>rules</code> field contains an ordered list of rules id.
+The API will update all <code>Position</code> properties accordingly to given order.</p>
+<p>Input example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;reorder&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">24</span><span class="p">,</span><span class="mi">55</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h2 id="create">create<a class="headerlink" href="#create" title="Permanent link">&para;</a></h2>
 <p>It uses the same format from input action.</p>
 <h4 id="create-default">create-default<a class="headerlink" href="#create-default" title="Permanent link">&para;</a></h4>

@@ -11,7 +11,7 @@
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       
       
-        <link rel="canonical" href="https://nethserver.github.io/nethserver-cockpit/api/system-openssh/">
+        <link rel="canonical" href="https://nethserver.github.io/nethserver-cockpit/api/nethserver-firewall-base/connections/">
       
       
       
@@ -33,18 +33,18 @@
       
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
-      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <link rel="shortcut icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.0.3, mkdocs-material-3.0.4">
     
     
       
-        <title>system-openssh - NethServer Cockpit</title>
+        <title>connections - NethServer Cockpit</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/application.451f80e5.css">
       
-        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/application-palette.22915126.css">
       
       
         
@@ -53,7 +53,7 @@
       
     
     
-      <script src="../../assets/javascripts/modernizr.1aa3b519.js"></script>
+      <script src="../../../assets/javascripts/modernizr.1aa3b519.js"></script>
     
     
       
@@ -62,7 +62,7 @@
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
-    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    <link rel="stylesheet" href="../../../assets/fonts/material-icons.css">
     
     
   </head>
@@ -100,7 +100,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="../../#system-openssh" tabindex="1" class="md-skip">
+      <a href="../../../#connections" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -126,7 +126,7 @@
                 NethServer Cockpit
               </span>
               <span class="md-header-nav__topic">
-                system-openssh
+                connections
               </span>
             
           
@@ -243,7 +243,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../.." title="Home" class="md-nav__link">
+    <a href="../../.." title="Home" class="md-nav__link">
       Home
     </a>
   </li>
@@ -295,7 +295,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../api_guidelines/" title="Design guidelines" class="md-nav__link">
+    <a href="../../../api_guidelines/" title="Design guidelines" class="md-nav__link">
       Design guidelines
     </a>
   </li>
@@ -307,7 +307,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../api_protocol/" title="Communication protocol" class="md-nav__link">
+    <a href="../../../api_protocol/" title="Communication protocol" class="md-nav__link">
       Communication protocol
     </a>
   </li>
@@ -319,8 +319,404 @@
 
 
   <li class="md-nav__item">
-    <a href="../../api_libraries/" title="Helper libraries" class="md-nav__link">
+    <a href="../../../api_libraries/" title="Helper libraries" class="md-nav__link">
       Helper libraries
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2">
+    
+    <label class="md-nav__link" for="nav-2-2">
+      System helpers
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-2">
+        System helpers
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-accounts-provider/" title="system-accounts-provider" class="md-nav__link">
+      system-accounts-provider
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-aliases/" title="system-alias" class="md-nav__link">
+      system-alias
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-apps/" title="system-apps" class="md-nav__link">
+      system-apps
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-authorization/" title="system-authorization" class="md-nav__link">
+      system-authorization
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-backup/" title="system-backup" class="md-nav__link">
+      system-backup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-certificate/" title="system-certificate" class="md-nav__link">
+      system-certificate
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-company/" title="system-company" class="md-nav__link">
+      system-company
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-dhcp/" title="system-dhcp" class="md-nav__link">
+      system-dhcp
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-disk-usage/" title="system-disk-usage" class="md-nav__link">
+      system-disk-usage
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-docs/" title="system-docs" class="md-nav__link">
+      system-docs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-dns/" title="system-dns" class="md-nav__link">
+      system-dns
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-hostname/" title="system-hostname" class="md-nav__link">
+      system-hostname
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-hosts/" title="system-hosts" class="md-nav__link">
+      system-hosts
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-logs/" title="system-logs" class="md-nav__link">
+      system-logs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-network/" title="system-network" class="md-nav__link">
+      system-network
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-openssh/" title="system-openssh" class="md-nav__link">
+      system-openssh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-password/" title="system-password" class="md-nav__link">
+      system-password
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-password-policy/" title="system-password-policy" class="md-nav__link">
+      system-password-policy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-packages/" title="system-packages" class="md-nav__link">
+      system-packages
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-proxy/" title="system-proxy" class="md-nav__link">
+      system-proxy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-routes/" title="system-routes" class="md-nav__link">
+      system-routes
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-services/" title="system-services" class="md-nav__link">
+      system-services
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-settings/" title="system-settings" class="md-nav__link">
+      system-settings
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-shutdown/" title="system-shutdown" class="md-nav__link">
+      system-shutdown
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-status/" title="system-status" class="md-nav__link">
+      system-status
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-subscription/" title="system-subscription" class="md-nav__link">
+      system-subscription
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-task/" title="system-task" class="md-nav__link">
+      system-task
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-time/" title="system-time" class="md-nav__link">
+      system-time
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-tls-policy/" title="system-tls-policy" class="md-nav__link">
+      system-tls-policy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-trusted-networks/" title="system-trusted-networks" class="md-nav__link">
+      system-trusted-networks
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../system-users/" title="system-users" class="md-nav__link">
+      system-users
     </a>
   </li>
 
@@ -339,197 +735,17 @@
 
   <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-3" type="checkbox" id="nav-2-3" checked>
     
-    <label class="md-nav__link" for="nav-2-2">
-      System helpers
+    <label class="md-nav__link" for="nav-2-3">
+      Firewall helpers
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
-      <label class="md-nav__title" for="nav-2-2">
-        System helpers
+      <label class="md-nav__title" for="nav-2-3">
+        Firewall helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-accounts-provider/" title="system-accounts-provider" class="md-nav__link">
-      system-accounts-provider
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-aliases/" title="system-alias" class="md-nav__link">
-      system-alias
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-apps/" title="system-apps" class="md-nav__link">
-      system-apps
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-authorization/" title="system-authorization" class="md-nav__link">
-      system-authorization
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-backup/" title="system-backup" class="md-nav__link">
-      system-backup
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-certificate/" title="system-certificate" class="md-nav__link">
-      system-certificate
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-company/" title="system-company" class="md-nav__link">
-      system-company
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-dhcp/" title="system-dhcp" class="md-nav__link">
-      system-dhcp
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-disk-usage/" title="system-disk-usage" class="md-nav__link">
-      system-disk-usage
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-docs/" title="system-docs" class="md-nav__link">
-      system-docs
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-dns/" title="system-dns" class="md-nav__link">
-      system-dns
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-hostname/" title="system-hostname" class="md-nav__link">
-      system-hostname
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-hosts/" title="system-hosts" class="md-nav__link">
-      system-hosts
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-logs/" title="system-logs" class="md-nav__link">
-      system-logs
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-network/" title="system-network" class="md-nav__link">
-      system-network
-    </a>
-  </li>
-
         
           
           
@@ -546,11 +762,11 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
-        system-openssh
+        connections
       </label>
     
-    <a href="./" title="system-openssh" class="md-nav__link md-nav__link--active">
-      system-openssh
+    <a href="./" title="connections" class="md-nav__link md-nav__link--active">
+      connections
     </a>
     
       
@@ -572,36 +788,70 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#output" title="Output" class="md-nav__link">
-    Output
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#validate" title="validate" class="md-nav__link">
-    validate
+  <a href="#input" title="Input" class="md-nav__link">
+    Input
   </a>
   
     <nav class="md-nav">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#constraints" title="Constraints" class="md-nav__link">
-    Constraints
+  <a href="#protocols" title="protocols" class="md-nav__link">
+    protocols
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#input" title="Input" class="md-nav__link">
-    Input
+  <a href="#conntrack" title="conntrack" class="md-nav__link">
+    conntrack
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stats" title="stats" class="md-nav__link">
+    stats
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output" title="Output" class="md-nav__link">
+    Output
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protocols_1" title="protocols" class="md-nav__link">
+    protocols
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conntrack_1" title="conntrack" class="md-nav__link">
+    conntrack
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stats_1" title="stats" class="md-nav__link">
+    stats
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -611,9 +861,42 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#update" title="update" class="md-nav__link">
-    update
+  <a href="#delete" title="delete" class="md-nav__link">
+    delete
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input_1" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flush" title="flush" class="md-nav__link">
+    flush
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection" title="connection" class="md-nav__link">
+    connection
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -634,223 +917,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../system-password/" title="system-password" class="md-nav__link">
-      system-password
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-password-policy/" title="system-password-policy" class="md-nav__link">
-      system-password-policy
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-packages/" title="system-packages" class="md-nav__link">
-      system-packages
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-proxy/" title="system-proxy" class="md-nav__link">
-      system-proxy
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-routes/" title="system-routes" class="md-nav__link">
-      system-routes
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-services/" title="system-services" class="md-nav__link">
-      system-services
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-settings/" title="system-settings" class="md-nav__link">
-      system-settings
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-shutdown/" title="system-shutdown" class="md-nav__link">
-      system-shutdown
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-status/" title="system-status" class="md-nav__link">
-      system-status
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-subscription/" title="system-subscription" class="md-nav__link">
-      system-subscription
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-task/" title="system-task" class="md-nav__link">
-      system-task
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-time/" title="system-time" class="md-nav__link">
-      system-time
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-tls-policy/" title="system-tls-policy" class="md-nav__link">
-      system-tls-policy
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-trusted-networks/" title="system-trusted-networks" class="md-nav__link">
-      system-trusted-networks
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../system-users/" title="system-users" class="md-nav__link">
-      system-users
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-3" type="checkbox" id="nav-2-3">
-    
-    <label class="md-nav__link" for="nav-2-3">
-      Firewall helpers
-    </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
-      <label class="md-nav__title" for="nav-2-3">
-        Firewall helpers
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../nethserver-firewall-base/connections/" title="connections" class="md-nav__link">
-      connections
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../nethserver-firewall-base/dashboard/" title="dashboard" class="md-nav__link">
+    <a href="../dashboard/" title="dashboard" class="md-nav__link">
       dashboard
     </a>
   </li>
@@ -862,7 +929,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../nethserver-firewall-base/local-rules/" title="local-rules" class="md-nav__link">
+    <a href="../local-rules/" title="local-rules" class="md-nav__link">
       local-rules
     </a>
   </li>
@@ -874,7 +941,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../nethserver-firewall-base/objects/" title="objects" class="md-nav__link">
+    <a href="../objects/" title="objects" class="md-nav__link">
       objects
     </a>
   </li>
@@ -886,7 +953,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../nethserver-firewall-base/port-forward/" title="port-forward" class="md-nav__link">
+    <a href="../port-forward/" title="port-forward" class="md-nav__link">
       port-forward
     </a>
   </li>
@@ -898,7 +965,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../nethserver-firewall-base/rules/" title="rules" class="md-nav__link">
+    <a href="../rules/" title="rules" class="md-nav__link">
       rules
     </a>
   </li>
@@ -910,7 +977,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../nethserver-firewall-base/settings/" title="settings" class="md-nav__link">
+    <a href="../settings/" title="settings" class="md-nav__link">
       settings
     </a>
   </li>
@@ -922,7 +989,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../nethserver-firewall-base/snat/" title="snat" class="md-nav__link">
+    <a href="../snat/" title="snat" class="md-nav__link">
       snat
     </a>
   </li>
@@ -934,7 +1001,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../nethserver-firewall-base/traffic-shaping/" title="traffic-shaping" class="md-nav__link">
+    <a href="../traffic-shaping/" title="traffic-shaping" class="md-nav__link">
       traffic-shaping
     </a>
   </li>
@@ -946,7 +1013,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../nethserver-firewall-base/wan/" title="wan" class="md-nav__link">
+    <a href="../wan/" title="wan" class="md-nav__link">
       wan
     </a>
   </li>
@@ -987,7 +1054,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../ui_guidelines/" title="UI guidelines" class="md-nav__link">
+    <a href="../../../ui_guidelines/" title="UI guidelines" class="md-nav__link">
       UI guidelines
     </a>
   </li>
@@ -999,7 +1066,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../i18n/" title="Translations" class="md-nav__link">
+    <a href="../../../i18n/" title="Translations" class="md-nav__link">
       Translations
     </a>
   </li>
@@ -1016,7 +1083,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../authorizations/" title="Authorizations" class="md-nav__link">
+    <a href="../../../authorizations/" title="Authorizations" class="md-nav__link">
       Authorizations
     </a>
   </li>
@@ -1028,7 +1095,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../environment/" title="Development environment" class="md-nav__link">
+    <a href="../../../environment/" title="Development environment" class="md-nav__link">
       Development environment
     </a>
   </li>
@@ -1040,7 +1107,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../application_manifest/" title="Application manifest" class="md-nav__link">
+    <a href="../../../application_manifest/" title="Application manifest" class="md-nav__link">
       Application manifest
     </a>
   </li>
@@ -1052,7 +1119,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorial/" title="Tutorial" class="md-nav__link">
+    <a href="../../../tutorial/" title="Tutorial" class="md-nav__link">
       Tutorial
     </a>
   </li>
@@ -1083,7 +1150,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../build_doc/" title="Building documentation" class="md-nav__link">
+    <a href="../../../build_doc/" title="Building documentation" class="md-nav__link">
       Building documentation
     </a>
   </li>
@@ -1095,7 +1162,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../build_rpm/" title="Building RPM" class="md-nav__link">
+    <a href="../../../build_rpm/" title="Building RPM" class="md-nav__link">
       Building RPM
     </a>
   </li>
@@ -1195,36 +1262,70 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#output" title="Output" class="md-nav__link">
-    Output
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#validate" title="validate" class="md-nav__link">
-    validate
+  <a href="#input" title="Input" class="md-nav__link">
+    Input
   </a>
   
     <nav class="md-nav">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#constraints" title="Constraints" class="md-nav__link">
-    Constraints
+  <a href="#protocols" title="protocols" class="md-nav__link">
+    protocols
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#input" title="Input" class="md-nav__link">
-    Input
+  <a href="#conntrack" title="conntrack" class="md-nav__link">
+    conntrack
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stats" title="stats" class="md-nav__link">
+    stats
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output" title="Output" class="md-nav__link">
+    Output
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protocols_1" title="protocols" class="md-nav__link">
+    protocols
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conntrack_1" title="conntrack" class="md-nav__link">
+    conntrack
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stats_1" title="stats" class="md-nav__link">
+    stats
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1234,9 +1335,42 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#update" title="update" class="md-nav__link">
-    update
+  <a href="#delete" title="delete" class="md-nav__link">
+    delete
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input_1" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flush" title="flush" class="md-nav__link">
+    flush
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection" title="connection" class="md-nav__link">
+    connection
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1256,91 +1390,165 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/docs/api/system-openssh.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/docs/api/nethserver-firewall-base/connections.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="system-openssh">system-openssh<a class="headerlink" href="#system-openssh" title="Permanent link">&para;</a></h1>
-<p>Read and write configuration for nethserver-openssh package.</p>
+                <h1 id="connections">connections<a class="headerlink" href="#connections" title="Permanent link">&para;</a></h1>
+<p>Manage conntrack table.</p>
 <h2 id="read">read<a class="headerlink" href="#read" title="Permanent link">&para;</a></h2>
-<h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
-<p>A JSON object containing <code>configuration</code> and <code>status</code> fields:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
-    <span class="nt">&quot;configuration&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="err">&lt;sshd</span> <span class="err">prop&gt;</span> <span class="p">},</span>
-    <span class="nt">&quot;status&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="nt">&quot;connections&quot;</span><span class="p">:</span> <span class="err">&lt;list</span> <span class="err">of</span> <span class="err">active</span> <span class="err">connections&gt;</span> <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-
-
-<p>Output example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
-    <span class="nt">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;sshd&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;props&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;LoginGraceTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2m&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;MaxAuthTries&quot;</span><span class="p">:</span> <span class="s2">&quot;6&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;PasswordAuthentication&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;PermitRootLogin&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;Protocol&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;TCPPort&quot;</span><span class="p">:</span> <span class="s2">&quot;22&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;UsePAM&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;access&quot;</span><span class="p">:</span> <span class="s2">&quot;green,red&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span>
-        <span class="p">},</span>
-        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;service&quot;</span>
-    <span class="p">},</span>
-    <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;connections&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="nt">&quot;local&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.1:22&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;peer&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.45:54478&quot;</span>
-            <span class="p">}</span>
-        <span class="p">]</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-
-
-<h2 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h2>
-<h3 id="constraints">Constraints<a class="headerlink" href="#constraints" title="Permanent link">&para;</a></h3>
-<ul>
-<li>PasswordAuthentication: boolean</li>
-<li>PermitRootLogin: boolean</li>
-<li>TCPPort: port number</li>
-</ul>
 <h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
-<p>An Esmith db record in JSON format:</p>
+<p>The read API requires an action field.
+Valid actions:</p>
+<ul>
+<li><code>conntrack</code></li>
+<li><code>protocols</code></li>
+<li><code>stats</code></li>
+</ul>
+<h4 id="protocols">protocols<a class="headerlink" href="#protocols" title="Permanent link">&para;</a></h4>
+<p>List the available protocols along with their states.</p>
+<p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="err">&lt;key&gt;</span><span class="p">,</span>
-    <span class="nt">&quot;props&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="err">&lt;prop&gt;:</span> <span class="err">&lt;value&gt;</span>
-        <span class="err">...</span>
-        <span class="err">&lt;prop&gt;:</span> <span class="err">&lt;value&gt;</span>
-    <span class="p">},</span>
-    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="err">&lt;record-type&gt;</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;protocols&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
 
-<p>Input example from: <code>config getjson sshd</code>:</p>
+<h4 id="conntrack">conntrack<a class="headerlink" href="#conntrack" title="Permanent link">&para;</a></h4>
+<p>Return the list of connections filtered by <code>protocol</code> and <code>state</code>.</p>
+<p>If <code>expand</code> is set to 1, retrieve also the zone for each address.</p>
+<p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;sshd&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;props&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;PasswordAuthentication&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;PermitRootLogin&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;TCPPort&quot;</span><span class="p">:</span> <span class="s2">&quot;22&quot;</span>
-    <span class="p">},</span>
-    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;service&quot;</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;conntrack&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;protocol&quot;</span><span class="p">:</span> <span class="s2">&quot;tcp&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;state&quot;</span> <span class="p">:</span> <span class="s2">&quot;ESTABLISHED&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;expand&quot;</span><span class="p">:</span> <span class="mi">0</span>
 <span class="p">}</span>
 </pre></div>
 
 
-<p>Invocation example:</p>
-<div class="codehilite"><pre><span></span><span class="nb">echo</span> <span class="s1">&#39;{&quot;props&quot;:{&quot;PasswordAuthentication&quot;:&quot;yes&quot;,&quot;PermitRootLogin&quot;:&quot;yes&quot;,&quot;TCPPort&quot;:&quot;22&quot;},&quot;name&quot;:&quot;sshd&quot;,&quot;type&quot;:&quot;service&quot;}&#39;</span> <span class="p">|</span> ./validate
+<h4 id="stats">stats<a class="headerlink" href="#stats" title="Permanent link">&para;</a></h4>
+<p>Return the connection number in the last 30 seconds from netdata.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;stats&quot;</span>
+<span class="p">}</span>
 </pre></div>
 
 
-<h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
-<p>Same input from validate helper.</p>
+<h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
+<h4 id="protocols_1">protocols<a class="headerlink" href="#protocols_1" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;protocols&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;udp&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="nt">&quot;tcp&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;CLOSE&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;CLOSE_WAIT&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;ESTABLISHED&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;FIN_WAIT&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;LAST_ACK&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;LISTEN&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;NONE&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;SYN_SENT&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;SYN_RECV&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;TIME_WAIT&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;icmp&quot;</span><span class="p">:</span> <span class="p">[]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="conntrack_1">conntrack<a class="headerlink" href="#conntrack_1" title="Permanent link">&para;</a></h4>
+<p>List active connections sorted in descending order by:</p>
+<ul>
+<li><code>bytes_total</code>, if accounting is enabled</li>
+<li><code>timeout</code>, if accounting is disabled</li>
+</ul>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;connections&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;bytes_total&quot;</span><span class="p">:</span> <span class="mi">5328656</span><span class="p">,</span>
+      <span class="nt">&quot;dport_reply&quot;</span><span class="p">:</span> <span class="s2">&quot;22&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;dst_reply&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.5.246&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;protocol&quot;</span><span class="p">:</span> <span class="s2">&quot;tcp&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;bytes&quot;</span><span class="p">:</span> <span class="s2">&quot;978988&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;nat&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nt">&quot;zone&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;ASSURED&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;sport_reply&quot;</span><span class="p">:</span> <span class="s2">&quot;55038&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;packets&quot;</span><span class="p">:</span> <span class="s2">&quot;3993&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;packets_reply&quot;</span><span class="p">:</span> <span class="s2">&quot;5304&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;dport&quot;</span><span class="p">:</span> <span class="s2">&quot;55038&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;ESTABLISHED&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;mark&quot;</span><span class="p">:</span> <span class="s2">&quot;23552&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;use&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;timeout&quot;</span><span class="p">:</span> <span class="s2">&quot;299&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;src_reply&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.5.22&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;src&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.5.246&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;layer&quot;</span><span class="p">:</span> <span class="s2">&quot;ipv4&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;bytes_reply&quot;</span><span class="p">:</span> <span class="s2">&quot;4349668&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;packets_total&quot;</span><span class="p">:</span> <span class="mi">9297</span><span class="p">,</span>
+      <span class="nt">&quot;sport&quot;</span><span class="p">:</span> <span class="s2">&quot;22&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;dst&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.5.22&quot;</span>
+    <span class="p">},</span>
+    <span class="err">...</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="stats_1">stats<a class="headerlink" href="#stats_1" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;connections&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;19&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;18&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;18&quot;</span><span class="p">,</span>
+    <span class="err">....</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;time&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;1551362111&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;1551362110&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;1551362109&quot;</span><span class="p">,</span>
+    <span class="err">...</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h2>
+<p>The read API requires an action field.
+Valid actions:</p>
+<ul>
+<li><code>flush</code></li>
+<li><code>connection</code></li>
+</ul>
+<h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
+<h4 id="flush">flush<a class="headerlink" href="#flush" title="Permanent link">&para;</a></h4>
+<p>Delete all active connections.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;flush&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="connection">connection<a class="headerlink" href="#connection" title="Permanent link">&para;</a></h4>
+<p>Delete selected connction.
+Required fields are: <code>protocol</code>, <code>src</code>, <code>dst</code>.
+If <code>protocol</code> is <code>udp</code> or <code>tcp</code>, also <code>sport</code> and <code>dport</code> are required.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;connection&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;protocol&quot;</span><span class="p">:</span> <span class="s2">&quot;icmp&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;dport&quot;</span><span class="p">:</span> <span class="mi">389</span><span class="p">,</span>
+  <span class="nt">&quot;sport&quot;</span><span class="p">:</span> <span class="mi">46286</span><span class="p">,</span>
+  <span class="nt">&quot;src&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.212&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;dst&quot;</span><span class="p">:</span> <span class="s2">&quot;1.2.3.4&quot;</span>
+<span class="p">}</span>
+</pre></div>
                 
                   
                 
@@ -1361,7 +1569,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../system-network/" title="system-network" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../../system-users/" title="system-users" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -1370,19 +1578,19 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                system-network
+                system-users
               </span>
             </div>
           </a>
         
         
-          <a href="../system-password/" title="system-password" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../dashboard/" title="dashboard" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                system-password
+                dashboard
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
@@ -1412,9 +1620,9 @@
       
     </div>
     
-      <script src="../../assets/javascripts/application.583bbe55.js"></script>
+      <script src="../../../assets/javascripts/application.583bbe55.js"></script>
       
-      <script>app.initialize({version:"1.0.3",url:{base:"../.."}})</script>
+      <script>app.initialize({version:"1.0.3",url:{base:"../../.."}})</script>
       
     
     

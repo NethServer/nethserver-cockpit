@@ -753,6 +753,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../connections/" title="connections" class="md-nav__link">
+      connections
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../dashboard/" title="dashboard" class="md-nav__link">
       dashboard
     </a>
@@ -2157,13 +2169,13 @@ Each protocol has an associated icon, icon mapping is configured inside the <cod
 <li>IpAddress: must be valid ipv4</li>
 <li>Description: optional description</li>
 <li>portforwards: optional list of valid portforwards to set host as <code>DstHost</code></li>
+<li>rules: optional, if set to "1" substitute all IpAddress inside the fwrules db with newly created host object</li>
 </ul>
 <p>Constraints for <code>update-host</code>:</p>
 <ul>
 <li>name: must be an existing host</li>
 <li>IpAddress: must be valid ipv4</li>
 <li>Description: optional description</li>
-<li>portforwards: optional list of valid portforwards to set host as <code>DstHost</code></li>
 </ul>
 <p>Constraints for <code>delete-host</code>:</p>
 <ul>
@@ -2232,6 +2244,7 @@ Each protocol has an associated icon, icon mapping is configured inside the <cod
 <li>name: must be a non-existing cidr subnet</li>
 <li>Address: must be a valid CIDR block</li>
 <li>Description: optional description</li>
+<li>rules: optional, if set to "1" substitute all IpAddress inside the fwrules db with newly created host object</li>
 </ul>
 <p>Constraints for <code>update-cidr-sub</code>:</p>
 <ul>
@@ -2285,7 +2298,8 @@ Each protocol has an associated icon, icon mapping is configured inside the <cod
   <span class="nt">&quot;IpAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;a123&quot;</span><span class="p">,</span>
   <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;123&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;portforwards&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+  <span class="nt">&quot;portforwards&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+  <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="mi">1</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -2297,7 +2311,6 @@ Each protocol has an associated icon, icon mapping is configured inside the <cod
   <span class="nt">&quot;IpAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.3&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;a123&quot;</span><span class="p">,</span>
   <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;123&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;portforwards&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -2431,7 +2444,8 @@ Each protocol has an associated icon, icon mapping is configured inside the <cod
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create-cidr-sub&quot;</span><span class="p">,</span>
   <span class="nt">&quot;Address&quot;</span><span class="p">:</span> <span class="s2">&quot;10.10.10.0/24&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;cidr1&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+  <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="mi">0</span>
 <span class="p">}</span>
 </pre></div>
 

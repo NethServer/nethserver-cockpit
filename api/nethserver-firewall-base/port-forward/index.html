@@ -753,6 +753,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../connections/" title="connections" class="md-nav__link">
+      connections
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../dashboard/" title="dashboard" class="md-nav__link">
       dashboard
     </a>
@@ -1313,7 +1325,7 @@ Valid actions:</p>
   <span class="nt">&quot;portforward&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="nt">&quot;192.168.1.129&quot;</span><span class="p">:</span> <span class="p">{</span>
       <span class="nt">&quot;info&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ip&quot;</span>
+        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raw&quot;</span>
       <span class="p">},</span>
       <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">{</span>
@@ -1335,7 +1347,7 @@ Valid actions:</p>
     <span class="nt">&quot;host;myhost&quot;</span><span class="p">:</span> <span class="p">{</span>
       <span class="nt">&quot;info&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="nt">&quot;IpAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.22&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span>
         <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;this is my myhost&quot;</span>
       <span class="p">},</span>
       <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -1372,7 +1384,7 @@ Valid actions:</p>
 <p>Constraints for <code>create</code>:</p>
 <ul>
 <li>Proto: <code>tcp</code>, <code>udp</code> or <code>tcpudp</code>, <code>ah</code>, <code>gre</code>, <code>ah</code>, <code>esp</code> </li>
-<li>Src: a port number or a range in the form <code>xxxx:yyyy</code>, must be empty if protocol is not tcp, udp or tcpudp</li>
+<li>Src: a list of port number or ranges in the form <code>xxxx:yyyy</code>, must be an empty list if protocol is not tcp, udp or tcpudp</li>
 <li>Dst: a port number, if empty the value of Src is used, must be empty if protocol is not tcp, udp or tcpudp</li>
 <li>DstHost: a destination host, can be an IP address or a host firewall object</li>
 <li>OriDst: an IP address or empty</li>
