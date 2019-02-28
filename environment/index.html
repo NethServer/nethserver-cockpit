@@ -966,15 +966,15 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install-requirements" title="Install requirements" class="md-nav__link">
-    Install requirements
+  <a href="#install-ui-requirements" title="Install UI requirements" class="md-nav__link">
+    Install UI requirements
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#build-ui" title="Build UI" class="md-nav__link">
-    Build UI
+  <a href="#build-the-ui" title="Build the UI" class="md-nav__link">
+    Build the UI
   </a>
   
 </li>
@@ -1157,15 +1157,15 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install-requirements" title="Install requirements" class="md-nav__link">
-    Install requirements
+  <a href="#install-ui-requirements" title="Install UI requirements" class="md-nav__link">
+    Install UI requirements
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#build-ui" title="Build UI" class="md-nav__link">
-    Build UI
+  <a href="#build-the-ui" title="Build the UI" class="md-nav__link">
+    Build the UI
   </a>
   
 </li>
@@ -1208,7 +1208,7 @@
 <ul>
 <li><a href="#install-requirements">Install requirements</a></li>
 <li><a href="#code-style">Code style</a></li>
-<li><a href="#build-api-and-ui">Build API and UI</a></li>
+<li><a href="#build-api-and-ui">Build API and US</a></li>
 <li><a href="#sync-api-and-ui">Sync API and UI</a></li>
 </ul>
 <p>The development environment can be prepared on a Fedora or CentOS 7 machine.</p>
@@ -1221,10 +1221,10 @@
 <p>do your modification to API or UI</p>
 </li>
 <li>
-<p>sync your modification to the server where cockpit is running</p>
+<p>sync your modification to the server where Cockpit is running</p>
 </li>
 </ul>
-<h2 id="install-requirements">Install requirements<a class="headerlink" href="#install-requirements" title="Permanent link">&para;</a></h2>
+<h2 id="install-ui-requirements">Install UI requirements<a class="headerlink" href="#install-ui-requirements" title="Permanent link">&para;</a></h2>
 <p>Prepare the development environment:</p>
 <ul>
 <li>Install developer tools: npm and git</li>
@@ -1241,31 +1241,38 @@
 <li>
 <p>Enter inside the cloned repository and install all ui dependencies:</p>
 <p><code>cd nethserver-cockpit/ui
-npm install &amp;&amp; npm run dev</code></p>
+npm install</code></p>
 </li>
 </ul>
-<h2 id="build-ui">Build UI<a class="headerlink" href="#build-ui" title="Permanent link">&para;</a></h2>
+<h2 id="build-the-ui">Build the UI<a class="headerlink" href="#build-the-ui" title="Permanent link">&para;</a></h2>
+<p><strong>Note</strong>: during the development, the UI must run on the NethServer server.
+Running the UI on the developer machine will not work due to Cockpit CORS limitations.</p>
 <p>Enter UI directory and build using <code>npm</code>:</p>
 <div class="codehilite"><pre><span></span>cd ui/ &amp;&amp; ./prep-sources
 </pre></div>
 
 
-<h2 id="sync-api-and-ui">Sync API and UI<a class="headerlink" href="#sync-api-and-ui" title="Permanent link">&para;</a></h2>
-<p><strong>Note</strong>: during the development, the UI must run on the NethServer server.
-Running the UI on the developer machine will not work due to Cockpit CORS limitations.</p>
-<p>Files can be copied using rsync.</p>
-<p>While UI could be synced without executing the <code>build</code> task each time,
-make sure API is always built before sync.</p>
-<p>Use the following commands:</p>
-<div class="codehilite"><pre><span></span><span class="n">ssh</span> <span class="n">root</span><span class="mf">@192.168.1.20</span>  <span class="s">&quot;mkdir -p ~/.local/share/cockpit/nethserver&quot;</span>
+<p>Make sure to create the <code>/root/.local/share/cockpit/nethserver</code> directory inside your NethServer.
+You can do it using this command, assuming the NethServer has IP <code>192.168.1.20</code>:</p>
+<div class="codehilite"><pre><span></span>ssh root@192.168.1.20  &quot;mkdir -p ~/.local/share/cockpit/nethserver&quot;
+</pre></div>
 
-<span class="n">cd</span> <span class="n">api</span><span class="o">/</span> <span class="o">&amp;&amp;</span> <span class="n">rsync</span> <span class="o">-</span><span class="n">avz</span> <span class="o">--</span><span class="n">delete</span> <span class="p">.</span><span class="cm">/* root@192.168.1.20:/usr/libexec/nethserver/api/</span>
-<span class="cm">cd ui/ &amp;&amp; rsync -avz --delete dist/* root@192.168.1.20:/usr/share/cockpit/nethserver/</span>
+
+<h2 id="sync-api-and-ui">Sync API and UI<a class="headerlink" href="#sync-api-and-ui" title="Permanent link">&para;</a></h2>
+<p>Files can be copied using rsync.</p>
+<p>To copy the APIs, use the following command:</p>
+<div class="codehilite"><pre><span></span>cd api/ &amp;&amp; rsync -avz --delete ./* root@192.168.1.20:/usr/libexec/nethserver/api/
+</pre></div>
+
+
+<p>Before copying the UI, make sure to compile it as explained in the paragraph above.</p>
+<p>To copy the UI, use the following command:</p>
+<div class="codehilite"><pre><span></span>cd ui/ &amp;&amp; rsync -avz --delete dist/* root@192.168.1.20:/usr/share/cockpit/nethserver/
 </pre></div>
 
 
 <h2 id="code-style">Code style<a class="headerlink" href="#code-style" title="Permanent link">&para;</a></h2>
-<p>Please use configuration from EditorConfig: http://editorconfig.org</p>
+<p>Please use configuration from <a href="http://editorconfig.org">EditorConfig</a>.</p>
                 
                   
                 
