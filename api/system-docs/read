@@ -23,10 +23,9 @@
 
 require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
 
-define("DOWNLOAD_BASE_URL","https://nethserver-docs-cockpit.readthedocs.io");
+define("DOWNLOAD_BASE_URL","http://docs.nethserver.org");
 define("LINK_BASE_URL","http://docs.nethserver.org");
 define("VERSION","latest");
-define("CACHE_DIR","/var/spool/nethserver-cockpit/docs");
 
 function get_link($chapter, $lang, $section)
 {
@@ -45,9 +44,12 @@ function find_section($url, $section)
     if ($html) {
         $dom = new DOMDocument;
         @$dom->loadHTML($html);
-        $el = $dom->getElementById($section);
-        if ($el) {
-            return $dom->saveHTML($el);
+        $doc = simplexml_import_dom($dom);
+
+        $elements = $doc->xpath("//div[contains(@class, '$section')]");
+        if ($elements && $elements[0]) {
+            # remove class attributes before returning
+            return preg_replace("/class=\".*\"/", "", $elements[0]->asXML());
         }
     }
     return $ret;
