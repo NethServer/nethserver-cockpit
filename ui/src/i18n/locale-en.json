@@ -266,7 +266,8 @@
       "disk_usage": "Disk usage",
       "destination_available": "Available",
       "destination_usage": "Used",
-      "storage_usage": "Destination storage usage"
+      "storage_usage": "Destination storage usage",
+      "overwrite_all_data": "the restore will overwrite all data"
     },
     "disk_usage": {
       "title": "Disk usage",

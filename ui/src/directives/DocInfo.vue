@@ -1,7 +1,18 @@
 <template>
   <div v-if="docAvailable">
-    <a :id="id" href="#" class="info-general" data-toggle="popover" data-html="true" :data-placement="placement"
-      data-close="true" data-trigger="focus" data-container="body" :title="title | capitalize" :data-content="content">
+    <a
+      :id="id"
+      href="#"
+      class="info-general"
+      data-toggle="popover"
+      data-html="true"
+      :data-placement="placement"
+      data-close="true"
+      data-trigger="focus"
+      data-container="body"
+      :title="title | capitalize"
+      :data-content="content"
+    >
       <span class="pficon pficon-info"></span>
     </a>
   </div>
@@ -46,7 +57,7 @@ export default {
             '<a target="_blank" href="' +
             success.link +
             '">' +
-            context.$i18n && context.$i18n.t("more_info") +
+            (context.$i18n && context.$i18n.t("more_info")) +
             "</a>";
 
           // init popovers

@@ -6,6 +6,9 @@ import VueClipboard from 'vue-clipboard2';
 import VueToggleButton from 'vue-js-toggle-button';
 import BootstrapVue from 'bootstrap-vue';
 
+import DocInfo from "./directives/DocInfo.vue";
+
+
 import App from "./App.vue";
 import router from "./router/index";
 import languages from "./i18n/lang";
@@ -22,6 +25,7 @@ Vue.use(VueGoodTable);
 Vue.use(VueClipboard)
 Vue.use(VueToggleButton)
 Vue.use(BootstrapVue);
+Vue.component('doc-info', DocInfo)
 Vue.directive('focus', {
   inserted: function (el) {
     el.focus()

@@ -181,9 +181,12 @@
           v-bind:key="b"
         >
           <div class="list-view-pf-actions">
-            <button @click="openExecuteData(b)" class="btn btn-default">
-              <span class="fa fa-play span-right-margin"></span>
-              {{$t('backup.execute_now')}}
+            <button
+              @click="b.ready == 1 ? openExecuteData(b) : openEditBackupData(b)"
+              class="btn btn-default"
+            >
+              <span :class="['fa', b.ready == 1 ? 'fa-play' : 'fa-edit', 'span-right-margin']"></span>
+              {{b.ready == 1 ? $t('backup.execute_now') : $t('edit')}}
             </button>
             <div class="dropdown pull-right dropdown-kebab-pf">
               <button
@@ -226,7 +229,10 @@
             </div>
             <div class="list-view-pf-body">
               <div class="list-view-pf-description">
-                <div @click="openExecuteData(b)" class="list-group-item-heading">
+                <div
+                  @click="b.ready == 1 ? openExecuteData(b) : openEditBackupData(b)"
+                  class="list-group-item-heading"
+                >
                   <a>{{b.name}}</a>
                 </div>
                 <div class="list-group-item-text">
@@ -621,6 +627,10 @@
           </div>
           <form class="form-horizontal" v-on:submit.prevent="restoreDataBackup(currentDataBackup)">
             <div class="modal-body">
+              <div class="alert alert-warning alert-dismissable">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>{{$t('warning')}}</strong>: {{$t('backup.overwrite_all_data')}}.
+              </div>
               <div class="form-group">
                 <label
                   class="col-sm-3 control-label"
@@ -972,7 +982,7 @@
                               :placement="'top'"
                               :title="'NFS'"
                               :chapter="'backup'"
-                              :section="'nfs'"
+                              :section="'ui-backend-nfs'"
                             ></doc-info>
                           </p>
                         </div>
@@ -991,7 +1001,7 @@
                               :placement="'top'"
                               :title="'CIFS'"
                               :chapter="'backup'"
-                              :section="'cifs'"
+                              :section="'ui-backend-cifs'"
                             ></doc-info>
                           </p>
                         </div>
@@ -1010,7 +1020,7 @@
                               :placement="'top'"
                               :title="$t('backup.disk')"
                               :chapter="'backup'"
-                              :section="'usb'"
+                              :section="'ui-backend-usb'"
                             ></doc-info>
                           </p>
                         </div>
@@ -1029,7 +1039,7 @@
                               :placement="'top'"
                               :title="$t('backup.webdav')"
                               :chapter="'backup'"
-                              :section="'webdav'"
+                              :section="'ui-backend-webdav'"
                             ></doc-info>
                           </p>
                         </div>
@@ -1050,7 +1060,7 @@
                               :placement="'top'"
                               :title="'SFTP'"
                               :chapter="'backup'"
-                              :section="'sftp'"
+                              :section="'ui-backend-sftp'"
                             ></doc-info>
                           </p>
                         </div>
@@ -1069,7 +1079,7 @@
                               :placement="'top'"
                               :title="'Backblaze B2'"
                               :chapter="'backup'"
-                              :section="'b2'"
+                              :section="'ui-backend-b2'"
                             ></doc-info>
                           </p>
                         </div>
@@ -1088,7 +1098,7 @@
                               :placement="'top'"
                               :title="'Amazon S3'"
                               :chapter="'backup'"
-                              :section="'s3'"
+                              :section="'ui-backend-s3'"
                             ></doc-info>
                           </p>
                         </div>
@@ -1707,21 +1717,6 @@
                           <label
                             class="col-sm-3 control-label"
                             for="textInput-modal-markup"
-                          >{{$t('backup.vol_size')}}</label>
-                          <div class="col-sm-9">
-                            <input
-                              required
-                              type="number"
-                              min="2"
-                              v-model="wizard.how.duplicity.VolSize"
-                              class="form-control"
-                            >
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label
-                            class="col-sm-3 control-label"
-                            for="textInput-modal-markup"
                           >{{$t('backup.cleanup_older_than')}}</label>
                           <div class="col-sm-9">
                             <select
@@ -1735,6 +1730,32 @@
                                 :value="d"
                               >{{$t('backup.'+d)}}</option>
                             </select>
+                          </div>
+                        </div>
+
+                        <legend class="fields-section-header-pf" aria-expanded="true">
+                          <span
+                            :class="['fa fa-angle-right field-section-toggle-pf', wizard.how.duplicity.advanced ? 'fa-angle-down' : '']"
+                          ></span>
+                          <a
+                            class="field-section-toggle-pf"
+                            @click="toggleAdvancedMode()"
+                          >{{$t('advanced_mode')}}</a>
+                        </legend>
+
+                        <div v-show="wizard.how.duplicity.advanced" class="form-group">
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('backup.vol_size')}}</label>
+                          <div class="col-sm-9">
+                            <input
+                              required
+                              type="number"
+                              min="2"
+                              v-model="wizard.how.duplicity.VolSize"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                       </div>
@@ -1971,8 +1992,6 @@
 </template>
 
 <script>
-import DocInfo from "../../directives/DocInfo.vue";
-
 export default {
   name: "Backup",
   beforeRouteEnter(to, from, next) {
@@ -2001,9 +2020,6 @@ export default {
         false
       );
     });
-  },
-  components: {
-    DocInfo
   },
   beforeRouteLeave(to, from, next) {
     $(".modal").modal("hide");
@@ -2253,7 +2269,8 @@ export default {
               b && b.props.CleanupOlderThan
                 ? b.props.CleanupOlderThan
                 : "never",
-            cleanups: ["never", "7D", "14D", "28D", "56D", "168D", "364D"]
+            cleanups: ["never", "7D", "14D", "28D", "56D", "168D", "364D"],
+            advanced: false
           },
           restic: {
             Prune: b && b.props.Prune ? parseInt(b.props.Prune) + 1 : 1,
@@ -2296,6 +2313,10 @@ export default {
           }
         }
       };
+    },
+    toggleAdvancedMode() {
+      this.wizard.how.duplicity.advanced = !this.wizard.how.duplicity.advanced;
+      this.$forceUpdate();
     },
     togglePass() {
       this.wizard.where.sftp.togglePass = !this.wizard.where.sftp.togglePass;

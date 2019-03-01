@@ -196,10 +196,6 @@ textarea {
   font-size: 12px !important;
 }
 
-.popover-title.closable .close .pficon.pficon-close {
-  margin-right: 0px !important;
-}
-
 iframe>.breadcrumb {
   display: none;
 }
@@ -888,19 +884,6 @@ circle {
 
 .command-logs {
   min-height: 375px;
-}
-
-.popover-title.closable>button {
-  font-size: 14px;
-}
-
-.popover {
-  min-width: 350px;
-}
-
-.popover-content {
-  max-height: 350px;
-  overflow: auto;
 }
 
 .nav-pf-vertical .list-group-item .badge {

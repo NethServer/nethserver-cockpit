@@ -351,3 +351,20 @@ li.active>a>span {
 .table th:not(.line-numbers) {
     text-align: left;
 }
+
+.popover-title.closable .close .pficon.pficon-close {
+    margin-right: 0px !important;
+}
+
+.popover-title.closable>button {
+    font-size: 14px;
+}
+
+.popover {
+    min-width: 350px;
+}
+
+.popover-content {
+    max-height: 350px;
+    overflow: auto;
+}
