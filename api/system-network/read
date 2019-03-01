@@ -175,8 +175,9 @@ if($cmd eq 'list') {
         my $role = $interface->{'role'} || 'free';
         my $type = $interface->{'type'};
 
+        # skip zones
+        next if ($type eq 'zone');
         # children will be handled later
-        #next if ($role eq 'alias' || $role eq 'bridged' || $role eq 'slave' || $role eq 'pppoe' || $type eq 'provider');
         next if ($role eq 'alias' || $role eq 'pppoe' || $type eq 'provider');
 
         $interface->{'aliases'} = [];
