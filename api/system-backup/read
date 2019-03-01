@@ -239,7 +239,7 @@ if($cmd eq 'backup-info') {
     my $db = esmith::ConfigDB->open_ro('backups');
     foreach my $backup ($db->get_all()) {
         my %props = $backup->props;
-        my $record = {'type' => 'backup', 'name' => $backup->key, 'props' => \%props };
+        my $record = {'type' => 'backup', 'name' => $backup->key, 'props' => \%props, 'ready' => defined($props{'VFSType'}) ? 1 : 0 };
         $record->{'custom-includes'} = get_custom_includes($backup->key);
         $record->{'custom-excludes'} = get_custom_excludes($backup->key);
         push(@backups,$record);

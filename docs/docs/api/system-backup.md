@@ -99,6 +99,8 @@ Example:
 The output is composed by `configuration` and `status` fields.
 Both fields contain `backup-data` and `backup-config` fields.
 
+The `ready` field is set to 1 if the backup is configured and ready to be executed.
+
 Output example
 ```json
 {
@@ -162,6 +164,7 @@ Output example
             "/root"
           ],
           "name": "local119sftp",
+          "ready": 1,
           "type": "backup"
         }
         ...
