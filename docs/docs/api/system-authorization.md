@@ -8,6 +8,9 @@ Read the list of modules accessible by the user.
 
 It returns the list of enabled modules for the user.
 
+- isRoot ('1' or '0'), validate that the user is `root`.
+- isAdmin('1' or '0'), validate  that the user is member of the group `domain admins` (root returns '1').
+
 Example:
 ```json
 {
@@ -27,6 +30,10 @@ Example:
     "applications",
     "software-center"
   ],
+    "status": {
+    "isRoot": 1,
+    "isAdmin": 1
+  },
   "applications": [
     "nethserver-nextcloud"
   ]
