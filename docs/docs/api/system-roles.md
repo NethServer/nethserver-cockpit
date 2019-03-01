@@ -18,6 +18,7 @@ It returns the list of role delegations for a group.
 - `editable` is used for the `domain admins` group (set to '0') to prevent to remove delegation to that group, others group are set to '1' and you are able to remove the delegation.
 
 Example:
+
 ```json
 {
     "system": [
@@ -43,15 +44,17 @@ Example:
 ```
 
 Invocation example:
+
 ```bash
 echo '{"role":"domain admins"}'|/usr/libexec/nethserver/api/system-roles/read| jq
 ```
 
 #### applications
 
-it returns the complete list of system and applications modules to create the cockpit dropdown menus for the role delegations in the groups panel
+It returns the complete list of system and applications modules to create the cockpit dropdown menus for the role delegations in the groups panel
 
 Example:
+
 ```json
 {
   "system": [
@@ -77,24 +80,31 @@ Example:
 ```
 
 Invocation example:
+
 ```bash
 echo '{"action":"applications"}'|/usr/libexec/nethserver/api/system-roles/read| jq
 ```
 
-## update
+## Update
 
-update the json file `/etc/nethserver/cockpit/authorization/roles.json` with the new role delegation and expand the file `/etc/sudoers.d/30_nethserver_cockpit_roles`
+Update the json file `/etc/nethserver/cockpit/authorization/roles.json` with the new role delegation and expand the file `/etc/sudoers.d/30_nethserver_cockpit_roles`
+
+### input 
 
 Invocation example:
+
 ```bash
  echo '{"role":"sysadmin","system":["storage","dhcp","backup"],"applications":["nethserver-mattermost"]}' | /usr/bin/sudo /usr/libexec/nethserver/api/system-roles/update | jq
  ```
 
-## delete
+## Delete
 
-update the json file `/etc/nethserver/cockpit/authorization/roles.json` by removing the role delegation of a group when it is deleted
+Update the json file `/etc/nethserver/cockpit/authorization/roles.json` by removing the role delegation of a group when it is deleted
+
+### input 
 
 Invocation example:
+
 ```bash
  echo '{"role":"sysadmin"}' | /usr/bin/sudo /usr/libexec/nethserver/api/system-roles/delete | jq
  ```
