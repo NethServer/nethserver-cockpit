@@ -41,6 +41,7 @@ nav:
       - api/system-password-policy.md
       - api/system-packages.md
       - api/system-proxy.md
+      - api/system-roles.md
       - api/system-routes.md
       - api/system-services.md
       - api/system-settings.md
