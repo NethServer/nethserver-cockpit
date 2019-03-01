@@ -718,8 +718,7 @@
             <div class="modal-body">
               <div class="alert alert-warning alert-dismissable">
                 <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>{{$t('users_groups.caution')}}</strong>
-                . {{$t('users_groups.warning_provider')}}.
+                <strong>{{$t('users_groups.caution')}}</strong>: {{$t('users_groups.warning_provider')}}.
               </div>
               <div class="form-group">
                 <label
