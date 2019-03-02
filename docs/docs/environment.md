@@ -44,7 +44,7 @@ Prepare the development environment:
 
     ```
     cd nethserver-cockpit/ui
-    npm install && npm run dev
+    npm install
     ```
 
 ## Build UI
