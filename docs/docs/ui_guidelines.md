@@ -146,6 +146,28 @@ Modal overlay should be provided any time the user needs to enter data on a form
 
 See also [Modal Overlay](http://www.patternfly.org/pattern-library/forms-and-controls/modal-overlay/) for extra use cases.
 
+## Help on forms
+
+There are many ways to provide additional help to users when filling forms.
+The UI can display inline documentation or add links to external documentation.
+
+### Pop-over
+
+The field should have the help icon as described in [PatternFly](https://www.patternfly.org/pattern-library/forms-and-controls/help-on-forms/#overview).
+On click, a pop-over can give context about the field or describe the syntax.
+Pop-over can contain HTML syntax but it should be avoided to ease the string translation.
+
+HTML5 placeholder can be used to suggest actions like: "Type a word to start searching".
+
+### External link
+
+A link pointing to external documentation should be added on complex sections which requires a general explanation.
+Some use cases are:
+
+- wizards where the user should be guided to make a decision, like the backup configuration
+- sections using NethServer-related terminology, like the "Trusted network" page
+
+
 ## Accessibility
 
 We need to evaluate how PatternFly copes with people suffering of low vision, who need to access most features
