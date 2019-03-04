@@ -23,8 +23,7 @@
 
 require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
 
-define("DOWNLOAD_BASE_URL","http://docs.nethserver.org");
-define("LINK_BASE_URL","http://docs.nethserver.org");
+define("LINK_BASE_URL","https://docs.nethserver.org");
 define("VERSION","latest");
 
 function get_link($chapter, $lang, $section)
@@ -32,33 +31,9 @@ function get_link($chapter, $lang, $section)
     return LINK_BASE_URL."/$lang/".VERSION."/$chapter.html#$section";
 }
 
-function get_download_url($chapter, $lang)
-{
-    return DOWNLOAD_BASE_URL."/$lang/".VERSION."/$chapter.html#";
-}
-
-function find_section($url, $section)
-{
-    $ret = '';
-    $html = @file_get_contents($url);
-    if ($html) {
-        $dom = new DOMDocument;
-        @$dom->loadHTML($html);
-        $doc = simplexml_import_dom($dom);
-
-        $elements = $doc->xpath("//div[contains(@class, '$section')]");
-        if ($elements && $elements[0]) {
-            # remove class attributes before returning
-            return preg_replace("/class=\".*\"/", "", $elements[0]->asXML());
-        }
-    }
-    return $ret;
-}
 
 $data = readInput();
 
-$url = get_download_url($data['chapter'], $data['language']);
 $link = get_link($data['chapter'], $data['language'], $data['section']);
-$html = find_section($url, $data['section']);
 
-echo json_encode(array("data" => base64_encode($html), "link" => $link));
+echo json_encode(array("link" => $link));
