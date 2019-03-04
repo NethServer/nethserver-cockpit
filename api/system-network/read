@@ -29,10 +29,22 @@ use esmith::NetworksDB;
 my $ret = {"status" => undef, "configuration" => {'green' => [], 'red' => [] , 'orange' => [], 'blue' => [], 'free' => [], 'other' => [], 'missing' => [] }};
 our $ndb = esmith::NetworksDB->open_ro();
 
+sub is_valid_interface
+{
+    my $type = shift;
+    if ($type =~ m/zone|xdsl|provider|network/) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
 sub list_free_interfaces
 {
     my @interfaces;
     foreach my $n ($ndb->get_all()) {
+        next if(!is_valid_interface($n->prop('type')));
+
         my $role = $n->prop('role') || '';
         if ($role eq '') {
             push(@interfaces, $n->key);
@@ -123,7 +135,7 @@ if($cmd eq 'list') {
     foreach my $n ($ndb->get_all()) {
         my %props = $n->props;
         my $iname = $n->key;
-        next if ($props{'type'} eq 'xdsl-disabled' || $props{'type'} eq 'network');
+        next if(!is_valid_interface($n->prop('type')));
         if ($props{'type'} eq 'vlan') {
             my @tmp = split(/\./,$n->key);
             $props{'parent'} = $tmp[0];
@@ -271,8 +283,7 @@ if($cmd eq 'list') {
 
     my @interfaces;
     foreach my $n ($ndb->get_all()) {
-        my $type = $n->prop('type');
-        if ($type ne 'alias' && $type ne 'vlan' && $type !~ /xdsl/) {
+        if(is_valid_interface($n->prop('type'))) {
             push(@interfaces, $n->key);
         }
     }
