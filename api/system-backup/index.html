@@ -1037,6 +1037,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../system-roles/" title="system-roles" class="md-nav__link">
+      system-roles
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../system-routes/" title="system-routes" class="md-nav__link">
       system-routes
     </a>
@@ -2052,6 +2064,7 @@ The <code>mode</code> field can be:</p>
 <h4 id="backup-info_1">backup-info<a class="headerlink" href="#backup-info_1" title="Permanent link">&para;</a></h4>
 <p>The output is composed by <code>configuration</code> and <code>status</code> fields.
 Both fields contain <code>backup-data</code> and <code>backup-config</code> fields.</p>
+<p>The <code>ready</code> field is set to 1 if the backup is configured and ready to be executed.</p>
 <p>Output example</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -2114,6 +2127,7 @@ Both fields contain <code>backup-data</code> and <code>backup-config</code> fiel
             <span class="s2">&quot;/root&quot;</span>
           <span class="p">],</span>
           <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;local119sftp&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;ready&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
           <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;backup&quot;</span>
         <span class="p">}</span>
         <span class="err">...</span>

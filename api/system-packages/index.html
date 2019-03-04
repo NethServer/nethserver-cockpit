@@ -832,6 +832,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../system-roles/" title="system-roles" class="md-nav__link">
+      system-roles
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../system-routes/" title="system-routes" class="md-nav__link">
       system-routes
     </a>
@@ -1569,7 +1581,7 @@
 <li><code>list-updates</code>: calculate the list of dependencies which will be removed along with given packages</li>
 <li><code>list-removed</code>: list the packages which will be removed</li>
 <li><code>changelog</code>: retrieve the changelog of all updates</li>
-<li><code>get-config</code>: retrieve yum-cron and NsReleaseLock configuration</li>
+<li><code>get-config</code>: retrieve yum-cron configuration</li>
 </ul>
 <h4 id="list-available">list-available<a class="headerlink" href="#list-available" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
@@ -1759,7 +1771,6 @@ The command will list all packages removed as dependencies.</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;editable&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
   <span class="nt">&quot;messages&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;NsReleaseLock&quot;</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span><span class="p">,</span>
   <span class="nt">&quot;applyUpdate&quot;</span><span class="p">:</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span>
   <span class="nt">&quot;download&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span>
 <span class="p">}</span>
@@ -1770,7 +1781,6 @@ The command will list all packages removed as dependencies.</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;messages&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
   <span class="nt">&quot;editable&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-  <span class="nt">&quot;NsReleaseLock&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
   <span class="nt">&quot;applyUpdate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
   <span class="nt">&quot;download&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
 <span class="p">}</span>
@@ -1783,7 +1793,7 @@ The command will list all packages removed as dependencies.</p>
 <li><code>update</code>: update one or more packages</li>
 <li><code>install</code>: install one or more packages</li>
 <li><code>remove</code>: remove one or more packages</li>
-<li><code>set-config</code>: configure NsReleaseLock and yum-cron</li>
+<li><code>set-config</code>: configure yum-cron</li>
 </ul>
 <h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
 <p>The <code>packages</code> field contains a list of packages or group to be updated.
@@ -1821,7 +1831,6 @@ If <code>packages</code> field is empty, all packages will be updated.</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;set-config&quot;</span><span class="p">,</span>
   <span class="nt">&quot;messages&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;NsReleaseLock&quot;</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span><span class="p">,</span>
   <span class="nt">&quot;applyUpdate&quot;</span><span class="p">:</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span>
   <span class="nt">&quot;download&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span>
 <span class="p">}</span>

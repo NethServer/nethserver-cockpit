@@ -695,6 +695,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../system-roles/" title="system-roles" class="md-nav__link">
+      system-roles
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../system-routes/" title="system-routes" class="md-nav__link">
       system-routes
     </a>
@@ -1290,6 +1302,10 @@
 <h2 id="read">read<a class="headerlink" href="#read" title="Permanent link">&para;</a></h2>
 <h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
 <p>It returns the list of enabled modules for the user.</p>
+<ul>
+<li>isRoot ('1' or '0'), validate that the user is <code>root</code>.</li>
+<li>isAdmin('1' or '0'), validate  that the user is member of the group <code>domain admins</code> (root returns '1').</li>
+</ul>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;system&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -1308,6 +1324,10 @@
     <span class="s2">&quot;applications&quot;</span><span class="p">,</span>
     <span class="s2">&quot;software-center&quot;</span>
   <span class="p">],</span>
+    <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;isRoot&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">&quot;isAdmin&quot;</span><span class="p">:</span> <span class="mi">1</span>
+  <span class="p">},</span>
   <span class="nt">&quot;applications&quot;</span><span class="p">:</span> <span class="p">[</span>
     <span class="s2">&quot;nethserver-nextcloud&quot;</span>
   <span class="p">]</span>

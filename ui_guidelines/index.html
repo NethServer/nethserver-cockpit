@@ -593,6 +593,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../api/system-roles/" title="system-roles" class="md-nav__link">
+      system-roles
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../api/system-routes/" title="system-routes" class="md-nav__link">
       system-routes
     </a>
@@ -1387,7 +1399,8 @@ has been completed. This kind of notification can be created only by <code>signa
     <span class="p">},</span>
     <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="nx">error</span><span class="p">;</span>
-    <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="kc">true</span>   <span class="c1">// set to `false` if you do not want to launch the API with the sudo command</span>
 <span class="p">);</span>
 
 
@@ -1405,7 +1418,8 @@ has been completed. This kind of notification can be created only by <code>signa
         <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
             <span class="kd">var</span> <span class="nx">errorData</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
             <span class="nx">callback</span><span class="p">(</span><span class="nx">errorData</span><span class="p">);</span>
-        <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="kc">false</span>
     <span class="p">);</span>
 <span class="p">}</span>
 
