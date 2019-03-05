@@ -67,18 +67,29 @@ sub find_next_bond
     return "bond$k";
 }
 
+sub has_provider
+{
+    my $interface = shift;
+    my $db = shift;
+
+    foreach ($db->get_all_by_prop('type' => 'provider')) {
+        if ($_->prop('interface') eq $interface) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 sub create_provider
 {
     my $interface = shift;
     my $db = shift;
 
-    my $role = $db->get_prop($interface, 'role') || '';
-    return if ($role ne 'red');
-
-
-    my $max = scalar $ndb->get_all_by_prop('type' => 'provider');
-    my $name = "red".($max+1);
-    $db->new_record($name, {'type' => 'provider', 'weight' => 1, 'interface' => $interface});
+    if (!has_provider($interface, $db)) {
+        my $max = scalar $db->get_all_by_prop('type' => 'provider');
+        my $name = "red".($max+1);
+        $db->new_record($name, {'type' => 'provider', 'weight' => 1, 'interface' => $interface});
+    }
 }
 
 

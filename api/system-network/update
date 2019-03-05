@@ -43,14 +43,29 @@ sub cleanup_providers
     }
 }
 
+sub has_provider
+{
+    my $interface = shift;
+    my $db = shift;
+
+    foreach ($db->get_all_by_prop('type' => 'provider')) {
+        if ($_->prop('interface') eq $interface) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 sub create_provider
 {
     my $interface = shift;
     my $db = shift;
 
-    my $max = scalar $ndb->get_all_by_prop('type' => 'provider');
-    my $name = "red".($max+1);
-    $db->new_record($name, {'type' => 'provider', 'weight' => 1, 'interface' => $interface});
+    if (!has_provider($interface, $db)) {
+        my $max = scalar $db->get_all_by_prop('type' => 'provider');
+        my $name = "red".($max+1);
+        $db->new_record($name, {'type' => 'provider', 'weight' => 1, 'interface' => $interface});
+    }
 }
 
 if($cmd eq 'release-role') {
@@ -133,7 +148,7 @@ if($cmd eq 'release-role') {
     $d->delete_prop('slave');
     $d->delete_prop('master');
     $d->delete_prop('bridge');
-    
+
     system("/sbin/e-smith/signal-event -j interface-update");
 
 } elsif($cmd eq 'set-pppoe') {
@@ -151,7 +166,7 @@ if($cmd eq 'release-role') {
     system("/sbin/e-smith/signal-event -j interface-update");
 
 } elsif($cmd eq 'unset-pppoe') {
-    
+
     my $ppp = $ndb->get('ppp0');
     $ppp->set_prop('type', 'xdsl-disabled');
 
