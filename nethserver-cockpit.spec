@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.3.0
+Version: 0.4.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -57,6 +57,13 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 
 
 %changelog
+* Tue Mar 05 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.4.0-1
+- Advanced options is visible on password change form - Bug NethServer/dev#5715
+- Ejabberd Cockpit UI - NethServer/dev#5719
+- Add delegation fro groups
+- Fix provider creation on network page
+- Many API and UI fixes
+
 * Wed Jan 30 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.3.0-1
 - Remove single backup data - NethServer/dev#5691
 - Users can now change their password on local or remote account provider - NethServer/nethserver-cockpit#38
