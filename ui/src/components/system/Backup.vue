@@ -629,7 +629,8 @@
             <div class="modal-body">
               <div class="alert alert-warning alert-dismissable">
                 <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>{{$t('warning')}}</strong>: {{$t('backup.overwrite_all_data')}}.
+                <strong>{{$t('warning')}}</strong>
+                : {{$t('backup.overwrite_all_data')}}.
               </div>
               <div class="form-group">
                 <label
@@ -770,7 +771,7 @@
                   data-tabgroup="1"
                 >
                   <a>
-                    <span class="wizard-pf-step-number">1</span>
+                    <span class="wizard-pf-step-number no-cursor">1</span>
                     <span class="wizard-pf-step-title">{{$t('backup.when')}}</span>
                   </a>
                 </li>
@@ -780,7 +781,7 @@
                   data-tabgroup="2"
                 >
                   <a>
-                    <span class="wizard-pf-step-number">2</span>
+                    <span class="wizard-pf-step-number no-cursor">2</span>
                     <span class="wizard-pf-step-title">{{$t('backup.where')}}</span>
                   </a>
                 </li>
@@ -790,7 +791,7 @@
                   data-tabgroup="3"
                 >
                   <a>
-                    <span class="wizard-pf-step-number">3</span>
+                    <span class="wizard-pf-step-number no-cursor">3</span>
                     <span class="wizard-pf-step-title">{{$t('backup.how')}}</span>
                   </a>
                 </li>
@@ -800,7 +801,7 @@
                   data-tabgroup="3"
                 >
                   <a>
-                    <span class="wizard-pf-step-number">4</span>
+                    <span class="wizard-pf-step-number no-cursor">4</span>
                     <span class="wizard-pf-step-title">{{$t('backup.final')}}</span>
                   </a>
                 </li>
@@ -967,6 +968,13 @@
                       <span class="pficon pficon-volume"></span>
                     </div>
                     <h1>{{$t('backup.wizard_choose_where_title')}}</h1>
+                    <doc-info
+                      :placement="'top'"
+                      :title="$t('docs.storage_backends')"
+                      :chapter="'backup'"
+                      :section="'storage-backends'"
+                      :inline="false"
+                    ></doc-info>
                     <div class="blank-slate-pf-main-action row wizard-where-choices">
                       <div
                         @click="selectWhere('nfs')"
@@ -977,14 +985,6 @@
                             <span class="fa fa-hdd-o"></span>
                           </div>
                           <h3>NFS</h3>
-                          <p>
-                            <doc-info
-                              :placement="'top'"
-                              :title="'NFS'"
-                              :chapter="'backup'"
-                              :section="'ui-backend-nfs'"
-                            ></doc-info>
-                          </p>
                         </div>
                       </div>
                       <div
@@ -996,14 +996,6 @@
                             <span class="fa fa-folder-open"></span>
                           </div>
                           <h3>CIFS</h3>
-                          <p>
-                            <doc-info
-                              :placement="'top'"
-                              :title="'CIFS'"
-                              :chapter="'backup'"
-                              :section="'ui-backend-cifs'"
-                            ></doc-info>
-                          </p>
                         </div>
                       </div>
                       <div
@@ -1015,14 +1007,6 @@
                             <span class="fa fa-usb"></span>
                           </div>
                           <h3>{{$t('backup.disk')}}</h3>
-                          <p>
-                            <doc-info
-                              :placement="'top'"
-                              :title="$t('backup.disk')"
-                              :chapter="'backup'"
-                              :section="'ui-backend-usb'"
-                            ></doc-info>
-                          </p>
                         </div>
                       </div>
                       <div
@@ -1034,14 +1018,6 @@
                             <span class="fa fa-cloud"></span>
                           </div>
                           <h3>{{$t('backup.webdav')}}</h3>
-                          <p>
-                            <doc-info
-                              :placement="'top'"
-                              :title="$t('backup.webdav')"
-                              :chapter="'backup'"
-                              :section="'ui-backend-webdav'"
-                            ></doc-info>
-                          </p>
                         </div>
                       </div>
                     </div>
@@ -1055,14 +1031,6 @@
                             <span class="fa fa-terminal"></span>
                           </div>
                           <h3>SFTP</h3>
-                          <p>
-                            <doc-info
-                              :placement="'top'"
-                              :title="'SFTP'"
-                              :chapter="'backup'"
-                              :section="'ui-backend-sftp'"
-                            ></doc-info>
-                          </p>
                         </div>
                       </div>
                       <div
@@ -1074,14 +1042,6 @@
                             <span class="fa fa-fire"></span>
                           </div>
                           <h3>Backblaze B2</h3>
-                          <p>
-                            <doc-info
-                              :placement="'top'"
-                              :title="'Backblaze B2'"
-                              :chapter="'backup'"
-                              :section="'ui-backend-b2'"
-                            ></doc-info>
-                          </p>
                         </div>
                       </div>
                       <div
@@ -1093,14 +1053,6 @@
                             <span class="fa fa-amazon"></span>
                           </div>
                           <h3>Amazon S3</h3>
-                          <p>
-                            <doc-info
-                              :placement="'top'"
-                              :title="'Amazon S3'"
-                              :chapter="'backup'"
-                              :section="'ui-backend-s3'"
-                            ></doc-info>
-                          </p>
                         </div>
                       </div>
                     </div>
@@ -1181,6 +1133,12 @@
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">
                             {{'SMBLogin' |
                             camelToSentence}}
+                            <doc-info
+                              :placement="'top'"
+                              :title="'SMBLogin' | camelToSentence"
+                              :chapter="'smb_login'"
+                              :inline="true"
+                            ></doc-info>
                           </label>
                           <div class="col-sm-9">
                             <input
@@ -1394,6 +1352,12 @@
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">
                             {{'SFTPPassword' |
                             camelToSentence}}
+                            <doc-info
+                              :placement="'top'"
+                              :title="'SFTPPassword' | camelToSentence"
+                              :chapter="'sftp_password'"
+                              :inline="true"
+                            ></doc-info>
                           </label>
                           <div class="col-sm-7">
                             <input
@@ -1602,6 +1566,13 @@
                       <span class="fa fa-space-shuttle"></span>
                     </div>
                     <h1>{{$t('backup.wizard_choose_how_title')}}</h1>
+                    <doc-info
+                      :placement="'top'"
+                      :title="$t('docs.engines')"
+                      :chapter="'backup'"
+                      :section="'engines'"
+                      :inline="false"
+                    ></doc-info>
                     <div class="blank-slate-pf-main-action row wizard-where-choices">
                       <div
                         v-show="handleHow().duplicity"
@@ -1613,14 +1584,6 @@
                             <span class="fa fa-clone"></span>
                           </div>
                           <h3>Duplicity</h3>
-                          <p>
-                            <doc-info
-                              :placement="'top'"
-                              :title="'Duplicity'"
-                              :chapter="'backup'"
-                              :section="'duplicity'"
-                            ></doc-info>
-                          </p>
                         </div>
                       </div>
                       <div
@@ -1633,14 +1596,6 @@
                             <span class="fa fa-rocket"></span>
                           </div>
                           <h3>Restic</h3>
-                          <p>
-                            <doc-info
-                              :placement="'top'"
-                              :title="'Restic'"
-                              :chapter="'backup'"
-                              :section="'restic'"
-                            ></doc-info>
-                          </p>
                         </div>
                       </div>
                       <div
@@ -1653,14 +1608,6 @@
                             <span class="fa fa-refresh"></span>
                           </div>
                           <h3>rSync</h3>
-                          <p>
-                            <doc-info
-                              :placement="'top'"
-                              :title="'rSync'"
-                              :chapter="'backup'"
-                              :section="'rsync'"
-                            ></doc-info>
-                          </p>
                         </div>
                       </div>
                     </div>
@@ -1744,10 +1691,15 @@
                         </legend>
 
                         <div v-show="wizard.how.duplicity.advanced" class="form-group">
-                          <label
-                            class="col-sm-3 control-label"
-                            for="textInput-modal-markup"
-                          >{{$t('backup.vol_size')}}</label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{$t('backup.vol_size')}}
+                            <doc-info
+                              :placement="'top'"
+                              :title="$t('docs.vol_size')"
+                              :chapter="'backup_volsize'"
+                              :inline="true"
+                            ></doc-info>
+                          </label>
                           <div class="col-sm-9">
                             <input
                               required
@@ -1869,7 +1821,6 @@
                       <div class="form-group">
                         <label
                           class="col-sm-3 control-label"
-                          for="notifyToChoice-1"
                         >{{$t('backup.notify_to')}}</label>
                         <div class="col-sm-9">
                           <input
@@ -1881,7 +1832,7 @@
                           >
                           <label
                             class="col-sm-10 col-xs-10 control-label text-align-left"
-                            for="notifyToChoice-2"
+                            for="notifyToChoice-1"
                           >{{$t('backup.root')}}</label>
                           <input
                             id="notifyToChoice-2"
@@ -1892,6 +1843,7 @@
                           >
                           <label
                             class="col-sm-10 col-xs-10 control-label text-align-left"
+                            for="notifyToChoice-2"
                           >{{$t('backup.custom_email')}}</label>
                         </div>
                       </div>

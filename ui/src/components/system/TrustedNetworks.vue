@@ -1,6 +1,14 @@
 <template>
   <div v-if="view.isAuth">
     <h2>{{$t('trusted_networks.title')}}</h2>
+    <doc-info
+      :placement="'top'"
+      :title="$t('docs.trusted_networks')"
+      :chapter="'base_system'"
+      :section="'trusted-networks'"
+      :inline="false"
+    ></doc-info>
+
     <h3>{{$t('actions')}}</h3>
     <button @click="addNetwork()" class="btn btn-primary btn-lg shutdown-privileged" data-action="restart"
       data-container="body">

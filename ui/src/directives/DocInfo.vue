@@ -1,5 +1,5 @@
 <template>
-  <div v-if="docAvailable">
+  <div :class="inline ? 'reset-padding' : ''">
     <a
       :id="id"
       href="#"
@@ -12,22 +12,28 @@
       data-container="body"
       :title="title | capitalize"
       :data-content="content"
+      v-if="inline"
     >
       <span class="pficon pficon-info"></span>
     </a>
+    <span v-if="!inline">
+      {{$t('docs.more_info_about')}}
+      <a target="_blank" :href="link">{{title}}</a>.
+    </span>
   </div>
 </template>
 <script>
 export default {
   name: "DocInfo",
-  props: ["title", "chapter", "section", "placement"],
+  props: ["title", "chapter", "section", "placement", "inline"],
   mixins: [],
   data() {
     return {
       title: this.title || this.chapter,
       content: "",
       id: this.chapter + "-" + this.section + (+new Date()).toString(),
-      docAvailable: true
+      inline: this.inline,
+      link: ""
     };
   },
   mounted() {
@@ -36,42 +42,34 @@ export default {
   methods: {
     getDocumentation() {
       var context = this;
-      context.exec(
-        ["system-docs/read"],
-        {
-          chapter: this.chapter,
-          section: this.section,
-          language: this.$root.$options.currentLocale
-        },
-        null,
-        function(success) {
-          success = JSON.parse(success);
 
-          var html = success.data.length > 0 ? atob(success.data) : null;
-          if (html) {
-            context.content = html;
-            context.content += "<br/>";
+      if (!this.inline) {
+        context.exec(
+          ["system-docs/read"],
+          {
+            chapter: this.chapter,
+            section: this.section,
+            language: this.$root.$options.currentLocale
+          },
+          null,
+          function(success) {
+            success = JSON.parse(success);
+
+            context.link = success.link;
+          },
+          function(error) {
+            console.error(error);
           }
-
-          context.content +=
-            '<a target="_blank" href="' +
-            success.link +
-            '">' +
-            (context.$i18n && context.$i18n.t("more_info")) +
-            "</a>";
-
-          // init popovers
-          $("#" + context.id)
-            .popovers()
-            .on("hidden.bs.popover", function(e) {
-              $(e.target).data("bs.popover").inState.click = false;
-            });
-        },
-        function(error) {
-          console.error(error);
-          context.docAvailable = false;
-        }
-      );
+        );
+      } else {
+        this.content = this.$i18n.t("docs." + this.chapter);
+        // init popovers
+        $("#" + context.id)
+          .popovers()
+          .on("hidden.bs.popover", function(e) {
+            $(e.target).data("bs.popover").inState.click = false;
+          });
+      }
     }
   }
 };
@@ -79,5 +77,12 @@ export default {
 <style>
 .info-general {
   font-size: 14px;
+}
+
+.reset-padding {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  display: inline-block !important;
+  margin-left: 5px !important;
 }
 </style>

@@ -512,21 +512,21 @@
 
                 <li :class="['wizard-pf-step', wizard.currentStep == 1 ? 'active' : '']" data-tabgroup="1">
                   <a>
-                    <span class="wizard-pf-step-number">1</span>
+                    <span class="wizard-pf-step-number no-cursor">1</span>
                     <span class="wizard-pf-step-title">{{$t('network.role')}}</span>
                   </a>
                 </li>
 
                 <li :class="['wizard-pf-step', wizard.currentStep == 2 ? 'active' : '']" data-tabgroup="2">
                   <a>
-                    <span class="wizard-pf-step-number">2</span>
+                    <span class="wizard-pf-step-number no-cursor">2</span>
                     <span class="wizard-pf-step-title">{{$t('network.type')}}</span>
                   </a>
                 </li>
 
                 <li :class="['wizard-pf-step', wizard.currentStep == 3 ? 'active' : '']" data-tabgroup="3">
                   <a>
-                    <span class="wizard-pf-step-number">3</span>
+                    <span class="wizard-pf-step-number no-cursor">3</span>
                     <span class="wizard-pf-step-title">{{$t('network.configure')}}</span>
                   </a>
                 </li>
@@ -544,6 +544,13 @@
                     <h1>
                       {{$t('network.wizard_choose_role_title')}}
                     </h1>
+                    <doc-info
+                      :placement="'top'"
+                      :title="$t('docs.network')"
+                      :chapter="'base_system'"
+                      :section="'network'"
+                      :inline="false"
+                    ></doc-info>
                     <div class="blank-slate-pf-main-action row wizard-where-choices">
                       <div @click="selectRole('green')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizard.role.choice == 'green' ? 'active-choose-green' : '']">
                         <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
@@ -553,9 +560,6 @@
                           <h3>
                             {{$t('network.green')}}
                           </h3>
-                          <p>
-                            <doc-info :placement="'top'" :title="$t('network.green')" :chapter="'network'" :section="'green'"></doc-info>
-                          </p>
                         </div>
                       </div>
                       <div @click="selectRole('red')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizard.role.choice == 'red' ? 'active-choose-red' : '']">
@@ -566,9 +570,6 @@
                           <h3>
                             {{$t('network.red')}}
                           </h3>
-                          <p>
-                            <doc-info :placement="'top'" :title="$t('network.red')" :chapter="'network'" :section="'red'"></doc-info>
-                          </p>
                         </div>
                       </div>
                       <div @click="selectRole('blue')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizard.role.choice == 'blue' ? 'active-choose-blue' : '']">
@@ -579,9 +580,6 @@
                           <h3>
                             {{$t('network.blue')}}
                           </h3>
-                          <p>
-                            <doc-info :placement="'top'" :title="$t('network.blue')" :chapter="'network'" :section="'blue'"></doc-info>
-                          </p>
                         </div>
                       </div>
                       <div @click="selectRole('orange')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizard.role.choice == 'orange' ? 'active-choose-orange' : '']">
@@ -592,9 +590,6 @@
                           <h3>
                             {{$t('network.orange')}}
                           </h3>
-                          <p>
-                            <doc-info :placement="'top'" :title="$t('network.orange')" :chapter="'network'" :section="'orange'"></doc-info>
-                          </p>
                         </div>
                       </div>
                     </div>
@@ -637,9 +632,6 @@
                           <h3>
                             Bond
                           </h3>
-                          <p>
-                            <doc-info :placement="'top'" :title="'Bond'" :chapter="'logical-interfaces'" :section="'bond'"></doc-info>
-                          </p>
                         </div>
                       </div>
                       <div @click="selectType('bridge')" :class="['col-xs-12', 'col-sm-4', 'col-md-4', 'col-lg-4', 'card-pf', wizard.type.choice == 'bridge' ? 'active-choose' : '']">
@@ -650,9 +642,6 @@
                           <h3>
                             Bridge
                           </h3>
-                          <p>
-                            <doc-info :placement="'top'" :title="'Bridge'" :chapter="'logical-interfaces'" :section="'bridge'"></doc-info>
-                          </p>
                         </div>
                       </div>
                       <div @click="selectType('vlan')" :class="['col-xs-12', 'col-sm-4', 'col-md-4', 'col-lg-4', 'card-pf', wizard.type.choice == 'vlan' ? 'active-choose' : '']">
@@ -663,9 +652,6 @@
                           <h3>
                             VLAN
                           </h3>
-                          <p>
-                            <doc-info :placement="'top'" :title="'VLAN'" :chapter="'logical-interfaces'" :section="'vlan'"></doc-info>
-                          </p>
                         </div>
                       </div>
                     </div>
@@ -847,14 +833,14 @@
 
                 <li :class="['wizard-pf-step', wizardPhysical.currentStep == 1 ? 'active' : '']" data-tabgroup="1">
                   <a>
-                    <span class="wizard-pf-step-number">1</span>
+                    <span class="wizard-pf-step-number no-cursor">1</span>
                     <span class="wizard-pf-step-title">{{$t('network.role')}}</span>
                   </a>
                 </li>
 
                 <li :class="['wizard-pf-step', wizardPhysical.currentStep == 2 ? 'active' : '']" data-tabgroup="3">
                   <a>
-                    <span class="wizard-pf-step-number">2</span>
+                    <span class="wizard-pf-step-number no-cursor">2</span>
                     <span class="wizard-pf-step-title">{{$t('network.configure')}}</span>
                   </a>
                 </li>
@@ -872,6 +858,13 @@
                     <h1>
                       {{$t('network.wizard_choose_role_title')}}
                     </h1>
+                    <doc-info
+                      :placement="'top'"
+                      :title="$t('docs.network')"
+                      :chapter="'base_system'"
+                      :section="'network'"
+                      :inline="false"
+                    ></doc-info>
                     <div class="blank-slate-pf-main-action row wizard-where-choices">
                       <div @click="selectRolePhysical('green')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizardPhysical.role.choice == 'green' ? 'active-choose-green' : '']">
                         <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
@@ -881,9 +874,6 @@
                           <h3>
                             {{$t('network.green')}}
                           </h3>
-                          <p>
-                            <doc-info :placement="'top'" :title="$t('network.green')" :chapter="'network'" :section="'green'"></doc-info>
-                          </p>
                         </div>
                       </div>
                       <div @click="selectRolePhysical('red')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizardPhysical.role.choice == 'red' ? 'active-choose-red' : '']">
@@ -894,9 +884,6 @@
                           <h3>
                             {{$t('network.red')}}
                           </h3>
-                          <p>
-                            <doc-info :placement="'top'" :title="$t('network.red')" :chapter="'network'" :section="'red'"></doc-info>
-                          </p>
                         </div>
                       </div>
                       <div @click="selectRolePhysical('blue')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizardPhysical.role.choice == 'blue' ? 'active-choose-blue' : '']">
@@ -907,9 +894,6 @@
                           <h3>
                             {{$t('network.blue')}}
                           </h3>
-                          <p>
-                            <doc-info :placement="'top'" :title="$t('network.blue')" :chapter="'network'" :section="'blue'"></doc-info>
-                          </p>
                         </div>
                       </div>
                       <div @click="selectRolePhysical('orange')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizardPhysical.role.choice == 'orange' ? 'active-choose-orange' : '']">
@@ -920,9 +904,6 @@
                           <h3>
                             {{$t('network.orange')}}
                           </h3>
-                          <p>
-                            <doc-info :placement="'top'" :title="$t('network.orange')" :chapter="'network'" :section="'orange'"></doc-info>
-                          </p>
                         </div>
                       </div>
                     </div>
@@ -946,9 +927,6 @@
                           <h3>
                             Ethernet
                           </h3>
-                          <p>
-                            <doc-info :placement="'top'" :title="'Ethernet'" :chapter="'physical-interfaces'" :section="'ethernet'"></doc-info>
-                          </p>
                         </div>
                       </div>
                       <div v-if="wizardPhysical.role.choice == 'red'" @click="selectTypePhysical('pppoe')" :class="['col-xs-12', 'col-sm-6', 'col-md-6', 'col-lg-6', 'card-pf', wizardPhysical.type.choice == 'pppoe' ? 'active-choose' : '']">
@@ -959,9 +937,6 @@
                           <h3>
                             PPPoE
                           </h3>
-                          <p>
-                            <doc-info :placement="'top'" :title="'PPPoE'" :chapter="'logical-interfaces'" :section="'pppoe'"></doc-info>
-                          </p>
                         </div>
                       </div>
                     </div>

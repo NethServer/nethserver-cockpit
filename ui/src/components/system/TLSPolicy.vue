@@ -1,31 +1,53 @@
 <template>
   <div v-if="view.isAuth">
     <h2>{{$t('tls_policy.title')}}</h2>
+    <doc-info
+      :placement="'top'"
+      :title="$t('docs.tls_policy')"
+      :chapter="'tlspolicy'"
+      :section="''"
+      :inline="false"
+    ></doc-info>
+
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <div v-if="view.isLoaded">
       <h3>{{$t('config')}}</h3>
       <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
         <span class="pficon pficon-warning-triangle-o"></span>
         <strong>{{$t('hints_suggested')}}:</strong>
-        <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{$t('hints.'+t)}}</strong>: {{$t('hints.'+m)}}</li>
-        <span v-if="hints.message && hints.message.length > 0">
-          {{hints.message && $t('hints.'+hints.message)}}
-        </span>
+        <li v-for="(m,t) in hints.details" v-bind:key="t">
+          <strong>{{$t('hints.'+t)}}</strong>
+          : {{$t('hints.'+m)}}
+        </li>
+        <span
+          v-if="hints.message && hints.message.length > 0"
+        >{{hints.message && $t('hints.'+hints.message)}}</span>
       </div>
       <form class="form-horizontal" v-on:submit.prevent="saveTLSPolicy(TLSPolicy)">
         <div :class="['form-group', TLSPolicy.errors.policy.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('tls_policy.enforce_security')}}</label>
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('tls_policy.enforce_security')}}</label>
           <div class="col-sm-5">
             <select required type="text" v-model="TLSPolicy.policy" class="form-control">
-              <option :value="p.length > 0 ? p : 0" v-for="p in TLSPolicy.policies" v-bind:key="p">{{p.length > 0 ? p :
-                $t('tls_policy.default_policy')}}</option>
+              <option :value="p.length > 0 ? p : 0" v-for="p in TLSPolicy.policies" v-bind:key="p">
+                {{p.length > 0 ? p :
+                $t('tls_policy.default_policy')}}
+              </option>
             </select>
-            <span v-if="TLSPolicy.errors.policy.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+TLSPolicy.errors.policy.message)}}</span>
+            <span
+              v-if="TLSPolicy.errors.policy.hasError"
+              class="help-block"
+            >{{$t('validation.validation_failed')}}: {{$t('validation.'+TLSPolicy.errors.policy.message)}}</span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
-            <div v-if="TLSPolicy.isLoading" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
+            <div
+              v-if="TLSPolicy.isLoading"
+              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
+            ></div>
           </label>
           <div class="col-sm-5">
             <button class="btn btn-primary" type="submit">{{$t('save')}}</button>

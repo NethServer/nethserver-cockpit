@@ -967,6 +967,22 @@
       "valid_macAddress": "Must be a valid MAC address",
       "invalid_secret": "Invalid secret",
       "valid_lessThan_90": "Days must be less than 90"
+    },
+    "docs": {
+      "more_info_about": "More info about",
+      "storage_backends": "Storage backends",
+      "engines": "Engines",
+      "user_groups": "User and Groups",
+      "network": "Network",
+      "tls_policy": "TLS Policy",
+      "trusted_networks": "Trusted Networks",
+
+
+      "sftp_password": "insert here the sftp password",
+      "smb_login": "insert here the smb login",
+      "vol_size": "insert here the vol size",
+      "dns_wildcard": "insert here the dns wildcard",
+      "limit_access": "insert here the Grant access from Wan (Red)"
     }
   }
 }

@@ -3,14 +3,16 @@
     <h2>{{$t('settings.title')}}</h2>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <div v-if="view.isLoaded">
-
       <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
         <span class="pficon pficon-warning-triangle-o"></span>
         <strong>{{$t('hints_suggested')}}:</strong>
-        <li v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{$t('hints.'+t)}}</strong>: {{$t('hints.'+m)}}</li>
-        <span v-if="hints.message && hints.message.length > 0">
-          {{hints.message && $t('hints.'+hints.message)}}
-        </span>
+        <li v-for="(m,t) in hints.details" v-bind:key="t">
+          <strong>{{$t('hints.'+t)}}</strong>
+          : {{$t('hints.'+m)}}
+        </li>
+        <span
+          v-if="hints.message && hints.message.length > 0"
+        >{{hints.message && $t('hints.'+hints.message)}}</span>
       </div>
 
       <h3>{{$t('settings.password')}}</h3>
@@ -21,24 +23,49 @@
       </div>
       <form class="form-horizontal" v-on:submit.prevent="saveSettings('password')">
         <div v-if="!view.isRoot" class="form-group">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.old_password')}}</label>
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.old_password')}}</label>
           <div class="col-sm-5">
-            <input tabindex="0" :disabled="!newUser.canChangePassword" required :type="newUser.togglePass ? 'text' : 'password'"
-              v-model="newUser.oldPassword" class="form-control">
+            <input
+              tabindex="0"
+              :disabled="!newUser.canChangePassword"
+              required
+              :type="newUser.togglePass ? 'text' : 'password'"
+              v-model="newUser.oldPassword"
+              class="form-control"
+            >
           </div>
           <div class="col-sm-2">
-            <button tabindex="-1" @click="togglePass()" type="button" class="btn btn-primary adjust-top-min">
+            <button
+              tabindex="-1"
+              @click="togglePass()"
+              type="button"
+              class="btn btn-primary adjust-top-min"
+            >
               <span :class="[!newUser.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"></span>
             </button>
           </div>
         </div>
         <div :class="['form-group', errors.newPassword.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.new_password')}}</label>
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.new_password')}}</label>
           <div class="col-sm-5">
-            <input tabindex="0" :disabled="!newUser.canChangePassword" required :type="newUser.togglePass ? 'text' : 'password'"
-              v-model="newUser.newPassword" class="form-control">
-            <span v-if="errors.newPassword.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-              {{$t('validation.'+errors.newPassword.message)}}</span>
+            <input
+              tabindex="0"
+              :disabled="!newUser.canChangePassword"
+              required
+              :type="newUser.togglePass ? 'text' : 'password'"
+              v-model="newUser.newPassword"
+              class="form-control"
+            >
+            <span v-if="errors.newPassword.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.newPassword.message)}}
+            </span>
           </div>
           <div v-show="view.isRoot" class="col-sm-2">
             <button tabindex="-1" @click="togglePass()" type="button" class="btn btn-primary">
@@ -47,74 +74,171 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.confirm_new_password')}}</label>
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.confirm_new_password')}}</label>
           <div class="col-sm-5">
             <password-meter></password-meter>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
-            <div v-if="loaders.password" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
+            <div
+              v-if="loaders.password"
+              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
+            ></div>
           </label>
           <div class="col-sm-5">
-            <button :disabled="!newUser.passwordStrength || !newUser.canChangePassword" class="btn btn-primary" type="submit">{{$t('save')}}</button>
+            <button
+              :disabled="!newUser.passwordStrength || !newUser.canChangePassword"
+              class="btn btn-primary"
+              type="submit"
+            >{{$t('save')}}</button>
           </div>
         </div>
       </form>
 
       <div v-if="view.isAdmin" class="divider"></div>
       <h3 v-if="view.isAdmin">{{$t('settings.smart_host')}}</h3>
-      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('smarthost')">
+      <form
+        v-if="view.isAdmin"
+        class="form-horizontal"
+        v-on:submit.prevent="saveSettings('smarthost')"
+      >
         <div :class="['form-group', errors.SmartHostStatus.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.use_smarthost')}}</label>
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.use_smarthost')}}</label>
           <div class="col-sm-5">
-            <toggle-button class="min-toggle" :width="40" :height="20" :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
-              :value="settings.smarthost.SmartHostStatus" :sync="true" @change="toggleSettingsSmartHost()" />
-            <span v-if="errors.SmartHostStatus.hasError" class="help-block">{{errors.SmartHostStatus.message}}</span>
+            <toggle-button
+              class="min-toggle"
+              :width="40"
+              :height="20"
+              :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+              :value="settings.smarthost.SmartHostStatus"
+              :sync="true"
+              @change="toggleSettingsSmartHost()"
+            />
+            <span
+              v-if="errors.SmartHostStatus.hasError"
+              class="help-block"
+            >{{errors.SmartHostStatus.message}}</span>
           </div>
         </div>
-        <div v-if="settings.smarthost.SmartHostStatus" :class="['form-group', errors.SmartHostName.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.smarthost_hostname')}}</label>
+        <div
+          v-if="settings.smarthost.SmartHostStatus"
+          :class="['form-group', errors.SmartHostName.hasError ? 'has-error' : '']"
+        >
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.smarthost_hostname')}}</label>
           <div class="col-sm-5">
-            <input :required="settings.smarthost.SmartHostStatus" type="text" v-model="settings.smarthost.SmartHostName"
-              class="form-control">
-            <span v-if="errors.SmartHostName.hasError" class="help-block">{{errors.SmartHostName.message}}</span>
+            <input
+              :required="settings.smarthost.SmartHostStatus"
+              type="text"
+              v-model="settings.smarthost.SmartHostName"
+              class="form-control"
+            >
+            <span
+              v-if="errors.SmartHostName.hasError"
+              class="help-block"
+            >{{errors.SmartHostName.message}}</span>
           </div>
         </div>
-        <div v-if="settings.smarthost.SmartHostStatus" :class="['form-group', errors.SmartHostPort.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.smarthost_port')}}</label>
+        <div
+          v-if="settings.smarthost.SmartHostStatus"
+          :class="['form-group', errors.SmartHostPort.hasError ? 'has-error' : '']"
+        >
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.smarthost_port')}}</label>
           <div class="col-sm-5">
-            <input :required="settings.smarthost.SmartHostStatus" type="number" min="0" v-model="settings.smarthost.SmartHostPort"
-              class="form-control">
-            <span v-if="errors.SmartHostPort.hasError" class="help-block">{{errors.SmartHostPort.message}}</span>
+            <input
+              :required="settings.smarthost.SmartHostStatus"
+              type="number"
+              min="0"
+              v-model="settings.smarthost.SmartHostPort"
+              class="form-control"
+            >
+            <span
+              v-if="errors.SmartHostPort.hasError"
+              class="help-block"
+            >{{errors.SmartHostPort.message}}</span>
           </div>
         </div>
-        <div v-if="settings.smarthost.SmartHostStatus" :class="['form-group', errors.SmartHostUsername.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.smarthost_username')}}</label>
+        <div
+          v-if="settings.smarthost.SmartHostStatus"
+          :class="['form-group', errors.SmartHostUsername.hasError ? 'has-error' : '']"
+        >
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.smarthost_username')}}</label>
           <div class="col-sm-5">
-            <input :required="settings.smarthost.SmartHostStatus" type="text" v-model="settings.smarthost.SmartHostUsername"
-              class="form-control">
-            <span v-if="errors.SmartHostUsername.hasError" class="help-block">{{errors.SmartHostUsername.message}}</span>
+            <input
+              :required="settings.smarthost.SmartHostStatus"
+              type="text"
+              v-model="settings.smarthost.SmartHostUsername"
+              class="form-control"
+            >
+            <span
+              v-if="errors.SmartHostUsername.hasError"
+              class="help-block"
+            >{{errors.SmartHostUsername.message}}</span>
           </div>
         </div>
-        <div v-if="settings.smarthost.SmartHostStatus" :class="['form-group', errors.SmartHostPassword.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.smarthost_password')}}</label>
+        <div
+          v-if="settings.smarthost.SmartHostStatus"
+          :class="['form-group', errors.SmartHostPassword.hasError ? 'has-error' : '']"
+        >
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.smarthost_password')}}</label>
           <div class="col-sm-5">
-            <input :required="settings.smarthost.SmartHostStatus" type="password" v-model="settings.smarthost.SmartHostPassword"
-              class="form-control">
-            <span v-if="errors.SmartHostPassword.hasError" class="help-block">{{errors.SmartHostPassword.message}}</span>
+            <input
+              :required="settings.smarthost.SmartHostStatus"
+              type="password"
+              v-model="settings.smarthost.SmartHostPassword"
+              class="form-control"
+            >
+            <span
+              v-if="errors.SmartHostPassword.hasError"
+              class="help-block"
+            >{{errors.SmartHostPassword.message}}</span>
           </div>
         </div>
-        <div v-if="settings.smarthost.SmartHostStatus" :class="['form-group', errors.SmartHostTlsStatus.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="SmartHostTlsStatus">{{$t('settings.smarthost_encrypt')}}</label>
+        <div
+          v-if="settings.smarthost.SmartHostStatus"
+          :class="['form-group', errors.SmartHostTlsStatus.hasError ? 'has-error' : '']"
+        >
+          <label
+            class="col-sm-2 control-label"
+            for="SmartHostTlsStatus"
+          >{{$t('settings.smarthost_encrypt')}}</label>
           <div class="col-sm-5">
-            <input type="checkbox" id="SmartHostTlsStatus" v-model="settings.smarthost.SmartHostTlsStatus" class="form-control">
-            <span v-if="errors.SmartHostTlsStatus.hasError" class="help-block">{{errors.SmartHostTlsStatus.message}}</span>
+            <input
+              type="checkbox"
+              id="SmartHostTlsStatus"
+              v-model="settings.smarthost.SmartHostTlsStatus"
+              class="form-control"
+            >
+            <span
+              v-if="errors.SmartHostTlsStatus.hasError"
+              class="help-block"
+            >{{errors.SmartHostTlsStatus.message}}</span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
-            <div v-if="loaders.smarthost" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
+            <div
+              v-if="loaders.smarthost"
+              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
+            ></div>
           </label>
           <div class="col-sm-5">
             <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
@@ -126,20 +250,33 @@
       <h3 v-if="view.isAdmin">{{$t('settings.notifications')}}</h3>
       <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('root')">
         <div :class="['form-group', errors.SenderAddress.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.notify_from')}}</label>
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.notify_from')}}</label>
           <div class="col-sm-5">
             <input required type="email" v-model="settings.root.SenderAddress" class="form-control">
-            <span v-if="errors.SenderAddress.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-              {{$t('validation.'+errors.SenderAddress.message)}}</span>
+            <span v-if="errors.SenderAddress.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.SenderAddress.message)}}
+            </span>
           </div>
         </div>
-        <div v-for="(a, i) in settings.root.EmailAddress" v-bind:key="i" :class="['form-group', errors.EmailAddress.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{i == 0 ?
-            $t('settings.notify_to') : ''}}</label>
+        <div
+          v-for="(a, i) in settings.root.EmailAddress"
+          v-bind:key="i"
+          :class="['form-group', errors.EmailAddress.hasError ? 'has-error' : '']"
+        >
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">
+            {{i == 0 ?
+            $t('settings.notify_to') : ''}}
+          </label>
           <div class="col-sm-5">
             <input required type="email" v-model="a.email" class="form-control">
-            <span v-if="errors.EmailAddress.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-              {{$t('validation.'+errors.EmailAddress.message)}}</span>
+            <span v-if="errors.EmailAddress.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.EmailAddress.message)}}
+            </span>
           </div>
           <div v-if="i > 0" class="col-sm-2">
             <button @click="removeEmail(a, i)" class="btn btn-default" type="button">
@@ -151,13 +288,17 @@
           <div class="col-sm-2 control-label"></div>
           <div class="col-sm-5">
             <button @click="addEmail()" class="btn btn-default" type="button">
-              <span class="fa fa-plus card-icon-def"></span> {{$t('settings.add_email')}}
+              <span class="fa fa-plus card-icon-def"></span>
+              {{$t('settings.add_email')}}
             </button>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
-            <div v-if="loaders.root" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
+            <div
+              v-if="loaders.root"
+              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
+            ></div>
           </label>
           <div class="col-sm-5">
             <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
@@ -167,27 +308,59 @@
 
       <div v-if="view.isAdmin" class="divider"></div>
       <h3 v-if="view.isAdmin">{{$t('settings.web_shell')}}</h3>
-      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('cockpit')">
+      <form
+        v-if="view.isAdmin"
+        class="form-horizontal"
+        v-on:submit.prevent="saveSettings('cockpit')"
+      >
         <div :class="['form-group', errors.access.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.limit_access')}}</label>
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">
+            {{$t('settings.limit_access')}}
+            <doc-info
+              :placement="'top'"
+              :title="$t('docs.limit_access')"
+              :chapter="'limit_access'"
+              :inline="true"
+            ></doc-info>
+          </label>
           <div class="col-sm-5">
-            <toggle-button class="min-toggle" :width="40" :height="20" :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
-              :value="settings.cockpit.access" :sync="true" @change="toggleSettingsLimitAccess()" />
-            <span v-if="errors.access.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-              {{$t('validation.'+errors.access.message)}}</span>
+            <toggle-button
+              class="min-toggle"
+              :width="40"
+              :height="20"
+              :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+              :value="settings.cockpit.access"
+              :sync="true"
+              @change="toggleSettingsLimitAccess()"
+            />
+            <span v-if="errors.access.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.access.message)}}
+            </span>
           </div>
         </div>
-        <div v-if="settings.cockpit.access" :class="['form-group', errors.LimitAccess.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.allow_only')}}</label>
+        <div
+          v-if="settings.cockpit.access"
+          :class="['form-group', errors.LimitAccess.hasError ? 'has-error' : '']"
+        >
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.allow_only')}}</label>
           <div class="col-sm-5">
             <textarea v-model="settings.cockpit.LimitAccess" class="form-control"></textarea>
-            <span v-if="errors.LimitAccess.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-              {{$t('validation.'+errors.LimitAccess.message)}}</span>
+            <span v-if="errors.LimitAccess.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.LimitAccess.message)}}
+            </span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
-            <div v-if="loaders.cockpit" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
+            <div
+              v-if="loaders.cockpit"
+              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
+            ></div>
           </label>
           <div class="col-sm-5">
             <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
@@ -197,43 +370,71 @@
 
       <div v-if="view.isAdmin" class="divider"></div>
       <h3 v-if="view.isAdmin">{{$t('settings.logrotate')}}</h3>
-      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('logrotate')">
+      <form
+        v-if="view.isAdmin"
+        class="form-horizontal"
+        v-on:submit.prevent="saveSettings('logrotate')"
+      >
         <div :class="['form-group', errors.Rotate.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.log_rotate')}}</label>
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.log_rotate')}}</label>
           <div class="col-sm-5">
-            <select required type="text" v-model="settings.logrotate.Rotate" class="combobox form-control">
+            <select
+              required
+              type="text"
+              v-model="settings.logrotate.Rotate"
+              class="combobox form-control"
+            >
               <option value="daily">{{$t('settings.rotation_daily')}}</option>
               <option value="weekly">{{$t('settings.rotation_weekly')}}</option>
               <option value="monthly">{{$t('settings.rotation_monthly')}}</option>
             </select>
-            <span v-if="errors.Rotate.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-              {{$t('validation.'+errors.Rotate.message)}}</span>
+            <span v-if="errors.Rotate.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.Rotate.message)}}
+            </span>
           </div>
         </div>
 
         <div :class="['form-group', errors.Times.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.log_times')}}</label>
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.log_times')}}</label>
           <div class="col-sm-5">
             <input required type="number" v-model="settings.logrotate.Times" class="form-control">
-            <span v-if="errors.Times.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-              {{$t('validation.'+errors.Times.message)}}</span>
+            <span v-if="errors.Times.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.Times.message)}}
+            </span>
           </div>
         </div>
 
         <div :class="['form-group', errors.Compression.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="Compression">{{$t('settings.log_compression')}}</label>
           <div class="col-sm-5">
-            <input type="checkbox" id="Compression"  :value="settings.logrotate.Compression == 'enabled'" v-model="settings.logrotate.Compression"
-              class="form-control">
-            <span v-if="errors.Compression.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-              {{$t('validation.'+errors.Compression.message)}}</span>
+            <input
+              type="checkbox"
+              id="Compression"
+              :value="settings.logrotate.Compression == 'enabled'"
+              v-model="settings.logrotate.Compression"
+              class="form-control"
+            >
+            <span v-if="errors.Compression.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.Compression.message)}}
+            </span>
           </div>
         </div>
 
-
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
-            <div v-if="loaders.logrotate" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
+            <div
+              v-if="loaders.logrotate"
+              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
+            ></div>
           </label>
           <div class="col-sm-5">
             <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
@@ -245,17 +446,32 @@
       <h3 v-if="view.isAdmin">{{$t('settings.hints')}}</h3>
       <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('hints')">
         <div :class="['form-group', errors.ShowHints.hasError ? 'has-error' : '']">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">{{$t('settings.show_hints')}}</label>
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.show_hints')}}</label>
           <div class="col-sm-5">
-            <toggle-button class="min-toggle" :width="40" :height="20" :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
-              :value="settings.cockpit.ShowHints" :sync="true" @change="toggleSettingsHints()" />
-            <span v-if="errors.ShowHints.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-              {{$t('validation.'+errors.ShowHints.message)}}</span>
+            <toggle-button
+              class="min-toggle"
+              :width="40"
+              :height="20"
+              :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+              :value="settings.cockpit.ShowHints"
+              :sync="true"
+              @change="toggleSettingsHints()"
+            />
+            <span v-if="errors.ShowHints.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.ShowHints.message)}}
+            </span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
-            <div v-if="loaders.hints" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
+            <div
+              v-if="loaders.hints"
+              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
+            ></div>
           </label>
           <div class="col-sm-5">
             <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
@@ -279,7 +495,6 @@ export default {
     this.getSettings();
     this.getHints();
     this.getAuthorizations();
-
   },
   data() {
     return {
@@ -423,10 +638,10 @@ export default {
       );
     },
     getAuthorizations() {
-          var context = this;
+      var context = this;
 
-          context.view.isLoaded = false;
-          context.exec(
+      context.view.isLoaded = false;
+      context.exec(
         ["system-authorization/read"],
         null,
         null,
@@ -443,7 +658,7 @@ export default {
           console.error(error);
         },
         false
-        );
+      );
     },
     getSettings() {
       var context = this;
@@ -528,7 +743,7 @@ export default {
       var settingsObj = {};
       var endpoint = "settings";
       var sudo = false;
-      
+
       switch (type) {
         case "password":
           settingsObj = {
@@ -644,9 +859,9 @@ export default {
               context.$parent.notifications.error.message = context.$i18n.t(
                 "settings.settings_updated_error"
               );
-          },
-            sudo 
-           );
+            },
+            sudo
+          );
         },
         function(error, data) {
           var errorData = {};

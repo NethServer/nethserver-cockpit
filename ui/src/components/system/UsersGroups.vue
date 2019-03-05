@@ -1,6 +1,13 @@
 <template>
   <div v-if="view.isAuth">
     <h2>{{$t('users_groups.title')}}</h2>
+    <doc-info
+      :placement="'top'"
+      :title="$t('docs.user_groups')"
+      :chapter="'users-and-groups'"
+      :section="''"
+      :inline="false"
+    ></doc-info>
 
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
 
@@ -229,7 +236,6 @@
                     {{u.expired ? $t('users_groups.expired') :
                     $t('users_groups.not_expired')}}
                   </span>
-
                 </div>
               </div>
               <div class="list-view-pf-additional-info"></div>
@@ -430,7 +436,11 @@
                 </div>
               </div>
 
-              <legend v-if="!newUser.isPassEdit" class="fields-section-header-pf" aria-expanded="true">
+              <legend
+                v-if="!newUser.isPassEdit"
+                class="fields-section-header-pf"
+                aria-expanded="true"
+              >
                 <span
                   :class="['fa fa-angle-right field-section-toggle-pf', newUser.advanced ? 'fa-angle-down' : '']"
                 ></span>
@@ -608,10 +618,11 @@
                       <li v-for="(u,i) in newGroup.system" v-bind:key="i">
                         <span class="label label-info">
                           {{$t('menu.'+u)}}
-                          <a @click="removeSystemFromGroup(i)"
-                             class="remove-item-inline"
+                          <a
+                            @click="removeSystemFromGroup(i)"
+                            class="remove-item-inline"
                           >
-                            <span  v-bind:class="[ roles.editable ? 'fa fa-times' : '']"></span>
+                            <span v-bind:class="[ roles.editable ? 'fa fa-times' : '']"></span>
                           </a>
                         </span>
                       </li>
@@ -655,7 +666,7 @@
                             @click="removeApplicationsFromGroup(i)"
                             class="remove-item-inline"
                           >
-                            <span  v-bind:class="[ roles.editable ? 'fa fa-times' : '']"></span>
+                            <span v-bind:class="[ roles.editable ? 'fa fa-times' : '']"></span>
                           </a>
                         </span>
                       </li>
@@ -718,7 +729,8 @@
             <div class="modal-body">
               <div class="alert alert-warning alert-dismissable">
                 <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>{{$t('users_groups.caution')}}</strong>: {{$t('users_groups.warning_provider')}}.
+                <strong>{{$t('users_groups.caution')}}</strong>
+                : {{$t('users_groups.warning_provider')}}.
               </div>
               <div class="form-group">
                 <label
@@ -874,21 +886,21 @@
               <ul class="wizard-pf-steps-indicator">
                 <li :class="['wizard-pf-step', currentStep == 1 ? 'active' : '']" data-tabgroup="1">
                   <a>
-                    <span class="wizard-pf-step-number">1</span>
+                    <span class="wizard-pf-step-number no-cursor">1</span>
                     <span class="wizard-pf-step-title">{{$t('users_groups.account_provider')}}</span>
                   </a>
                 </li>
 
                 <li :class="['wizard-pf-step', currentStep == 2 ? 'active' : '']" data-tabgroup="2">
                   <a>
-                    <span class="wizard-pf-step-number">2</span>
+                    <span class="wizard-pf-step-number no-cursor">2</span>
                     <span class="wizard-pf-step-title">{{$t('users_groups.local_or_remote_bind')}}</span>
                   </a>
                 </li>
 
                 <li :class="['wizard-pf-step', currentStep == 3 ? 'active' : '']" data-tabgroup="3">
                   <a>
-                    <span class="wizard-pf-step-number">3</span>
+                    <span class="wizard-pf-step-number no-cursor">3</span>
                     <span class="wizard-pf-step-title">{{$t('users_groups.install')}}</span>
                   </a>
                 </li>

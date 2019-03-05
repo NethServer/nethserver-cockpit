@@ -18,6 +18,10 @@ textarea {
   min-height: 125px;
 }
 
+.no-cursor {
+  cursor: initial !important;
+}
+
 .container-cards-pf {
   margin-left: 55px;
   margin-top: 0px;

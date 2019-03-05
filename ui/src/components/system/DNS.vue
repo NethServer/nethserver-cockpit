@@ -2,16 +2,32 @@
   <div v-if="view.isAuth">
     <h2>{{$t('dns.title')}}</h2>
     <h3>{{$t('actions')}}</h3>
-    <button @click="newDNS()" class="btn btn-primary btn-lg shutdown-privileged" data-action="restart" data-container="body">
-      {{$t('dns.add_dns_record')}}
-    </button>
+    <button
+      @click="newDNS()"
+      class="btn btn-primary btn-lg shutdown-privileged"
+      data-action="restart"
+      data-container="body"
+    >{{$t('dns.add_dns_record')}}</button>
 
     <h3>{{$t('list')}}</h3>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
-    <vue-good-table v-if="view.isLoaded" :customRowsPerPageDropdown="[25,50,100]" :perPage="25" :columns="columns" :rows="rows" :lineNumbers="false"
-      :defaultSortBy="{field: 'name', type: 'asc'}" :globalSearch="true" :paginate="true" styleClass="table" :nextText="tableLangsTexts.nextText"
-      :prevText="tableLangsTexts.prevText" :rowsPerPageText="tableLangsTexts.rowsPerPageText" :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
-      :ofText="tableLangsTexts.ofText">
+    <vue-good-table
+      v-if="view.isLoaded"
+      :customRowsPerPageDropdown="[25,50,100]"
+      :perPage="25"
+      :columns="columns"
+      :rows="rows"
+      :lineNumbers="false"
+      :defaultSortBy="{field: 'name', type: 'asc'}"
+      :globalSearch="true"
+      :paginate="true"
+      styleClass="table"
+      :nextText="tableLangsTexts.nextText"
+      :prevText="tableLangsTexts.prevText"
+      :rowsPerPageText="tableLangsTexts.rowsPerPageText"
+      :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
+      :ofText="tableLangsTexts.ofText"
+    >
       <template slot="table-row" slot-scope="props">
         <td class="fancy">
           <a @click="editDNS(props.row)">
@@ -32,7 +48,13 @@
             {{$t('edit')}}
           </button>
           <div class="dropup pull-right dropdown-kebab-pf">
-            <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <button
+              class="btn btn-link dropdown-toggle"
+              type="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="true"
+            >
               <span class="fa fa-ellipsis-v"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
@@ -52,37 +74,78 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{newDns.isEdit ? $t('dns.edit_dns_record') + ' '+ newDns.name : $t('dns.add_dns_record')}}</h4>
+            <h4
+              class="modal-title"
+            >{{newDns.isEdit ? $t('dns.edit_dns_record') + ' '+ newDns.name : $t('dns.add_dns_record')}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="saveDNS(newDns)">
-
             <div class="modal-body">
               <div :class="['form-group', newDns.errors.name.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dns.hostname')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dns.hostname')}}</label>
                 <div class="col-sm-9">
-                  <input :disabled="newDns.isEdit" required type="text" v-model="newDns.name" class="form-control">
-                  <span v-if="newDns.errors.name.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newDns.errors.name.message)}}</span>
+                  <input
+                    :disabled="newDns.isEdit"
+                    required
+                    type="text"
+                    v-model="newDns.name"
+                    class="form-control"
+                  >
+                  <span
+                    v-if="newDns.errors.name.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newDns.errors.name.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', newDns.errors.IpAddress.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dns.ip_address')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dns.ip_address')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="newDns.props.IpAddress" class="form-control">
-                  <span v-if="newDns.errors.IpAddress.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newDns.errors.IpAddress.message)}}</span>
+                  <span
+                    v-if="newDns.errors.IpAddress.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newDns.errors.IpAddress.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', newDns.errors.Description.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dns.description')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dns.description')}}</label>
                 <div class="col-sm-9">
                   <input type="text" v-model="newDns.props.Description" class="form-control">
-                  <span v-if="newDns.errors.Description.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newDns.errors.Description.message)}}</span>
+                  <span
+                    v-if="newDns.errors.Description.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newDns.errors.Description.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', newDns.errors.WildcardMode.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dns.wildcard')}}</label>
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                  {{$t('dns.wildcard')}}
+                  <doc-info
+                    :placement="'top'"
+                    :title="$t('dns.wildcard')"
+                    :chapter="'dns_wildcard'"
+                    :inline="true"
+                  ></doc-info>
+                </label>
                 <div class="col-sm-9">
-                  <input type="checkbox" :value="newDns.props.WildcardMode == 'enabled'" v-model="newDns.props.WildcardMode" class="form-control">
-                  <span v-if="newDns.errors.WildcardMode.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+newDns.errors.WildcardMode.message)}}</span>
+                  <input
+                    type="checkbox"
+                    :value="newDns.props.WildcardMode == 'enabled'"
+                    v-model="newDns.props.WildcardMode"
+                    class="form-control"
+                  >
+                  <span
+                    v-if="newDns.errors.WildcardMode.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newDns.errors.WildcardMode.message)}}</span>
                 </div>
               </div>
             </div>
@@ -92,7 +155,6 @@
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
             </div>
-
           </form>
         </div>
       </div>
@@ -105,17 +167,18 @@
             <h4 class="modal-title">{{$t('dns.delete_dns')}} {{currentDns.name}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="deleteDNS(currentDns)">
-
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
               </div>
             </div>
             <div class="modal-footer">
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-danger" type="submit">{{$t('delete')}}</button>
             </div>
-
           </form>
         </div>
       </div>
