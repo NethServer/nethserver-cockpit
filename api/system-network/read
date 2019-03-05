@@ -187,8 +187,8 @@ if($cmd eq 'list') {
         my $role = $interface->{'role'} || 'free';
         my $type = $interface->{'type'};
 
-        # skip zones
-        next if ($type eq 'zone');
+        # skip non-interfaces
+        next if(!is_valid_interface($type));
         # children will be handled later
         next if ($role eq 'alias' || $role eq 'pppoe' || $type eq 'provider');
 
@@ -257,7 +257,7 @@ if($cmd eq 'list') {
     foreach my $n ($ndb->get_all()) {
         my %props = $n->props;
         my $role = $props{'role'} || '';
-        next if ($props{'type'} eq 'xdsl-disabled' || $props{'type'} eq 'provider');
+        next if(!is_valid_interface($props{'type'}));
         if ($role eq '') {
             push(@interfaces, $n->key);
             next;
