@@ -26,6 +26,19 @@ use warnings;
 use strict;
 use esmith::NetworksDB;
 
+sub cleanup_providers
+{
+    my $interface = shift;
+    my $db = shift;
+
+    foreach ($db->get_all_by_prop('type' => 'provider')) {
+        if (($_->prop('interface') || '') eq $interface) {
+            $_->delete();
+        }
+    }
+}
+
+
 our $ndb = esmith::NetworksDB->open();
 
 my $input = readInput();
@@ -66,6 +79,8 @@ if ($input->{'heir'}) {
     $heir->set_prop('netmask', $i->prop('netmask') || '');
     $heir->set_prop('gateway', $i->prop('gateway') || '');
 }
+
+cleanup_providers($input->{'interface'}, $ndb);
 
 # delete interface
 $i->delete();

@@ -67,6 +67,20 @@ sub find_next_bond
     return "bond$k";
 }
 
+sub create_provider
+{
+    my $interface = shift;
+    my $db = shift;
+
+    my $role = $db->get_prop($interface, 'role') || '';
+    return if ($role ne 'red');
+
+
+    my $max = scalar $ndb->get_all_by_prop('type' => 'provider');
+    my $name = "red".($max+1);
+    $db->new_record($name, {'type' => 'provider', 'weight' => 1, 'interface' => $interface});
+}
+
 
 if($cmd eq 'create-alias') {
 
@@ -93,6 +107,7 @@ if($cmd eq 'create-alias') {
         $d->delete();
         $ndb->new_record($_, { 'type' => $type, 'role' => 'bridged', 'bridge' => $bridge });
     }
+    create_provider($bridge, $ndb);
     system("/sbin/e-smith/signal-event -j interface-update");
 
 } elsif($cmd eq 'create-vlan') {
@@ -107,6 +122,7 @@ if($cmd eq 'create-alias') {
             'nslabel' => $input->{'nslabel'} || '',
             'type' => 'vlan'
         });
+    create_provider($vlan, $ndb);
     system("/sbin/e-smith/signal-event -j interface-update");
 
 } elsif($cmd eq 'create-bond') {
@@ -129,6 +145,7 @@ if($cmd eq 'create-alias') {
         $d->delete();
         $ndb->new_record($_, { 'type' => $type, 'role' => 'slave', 'master' => $bond, 'slave' => 'yes' });
     }
+    create_provider($bond, $ndb);
     system("/sbin/e-smith/signal-event -j interface-update");
 
 } else {

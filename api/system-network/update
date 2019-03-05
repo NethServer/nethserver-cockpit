@@ -36,7 +36,7 @@ sub cleanup_providers
     my $interface = shift;
     my $db = shift;
 
-    foreach ($ndb->get_all_by_prop('type' => 'provider')) {
+    foreach ($db->get_all_by_prop('type' => 'provider')) {
         if (($_->prop('interface') || '') eq $interface) {
             $_->delete();
         }
