@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.4.0
+Version: 0.4.1
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -57,6 +57,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 
 
 %changelog
+* Wed Mar 06 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.4.1-1
+- network api: create provider only if not exists
+
 * Tue Mar 05 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.4.0-1
 - Advanced options is visible on password change form - Bug NethServer/dev#5715
 - Ejabberd Cockpit UI - NethServer/dev#5719
