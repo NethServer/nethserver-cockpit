@@ -28,15 +28,12 @@ Example:
 
 Return the list of connections filtered by `protocol` and `state`.
 
-If `expand` is set to 1, retrieve also the zone for each address.
-
 Example:
 ```json
 {
   "action": "conntrack",
   "protocol": "tcp",
   "state" : "ESTABLISHED",
-  "expand": 0
 }
 ```
 
@@ -89,29 +86,32 @@ Example:
 {
   "connections": [
     {
-      "bytes_total": 5328656,
-      "dport_reply": "22",
-      "dst_reply": "192.168.5.246",
+      "provider": "",
+      "bytes_total": 220177,
+      "dport_reply": "55142",
+      "dst_reply": "80.17.99.73",
       "protocol": "tcp",
-      "bytes": "978988",
-      "nat": 0,
+      "bytes": "97369",
+      "nat": 1,
       "zone": "0",
       "status": "ASSURED",
-      "sport_reply": "55038",
-      "packets": "3993",
-      "packets_reply": "5304",
-      "dport": "55038",
+      "sport_reply": "443",
+      "packets": "1503",
+      "packets_reply": "1016",
+      "dport": "443",
       "state": "ESTABLISHED",
-      "mark": "23552",
+      "mark": "0x5b03",
       "use": "2",
-      "timeout": "299",
-      "src_reply": "192.168.5.22",
-      "src": "192.168.5.246",
+      "timeout": "431978",
+      "ndpi": "SSL",
+      "src_reply": "54.208.55.14",
+      "src": "192.168.5.31",
+      "prio": "low",
       "layer": "ipv4",
-      "bytes_reply": "4349668",
-      "packets_total": 9297,
-      "sport": "22",
-      "dst": "192.168.5.22"
+      "bytes_reply": "122808",
+      "packets_total": 2519,
+      "sport": "55142",
+      "dst": "4.8.55.14"
     },
     ...
   ]
