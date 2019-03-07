@@ -12,5 +12,6 @@
   "tls-policy",
   "trusted-networks",
   "logs",
-  "terminal"
+  "terminal",
+  "subscription"
 ]
