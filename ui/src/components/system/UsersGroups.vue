@@ -4,7 +4,7 @@
     <doc-info
       :placement="'top'"
       :title="$t('docs.user_groups')"
-      :chapter="'users-and-groups'"
+      :chapter="'accounts'"
       :section="''"
       :inline="false"
     ></doc-info>
