@@ -979,6 +979,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#discard" title="discard" class="md-nav__link">
+    discard
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1381,6 +1388,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#discard" title="discard" class="md-nav__link">
+    discard
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1431,7 +1445,8 @@ Valid actions:</p>
     <span class="nt">&quot;ExternalPing&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
     <span class="nt">&quot;Policy&quot;</span><span class="p">:</span> <span class="s2">&quot;permissive&quot;</span><span class="p">,</span>
     <span class="nt">&quot;MACValidationPolicy&quot;</span><span class="p">:</span> <span class="s2">&quot;drop&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;MACValidation&quot;</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span>
+    <span class="nt">&quot;MACValidation&quot;</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;HairpinNat&quot;</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -1463,7 +1478,7 @@ Available fields:</p>
 </ul>
 <p>Constraints for <code>settings</code> action:</p>
 <ul>
-<li>MACValidation and ExternalPing: can be <code>enabled</code> or <code>disabled</code></li>
+<li>MACValidation, ExternalPing and HairpinNat: can be <code>enabled</code> or <code>disabled</code></li>
 <li>Policy: can be <code>permissive</code> or <code>strict</code></li>
 <li>MACValidationPolicy: can be <code>drop</code> or <code>accept</code></li>
 </ul>
@@ -1509,6 +1524,15 @@ Execute the <code>firewall-adjust</code> event.</p>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;restore&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="discard">discard<a class="headerlink" href="#discard" title="Permanent link">&para;</a></h4>
+<p>Discard any saved backup, no more restore actions will be possible.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;discard&quot;</span>
 <span class="p">}</span>
 </pre></div>
                 

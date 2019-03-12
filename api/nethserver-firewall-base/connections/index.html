@@ -1426,12 +1426,14 @@ Valid actions:</p>
 
 
 <h4 id="conntrack">conntrack<a class="headerlink" href="#conntrack" title="Permanent link">&para;</a></h4>
-<p>Return the list of connections filtered by <code>protocol</code> and <code>state</code>.</p>
+<p>Return the list of connections filtered by <code>protocol</code> and <code>state</code>.
+If <code>limit</code> is set, return only the first <code>limit</code> connections.</p>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;conntrack&quot;</span><span class="p">,</span>
   <span class="nt">&quot;protocol&quot;</span><span class="p">:</span> <span class="s2">&quot;tcp&quot;</span><span class="p">,</span>
   <span class="nt">&quot;state&quot;</span> <span class="p">:</span> <span class="s2">&quot;ESTABLISHED&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;limit&quot;</span><span class="p">:</span> <span class="mi">25</span>
 <span class="p">}</span>
 </pre></div>
 
