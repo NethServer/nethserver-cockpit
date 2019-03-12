@@ -32,7 +32,8 @@ Output example:
     "ExternalPing": "enabled",
     "Policy": "permissive",
     "MACValidationPolicy": "drop",
-    "MACValidation": "disabled"
+    "MACValidation": "disabled",
+    "HairpinNat": "disabled"
   }
 }
 ```
@@ -67,7 +68,7 @@ The request must contain an `action` field. Valid actions are:
 
 Constraints for `settings` action:
 
-- MACValidation and ExternalPing: can be `enabled` or `disabled`
+- MACValidation, ExternalPing and HairpinNat: can be `enabled` or `disabled`
 - Policy: can be `permissive` or `strict`
 - MACValidationPolicy: can be `drop` or `accept`
 
@@ -124,5 +125,16 @@ Example:
 ```json
 {
   "action": "restore"
+}
+```
+
+#### discard
+
+Discard any saved backup, no more restore actions will be possible.
+
+Example:
+```json
+{
+  "action": "discard"
 }
 ```

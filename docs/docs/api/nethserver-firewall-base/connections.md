@@ -27,6 +27,7 @@ Example:
 #### conntrack
 
 Return the list of connections filtered by `protocol` and `state`.
+If `limit` is set, return only the first `limit` connections.
 
 Example:
 ```json
@@ -34,6 +35,7 @@ Example:
   "action": "conntrack",
   "protocol": "tcp",
   "state" : "ESTABLISHED",
+  "limit": 25
 }
 ```
 
