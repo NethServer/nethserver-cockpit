@@ -78,7 +78,7 @@
           v-bind:class="[getCurrentPath('services') ? 'active' : '', 'list-group-item']"
         >
           <a href="#/services">
-            <span class="fa fa-fighter-jet"></span>
+            <span class="fa fa-cogs"></span>
             <span class="list-group-item-value">{{$t('menu.services')}}</span>
             <span v-if="hints.services.count > 0" class="badge badge-small">{{hints.services.count}}</span>
           </a>
