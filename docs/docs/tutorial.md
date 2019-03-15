@@ -36,15 +36,13 @@ cd your-own-module
     │   ├── cockpit.min.js
     │   ├── jquery.min.js
     │   └── patternfly.css
-    ├── i18n
-    │   ├── lang.js
-    │   └── locale-en.json
     ├── index.html
     ├── js
     │   ├── app.js
     │   └── lib
     │       ├── sammy.js
     │       └── sammy.template.js
+    ├── language.json
     ├── logo.png
     ├── manifest.json
     ├── override.json
