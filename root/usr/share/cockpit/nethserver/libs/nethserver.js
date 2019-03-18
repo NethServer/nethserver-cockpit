@@ -168,6 +168,14 @@ nethserver = {
 
         return process
     },
+    fetchTranslatedStrings(callback = null) {
+        var context = this;
+        return jQuery.getJSON('./i18n/language.json', {}, function(data) {
+            if(callback) {
+                return callback.call(context, data);
+            }
+        });
+    },
     notifications: {
         success: null,
         error: null

@@ -8,6 +8,7 @@
     -   [Forms](#forms)
     -   [Notifications](#notifications)
 -   [Accessibility](#accessibility)
+-   [Translations](#translations)
 
 ## UI design
 
@@ -172,3 +173,39 @@ Some use cases are:
 
 We need to evaluate how PatternFly copes with people suffering of low vision, who need to access most features
 using the keyboard shortcuts.
+
+## Translations
+
+### nethserver.fetchTranslatedStrings(callback)
+
+Start an asynchronous call that fetches the localized strings. The current
+Cockpit language is automatically detected from the current session settings.
+
+If the remote call completes successfully `callback` is invoked.
+
+#### Return value
+
+a jQuery `jqXHR` object.
+
+#### Arguments
+
+* `callback(data)`, a function that accepts an argument `data` containing the
+  `language.json` file contents
+
+The actual localization is performed by the Cockpit server process, according to
+its content-negotiation rules. See also https://cockpit-project.org/guide/latest/packages.html#package-minified
+
+#### Examples
+
+In a VueJS `main.js`, using `vue-i18n` plugin:
+
+```js
+Vue.use(VueI18n)
+const i18n = new VueI18n();
+...
+nethserver.fetchTranslatedStrings(function (data) {
+    i18n.setLocaleMessage('cockpit', data);
+    i18n.locale = 'cockpit';
+    app.$mount('#app'); // Start VueJS application after language strings are loaded
+})
+```
