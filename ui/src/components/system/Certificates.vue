@@ -768,9 +768,13 @@ export default {
     },
     getCertificates() {
       var context = this;
+
+      context.view.isLoaded = false;
       context.exec(
         ["system-certificate/read"],
-        null,
+        {
+          action: "list"
+        },
         null,
         function(success) {
           try {
@@ -779,7 +783,6 @@ export default {
             console.error(e);
           }
           context.rows = success.configuration.certificates;
-          context.view.isLoaded = true;
           context.selfSignedCertificate.SubjectAltName =
             success.configuration.pki.props.SubjectAltName;
           context.selfSignedCertificate.State =
@@ -809,10 +812,11 @@ export default {
           context.letsEncryptCertificate.LetsEncryptRenewDays =
             success.configuration.pki.props.LetsEncryptRenewDays;
 
-          context.$forceUpdate();
+          context.view.isLoaded = true;
         },
         function(error) {
           console.error(error);
+          context.view.isLoaded = true;
         }
       );
     },
@@ -1173,6 +1177,7 @@ export default {
       context.exec(
         ["system-certificate/read"],
         {
+          action: "info",
           name: certificate
         },
         null,
