@@ -603,14 +603,17 @@
                 >{{$t('are_you_sure')}}?</label>
               </div>
               <div
-                v-if="currentInterface.type != 'xdsl'"
+                v-if="currentInterface.type != 'xdsl' && currentInterface.type != 'vlan'"
                 class="alert alert-warning alert-dismissable"
               >
                 <span class="pficon pficon-warning-triangle-o"></span>
                 <strong>{{$t('warning')}}.</strong>
                 {{$t('network.successor_hints')}}.
               </div>
-              <div v-if="currentInterface.type != 'xdsl'" class="form-group">
+              <div
+                v-if="currentInterface.type != 'xdsl' && currentInterface.type != 'vlan'"
+                class="form-group"
+              >
                 <label
                   class="col-sm-3 control-label"
                   for="textInput-modal-markup"
@@ -1874,8 +1877,11 @@ export default {
           if (this.wizard.review.bootproto == "none") {
             disabled =
               this.wizard.review.ipaddr.length == 0 ||
-              this.wizard.review.netmask.length == 0 ||
-              this.wizard.review.gateway.length == 0;
+              this.wizard.review.netmask.length == 0;
+
+            if (this.wizard.role.choice == "red") {
+              disabled = disabled || this.wizard.review.gateway.length == 0;
+            }
           }
           break;
       }
