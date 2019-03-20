@@ -246,7 +246,7 @@
                     :class="['fa', b.status.result == 'success' ? 'fa-check green' : b.status.result == 'unknown' ? 'fa-question gray' : 'fa-times red', 'panel-icon']"
                   ></span>
                   {{b.status['last-run']
-                  | dateFormat}}
+                  | dateFormat}} UTC
                 </div>
                 <div class="list-view-pf-additional-info-item">
                   <span class="fa fa-space-shuttle panel-icon"></span>
