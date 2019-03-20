@@ -203,7 +203,7 @@ In a VueJS `main.js`, using `vue-i18n` plugin:
 Vue.use(VueI18n)
 const i18n = new VueI18n();
 ...
-nethserver.fetchTranslatedStrings(function (data) {
+nethserver.fetchTranslatedStrings(function (data, lang) {
     i18n.setLocaleMessage('cockpit', data);
     i18n.locale = 'cockpit';
     app.$mount('#app'); // Start VueJS application after language strings are loaded

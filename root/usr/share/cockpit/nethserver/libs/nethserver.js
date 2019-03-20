@@ -172,7 +172,10 @@ nethserver = {
         var context = this;
         return jQuery.getJSON('./i18n/language.json', {}, function(data) {
             if(callback) {
-                return callback.call(context, data);
+                cockpit.spawn(['/usr/bin/printenv', 'LANG'])
+                .done(function(lang) {
+                    callback.call(context, data, lang.trim());
+                })
             }
         });
     },
