@@ -52,7 +52,11 @@
             data-toggle="collapse"
             data-parent="#provider-markup"
             href="#providerDetails"
-          >{{$t('backup.details')}}</span>
+            @click="toggleDetails()"
+          >
+            <span :class="['fa', view.opened ? 'fa-angle-down' : 'fa-angle-right']"></span>
+            {{$t('backup.details')}}
+          </span>
         </div>
         <div id="providerDetails" class="panel-collapse collapse list-group list-view-pf">
           <div
@@ -2093,7 +2097,8 @@ export default {
       view: {
         isLoaded: false,
         isAuth: false,
-        windowResize: window.innerWidth <= 768
+        windowResize: window.innerWidth <= 768,
+        opened: false
       },
       wizard: this.initWizard(),
       searchString: "",
@@ -2114,6 +2119,9 @@ export default {
     };
   },
   methods: {
+    toggleDetails() {
+      this.view.opened = !this.view.opened;
+    },
     initGraphics() {
       $("#app").css("background", "");
       $("#app").css("color", "");

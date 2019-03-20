@@ -26,11 +26,15 @@
             )+users.provider)}}
           </span>
           <span
-            class="provider-details"
+            class="provider-details margin-left-md"
             data-toggle="collapse"
             data-parent="#provider-markup"
             href="#providerDetails"
-          >{{$t('users_groups.details')}}</span>
+            @click="toggleDetails()"
+          >
+            <span :class="['fa', view.opened ? 'fa-angle-down' : 'fa-angle-right']"></span>
+            {{$t('users_groups.details')}}
+          </span>
         </div>
         <div id="providerDetails" class="panel-collapse collapse">
           <dl class="dl-horizontal details-container">
@@ -1523,7 +1527,8 @@ export default {
       view: {
         isLoaded: false,
         isAuth: false,
-        isRoot: false
+        isRoot: false,
+        opened: false
       },
       searchString: "",
       currentSearchFilter: "user",
@@ -1566,6 +1571,9 @@ export default {
     };
   },
   methods: {
+    toggleDetails() {
+      this.view.opened = !this.view.opened;
+    },
     toggleAdvancedMode() {
       this.newUser.advanced = !this.newUser.advanced;
       this.$forceUpdate();
