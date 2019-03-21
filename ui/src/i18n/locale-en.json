@@ -980,11 +980,13 @@
       "trusted_networks": "Trusted Networks",
 
 
-      "sftp_password": "insert here the sftp password",
-      "smb_login": "insert here the smb login",
-      "vol_size": "insert here the vol size",
-      "dns_wildcard": "insert here the dns wildcard",
-      "limit_access": "insert here the Grant access from Wan (Red)"
+      "sftp_password": "The password will not be saved. SSH connection will use a RSA key.",
+      "smb_login": "If the target server is joined to a domain, use extended syntax like 'MyBindUser,domain=mydomain.com'.",
+      "vol_size": "Size of backup chunks, keep small if the backup destination is a remote server. Default is 200MB.",
+      "dns_wildcard": "If enabled, match also all sub-domains.",
+      "limit_access": "Restict access to port 9090 only to given IP addresses",
+      "dhcp_comma_separated_field": "Insert an IP address or a comma-separated list of IP addesses",
+      "dhcp_servers": "Servers"
     }
   }
 }

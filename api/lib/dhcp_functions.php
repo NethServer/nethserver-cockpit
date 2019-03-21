@@ -54,16 +54,16 @@ function getDefaultRange($type, $props)
 function getDefaults($props)
 {
     $ret = array(
-        "DhcpTFTP" => "",
+        "DhcpTFTP" => array(),
         "status" =>  "disabled",
-        "DhcpDNS" => "",
+        "DhcpDNS" => array(),
         "DhcpDomain" => "",
         "DhcpLeaseTime" => "",
         "DhcpRangeStart" => getDefaultRange('start', $props),
-        "DhcpWINS" => "",
+        "DhcpWINS" => array(),
         "DhcpRangeEnd" => getDefaultRange('end', $props),
         "DhcpGatewayIP" => "",
-        "DhcpNTP" =>  ""
+        "DhcpNTP" =>  array()
     );
 
     return $ret;

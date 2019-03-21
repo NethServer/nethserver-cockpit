@@ -20,7 +20,7 @@
       </div>
     </div>
     <h3>{{$t('dhcp.interfaces')}}</h3>
-    <div v-for="i in ranges" v-bind:key="i">
+    <div v-for="i in ranges" v-bind:key="i.name">
       <h4 class="dhcp-int">{{i.name}}</h4>
       <toggle-button
         class="min-toggle"
@@ -377,7 +377,9 @@
                 <label
                   class="col-sm-3 control-label"
                   for="textInput-modal-markup"
-                >{{$t('dhcp.dns_servers')}}</label>
+                >{{$t('dhcp.dns_servers')}}
+                  <doc-info :placement="'top'" :title="$t('docs.dhcp_servers')" :chapter="'dhcp_comma_separated_field'" :inline="true"></doc-info>
+                </label>
                 <div class="col-sm-9">
                   <input type="text" v-model="currentRange.DhcpDNS" class="form-control">
                   <span
@@ -393,7 +395,9 @@
                 <label
                   class="col-sm-3 control-label"
                   for="textInput-modal-markup"
-                >{{$t('dhcp.wins_servers')}}</label>
+                >{{$t('dhcp.wins_servers')}}
+                  <doc-info :placement="'top'" :title="$t('docs.dhcp_servers')" :chapter="'dhcp_comma_separated_field'" :inline="true"></doc-info>
+                </label>
                 <div class="col-sm-9">
                   <input type="text" v-model="currentRange.DhcpWINS" class="form-control">
                   <span
@@ -409,7 +413,9 @@
                 <label
                   class="col-sm-3 control-label"
                   for="textInput-modal-markup"
-                >{{$t('dhcp.ntp_servers')}}</label>
+                >{{$t('dhcp.ntp_servers')}}
+                  <doc-info :placement="'top'" :title="$t('docs.dhcp_servers')" :chapter="'dhcp_comma_separated_field'" :inline="true"></doc-info>
+                </label>
                 <div class="col-sm-9">
                   <input type="text" v-model="currentRange.DhcpNTP" class="form-control">
                   <span
@@ -425,7 +431,9 @@
                 <label
                   class="col-sm-3 control-label"
                   for="textInput-modal-markup"
-                >{{$t('dhcp.tftp_servers')}}</label>
+                >{{$t('dhcp.tftp_servers')}}
+                  <doc-info :placement="'top'" :title="$t('docs.dhcp_servers')" :chapter="'dhcp_comma_separated_field'" :inline="true"></doc-info>
+                </label>
                 <div class="col-sm-9">
                   <input type="text" v-model="currentRange.DhcpTFTP" class="form-control">
                   <span
@@ -457,6 +465,7 @@
 </template>
 
 <script>
+ /* eslint-disable */
 export default {
   name: "DHCP",
   beforeRouteEnter(to, from, next) {
@@ -731,6 +740,16 @@ export default {
       context.currentRange.errors.DhcpWINS.hasError = false;
       context.currentRange.errors.DhcpNTP.hasError = false;
       context.currentRange.errors.DhcpTFTP.hasError = false;
+
+      var servers = ["DhcpDNS", "DhcpWINS", "DhcpNTP", "DhcpTFTP"]
+      servers.forEach(function(el) {
+        if (!Array.isArray(rangeObj[el])) {
+          if (typeof rangeObj[el] == "string" ) {
+            rangeObj[el] = rangeObj[el].split(",")
+          }
+        }
+      })
+
 
       context.exec(
         ["system-dhcp/validate"],

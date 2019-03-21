@@ -72,10 +72,16 @@ if ($action == 'create-reservation') {
     $v->declareParameter('DhcpGatewayIP', $v->createValidator()->OrValidator($ipValidator, $emptyValidator)); 
     $v->declareParameter('DhcpLeaseTime', $v->createValidator()->OrValidator($positiveValidator, $emptyValidator));
     $v->declareParameter('DhcpDomain', $v->createValidator()->OrValidator($hostnameValidator, $emptyValidator));
-    $v->declareParameter('DhcpDNS', $v->createValidator()->OrValidator($ipValidator, $emptyValidator));
-    $v->declareParameter('DhcpWINS', $v->createValidator()->OrValidator($ipValidator, $emptyValidator));
-    $v->declareParameter('DhcpNTP', $v->createValidator()->OrValidator($ipValidator, $emptyValidator));
-    $v->declareParameter('DhcpTFTP', $v->createValidator()->OrValidator($ipValidator, $emptyValidator));
+
+    foreach (array('DhcpDNS', 'DhcpWINS', 'DhcpNTP', 'DhcpTFTP') as $prop) {
+        if (isset($data[$prop]) && $data[$prop] && is_array($data[$prop])) {
+            foreach ($data[$prop] as $ip) {
+                if (!$ipValidator->evaluate($ip)) {
+                    $v->addValidationError($prop, 'valid_ipV4Address');
+                }
+            }
+        }
+    }
 
     if ($ipValidator->evaluate($data['DhcpRangeStart'])) {
         if (ip2long($data['DhcpRangeStart']) < ip2long(getDefaultRange('start', $interfaces[$key]))) {

@@ -59,6 +59,15 @@ foreach (getNetworkInterfaces() as $i => $props) {
     $range = $dhcp_db->getKey($i);
     $record = array("name" => $i ,"type" => "range");
     if ($range) {
+        foreach (array('DhcpDNS', 'DhcpWINS', 'DhcpNTP', 'DhcpTFTP') as $field) {
+            if (isset($range[$field])) {
+                if ($range[$field]) {
+                    $range[$field] = explode(",", $range[$field]);
+                } else {
+                    $range[$field] = array();
+                }
+            }
+        }
         $record['props'] = $range;
     } else {
         $record['props'] = getDefaults($props);

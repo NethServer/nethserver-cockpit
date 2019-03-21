@@ -31,6 +31,12 @@ function _get
     echo $data | jq -r ".$field"
 }
 
+function _get_array
+{
+    field=$1
+    echo $data | jq -r ".$field | map(tostring) | join(\",\")"
+}
+
 
 case $action in
 
@@ -44,7 +50,7 @@ case $action in
 
     "update-range")
         /sbin/e-smith/db dhcp set "$(_get name)" range status "$(_get status)" DhcpRangeStart "$(_get DhcpRangeStart)" DhcpRangeEnd "$(_get DhcpRangeEnd)" DhcpGatewayIP "$(_get DhcpGatewayIP)" \
-            DhcpLeaseTime "$(_get DhcpLeaseTime)" DhcpDomain "$(_get DhcpDomain)" DhcpDNS "$(_get DhcpDNS)" DhcpWINS "$(_get DhcpWINS)" DhcpNTP "$(_get DhcpNTP)" DhcpTFTP "$(_get DhcpTFTP)"
+            DhcpLeaseTime "$(_get DhcpLeaseTime)" DhcpDomain "$(_get DhcpDomain)" DhcpDNS "$(_get_array DhcpDNS)" DhcpWINS "$(_get_array DhcpWINS)" DhcpNTP "$(_get_array DhcpNTP)" DhcpTFTP "$(_get_array DhcpTFTP)"
         if [ $? -gt 0 ]; then
             error "EventFailed" "See /var/log/messages"
         else
