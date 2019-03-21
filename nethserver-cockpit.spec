@@ -37,6 +37,8 @@ perl createlinks
 (cd root ; find . -depth -not -name '*.orig' -print | cpio -dump %{buildroot})
 mkdir -p %{buildroot}/usr/share/cockpit/nethserver/
 tar xvf %{SOURCE1} -C %{buildroot}/usr/share/cockpit/nethserver/
+gzip -v %{buildroot}/usr/share/cockpit/nethserver/js/*
+gzip -v %{buildroot}/usr/share/cockpit/nethserver/css/*
 mkdir -p %{buildroot}/usr/libexec/nethserver/
 mv api/ %{buildroot}/usr/libexec/nethserver/
 %{genfilelist}  %{buildroot} | \
@@ -47,7 +49,6 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %doc README.rst
 %config /etc/nethserver/cockpit/authorization/roles.json
 %config /usr/share/cockpit/nethserver/categories/categories.json
-%config /usr/share/cockpit/nethserver/manifest.json
 %dir %{_nseventsdir}/%{name}-update
 %dir /usr/libexec/nethserver/api/
 
