@@ -18,8 +18,6 @@ rm -f *.tar.gz
 rm -f *.rpm
 rm -f *.log
 
-# Pull new languages strings if .pot exists.
-
 
 # Install dependecies and build UI and API
-npm install && npm run build && mv dist/static/manifest.json dist/
+npm install && npm run build

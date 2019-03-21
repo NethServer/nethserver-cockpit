@@ -105,7 +105,7 @@
               </div>
               <div class="list-view-pf-main-info compact-list-info">
                 <div class="list-view-pf-left">
-                  <img class="logo-app" src="static/assets/icon.png">
+                  <img class="logo-app" src="assets/icon.png">
                 </div>
                 <div class="list-view-pf-body">
                   <div class="list-view-pf-description">

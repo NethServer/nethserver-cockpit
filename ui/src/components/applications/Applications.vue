@@ -35,13 +35,13 @@
           >
             <img
               class="apps-icon"
-              :src="props.row.legacy ? 'static/assets/legacy.png' : '../'+props.row.id+'/logo.png'"
+              :src="props.row.legacy ? 'assets/legacy.png' : '../'+props.row.id+'/logo.png'"
             >
           </a>
           <span v-if="!props.row.url || props.row.url.length == 0 || props.row.legacy">
             <img
               class="apps-icon"
-              :src="props.row.legacy ? 'static/assets/legacy.png' : '../'+props.row.id+'/logo.png'"
+              :src="props.row.legacy ? 'assets/legacy.png' : '../'+props.row.id+'/logo.png'"
             >
           </span>
         </td>

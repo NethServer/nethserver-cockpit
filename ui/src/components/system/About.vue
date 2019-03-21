@@ -3,7 +3,7 @@
     <h2>{{$t('about.title')}}</h2>
     <div class="blank-slate-pf white-background" id="">
       <h1 class="logo">
-        <img class="img" src="static/assets/logo.svg">
+        <img class="img" src="assets/logo.svg">
       </h1>
       <h2>
         {{$t('about.description_1')}}

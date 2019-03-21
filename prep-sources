@@ -19,9 +19,6 @@ rm -f *.tar.gz
 rm -f *.rpm
 rm -f *.log
 
-# Pull new languages strings if .pot exists.
-
-
 # Install dependecies and build UI
 pushd ui && ./prep-sources && cd dist && tar cvzf ../../nethserver-cockpit-ui.tar.gz *
 popd
