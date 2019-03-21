@@ -1,3 +1,16 @@
+<style>
+.info-general {
+  font-size: 14px;
+}
+
+.reset-padding {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  display: inline-block !important;
+  margin-left: 5px !important;
+}
+</style>
+
 <template>
   <div :class="inline ? 'reset-padding' : ''">
     <a
@@ -22,17 +35,41 @@
     </span>
   </div>
 </template>
+
 <script>
 export default {
   name: "DocInfo",
-  props: ["title", "chapter", "section", "placement", "inline"],
+  props: {
+    title: {
+      type: String,
+      default: "More info"
+    },
+    chapter: {
+      type: String,
+      default: ""
+    },
+    section: {
+      type: String,
+      default: ""
+    },
+    placement: {
+      type: String,
+      default: ""
+    },
+    inline: {
+      type: Boolean,
+      default: false
+    },
+    lang: {
+      type: String,
+      default: "en"
+    }
+  },
   mixins: [],
   data() {
     return {
-      title: this.title || this.chapter,
       content: "",
       id: this.chapter + "-" + this.section + (+new Date()).toString(),
-      inline: this.inline,
       link: ""
     };
   },
@@ -41,15 +78,17 @@ export default {
   },
   methods: {
     getDocumentation() {
+      var $ = window.jQuery;
       var context = this;
 
       if (!this.inline) {
-        context.exec(
+        // eslint-disable-next-line
+        nethserver.exec(
           ["system-docs/read"],
           {
             chapter: this.chapter,
             section: this.section,
-            language: this.$root.$options.currentLocale
+            language: this.lang
           },
           null,
           function(success) {
@@ -58,7 +97,8 @@ export default {
             context.link = success.link;
           },
           function(error) {
-            console.error(error);
+            // eslint-disable-next-line
+            window.console.error(error);
           }
         );
       } else {
@@ -74,15 +114,3 @@ export default {
   }
 };
 </script>
-<style>
-.info-general {
-  font-size: 14px;
-}
-
-.reset-padding {
-  padding-left: 0px !important;
-  padding-right: 0px !important;
-  display: inline-block !important;
-  margin-left: 5px !important;
-}
-</style>
