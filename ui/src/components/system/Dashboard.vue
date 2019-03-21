@@ -433,6 +433,7 @@
 </template>
 
 <script>
+/*global patternfly c3*/
 var plot = require("./../../lib/plotter.js");
 var machine_info = require("./../../lib/machine-info.js");
 require("jquery.flot");

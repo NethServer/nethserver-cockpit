@@ -1944,6 +1944,7 @@
 </template>
 
 <script>
+/*global cockpit*/
 export default {
   name: "Backup",
   beforeRouteEnter(to, from, next) {

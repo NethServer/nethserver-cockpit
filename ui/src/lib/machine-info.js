@@ -21,6 +21,7 @@ const _ = cockpit.gettext;
 
 var cpu_ram_info_promises = {};
 
+/*global cockpit*/
 export function cpu_ram_info(address) {
   var pr = cpu_ram_info_promises[address];
   var dfd;

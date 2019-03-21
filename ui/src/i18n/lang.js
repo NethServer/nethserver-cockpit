@@ -1,3 +1,4 @@
+/*global cockpit*/
 var Lang = {
   initLang() {
     // get browser lang and init locales

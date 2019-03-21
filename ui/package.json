@@ -40,6 +40,7 @@
   "eslintConfig": {
     "root": true,
     "env": {
+      "browser": true,
       "node": true,
       "jquery": true
     },
@@ -47,7 +48,11 @@
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "rules": {},
+    "rules": {
+        "no-console": "off",
+        "no-unused-vars": "off",
+        "no-redeclare": "off"
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }

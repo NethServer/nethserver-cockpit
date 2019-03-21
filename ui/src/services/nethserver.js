@@ -1,3 +1,4 @@
+/*global nethserver*/
 var NethServerService = {
   methods: {
     exec: nethserver.exec,

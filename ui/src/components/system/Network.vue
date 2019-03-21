@@ -1052,6 +1052,7 @@
 </template>
 
 <script>
+/*global cockpit nethserver*/
 var plot = require("./../../lib/plotter.js");
 require("jquery.flot");
 require("jquery.flot/jquery.flot.selection");
@@ -1571,31 +1572,24 @@ export default {
       switch (role) {
         case "green":
           return "fa fa-map-marker";
-          break;
 
         case "red":
           return "fa fa-globe";
-          break;
 
         case "blue":
           return "fa fa-users";
-          break;
 
         case "orange":
           return "fa fa-shield";
-          break;
 
         case "free":
           return "fa fa-unlock";
-          break;
 
         case "other":
           return "fa fa-question";
-          break;
 
         case "missing":
           return "fa fa-ban";
-          break;
       }
     },
     toggleOpen(i) {

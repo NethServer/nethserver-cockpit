@@ -529,6 +529,7 @@
 </template>
 
 <script>
+/*global cockpit*/
 export default {
   name: "SoftwareCenter",
   data() {

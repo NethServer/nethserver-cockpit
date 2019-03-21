@@ -18,6 +18,7 @@
  */
 
 
+/*global cockpit*/
 const C_ = cockpit.gettext;
 
 /* A thin abstraction over flot and metrics channels.  It mostly

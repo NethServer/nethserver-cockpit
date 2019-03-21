@@ -154,6 +154,7 @@
 </template>
 
 <script>
+/*global cockpit*/
 export default {
   name: "Applications",
   data() {

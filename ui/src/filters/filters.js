@@ -1,5 +1,6 @@
 import Vue from "vue"
 
+/*global ns*/
 var Filters = {
   byteFormat: function (size) {
     var result;

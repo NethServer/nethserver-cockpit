@@ -24,6 +24,7 @@
 </template>
 
 <script>
+/*global d3*/
 export default {
   name: "DiskUsage",
   beforeRouteEnter(to, from, next) {
