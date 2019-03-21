@@ -276,18 +276,34 @@ if($cmd eq 'list') {
 
 } elsif ($cmd eq 'available') {
 
-    my @interfaces = list_free_interfaces();
-    $ret = \@interfaces;
+    $ret = {};
 
-} elsif ($cmd eq 'vlan-available') {
-
-    my @interfaces;
+    my @vlan;
     foreach my $n ($ndb->get_all()) {
-        if(is_valid_interface($n->prop('type'))) {
-            push(@interfaces, $n->key);
+        next if ($n->prop('type') eq 'ethernet' && !interface_exists($n->key));
+        if(is_valid_interface($n->prop('type')) && $n->prop('type') !~ m/vlan|alias/) {
+            push(@vlan, $n->key);
         }
     }
-    $ret = \@interfaces;
+    $ret->{'vlan'} = \@vlan;
+
+    my @bridge;
+    foreach my $n ($ndb->get_all()) {
+        next if ($n->prop('type') eq 'ethernet' && !interface_exists($n->key));
+        if(is_valid_interface($n->prop('type')) && $n->prop('type') !~ m/bridge|alias/) {
+            push(@bridge, $n->key);
+        }
+    }
+    $ret->{'bridge'} = \@bridge;
+
+    my @bond;
+    foreach my $n ($ndb->get_all()) {
+        next if ($n->prop('type') ne 'ethernet');
+        if (interface_exists($n->key)) {
+            push(@bond, $n->key);
+        }
+    }
+    $ret->{'bond'} = \@bridge;
 
 } elsif ($cmd eq 'bond-types') {
 

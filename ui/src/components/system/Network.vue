@@ -149,7 +149,7 @@
                 <div class="row">
                   <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                     <h4>{{$t('network.aliases')}}</h4>
-                    <dl v-for="a in i.aliases" v-bind:key="a" class="dl-horizontal int-details">
+                    <dl v-for="a in i.aliases" v-bind:key="a.name" class="dl-horizontal int-details">
                       <dt>{{a.name}}</dt>
                       <dd v-if="a.ipaddr">{{$t('network.ip_address')}}: <b>{{a.ipaddr}}</b></dd>
                       <dt></dt>
@@ -166,14 +166,14 @@
                   </div>
                   <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                     <h4>{{i.type == 'bond' ? $t('network.slaves') : $t('network.devices')}}</h4>
-                    <dl v-for="a in i.devices" v-bind:key="a" class="dl-horizontal int-details">
+                    <dl v-for="a in i.devices" v-bind:key="a.name" class="dl-horizontal int-details">
                       <dt>{{a.name}}</dt>
                       <dd v-if="a.mac">{{$t('network.mac_address')}}: <b>{{a.mac}}</b></dd>
                       <dt></dt>
                       <dd v-if="i.devices.length > 1">
                         <button @click="openDeleteDevice(a)" class="btn btn-danger btn-xs">{{$t('delete')}}</button>
                       </dd>
-                      <dd v-for="(c,ci) in a.devices" v-bind:key="ci">
+                      <dd v-for="(c,ci) in a.devices" v-bind:key="c.name">
                         <span :class="[ci == 0 ? '' : 'transparent', 'fa fa-arrow-right', 'span-right-margin']"></span>
                         <b>{{c.name}}</b>
                       </dd>
@@ -185,7 +185,7 @@
                   </div>
                   <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                     <h4>{{$t('network.routes')}}</h4>
-                    <dl v-for="r in routes[i.name]" v-bind:key="r" class="dl-horizontal int-details">
+                    <dl v-for="r in routes[i.name]" v-bind:key="r.name" class="dl-horizontal int-details">
                       <dt>{{r.name}}</dt>
                       <dd v-if="r.Router">{{$t('network.router')}}: <b>{{r.Router}}</b></dd>
                       <dt></dt>
@@ -689,7 +689,7 @@
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.mode')}}</label>
                           <div class="col-sm-9">
                             <select v-model="wizard.type.bond.mode" class="form-control combobox">
-                              <option v-for="m in wizard.type.bond.modes" :value="m" v-bind:key="m">{{m.name |
+                              <option v-for="m in wizard.type.bond.modes" :value="m" v-bind:key="m.name">{{m.name |
                                 capitalize}}</option>
                             </select>
                           </div>
@@ -1328,7 +1328,6 @@ export default {
     cancelWizard() {
       this.wizard = this.initWizard();
       this.getFreeDevices();
-      this.getFreeDevicesVLAN();
       this.getBondModes();
       $("#configureLogicInterface").modal("hide");
     },
@@ -1656,30 +1655,6 @@ export default {
         }
       );
     },
-    getFreeDevicesVLAN() {
-      var context = this;
-      context.exec(
-        ["system-network/read"],
-        {
-          action: "vlan-available"
-        },
-        null,
-        function(success) {
-          try {
-            success = JSON.parse(success);
-          } catch (e) {
-            console.error(e);
-          }
-          context.wizard.type.vlan.devicesList = success;
-          context.wizard.type.vlan.device = context.wizard.type.vlan.device
-            ? context.wizard.type.vlan.device
-            : success[0];
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
-    },
     getFreeDevices() {
       var context = this;
       context.exec(
@@ -1694,12 +1669,18 @@ export default {
           } catch (e) {
             console.error(e);
           }
+
           context.wizard.type.bond.devicesList = context.wizard.type.bond.devicesList
-            .concat(success)
+            .concat(success.bond)
             .sort();
           context.wizard.type.bridge.devicesList = context.wizard.type.bridge.devicesList
-            .concat(success)
+            .concat(success.bridge)
             .sort();
+
+          context.wizard.type.vlan.devicesList = success.vlan;
+          context.wizard.type.vlan.device = context.wizard.type.vlan.device
+            ? context.wizard.type.vlan.device
+            : success[0];
         },
         function(error) {
           console.error(error);
@@ -1852,7 +1833,6 @@ export default {
           };
 
           context.getFreeDevices();
-          context.getFreeDevicesVLAN();
           context.getBondModes();
           setTimeout(function() {
             $("[data-toggle=popover]")
@@ -1947,7 +1927,6 @@ export default {
       if (i.virtual == 1 && i.type != "xdsl") {
         this.wizard = this.initWizard(i);
         this.getFreeDevices();
-        this.getFreeDevicesVLAN();
         this.getBondModes();
         this.currentInterface = i;
         this.openNewLogicInterface();

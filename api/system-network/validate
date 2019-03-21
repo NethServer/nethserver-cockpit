@@ -99,9 +99,6 @@ function check_devices($devices, $current = array()) {
         if (!$r) {
             $v->addValidationError('devices', 'non_existing_interface');
         }
-        if (isset($r['role']) && $r['role']) {
-            $v->addValidationError('devices', 'interface_already_in_use');
-        } 
     }
 }
 
