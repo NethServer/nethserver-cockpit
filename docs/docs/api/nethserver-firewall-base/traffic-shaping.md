@@ -26,12 +26,16 @@ Example:
 
 #### stats
 
-Retrieve tc class usage for each red interface using netdata.
+Retrieve tc class usage for each red interface from the last `time` seconds.
+Data are read from netdata.
+
+If `time` is not set, default is 30 seconds.
 
 Example:
 ```json
 {
-  "action": "stats"
+    "action": "stats",
+    "time": 30
 }
 ```
 

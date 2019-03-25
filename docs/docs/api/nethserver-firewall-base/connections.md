@@ -41,12 +41,14 @@ Example:
 
 #### stats
 
-Return the connection number in the last 30 seconds from netdata.
+Return the connection number in the last `time` seconds from netdata.
+If `time` field is not defined, default is 900 seconds.
 
 Example:
 ```json
 {
-  "action": "stats"
+  "action": "stats",
+  "time": 900
 }
 ```
 
