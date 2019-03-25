@@ -9,25 +9,38 @@ Supported operations:
 - configure self-signed certificate
 - set default certificate
 
-## read 
-
-List all available certificates.
+## read
 
 ### Input
 
-If no input has been provided, the helper will return the list 
-of all available certificates.
+It takes a mandatory `action` argument.
+
+#### list
+
+List all available certificates.
+
+Example:
+```json
+{
+  "action": "list"
+}
+```
+
+#### info
 
 To retrieve a certificate, pass the `name` parameter to the read helper.
 
 Example:
-```bash
-echo '{"name":"/etc/pki/tls/certs/NSRV.crt"}' | ./read
+```json
+{
+  "action": "info",
+  "name":"/etc/pki/tls/certs/NSRV.crt"
+}
 ```
 
 ### Output
 
-#### List
+#### list
 
 Internally, the helper calls `/usr/libexec/nethserver/cert-list`.
 Output current `pki` configuration and the list of existing certificates.
@@ -77,7 +90,7 @@ Example:
 }
 ```
 
-#### Certificate content
+#### info
 
 Internally, the helper calls `/usr/libexec/nethserver/pki-info`.
 
