@@ -421,15 +421,20 @@
                     class="help-block"
                   >{{newUser.errorProps['newPassword']}}</span>
                 </div>
-                <div class="col-sm-2">
-                  <button tabindex="-1" @click="togglePass()" type="button" class="btn btn-primary">
+                <div class="col-sm-2 adjust-index">
+                  <button
+                    tabindex="-1"
+                    @click="togglePass()"
+                    type="button"
+                    class="btn btn-primary"
+                  >
                     <span :class="[!newUser.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"></span>
                   </button>
                 </div>
               </div>
               <div
                 v-if="!(newUser.isEdit && !newUser.isPassEdit)"
-                :class="['form-group', newUser.errorProps['confirmNewPassword'] ? 'has-error' : '']"
+                :class="['form-group mg-top-20', newUser.errorProps['confirmNewPassword'] ? 'has-error' : '']"
               >
                 <label
                   class="col-sm-3 control-label"
@@ -3057,4 +3062,10 @@ export default {
 </script>
 
 <style>
+.mg-top-20 {
+  margin-top: 20px;
+}
+.adjust-index {
+  z-index: 1;
+}
 </style>

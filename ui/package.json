@@ -49,9 +49,9 @@
       "eslint:recommended"
     ],
     "rules": {
-        "no-console": "off",
-        "no-unused-vars": "off",
-        "no-redeclare": "off"
+      "no-console": "off",
+      "no-unused-vars": "off",
+      "no-redeclare": "off"
     },
     "parserOptions": {
       "parser": "babel-eslint"
