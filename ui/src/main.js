@@ -42,7 +42,6 @@ const i18n = new VueI18n();
 
 // init Vue app
 var ns = new Vue({
-  el: "#app",
   router,
   i18n,
   render: h => h(App),
