@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.4.1
+Version: 0.4.2
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -58,6 +58,15 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 
 
 %changelog
+* Mon Mar 25 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.4.2-1
+- Security fix - NethServer/dev#5738
+- Network: allow creation of logical interfaces over existing interfaces
+- DHCP: support array of IP addresses
+- Compress JS and CSS files
+- Improve language selection
+- Restore Terminal and Subscription menu items
+- Minor UI and API fixes
+
 * Wed Mar 06 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.4.1-1
 - network api: create provider only if not exists
 
