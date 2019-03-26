@@ -11,12 +11,12 @@ import DocInfo from "./directives/DocInfo.vue";
 
 import App from "./App.vue";
 import router from "./router/index";
-import languages from "./i18n/lang";
 import "./filters/filters";
 
 
 window.c3 = require('c3');
 window.d3 = require('d3');
+window.moment = require("moment");
 
 Vue.config.productionTip = false;
 Vue.use(VueResource);
@@ -38,13 +38,7 @@ Vue.mixin(NethServer)
 Vue.mixin(UtilService)
 
 // configure i18n
-var langConf = languages.initLang();
-const i18n = new VueI18n({
-  locale: langConf.locale,
-  messages: langConf.messages
-});
-var moment = require("moment");
-moment.locale(langConf.locale);
+const i18n = new VueI18n();
 
 // init Vue app
 var ns = new Vue({
@@ -52,6 +46,15 @@ var ns = new Vue({
   router,
   i18n,
   render: h => h(App),
-  currentLocale: langConf.locale
 });
+
+nethserver.fetchTranslatedStrings(function (data, lang) {
+    var langCode = lang.substr(0, 2);
+    i18n.setLocaleMessage(langCode, data);
+    i18n.locale = langCode;
+    moment.locale(langCode);
+    ns.currentLocale = langCode;
+    ns.$mount('#app'); // Start VueJS application after language strings are loaded
+})
+
 global.ns = ns;

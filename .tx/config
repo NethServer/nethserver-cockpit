@@ -2,8 +2,7 @@
 host = https://www.transifex.com
 
 [nethserver.CockpitCore]
-source_file = ui/src/i18n/locale-en.json
-file_filter = ui/src/i18n/locale-<lang>.json
+source_file = ui/public/i18n/language.json
 source_lang = en
 type = KEYVALUEJSON
 
