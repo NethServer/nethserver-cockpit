@@ -69,7 +69,10 @@ Special fields:
 
 ## Success
 
-Simple success message:
+A successful response has no special requirements and is defined by the application 
+needs.
+
+For instance, a success message could be an empty object `{}` or as simple as:
 ```json
 {
     "state": "success"
@@ -92,6 +95,15 @@ For instance:
 }
 ```
 
+The **id** field is mandatory. It is an integer representing a unique identifier. 
+To generate a new `id` run the following Bash command:
+```bash
+$ date +%s
+```
+
+The **type** field is mandatory. Its value is a string identifying the error type. 
+See the "Well-known errors" section below.
+
 The **message** property should be used if an error is not caused by a specific
 attribute. On the other hand, there could be cases where the **attributes**
 object is empty, or undefined because the error condition does not depend on any
@@ -99,11 +111,6 @@ of the attributes or attributes are not defined at all.
 
 Note that the same Error object could represent multiple failure reasons.
 
-The `id` field should be a unique identifier like a timestamp.
-Bash example:
-```bash
-$ date +%s
-```
 
 ### Well-known errors
 
