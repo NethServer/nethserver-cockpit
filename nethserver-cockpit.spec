@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.4.2
+Version: 0.5.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -58,6 +58,14 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 
 
 %changelog
+* Wed Mar 27 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.5.0-1
+- Backup: hide/show password field
+- Network: allow creation of logic interface on existing ones
+- Backup: date is now in UTC
+- Improve password meter component
+- Improve labels and common components
+- Refactor i18n
+
 * Mon Mar 25 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.4.2-1
 - Security fix - NethServer/dev#5738
 - Network: allow creation of logical interfaces over existing interfaces
