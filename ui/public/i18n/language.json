@@ -1,5 +1,4 @@
 {
-  "en": {
     "cancel": "Cancel",
     "save": "Save",
     "delete": "Delete",
@@ -988,5 +987,4 @@
       "dhcp_comma_separated_field": "Insert an IP address or a comma-separated list of IP addesses",
       "dhcp_servers": "Servers"
     }
-  }
 }
