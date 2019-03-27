@@ -67,13 +67,13 @@
               {{$t('validation.'+errors.newPassword.message)}}
             </span>
           </div>
-          <div v-show="view.isRoot" class="col-sm-2">
+          <div v-show="view.isRoot" class="col-sm-2 adjust-index">
             <button tabindex="-1" @click="togglePass()" type="button" class="btn btn-primary">
               <span :class="[!newUser.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"></span>
             </button>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group mg-top-20">
           <label
             class="col-sm-2 control-label"
             for="textInput-modal-markup"
@@ -887,4 +887,10 @@ export default {
 </script>
 
 <style>
+.mg-top-20 {
+  margin-top: 20px;
+}
+.adjust-index {
+  z-index: 1;
+}
 </style>

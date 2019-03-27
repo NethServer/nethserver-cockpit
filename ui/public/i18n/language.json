@@ -872,7 +872,7 @@
       "LimitAccess": "Limit access",
       "backup": "Backup",
       "centos_upgrade": "A new upstream distribution release is available as update. To avoid installing it, switch the software updates origin to \"Locked\"",
-      "dhcp_on_green_can_cause_unexpected_behavior": "Using DHCP on green interfaces leads to unexpected behavior. Please, change the interface to static if possible",
+      "dhcp_on_green_can_cause_unexpected_behavior": "Using DHCP on green interfaces leads to unexpected behavior. Please, change the interface to static if possible.",
       "interface_must_be_static": "A green interface must have a static IP address"
     },
     "validation": {

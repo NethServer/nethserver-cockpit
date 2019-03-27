@@ -26,11 +26,15 @@
             )+users.provider)}}
           </span>
           <span
-            class="provider-details"
+            class="provider-details margin-left-md"
             data-toggle="collapse"
             data-parent="#provider-markup"
             href="#providerDetails"
-          >{{$t('users_groups.details')}}</span>
+            @click="toggleDetails()"
+          >
+            <span :class="['fa', view.opened ? 'fa-angle-down' : 'fa-angle-right']"></span>
+            {{$t('users_groups.details')}}
+          </span>
         </div>
         <div id="providerDetails" class="panel-collapse collapse">
           <dl class="dl-horizontal details-container">
@@ -417,15 +421,20 @@
                     class="help-block"
                   >{{newUser.errorProps['newPassword']}}</span>
                 </div>
-                <div class="col-sm-2">
-                  <button tabindex="-1" @click="togglePass()" type="button" class="btn btn-primary">
+                <div class="col-sm-2 adjust-index">
+                  <button
+                    tabindex="-1"
+                    @click="togglePass()"
+                    type="button"
+                    class="btn btn-primary"
+                  >
                     <span :class="[!newUser.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"></span>
                   </button>
                 </div>
               </div>
               <div
                 v-if="!(newUser.isEdit && !newUser.isPassEdit)"
-                :class="['form-group', newUser.errorProps['confirmNewPassword'] ? 'has-error' : '']"
+                :class="['form-group mg-top-20', newUser.errorProps['confirmNewPassword'] ? 'has-error' : '']"
               >
                 <label
                   class="col-sm-3 control-label"
@@ -1523,7 +1532,8 @@ export default {
       view: {
         isLoaded: false,
         isAuth: false,
-        isRoot: false
+        isRoot: false,
+        opened: false
       },
       searchString: "",
       currentSearchFilter: "user",
@@ -1566,6 +1576,9 @@ export default {
     };
   },
   methods: {
+    toggleDetails() {
+      this.view.opened = !this.view.opened;
+    },
     toggleAdvancedMode() {
       this.newUser.advanced = !this.newUser.advanced;
       this.$forceUpdate();
@@ -3049,4 +3062,10 @@ export default {
 </script>
 
 <style>
+.mg-top-20 {
+  margin-top: 20px;
+}
+.adjust-index {
+  z-index: 1;
+}
 </style>

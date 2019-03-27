@@ -40,8 +40,11 @@ sub set_default {
     }
 }
 
+my $input = readInput();
+my $cmd = $input->{'action'};
+
 # Check if input is not a pipe
-if (-t STDIN) {
+if ($cmd eq 'list') {
     $out->{'status'} = '';
     my @certs;
     foreach my $crt (values decode_json(`/usr/libexec/nethserver/cert-list`)) {
@@ -49,21 +52,19 @@ if (-t STDIN) {
     }
     $out->{'configuration'}{'certificates'} = \@certs;
     $out->{'configuration'}{'pki'} = $db->prepare_json('pki');
-} else {
-    my $data = readInput();
-    my $name = $data->{'name'};
-    $out->{'certificate'} = `/usr/libexec/nethserver/pki-info -s $name | base64 -w 0`;
-    
-}
 
-set_default('CountryCode','--');
-set_default('State','SomeState');
-set_default('Locality','Hometown');
-set_default('Organization','Example');
-set_default('OrganizationalUnitName','Main');
-set_default('CommonName','NethServer');
-set_default('EmailAddress',"");
-set_default('SubjectAltName',$db->get_type('DomainName'));
+    set_default('CountryCode','--');
+    set_default('State','SomeState');
+    set_default('Locality','Hometown');
+    set_default('Organization','Example');
+    set_default('OrganizationalUnitName','Main');
+    set_default('CommonName','NethServer');
+    set_default('EmailAddress',"");
+    set_default('SubjectAltName',$db->get_type('DomainName'));
+} elsif ($cmd eq 'info') {
+    my $name = $input->{'name'};
+    $out->{'certificate'} = `/usr/libexec/nethserver/pki-info -s $name | base64 -w 0`;
+}
 
 
 print encode_json($out);

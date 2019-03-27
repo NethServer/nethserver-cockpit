@@ -9,18 +9,19 @@ Manage traffic shaping configuration.
 The read API requires an action field.
 Valid actions:
 
-- `classes`
-- `stats`
-- `rules`
+-   `classes`
+-   `stats`
+-   `rules`
 
 #### classes
 
 Return the list of traffic shaping classes from `tc` database.
 
 Example:
+
 ```json
 {
-  "action": "classes"
+    "action": "classes"
 }
 ```
 
@@ -32,6 +33,7 @@ Data are read from netdata.
 If `time` is not set, default is 30 seconds.
 
 Example:
+
 ```json
 {
     "action": "stats",
@@ -48,180 +50,113 @@ If `expand` is set to `true`, the api will try to expand all objects involved in
 returning information about IP address, zone, etc.
 
 Example:
+
 ```json
 {
-  "action": "rules",
-  "expand": true
+    "action": "rules",
+    "expand": true
 }
 ```
-
 
 ### Output
 
 #### classes
 
 Output example:
+
 ```json
 {
-  "status": null,
-  "configuration": {
-    "classes": [
-      {
-        "MinOutputRate": "10",
-        "BindTo": [],
-        "name": "high",
-        "MaxOutputRate": "",
-        "MaxInputRate": "",
-        "MinInputRate": "10",
-        "Description": "",
-        "Unit": "%"
-      },
-      {
-        "MinOutputRate": "",
-        "BindTo": [],
-        "name": "low",
-        "MaxOutputRate": "90",
-        "MaxInputRate": "90",
-        "MinInputRate": "",
-        "Description": "",
-        "Unit": "%"
-      },
-      {
-        "MinOutputRate": "1",
-        "BindTo": [
-          "ens7",
-          "ens8"
-        ],
-        "name": "voip",
-        "MaxOutputRate": "",
-        "MaxInputRate": "",
-        "MinInputRate": "1",
-        "Description": "VoIP",
-        "Unit": "kbps"
-      }
-    ]
-  }
+    "status": null,
+    "configuration": {
+        "classes": [
+            {
+                "MinOutputRate": "10",
+                "BindTo": [],
+                "name": "high",
+                "MaxOutputRate": "",
+                "MaxInputRate": "",
+                "MinInputRate": "10",
+                "Description": "",
+                "Unit": "%"
+            },
+            {
+                "MinOutputRate": "",
+                "BindTo": [],
+                "name": "low",
+                "MaxOutputRate": "90",
+                "MaxInputRate": "90",
+                "MinInputRate": "",
+                "Description": "",
+                "Unit": "%"
+            },
+            {
+                "MinOutputRate": "1",
+                "BindTo": ["ens7", "ens8"],
+                "name": "voip",
+                "MaxOutputRate": "",
+                "MaxInputRate": "",
+                "MinInputRate": "1",
+                "Description": "VoIP",
+                "Unit": "kbps"
+            }
+        ]
+    }
 }
 ```
 
 #### stats
 
 Output example:
+
 ```json
 {
   "red1": {
     "out": {
-      "high": [
-        "0",
-        "0",
-        ...
+      "data": [
+        [
+          1553521843,
+          0,
+          0,
+          0
+        ],
+        [
+          1553521842,
+          0,
+          0,
+          0
+        ]
       ],
-      "time": [
-        "1548143776",
-        "1548143775",
-        ...
-      ],
-      "low": [
-        "0",
-        "0",
-        ...
-      ],
-      "default": [
-        "0.0115016",
-        "0.762703",
-        ...
-      ],
-      "voip": [
-        "0",
-        "0",
-        ...
+      "labels": [
+        "time",
+        "default",
+        "low",
+        "high"
       ]
     },
     "in": {
-      "high": [
-        "0",
-        "0",
-        ...
+      "data": [
+        [
+          1553521843,
+          0,
+          0,
+          0
+        ],
+        [
+          1553521842,
+          0,
+          0,
+          0
+        ]
       ],
-      "time": [
-        "1548143776",
-        "1548143775",
-        ...
-      ],
-      "low": [
-        "0",
-        "0",
-        ...
-      ],
-      "default": [
-        "0",
-        "0.0311577",
-        ...
-      ],
-      "voip": [
-        "0",
-        "0",
-        ...
+      "labels": [
+        "time",
+        "default",
+        "low",
+        "high"
       ]
     }
   },
-  "red2": {
-    "out": {
-      "high": [
-        "0",
-        "0",
-        ... 
-      ],
-      "time": [
-        "1548143776",
-        "1548143775",
-        ...
-      ],
-      "low": [
-        "0",
-        "0",
-        ...
-      ],
-      "default": [
-        "0.0456097",
-        "2.49839",
-        ...
-      ],
-      "voip": [
-        "0",
-        "0",
-        ...
-      ]
-    },
-    "in": {
-      "high": [
-        "0",
-        "0",
-        ...
-      ],
-      "time": [
-        "1548143776",
-        "1548143775",
-        ...
-      ],
-      "low": [
-        "0",
-        "0",
-        ...
-      ],
-      "default": [
-        "0.0289281",
-        "1.2430719",
-        ...
-      ],
-      "voip": [
-        "0",
-        "0",
-        ...
-      ]
-    }
-  }
-}
+  ...
 }
 ```
 
@@ -229,8 +164,8 @@ If data for red interfaces is not available (e.g. netdata is not running):
 
 ```json
 {
-  "ens7": null,
-  "ens8": null
+    "ens7": null,
+    "ens8": null
 }
 ```
 
@@ -242,6 +177,7 @@ The `status` section contains the `count` of existing rules,
 and the `next` position available for newly created rule.
 
 Example with `expand` set to `true`:
+
 ```json
 {
   "status": {
@@ -278,6 +214,7 @@ Example with `expand` set to `true`:
 ```
 
 Example with `expand` set to `false`:
+
 ```json
 {
   "rules": [
@@ -313,142 +250,141 @@ Example with `expand` set to `false`:
 
 The request must contain an `action` field. Valid actions are:
 
-- `create-class`
-- `update-class`
-- `create-rule`
-- `update-rule`
+-   `create-class`
+-   `update-class`
+-   `create-rule`
+-   `update-rule`
 
 Common constratins:
 
-- MaxInputRate, MaxOutputRate, MinInputRate, MinOutputRate: empty or an integer greater than 0
-- Unit: can be `kbps` or `%` 
-- BindTo: empty or a list of existing red interfaces
+-   MaxInputRate, MaxOutputRate, MinInputRate, MinOutputRate: empty or an integer greater than 0
+-   Unit: can be `kbps` or `%`
+-   BindTo: empty or a list of existing red interfaces
 
 Constraints for `create-class`:
 
-- name: must be a non-existing class
+-   name: must be a non-existing class
 
 Constraints for `update-class`:
 
-- name: must be an existing class
+-   name: must be an existing class
 
 Constraints for `delete-class`:
 
-- name: must be an existing class
-- the class must not be used in any firewall rule
+-   name: must be an existing class
+-   the class must not be used in any firewall rule
 
 Constraints for `create-rule` and `update-rule`:
 
-- All constraints from [firewall rules](/api/nethserver-firewall-base/rules.md#validate)
-- Action: must be an existing class in the form `class;<name>`
-- Src: can't be red role
-- Dst: can be red role or host or iprange or zone or cidr
-- id: must exists on update
-
+-   All constraints from [firewall rules](/api/nethserver-firewall-base/rules.md#validate)
+-   Action: must be an existing class in the form `class;<name>`
+-   Src: can't be red role
+-   Dst: can be red role or host or iprange or zone or cidr
+-   id: must exists on update
 
 ### Input
 
 #### create-class
 
 Example:
+
 ```json
 {
-  "action": "create-class",
-  "MinOutputRate": "",
-  "BindTo": [
-    "ens7"
-  ],
-  "name": "myclass",
-  "MaxOutputRate": 90,
-  "MaxInputRate": 90,
-  "MinInputRate": null,
-  "Description": "",
-  "Unit": "%"
+    "action": "create-class",
+    "MinOutputRate": "",
+    "BindTo": ["ens7"],
+    "name": "myclass",
+    "MaxOutputRate": 90,
+    "MaxInputRate": 90,
+    "MinInputRate": null,
+    "Description": "",
+    "Unit": "%"
 }
 ```
 
 #### update-class
 
 Example:
+
 ```json
 {
-  "action": "update-class",
-  "MinOutputRate": "",
-  "BindTo": [
-    "ens7",
-    "ens8"
-  ],
-  "name": "myclass",
-  "MaxOutputRate": 90,
-  "MaxInputRate": 90,
-  "MinInputRate": null,
-  "Description": "",
-  "Unit": "kbps"
+    "action": "update-class",
+    "MinOutputRate": "",
+    "BindTo": ["ens7", "ens8"],
+    "name": "myclass",
+    "MaxOutputRate": 90,
+    "MaxInputRate": 90,
+    "MinInputRate": null,
+    "Description": "",
+    "Unit": "kbps"
 }
 ```
 
 #### delete-class
 
 Example:
+
 ```json
 {
-  "action": "delete-class",
-  "name": "myclass"
+    "action": "delete-class",
+    "name": "myclass"
 }
 ```
 
 #### create-rule
 
 Example:
+
 ```json
 {
-  "Log": "none",
-  "Time": null,
-  "Position": 4,
-  "status": "enabled",
-  "Service": {
-    "name": "any",
-    "type": "fwservice"
-  },
-  "Action": "class;high",
-  "Dst": {
-    "name": "red",
-    "type": "role"
-  },
-  "Src": {
-    "name": "myhost.nethserver.org",
-    "type": "host"
-  },
-  "type": "rule",
-  "action": "create-rule"
+    "Log": "none",
+    "Time": null,
+    "Position": 4,
+    "status": "enabled",
+    "Service": {
+        "name": "any",
+        "type": "fwservice"
+    },
+    "Action": "class;high",
+    "Dst": {
+        "name": "red",
+        "type": "role"
+    },
+    "Src": {
+        "name": "myhost.nethserver.org",
+        "type": "host"
+    },
+    "type": "rule",
+    "action": "create-rule"
 }
 ```
 
 #### edit-rule
 
 Example:
+
 ```json
 {
-  "Log": "none",
-  "Time": null,
-  "Position": 4,
-  "status": "enabled",
-  "Service": {
-    "name": "any",
-    "type": "fwservice"
-  },
-  "Action": "class;high",
-  "Dst": {
-    "name": "red",
-    "type": "role"
-  },
-  "id": "6",
-  "Src": {
-    "name": "myhost.nethserver.org",
-    "type": "host"
-  },
-  "type": "rule",
-  "action": "create-rule"
+    "Log": "none",
+    "Time": null,
+    "Position": 4,
+    "status": "enabled",
+    "Service": {
+        "name": "any",
+        "type": "fwservice"
+    },
+    "Action": "class;high",
+    "Dst": {
+        "name": "red",
+        "type": "role"
+    },
+    "id": "6",
+    "Src": {
+        "name": "myhost.nethserver.org",
+        "type": "host"
+    },
+    "type": "rule",
+    "action": "create-rule"
 }
 ```
 
@@ -462,10 +398,11 @@ The `rules` field contains an ordered list of rules id.
 The API will update all `Position` properties accordingly to given order.
 
 Input example:
-```json     
+
+```json
 {
-  "action": "reorder",
-  "rules": [24,55,2]
+    "action": "reorder",
+    "rules": [24, 55, 2]
 }
 ```
 
@@ -478,9 +415,10 @@ It uses the same format from input action.
 Create default classes.
 
 Example:
+
 ```json
 {
-  "action": "create-default"
+    "action": "create-default"
 }
 ```
 
@@ -490,10 +428,11 @@ Takes an `action` field.
 
 Valid actions are:
 
-- `delete-class`
-- `delete-rule`
+-   `delete-class`
+-   `delete-rule`
 
 Example:
+
 ```json
 {
     "action": "delete-class",

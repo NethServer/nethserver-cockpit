@@ -1,33 +1,59 @@
 <template>
   <div v-show="view.isAuth">
     <h2>{{$t('network.title')}}</h2>
+    <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
+      <span class="pficon pficon-warning-triangle-o"></span>
+      <strong>{{$t('hints_suggested')}}:</strong>
+      <li v-for="(m,t) in hints.details" v-bind:key="t">
+        <strong>{{t}}</strong>
+        : {{$t('hints.'+m)}}
+      </li>
+      <span
+        v-if="hints.message && hints.message.length > 0"
+      >{{hints.message && $t('hints.'+hints.message)}}</span>
+    </div>
 
     <div class="row">
       <div class="col-sm-3">
         <h3>{{$t('network.proxy')}}</h3>
         <div>
           <h4 class="dhcp-int">{{$t('network.proxy_enabled')}}</h4>
-          <toggle-button class="min-toggle" :width="40" :height="20" :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
-            :value="currentProxy.status" :sync="true" @change="toggleProxy()" />
-          <button v-if="currentProxy.status" @click="toggleProxy(false, true)" class="btn btn-primary dhcp-mod-btn">{{$t('modify')}}</button>
+          <toggle-button
+            class="min-toggle"
+            :width="40"
+            :height="20"
+            :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+            :value="currentProxy.status"
+            :sync="true"
+            @change="toggleProxy()"
+          />
+          <button
+            v-if="currentProxy.status"
+            @click="toggleProxy(false, true)"
+            class="btn btn-primary dhcp-mod-btn"
+          >{{$t('modify')}}</button>
         </div>
 
         <h3>{{$t('actions')}}</h3>
-        <button @click="openNewLogicInterface()" class="btn btn-primary btn-lg shutdown-privileged" data-action="restart"
-          data-container="body">
-          {{$t('network.add_logic_interface')}}
-        </button>
+        <button
+          @click="openNewLogicInterface()"
+          class="btn btn-primary btn-lg shutdown-privileged"
+          data-action="restart"
+          data-container="body"
+        >{{$t('network.add_logic_interface')}}</button>
       </div>
       <div class="col-sm-9 adjust-top-col">
         <div v-show="view.isLoaded" class="col-sm-6">
           <div>
-            <span class="plot-unit" id="networking-tx-unit"></span><span class="plot-title" translatable="yes">Sending</span>
+            <span class="plot-unit" id="networking-tx-unit"></span>
+            <span class="plot-title" translatable="yes">Sending</span>
           </div>
           <div id="networking-tx-graph"></div>
         </div>
         <div v-show="view.isLoaded" class="col-sm-6">
           <div>
-            <span class="plot-unit" id="networking-rx-unit"></span><span class="plot-title" translatable="yes">Receiving</span>
+            <span class="plot-unit" id="networking-rx-unit"></span>
+            <span class="plot-title" translatable="yes">Receiving</span>
           </div>
           <div id="networking-rx-graph"></div>
         </div>
@@ -38,28 +64,54 @@
       <div class="col-sm-12">
         <h3>
           {{$t('network.interface_list')}}
-          <a id="routing-info" data-toggle="modal" data-target="#routingInfoModal" :class="['right', !routingInfo ? 'disabled' : '']">
-            <span class="pficon pficon-route starred-marging"></span>{{$t('network.routing_info')}}
+          <a
+            id="routing-info"
+            data-toggle="modal"
+            data-target="#routingInfoModal"
+            :class="['right', !routingInfo ? 'disabled' : '']"
+          >
+            <span class="pficon pficon-route starred-marging"></span>
+            {{$t('network.routing_info')}}
           </a>
         </h3>
         <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
 
         <div v-for="(role,roleKey) in interfaces" v-bind:key="roleKey">
           <h4 :class="[roleKey]" v-if="role.length > 0">{{$t('network.'+roleKey)}}</h4>
-          <div id="pf-list-simple-expansion" class="list-group list-view-pf list-view-pf-view wizard-pf-contents-title">
-            <div v-for="(i, iKey) in role" v-bind:key="iKey" :class="['list-group-item', roleKey+'-list', i.isOpened ? 'list-view-pf-expand-active' : '', 'no-shadow']">
+          <div
+            id="pf-list-simple-expansion"
+            class="list-group list-view-pf list-view-pf-view wizard-pf-contents-title"
+          >
+            <div
+              v-for="(i, iKey) in role"
+              v-bind:key="iKey"
+              :class="['list-group-item', roleKey+'-list', i.isOpened ? 'list-view-pf-expand-active' : '', 'no-shadow']"
+            >
               <div class="list-group-item-header">
                 <div class="list-view-pf-actions">
-                  <button :disabled="roleKey == 'missing'" @click="openConfigureInterface(i)" class="btn btn-default">
+                  <button
+                    :disabled="roleKey == 'missing'"
+                    @click="openConfigureInterface(i)"
+                    class="btn btn-default"
+                  >
                     <span class="fa fa-cog span-right-margin"></span>
                     {{$t('network.configure')}}
                   </button>
                   <div v-if="roleKey != 'free'" class="dropdown pull-right dropdown-kebab-pf">
-                    <button class="btn btn-link dropdown-toggle" type="button" :id="i.name+'-list-container'"
-                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <button
+                      class="btn btn-link dropdown-toggle"
+                      type="button"
+                      :id="i.name+'-list-container'"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="true"
+                    >
                       <span class="fa fa-ellipsis-v"></span>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-right" :aria-labelledby="i.name+'-list-container'">
+                    <ul
+                      class="dropdown-menu dropdown-menu-right"
+                      :aria-labelledby="i.name+'-list-container'"
+                    >
                       <li v-if="roleKey != 'missing'">
                         <a @click="openCreateAlias(i)">
                           <span class="fa fa-clone span-right-margin"></span>
@@ -75,7 +127,7 @@
                       <li v-if="roleKey != 'missing'" role="separator" class="divider"></li>
                       <li v-if="i.virtual == 0">
                         <a @click="openReleaseRole(i)">
-                          <span class="pficon pficon-unlocked	 span-right-margin"></span>
+                          <span class="pficon pficon-unlocked span-right-margin"></span>
                           {{$t('network.release_role')}}
                         </a>
                       </li>
@@ -95,21 +147,41 @@
                   <div class="list-view-pf-body">
                     <div class="list-view-pf-description">
                       <div :class="['list-group-item-heading', roleKey]">
-                        <span class="pointer" @click="toggleOpen(i)">{{i.name}} <span v-if="i.nslabel">({{i.nslabel}})</span></span>
+                        <span class="pointer" @click="toggleOpen(i)">
+                          {{i.name}}
+                          <span v-if="i.nslabel">({{i.nslabel}})</span>
+                        </span>
                       </div>
                       <div class="list-group-item-text details-ip">
                         <span class="pficon pficon-screen starred-marging"></span>
-                        <span class="">CIDR</span> <strong>{{i.cidr || interfaceStatus[i.name] &&
-                          interfaceStatus[i.name].ipaddr || '-'}}</strong>
-                        <br />
+                        <span class>CIDR</span>
+                        <strong>
+                          {{i.cidr || interfaceStatus[i.name] &&
+                          interfaceStatus[i.name].ipaddr || '-'}}
+                        </strong>
+                        <br>
                         <span v-if="interfaces.red.length == 0 || roleKey == 'red'">
                           <span class="pficon pficon-middleware starred-marging"></span>
-                          <span class="icon-net-margin">GW</span> <strong>{{i.gateway || interfaceStatus[i.name] &&
-                            interfaceStatus[i.name].gateway}}</strong>
+                          <span class="icon-net-margin">GW</span>
+                          <strong>
+                            {{i.gateway || interfaceStatus[i.name] &&
+                            interfaceStatus[i.name].gateway}}
+                          </strong>
                         </span>
-                        <br />
-                        <a tabindex="0" href="#" @click="getMoreInfo(i)" :id="'popover-'+i.name | sanitize" class="alert-link" data-trigger="focus" data-placement="top" data-toggle="popover" data-html="true" :title="$t('network.additional_info')"
-                          data-content="">{{$t('network.more_info')}}</a>
+                        <br>
+                        <a
+                          tabindex="0"
+                          href="#"
+                          @click="getMoreInfo(i)"
+                          :id="'popover-'+i.name | sanitize"
+                          class="alert-link"
+                          data-trigger="focus"
+                          data-placement="top"
+                          data-toggle="popover"
+                          data-html="true"
+                          :title="$t('network.additional_info')"
+                          data-content
+                        >{{$t('network.more_info')}}</a>
                       </div>
                     </div>
                     <div class="list-view-pf-additional-info">
@@ -118,45 +190,66 @@
                         <strong>{{i.role == 'pppoe' ? 'PPPoE' : i.role | capitalize}}</strong>
                       </div>
                       <div class="list-view-pf-additional-info-item">
-                        <span :class="['pficon', interfaceStatus[i.name] && interfaceStatus[i.name].link == 1 ? 'pficon-plugged' : 'pficon-unplugged']"></span>
+                        <span
+                          :class="['pficon', interfaceStatus[i.name] && interfaceStatus[i.name].link == 1 ? 'pficon-plugged' : 'pficon-unplugged']"
+                        ></span>
                         <strong>{{interfaceStatus[i.name] && interfaceStatus[i.name].link == 1 ? 'UP' : 'DOWN'}}</strong>
                       </div>
                       <div v-if="i.aliases.length > 0" class="list-view-pf-additional-info-item">
                         <span class="fa fa-clone"></span>
-                        <strong>{{i.aliases.length}}</strong> {{i.aliases.length == 1 ? $t('network.alias') :
+                        <strong>{{i.aliases.length}}</strong>
+                        {{i.aliases.length == 1 ? $t('network.alias') :
                         $t('network.aliases')}}
                       </div>
                       <div v-if="i.devices.length > 0" class="list-view-pf-additional-info-item">
                         <span class="pficon pficon-container-node"></span>
-                        <strong>{{i.devices.length}}</strong> {{i.type == 'bond' ? i.devices.length == 1 ?
+                        <strong>{{i.devices.length}}</strong>
+                        {{i.type == 'bond' ? i.devices.length == 1 ?
                         $t('network.slave') : $t('network.slaves') :
                         i.devices.length == 1 ? $t('network.device') : $t('network.devices')}}
                       </div>
-                      <div v-if="routes[i.name] && routes[i.name].length > 0" class="list-view-pf-additional-info-item">
+                      <div
+                        v-if="routes[i.name] && routes[i.name].length > 0"
+                        class="list-view-pf-additional-info-item"
+                      >
                         <span class="pficon pficon-route"></span>
-                        <strong>{{routes[i.name] && routes[i.name].length}}</strong> {{routes[i.name] &&
+                        <strong>{{routes[i.name] && routes[i.name].length}}</strong>
+                        {{routes[i.name] &&
                         routes[i.name].length == 1 ? $t('network.route') : $t('network.routes')}}
                       </div>
-                      <div v-if="i.aliases.length > 0 || i.devices.length > 0 || routes[i.name] && routes[i.name].length > 0"
-                        class="list-view-pf-additional-info-item">
+                      <div
+                        v-if="i.aliases.length > 0 || i.devices.length > 0 || routes[i.name] && routes[i.name].length > 0"
+                        class="list-view-pf-additional-info-item"
+                      >
                         <a @click="toggleOpen(i)">{{$t('details')}}</a>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div :class="['list-group-item-container container-fluid', i.isOpened ? 'active' : 'hidden']">
+              <div
+                :class="['list-group-item-container container-fluid', i.isOpened ? 'active' : 'hidden']"
+              >
                 <div class="row">
                   <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                     <h4>{{$t('network.aliases')}}</h4>
                     <dl v-for="a in i.aliases" v-bind:key="a.name" class="dl-horizontal int-details">
                       <dt>{{a.name}}</dt>
-                      <dd v-if="a.ipaddr">{{$t('network.ip_address')}}: <b>{{a.ipaddr}}</b></dd>
+                      <dd v-if="a.ipaddr">
+                        {{$t('network.ip_address')}}:
+                        <b>{{a.ipaddr}}</b>
+                      </dd>
                       <dt></dt>
-                      <dd v-if="a.netmask">{{$t('network.netmask')}}: <b>{{a.netmask}}</b></dd>
+                      <dd v-if="a.netmask">
+                        {{$t('network.netmask')}}:
+                        <b>{{a.netmask}}</b>
+                      </dd>
                       <dt></dt>
                       <dd>
-                        <button @click="openDeleteAlias(a)" class="btn btn-danger btn-xs">{{$t('delete')}}</button>
+                        <button
+                          @click="openDeleteAlias(a)"
+                          class="btn btn-danger btn-xs"
+                        >{{$t('delete')}}</button>
                       </dd>
                     </dl>
                     <dl v-if="i.aliases.length == 0" class="dl-horizontal int-details">
@@ -168,13 +261,21 @@
                     <h4>{{i.type == 'bond' ? $t('network.slaves') : $t('network.devices')}}</h4>
                     <dl v-for="a in i.devices" v-bind:key="a.name" class="dl-horizontal int-details">
                       <dt>{{a.name}}</dt>
-                      <dd v-if="a.mac">{{$t('network.mac_address')}}: <b>{{a.mac}}</b></dd>
+                      <dd v-if="a.mac">
+                        {{$t('network.mac_address')}}:
+                        <b>{{a.mac}}</b>
+                      </dd>
                       <dt></dt>
                       <dd v-if="i.devices.length > 1">
-                        <button @click="openDeleteDevice(a)" class="btn btn-danger btn-xs">{{$t('delete')}}</button>
+                        <button
+                          @click="openDeleteDevice(a)"
+                          class="btn btn-danger btn-xs"
+                        >{{$t('delete')}}</button>
                       </dd>
-                      <dd v-for="(c,ci) in a.devices" v-bind:key="c.name">
-                        <span :class="[ci == 0 ? '' : 'transparent', 'fa fa-arrow-right', 'span-right-margin']"></span>
+                      <dd v-for="(c,ci) in a.devices" v-bind:key="ci">
+                        <span
+                          :class="[ci == 0 ? '' : 'transparent', 'fa fa-arrow-right', 'span-right-margin']"
+                        ></span>
                         <b>{{c.name}}</b>
                       </dd>
                     </dl>
@@ -185,15 +286,31 @@
                   </div>
                   <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                     <h4>{{$t('network.routes')}}</h4>
-                    <dl v-for="r in routes[i.name]" v-bind:key="r.name" class="dl-horizontal int-details">
+                    <dl
+                      v-for="(r, ri) in routes[i.name]"
+                      v-bind:key="ri"
+                      class="dl-horizontal int-details"
+                    >
                       <dt>{{r.name}}</dt>
-                      <dd v-if="r.Router">{{$t('network.router')}}: <b>{{r.Router}}</b></dd>
+                      <dd v-if="r.Router">
+                        {{$t('network.router')}}:
+                        <b>{{r.Router}}</b>
+                      </dd>
                       <dt></dt>
-                      <dd v-if="r.Metric">{{$t('network.metric')}}: <b>{{r.Metric}}</b></dd>
+                      <dd v-if="r.Metric">
+                        {{$t('network.metric')}}:
+                        <b>{{r.Metric}}</b>
+                      </dd>
                       <dt></dt>
-                      <dd v-if="r.Description">{{$t('network.description')}}: <b>{{r.Description}}</b></dd>
+                      <dd v-if="r.Description">
+                        {{$t('network.description')}}:
+                        <b>{{r.Description}}</b>
+                      </dd>
                       <dd>
-                        <button @click="openDeleteRoute(r)" class="btn btn-danger btn-xs">{{$t('delete')}}</button>
+                        <button
+                          @click="openDeleteRoute(r)"
+                          class="btn btn-danger btn-xs"
+                        >{{$t('delete')}}</button>
                       </dd>
                     </dl>
                     <dl v-if="!routes[i.name]" class="dl-horizontal int-details">
@@ -232,7 +349,13 @@
       </div>
     </div>
 
-    <div class="modal" id="createInterfaceAliasModal" tabindex="-1" role="dialog" data-backdrop="static">
+    <div
+      class="modal"
+      id="createInterfaceAliasModal"
+      tabindex="-1"
+      role="dialog"
+      data-backdrop="static"
+    >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -241,19 +364,29 @@
           <form class="form-horizontal" v-on:submit.prevent="saveAlias(newInterface)">
             <div class="modal-body">
               <div :class="['form-group', newInterface.errors.ipaddr.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.ip_address')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('network.ip_address')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="newInterface.ipaddr" class="form-control">
-                  <span v-if="newInterface.errors.ipaddr.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                    {{$t('validation.'+newInterface.errors.ipaddr.message)}}</span>
+                  <span v-if="newInterface.errors.ipaddr.hasError" class="help-block">
+                    {{$t('validation.validation_failed')}}:
+                    {{$t('validation.'+newInterface.errors.ipaddr.message)}}
+                  </span>
                 </div>
               </div>
               <div :class="['form-group', newInterface.errors.netmask.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.netmask')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('network.netmask')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="newInterface.netmask" class="form-control">
-                  <span v-if="newInterface.errors.netmask.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                    {{$t('validation.'+newInterface.errors.netmask.message)}}</span>
+                  <span v-if="newInterface.errors.netmask.hasError" class="help-block">
+                    {{$t('validation.validation_failed')}}:
+                    {{$t('validation.'+newInterface.errors.netmask.message)}}
+                  </span>
                 </div>
               </div>
             </div>
@@ -267,7 +400,13 @@
       </div>
     </div>
 
-    <div class="modal" id="createInterfaceRouteModal" tabindex="-1" role="dialog" data-backdrop="static">
+    <div
+      class="modal"
+      id="createInterfaceRouteModal"
+      tabindex="-1"
+      role="dialog"
+      data-backdrop="static"
+    >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -276,35 +415,55 @@
           <form class="form-horizontal" v-on:submit.prevent="saveRoute(newRoute)">
             <div class="modal-body">
               <div :class="['form-group', newRoute.errors.name.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.network_address')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('network.network_address')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="newRoute.name" class="form-control">
-                  <span v-if="newRoute.errors.name.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                    {{$t('validation.'+newRoute.errors.name.message)}}</span>
+                  <span v-if="newRoute.errors.name.hasError" class="help-block">
+                    {{$t('validation.validation_failed')}}:
+                    {{$t('validation.'+newRoute.errors.name.message)}}
+                  </span>
                 </div>
               </div>
               <div :class="['form-group', newRoute.errors.Router.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.router')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('network.router')}}</label>
                 <div class="col-sm-9">
                   <input required type="text" v-model="newRoute.Router" class="form-control">
-                  <span v-if="newRoute.errors.Router.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                    {{$t('validation.'+newRoute.errors.Router.message)}}</span>
+                  <span v-if="newRoute.errors.Router.hasError" class="help-block">
+                    {{$t('validation.validation_failed')}}:
+                    {{$t('validation.'+newRoute.errors.Router.message)}}
+                  </span>
                 </div>
               </div>
               <div :class="['form-group', newRoute.errors.Metric.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.metric')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('network.metric')}}</label>
                 <div class="col-sm-9">
                   <input type="number" min="0" v-model="newRoute.Metric" class="form-control">
-                  <span v-if="newRoute.errors.Metric.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                    {{$t('validation.'+newRoute.errors.Metric.message)}}</span>
+                  <span v-if="newRoute.errors.Metric.hasError" class="help-block">
+                    {{$t('validation.validation_failed')}}:
+                    {{$t('validation.'+newRoute.errors.Metric.message)}}
+                  </span>
                 </div>
               </div>
               <div :class="['form-group', newRoute.errors.Description.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.description')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('network.description')}}</label>
                 <div class="col-sm-9">
                   <input type="text" v-model="newRoute.Description" class="form-control">
-                  <span v-if="newRoute.errors.Description.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                    {{$t('validation.'+newRoute.errors.Description.message)}}</span>
+                  <span v-if="newRoute.errors.Description.hasError" class="help-block">
+                    {{$t('validation.validation_failed')}}:
+                    {{$t('validation.'+newRoute.errors.Description.message)}}
+                  </span>
                 </div>
               </div>
             </div>
@@ -322,13 +481,18 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('network.delete_route')}}
-              {{currentRoute.name}}</h4>
+            <h4 class="modal-title">
+              {{$t('network.delete_route')}}
+              {{currentRoute.name}}
+            </h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="deleteRoute(currentRoute)">
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
               </div>
             </div>
             <div class="modal-footer">
@@ -344,13 +508,18 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('network.delete_alias')}}
-              {{currentInterface.name}}</h4>
+            <h4 class="modal-title">
+              {{$t('network.delete_alias')}}
+              {{currentInterface.name}}
+            </h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="deleteAlias(currentInterface)">
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
               </div>
             </div>
             <div class="modal-footer">
@@ -366,13 +535,18 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('network.release_role_for')}}
-              {{currentInterface.name}}</h4>
+            <h4 class="modal-title">
+              {{$t('network.release_role_for')}}
+              {{currentInterface.name}}
+            </h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="releaseRole(currentInterface)">
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
               </div>
             </div>
             <div class="modal-footer">
@@ -388,13 +562,18 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('network.delete_device')}}
-              {{currentInterface.name}}</h4>
+            <h4 class="modal-title">
+              {{$t('network.delete_device')}}
+              {{currentInterface.name}}
+            </h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="deleteDevice(currentInterface)">
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
               </div>
             </div>
             <div class="modal-footer">
@@ -410,26 +589,43 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('network.delete_interface')}}
-              {{currentInterface.name}}</h4>
+            <h4 class="modal-title">
+              {{$t('network.delete_interface')}}
+              {{currentInterface.name}}
+            </h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="deleteInterface(currentInterface)">
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
               </div>
-              <div v-if="currentInterface.type != 'xdsl'" class="alert alert-warning alert-dismissable">
+              <div
+                v-if="currentInterface.type != 'xdsl' && currentInterface.type != 'vlan'"
+                class="alert alert-warning alert-dismissable"
+              >
                 <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>{{$t('warning')}}.</strong> {{$t('network.successor_hints')}}.
+                <strong>{{$t('warning')}}.</strong>
+                {{$t('network.successor_hints')}}.
               </div>
-              <div v-if="currentInterface.type != 'xdsl'" class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.select_successor')}}</label>
+              <div
+                v-if="currentInterface.type != 'xdsl' && currentInterface.type != 'vlan'"
+                class="form-group"
+              >
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('network.select_successor')}}</label>
                 <div class="col-sm-9">
                   <div v-if="!currentInterface.successorListLoaded" class="spinner spinner-sm"></div>
-                  <select v-show="currentInterface.successorListLoaded" v-model="currentInterface.successor" class="combobox form-control">
-                    <option v-for="s in currentInterface.successorList" v-bind:key="s">
-                      {{s}}
-                    </option>
+                  <select
+                    v-show="currentInterface.successorListLoaded"
+                    v-model="currentInterface.successor"
+                    class="combobox form-control"
+                  >
+                    <option v-for="s in currentInterface.successorList" v-bind:key="s">{{s}}</option>
                   </select>
                 </div>
               </div>
@@ -450,100 +646,160 @@
             <h4 class="modal-title">{{$t('network.configure_proxy')}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="saveProxy()">
-
             <div class="modal-body">
               <div :class="['form-group', currentProxy.errors.host.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.hostname')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('network.hostname')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="currentProxy.configuration.props.host" class="form-control">
-                  <span v-if="currentProxy.errors.host.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                    {{$t('validation.'+currentProxy.errors.host.message)}}</span>
+                  <input
+                    required
+                    type="text"
+                    v-model="currentProxy.configuration.props.host"
+                    class="form-control"
+                  >
+                  <span v-if="currentProxy.errors.host.hasError" class="help-block">
+                    {{$t('validation.validation_failed')}}:
+                    {{$t('validation.'+currentProxy.errors.host.message)}}
+                  </span>
                 </div>
               </div>
               <div :class="['form-group', currentProxy.errors.port.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.port')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('network.port')}}</label>
                 <div class="col-sm-9">
-                  <input type="number" min="0" v-model="currentProxy.configuration.props.port" class="form-control">
-                  <span v-if="currentProxy.errors.port.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                    {{$t('validation.'+currentProxy.errors.port.message)}}</span>
+                  <input
+                    type="number"
+                    min="0"
+                    v-model="currentProxy.configuration.props.port"
+                    class="form-control"
+                  >
+                  <span v-if="currentProxy.errors.port.hasError" class="help-block">
+                    {{$t('validation.validation_failed')}}:
+                    {{$t('validation.'+currentProxy.errors.port.message)}}
+                  </span>
                 </div>
               </div>
               <div :class="['form-group', currentProxy.errors.user.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.username')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('network.username')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="currentProxy.configuration.props.user" class="form-control">
-                  <span v-if="currentProxy.errors.user.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                    {{$t('validation.'+currentProxy.errors.user.message)}}</span>
+                  <input
+                    required
+                    type="text"
+                    v-model="currentProxy.configuration.props.user"
+                    class="form-control"
+                  >
+                  <span v-if="currentProxy.errors.user.hasError" class="help-block">
+                    {{$t('validation.validation_failed')}}:
+                    {{$t('validation.'+currentProxy.errors.user.message)}}
+                  </span>
                 </div>
               </div>
-              <div :class="['form-group', currentProxy.errors.password.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.password')}}</label>
+              <div
+                :class="['form-group', currentProxy.errors.password.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('network.password')}}</label>
                 <div class="col-sm-9">
-                  <input required type="password" v-model="currentProxy.configuration.props.password" class="form-control">
-                  <span v-if="currentProxy.errors.password.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                    {{$t('validation.'+currentProxy.errors.password.message)}}</span>
+                  <input
+                    required
+                    type="password"
+                    v-model="currentProxy.configuration.props.password"
+                    class="form-control"
+                  >
+                  <span v-if="currentProxy.errors.password.hasError" class="help-block">
+                    {{$t('validation.validation_failed')}}:
+                    {{$t('validation.'+currentProxy.errors.password.message)}}
+                  </span>
                 </div>
               </div>
             </div>
 
             <div class="modal-footer">
               <div v-if="currentProxy.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
-              <button class="btn btn-default" @click="toggleProxy(true)" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
-              <button class="btn btn-primary" type="submit">{{currentProxy.isEdit ? $t('modify') :
-                $t('save')}}</button>
+              <button
+                class="btn btn-default"
+                @click="toggleProxy(true)"
+                type="button"
+                data-dismiss="modal"
+              >{{$t('cancel')}}</button>
+              <button class="btn btn-primary" type="submit">
+                {{currentProxy.isEdit ? $t('modify') :
+                $t('save')}}
+              </button>
             </div>
-
           </form>
         </div>
       </div>
     </div>
 
-    <div class="modal" id="configureLogicInterface" tabindex="-1" role="dialog" data-backdrop="static">
+    <div
+      class="modal"
+      id="configureLogicInterface"
+      tabindex="-1"
+      role="dialog"
+      data-backdrop="static"
+    >
       <div class="modal-dialog modal-lg wizard-pf">
         <div class="modal-content">
           <div class="modal-header">
-            <dt class="modal-title">{{wizard.isEdit ? $t('network.edit_logic_interface')+' '+currentInterface.name :
-              $t('network.add_logic_interface')}}</dt>
+            <dt class="modal-title">
+              {{wizard.isEdit ? $t('network.edit_logic_interface')+' '+currentInterface.name :
+              $t('network.add_logic_interface')}}
+            </dt>
           </div>
 
           <div class="modal-body wizard-pf-body clearfix">
             <div class="wizard-pf-steps">
               <ul class="wizard-pf-steps-indicator">
-
-                <li :class="['wizard-pf-step', wizard.currentStep == 1 ? 'active' : '']" data-tabgroup="1">
+                <li
+                  :class="['wizard-pf-step', wizard.currentStep == 1 ? 'active' : '']"
+                  data-tabgroup="1"
+                >
                   <a>
                     <span class="wizard-pf-step-number no-cursor">1</span>
                     <span class="wizard-pf-step-title">{{$t('network.role')}}</span>
                   </a>
                 </li>
 
-                <li :class="['wizard-pf-step', wizard.currentStep == 2 ? 'active' : '']" data-tabgroup="2">
+                <li
+                  :class="['wizard-pf-step', wizard.currentStep == 2 ? 'active' : '']"
+                  data-tabgroup="2"
+                >
                   <a>
                     <span class="wizard-pf-step-number no-cursor">2</span>
                     <span class="wizard-pf-step-title">{{$t('network.type')}}</span>
                   </a>
                 </li>
 
-                <li :class="['wizard-pf-step', wizard.currentStep == 3 ? 'active' : '']" data-tabgroup="3">
+                <li
+                  :class="['wizard-pf-step', wizard.currentStep == 3 ? 'active' : '']"
+                  data-tabgroup="3"
+                >
                   <a>
                     <span class="wizard-pf-step-number no-cursor">3</span>
                     <span class="wizard-pf-step-title">{{$t('network.configure')}}</span>
                   </a>
                 </li>
-
               </ul>
             </div>
 
             <div class="wizard-pf-row">
               <div class="wizard-pf-main">
                 <div :class="['wizard-pf-contents', wizard.currentStep == 1 ? '' : 'hidden']">
-                  <div class="blank-slate-pf " id="">
+                  <div class="blank-slate-pf" id>
                     <div class="blank-slate-pf-icon">
                       <span class="pficon pficon-network"></span>
                     </div>
-                    <h1>
-                      {{$t('network.wizard_choose_role_title')}}
-                    </h1>
+                    <h1>{{$t('network.wizard_choose_role_title')}}</h1>
                     <doc-info
                       :placement="'top'"
                       :title="$t('docs.network')"
@@ -552,120 +808,127 @@
                       :inline="false"
                     ></doc-info>
                     <div class="blank-slate-pf-main-action row wizard-where-choices">
-                      <div @click="selectRole('green')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizard.role.choice == 'green' ? 'active-choose-green' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectRole('green')"
+                        :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizard.role.choice == 'green' ? 'active-choose-green' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-map-marker"></span>
                           </div>
-                          <h3>
-                            {{$t('network.green')}}
-                          </h3>
+                          <h3>{{$t('network.green')}}</h3>
                         </div>
                       </div>
-                      <div @click="selectRole('red')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizard.role.choice == 'red' ? 'active-choose-red' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectRole('red')"
+                        :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizard.role.choice == 'red' ? 'active-choose-red' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-globe"></span>
                           </div>
-                          <h3>
-                            {{$t('network.red')}}
-                          </h3>
+                          <h3>{{$t('network.red')}}</h3>
                         </div>
                       </div>
-                      <div @click="selectRole('blue')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizard.role.choice == 'blue' ? 'active-choose-blue' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectRole('blue')"
+                        :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizard.role.choice == 'blue' ? 'active-choose-blue' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-users"></span>
                           </div>
-                          <h3>
-                            {{$t('network.blue')}}
-                          </h3>
+                          <h3>{{$t('network.blue')}}</h3>
                         </div>
                       </div>
-                      <div @click="selectRole('orange')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizard.role.choice == 'orange' ? 'active-choose-orange' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectRole('orange')"
+                        :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizard.role.choice == 'orange' ? 'active-choose-orange' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="pficon pficon-security"></span>
                           </div>
-                          <h3>
-                            {{$t('network.orange')}}
-                          </h3>
+                          <h3>{{$t('network.orange')}}</h3>
                         </div>
                       </div>
                     </div>
 
                     <div class="blank-slate-pf-main-action row wizard-where-choices">
-                      <div class="col-sm-3">
-
-                      </div>
-                      <div @click="selectRole('')" :class="['card-pf network-role-choose', wizard.role.choice == '' ? 'active-choose-other' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div class="col-sm-3"></div>
+                      <div
+                        @click="selectRole('')"
+                        :class="['card-pf network-role-choose', wizard.role.choice == '' ? 'active-choose-other' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-square"></span>
                           </div>
-                          <h3>
-                            {{$t('network.empty')}}
-                          </h3>
-                          <p>
-                          </p>
+                          <h3>{{$t('network.empty')}}</h3>
+                          <p></p>
                         </div>
                       </div>
                     </div>
-
                   </div>
                 </div>
 
                 <div :class="['wizard-pf-contents', wizard.currentStep == 2 ? '' : 'hidden']">
-                  <div class="blank-slate-pf " id="">
+                  <div class="blank-slate-pf" id>
                     <div class="blank-slate-pf-icon">
                       <span class="fa fa-asterisk"></span>
                     </div>
-                    <h1>
-                      {{$t('network.wizard_choose_type_title')}}
-                    </h1>
+                    <h1>{{$t('network.wizard_choose_type_title')}}</h1>
                     <div class="blank-slate-pf-main-action row wizard-where-choices">
-                      <div @click="selectType('bond')" :class="['col-xs-12', 'col-sm-4', 'col-md-4', 'col-lg-4', 'card-pf', wizard.type.choice == 'bond' ? 'active-choose' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectType('bond')"
+                        :class="['col-xs-12', 'col-sm-4', 'col-md-4', 'col-lg-4', 'card-pf', wizard.type.choice == 'bond' ? 'active-choose' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="pficon pficon-infrastructure"></span>
                           </div>
-                          <h3>
-                            Bond
-                          </h3>
+                          <h3>Bond</h3>
                         </div>
                       </div>
-                      <div @click="selectType('bridge')" :class="['col-xs-12', 'col-sm-4', 'col-md-4', 'col-lg-4', 'card-pf', wizard.type.choice == 'bridge' ? 'active-choose' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectType('bridge')"
+                        :class="['col-xs-12', 'col-sm-4', 'col-md-4', 'col-lg-4', 'card-pf', wizard.type.choice == 'bridge' ? 'active-choose' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="pficon pficon pficon-topology"></span>
                           </div>
-                          <h3>
-                            Bridge
-                          </h3>
+                          <h3>Bridge</h3>
                         </div>
                       </div>
-                      <div @click="selectType('vlan')" :class="['col-xs-12', 'col-sm-4', 'col-md-4', 'col-lg-4', 'card-pf', wizard.type.choice == 'vlan' ? 'active-choose' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectType('vlan')"
+                        :class="['col-xs-12', 'col-sm-4', 'col-md-4', 'col-lg-4', 'card-pf', wizard.type.choice == 'vlan' ? 'active-choose' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="pficon pficon-service"></span>
                           </div>
-                          <h3>
-                            VLAN
-                          </h3>
+                          <h3>VLAN</h3>
                         </div>
                       </div>
                     </div>
-
                   </div>
                   <form class="form-horizontal" v-on:submit.prevent="nextStep()">
                     <div class="modal-body">
                       <!-- BOND -->
                       <div v-if="wizard.type.choice == 'bond'">
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.interfaces')}}</label>
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('network.interfaces')}}</label>
                           <div class="col-sm-9">
-                            <select @change="addDeviceToInt(wizard.type.bond.device, 'bond')" class="combobox form-control"
-                              v-model="wizard.type.bond.device">
+                            <select
+                              @change="addDeviceToInt(wizard.type.bond.device, 'bond')"
+                              class="combobox form-control"
+                              v-model="wizard.type.bond.device"
+                            >
                               <option v-for="d in wizard.type.bond.devicesList" v-bind:key="d">{{d}}</option>
                             </select>
                           </div>
@@ -677,7 +940,10 @@
                               <li v-for="(d,i) in wizard.type.bond.devices" v-bind:key="i">
                                 <span class="label label-info">
                                   {{d}}
-                                  <a @click="removeDeviceToInt(i, 'bond')" class="remove-item-inline">
+                                  <a
+                                    @click="removeDeviceToInt(i, 'bond')"
+                                    class="remove-item-inline"
+                                  >
                                     <span class="fa fa-times"></span>
                                   </a>
                                 </span>
@@ -686,11 +952,16 @@
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.mode')}}</label>
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('network.mode')}}</label>
                           <div class="col-sm-9">
                             <select v-model="wizard.type.bond.mode" class="form-control combobox">
-                              <option v-for="m in wizard.type.bond.modes" :value="m" v-bind:key="m.name">{{m.name |
-                                capitalize}}</option>
+                              <option v-for="(m, mi) in wizard.type.bond.modes" :value="mi" v-bind:key="m">
+                                {{m.name |
+                                capitalize}}
+                              </option>
                             </select>
                           </div>
                         </div>
@@ -699,11 +970,20 @@
                       <!-- BRIDGE -->
                       <div v-if="wizard.type.choice == 'bridge'">
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.interfaces')}}</label>
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('network.interfaces')}}</label>
                           <div class="col-sm-9">
-                            <select @change="addDeviceToInt(wizard.type.bridge.device, 'bridge')" class="combobox form-control"
-                              v-model="wizard.type.bridge.device">
-                              <option v-for="d in wizard.type.bridge.devicesList" v-bind:key="d">{{d}}</option>
+                            <select
+                              @change="addDeviceToInt(wizard.type.bridge.device, 'bridge')"
+                              class="combobox form-control"
+                              v-model="wizard.type.bridge.device"
+                            >
+                              <option
+                                v-for="d in wizard.type.bridge.devicesList"
+                                v-bind:key="d"
+                              >{{d}}</option>
                             </select>
                           </div>
                         </div>
@@ -714,7 +994,10 @@
                               <li v-for="(d,i) in wizard.type.bridge.devices" v-bind:key="i">
                                 <span class="label label-info">
                                   {{d}}
-                                  <a @click="removeDeviceToInt(i, 'bridge')" class="remove-item-inline">
+                                  <a
+                                    @click="removeDeviceToInt(i, 'bridge')"
+                                    class="remove-item-inline"
+                                  >
                                     <span class="fa fa-times"></span>
                                   </a>
                                 </span>
@@ -727,17 +1010,33 @@
                       <!-- VLAN -->
                       <div v-if="wizard.type.choice == 'vlan'">
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.tag')}}</label>
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('network.tag')}}</label>
                           <div class="col-sm-9">
-                            <input :disabled="wizard.isEdit" required v-model="wizard.type.vlan.tag" class="form-control"
-                              type="number" min="1">
+                            <input
+                              :disabled="wizard.isEdit"
+                              required
+                              v-model="wizard.type.vlan.tag"
+                              class="form-control"
+                              type="number"
+                              min="1"
+                            >
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.interface')}}</label>
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('network.interface')}}</label>
                           <div class="col-sm-9">
                             <select v-model="wizard.type.vlan.device" class="form-control combobox">
-                              <option v-for="m in wizard.type.vlan.devicesList" :value="m" v-bind:key="m">{{m}}</option>
+                              <option
+                                v-for="m in wizard.type.vlan.devicesList"
+                                :value="m"
+                                v-bind:key="m"
+                              >{{m}}</option>
                             </select>
                           </div>
                         </div>
@@ -748,51 +1047,114 @@
                 </div>
 
                 <div :class="['wizard-pf-contents', wizard.currentStep == 3 ? '' : 'hidden']">
-                  <div class="blank-slate-pf " id="">
+                  <div class="blank-slate-pf" id>
                     <div class="blank-slate-pf-icon">
                       <span class="fa fa-cog"></span>
                     </div>
-                    <h1>
-                      {{$t('network.wizard_choose_config')}}
-                    </h1>
+                    <h1>{{$t('network.wizard_choose_config')}}</h1>
                   </div>
                   <form class="form-horizontal" v-on:submit.prevent="saveLogicInterface()">
                     <div class="modal-body">
                       <div v-if="wizard.role.choice == 'red'" class="form-group">
                         <label class="col-sm-3 control-label">{{$t('network.bootproto')}}</label>
-                        <input class="col-sm-1" type="radio" id="bootproto-1" v-model="wizard.review.bootproto" value="dhcp">
-                        <label class="col-sm-2 control-label text-align-left" for="bootproto-1">{{$t('network.boot_dhcp')}}</label>
-                        <input class="col-sm-1" type="radio" id="bootproto-2" v-model="wizard.review.bootproto" value="none">
-                        <label class="col-sm-2 control-label text-align-left" for="bootproto-2">{{$t('network.boot_static')}}</label>
+                        <input
+                          class="col-sm-1"
+                          type="radio"
+                          id="bootproto-1"
+                          v-model="wizard.review.bootproto"
+                          value="dhcp"
+                        >
+                        <label
+                          class="col-sm-2 control-label text-align-left"
+                          for="bootproto-1"
+                        >{{$t('network.boot_dhcp')}}</label>
+                        <input
+                          class="col-sm-1"
+                          type="radio"
+                          id="bootproto-2"
+                          v-model="wizard.review.bootproto"
+                          value="none"
+                        >
+                        <label
+                          class="col-sm-2 control-label text-align-left"
+                          for="bootproto-2"
+                        >{{$t('network.boot_static')}}</label>
                       </div>
-                      <div v-if="wizard.review.bootproto == 'none'" :class="['form-group', wizard.review.errors.ipaddr.hasError ? 'has-error' : '']">
-                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.ip_address')}}</label>
+                      <div
+                        v-if="wizard.review.bootproto == 'none'"
+                        :class="['form-group', wizard.review.errors.ipaddr.hasError ? 'has-error' : '']"
+                      >
+                        <label
+                          class="col-sm-3 control-label"
+                          for="textInput-modal-markup"
+                        >{{$t('network.ip_address')}}</label>
                         <div class="col-sm-6">
-                          <input required v-model="wizard.review.ipaddr" class="form-control" type="text">
-                          <span v-if="wizard.review.errors.ipaddr.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                            {{$t('validation.'+wizard.review.errors.ipaddr.message)}}</span>
+                          <input
+                            required
+                            v-model="wizard.review.ipaddr"
+                            class="form-control"
+                            type="text"
+                          >
+                          <span v-if="wizard.review.errors.ipaddr.hasError" class="help-block">
+                            {{$t('validation.validation_failed')}}:
+                            {{$t('validation.'+wizard.review.errors.ipaddr.message)}}
+                          </span>
                         </div>
                       </div>
-                      <div v-if="wizard.review.bootproto == 'none'" :class="['form-group', wizard.review.errors.netmask.hasError ? 'has-error' : '']">
-                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.netmask')}}</label>
+                      <div
+                        v-if="wizard.review.bootproto == 'none'"
+                        :class="['form-group', wizard.review.errors.netmask.hasError ? 'has-error' : '']"
+                      >
+                        <label
+                          class="col-sm-3 control-label"
+                          for="textInput-modal-markup"
+                        >{{$t('network.netmask')}}</label>
                         <div class="col-sm-6">
-                          <input required v-model="wizard.review.netmask" class="form-control" type="text">
-                          <span v-if="wizard.review.errors.netmask.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                            {{$t('validation.'+wizard.review.errors.netmask.message)}}</span>
+                          <input
+                            required
+                            v-model="wizard.review.netmask"
+                            class="form-control"
+                            type="text"
+                          >
+                          <span v-if="wizard.review.errors.netmask.hasError" class="help-block">
+                            {{$t('validation.validation_failed')}}:
+                            {{$t('validation.'+wizard.review.errors.netmask.message)}}
+                          </span>
                         </div>
                       </div>
-                      <div v-if="wizard.review.bootproto == 'none'" :class="['form-group', wizard.review.errors.gateway.hasError ? 'has-error' : '']">
-                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.gateway')}}</label>
+                      <div
+                        v-if="wizard.review.bootproto == 'none'"
+                        :class="['form-group', wizard.review.errors.gateway.hasError ? 'has-error' : '']"
+                      >
+                        <label
+                          class="col-sm-3 control-label"
+                          for="textInput-modal-markup"
+                        >{{$t('network.gateway')}}</label>
                         <div class="col-sm-6">
-                          <input required v-model="wizard.review.gateway" class="form-control" type="text">
-                          <span v-if="wizard.review.errors.gateway.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                            {{$t('validation.'+wizard.review.errors.gateway.message)}}</span>
+                          <input
+                            required
+                            v-model="wizard.review.gateway"
+                            class="form-control"
+                            type="text"
+                          >
+                          <span v-if="wizard.review.errors.gateway.hasError" class="help-block">
+                            {{$t('validation.validation_failed')}}:
+                            {{$t('validation.'+wizard.review.errors.gateway.message)}}
+                          </span>
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.label')}} <span class="optional-label">({{$t('optional')}})</span></label>
+                        <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                          {{$t('network.label')}}
+                          <span class="optional-label">({{$t('optional')}})</span>
+                        </label>
                         <div class="col-sm-6">
-                          <input required v-model="wizard.review.nslabel" class="form-control" type="text">
+                          <input
+                            required
+                            v-model="wizard.review.nslabel"
+                            class="form-control"
+                            type="text"
+                          >
                         </div>
                       </div>
                     </div>
@@ -804,60 +1166,91 @@
 
           <div class="modal-footer wizard-pf-footer">
             <div v-if="wizard.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
-            <button @click="cancelWizard()" type="button" class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss">{{$t('cancel')}}</button>
-            <button :disabled="wizard.currentStep == 1" @click="prevStep()" type="button" class="btn btn-default wizard-pf-back">
+            <button
+              @click="cancelWizard()"
+              type="button"
+              class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss"
+            >{{$t('cancel')}}</button>
+            <button
+              :disabled="wizard.currentStep == 1"
+              @click="prevStep()"
+              type="button"
+              class="btn btn-default wizard-pf-back"
+            >
               <span class="i fa fa-angle-left"></span>
               {{$t('back')}}
             </button>
-            <button :disabled="checkIfDisabled()" @click="nextStep()" type="button" class="btn btn-primary wizard-pf-next">
+            <button
+              :disabled="checkIfDisabled()"
+              @click="nextStep()"
+              type="button"
+              class="btn btn-primary wizard-pf-next"
+            >
               {{wizard.currentStep == 3 ? (wizard.isEdit ? $t('edit') : $t('create')) : $t('next')}}
-              <span class="i fa fa-angle-right"></span>
+              <span
+                class="i fa fa-angle-right"
+              ></span>
             </button>
-            <button type="button" class="btn btn-primary hidden wizard-pf-close wizard-pf-dismiss">{{$t('close')}}</button>
+            <button
+              type="button"
+              class="btn btn-primary hidden wizard-pf-close wizard-pf-dismiss"
+            >{{$t('close')}}</button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="modal" id="configurePhysicalInterface" tabindex="-1" role="dialog" data-backdrop="static">
+    <div
+      class="modal"
+      id="configurePhysicalInterface"
+      tabindex="-1"
+      role="dialog"
+      data-backdrop="static"
+    >
       <div class="modal-dialog modal-lg wizard-pf">
         <div class="modal-content">
           <div class="modal-header">
-            <dt class="modal-title">{{$t('network.configure_physical_interface')}} {{wizardPhysical.currentInterface &&
-              wizardPhysical.currentInterface.name}}</dt>
+            <dt class="modal-title">
+              {{$t('network.configure_physical_interface')}} {{wizardPhysical.currentInterface &&
+              wizardPhysical.currentInterface.name}}
+            </dt>
           </div>
 
           <div class="modal-body wizard-pf-body clearfix">
             <div class="wizard-pf-steps">
               <ul class="wizard-pf-steps-indicator">
-
-                <li :class="['wizard-pf-step', wizardPhysical.currentStep == 1 ? 'active' : '']" data-tabgroup="1">
+                <li
+                  :class="['wizard-pf-step', wizardPhysical.currentStep == 1 ? 'active' : '']"
+                  data-tabgroup="1"
+                >
                   <a>
                     <span class="wizard-pf-step-number no-cursor">1</span>
                     <span class="wizard-pf-step-title">{{$t('network.role')}}</span>
                   </a>
                 </li>
 
-                <li :class="['wizard-pf-step', wizardPhysical.currentStep == 2 ? 'active' : '']" data-tabgroup="3">
+                <li
+                  :class="['wizard-pf-step', wizardPhysical.currentStep == 2 ? 'active' : '']"
+                  data-tabgroup="3"
+                >
                   <a>
                     <span class="wizard-pf-step-number no-cursor">2</span>
                     <span class="wizard-pf-step-title">{{$t('network.configure')}}</span>
                   </a>
                 </li>
-
               </ul>
             </div>
 
             <div class="wizard-pf-row">
               <div class="wizard-pf-main">
-                <div :class="['wizard-pf-contents', wizardPhysical.currentStep == 1 ? '' : 'hidden']">
-                  <div class="blank-slate-pf " id="">
+                <div
+                  :class="['wizard-pf-contents', wizardPhysical.currentStep == 1 ? '' : 'hidden']"
+                >
+                  <div class="blank-slate-pf" id>
                     <div class="blank-slate-pf-icon">
                       <span class="pficon pficon-network"></span>
                     </div>
-                    <h1>
-                      {{$t('network.wizard_choose_role_title')}}
-                    </h1>
+                    <h1>{{$t('network.wizard_choose_role_title')}}</h1>
                     <doc-info
                       :placement="'top'"
                       :title="$t('docs.network')"
@@ -866,156 +1259,289 @@
                       :inline="false"
                     ></doc-info>
                     <div class="blank-slate-pf-main-action row wizard-where-choices">
-                      <div @click="selectRolePhysical('green')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizardPhysical.role.choice == 'green' ? 'active-choose-green' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectRolePhysical('green')"
+                        :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizardPhysical.role.choice == 'green' ? 'active-choose-green' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-map-marker"></span>
                           </div>
-                          <h3>
-                            {{$t('network.green')}}
-                          </h3>
+                          <h3>{{$t('network.green')}}</h3>
                         </div>
                       </div>
-                      <div @click="selectRolePhysical('red')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizardPhysical.role.choice == 'red' ? 'active-choose-red' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectRolePhysical('red')"
+                        :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizardPhysical.role.choice == 'red' ? 'active-choose-red' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-globe"></span>
                           </div>
-                          <h3>
-                            {{$t('network.red')}}
-                          </h3>
+                          <h3>{{$t('network.red')}}</h3>
                         </div>
                       </div>
-                      <div @click="selectRolePhysical('blue')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizardPhysical.role.choice == 'blue' ? 'active-choose-blue' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectRolePhysical('blue')"
+                        :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizardPhysical.role.choice == 'blue' ? 'active-choose-blue' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-users"></span>
                           </div>
-                          <h3>
-                            {{$t('network.blue')}}
-                          </h3>
+                          <h3>{{$t('network.blue')}}</h3>
                         </div>
                       </div>
-                      <div @click="selectRolePhysical('orange')" :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizardPhysical.role.choice == 'orange' ? 'active-choose-orange' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectRolePhysical('orange')"
+                        :class="['col-xs-12', 'col-sm-3', 'col-md-3', 'col-lg-3', 'card-pf network-role-choose', wizardPhysical.role.choice == 'orange' ? 'active-choose-orange' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="pficon pficon-security"></span>
                           </div>
-                          <h3>
-                            {{$t('network.orange')}}
-                          </h3>
+                          <h3>{{$t('network.orange')}}</h3>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div :class="['wizard-pf-contents', wizardPhysical.currentStep == 2 ? '' : 'hidden']">
-                  <div class="blank-slate-pf " id="">
+                <div
+                  :class="['wizard-pf-contents', wizardPhysical.currentStep == 2 ? '' : 'hidden']"
+                >
+                  <div class="blank-slate-pf" id>
                     <div class="blank-slate-pf-icon">
                       <span class="fa fa-asterisk"></span>
                     </div>
-                    <h1>
-                      {{$t('network.wizard_choose_type_title')}}
-                    </h1>
+                    <h1>{{$t('network.wizard_choose_type_title')}}</h1>
                     <div class="blank-slate-pf-main-action row wizard-where-choices">
-                      <div @click="selectTypePhysical('ethernet')" :class="['col-xs-12', wizardPhysical.role.choice == 'red' ? 'col-sm-6 col-md-6 col-lg-6' : 'col-sm-12 col-md-12 col-lg-12', 'card-pf', wizardPhysical.type.choice == 'ethernet' ? 'active-choose' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        @click="selectTypePhysical('ethernet')"
+                        :class="['col-xs-12', wizardPhysical.role.choice == 'red' ? 'col-sm-6 col-md-6 col-lg-6' : 'col-sm-12 col-md-12 col-lg-12', 'card-pf', wizardPhysical.type.choice == 'ethernet' ? 'active-choose' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="pficon pficon pficon-topology"></span>
                           </div>
-                          <h3>
-                            Ethernet
-                          </h3>
+                          <h3>Ethernet</h3>
                         </div>
                       </div>
-                      <div v-if="wizardPhysical.role.choice == 'red'" @click="selectTypePhysical('pppoe')" :class="['col-xs-12', 'col-sm-6', 'col-md-6', 'col-lg-6', 'card-pf', wizardPhysical.type.choice == 'pppoe' ? 'active-choose' : '']">
-                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id="">
+                      <div
+                        v-if="wizardPhysical.role.choice == 'red'"
+                        @click="selectTypePhysical('pppoe')"
+                        :class="['col-xs-12', 'col-sm-6', 'col-md-6', 'col-lg-6', 'card-pf', wizardPhysical.type.choice == 'pppoe' ? 'active-choose' : '']"
+                      >
+                        <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="pficon pficon-topology"></span>
                           </div>
-                          <h3>
-                            PPPoE
-                          </h3>
+                          <h3>PPPoE</h3>
                         </div>
                       </div>
                     </div>
-
                   </div>
                   <form class="form-horizontal" v-on:submit.prevent="nextStepPhysical()">
                     <div class="modal-body">
                       <!-- ETHERNET -->
                       <div v-if="wizardPhysical.type.choice == 'ethernet'">
-                        <div v-if="wizardPhysical.role.choice == 'green' || wizardPhysical.role.choice == 'red'" class="form-group">
+                        <div
+                          v-if="wizardPhysical.role.choice == 'green' || wizardPhysical.role.choice == 'red'"
+                          class="form-group"
+                        >
                           <label class="col-sm-3 control-label">{{$t('network.bootproto')}}</label>
-                          <input class="col-sm-1" type="radio" id="bootproto-3" v-model="wizardPhysical.review.bootproto" value="dhcp">
-                          <label class="col-sm-2 control-label text-align-left" for="bootproto-3">{{$t('network.boot_dhcp')}}</label>
-                          <input class="col-sm-1" type="radio" id="bootproto-4" v-model="wizardPhysical.review.bootproto" value="none">
-                          <label class="col-sm-2 control-label text-align-left" for="bootproto-4">{{$t('network.boot_static')}}</label>
+                          <input
+                            class="col-sm-1"
+                            type="radio"
+                            id="bootproto-3"
+                            v-model="wizardPhysical.review.bootproto"
+                            value="dhcp"
+                          >
+                          <label
+                            class="col-sm-2 control-label text-align-left"
+                            for="bootproto-3"
+                          >{{$t('network.boot_dhcp')}}</label>
+                          <input
+                            class="col-sm-1"
+                            type="radio"
+                            id="bootproto-4"
+                            v-model="wizardPhysical.review.bootproto"
+                            value="none"
+                          >
+                          <label
+                            class="col-sm-2 control-label text-align-left"
+                            for="bootproto-4"
+                          >{{$t('network.boot_static')}}</label>
                         </div>
-                        <div v-if="wizardPhysical.review.bootproto == 'none'" :class="['form-group', wizardPhysical.review.errors.ipaddr.hasError ? 'has-error' : '']">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.ip_address')}}</label>
+                        <div
+                          v-if="wizardPhysical.review.bootproto == 'none'"
+                          :class="['form-group', wizardPhysical.review.errors.ipaddr.hasError ? 'has-error' : '']"
+                        >
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('network.ip_address')}}</label>
                           <div class="col-sm-6">
-                            <input required v-model="wizardPhysical.review.ipaddr" class="form-control" type="text">
-                            <span v-if="wizardPhysical.review.errors.ipaddr.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                              {{$t('validation.'+wizardPhysical.review.errors.ipaddr.message)}}</span>
+                            <input
+                              required
+                              v-model="wizardPhysical.review.ipaddr"
+                              class="form-control"
+                              type="text"
+                            >
+                            <span
+                              v-if="wizardPhysical.review.errors.ipaddr.hasError"
+                              class="help-block"
+                            >
+                              {{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+wizardPhysical.review.errors.ipaddr.message)}}
+                            </span>
                           </div>
                         </div>
-                        <div v-if="wizardPhysical.review.bootproto == 'none'" :class="['form-group', wizardPhysical.review.errors.netmask.hasError ? 'has-error' : '']">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.netmask')}}</label>
+                        <div
+                          v-if="wizardPhysical.review.bootproto == 'none'"
+                          :class="['form-group', wizardPhysical.review.errors.netmask.hasError ? 'has-error' : '']"
+                        >
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('network.netmask')}}</label>
                           <div class="col-sm-6">
-                            <input required v-model="wizardPhysical.review.netmask" class="form-control" type="text">
-                            <span v-if="wizardPhysical.review.errors.netmask.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                              {{$t('validation.'+wizardPhysical.review.errors.netmask.message)}}</span>
+                            <input
+                              required
+                              v-model="wizardPhysical.review.netmask"
+                              class="form-control"
+                              type="text"
+                            >
+                            <span
+                              v-if="wizardPhysical.review.errors.netmask.hasError"
+                              class="help-block"
+                            >
+                              {{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+wizardPhysical.review.errors.netmask.message)}}
+                            </span>
                           </div>
                         </div>
-                        <div v-if="wizardPhysical.review.bootproto == 'none' && (wizardPhysical.role.choice == 'green' || wizardPhysical.role.choice == 'red')"
-                          :class="['form-group', wizardPhysical.review.errors.gateway.hasError ? 'has-error' : '']">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.gateway')}}</label>
+                        <div
+                          v-if="wizardPhysical.review.bootproto == 'none' && (wizardPhysical.role.choice == 'green' || wizardPhysical.role.choice == 'red')"
+                          :class="['form-group', wizardPhysical.review.errors.gateway.hasError ? 'has-error' : '']"
+                        >
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('network.gateway')}}</label>
                           <div class="col-sm-6">
-                            <input required v-model="wizardPhysical.review.gateway" class="form-control" type="text">
-                            <span v-if="wizardPhysical.review.errors.gateway.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                              {{$t('validation.'+wizardPhysical.review.errors.gateway.message)}}</span>
+                            <input
+                              required
+                              v-model="wizardPhysical.review.gateway"
+                              class="form-control"
+                              type="text"
+                            >
+                            <span
+                              v-if="wizardPhysical.review.errors.gateway.hasError"
+                              class="help-block"
+                            >
+                              {{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+wizardPhysical.review.errors.gateway.message)}}
+                            </span>
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.label')}} <span class="optional-label">({{$t('optional')}})</span></label>
+                          <label class="col-sm-3 control-label" for="textInput-modal-markup">
+                            {{$t('network.label')}}
+                            <span class="optional-label">({{$t('optional')}})</span>
+                          </label>
                           <div class="col-sm-6">
-                            <input required v-model="wizardPhysical.review.nslabel" class="form-control" type="text">
+                            <input
+                              required
+                              v-model="wizardPhysical.review.nslabel"
+                              class="form-control"
+                              type="text"
+                            >
                           </div>
                         </div>
                       </div>
                       <!-- -->
                       <!-- PPPoE -->
                       <div v-if="wizardPhysical.type.choice == 'pppoe'">
-                        <div :class="['form-group', wizardPhysical.review.errors.provider.hasError ? 'has-error' : '']">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.provider')}}</label>
+                        <div
+                          :class="['form-group', wizardPhysical.review.errors.provider.hasError ? 'has-error' : '']"
+                        >
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('network.provider')}}</label>
                           <div class="col-sm-6">
-                            <input required v-model="wizardPhysical.review.provider" class="form-control" type="text">
-                            <span v-if="wizardPhysical.review.errors.provider.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                              {{$t('validation.'+wizardPhysical.review.errors.provider.message)}}</span>
+                            <input
+                              required
+                              v-model="wizardPhysical.review.provider"
+                              class="form-control"
+                              type="text"
+                            >
+                            <span
+                              v-if="wizardPhysical.review.errors.provider.hasError"
+                              class="help-block"
+                            >
+                              {{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+wizardPhysical.review.errors.provider.message)}}
+                            </span>
                           </div>
                         </div>
-                        <div :class="['form-group', wizardPhysical.review.errors.username.hasError ? 'has-error' : '']">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.username')}}</label>
+                        <div
+                          :class="['form-group', wizardPhysical.review.errors.username.hasError ? 'has-error' : '']"
+                        >
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('network.username')}}</label>
                           <div class="col-sm-6">
-                            <input required v-model="wizardPhysical.review.username" class="form-control" type="text">
-                            <span v-if="wizardPhysical.review.errors.username.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                              {{$t('validation.'+wizardPhysical.review.errors.username.message)}}</span>
+                            <input
+                              required
+                              v-model="wizardPhysical.review.username"
+                              class="form-control"
+                              type="text"
+                            >
+                            <span
+                              v-if="wizardPhysical.review.errors.username.hasError"
+                              class="help-block"
+                            >
+                              {{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+wizardPhysical.review.errors.username.message)}}
+                            </span>
                           </div>
                         </div>
-                        <div :class="['form-group', wizardPhysical.review.errors.password.hasError ? 'has-error' : '']">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.password')}}</label>
+                        <div
+                          :class="['form-group', wizardPhysical.review.errors.password.hasError ? 'has-error' : '']"
+                        >
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('network.password')}}</label>
                           <div class="col-sm-6">
-                            <input required v-model="wizardPhysical.review.password" class="form-control" type="password">
-                            <span v-if="wizardPhysical.review.errors.password.hasError" class="help-block">{{$t('validation.validation_failed')}}:
-                              {{$t('validation.'+wizardPhysical.review.errors.password.message)}}</span>
+                            <input
+                              required
+                              v-model="wizardPhysical.review.password"
+                              class="form-control"
+                              type="password"
+                            >
+                            <span
+                              v-if="wizardPhysical.review.errors.password.hasError"
+                              class="help-block"
+                            >
+                              {{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+wizardPhysical.review.errors.password.message)}}
+                            </span>
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('network.auth_type')}}</label>
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('network.auth_type')}}</label>
                           <div class="col-sm-6">
-                            <select class="combobox form-control" v-model="wizardPhysical.review.auth_type">
+                            <select
+                              class="combobox form-control"
+                              v-model="wizardPhysical.review.auth_type"
+                            >
                               <option value="auto">{{$t('network.auto')}}</option>
                               <option value="pap">{{$t('network.pap')}}</option>
                               <option value="CHAP">{{$t('network.chap')}}</option>
@@ -1033,22 +1559,40 @@
 
           <div class="modal-footer wizard-pf-footer">
             <div v-if="wizardPhysical.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
-            <button @click="cancelWizardPhysical()" type="button" class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss">{{$t('cancel')}}</button>
-            <button :disabled="wizardPhysical.currentStep == 1" @click="prevStepPhysical()" type="button" class="btn btn-default wizard-pf-back">
+            <button
+              @click="cancelWizardPhysical()"
+              type="button"
+              class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss"
+            >{{$t('cancel')}}</button>
+            <button
+              :disabled="wizardPhysical.currentStep == 1"
+              @click="prevStepPhysical()"
+              type="button"
+              class="btn btn-default wizard-pf-back"
+            >
               <span class="i fa fa-angle-left"></span>
               {{$t('back')}}
             </button>
-            <button :disabled="checkIfDisabledPhysical()" @click="nextStepPhysical()" type="button" class="btn btn-primary wizard-pf-next">
+            <button
+              :disabled="checkIfDisabledPhysical()"
+              @click="nextStepPhysical()"
+              type="button"
+              class="btn btn-primary wizard-pf-next"
+            >
               {{wizardPhysical.currentStep == 2 ? $t('network.configure') : $t('next')}}
-              <span class="i fa fa-angle-right"></span>
+              <span
+                class="i fa fa-angle-right"
+              ></span>
             </button>
-            <button type="button" class="btn btn-primary hidden wizard-pf-close wizard-pf-dismiss">{{$t('close')}}</button>
+            <button
+              type="button"
+              class="btn btn-primary hidden wizard-pf-close wizard-pf-dismiss"
+            >{{$t('close')}}</button>
           </div>
         </div>
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -1105,6 +1649,7 @@ export default {
     this.getRoutes();
     this.getProxy();
     this.getRoutingInfo();
+    this.getHints();
   },
   data() {
     return {
@@ -1123,10 +1668,24 @@ export default {
       wizard: this.initWizard(),
       wizardPhysical: this.initWizardPhysical(),
       routes: {},
-      routingInfo: null
+      routingInfo: null,
+      hints: {}
     };
   },
   methods: {
+    getHints(callback) {
+      var context = this;
+      context.execHints(
+        "system-network",
+        function(success) {
+          context.hints = success;
+          callback ? callback() : null;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
     initGraphics() {
       $("#app").css("background", "");
       $("#app").css("color", "");
@@ -1318,8 +1877,11 @@ export default {
           if (this.wizard.review.bootproto == "none") {
             disabled =
               this.wizard.review.ipaddr.length == 0 ||
-              this.wizard.review.netmask.length == 0 ||
-              this.wizard.review.gateway.length == 0;
+              this.wizard.review.netmask.length == 0;
+
+            if (this.wizard.role.choice == "red") {
+              disabled = disabled || this.wizard.review.gateway.length == 0;
+            }
           }
           break;
       }
@@ -1844,7 +2406,9 @@ export default {
       );
     },
     getMoreInfo(int) {
-      var popover = $('#'+this.$options.filters.sanitize("popover-" + int.name)).data("bs.popover");
+      var popover = $(
+        "#" + this.$options.filters.sanitize("popover-" + int.name)
+      ).data("bs.popover");
 
       if (!int.moreInfoOpened && popover) {
         popover.options.content = '<div class="spinner spinner-sm"></div>';
@@ -1865,23 +2429,24 @@ export default {
               '<b class="col-sm-6">' +
               context.$i18n.t("network.public_ip") +
               '</b><span class="col-sm-6">' +
-              (success.ip || '-') +
+              (success.ip || "-") +
               "</span>";
             popover.options.content +=
               '<b class="col-sm-6">' +
               context.$i18n.t("network.reverse_lookup") +
               '</b><span class="col-sm-6">' +
-              (success.hostname || '-') +
+              (success.hostname || "-") +
               "</span>";
             popover.options.content +=
               '<b class="col-sm-6 advanced">' +
               context.$i18n.t("network.country") +
               '</b><span class="col-sm-6 advanced">' +
-              (success.country_iso || '-') +
+              (success.country_iso || "-") +
               "</span>";
 
-            if(int.virtual == 0) {
-              popover.options.content += '<div class="divider col-sm-12"></div>';
+            if (int.virtual == 0) {
+              popover.options.content +=
+                '<div class="divider col-sm-12"></div>';
 
               popover.options.content +=
                 '<b class="col-sm-6 stats-text">' +
@@ -1908,7 +2473,7 @@ export default {
                 context.interfaceStatus[int.name].mac +
                 "</span>";
             }
-            int.moreInfoOpened = true
+            int.moreInfoOpened = true;
             popover.show();
           },
           function(error) {

@@ -52,7 +52,11 @@
             data-toggle="collapse"
             data-parent="#provider-markup"
             href="#providerDetails"
-          >{{$t('backup.details')}}</span>
+            @click="toggleDetails()"
+          >
+            <span :class="['fa', view.opened ? 'fa-angle-down' : 'fa-angle-right']"></span>
+            {{$t('backup.details')}}
+          </span>
         </div>
         <div id="providerDetails" class="panel-collapse collapse list-group list-view-pf">
           <div
@@ -246,7 +250,7 @@
                     :class="['fa', b.status.result == 'success' ? 'fa-check green' : b.status.result == 'unknown' ? 'fa-question gray' : 'fa-times red', 'panel-icon']"
                   ></span>
                   {{b.status['last-run']
-                  | dateFormat}}
+                  | dateFormat}} UTC
                 </div>
                 <div class="list-view-pf-additional-info-item">
                   <span class="fa fa-space-shuttle panel-icon"></span>
@@ -1154,13 +1158,25 @@
                             {{'SMBPassword' |
                             camelToSentence}}
                           </label>
-                          <div class="col-sm-9">
+                          <div class="col-sm-7">
                             <input
                               required
-                              type="text"
+                              :type="wizard.where.cifs.togglePass ? 'text' : 'password'"
                               v-model="wizard.where.cifs.SMBPassword"
                               class="form-control"
                             >
+                          </div>
+                          <div class="col-sm-1">
+                            <button
+                              tabindex="-1"
+                              @click="togglePass('cifs')"
+                              type="button"
+                              class="btn btn-primary adjust-top-min"
+                            >
+                              <span
+                                :class="[!wizard.where.cifs.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"
+                              ></span>
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -1279,13 +1295,25 @@
                             {{'WebDAV Password'
                             }}
                           </label>
-                          <div class="col-sm-9">
+                          <div class="col-sm-7">
                             <input
                               required
-                              type="text"
+                              :type="wizard.where.webdav.togglePass ? 'text' : 'password'"
                               v-model="wizard.where.webdav.WebDAVPassword"
                               class="form-control"
                             >
+                          </div>
+                          <div class="col-sm-1">
+                            <button
+                              tabindex="-1"
+                              @click="togglePass('webdav')"
+                              type="button"
+                              class="btn btn-primary adjust-top-min"
+                            >
+                              <span
+                                :class="[!wizard.where.webdav.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"
+                              ></span>
+                            </button>
                           </div>
                         </div>
                         <div class="form-group">
@@ -1371,6 +1399,7 @@
                           </div>
                           <div class="col-sm-1">
                             <button
+                              :disabled="!wizard.isEdit"
                               tabindex="-1"
                               @click="toggleEdit()"
                               type="button"
@@ -1385,7 +1414,7 @@
                             <button
                               :disabled="!wizard.where.sftp.toggleEdit"
                               tabindex="-1"
-                              @click="togglePass()"
+                              @click="togglePass('sftp')"
                               type="button"
                               class="btn btn-primary adjust-top-min"
                             >
@@ -1819,9 +1848,7 @@
                         </div>
                       </div>
                       <div class="form-group">
-                        <label
-                          class="col-sm-3 control-label"
-                        >{{$t('backup.notify_to')}}</label>
+                        <label class="col-sm-3 control-label">{{$t('backup.notify_to')}}</label>
                         <div class="col-sm-9">
                           <input
                             id="notifyToChoice-1"
@@ -2070,7 +2097,8 @@ export default {
       view: {
         isLoaded: false,
         isAuth: false,
-        windowResize: window.innerWidth <= 768
+        windowResize: window.innerWidth <= 768,
+        opened: false
       },
       wizard: this.initWizard(),
       searchString: "",
@@ -2091,6 +2119,9 @@ export default {
     };
   },
   methods: {
+    toggleDetails() {
+      this.view.opened = !this.view.opened;
+    },
     initGraphics() {
       $("#app").css("background", "");
       $("#app").css("color", "");
@@ -2169,7 +2200,8 @@ export default {
             SMBShare: b && b.props.SMBShare ? b.props.SMBShare : null,
             SMBHost: b && b.props.SMBHost ? b.props.SMBHost : null,
             SMBLogin: b && b.props.SMBLogin ? b.props.SMBLogin : null,
-            SMBPassword: b && b.props.SMBPassword ? b.props.SMBPassword : null
+            SMBPassword: b && b.props.SMBPassword ? b.props.SMBPassword : null,
+            togglePass: false
           },
           usb: {
             USBLabel: b && b.props.USBLabel ? b.props.USBLabel : null,
@@ -2184,7 +2216,8 @@ export default {
             WebDAVLogin: b && b.props.WebDAVLogin ? b.props.WebDAVLogin : null,
             WebDAVPassword:
               b && b.props.WebDAVPassword ? b.props.WebDAVPassword : null,
-            WebDAVUrl: b && b.props.WebDAVUrl ? b.props.WebDAVUrl : null
+            WebDAVUrl: b && b.props.WebDAVUrl ? b.props.WebDAVUrl : null,
+            togglePass: false
           },
           sftp: {
             SftpDirectory:
@@ -2195,7 +2228,7 @@ export default {
             SftpHost: b && b.props.SftpHost ? b.props.SftpHost : null,
             SftpPort: b && b.props.SftpPort ? b.props.SftpPort : "22",
             togglePass: false,
-            toggleEdit: false
+            toggleEdit: b ? false : true
           },
           b2: {
             B2AccountId: b && b.props.B2AccountId ? b.props.B2AccountId : null,
@@ -2271,8 +2304,8 @@ export default {
       this.wizard.how.duplicity.advanced = !this.wizard.how.duplicity.advanced;
       this.$forceUpdate();
     },
-    togglePass() {
-      this.wizard.where.sftp.togglePass = !this.wizard.where.sftp.togglePass;
+    togglePass(type) {
+      this.wizard.where[type].togglePass = !this.wizard.where[type].togglePass;
     },
     toggleEdit() {
       this.wizard.where.sftp.toggleEdit = !this.wizard.where.sftp.toggleEdit;
