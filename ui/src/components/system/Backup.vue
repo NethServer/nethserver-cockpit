@@ -67,7 +67,7 @@
             <strong>{{$t('backup.no_config_backup_found_title')}}.</strong>
             {{$t('backup.no_config_backup_found_desc')}}.
           </div>
-          <div class="list-group-item" v-for="b in backupConfigurations" v-bind:key="b">
+          <div class="list-group-item" v-for="(b, bk) in backupConfigurations" v-bind:key="bk">
             <div class="list-view-pf-actions">
               <button @click="downloadConfigBackup(b)" class="btn btn-default">
                 <span class="fa fa-download span-right-margin"></span>
@@ -181,8 +181,8 @@
         <div
           v-if="backupData.length > 0"
           class="list-group-item"
-          v-for="b in filteredBackupList"
-          v-bind:key="b"
+          v-for="(b, bk) in filteredBackupList"
+          v-bind:key="bk"
         >
           <div class="list-view-pf-actions">
             <button
@@ -424,7 +424,7 @@
                     v-model="currentConfigBackup.restoreBackup"
                     class="combobox form-control"
                   >
-                    <option v-for="t in backupConfigurations" v-bind:key="t" :value="t.id">
+                    <option v-for="(t, tk) in backupConfigurations" v-bind:key="tk" :value="t.id">
                       {{t.type | capitalize}} -
                       {{t.description}}
                     </option>
@@ -469,8 +469,8 @@
               </div>
               <div
                 v-if="currentConfigBackup.remap"
-                v-for="o in currentConfigBackup.remapInterfaces.old"
-                v-bind:key="o"
+                v-for="(o, ok) in currentConfigBackup.remapInterfaces.old"
+                v-bind:key="ok"
                 class="form-group"
               >
                 <div class="col-sm-4">
@@ -497,8 +497,8 @@
                     class="combobox form-control"
                   >
                     <option
-                      v-for="n in currentConfigBackup.remapInterfaces.new"
-                      v-bind:key="n"
+                      v-for="(n, nk) in currentConfigBackup.remapInterfaces.new"
+                      v-bind:key="nk"
                       :value="n.name"
                     >{{n.name}}</option>
                   </select>
@@ -643,7 +643,7 @@
                 >{{$t('backup.from_backup')}}</label>
                 <div class="col-sm-9">
                   <select v-model="currentDataBackup.restoreBackup" class="combobox form-control">
-                    <option v-for="t in backupData" v-bind:key="t" :value="t.name">
+                    <option v-for="(t, tk) in backupData" v-bind:key="tk" :value="t.name">
                       {{t.name}} - {{t.props.VFSType |
                       uppercase}}
                       {{$t('with')}} {{t.props.type | capitalize}}
@@ -896,7 +896,7 @@
                           <select v-model="wizard.when.week_day" class="combobox form-control">
                             <option
                               v-for="(w,i) in weekdays()"
-                              v-bind:key="w"
+                              v-bind:key="i"
                               :value="i"
                             >{{w | capitalize}}</option>
                           </select>
@@ -1199,8 +1199,8 @@
                               class="combobox form-control"
                             >
                               <option
-                                v-for="d in wizard.where.usb.devices"
-                                v-bind:key="d"
+                                v-for="(d, dk) in wizard.where.usb.devices"
+                                v-bind:key="dk"
                                 :value="d"
                               >
                                 {{d.name}} -
@@ -1657,8 +1657,8 @@
                               class="combobox form-control"
                             >
                               <option
-                                v-for="d in wizard.how.duplicity.types"
-                                v-bind:key="d"
+                                v-for="(d, dk) in wizard.how.duplicity.types"
+                                v-bind:key="dk"
                                 :value="d"
                               >
                                 {{d |
@@ -1701,8 +1701,8 @@
                               class="combobox form-control"
                             >
                               <option
-                                v-for="d in wizard.how.duplicity.cleanups"
-                                v-bind:key="d"
+                                v-for="(d, dk) in wizard.how.duplicity.cleanups"
+                                v-bind:key="dk"
                                 :value="d"
                               >{{$t('backup.'+d)}}</option>
                             </select>
@@ -1778,8 +1778,8 @@
                               class="combobox form-control"
                             >
                               <option
-                                v-for="d in wizard.how.restic.cleanups"
-                                v-bind:key="d"
+                                v-for="(d, dk) in wizard.how.restic.cleanups"
+                                v-bind:key="dk"
                                 :value="d"
                               >{{$t('backup.'+d)}}</option>
                             </select>
@@ -1840,8 +1840,8 @@
                             class="combobox form-control"
                           >
                             <option
-                              v-for="d in wizard.review.notifyTypes"
-                              v-bind:key="d"
+                              v-for="(d, dk) in wizard.review.notifyTypes"
+                              v-bind:key="dk"
                               :value="d"
                             >{{$t('backup.'+d)}}</option>
                           </select>

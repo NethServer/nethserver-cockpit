@@ -605,8 +605,8 @@
                       <option>-</option>
                       <option
                         :value="value"
-                        v-for="value in roles.list.system"
-                        v-bind:key="value"
+                        v-for="(value, vk) in roles.list.system"
+                        v-bind:key="vk"
                       >{{$t('menu.'+value)}}</option>
                     </select>
                     <span

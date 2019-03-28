@@ -233,7 +233,7 @@
                 <div class="row">
                   <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                     <h4>{{$t('network.aliases')}}</h4>
-                    <dl v-for="a in i.aliases" v-bind:key="a.name" class="dl-horizontal int-details">
+                    <dl v-for="(a, ak) in i.aliases" v-bind:key="ak" class="dl-horizontal int-details">
                       <dt>{{a.name}}</dt>
                       <dd v-if="a.ipaddr">
                         {{$t('network.ip_address')}}:
@@ -259,7 +259,7 @@
                   </div>
                   <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                     <h4>{{i.type == 'bond' ? $t('network.slaves') : $t('network.devices')}}</h4>
-                    <dl v-for="a in i.devices" v-bind:key="a.name" class="dl-horizontal int-details">
+                    <dl v-for="(a, ak) in i.devices" v-bind:key="ak" class="dl-horizontal int-details">
                       <dt>{{a.name}}</dt>
                       <dd v-if="a.mac">
                         {{$t('network.mac_address')}}:
@@ -625,7 +625,7 @@
                     v-model="currentInterface.successor"
                     class="combobox form-control"
                   >
-                    <option v-for="s in currentInterface.successorList" v-bind:key="s">{{s}}</option>
+                    <option v-for="(s, sk) in currentInterface.successorList" v-bind:key="sk">{{s}}</option>
                   </select>
                 </div>
               </div>
@@ -929,7 +929,7 @@
                               class="combobox form-control"
                               v-model="wizard.type.bond.device"
                             >
-                              <option v-for="d in wizard.type.bond.devicesList" v-bind:key="d">{{d}}</option>
+                              <option v-for="(d, dk) in wizard.type.bond.devicesList" v-bind:key="(d, dk)">{{d}}</option>
                             </select>
                           </div>
                         </div>
@@ -958,7 +958,7 @@
                           >{{$t('network.mode')}}</label>
                           <div class="col-sm-9">
                             <select v-model="wizard.type.bond.mode" class="form-control combobox">
-                              <option v-for="(m, mi) in wizard.type.bond.modes" :value="mi" v-bind:key="m">
+                              <option v-for="(m, mi) in wizard.type.bond.modes" :value="mi" v-bind:key="mi">
                                 {{m.name |
                                 capitalize}}
                               </option>
@@ -981,8 +981,8 @@
                               v-model="wizard.type.bridge.device"
                             >
                               <option
-                                v-for="d in wizard.type.bridge.devicesList"
-                                v-bind:key="d"
+                                v-for="(d, dk) in wizard.type.bridge.devicesList"
+                                v-bind:key="dk"
                               >{{d}}</option>
                             </select>
                           </div>
@@ -1033,9 +1033,9 @@
                           <div class="col-sm-9">
                             <select v-model="wizard.type.vlan.device" class="form-control combobox">
                               <option
-                                v-for="m in wizard.type.vlan.devicesList"
+                                v-for="(m, mk) in wizard.type.vlan.devicesList"
                                 :value="m"
-                                v-bind:key="m"
+                                v-bind:key="mk"
                               >{{m}}</option>
                             </select>
                           </div>
