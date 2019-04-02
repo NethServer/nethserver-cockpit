@@ -58,7 +58,7 @@ function createValidator($data)
 }
 
 /**
-* Print a success return object and exit with 0 
+* Print a success return object and exit with 0
 */
 function success()
 {
@@ -69,7 +69,7 @@ function success()
 /**
 * Print all validation errors and exit with 1
 * @param {Validator} or {Array} - optional
-* 
+*
 * If argument is a Validator, generate a validation error and print all validation messages.
 * Otherwise the argument should be an array in the form { type: 'ErrorType', message: 'Error message' }
 * use the argument as generico error message.
@@ -78,13 +78,11 @@ function success()
 function error($arg = NULL)
 {
     $error = array(
-        "id" => time(),
         "type" => "GenericError",
         "message" => "generic_error"
     );
     if ($arg instanceof LegacyValidator) {
         $error = array(
-            "id" => time(),
             "type" => 'NotValid',
             "message" => "validation_failed",
         );

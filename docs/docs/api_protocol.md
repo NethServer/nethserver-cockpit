@@ -86,19 +86,12 @@ If something goes wrong, APIs must output a JSON object which describes the erro
 For instance:
 ```json
 {
-    "id": 1507721123244,
     "type": "Error",
     "message": "Generic error reason",
     "attributes": {
         "output": "output from the system"
     }
 }
-```
-
-The **id** field is mandatory. It is an integer representing a unique identifier. 
-To generate a new `id` run the following Bash command:
-```bash
-$ date +%s
 ```
 
 The **type** field is mandatory. Its value is a string identifying the error type. 
@@ -127,7 +120,6 @@ Validation error:
 
 ```json
 {
-  "id": 1536738091,
   "type": "NotValid",
   "message": "Validation failed",
   "attributes": [
@@ -146,7 +138,6 @@ Event has failed:
 
 ```json
 {
-  "id": "1536738278",
   "type": "EventFailed",
   "message": "See /var/log/messages"
 } 
@@ -158,7 +149,6 @@ Invalid JSON object input:
 
 ```json
 {
-  "id": "1536738276",
   "type": "InvalidInput",
   "message": "No JSON data available"
 }
@@ -198,4 +188,3 @@ Example of multiple hint:
   "link": null
 }
 ```
-
