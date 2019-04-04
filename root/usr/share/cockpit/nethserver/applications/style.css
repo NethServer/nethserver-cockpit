@@ -17,6 +17,10 @@ input[type="checkbox"].form-control {
     box-shadow: none;
 }
 
+textarea {
+    resize: vertical !important;
+}
+
 .form-spinner-loader {
     display: inline-block;
     top: 6px;
@@ -367,4 +371,29 @@ li.active>a>span {
 .popover-content {
     max-height: 350px;
     overflow: auto;
+}
+
+.panel.panel-default {
+    box-shadow: none !important;
+}
+
+#providerDetails {
+    padding: 10px;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.provider-details {
+    color: #0088ce;
+    text-decoration: none;
+}
+
+#provider-markup {
+    box-shadow: none;
+}
+
+.provider-details:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }

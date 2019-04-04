@@ -495,29 +495,8 @@ circle {
     margin-bottom: 0px;
 }
 
-#providerDetails {
-    padding: 10px;
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-}
-
-.provider-details {
-    color: #0088ce;
-    text-decoration: none;
-}
-
 #change-provider-btn {
     float: right;
-}
-
-#provider-markup {
-    box-shadow: none;
-}
-
-.provider-details:hover {
-    text-decoration: underline;
-    cursor: pointer;
 }
 
 .wizard-pf-main {
