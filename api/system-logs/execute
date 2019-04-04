@@ -29,6 +29,7 @@ my $TIMEOUT=300;
 my $input = readInput();
 my $cmd = $input->{'action'};
 my $lines = $input->{'lines'} || '50';
+my $filter = $input->{'filter'} || '';
 
 sub dump_logs
 {
@@ -53,6 +54,9 @@ sub dump_logs
         $watchdog= "timeout --foreground -k ".($TIMEOUT+5)." $TIMEOUT ";
     } else {
         $cmd .= " -n $lines";
+    }
+    if ($filter ne '') {
+        $cmd .= " | grep '$filter'";
     }
 
     # Make sure there is only one instance running
