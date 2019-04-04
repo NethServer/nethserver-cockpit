@@ -24,6 +24,7 @@ require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
 
 use warnings;
 use strict;
+use String::ShellQuote qw( shell_quote );
 
 my $TIMEOUT=300;
 my $input = readInput();
@@ -43,20 +44,20 @@ sub dump_logs
 
     if ($mode eq 'systemd') {
         $cmd .= "journalctl ";
-        $args = " -u ".join(" -u ",@$paths);
+        $args = " -u ".shell_quote(join(" -u ",@$paths));
     } else {
         $cmd .= "tail ";
-        $args = join(" ",@$paths);
+        $args = shell_quote(join(" ",@$paths));
     }
     if ($follow) {
         $cmd .= " -f ";
         # Make sure process is killed after the timeout
         $watchdog= "timeout --foreground -k ".($TIMEOUT+5)." $TIMEOUT ";
     } else {
-        $cmd .= " -n $lines";
+        $cmd .= " -n ".shell_quote($lines);
     }
     if ($filter ne '') {
-        $cmd .= " | grep '$filter'";
+        $cmd .= " | grep '".shell_quote($filter)."'";
     }
 
     # Make sure there is only one instance running
