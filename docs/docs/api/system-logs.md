@@ -20,6 +20,10 @@ Required fields:
 - `paths`: list of systemd units or absolute file paths
 - `lines`: maximum lines to retrieve, if empty, default is 50
 
+Optional fields:
+
+- `filter`: if present and not empty, pipe the output to grep with the given filter
+
 Example for `systemd` mode
 ```json
 {
@@ -43,6 +47,19 @@ Example for file mode:
     "/var/log/messages"
   ],
   "lines": "20"
+}
+```
+
+Example with filter:
+```json
+{
+  "action": "dump",
+  "mode": "log",
+  "paths": [
+    "/var/log/maillog"
+  ],
+  "lines": "",
+  "filter": "2696210DAFFF"
 }
 ```
 
