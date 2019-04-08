@@ -57,7 +57,7 @@ sub dump_logs
         $cmd .= " -n ".shell_quote($lines);
     }
     if ($filter ne '') {
-        $cmd .= " | grep '".shell_quote($filter)."'";
+        $args .= " | grep '".shell_quote($filter)."'";
     }
 
     # Make sure there is only one instance running
