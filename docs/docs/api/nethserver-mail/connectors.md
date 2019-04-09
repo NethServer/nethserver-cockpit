@@ -93,17 +93,9 @@ Common constraints:
 
 - Retriever: valid values are `SimplePOP3Retriever`, `SimplePOP3SSLRetriever`, `SimpleIMAPRetriever`, `SimpleIMAPSSLRetriever`
 - Delete: number of days after the mail is deleted from the remote server, must be an integer grater or equal than `-1`. A negative number means 'never' 
-- Time: time expressed in minutes, must be greater than 5
+- Time: time expressed in minutes, must be greater than 4
 - Server: IP addres or host name
 - status, SpamCheck, VirusCheck: can be `enabled` or `disabled`
-
-Constraints for `update` action:
-
-- name: must be a valid mail address and an already existing connector
-
-Constraints for `create` action:
-
-- name: must be a valid mail address and an non existing connector
 
 ### Input
 
@@ -144,10 +136,11 @@ Example:
   "Retriever": "SimpleIMAPRetriever",
   "Username": "giacomo",
   "FilterCheck": "enabled",
-  "name": "external@my.remote.com",
   "action": "create"
 }
 ```
+
+The database key is calculated by the server.
 
 ## create
 
