@@ -47,7 +47,7 @@ Example:
 ```json
 {
   "connectors": {
-    "giacomo@local.neth.eu": [
+    "giacomo": [
       {
         "props": {
           "Server": "test.local.net",
