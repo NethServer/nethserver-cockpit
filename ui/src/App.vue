@@ -295,7 +295,7 @@
       </div>
     </div>
 
-    <div v-if="taskInProgress" class="fake-modal-backdrop-event"></div>
+    <div v-if="taskInProgress && this.$route.path != '/terminal'" class="fake-modal-backdrop-event"></div>
   </div>
 </template>
 
