@@ -69,6 +69,7 @@ nav:
       - api/nethserver-mail/dashboard.md
       - api/nethserver-mail/filter.md
       - api/nethserver-mail/mailbox.md
+      - api/nethserver-mail/feature.md
       - api/nethserver-mail/pseudonym.md
       - api/nethserver-mail/queue.md
       - api/nethserver-mail/send.md
