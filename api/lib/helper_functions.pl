@@ -107,5 +107,23 @@ sub readInput
 
 }
 
+#
+# Try to decode a json string, return a default if fails
+#
+sub safe_decode_json
+{
+    my $str = shift;
+    my $default = shift;
+    if( ! defined $default) {
+        $default = {};
+    }
+
+    my $ret;
+    eval { $ret = decode_json($str); };
+    if($@) {
+        return $default;
+    }
+    return $ret;
+}
 
 1;
