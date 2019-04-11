@@ -72,6 +72,7 @@ nethserver = {
                             ns.$children[0].notifications.event.show = false;
                             ns.$children[0].notifications.event.message = "";
                             ns.$children[0].notifications.event.name = ""
+                            ns.$children[0].taskInProgress = false;
                         }, 500)
                         stream(j.status)
                     }
