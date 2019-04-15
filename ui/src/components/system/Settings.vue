@@ -137,7 +137,6 @@
           >{{$t('settings.smarthost_hostname')}}</label>
           <div class="col-sm-5">
             <input
-              :required="settings.smarthost.SmartHostStatus"
               type="text"
               v-model="settings.smarthost.SmartHostName"
               class="form-control"
@@ -158,7 +157,6 @@
           >{{$t('settings.smarthost_port')}}</label>
           <div class="col-sm-5">
             <input
-              :required="settings.smarthost.SmartHostStatus"
               type="number"
               min="0"
               v-model="settings.smarthost.SmartHostPort"
