@@ -97,7 +97,7 @@
                     <span class="fa fa-cog span-right-margin"></span>
                     {{$t('network.configure')}}
                   </button>
-                  <div v-if="roleKey != 'free'" class="dropdown pull-right dropdown-kebab-pf">
+                  <div v-if="roleKey != 'free'" class="dropup pull-right dropdown-kebab-pf">
                     <button
                       class="btn btn-link dropdown-toggle"
                       type="button"

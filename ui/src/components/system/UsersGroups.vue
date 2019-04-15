@@ -182,7 +182,7 @@
               <span class="pficon pficon-edit span-right-margin"></span>
               {{$t('edit')}}
             </button>
-            <div class="dropdown pull-right dropdown-kebab-pf">
+            <div class="dropup pull-right dropdown-kebab-pf">
               <button
                 class="btn btn-link dropdown-toggle"
                 type="button"
@@ -258,7 +258,7 @@
               <span class="pficon pficon-edit span-right-margin"></span>
               {{$t('edit')}}
             </button>
-            <div class="dropdown pull-right dropdown-kebab-pf">
+            <div class="dropup pull-right dropdown-kebab-pf">
               <button
                 class="btn btn-link dropdown-toggle"
                 type="button"

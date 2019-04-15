@@ -73,7 +73,7 @@
                 <span class="fa fa-download span-right-margin"></span>
                 {{$t('backup.download')}}
               </button>
-              <div class="dropdown pull-right dropdown-kebab-pf">
+              <div class="dropup pull-right dropdown-kebab-pf">
                 <button
                   class="btn btn-link dropdown-toggle"
                   type="button"
@@ -192,7 +192,7 @@
               <span :class="['fa', b.ready == 1 ? 'fa-play' : 'fa-edit', 'span-right-margin']"></span>
               {{b.ready == 1 ? $t('backup.execute_now') : $t('edit')}}
             </button>
-            <div class="dropdown pull-right dropdown-kebab-pf">
+            <div class="dropup pull-right dropdown-kebab-pf">
               <button
                 class="btn btn-link dropdown-toggle"
                 type="button"
