@@ -137,6 +137,7 @@
           >{{$t('settings.smarthost_hostname')}}</label>
           <div class="col-sm-5">
             <input
+              :required="settings.smarthost.SmartHostStatus"
               type="text"
               v-model="settings.smarthost.SmartHostName"
               class="form-control"
@@ -157,6 +158,7 @@
           >{{$t('settings.smarthost_port')}}</label>
           <div class="col-sm-5">
             <input
+              :required="settings.smarthost.SmartHostStatus"
               type="number"
               min="0"
               v-model="settings.smarthost.SmartHostPort"
@@ -178,7 +180,6 @@
           >{{$t('settings.smarthost_username')}}</label>
           <div class="col-sm-5">
             <input
-              :required="settings.smarthost.SmartHostStatus"
               type="text"
               v-model="settings.smarthost.SmartHostUsername"
               class="form-control"
@@ -199,7 +200,6 @@
           >{{$t('settings.smarthost_password')}}</label>
           <div class="col-sm-5">
             <input
-              :required="settings.smarthost.SmartHostStatus"
               type="password"
               v-model="settings.smarthost.SmartHostPassword"
               class="form-control"
