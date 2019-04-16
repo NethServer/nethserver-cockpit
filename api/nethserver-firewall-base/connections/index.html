@@ -1109,6 +1109,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../../nethserver-mail/feature/" title="menu" class="md-nav__link">
+      menu
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../../nethserver-mail/pseudonym/" title="pseudonym" class="md-nav__link">
       pseudonym
     </a>
@@ -1559,10 +1571,12 @@ If <code>limit</code> is set, return only the first <code>limit</code> connectio
 
 
 <h4 id="stats">stats<a class="headerlink" href="#stats" title="Permanent link">&para;</a></h4>
-<p>Return the connection number in the last 30 seconds from netdata.</p>
+<p>Return the connection number in the last <code>time</code> seconds from netdata.
+If <code>time</code> field is not defined, default is 900 seconds.</p>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;stats&quot;</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;stats&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;time&quot;</span><span class="p">:</span> <span class="mi">900</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -1637,17 +1651,19 @@ If <code>limit</code> is set, return only the first <code>limit</code> connectio
 <h4 id="stats_1">stats<a class="headerlink" href="#stats_1" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;connections&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="s2">&quot;19&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;18&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;18&quot;</span><span class="p">,</span>
-    <span class="err">....</span>
+  <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">[</span>
+      <span class="mi">1553521929</span><span class="p">,</span>
+      <span class="mi">422</span>
+    <span class="p">],</span>
+    <span class="p">[</span>
+      <span class="mi">1553521928</span><span class="p">,</span>
+      <span class="mi">423</span>
+    <span class="p">]</span>
   <span class="p">],</span>
-  <span class="nt">&quot;time&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="s2">&quot;1551362111&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;1551362110&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;1551362109&quot;</span><span class="p">,</span>
-    <span class="err">...</span>
+  <span class="nt">&quot;labels&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;connections&quot;</span>
   <span class="p">]</span>
 <span class="p">}</span>
 </pre></div>

@@ -953,6 +953,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../api/nethserver-mail/feature/" title="menu" class="md-nav__link">
+      menu
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../api/nethserver-mail/pseudonym/" title="pseudonym" class="md-nav__link">
       pseudonym
     </a>
@@ -1157,6 +1169,53 @@
   <a href="#accessibility" title="Accessibility" class="md-nav__link">
     Accessibility
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#translations" title="Translations" class="md-nav__link">
+    Translations
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nethserverfetchtranslatedstringscallback" title="nethserver.fetchTranslatedStrings(callback)" class="md-nav__link">
+    nethserver.fetchTranslatedStrings(callback)
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#return-value" title="Return value" class="md-nav__link">
+    Return value
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arguments" title="Arguments" class="md-nav__link">
+    Arguments
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" title="Examples" class="md-nav__link">
+    Examples
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1466,6 +1525,53 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#translations" title="Translations" class="md-nav__link">
+    Translations
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nethserverfetchtranslatedstringscallback" title="nethserver.fetchTranslatedStrings(callback)" class="md-nav__link">
+    nethserver.fetchTranslatedStrings(callback)
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#return-value" title="Return value" class="md-nav__link">
+    Return value
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arguments" title="Arguments" class="md-nav__link">
+    Arguments
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" title="Examples" class="md-nav__link">
+    Examples
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
       
       
       
@@ -1496,6 +1602,7 @@
 </ul>
 </li>
 <li><a href="#accessibility">Accessibility</a></li>
+<li><a href="#translations">Translations</a></li>
 </ul>
 <h2 id="ui-design">UI design<a class="headerlink" href="#ui-design" title="Permanent link">&para;</a></h2>
 <p>The whole web UI is designed following <a href="http://www.patternfly.org/">PatternFly</a> patterns.
@@ -1631,6 +1738,31 @@ Some use cases are:</p>
 <h2 id="accessibility">Accessibility<a class="headerlink" href="#accessibility" title="Permanent link">&para;</a></h2>
 <p>We need to evaluate how PatternFly copes with people suffering of low vision, who need to access most features
 using the keyboard shortcuts.</p>
+<h2 id="translations">Translations<a class="headerlink" href="#translations" title="Permanent link">&para;</a></h2>
+<h3 id="nethserverfetchtranslatedstringscallback">nethserver.fetchTranslatedStrings(callback)<a class="headerlink" href="#nethserverfetchtranslatedstringscallback" title="Permanent link">&para;</a></h3>
+<p>Start an asynchronous call that fetches the localized strings. The current
+Cockpit language is automatically detected from the current session settings.</p>
+<p>If the remote call completes successfully <code>callback</code> is invoked.</p>
+<h4 id="return-value">Return value<a class="headerlink" href="#return-value" title="Permanent link">&para;</a></h4>
+<p>a jQuery <code>jqXHR</code> object.</p>
+<h4 id="arguments">Arguments<a class="headerlink" href="#arguments" title="Permanent link">&para;</a></h4>
+<ul>
+<li><code>callback(data)</code>, a function that accepts an argument <code>data</code> containing the
+  <code>language.json</code> file contents</li>
+</ul>
+<p>The actual localization is performed by the Cockpit server process, according to
+its content-negotiation rules. See also https://cockpit-project.org/guide/latest/packages.html#package-minified</p>
+<h4 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h4>
+<p>In a VueJS <code>main.js</code>, using <code>vue-i18n</code> plugin:</p>
+<div class="codehilite"><pre><span></span><span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">VueI18n</span><span class="p">)</span>
+<span class="kr">const</span> <span class="nx">i18n</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">VueI18n</span><span class="p">();</span>
+<span class="p">...</span>
+<span class="nx">nethserver</span><span class="p">.</span><span class="nx">fetchTranslatedStrings</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">lang</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">i18n</span><span class="p">.</span><span class="nx">setLocaleMessage</span><span class="p">(</span><span class="s1">&#39;cockpit&#39;</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+    <span class="nx">i18n</span><span class="p">.</span><span class="nx">locale</span> <span class="o">=</span> <span class="s1">&#39;cockpit&#39;</span><span class="p">;</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">$mount</span><span class="p">(</span><span class="s1">&#39;#app&#39;</span><span class="p">);</span> <span class="c1">// Start VueJS application after language strings are loaded</span>
+<span class="p">})</span>
+</pre></div>
                 
                   
                 

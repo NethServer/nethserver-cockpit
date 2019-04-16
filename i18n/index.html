@@ -953,6 +953,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../api/nethserver-mail/feature/" title="menu" class="md-nav__link">
+      menu
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../api/nethserver-mail/pseudonym/" title="pseudonym" class="md-nav__link">
       pseudonym
     </a>
@@ -1071,15 +1083,42 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pushing-translations" title="Pushing translations" class="md-nav__link">
-    Pushing translations
+  <a href="#developer-rules" title="Developer rules" class="md-nav__link">
+    Developer rules
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" title="Prerequisites" class="md-nav__link">
+    Prerequisites
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simple-workflow" title="Simple workflow" class="md-nav__link">
+    Simple workflow
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#translations-packages" title="Translations packages" class="md-nav__link">
+    Translations packages
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#pulling-translations" title="Pulling translations" class="md-nav__link">
-    Pulling translations
+  <a href="#translations-api" title="Translations API" class="md-nav__link">
+    Translations API
   </a>
   
 </li>
@@ -1277,15 +1316,42 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pushing-translations" title="Pushing translations" class="md-nav__link">
-    Pushing translations
+  <a href="#developer-rules" title="Developer rules" class="md-nav__link">
+    Developer rules
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" title="Prerequisites" class="md-nav__link">
+    Prerequisites
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simple-workflow" title="Simple workflow" class="md-nav__link">
+    Simple workflow
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#translations-packages" title="Translations packages" class="md-nav__link">
+    Translations packages
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#pulling-translations" title="Pulling translations" class="md-nav__link">
-    Pulling translations
+  <a href="#translations-api" title="Translations API" class="md-nav__link">
+    Translations API
   </a>
   
 </li>
@@ -1310,33 +1376,75 @@
                 
                 
                 <h1 id="translations">Translations<a class="headerlink" href="#translations" title="Permanent link">&para;</a></h1>
-<p>The UI uses a simple JSON file to handle translations.
-Translations files are saved inside the repository under the <code>ui/src/i18n/</code> directory.</p>
-<p>Each file name is in the form <code>locale-&lt;lang&gt;.json</code> where <code>&lt;lang&gt;</code> is the language code.
-The source file of all translations is the <code>locale-en.json</code> file.</p>
-<p>Translations are handled using <a href="https://www.transifex.com/nethserver/nethserver/dashboard/">Transifex</a>.</p>
-<h2 id="pushing-translations">Pushing translations<a class="headerlink" href="#pushing-translations" title="Permanent link">&para;</a></h2>
-<p>Make sure to have a Transifex account and the <a href="https://docs.transifex.com/client/introduction">client</a> is installed.</p>
-<p>When a new string is added inside the <code>local-en.json file</code>, remember to push it to Transifex:</p>
-<div class="codehilite"><pre><span></span>tx push -s
+<p>The UI uses a simple JSON file format to handle translations. The JSON format is
+described by the <a href="https://docs.transifex.com/formats/json">Transifex JSON
+format</a> documentation page.</p>
+<p><strong>Translators</strong> have to access
+<a href="https://www.transifex.com/nethserver/nethserver/dashboard/">Transifex</a> to
+localize the messages.</p>
+<p><strong>Developers</strong> have to follow the rules described by the next section.</p>
+<p>See also the <a href="http://docs.nethserver.org/projects/nethserver-devel/en/latest/i18n.html">Internationalization
+section</a>
+in the Developer manual.</p>
+<h2 id="developer-rules">Developer rules<a class="headerlink" href="#developer-rules" title="Permanent link">&para;</a></h2>
+<p>The source code repository <strong>must have</strong> the messages source strings already
+localized in English (US) and saved according the above JSON format.</p>
+<p>The JSON source code path, depends on many factors. A typical example for simple
+projects could be <code>&lt;project root&gt;/ui/i18n/language.json</code>, whilst a Vue.js
+project can use <code>&lt;project root&gt;/ui/public/i18n/language.json</code>.</p>
+<p>The resulting runtime URL, relative to the application base URL <strong>must be</strong>
+<code>./i18n/language.json</code>. That URL is required by the
+<code>nethserver.fetchTranslatedStrings()</code> method. To obtain this, the application
+RPM must install the <code>language.json</code> source catalog as
+<code>/usr/share/cockpit/&lt;APPDIR&gt;/i18n/language.json</code>.</p>
+<p>For instance <code>&lt;APPDIR&gt;</code> can be <code>nethserver-myapp</code>.</p>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+<ul>
+<li>create a personal Transifex account associated to the <code>nethserver</code> organization</li>
+<li>install the <a href="https://docs.transifex.com/client/introduction">Transifex Client</a> (command <code>tx</code>)</li>
+<li>ensure the repository root dir has a <code>.tx/config</code> file</li>
+</ul>
+<p>For instance, for the "MyApp" application <code>.tx/config</code> must have something like:</p>
+<div class="codehilite"><pre><span></span>[nethserver.CockpitMyApp]
+source_file = ui/i18n/language.json
+source_lang = en
+type = KEYVALUEJSON
 </pre></div>
 
 
-<h2 id="pulling-translations">Pulling translations<a class="headerlink" href="#pulling-translations" title="Permanent link">&para;</a></h2>
-<p>Once in a while, remember to pull new translations and commit everything inside the repository.</p>
-<p>First, pull all available languages:</p>
-<div class="codehilite"><pre><span></span>tx pull -s
+<p>Note the <strong>mandatory</strong> <code>nethserver.Cockpit*</code> prefix for the strings catalog
+"slug" name.</p>
+<h3 id="simple-workflow">Simple workflow<a class="headerlink" href="#simple-workflow" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p>When a new string in source code has to be translated, add it to the <code>language.json</code> file,</p>
+</li>
+<li>
+<p>Commit changes to git</p>
+</li>
+<li>
+<p>When the changes are ready for the release send the strings to Transifex for
+   the translation by running <code>tx push -s</code> in the repository root directory</p>
+</li>
+</ol>
+<h2 id="translations-packages">Translations packages<a class="headerlink" href="#translations-packages" title="Permanent link">&para;</a></h2>
+<p>The localized strings are periodically downloaded from Transifex and added to
+the <a href="https://github.com/nethserver/nethserver-lang">nethserver-lang repository</a>.
+They are packed in separate RPMs at a later time.</p>
+<p>The UI application developer must list his JSON traslation files in
+<code>nethserver-lang/.tx/config</code>; following the example above, the corresponding
+resource specification is:</p>
+<div class="codehilite"><pre><span></span>[nethserver.CockpitMail]
+file_filter = ui/nethserver-myapp/language.&lt;lang&gt;.json
+source_file = ui/nethserver-myapp/language.json
+source_lang = en
+type = KEYVALUEJSON
 </pre></div>
 
 
-<p>If needed, add new languages to the repository:</p>
-<div class="codehilite"><pre><span></span>git add ui/src/i18n/locale-it.json
-</pre></div>
-
-
-<p>Finally, commit everything:</p>
-<div class="codehilite"><pre><span></span>git commit -a -m &quot;Pull translations: add Italian&quot;
-</pre></div>
+<p>The developer can open a Pull Request to merge his code in <code>nethserver-lang</code>.</p>
+<h2 id="translations-api">Translations API<a class="headerlink" href="#translations-api" title="Permanent link">&para;</a></h2>
+<p>See the "UI guidelines" section.</p>
                 
                   
                 

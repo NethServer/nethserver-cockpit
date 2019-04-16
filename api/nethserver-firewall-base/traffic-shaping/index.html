@@ -1184,6 +1184,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../../nethserver-mail/feature/" title="menu" class="md-nav__link">
+      menu
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../../nethserver-mail/pseudonym/" title="pseudonym" class="md-nav__link">
       pseudonym
     </a>
@@ -1690,16 +1702,19 @@ Valid actions:</p>
 <p>Return the list of traffic shaping classes from <code>tc</code> database.</p>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;classes&quot;</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;classes&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
 
 <h4 id="stats">stats<a class="headerlink" href="#stats" title="Permanent link">&para;</a></h4>
-<p>Retrieve tc class usage for each red interface using netdata.</p>
+<p>Retrieve tc class usage for each red interface from the last <code>time</code> seconds.
+Data are read from netdata.</p>
+<p>If <code>time</code> is not set, default is 30 seconds.</p>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;stats&quot;</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;stats&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;time&quot;</span><span class="p">:</span> <span class="mi">30</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -1711,8 +1726,8 @@ If <code>expand</code> is set to <code>true</code>, the api will try to expand a
 returning information about IP address, zone, etc.</p>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;rules&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;expand&quot;</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;rules&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;expand&quot;</span><span class="p">:</span> <span class="kc">true</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -1721,44 +1736,41 @@ returning information about IP address, zone, etc.</p>
 <h4 id="classes_1">classes<a class="headerlink" href="#classes_1" title="Permanent link">&para;</a></h4>
 <p>Output example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-  <span class="nt">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;classes&quot;</span><span class="p">:</span> <span class="p">[</span>
-      <span class="p">{</span>
-        <span class="nt">&quot;MinOutputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;10&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;BindTo&quot;</span><span class="p">:</span> <span class="p">[],</span>
-        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;high&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;MaxOutputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;MaxInputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;MinInputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;10&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;Unit&quot;</span><span class="p">:</span> <span class="s2">&quot;%&quot;</span>
-      <span class="p">},</span>
-      <span class="p">{</span>
-        <span class="nt">&quot;MinOutputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;BindTo&quot;</span><span class="p">:</span> <span class="p">[],</span>
-        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;low&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;MaxOutputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;90&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;MaxInputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;90&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;MinInputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;Unit&quot;</span><span class="p">:</span> <span class="s2">&quot;%&quot;</span>
-      <span class="p">},</span>
-      <span class="p">{</span>
-        <span class="nt">&quot;MinOutputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;BindTo&quot;</span><span class="p">:</span> <span class="p">[</span>
-          <span class="s2">&quot;ens7&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;ens8&quot;</span>
-        <span class="p">],</span>
-        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;voip&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;MaxOutputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;MaxInputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;MinInputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;VoIP&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;Unit&quot;</span><span class="p">:</span> <span class="s2">&quot;kbps&quot;</span>
-      <span class="p">}</span>
-    <span class="p">]</span>
-  <span class="p">}</span>
+    <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;classes&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="nt">&quot;MinOutputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;10&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;BindTo&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;high&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;MaxOutputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;MaxInputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;MinInputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;10&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;Unit&quot;</span><span class="p">:</span> <span class="s2">&quot;%&quot;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="nt">&quot;MinOutputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;BindTo&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;low&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;MaxOutputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;90&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;MaxInputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;90&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;MinInputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;Unit&quot;</span><span class="p">:</span> <span class="s2">&quot;%&quot;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="nt">&quot;MinOutputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;BindTo&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ens7&quot;</span><span class="p">,</span> <span class="s2">&quot;ens8&quot;</span><span class="p">],</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;voip&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;MaxOutputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;MaxInputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;MinInputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;VoIP&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;Unit&quot;</span><span class="p">:</span> <span class="s2">&quot;kbps&quot;</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -1768,125 +1780,59 @@ returning information about IP address, zone, etc.</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;red1&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="nt">&quot;out&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">&quot;high&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
+      <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">[</span>
+          <span class="mi">1553521843</span><span class="p">,</span>
+          <span class="mi">0</span><span class="p">,</span>
+          <span class="mi">0</span><span class="p">,</span>
+          <span class="mi">0</span>
+        <span class="p">],</span>
+        <span class="p">[</span>
+          <span class="mi">1553521842</span><span class="p">,</span>
+          <span class="mi">0</span><span class="p">,</span>
+          <span class="mi">0</span><span class="p">,</span>
+          <span class="mi">0</span>
+        <span class="p">]</span>
       <span class="p">],</span>
-      <span class="nt">&quot;time&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;1548143776&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;1548143775&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
-      <span class="p">],</span>
-      <span class="nt">&quot;low&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
-      <span class="p">],</span>
-      <span class="nt">&quot;default&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;0.0115016&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;0.762703&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
-      <span class="p">],</span>
-      <span class="nt">&quot;voip&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
+      <span class="nt">&quot;labels&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;low&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;high&quot;</span>
       <span class="p">]</span>
     <span class="p">},</span>
     <span class="nt">&quot;in&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">&quot;high&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
+      <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">[</span>
+          <span class="mi">1553521843</span><span class="p">,</span>
+          <span class="mi">0</span><span class="p">,</span>
+          <span class="mi">0</span><span class="p">,</span>
+          <span class="mi">0</span>
+        <span class="p">],</span>
+        <span class="p">[</span>
+          <span class="mi">1553521842</span><span class="p">,</span>
+          <span class="mi">0</span><span class="p">,</span>
+          <span class="mi">0</span><span class="p">,</span>
+          <span class="mi">0</span>
+        <span class="p">]</span>
       <span class="p">],</span>
-      <span class="nt">&quot;time&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;1548143776&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;1548143775&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
-      <span class="p">],</span>
-      <span class="nt">&quot;low&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
-      <span class="p">],</span>
-      <span class="nt">&quot;default&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;0.0311577&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
-      <span class="p">],</span>
-      <span class="nt">&quot;voip&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
+      <span class="nt">&quot;labels&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;low&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;high&quot;</span>
       <span class="p">]</span>
     <span class="p">}</span>
   <span class="p">},</span>
-  <span class="nt">&quot;red2&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;out&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">&quot;high&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="err">...</span> 
-      <span class="p">],</span>
-      <span class="nt">&quot;time&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;1548143776&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;1548143775&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
-      <span class="p">],</span>
-      <span class="nt">&quot;low&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
-      <span class="p">],</span>
-      <span class="nt">&quot;default&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;0.0456097&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;2.49839&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
-      <span class="p">],</span>
-      <span class="nt">&quot;voip&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
-      <span class="p">]</span>
-    <span class="p">},</span>
-    <span class="nt">&quot;in&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">&quot;high&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
-      <span class="p">],</span>
-      <span class="nt">&quot;time&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;1548143776&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;1548143775&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
-      <span class="p">],</span>
-      <span class="nt">&quot;low&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
-      <span class="p">],</span>
-      <span class="nt">&quot;default&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;0.0289281&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;1.2430719&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
-      <span class="p">],</span>
-      <span class="nt">&quot;voip&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="err">...</span>
-      <span class="p">]</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+  <span class="err">...</span>
 <span class="p">}</span>
-<span class="err">}</span>
 </pre></div>
 
 
 <p>If data for red interfaces is not available (e.g. netdata is not running):</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;ens7&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-  <span class="nt">&quot;ens8&quot;</span><span class="p">:</span> <span class="kc">null</span>
+    <span class="nt">&quot;ens7&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;ens8&quot;</span><span class="p">:</span> <span class="kc">null</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -1973,7 +1919,7 @@ and the <code>next</code> position available for newly created rule.</p>
 <p>Common constratins:</p>
 <ul>
 <li>MaxInputRate, MaxOutputRate, MinInputRate, MinOutputRate: empty or an integer greater than 0</li>
-<li>Unit: can be <code>kbps</code> or <code>%</code> </li>
+<li>Unit: can be <code>kbps</code> or <code>%</code></li>
 <li>BindTo: empty or a list of existing red interfaces</li>
 </ul>
 <p>Constraints for <code>create-class</code>:</p>
@@ -2001,17 +1947,15 @@ and the <code>next</code> position available for newly created rule.</p>
 <h4 id="create-class">create-class<a class="headerlink" href="#create-class" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create-class&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;MinOutputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;BindTo&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="s2">&quot;ens7&quot;</span>
-  <span class="p">],</span>
-  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myclass&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;MaxOutputRate&quot;</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span>
-  <span class="nt">&quot;MaxInputRate&quot;</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span>
-  <span class="nt">&quot;MinInputRate&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-  <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;Unit&quot;</span><span class="p">:</span> <span class="s2">&quot;%&quot;</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create-class&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;MinOutputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;BindTo&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ens7&quot;</span><span class="p">],</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myclass&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;MaxOutputRate&quot;</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span>
+    <span class="nt">&quot;MaxInputRate&quot;</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span>
+    <span class="nt">&quot;MinInputRate&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Unit&quot;</span><span class="p">:</span> <span class="s2">&quot;%&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -2019,18 +1963,15 @@ and the <code>next</code> position available for newly created rule.</p>
 <h4 id="update-class">update-class<a class="headerlink" href="#update-class" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;update-class&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;MinOutputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;BindTo&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="s2">&quot;ens7&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ens8&quot;</span>
-  <span class="p">],</span>
-  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myclass&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;MaxOutputRate&quot;</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span>
-  <span class="nt">&quot;MaxInputRate&quot;</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span>
-  <span class="nt">&quot;MinInputRate&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-  <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;Unit&quot;</span><span class="p">:</span> <span class="s2">&quot;kbps&quot;</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;update-class&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;MinOutputRate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;BindTo&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ens7&quot;</span><span class="p">,</span> <span class="s2">&quot;ens8&quot;</span><span class="p">],</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myclass&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;MaxOutputRate&quot;</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span>
+    <span class="nt">&quot;MaxInputRate&quot;</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span>
+    <span class="nt">&quot;MinInputRate&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;Description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Unit&quot;</span><span class="p">:</span> <span class="s2">&quot;kbps&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -2038,8 +1979,8 @@ and the <code>next</code> position available for newly created rule.</p>
 <h4 id="delete-class">delete-class<a class="headerlink" href="#delete-class" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;delete-class&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myclass&quot;</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;delete-class&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myclass&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -2047,25 +1988,25 @@ and the <code>next</code> position available for newly created rule.</p>
 <h4 id="create-rule">create-rule<a class="headerlink" href="#create-rule" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;Log&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;Time&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-  <span class="nt">&quot;Position&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;Service&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;any&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fwservice&quot;</span>
-  <span class="p">},</span>
-  <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;class;high&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;Dst&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;role&quot;</span>
-  <span class="p">},</span>
-  <span class="nt">&quot;Src&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myhost.nethserver.org&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;host&quot;</span>
-  <span class="p">},</span>
-  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create-rule&quot;</span>
+    <span class="nt">&quot;Log&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Time&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;Position&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Service&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;any&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fwservice&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;class;high&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Dst&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;role&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;Src&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myhost.nethserver.org&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;host&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create-rule&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -2073,26 +2014,26 @@ and the <code>next</code> position available for newly created rule.</p>
 <h4 id="edit-rule">edit-rule<a class="headerlink" href="#edit-rule" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;Log&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;Time&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-  <span class="nt">&quot;Position&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;Service&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;any&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fwservice&quot;</span>
-  <span class="p">},</span>
-  <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;class;high&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;Dst&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;role&quot;</span>
-  <span class="p">},</span>
-  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;6&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;Src&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myhost.nethserver.org&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;host&quot;</span>
-  <span class="p">},</span>
-  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create-rule&quot;</span>
+    <span class="nt">&quot;Log&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Time&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;Position&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Service&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;any&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fwservice&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;class;high&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Dst&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;role&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;6&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Src&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myhost.nethserver.org&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;host&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rule&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create-rule&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -2104,8 +2045,8 @@ and the <code>next</code> position available for newly created rule.</p>
 The API will update all <code>Position</code> properties accordingly to given order.</p>
 <p>Input example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;reorder&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">24</span><span class="p">,</span><span class="mi">55</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;reorder&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;rules&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">24</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -2116,7 +2057,7 @@ The API will update all <code>Position</code> properties accordingly to given or
 <p>Create default classes.</p>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create-default&quot;</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create-default&quot;</span>
 <span class="p">}</span>
 </pre></div>
 

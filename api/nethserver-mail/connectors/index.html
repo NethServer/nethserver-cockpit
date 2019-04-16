@@ -1156,6 +1156,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../feature/" title="menu" class="md-nav__link">
+      menu
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../pseudonym/" title="pseudonym" class="md-nav__link">
       pseudonym
     </a>
@@ -1656,7 +1668,7 @@
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;connectors&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;giacomo@local.neth.eu&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="nt">&quot;giacomo&quot;</span><span class="p">:</span> <span class="p">[</span>
       <span class="p">{</span>
         <span class="nt">&quot;props&quot;</span><span class="p">:</span> <span class="p">{</span>
           <span class="nt">&quot;Server&quot;</span><span class="p">:</span> <span class="s2">&quot;test.local.net&quot;</span><span class="p">,</span>
@@ -1700,17 +1712,9 @@
 <ul>
 <li>Retriever: valid values are <code>SimplePOP3Retriever</code>, <code>SimplePOP3SSLRetriever</code>, <code>SimpleIMAPRetriever</code>, <code>SimpleIMAPSSLRetriever</code></li>
 <li>Delete: number of days after the mail is deleted from the remote server, must be an integer grater or equal than <code>-1</code>. A negative number means 'never' </li>
-<li>Time: time expressed in minutes, must be greater than 5</li>
+<li>Time: time expressed in minutes, must be greater than 4</li>
 <li>Server: IP addres or host name</li>
 <li>status, SpamCheck, VirusCheck: can be <code>enabled</code> or <code>disabled</code></li>
-</ul>
-<p>Constraints for <code>update</code> action:</p>
-<ul>
-<li>name: must be a valid mail address and an already existing connector</li>
-</ul>
-<p>Constraints for <code>create</code> action:</p>
-<ul>
-<li>name: must be a valid mail address and an non existing connector</li>
 </ul>
 <h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
 <h4 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h4>
@@ -1745,12 +1749,12 @@
   <span class="nt">&quot;Retriever&quot;</span><span class="p">:</span> <span class="s2">&quot;SimpleIMAPRetriever&quot;</span><span class="p">,</span>
   <span class="nt">&quot;Username&quot;</span><span class="p">:</span> <span class="s2">&quot;giacomo&quot;</span><span class="p">,</span>
   <span class="nt">&quot;FilterCheck&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;external@my.remote.com&quot;</span><span class="p">,</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
 
+<p>The database key is calculated by the server.</p>
 <h2 id="create_1">create<a class="headerlink" href="#create_1" title="Permanent link">&para;</a></h2>
 <p>Same input from validate API.</p>
 <h2 id="update_1">update<a class="headerlink" href="#update_1" title="Permanent link">&para;</a></h2>

@@ -456,6 +456,26 @@
     Input
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list" title="list" class="md-nav__link">
+    list
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#info" title="info" class="md-nav__link">
+    info
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -467,15 +487,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#list" title="List" class="md-nav__link">
-    List
+  <a href="#list_1" title="list" class="md-nav__link">
+    list
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#certificate-content" title="Certificate content" class="md-nav__link">
-    Certificate content
+  <a href="#info_1" title="info" class="md-nav__link">
+    info
   </a>
   
 </li>
@@ -1130,6 +1150,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../nethserver-mail/feature/" title="menu" class="md-nav__link">
+      menu
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../nethserver-mail/pseudonym/" title="pseudonym" class="md-nav__link">
       pseudonym
     </a>
@@ -1419,6 +1451,26 @@
     Input
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list" title="list" class="md-nav__link">
+    list
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#info" title="info" class="md-nav__link">
+    info
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1430,15 +1482,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#list" title="List" class="md-nav__link">
-    List
+  <a href="#list_1" title="list" class="md-nav__link">
+    list
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#certificate-content" title="Certificate content" class="md-nav__link">
-    Certificate content
+  <a href="#info_1" title="info" class="md-nav__link">
+    info
   </a>
   
 </li>
@@ -1578,18 +1630,29 @@ Supported operations:</p>
 <li>set default certificate</li>
 </ul>
 <h2 id="read">read<a class="headerlink" href="#read" title="Permanent link">&para;</a></h2>
-<p>List all available certificates.</p>
 <h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
-<p>If no input has been provided, the helper will return the list 
-of all available certificates.</p>
+<p>It takes a mandatory <code>action</code> argument.</p>
+<h4 id="list">list<a class="headerlink" href="#list" title="Permanent link">&para;</a></h4>
+<p>List all available certificates.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;list&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="info">info<a class="headerlink" href="#info" title="Permanent link">&para;</a></h4>
 <p>To retrieve a certificate, pass the <code>name</code> parameter to the read helper.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="nb">echo</span> <span class="s1">&#39;{&quot;name&quot;:&quot;/etc/pki/tls/certs/NSRV.crt&quot;}&#39;</span> <span class="p">|</span> ./read
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;info&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;/etc/pki/tls/certs/NSRV.crt&quot;</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
-<h4 id="list">List<a class="headerlink" href="#list" title="Permanent link">&para;</a></h4>
+<h4 id="list_1">list<a class="headerlink" href="#list_1" title="Permanent link">&para;</a></h4>
 <p>Internally, the helper calls <code>/usr/libexec/nethserver/cert-list</code>.
 Output current <code>pki</code> configuration and the list of existing certificates.</p>
 <p>If some <code>pki</code> properties are empty, system defaults will be used to fill the returned object.</p>
@@ -1636,7 +1699,7 @@ Output current <code>pki</code> configuration and the list of existing certifica
 </pre></div>
 
 
-<h4 id="certificate-content">Certificate content<a class="headerlink" href="#certificate-content" title="Permanent link">&para;</a></h4>
+<h4 id="info_1">info<a class="headerlink" href="#info_1" title="Permanent link">&para;</a></h4>
 <p>Internally, the helper calls <code>/usr/libexec/nethserver/pki-info</code>.</p>
 <p>Output is base64 encoded:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>

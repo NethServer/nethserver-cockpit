@@ -1055,6 +1055,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../nethserver-mail/feature/" title="menu" class="md-nav__link">
+      menu
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../nethserver-mail/pseudonym/" title="pseudonym" class="md-nav__link">
       pseudonym
     </a>
@@ -1434,6 +1446,10 @@ Valid actions are:</p>
 <li><code>paths</code>: list of systemd units or absolute file paths</li>
 <li><code>lines</code>: maximum lines to retrieve, if empty, default is 50</li>
 </ul>
+<p>Optional fields:</p>
+<ul>
+<li><code>filter</code>: if present and not empty, pipe the output to grep with the given filter</li>
+</ul>
 <p>Example for <code>systemd</code> mode</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;dump&quot;</span><span class="p">,</span>
@@ -1456,6 +1472,19 @@ Valid actions are:</p>
     <span class="s2">&quot;/var/log/messages&quot;</span>
   <span class="p">],</span>
   <span class="nt">&quot;lines&quot;</span><span class="p">:</span> <span class="s2">&quot;20&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Example with filter:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;dump&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;log&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;paths&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;/var/log/maillog&quot;</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;lines&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;filter&quot;</span><span class="p">:</span> <span class="s2">&quot;2696210DAFFF&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
