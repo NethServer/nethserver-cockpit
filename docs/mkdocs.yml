@@ -67,6 +67,7 @@ nav:
     - Mail helpers:
       - api/nethserver-mail/connectors.md
       - api/nethserver-mail/dashboard.md
+      - api/nethserver-mail/domains.md
       - api/nethserver-mail/filter.md
       - api/nethserver-mail/mailbox.md
       - api/nethserver-mail/feature.md
