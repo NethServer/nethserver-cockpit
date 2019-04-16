@@ -241,6 +241,11 @@
      <changefreq>daily</changefreq>
     </url>
     <url>
+     <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-mail/domains/</loc>
+     <lastmod>2019-04-16</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-mail/filter/</loc>
      <lastmod>2019-04-16</lastmod>
      <changefreq>daily</changefreq>
