@@ -64,6 +64,16 @@ nav:
       - api/nethserver-firewall-base/snat.md
       - api/nethserver-firewall-base/traffic-shaping.md
       - api/nethserver-firewall-base/wan.md
+    - Mail helpers:
+      - api/nethserver-mail/connectors.md
+      - api/nethserver-mail/dashboard.md
+      - api/nethserver-mail/filter.md
+      - api/nethserver-mail/mailbox.md
+      - api/nethserver-mail/feature.md
+      - api/nethserver-mail/pseudonym.md
+      - api/nethserver-mail/queue.md
+      - api/nethserver-mail/send.md
+      - api/nethserver-mail/settings.md
 - UI:
   - ui_guidelines.md
   - i18n.md
