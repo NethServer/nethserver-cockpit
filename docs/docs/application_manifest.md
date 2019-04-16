@@ -17,6 +17,7 @@ Manifest must be placed under `/usr/share/cockpit/nethserver/applications` direc
 - **screenshots**: a list of screenshots; all screenshots should have a 16:9 aspect ratio, and should have a width that is no smaller than 620px (optional)
 - **url**: link to local application installation. (required for web applications)
 - **homepage**: this is a recommended tag for link project official site (optional)
+- **external**: this is a *optional* tag for applications that have only external link and not configuration settings
 - **release**: define the version and release date of this application (recommended)
 - **provides**: list of provided RPM packages (optional)
 - **tags**: list of keywords to help people discover content of the application (optional)

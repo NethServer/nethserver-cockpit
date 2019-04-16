@@ -59,16 +59,19 @@
         </td>
         <td class="fancy">{{ props.row.description}}</td>
         <td class="fancy">
+          settings
           <strong>{{props.row.release.version | capitalize}}</strong>
         </td>
         <td>
           <a
-            :target="props.row.legacy ? '_blank' : ''"
-            :href="props.row.legacy ? legacyUrl+props.row.url : '#/applications/'+props.row.id"
+            :target="(props.row.legacy || props.row.external) ? '_blank' : ''"
+            :href="(props.row.legacy || props.row.external) ? (props.row.legacy ? legacyUrl : '' )+props.row.url : '#/applications/'+props.row.id"
             class="btn btn-primary button-minimum"
           >
-            <span :class="['fa', props.row.legacy ? 'fa-external-link' : 'fa-cogs']"></span>
-            {{props.row.legacy ? $t('applications.open') : $t('applications.settings')}}
+            <span
+              :class="['fa', (props.row.legacy || props.row.external) ? 'fa-external-link' : 'fa-cogs']"
+            ></span>
+            {{(props.row.legacy || props.row.external) ? $t('applications.open') : $t('applications.settings')}}
           </a>
           <div
             v-if="props.row.editable == 1 && !props.row.legacy"
@@ -84,7 +87,7 @@
               <span class="fa fa-ellipsis-v"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li v-if="props.row.editable == 1" role="presentation">
+              <li v-if="props.row.editable == 1 && !props.row.external" role="presentation">
                 <a
                   @click="props.row.shortcut == 1 ? removeShortcut(props.row.id) : addShortcut(props.row.id)"
                 >
@@ -95,7 +98,7 @@
                   ? $t('remove_shortcut') : $t('add_shortcut')}}
                 </a>
               </li>
-              <li v-if="props.row.editable == 1" role="presentation" class="divider"></li>
+              <li v-if="props.row.editable == 1 && !props.row.external" role="presentation" class="divider"></li>
               <li>
                 <a @click="openRemoveApp(props.row)">
                   <span class="fa fa-times action-icon-menu"></span>
