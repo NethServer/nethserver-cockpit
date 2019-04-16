@@ -116,7 +116,7 @@ if($cmd eq 'list') {
     }
 
     if (is_editable()) {
-        my @installed = `rpm -qa --queryformat "%{NAME}\n" | grep nethserver`;
+        my @installed = `rpm -qa --queryformat "%{NAME}\n" nethserver-\*`;
         chomp @installed;
         my $legacy_apps = read_json("/etc/nethserver/cockpit/legacy-apps.json");
         foreach my $app (keys(%$legacy_apps)) {
