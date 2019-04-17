@@ -1,4 +1,4 @@
-# menu
+# feature
 
 Check if a feature is installed.
 
