@@ -11,7 +11,7 @@ Source1:        nethserver-cockpit-ui.tar.gz
 BuildArch:      noarch
 
 BuildRequires:  nethserver-devtools
-Requires:       %{name}-lib
+Requires:       %{name}-lib >= %{version}-%{release}
 Requires:       cockpit, cockpit-storaged, cockpit-packagekit
 Requires:       jq, openldap-clients, expect, python-pwquality
 Requires:       nethserver-subscription
