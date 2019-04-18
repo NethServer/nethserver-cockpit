@@ -111,8 +111,8 @@ The source code must be placed inside the `app` directory:
    - Item 1 (can be customizable)
    - Logs
    - About
-- `css/style.css`: application stylesheet, customize your custom CSS but always follow [UI guidelines](./ui_guidelines)
-- `js/app.js`: JavaScript logic goes here. If you need to develop complex API, take a loot to [API guidelines](./api_guidelines)
+- `css/style.css`: application stylesheet, customize your custom CSS but always follow [UI guidelines](ui_guidelines.md)
+- `js/app.js`: JavaScript logic goes here. If you need to develop complex API, take a loot to [API guidelines](api_guidelines.md)
 - `views/*.html`: contains views for each routes defined in app.js
 
 You can ignore `manifest.json` and `override.json` files which are used for Cockpit internals (change only name inside with `your-own-module`).
