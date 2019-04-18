@@ -8,11 +8,11 @@ A NethServer Cockpit module is composed by 5 parts:
 - API: a list of helpers to do actions: `read` - `validate` - `update`
 - Package files: manifest and RPM spec file to create an installable package
 - Translation files (optional)
-- An [applicatin manifest](./application_manifest)
+- An [application manifest](application_manifest.md)
 
 ## Install required tools
 
-Let's assume you've already prepared your own [development environment](./environment).
+Let's assume you've already prepared your own [development environment](environment.md).
 
 ```
 git clone git@github.com:NethServer/nethserver-cockpit-empty.git your-own-module
