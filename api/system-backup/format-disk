@@ -36,7 +36,8 @@ if [ $? -gt 0 ]; then
     exit 1
 fi
 
-echo "0," | sfdisk $dev
+sgdisk --zap-all $dev
+sgdisk --largest-new=1 $dev
 if [ $? -gt 0 ]; then
     exit 2
 fi
