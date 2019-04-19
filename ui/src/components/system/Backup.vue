@@ -1636,7 +1636,7 @@
                           <div class="blank-slate-pf-icon small-size-wizard">
                             <span class="fa fa-refresh"></span>
                           </div>
-                          <h3>rSync</h3>
+                          <h3>Rsync</h3>
                         </div>
                       </div>
                     </div>
