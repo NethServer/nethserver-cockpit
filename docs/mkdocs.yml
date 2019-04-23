@@ -76,8 +76,10 @@ nav:
       - api/nethserver-mail/send.md
       - api/nethserver-mail/settings.md
     - Web proxy helpers:
+      - api/nethserver-squid/dashboard.md
       - api/nethserver-squid/feature.md
       - api/nethserver-squid/proxy.md
+      - api/nethserver-squid/rules.md
 - UI:
   - ui_guidelines.md
   - i18n.md

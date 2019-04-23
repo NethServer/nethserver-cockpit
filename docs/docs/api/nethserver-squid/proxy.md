@@ -1,6 +1,6 @@
 # proxy
 
-Read and set gloval Squid configuration.
+Read and set global Squid configuration.
 
 ## read
 
