@@ -202,6 +202,7 @@
     "cleanup_older_than": "Cleanup backups older than",
     "include_logs": "Include logs",
     "never": "Never",
+    "1D": "1 day",
     "7D": "7 days",
     "14D": "14 days",
     "28D": "28 days",
