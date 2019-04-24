@@ -2255,7 +2255,7 @@ export default {
               b && b.props.CleanupOlderThan
                 ? b.props.CleanupOlderThan
                 : "never",
-            cleanups: ["never", "7D", "14D", "28D", "56D", "168D", "364D"],
+            cleanups: ["never", "1D", "7D", "14D", "28D", "56D", "168D", "364D"],
             advanced: false
           },
           restic: {
@@ -2265,7 +2265,7 @@ export default {
               b && b.props.CleanupOlderThan
                 ? b.props.CleanupOlderThan
                 : "never",
-            cleanups: ["never", "7D", "14D", "28D", "56D", "168D", "364D"]
+            cleanups: ["never", "1D", "7D", "14D", "28D", "56D", "168D", "364D"]
           },
           rsync: {
             CleanupOlderThan: ""
