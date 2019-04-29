@@ -37,4 +37,8 @@ foreach ($db->green()) {
     }
 }
 
-hints("dhcp_on_green_can_cause_unexpected_behavior",$details);
+if ($details) {
+    hints("dhcp_on_green_can_cause_unexpected_behavior",$details);
+} else {
+    hints();
+}
