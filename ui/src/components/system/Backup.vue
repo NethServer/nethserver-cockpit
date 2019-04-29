@@ -38,7 +38,7 @@
           <button
             :disabled="backupConfigurations.length == 0"
             @click="openRestoreConfig(b)"
-            class="btn btn-primary right panel-icon"
+            class="btn btn-default right panel-icon"
           >{{$t('backup.restore')}}</button>
           <button
             @click="openExecuteConfig(b)"
@@ -136,7 +136,7 @@
           <button
             :disabled="backupData.length == 0"
             @click="openRestoreData(b)"
-            class="btn btn-primary right panel-icon"
+            class="btn btn-default right panel-icon"
           >{{$t('backup.restore')}}</button>
           <button
             @click="openCreateData(b)"

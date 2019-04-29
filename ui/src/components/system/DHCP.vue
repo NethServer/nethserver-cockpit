@@ -677,6 +677,7 @@ export default {
     },
     toggleInterface(range, reset, isEdit) {
       if (reset) {
+        this.currentRange.original.props.status = !this.currentRange.original.props.status;
         this.getRanges();
       } else {
         if (!range.props.status || (range.props.status && isEdit)) {
@@ -692,6 +693,7 @@ export default {
           this.currentRange.DhcpNTP = range.props.DhcpNTP;
           this.currentRange.DhcpTFTP = range.props.DhcpTFTP;
           this.currentRange.isEdit = isEdit;
+          this.currentRange.original = range
           $("#dhcpInterfaceSetModal").modal("show");
         } else {
           var context = this;
