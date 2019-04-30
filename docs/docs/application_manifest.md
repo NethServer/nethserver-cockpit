@@ -24,6 +24,7 @@ Manifest must be placed under `/usr/share/cockpit/nethserver/applications` direc
 - **license**: license of the application, please pick one from [SPDX list](https://spdx.org/licenses/) (recommended)
 - **bugs**: the url of project's issue tracker and / or the email address to which issues should be reported (optional)
 - **author**: the name of of the author with optional email and urls fields. (recommended)
+- **infoapi**: an object describing an API script call that extends the manifest with runtime information
 
 Images like screenshots and icons must be placed under `/usr/share/cockpit/<application-id>/` directory.
 
@@ -32,7 +33,58 @@ The `url` field should contain the URL to access the installed Web application. 
 - be empty, if the application doesn't have its own external Web interface
 - start with `/`, if the application is hosted under the default virtualhost; example: `/webtop`
 - contain a full URL if the application is hosted inside a dedicated virtual host, example: `https://mattermost.nethserver.org`.
-  In this case, the application should take care to update is own application manifest using a template
+  In this case, the application can generate the URL at runtime with an **infoapi** script
+
+### Manifest runtime overriding with `infoapi`
+
+The manifest can describe how to invoke an API script during runtime that
+overrides the manifest itself.
+
+The script output format must be a JSON string representing an object. The
+object is merged with the static manifest contents.
+
+For instance, the script output can be:
+
+```json
+{
+    "url": "https://mattermost.example.com"
+}
+```
+
+The object is merged with the static JSON manifest, overriding its `url`
+attribute.
+
+To enable the API script invocation, set the `infoapi` attribute in the
+following way:
+
+```json
+{
+    // other manifest attributes,
+    "infoapi": {
+        "path": "nethserver-mattermost/read",
+        "input": {
+            "action": "custom-action"
+        }
+    }
+}
+```
+
+The `path` attribute is mandatory and identifies an executable file under the
+usual API directory (`/usr/libexec/nethserver/api/`).
+
+The `input` attribute is optional. It represents an input object for the API
+script that is copied over a base input object created by the system. The
+base object looks like:
+
+```json
+{
+    "action": "app-info",
+    "location": {
+        // JavaScript window.location converted to JSON
+    }
+}
+```
+
 
 ### Example
 
@@ -74,4 +126,3 @@ File `/usr/share/cockpit/nethserver/applications/nextcloud.json`:
     }
 }
 ```
-
