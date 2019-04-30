@@ -70,16 +70,16 @@ sub app_info
     my $data = read_json($file);
     my $extended_data = {};
 
-    # If available, invoke the INFO_API provider
+    # If available, invoke the infoapi provider
     # to extend the manifest data dynamically
-    if($data->{'INFO_API'}) {
-        if(-x '/usr/libexec/nethserver/api/' . $data->{'INFO_API'}->{'path'}) {
+    if($data->{'infoapi'}) {
+        if(-x '/usr/libexec/nethserver/api/' . $data->{'infoapi'}->{'path'}) {
             $extended_data = invoke_info_api(
-                '/usr/libexec/nethserver/api/' . $data->{'INFO_API'}->{'path'},
-                safe_decode_json($data->{'INFO_API'}->{'input'})
+                '/usr/libexec/nethserver/api/' . $data->{'infoapi'}->{'path'},
+                safe_decode_json($data->{'infoapi'}->{'input'})
             );
         } else {
-            warn "[ERROR] missing executable script! Actual `INFO_API.path` value: " . $data->{'INFO_API'}->{'path'} . "\n";
+            warn "[ERROR] missing executable script! Actual `infoapi.path` value: " . $data->{'infoapi'}->{'path'} . "\n";
         }
     }
     $data = {%$data, %$extended_data}; # merges the input hashes
