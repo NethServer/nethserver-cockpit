@@ -237,7 +237,8 @@ export default {
       context.exec(
         ["system-apps/read"],
         {
-          action: "list"
+          action: "list",
+          location: window.location,
         },
         null,
         function(success) {
