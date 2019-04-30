@@ -46,11 +46,45 @@ sub read_json
     return decode_json($json);
 }
 
+sub invoke_info_api
+{
+    use IPC::Open2;
+    my $helper_path = shift;
+    my $helper_input = shift;
+    my($chld_out, $chld_in, $pid);
+
+    $helper_input = {%$input, 'action' => 'app-info', %$helper_input}; # merges the input hashes
+    $pid = open2($chld_out, $chld_in, $helper_path);
+    print $chld_in encode_json($helper_input);
+    close($chld_in);
+    my $raw_response = <$chld_out>;
+    close($chld_out);
+    waitpid( $pid, 0 );
+    return safe_decode_json($raw_response);
+}
+
 sub app_info
 {
     my $app = shift;
     my $file = "$path$app.json";
     my $data = read_json($file);
+    my $extended_data = {};
+
+    # If available, invoke the INFO_API provider
+    # to extend the manifest data dynamically
+    if($data->{'INFO_API'}) {
+        if(-x '/usr/libexec/nethserver/api/' . $data->{'INFO_API'}->{'path'}) {
+            $extended_data = invoke_info_api(
+                '/usr/libexec/nethserver/api/' . $data->{'INFO_API'}->{'path'},
+                safe_decode_json($data->{'INFO_API'}->{'input'})
+            );
+        } else {
+            warn "[ERROR] missing executable script! Actual `INFO_API.path` value: " . $data->{'INFO_API'}->{'path'} . "\n";
+        }
+    }
+    $data = {%$data, %$extended_data}; # merges the input hashes
+
+    # Set hardcoded attributes:
     $data->{'editable'} = is_editable();
     $data->{'shortcut'} = has_shortcut($app);
     $data->{'legacy'} = 0;
