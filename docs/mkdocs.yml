@@ -79,6 +79,7 @@ nav:
       - api/nethserver-squid/categories.md
       - api/nethserver-squid/dashboard.md
       - api/nethserver-squid/feature.md
+      - api/nethserver-squid/filter.md
       - api/nethserver-squid/proxy.md
       - api/nethserver-squid/rules.md
 - UI:
