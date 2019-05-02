@@ -78,13 +78,13 @@ Defaults:%$groupAdminsSudo !requiretty
 
             if (! exists $controllers{$role}){
                 if ($role =~ /^nethserver-/) {
-                    push @commands, "/usr/libexec/nethserver/api/$role/*";
+                    push @commands, ("/usr/libexec/nethserver/api/$role/*","/usr/libexec/nethserver/api/$role/*/*");
                 } else {
-                    push @commands, "/usr/libexec/nethserver/api/system-$role/*";
+                    push @commands, ("/usr/libexec/nethserver/api/system-$role/*","/usr/libexec/nethserver/api/system-$role/*/*");
                 }
             } else { 
                 foreach my $api (@{$controllers{$role}}) {
-                    push @commands, "/usr/libexec/nethserver/api/$api/*";
+                    push @commands, ("/usr/libexec/nethserver/api/$api/*","/usr/libexec/nethserver/api/$api/*/*");
                 }
             }  
         }
