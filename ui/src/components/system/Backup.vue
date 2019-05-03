@@ -135,7 +135,7 @@
           >{{$t('backup.configure')}}</button>
           <button
             :disabled="backupData.length == 0"
-            @click="openRestoreData(b)"
+            @click="openRestoreData()"
             class="btn btn-default right panel-icon"
           >{{$t('backup.restore')}}</button>
           <button
@@ -2255,7 +2255,16 @@ export default {
               b && b.props.CleanupOlderThan
                 ? b.props.CleanupOlderThan
                 : "never",
-            cleanups: ["never", "1D", "7D", "14D", "28D", "56D", "168D", "364D"],
+            cleanups: [
+              "never",
+              "1D",
+              "7D",
+              "14D",
+              "28D",
+              "56D",
+              "168D",
+              "364D"
+            ],
             advanced: false
           },
           restic: {
@@ -3061,7 +3070,7 @@ export default {
         ["system-backup/execute"],
         {
           action: "restore-backup-data",
-          name: context.currentDataBackup.name
+          name: context.currentDataBackup.restoreBackup
         },
         function(stream) {
           console.info("backup-data-restore", stream);
