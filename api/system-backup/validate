@@ -24,7 +24,7 @@ require_once("/usr/libexec/nethserver/api/lib/dhcp_functions.php");
 
 $vfstypes = array('usb','cifs','nfs','b2','s3','sftp','webdav');
 $engines = array('duplicity','restic','rsync');
-$cleanuptypes = array('never','7D','14D','28D','56D','168D','364D');
+$cleanuptypes = array('never','1D','7D','14D','28D','56D','168D','364D');
 
 function validate_time($time, &$error)
 {
