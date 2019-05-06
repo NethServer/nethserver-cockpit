@@ -965,8 +965,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../api/nethserver-mail/feature/" title="feature" class="md-nav__link">
-      feature
+    <a href="../api/nethserver-mail/feature/" title="menu" class="md-nav__link">
+      menu
     </a>
   </li>
 
@@ -1015,6 +1015,102 @@
   <li class="md-nav__item">
     <a href="../api/nethserver-mail/settings/" title="settings" class="md-nav__link">
       settings
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-5" type="checkbox" id="nav-2-5">
+    
+    <label class="md-nav__link" for="nav-2-5">
+      Web proxy helpers
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-5">
+        Web proxy helpers
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/nethserver-squid/categories/" title="categories" class="md-nav__link">
+      categories
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/nethserver-squid/dashboard/" title="dashboard" class="md-nav__link">
+      dashboard
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/nethserver-squid/feature/" title="feature" class="md-nav__link">
+      feature
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/nethserver-squid/filter/" title="filter" class="md-nav__link">
+      filter
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/nethserver-squid/proxy/" title="proxy" class="md-nav__link">
+      proxy
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/nethserver-squid/rules/" title="rules" class="md-nav__link">
+      rules
     </a>
   </li>
 
@@ -1433,10 +1529,10 @@
 <li>API: a list of helpers to do actions: <code>read</code> - <code>validate</code> - <code>update</code></li>
 <li>Package files: manifest and RPM spec file to create an installable package</li>
 <li>Translation files (optional)</li>
-<li>An <a href="../application_manifest/">application manifest</a></li>
+<li>An <a href="./application_manifest">applicatin manifest</a></li>
 </ul>
 <h2 id="install-required-tools">Install required tools<a class="headerlink" href="#install-required-tools" title="Permanent link">&para;</a></h2>
-<p>Let's assume you've already prepared your own <a href="../environment/">development environment</a>.</p>
+<p>Let's assume you've already prepared your own <a href="./environment">development environment</a>.</p>
 <div class="codehilite"><pre><span></span>git clone git@github.com:NethServer/nethserver-cockpit-empty.git your-own-module
 
 cd your-own-module
@@ -1527,8 +1623,8 @@ there is no need to learn a new framework, use whatever you like.</p>
 <li>Item 1 (can be customizable)</li>
 <li>Logs</li>
 <li>About</li>
-<li><code>css/style.css</code>: application stylesheet, customize your custom CSS but always follow <a href="../ui_guidelines/">UI guidelines</a></li>
-<li><code>js/app.js</code>: JavaScript logic goes here. If you need to develop complex API, take a loot to <a href="../api_guidelines/">API guidelines</a></li>
+<li><code>css/style.css</code>: application stylesheet, customize your custom CSS but always follow <a href="./ui_guidelines">UI guidelines</a></li>
+<li><code>js/app.js</code>: JavaScript logic goes here. If you need to develop complex API, take a loot to <a href="./api_guidelines">API guidelines</a></li>
 <li><code>views/*.html</code>: contains views for each routes defined in app.js</li>
 </ul>
 <p>You can ignore <code>manifest.json</code> and <code>override.json</code> files which are used for Cockpit internals (change only name inside with <code>your-own-module</code>).</p>
