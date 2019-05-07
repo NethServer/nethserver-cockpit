@@ -64,9 +64,7 @@ Output example:
     {
       "Time": [],
       "name": "default_profile",
-      "FilterElse": {
-        "Categories": []
-      },
+      "FilterElse": "",
       "broken": 0,
       "Filter": {
         "BlockIpAccess": "disabled",
@@ -101,20 +99,7 @@ Output example:
         }
       ],
       "name": "p1",
-      "FilterElse": {
-        "BlockIpAccess": "disabled",
-        "Categories": [
-          "publicite",
-          "nonexisting"
-        ],
-        "BlockFileTypes": "disabled",
-        "name": "f2",
-        "BlackList": "enabled",
-        "BlockAll": "disabled",
-        "type": "filter",
-        "WhiteList": "disabled",
-        "Description": ""
-      },
+      "FilterElse": "profile2",
       "broken": 1,
       "Filter": {
         "BlockIpAccess": "enabled",
@@ -194,6 +179,11 @@ Output example:
       "name": "green",
       "type": "role",
       "Interfaces": "br0,eth2"
+    },
+    {
+      "name": "myprofile1",
+      "type": "profile",
+      "Description": "my first profile"
     }
   ]
 }
