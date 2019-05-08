@@ -130,4 +130,18 @@ sub safe_decode_json
     return $ret;
 }
 
+#
+# Execute a command with arguments, capturing stdout.
+# This is equivalent of Perl qx() without intermediate shell invocation.
+# Exit code available in $?, last call status in $!, as usual.
+#
+sub exec_slurp
+{
+    local $/ = undef;
+    open(my $fh, '-|', @_);
+    my $data = <$fh>;
+    close($fh);
+    return $data;
+}
+
 1;
