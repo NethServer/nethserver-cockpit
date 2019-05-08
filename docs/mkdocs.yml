@@ -75,6 +75,8 @@ nav:
       - api/nethserver-mail/queue.md
       - api/nethserver-mail/send.md
       - api/nethserver-mail/settings.md
+    - Samba helpers:
+      - api/nethserver-samba/audit.md
 - UI:
   - ui_guidelines.md
   - i18n.md
