@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.5.0
+Version: 0.6.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -58,6 +58,13 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 
 
 %changelog
+* Wed May 08 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.6.0-1
+- Mail Cockpit UI - NethServer/dev#5744
+- Mail server: sender dependent relay - NethServer/dev#5743
+- Backup retention: 1 day - NethServer/dev#5748
+- Variuos fixes on backup, network, dhcp, applications and logs pages
+- Backup: support partitioning of disks greater than 3 TB
+
 * Wed Mar 27 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.5.0-1
 - Backup: hide/show password field
 - Network: allow creation of logic interface on existing ones
