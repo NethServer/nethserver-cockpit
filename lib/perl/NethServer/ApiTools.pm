@@ -144,4 +144,24 @@ sub exec_slurp
     return $data;
 }
 
+#
+# Safely execute the the "validate" command. It returns a list with
+# 1. the numeric exit code returned by validate
+# 2. the validate output
+#
+sub platform_validator
+{
+    my $message = exec_slurp('/sbin/e-smith/validate', @_);
+    chomp($message);
+    my $exitCode = 0;
+    if($!) {
+        warn("[ERROR] platform_validator: $!");
+        $exitCode = 1;
+    } elsif($? ne 0) {
+        $exitCode = $? >> 8;
+    }
+    return ($exitCode, $message);
+}
+
+
 1;
