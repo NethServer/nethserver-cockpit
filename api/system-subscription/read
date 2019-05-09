@@ -54,4 +54,23 @@ if (defined($ret->{'status'}{'id'})) {
 
 $ret->{'configuration'} = { 'PortalURL' => $url, 'PricingUrl' => $pricing, 'SystemId' => $id, 'enterprise' => $enterprise };
 
+$ret->{'support'} = undef;
+if (-f "/usr/bin/don") {
+    my $out = `/usr/bin/don status`;
+    my $server = $db->get_prop('don','ServerName');
+    my $cred_file = '/run/don/credentials';
+    my $session = '';
+    $ret->{'support'} = { status => 'disabled', server => $server, 'sessionid' => $session };
+    if ($? == 0 && -f $cred_file) {
+        open my $fh, "<", $cred_file;
+        my @lines = <$fh>;
+        close $fh;
+        $session = $lines[1];
+        chomp $session;
+
+        $ret->{'support'}{'sessionid'} = $session;
+        $ret->{'support'}{'status'} = 'enabled';
+    }
+}
+
 print encode_json($ret);
