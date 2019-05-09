@@ -486,7 +486,7 @@
     "old_ip": "Old IP",
     "new_ip": "New IP",
     "change_nsdc_ip": "Change DC container IP",
-    "not_expired": "Active",
+    "not_expired": "Not expired",
     "expired": "Expired",
     "user_created_ok": "User created successfully!",
     "user_created_error": "User not created.",
