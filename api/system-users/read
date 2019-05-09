@@ -22,6 +22,9 @@
 
 use strict;
 use warnings;
+use esmith::ConfigDB;
+use JSON;
+use POSIX qw/ceil/;
 
 require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
 
@@ -30,7 +33,35 @@ my $input = readInput();
 my $cmd = $input->{'action'};
 
 if ($cmd eq 'list-users') {
-    system("/usr/libexec/nethserver/list-users -s");
+    my $db = esmith::ConfigDB->open_ro();
+    my $provider = $db->get_prop('sssd', 'Provider') || '';
+    my $out = `/usr/libexec/nethserver/list-users -s`;
+    if ($provider eq 'ad') {
+        my $users = safe_decode_json($out);
+        open(FH, "LANG=C net ads search '(objectCategory=User)' name lastLogon|");
+        my $user = '';
+        while (<FH>) {
+            next if /^\s*$/;    # skip blank lines
+            if (/^name/) {
+                my ($field,$value) = split;
+                $user = $value;
+            }
+            if (/^lastLogon/) {
+                chomp;
+                $_ =~ s/^(.*:)//;
+                my $lastLogon = ceil((int($_)/10000000)-11644473600);
+                if ($users->{$user}) {
+                    $users->{$user}{'lastLogon'} = $lastLogon > 0 ? $lastLogon : 0 ;
+                }
+                $user = '';
+            }
+        }
+        close(FH);
+
+        print encode_json($users);
+    } else {
+        print $out;
+    }
 } elsif ($cmd eq 'list-groups') {
     system("/usr/libexec/nethserver/list-groups -s");
 } elsif ($cmd eq 'user-membership') {
