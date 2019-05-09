@@ -77,6 +77,8 @@ nav:
       - api/nethserver-mail/settings.md
     - Samba helpers:
       - api/nethserver-samba/audit.md
+      - api/nethserver-samba/dashboard.md
+      - api/nethserver-samba/settings.md
 - UI:
   - ui_guidelines.md
   - i18n.md
