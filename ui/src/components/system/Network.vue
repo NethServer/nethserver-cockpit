@@ -10,6 +10,7 @@
       </li>
       <span
         v-if="hints.message && hints.message.length > 0"
+        class="margin-left-sm"
       >{{hints.message && $t('hints.'+hints.message)}}</span>
     </div>
 
@@ -159,6 +160,11 @@
                           {{i.cidr || interfaceStatus[i.name] &&
                           interfaceStatus[i.name].ipaddr || '-'}}
                         </strong>
+                        <span
+                          v-if="i.bootproto == 'dhcp' && (i.cidr || interfaceStatus[i.name] &&
+                          interfaceStatus[i.name].ipaddr)"
+                          class="gray"
+                        >({{i.bootproto}})</span>
                         <br>
                         <span v-if="interfaces.red.length == 0 || roleKey == 'red'">
                           <span class="pficon pficon-middleware starred-marging"></span>
@@ -233,7 +239,11 @@
                 <div class="row">
                   <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                     <h4>{{$t('network.aliases')}}</h4>
-                    <dl v-for="(a, ak) in i.aliases" v-bind:key="ak" class="dl-horizontal int-details">
+                    <dl
+                      v-for="(a, ak) in i.aliases"
+                      v-bind:key="ak"
+                      class="dl-horizontal int-details"
+                    >
                       <dt>{{a.name}}</dt>
                       <dd v-if="a.ipaddr">
                         {{$t('network.ip_address')}}:
@@ -259,7 +269,11 @@
                   </div>
                   <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                     <h4>{{i.type == 'bond' ? $t('network.slaves') : $t('network.devices')}}</h4>
-                    <dl v-for="(a, ak) in i.devices" v-bind:key="ak" class="dl-horizontal int-details">
+                    <dl
+                      v-for="(a, ak) in i.devices"
+                      v-bind:key="ak"
+                      class="dl-horizontal int-details"
+                    >
                       <dt>{{a.name}}</dt>
                       <dd v-if="a.mac">
                         {{$t('network.mac_address')}}:
@@ -929,7 +943,10 @@
                               class="combobox form-control"
                               v-model="wizard.type.bond.device"
                             >
-                              <option v-for="(d, dk) in wizard.type.bond.devicesList" v-bind:key="(d, dk)">{{d}}</option>
+                              <option
+                                v-for="(d, dk) in wizard.type.bond.devicesList"
+                                v-bind:key="(d, dk)"
+                              >{{d}}</option>
                             </select>
                           </div>
                         </div>
@@ -958,7 +975,11 @@
                           >{{$t('network.mode')}}</label>
                           <div class="col-sm-9">
                             <select v-model="wizard.type.bond.mode" class="form-control combobox">
-                              <option v-for="(m, mi) in wizard.type.bond.modes" :value="mi" v-bind:key="mi">
+                              <option
+                                v-for="(m, mi) in wizard.type.bond.modes"
+                                :value="mi"
+                                v-bind:key="mi"
+                              >
                                 {{m.name |
                                 capitalize}}
                               </option>
@@ -3152,5 +3173,9 @@ export default {
   text-align: right;
   color: #545454;
   margin-right: 7px;
+}
+
+.margin-left-sm {
+  margin-left: 5px;
 }
 </style>
