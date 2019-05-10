@@ -33,7 +33,7 @@
         {{$t('subscription.registration_description_2_ent_partial')}}
         <a
           target="_blank"
-          :href="'https://my.nethesis.it/#/servers?q='+SubscriptionConfig.systemId"
+          :href="'https://my.nethesis.it/#/server/'+SubscriptionConfig.systemId"
         >{{$t('subscription.here')}}</a>.
         <br>
       </div>
@@ -164,6 +164,52 @@
           </div>
         </div>
       </form>
+      <h3 v-if="SubscriptionConfig.support">{{$t('subscription.support')}}</h3>
+      <form v-if="SubscriptionConfig.support" class="form-horizontal">
+        <div class="form-group compact">
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('subscription.server')}}</label>
+          <div class="col-sm-4 adjust-li">
+            <input
+              class="form-control"
+              :disabled="SubscriptionConfig.support.status == 'enabled'"
+              v-model="SubscriptionConfig.support.server"
+            >
+          </div>
+        </div>
+        <div v-if="SubscriptionConfig.support.status == 'enabled'" class="form-group compact">
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('subscription.session_id')}}</label>
+          <div class="col-sm-7 adjust-li">
+            <pre class="pre-inline">{{SubscriptionConfig.support.sessionid}}</pre>
+            <button
+              type="button"
+              @click="copySessionID(SubscriptionConfig.support.sessionid)"
+              class="btn btn-primary margin-left-sm"
+            >{{$t('subscription.copy_id')}}</button>
+            <span v-if="view.isCopied" class="fa fa-check green copy-ok"></span>
+          </div>
+        </div>
+        <div class="form-group compact">
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{SubscriptionConfig.support.status == 'enabled' ? $t('subscription.stop_support') : $t('subscription.start_support')}}</label>
+          <div class="col-sm-2 adjust-li">
+            <button
+              :disabled="view.isSupporting"
+              @click="toggleSupport()"
+              type="button"
+              :class="['btn', SubscriptionConfig.support.status == 'enabled' ? 'btn-danger' : 'btn-primary']"
+            >{{SubscriptionConfig.support.status == 'enabled' ? $t('subscription.stop') : $t('subscription.start')}}</button>
+            <div v-if="view.isSupporting" class="spinner spinner-sm adjust-spinner-top"></div>
+          </div>
+        </div>
+      </form>
     </div>
     <div class="modal" id="unsubscribeModal" tabindex="-1" role="dialog" data-backdrop="static">
       <div class="modal-dialog">
@@ -250,7 +296,9 @@ export default {
         isAuth: false,
         isChecking: false,
         isChecked: false,
-        isCheckFail: false
+        isCheckFail: false,
+        isSupporting: false,
+        isCopied: false
       },
       SubscriptionConfig: {
         isLoading: false,
@@ -262,6 +310,7 @@ export default {
         },
         secret: "",
         status: {},
+        support: {},
         enterprise: false,
         missingToken: false,
         systemId: ""
@@ -298,6 +347,8 @@ export default {
             success.configuration.SystemId &&
             success.configuration.SystemId.length > 0;
           context.SubscriptionConfig.systemId = success.configuration.SystemId;
+
+          context.SubscriptionConfig.support = success.support;
         },
         function(error) {
           console.error(error);
@@ -432,6 +483,52 @@ export default {
           context.view.isChecking = false;
           context.view.isChecked = false;
           context.view.isCheckFail = true;
+        }
+      );
+    },
+    toggleSupport() {
+      var context = this;
+
+      context.view.isSupporting = true;
+      context.exec(
+        ["system-subscription/update"],
+        {
+          action:
+            context.SubscriptionConfig.support.status == "enabled"
+              ? "support-stop"
+              : "support-start"
+        },
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+          context.view.isSupporting = false;
+          context.SubscriptionConfig.support.status =
+            context.SubscriptionConfig.support.status == "enabled"
+              ? "disabled"
+              : "enabled";
+          context.getSubscriptionConfig();
+        },
+        function(error) {
+          console.error(error);
+          context.view.isSupporting = false;
+        }
+      );
+    },
+    copySessionID(sessionid) {
+      var context = this;
+      context.$copyText(sessionid).then(
+        function(e) {
+          context.view.isCopied = true;
+          setTimeout(function() {
+            context.view.isCopied = false;
+          }, 2000);
+        },
+        function(e) {
+          context.view.isCopied = false;
         }
       );
     }

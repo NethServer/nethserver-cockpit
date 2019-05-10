@@ -850,7 +850,15 @@
     "connection": "Connection",
     "check_connection": "Check connection",
     "check": "Check",
-    "here": "here"
+    "here": "here",
+    "support": "Remote support",
+    "server": "Support server",
+    "session_id": "Session ID",
+    "stop_support": "Stop support",
+    "start_support": "Start support",
+    "start": "Start",
+    "stop": "Stop",
+    "copy_id": "Copy ID"
   },
   "hints": {
     "Password": "Password",
