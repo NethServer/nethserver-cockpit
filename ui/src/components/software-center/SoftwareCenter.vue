@@ -463,9 +463,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4
-              class="modal-title"
-            >{{$t('software_center.configure_updates_header')}}</h4>
+            <h4 class="modal-title">{{$t('software_center.configure_updates_header')}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="saveConfiguration()">
             <div class="modal-body">
@@ -627,6 +625,8 @@ export default {
       $(parent.document.getElementById("sidebar-menu").children[0]).removeClass(
         "active"
       );
+
+      this.$parent.getHints("system-subscription", "subscription");
       $("#app").css("background", "");
       $("#app").css("color", "");
     },
@@ -818,14 +818,14 @@ export default {
           var pack = this.updates.other[o];
           details += pack.name + " ";
           details +=
-              "@" +
-              pack.version +
-              "-" +
-              pack.release +
-              " " +
-              this.$i18n.t("from") +
-              " " +
-              pack.repo;
+            "@" +
+            pack.version +
+            "-" +
+            pack.release +
+            " " +
+            this.$i18n.t("from") +
+            " " +
+            pack.repo;
           details += "\n";
         }
         this.currentPackage.details = details;

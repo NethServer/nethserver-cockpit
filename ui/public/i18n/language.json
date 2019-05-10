@@ -880,7 +880,9 @@
     "dhcp_on_green_can_cause_unexpected_behavior": "Using DHCP on green interfaces leads to unexpected behavior. Please, change the interface to static if possible.",
     "interface_must_be_static": "A green interface must have a static IP address",
     "hostname": "Hostname",
-    "hostname_should_not_contain_localhost": "Hostname should not contains localhost"
+    "hostname_should_not_contain_localhost": "Hostname should not contains localhost",
+    "subscription": "Subscription",
+    "support_active": "A remote support session is active"
   },
   "validation": {
     "weak_password": "Password too weak, it could be inside a dictionary or too similar to the previous one",

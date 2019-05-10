@@ -98,7 +98,11 @@
                   ? $t('remove_shortcut') : $t('add_shortcut')}}
                 </a>
               </li>
-              <li v-if="props.row.editable == 1 && !props.row.external" role="presentation" class="divider"></li>
+              <li
+                v-if="props.row.editable == 1 && !props.row.external"
+                role="presentation"
+                class="divider"
+              ></li>
               <li>
                 <a @click="openRemoveApp(props.row)">
                   <span class="fa fa-times action-icon-menu"></span>
@@ -227,6 +231,8 @@ export default {
       $(parent.document.getElementById("sidebar-menu").children[0]).removeClass(
         "active"
       );
+
+      this.$parent.getHints("system-subscription", "subscription");
       $("#app").css("background", "");
       $("#app").css("color", "");
     },
@@ -238,7 +244,7 @@ export default {
         ["system-apps/read"],
         {
           action: "list",
-          location: window.location,
+          location: window.location
         },
         null,
         function(success) {

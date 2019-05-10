@@ -279,6 +279,7 @@ export default {
   },
   mounted() {
     this.getSubscriptionConfig();
+    this.$parent.getHints("system-subscription", "subscription");
 
     setTimeout(function() {
       $(parent.document.getElementById("sidebar-menu").children[3]).addClass(
@@ -506,10 +507,34 @@ export default {
             console.error(e);
           }
           context.view.isSupporting = false;
+
+          if (context.SubscriptionConfig.support.status == "disabled") {
+            $(
+              "#sidebar-menu>.list-group-item:nth-last-child(2)",
+              window.parent.document
+            ).css("border-left", "3px solid #f0ab00");
+
+            $("#topnav", window.parent.document).css(
+              "border-top",
+              "2px solid #f0ab00"
+            );
+          } else {
+            $(
+              "#sidebar-menu>.list-group-item:nth-last-child(2)",
+              window.parent.document
+            ).css("border-left", "");
+
+            $("#topnav", window.parent.document).css(
+              "border-top",
+              "2px solid #39a5dc"
+            );
+          }
+
           context.SubscriptionConfig.support.status =
             context.SubscriptionConfig.support.status == "enabled"
               ? "disabled"
               : "enabled";
+
           context.getSubscriptionConfig();
         },
         function(error) {
