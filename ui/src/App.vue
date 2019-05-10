@@ -252,7 +252,7 @@
       >{{notifications.error.message || '-'}}</p>
       <span>
         {{$t('check')}}
-        <pre class="pre-inline">logs</pre>
+        <code>logs</code>
         {{$t('for_more_info')}}.
       </span>
       <pre>less /var/log/messages</pre>
