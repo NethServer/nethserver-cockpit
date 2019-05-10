@@ -84,6 +84,10 @@ Output example:
       },
       ...
     ]
+  },
+  "source": {
+      "downloaded": true,
+      "list": "toulouse"
   }
 }
 ```
@@ -196,6 +200,10 @@ Same input from validate helper.
 ## update
 
 Same input from validate helper.
+
+Extra valid actions:
+
+- `download`: download categories
 
 ## delete
 
