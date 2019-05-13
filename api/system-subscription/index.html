@@ -1087,8 +1087,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../nethserver-mail/feature/" title="menu" class="md-nav__link">
-      menu
+    <a href="../nethserver-mail/feature/" title="feature" class="md-nav__link">
+      feature
     </a>
   </li>
 
@@ -1578,7 +1578,8 @@
                 
                 
                 <h1 id="system-subscription">system-subscription<a class="headerlink" href="#system-subscription" title="Permanent link">&para;</a></h1>
-<p>Manage server subscription on a <a href="https://nethesis.github.io/dartagnan/">Dartagnan</a> server.</p>
+<p>Manage server subscription on a <a href="https://nethesis.github.io/dartagnan/">Dartagnan</a> server.
+Also start and stop windmill remote support client (don).</p>
 <h2 id="read">read<a class="headerlink" href="#read" title="Permanent link">&para;</a></h2>
 <h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
 <p>The <code>configuration</code> field contains info about the subscription.
@@ -1623,6 +1624,11 @@ If the server is already registered, the <code>status</code> field contains all 
     <span class="nt">&quot;SystemId&quot;</span><span class="p">:</span> <span class="s2">&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;</span><span class="p">,</span>
     <span class="nt">&quot;PortalURL&quot;</span><span class="p">:</span> <span class="s2">&quot;https://my.nethserver.com&quot;</span><span class="p">,</span>
     <span class="nt">&quot;enterprise&quot;</span><span class="p">:</span> <span class="mi">0</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;support&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;server&quot;</span><span class="p">:</span> <span class="s2">&quot;sos.nethesis.it&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;sessionid&quot;</span><span class="p">:</span> <span class="s2">&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -1648,6 +1654,8 @@ Available actions:</p>
 <ul>
 <li><code>register</code>: register the server to the Dartagnan server</li>
 <li><code>send</code>: send inventory to the Dartagnan server</li>
+<li><code>support-start</code>: start don support</li>
+<li><code>support-stop</code>: stop don support</li>
 </ul>
 <h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
 <h4 id="register">register<a class="headerlink" href="#register" title="Permanent link">&para;</a></h4>

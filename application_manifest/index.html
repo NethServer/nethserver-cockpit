@@ -965,8 +965,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../api/nethserver-mail/feature/" title="menu" class="md-nav__link">
-      menu
+    <a href="../api/nethserver-mail/feature/" title="feature" class="md-nav__link">
+      feature
     </a>
   </li>
 
@@ -1238,6 +1238,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#manifest-runtime-overriding-with-infoapi" title="Manifest runtime overriding with infoapi" class="md-nav__link">
+    Manifest runtime overriding with infoapi
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#example" title="Example" class="md-nav__link">
     Example
   </a>
@@ -1409,6 +1416,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#manifest-runtime-overriding-with-infoapi" title="Manifest runtime overriding with infoapi" class="md-nav__link">
+    Manifest runtime overriding with infoapi
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#example" title="Example" class="md-nav__link">
     Example
   </a>
@@ -1461,6 +1475,7 @@ and <a href="https://docs.npmjs.com/files/package.json">NPM package.json</a> for
 <li><strong>license</strong>: license of the application, please pick one from <a href="https://spdx.org/licenses/">SPDX list</a> (recommended)</li>
 <li><strong>bugs</strong>: the url of project's issue tracker and / or the email address to which issues should be reported (optional)</li>
 <li><strong>author</strong>: the name of of the author with optional email and urls fields. (recommended)</li>
+<li><strong>infoapi</strong>: an object describing an API script call that extends the manifest with runtime information</li>
 </ul>
 <p>Images like screenshots and icons must be placed under <code>/usr/share/cockpit/&lt;application-id&gt;/</code> directory.</p>
 <p>The <code>url</code> field should contain the URL to access the installed Web application. It should</p>
@@ -1468,8 +1483,50 @@ and <a href="https://docs.npmjs.com/files/package.json">NPM package.json</a> for
 <li>be empty, if the application doesn't have its own external Web interface</li>
 <li>start with <code>/</code>, if the application is hosted under the default virtualhost; example: <code>/webtop</code></li>
 <li>contain a full URL if the application is hosted inside a dedicated virtual host, example: <code>https://mattermost.nethserver.org</code>.
-  In this case, the application should take care to update is own application manifest using a template</li>
+  In this case, the application can generate the URL at runtime with an <strong>infoapi</strong> script</li>
 </ul>
+<h3 id="manifest-runtime-overriding-with-infoapi">Manifest runtime overriding with <code>infoapi</code><a class="headerlink" href="#manifest-runtime-overriding-with-infoapi" title="Permanent link">&para;</a></h3>
+<p>The manifest can describe how to invoke an API script during runtime that
+overrides the manifest itself.</p>
+<p>The script output format must be a JSON string representing an object. The
+object is merged with the static manifest contents.</p>
+<p>For instance, the script output can be:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://mattermost.example.com&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The object is merged with the static JSON manifest, overriding its <code>url</code>
+attribute.</p>
+<p>To enable the API script invocation, set the <code>infoapi</code> attribute in the
+following way:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="err">//</span> <span class="err">other</span> <span class="err">manifest</span> <span class="err">attributes,</span>
+    <span class="nt">&quot;infoapi&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;nethserver-mattermost/read&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;input&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;custom-action&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The <code>path</code> attribute is mandatory and identifies an executable file under the
+usual API directory (<code>/usr/libexec/nethserver/api/</code>).</p>
+<p>The <code>input</code> attribute is optional. It represents an input object for the API
+script that is copied over a base input object created by the system. The
+base object looks like:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;app-info&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="err">//</span> <span class="err">JavaScript</span> <span class="err">window.location</span> <span class="err">converted</span> <span class="err">to</span> <span class="err">JSON</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
 <p>File <code>/usr/share/cockpit/nethserver/applications/nextcloud.json</code>:</p>
 <div class="codehilite"><pre><span></span>{
