@@ -19,8 +19,9 @@
 #
 
 use strict;
+use warnings;
+use JSON;
+use esmith::ConfigDB;
 use NethServer::ApiTools qw(hints success error readInput safe_decode_json);
-
-safe_decode_json({});
 
 1;
