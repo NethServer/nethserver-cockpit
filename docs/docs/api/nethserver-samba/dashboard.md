@@ -27,19 +27,14 @@ Output example:
 ```json
 {
   "workgroup": "LOCAL",
-  "ibays": {
-    "iba2": {
-      "audit": "enabled",
-      "files": "2",
-      "name": "iba2",
-      "size": "42262528"
-    },
-    "iba1": {
-      "audit": "enabled",
-      "files": "7",
-      "name": "iba1",
-      "size": "25665536"
-    }
+  "count": 2,
+  "files": {
+    "iba2": 3,
+    "iba1": 8
+  },
+  "du": {
+    "iba2": 42266624,
+    "iba1": 25665536
   }
 }
 ```
