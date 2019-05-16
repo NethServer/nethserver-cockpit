@@ -82,6 +82,9 @@ nav:
       - api/nethserver-squid/filter.md
       - api/nethserver-squid/proxy.md
       - api/nethserver-squid/rules.md
+    - IPS helpers:
+      - api/nethserver-suricata/configuration.md
+      - api/nethserver-suricata/dashboard.md
 - UI:
   - ui_guidelines.md
   - i18n.md
