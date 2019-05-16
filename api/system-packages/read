@@ -81,7 +81,12 @@ if($cmd eq 'list-updates') {
 
 } elsif ($cmd eq 'list-available') {
 
-    system("/usr/libexec/nethserver/api/system-packages/list-available");
+    my $out = `/usr/libexec/nethserver/api/system-packages/list-available`;
+    # HACK: remove error output from yb.comps.get_groups() inside YUM wrapper
+    if (index($out, '{') != 0) {
+        $out = substr($out, index($out, '{'))
+    }
+    print $out;
 
 } elsif ($cmd eq 'list-removed') {
 

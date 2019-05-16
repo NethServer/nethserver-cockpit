@@ -30,6 +30,8 @@ Provides code libraries to build the Cockpit-based Server Manager API helpers
 
 %build
 %{makedocs}
+mkdir -p root%{perl_vendorlib}
+cp -av lib/perl/NethServer root%{perl_vendorlib}
 gzip -v root/usr/share/cockpit/nethserver/libs/*.js
 perl createlinks
 
@@ -42,7 +44,7 @@ gzip -v %{buildroot}/usr/share/cockpit/nethserver/css/*
 mkdir -p %{buildroot}/usr/libexec/nethserver/
 mv api/ %{buildroot}/usr/libexec/nethserver/
 %{genfilelist}  %{buildroot} | \
-    grep -v '^/usr/libexec/nethserver/api/lib' > file.lst
+    grep -v -e '^/usr/libexec/nethserver/api/lib' -e '^%{perl_vendorlib}' > file.lst
 
 %files -f file.lst
 %license COPYING
@@ -55,7 +57,7 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %files lib
 %license COPYING
 /usr/libexec/nethserver/api/lib/
-
+%{perl_vendorlib}/NethServer
 
 %changelog
 * Wed May 08 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.6.0-1

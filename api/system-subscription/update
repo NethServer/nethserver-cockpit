@@ -56,6 +56,14 @@ case $action in
         rm -f $DATA
     ;;
 
+    "support-start")
+        /usr/bin/don start &>/dev/null
+    ;;
+
+    "support-stop")
+        /usr/bin/don stop
+    ;;
+
     "send")
         /etc/e-smith/events/actions/nethserver-inventory-send && systemctl restart collectd nms
     ;;

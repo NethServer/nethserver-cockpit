@@ -252,7 +252,7 @@
       >{{notifications.error.message || '-'}}</p>
       <span>
         {{$t('check')}}
-        <pre class="pre-inline">logs</pre>
+        <code>logs</code>
         {{$t('for_more_info')}}.
       </span>
       <pre>less /var/log/messages</pre>
@@ -310,7 +310,7 @@ export default {
     this.getAuths();
 
     // check for running tasks
-    this.checkSystemTaks();
+    this.checkSystemTasks();
 
     // get hints
     this.checkHints();
@@ -322,7 +322,7 @@ export default {
       this.notifications.event.show = false;
       this.notifications.addMargin = false;
 
-      this.checkSystemTaks();
+      this.checkSystemTasks();
     }
   },
   data() {
@@ -405,7 +405,7 @@ export default {
         return this.$route.path.split("/")[1] === route;
       }
     },
-    checkSystemTaks() {
+    checkSystemTasks() {
       var context = this;
       context.exec(
         ["system-task/read"],
@@ -496,6 +496,9 @@ export default {
         },
         settings: {
           count: 0
+        },
+        subscription: {
+          count: 0
         }
       };
     },
@@ -535,6 +538,29 @@ export default {
         type,
         function(success) {
           context.hints[prop].count = success.count;
+
+          if (prop == "subscription" && success.count > 0) {
+            $(
+              "#sidebar-menu>.list-group-item:nth-last-child(2)",
+              window.parent.document
+            ).css("border-left", "3px solid #f0ab00");
+
+            $("#topnav", window.parent.document).css(
+              "border-top",
+              "2px solid #f0ab00"
+            );
+          }
+          if (prop == "subscription" && success.count == 0) {
+            $(
+              "#sidebar-menu>.list-group-item:nth-last-child(2)",
+              window.parent.document
+            ).css("border-left", "");
+
+            $("#topnav", window.parent.document).css(
+              "border-top",
+              "2px solid #39a5dc"
+            );
+          }
         },
         function(error) {
           console.error(error);
@@ -550,6 +576,7 @@ export default {
       this.getHints("system-openssh", "ssh");
       this.getHints("system-tls-policy", "tls_policy");
       this.getHints("system-settings", "settings");
+      this.getHints("system-subscription", "subscription");
     }
   }
 };

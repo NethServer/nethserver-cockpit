@@ -1,9 +1,13 @@
 <template>
   <div v-show="view.isAuth">
-   <h2>{{$t('terminal.title')}}</h2>
-   <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
-   <iframe id="terminal-frame" class="iframe-embedded" src="/cockpit/@localhost/system/terminal.html"></iframe>
-   <div v-if="view.modalFake" class="fake-modal-backdrop"></div>
+    <h2>{{$t('terminal.title')}}</h2>
+    <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
+    <iframe
+      id="terminal-frame"
+      class="iframe-embedded"
+      src="/cockpit/@localhost/system/terminal.html"
+    ></iframe>
+    <div v-if="view.modalFake" class="fake-modal-backdrop"></div>
   </div>
 </template>
 
@@ -79,6 +83,8 @@ export default {
       // pass in the target node, as well as the observer options
       observer.observe(target, config);
     });
+
+    this.$parent.getHints("system-subscription", "subscription");
     $("#app").css("background", "");
     $("#app").css("color", "");
 

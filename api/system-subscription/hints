@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 # Copyright (C) 2018 Nethesis S.r.l.
 # http://www.nethesis.it - nethserver@nethesis.it
@@ -18,10 +20,12 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-use strict;
-use warnings;
-use JSON;
-use esmith::ConfigDB;
-use NethServer::ApiTools qw(hints success error readInput safe_decode_json);
+. /usr/libexec/nethserver/api/lib/helper_functions
 
-1;
+/usr/bin/don status &>/dev/null
+
+if [ $? -eq 0 ]; then
+    hints '' '{"subscription":"support_active"}' 1
+else
+    hints
+fi

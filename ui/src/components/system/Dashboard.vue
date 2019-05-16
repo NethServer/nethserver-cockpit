@@ -1,15 +1,20 @@
 <template>
   <div>
     <h2>{{$t('dashboard.title')}}</h2>
-    <div v-if="(hints.details.hostname && hints.details.hostname.count > 0) || (hints.details.dns && hints.details.dns.count > 0) || (hints.details.company && hints.details.company.count > 0)"
-      class="alert alert-warning alert-dismissable">
+    <div
+      v-if="(hints.details.hostname && hints.details.hostname.count > 0) || (hints.details.dns && hints.details.dns.count > 0) || (hints.details.company && hints.details.company.count > 0)"
+      class="alert alert-warning alert-dismissable"
+    >
       <span class="pficon pficon-warning-triangle-o"></span>
       <strong>{{$t('hints_suggested')}}:</strong>
-      <li v-if="m.count > 0" v-for="(m,t) in hints.details" v-bind:key="t"><strong>{{$t('hints.'+t) | capitalize}}</strong>:
-        {{$t('hints.'+m.message)}}</li>
-      <span v-if="hints.message && hints.message.length > 0">
-        {{hints.message && $t('hints.'+hints.message)}}
-      </span>
+      <li v-if="m.count > 0" v-for="(m,t) in hints.details" v-bind:key="t">
+        <strong>{{$t('hints.'+t) | capitalize}}</strong>
+        :
+        {{$t('hints.'+m.message)}}
+      </li>
+      <span
+        v-if="hints.message && hints.message.length > 0"
+      >{{hints.message && $t('hints.'+hints.message)}}</span>
     </div>
     <div class="row row-dashboard">
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -61,7 +66,13 @@
             <div class="col-sm-9 adjust-li">
               <div v-if="loaders.hostname" class="spinner spinner-xs list-spinner-loader"></div>
               <p>
-                <a v-bind:class="{ disable_a_href: !view.isAdmin }" v-if="!loaders.hostname" data-toggle="modal" data-target="#hostnameChangeModal" href="#">{{system.summary.hostname}}</a>
+                <a
+                  v-bind:class="{ disable_a_href: !view.isAdmin }"
+                  v-if="!loaders.hostname"
+                  data-toggle="modal"
+                  data-target="#hostnameChangeModal"
+                  href="#"
+                >{{system.summary.hostname}}</a>
               </p>
             </div>
           </div>
@@ -70,16 +81,27 @@
             <div class="col-sm-9 adjust-li">
               <div v-if="loaders.dns" class="spinner spinner-xs list-spinner-loader"></div>
               <p>
-                <a v-bind:class="{ disable_a_href: !view.isAdmin }" v-if="!loaders.dns" data-toggle="modal" data-target="#dnsChangeModal" href="#">
-                  <span v-for="(d,i) in system.summary.dns" v-bind:key="i">{{d.readDns}}
-                    <span v-if="!i == system.summary.dns.length - 1 && system.summary.dns[1].readDns.length != 0">,
-                    </span>
+                <a
+                  v-bind:class="{ disable_a_href: !view.isAdmin }"
+                  v-if="!loaders.dns"
+                  data-toggle="modal"
+                  data-target="#dnsChangeModal"
+                  href="#"
+                >
+                  <span v-for="(d,i) in system.summary.dns" v-bind:key="i">
+                    {{d.readDns}}
+                    <span
+                      v-if="!i == system.summary.dns.length - 1 && system.summary.dns[1].readDns.length != 0"
+                    >,</span>
                   </span>
                 </a>
-                <a v-bind:class="{ disable_a_href: !view.isAdmin }" v-if="!loaders.dns && system.summary.dns[0].readDns.length == 0" data-toggle="modal" data-target="#dnsChangeModal"
-                  href="#">
-                  {{$t('edit')}}
-                </a>
+                <a
+                  v-bind:class="{ disable_a_href: !view.isAdmin }"
+                  v-if="!loaders.dns && system.summary.dns[0].readDns.length == 0"
+                  data-toggle="modal"
+                  data-target="#dnsChangeModal"
+                  href="#"
+                >{{$t('edit')}}</a>
               </p>
             </div>
           </div>
@@ -88,7 +110,12 @@
             <div class="col-sm-9 adjust-li">
               <div v-if="loaders.datetime" class="spinner spinner-xs list-spinner-loader"></div>
               <p>
-                <a v-bind:class="{ disable_a_href: !view.isAdmin }" v-if="!loaders.datetime" @click="openChangeSystime()" href="#">{{system.summary.datetime}}</a>
+                <a
+                  v-bind:class="{ disable_a_href: !view.isAdmin }"
+                  v-if="!loaders.datetime"
+                  @click="openChangeSystime()"
+                  href="#"
+                >{{system.summary.datetime}}</a>
               </p>
             </div>
           </div>
@@ -97,7 +124,12 @@
             <div class="col-sm-9 adjust-li">
               <div v-if="loaders.company" class="spinner spinner-xs list-spinner-loader"></div>
               <p>
-                <a v-bind:class="{ disable_a_href: !view.isAdmin }" v-if="!loaders.company" @click="openChangeCompany()" href="#">{{system.organization.company}}</a>
+                <a
+                  v-bind:class="{ disable_a_href: !view.isAdmin }"
+                  v-if="!loaders.company"
+                  @click="openChangeCompany()"
+                  href="#"
+                >{{system.organization.company}}</a>
               </p>
             </div>
           </div>
@@ -105,18 +137,36 @@
             <label class="col-sm-3 control-label">{{$t('dashboard.power')}}</label>
             <div class="col-sm-9">
               <div class="btn-group">
-                <button :disabled="!view.isAdmin" @click="openPowerModal('reboot')" class="btn btn-default">
-                  {{$t('dashboard.reboot')}}
-                </button>
-                <button :disabled="!view.isAdmin" data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                <button
+                  :disabled="!view.isAdmin"
+                  @click="openPowerModal('reboot')"
+                  class="btn btn-default"
+                >{{$t('dashboard.reboot')}}</button>
+                <button
+                  :disabled="!view.isAdmin"
+                  data-toggle="dropdown"
+                  class="btn btn-default dropdown-toggle"
+                >
                   <span class="caret"></span>
                 </button>
                 <ul role="menu" class="dropdown-menu">
                   <li class="presentation">
-                    <a v-bind:class="{ disable_a_href: !view.isAdmin }" href="#" @click="openPowerModal('reboot')" role="menuitem" data-action="restart">{{$t('dashboard.reboot')}}</a>
+                    <a
+                      v-bind:class="{ disable_a_href: !view.isAdmin }"
+                      href="#"
+                      @click="openPowerModal('reboot')"
+                      role="menuitem"
+                      data-action="restart"
+                    >{{$t('dashboard.reboot')}}</a>
                   </li>
                   <li class="presentation">
-                    <a v-bind:class="{ disable_a_href: !view.isAdmin }" href="#" @click="openPowerModal('poweroff')" role="menuitem" data-action="shutdown">{{$t('dashboard.power_off')}}</a>
+                    <a
+                      v-bind:class="{ disable_a_href: !view.isAdmin }"
+                      href="#"
+                      @click="openPowerModal('poweroff')"
+                      role="menuitem"
+                      data-action="shutdown"
+                    >{{$t('dashboard.power_off')}}</a>
                   </li>
                 </ul>
               </div>
@@ -127,21 +177,25 @@
       <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
         <div class="row adjust-top">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <span class="plot-unit" id="server_cpu_unit">%</span> <span id="link-cpu"></span> x CPU (Core)
+            <span class="plot-unit" id="server_cpu_unit">%</span>
+            <span id="link-cpu"></span> x CPU (Core)
             <div id="server_cpu_graph" class="graph zoomable-plot"></div>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 adjust-top-col">
-            <span class="plot-unit" id="server_memory_unit"></span> {{$t('dashboard.memory')}} & SWAP
+            <span class="plot-unit" id="server_memory_unit"></span>
+            {{$t('dashboard.memory')}} & SWAP
             <div id="server_memory_graph" class="graph zoomable-plot"></div>
           </div>
         </div>
         <div class="row adjust-top-row">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <span class="plot-unit" id="server_disk_io_unit"></span> {{$t('dashboard.disk_io')}}
+            <span class="plot-unit" id="server_disk_io_unit"></span>
+            {{$t('dashboard.disk_io')}}
             <div id="server_disk_io_graph" class="graph zoomable-plot"></div>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 adjust-top-col">
-            <span class="plot-unit" id="server_network_traffic_unit"></span> {{$t('dashboard.network')}}
+            <span class="plot-unit" id="server_network_traffic_unit"></span>
+            {{$t('dashboard.network')}}
             <div id="server_network_traffic_graph" class="graph zoomable-plot"></div>
           </div>
         </div>
@@ -158,14 +212,16 @@
               <h3 class="panel-title">
                 <span class="icon-header-panel">
                   <span class="fa fa-microchip right"></span>
-                </span>{{$t('dashboard.ram')}}
+                </span>
+                {{$t('dashboard.ram')}}
               </h3>
             </div>
             <div class="panel-body">
               <div id="ram-chart" class="text-center"></div>
-              <div class="text-right ">{{$t('dashboard.size')}}:
+              <div class="text-right">
+                {{$t('dashboard.size')}}:
                 <b>
-                  <span class="">{{system.memory.system.available_bytes * 1024 | byteFormat}}</span>
+                  <span class>{{system.memory.system.available_bytes * 1024 | byteFormat}}</span>
                 </b>
               </div>
             </div>
@@ -177,14 +233,16 @@
               <h3 class="panel-title">
                 <span class="icon-header-panel">
                   <span class="fa fa-exchange right"></span>
-                </span>{{$t('dashboard.swap')}}
+                </span>
+                {{$t('dashboard.swap')}}
               </h3>
             </div>
             <div class="panel-body">
               <div id="swap-chart" class="text-center"></div>
-              <div class="text-right ">{{$t('dashboard.size')}}:
+              <div class="text-right">
+                {{$t('dashboard.size')}}:
                 <b>
-                  <span class="">{{system.memory.swap.available_bytes * 1024 | byteFormat}}</span>
+                  <span class>{{system.memory.swap.available_bytes * 1024 | byteFormat}}</span>
                 </b>
               </div>
             </div>
@@ -199,22 +257,45 @@
           <div class="modal-header">
             <h4 class="modal-title">{{$t('dashboard.change_hostname')}}</h4>
           </div>
-          <form class="form-horizontal" v-on:submit.prevent="saveHostname(system.summary.newHostname)">
-
+          <form
+            class="form-horizontal"
+            v-on:submit.prevent="saveHostname(system.summary.newHostname)"
+          >
             <div class="modal-body">
               <div :class="['form-group', system.errors.hostname.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.fqdn')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dashboard.fqdn')}}</label>
                 <div class="col-sm-9">
-                  <input :disabled="!system.summary.hostnameIsEdit" required type="text" v-model="system.summary.newHostname" class="form-control">
-                  <span v-if="system.errors.hostname.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.hostname.message)}}</span>
+                  <input
+                    :disabled="!system.summary.hostnameIsEdit"
+                    required
+                    type="text"
+                    v-model="system.summary.newHostname"
+                    class="form-control"
+                  >
+                  <span
+                    v-if="system.errors.hostname.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.hostname.message)}}</span>
                 </div>
               </div>
-              <div v-for="(a, i) in system.summary.aliases" v-bind:key="i" :class="['form-group', system.summary.aliases[i].hasError ? 'has-error' : '']">
-                <label class="col-xs-12 col-sm-3 control-label" for="textInput-modal-markup">{{i == 0 ?
-                  $t('dashboard.alias') : ''}}</label>
+              <div
+                v-for="(a, i) in system.summary.aliases"
+                v-bind:key="i"
+                :class="['form-group', system.summary.aliases[i].hasError ? 'has-error' : '']"
+              >
+                <label class="col-xs-12 col-sm-3 control-label" for="textInput-modal-markup">
+                  {{i == 0 ?
+                  $t('dashboard.alias') : ''}}
+                </label>
                 <div class="col-xs-7 col-sm-6">
                   <input type="text" v-model="a.key" class="form-control">
-                  <span v-if="system.summary.aliases[i].hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+system.summary.aliases[i].message)}}</span>
+                  <span
+                    v-if="system.summary.aliases[i].hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+system.summary.aliases[i].message)}}</span>
                 </div>
                 <div class="col-xs-5 col-sm-2">
                   <button @click="removeAlias(a, i)" class="btn btn-default" type="button">
@@ -226,13 +307,17 @@
                 <div class="col-sm-3 control-label"></div>
                 <div class="col-sm-9">
                   <button @click="addAlias()" class="btn btn-default" type="button">
-                    <span class="fa fa-plus card-icon-def"></span> {{$t('dashboard.add_alias')}}
+                    <span class="fa fa-plus card-icon-def"></span>
+                    {{$t('dashboard.add_alias')}}
                   </button>
                 </div>
               </div>
             </div>
             <div class="modal-footer submit">
-              <div v-if="system.errors.aliases.isLoading || system.errors.aliases.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <div
+                v-if="system.errors.aliases.isLoading || system.errors.aliases.isLoading"
+                class="spinner spinner-sm form-spinner-loader"
+              ></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" value="submit" type="submit">{{$t('save')}}</button>
             </div>
@@ -248,29 +333,47 @@
             <h4 class="modal-title">{{$t('dashboard.change_dns_servers')}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="saveDNS(system.summary.dns)">
-
             <div class="modal-body">
               <div :class="['form-group', system.errors.dns1.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">1° {{$t('dashboard.dns')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >1° {{$t('dashboard.dns')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="system.summary.dns[0].dns" class="form-control">
-                  <span v-if="system.errors.dns1.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.dns1.message)}}</span>
+                  <input
+                    required
+                    type="text"
+                    v-model="system.summary.dns[0].dns"
+                    class="form-control"
+                  >
+                  <span
+                    v-if="system.errors.dns1.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.dns1.message)}}</span>
                 </div>
               </div>
               <div :class="['form-group', system.errors.dns2.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">2° {{$t('dashboard.dns')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >2° {{$t('dashboard.dns')}}</label>
                 <div class="col-sm-9">
                   <input type="text" v-model="system.summary.dns[1].dns" class="form-control">
-                  <span v-if="system.errors.dns2.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.dns2.message)}}</span>
+                  <span
+                    v-if="system.errors.dns2.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.dns2.message)}}</span>
                 </div>
               </div>
             </div>
             <div class="modal-footer submit">
-              <div v-if="system.errors.dns1.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <div
+                v-if="system.errors.dns1.isLoading"
+                class="spinner spinner-sm form-spinner-loader"
+              ></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" value="submit" type="submit">{{$t('save')}}</button>
             </div>
-
           </form>
         </div>
       </div>
@@ -283,68 +386,131 @@
             <h4 class="modal-title">{{$t('dashboard.change_system_time')}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="saveSystime()">
-
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.time_zone')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dashboard.time_zone')}}</label>
                 <div class="col-sm-9">
-                  <select required v-model="system.summary.newTimeZone" class="combobox form-control">
+                  <select
+                    required
+                    v-model="system.summary.newTimeZone"
+                    class="combobox form-control"
+                  >
                     <option v-for="(t,i) in system.summary.timeZones" v-bind:key="i">{{t}}</option>
                   </select>
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.set_time')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dashboard.set_time')}}</label>
                 <div class="col-sm-9">
                   <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                    <button
+                      class="btn btn-default dropdown-toggle"
+                      type="button"
+                      id="dropdownMenu1"
+                      data-toggle="dropdown"
+                    >
                       {{system.systimeTypes[system.summary.newTimeMode]}}
                       <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                       <li role="presentation">
-                        <a role="menuitem" tabindex="-1" @click="changeSystime('manual')" href="#">{{$t('dashboard.manual')}}</a>
+                        <a
+                          role="menuitem"
+                          tabindex="-1"
+                          @click="changeSystime('manual')"
+                          href="#"
+                        >{{$t('dashboard.manual')}}</a>
                       </li>
                       <li role="presentation">
-                        <a role="menuitem" tabindex="-1" @click="changeSystime('ntp')" href="#">{{$t('dashboard.using_ntp_server')}}</a>
+                        <a
+                          role="menuitem"
+                          tabindex="-1"
+                          @click="changeSystime('ntp')"
+                          href="#"
+                        >{{$t('dashboard.using_ntp_server')}}</a>
                       </li>
                     </ul>
                   </div>
                 </div>
               </div>
-              <div v-if="system.summary.newTimeMode == 'manual'" :class="['form-group', system.errors.datetime.date.hasError || system.errors.datetime.time.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.date_time')}}</label>
+              <div
+                v-if="system.summary.newTimeMode == 'manual'"
+                :class="['form-group', system.errors.datetime.date.hasError || system.errors.datetime.time.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dashboard.date_time')}}</label>
                 <div class="col-sm-6">
                   <div id="date-picker" class="input-group date">
-                    <input required v-model="system.summary.newDate" type="text" class="form-control bootstrap-datepicker">
+                    <input
+                      required
+                      v-model="system.summary.newDate"
+                      type="text"
+                      class="form-control bootstrap-datepicker"
+                    >
                     <span class="input-group-addon">
                       <span class="fa fa-calendar"></span>
                     </span>
                   </div>
-                  <span v-if="system.errors.datetime.date.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.datetime.date.message)}}</span>
+                  <span
+                    v-if="system.errors.datetime.date.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.datetime.date.message)}}</span>
                 </div>
                 <div class="col-sm-3">
                   <div class="input-group time-picker-pf" id="time-picker">
-                    <input required v-model="system.summary.newTime" type="text" class="form-control">
+                    <input
+                      required
+                      v-model="system.summary.newTime"
+                      type="text"
+                      class="form-control"
+                    >
                     <span class="input-group-addon btn btn-default">
                       <span class="fa fa-clock-o"></span>
                     </span>
                   </div>
-                  <span v-if="system.errors.datetime.time.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.datetime.time.message)}}</span>
+                  <span
+                    v-if="system.errors.datetime.time.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.datetime.time.message)}}</span>
                 </div>
               </div>
 
-              <div v-if="system.summary.newTimeMode == 'ntp'" :class="['form-group', system.errors.datetime.NTPServer.hasError ? 'has-error' : '']">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.ntp_server')}}</label>
+              <div
+                v-if="system.summary.newTimeMode == 'ntp'"
+                :class="['form-group', system.errors.datetime.NTPServer.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dashboard.ntp_server')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="system.summary.newNtpServer" class="form-control">
-                  <span v-if="system.errors.datetime.NTPServer.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.datetime.NTPServer.message)}}</span>
+                  <input
+                    required
+                    type="text"
+                    v-model="system.summary.newNtpServer"
+                    class="form-control"
+                  >
+                  <span
+                    v-if="system.errors.datetime.NTPServer.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+system.errors.datetime.NTPServer.message)}}</span>
                 </div>
               </div>
             </div>
             <div class="modal-footer">
-              <div v-if="system.errors.datetime.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <div
+                v-if="system.errors.datetime.isLoading"
+                class="spinner spinner-sm form-spinner-loader"
+              ></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
             </div>
@@ -360,45 +526,86 @@
             <h4 class="modal-title">{{$t('dashboard.change_company_info')}}</h4>
           </div>
           <form class="form-horizontal" v-on:submit.prevent="saveCompany(system.newOrganization)">
-
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.company')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dashboard.company')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="system.newOrganization.company" class="form-control">
+                  <input
+                    required
+                    type="text"
+                    v-model="system.newOrganization.company"
+                    class="form-control"
+                  >
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.city')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dashboard.city')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="system.newOrganization.city" class="form-control">
+                  <input
+                    required
+                    type="text"
+                    v-model="system.newOrganization.city"
+                    class="form-control"
+                  >
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.department')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dashboard.department')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="system.newOrganization.department" class="form-control">
+                  <input
+                    required
+                    type="text"
+                    v-model="system.newOrganization.department"
+                    class="form-control"
+                  >
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.phone')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dashboard.phone')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="system.newOrganization.phone" class="form-control">
+                  <input
+                    required
+                    type="text"
+                    v-model="system.newOrganization.phone"
+                    class="form-control"
+                  >
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('dashboard.address')}}</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('dashboard.address')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="system.newOrganization.address" class="form-control">
+                  <input
+                    required
+                    type="text"
+                    v-model="system.newOrganization.address"
+                    class="form-control"
+                  >
                 </div>
               </div>
             </div>
             <div class="modal-footer submit">
-              <div v-if="system.errors.company.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
+              <div
+                v-if="system.errors.company.isLoading"
+                class="spinner spinner-sm form-spinner-loader"
+              ></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" value="submit" type="submit">{{$t('save')}}</button>
             </div>
-
           </form>
         </div>
       </div>
@@ -408,27 +615,34 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{system.summary.actualPower == 'reboot' ? $t('dashboard.reboot_the_system') :
-              $t('dashboard.shutdown_the_system')}}</h4>
+            <h4 class="modal-title">
+              {{system.summary.actualPower == 'reboot' ? $t('dashboard.reboot_the_system') :
+              $t('dashboard.shutdown_the_system')}}
+            </h4>
           </div>
-          <form class="form-horizontal" v-on:submit.prevent="powerActions(system.summary.actualPower)">
-
+          <form
+            class="form-horizontal"
+            v-on:submit.prevent="powerActions(system.summary.actualPower)"
+          >
             <div class="modal-body">
               <div class="form-group">
-                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('are_you_sure')}}?</label>
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
               </div>
             </div>
             <div class="modal-footer">
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
-              <button class="btn btn-danger" type="submit">{{system.summary.actualPower == 'reboot' ?
-                $t('dashboard.reboot') : $t('dashboard.power_off')}}</button>
+              <button class="btn btn-danger" type="submit">
+                {{system.summary.actualPower == 'reboot' ?
+                $t('dashboard.reboot') : $t('dashboard.power_off')}}
+              </button>
             </div>
-
           </form>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -452,6 +666,7 @@ export default {
     this.getHints("hostname");
     this.getHints("dns");
     this.getHints("company");
+    this.getHints("subscription");
     this.getSystemSummary();
     this.getSystemHostname();
     this.getSystemAliases();
@@ -464,7 +679,7 @@ export default {
     return {
       view: {
         isAdmin: false
-        },
+      },
       loaders: {
         summary: true,
         hostname: true,
@@ -578,6 +793,7 @@ export default {
   },
   methods: {
     initGraphics() {
+      this.$parent.getHints("system-subscription", "subscription");
       $("#app").css("background", "");
       $("#app").css("color", "");
     },
@@ -599,7 +815,7 @@ export default {
           console.error(error);
         },
         false
-        );
+      );
     },
     getHints(type, callback) {
       var context = this;

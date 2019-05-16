@@ -486,7 +486,7 @@
     "old_ip": "Old IP",
     "new_ip": "New IP",
     "change_nsdc_ip": "Change DC container IP",
-    "not_expired": "Active",
+    "not_expired": "Not expired",
     "expired": "Expired",
     "user_created_ok": "User created successfully!",
     "user_created_error": "User not created.",
@@ -850,7 +850,15 @@
     "connection": "Connection",
     "check_connection": "Check connection",
     "check": "Check",
-    "here": "here"
+    "here": "here",
+    "support": "Remote support",
+    "server": "Support server",
+    "session_id": "Session ID",
+    "stop_support": "Stop support",
+    "start_support": "Start support",
+    "start": "Start",
+    "stop": "Stop",
+    "copy_id": "Copy ID"
   },
   "hints": {
     "Password": "Password",
@@ -870,7 +878,11 @@
     "backup": "Backup",
     "centos_upgrade": "A new upstream distribution release is available as update. To avoid installing it, switch the software updates origin to \"Locked\"",
     "dhcp_on_green_can_cause_unexpected_behavior": "Using DHCP on green interfaces leads to unexpected behavior. Please, change the interface to static if possible.",
-    "interface_must_be_static": "A green interface must have a static IP address"
+    "interface_must_be_static": "A green interface must have a static IP address",
+    "hostname": "Hostname",
+    "hostname_should_not_contain_localhost": "Hostname should not contains localhost",
+    "subscription": "Subscription",
+    "support_active": "A remote support session is active"
   },
   "validation": {
     "weak_password": "Password too weak, it could be inside a dictionary or too similar to the previous one",

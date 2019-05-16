@@ -74,6 +74,8 @@ export default {
         "active"
       );
 
+      this.$parent.getHints("system-subscription", "subscription");
+
       var context = this;
       $("#sidebar-menu", window.parent.document)
         .children("li")

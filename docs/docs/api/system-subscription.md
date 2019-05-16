@@ -1,6 +1,7 @@
 # system-subscription
 
 Manage server subscription on a [Dartagnan](https://nethesis.github.io/dartagnan/) server.
+Also start and stop windmill remote support client (don).
 
 ## read
 
@@ -50,6 +51,11 @@ Output example:
     "SystemId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
     "PortalURL": "https://my.nethserver.com",
     "enterprise": 0
+  },
+  "support": {
+    "status": "enabled",
+    "server": "sos.nethesis.it",
+    "sessionid": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
   }
 }
 ```
@@ -77,6 +83,8 @@ Available actions:
 
 - `register`: register the server to the Dartagnan server
 - `send`: send inventory to the Dartagnan server
+- `support-start`: start don support
+- `support-stop`: stop don support
 
 ### Input
 

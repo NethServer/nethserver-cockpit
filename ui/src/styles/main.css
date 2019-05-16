@@ -675,7 +675,8 @@ circle {
 
 .pre-inline {
     display: inline-grid !important;
-    padding: 2px !important
+    padding: 2px 6px;
+    min-width: 305px;
 }
 
 .adjust-top-loader {
