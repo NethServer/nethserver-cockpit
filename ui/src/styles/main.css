@@ -696,6 +696,14 @@ circle {
 
 .copy-path {
     margin-left: 5px !important;
+    margin-top: 0px !important;
+}
+
+@media screen and (min-width: 992px) {
+    .copy-path {
+        margin-left: 0px !important;
+        margin-top: 5px !important;
+    }
 }
 
 .copy-ok {

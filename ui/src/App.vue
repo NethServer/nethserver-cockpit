@@ -255,6 +255,7 @@
         <code>API</code>
         {{$t('for_more_info')}}:
       </span>
+      <br>
       <code>{{notifications.error.api}}</code>
       <button
         @click="copyCommand(notifications.error.command)"
