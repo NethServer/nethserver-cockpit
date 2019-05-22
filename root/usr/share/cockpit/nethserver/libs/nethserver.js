@@ -27,6 +27,7 @@ nethserver = {
             process.input(JSON.stringify(input))
         }
 
+        var command = (input ? " echo '" + JSON.stringify(input) + "' | " : "") + args.join(' ') + " | jq"
         console.info("%cAPI exec: " + api + "\n%c$ " + (input ? " echo '" + JSON.stringify(input) + "' | " : "") + args.join(' ') + " | jq", "background: #1f2123; color: yellow;", "background: #1f2123; color: white; font-size: large, font-family: 'monospace';")
 
         if (stream) {
@@ -101,6 +102,8 @@ nethserver = {
                 ns.$children[0].notifications.success.show = false
                 ns.$children[0].notifications.error.show = true
                 ns.$children[0].notifications.error.message = nethserver.notifications.error || null
+                ns.$children[0].notifications.error.api = api
+                ns.$children[0].notifications.error.command = command
                 ns.$children[0].taskInProgress = false
             }
             error(errorResp, errorData)

@@ -651,7 +651,7 @@
                       class="combobox form-control"
                     >
                       <option>-</option>
-                      <option v-for="value in roles.list.applications">{{value}}</option>
+                      <option v-for="(value,k) in roles.list.applications" :key="k">{{value}}</option>
                     </select>
                     <span
                       v-if="newGroup.errorProps['applications']"

@@ -252,12 +252,12 @@
       >{{notifications.error.message || '-'}}</p>
       <span>
         {{$t('check')}}
-        <code>logs</code>
-        {{$t('for_more_info')}}.
+        <code>API</code>
+        {{$t('for_more_info')}}:
       </span>
-      <pre>less /var/log/messages</pre>
+      <code>{{notifications.error.api}}</code>
       <button
-        @click="copyCommand('less /var/log/messages')"
+        @click="copyCommand(notifications.error.command)"
         class="btn btn-primary copy-path"
         type="button"
       >{{$t('copy_command')}}</button>
@@ -341,6 +341,8 @@ export default {
           show: false
         },
         error: {
+          api: "",
+          command: "",
           message: "",
           action: undefined,
           actionName: "",
