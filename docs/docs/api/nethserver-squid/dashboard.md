@@ -29,6 +29,16 @@ Accept an extra `time` parameters in seconds:
 }
 ```
 
+Input example for `status` action.
+Accept an extra `hostname` parameter to calculate lightsquid url.
+```json
+{
+  "action": "status",
+  "hostname": "test.org"
+}
+```
+
+
 ### Output
 
 #### status
@@ -41,7 +51,8 @@ Output example:
   "filter": {
     "status": "enabled",
     "antivirus": "disabled",
-    "profiles": 5
+    "profiles": 5,
+    "antivirus_db":1559052607
   },
   "proxy": {
     "client_bytes_in": 17746944,
@@ -57,7 +68,8 @@ Output example:
     "cpu_usage": "0.07",
     "client_requests": "322642",
     "BlueMode": "transparent"
-  }
+  },
+  "url": "https://test.org:980/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 }
 ```
 
