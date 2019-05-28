@@ -136,38 +136,11 @@ The `update` API scripts has this generic input form:
 
 The following sections document available `action` values.
 
-### create
-
-Creates a new shared folder. Set e-smith accounts DB and invokes the
-`ibay-create` event.
-
-```json
-{
-    "action": "create",
-    "item": {
-        // ...
-    }
-}
-```
-
-### delete
-
-Deletes an existing shared folder. Changes the e-smith record type and invokes
-the `ibay-delete` event.
-
-```json
-{
-    "action": "delete",
-    "item": {
-        "name": "the_record_key"
-    }
-}
-```
-
 ### edit
 
 Changes an existing shared folder configuration. Updates the corresponding
-e-smith  accounts DB props and invokes the `ibay-modify` event.
+e-smith  accounts DB props and invokes the `ibay-modify` event. See the
+`validate` script, for more information about the `item` object format.
 
 ```json
 {
@@ -201,6 +174,39 @@ folder must have some configuration props set by the NS6 nethserver-ibay module.
 ```json
 {
     "action": "migrate",
+    "item": {
+        "name": "the_record_key"
+    }
+}
+```
+
+
+
+## create
+
+Creates a new shared folder. Set e-smith accounts DB and invokes the
+`ibay-create` event.
+
+```json
+{
+    "action": "create",
+    "item": {
+        // ...
+    }
+}
+```
+
+The `item` object format is the same used by the `edit` action in the `update`
+script.
+
+### delete
+
+Deletes an existing shared folder. Changes the e-smith record type and invokes
+the `ibay-delete` event. It finally removes the e-smith DB record.
+
+```json
+{
+    "action": "delete",
     "item": {
         "name": "the_record_key"
     }
