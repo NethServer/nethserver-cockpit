@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.6.0
+Version: 0.7.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -60,6 +60,13 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue May 28 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.7.0-1
+- File server Cockpit UI - NethServer/dev#5754
+- IPS Cockpit UI - NethServer/dev#5756
+- Web proxy Cockpit UI - NethServer/dev#5746
+- Various UI improvements
+- Add perl library for API
+
 * Wed May 08 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.6.0-1
 - Mail Cockpit UI - NethServer/dev#5744
 - Mail server: sender dependent relay - NethServer/dev#5743
