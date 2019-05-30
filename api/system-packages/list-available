@@ -123,7 +123,7 @@ def filtercomps(yb, fcomps):
                 url += '/'
 
             try:
-                response = repo.grabfunc.urlread(url + 'api/subscription', **override_ugopts)
+                response = repo.grabfunc.urlread(url + 'api/subscription.json', **override_ugopts)
                 exclude_categories.update(simplejson.loads(response)['exclude_categories'])
             except Exception, e:
                 last_error_message = "%s" % e
