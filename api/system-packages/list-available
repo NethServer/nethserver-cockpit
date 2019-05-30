@@ -134,18 +134,7 @@ def filtercomps(yb, fcomps):
             # no "break" was hit: the query to subscription API has failed
             raise Exception("api/subscription error: %s" % last_error_message)
 
-    include_groups = set()
-    exclude_groups = set()
-
-    for category in fcomps['categories']:
-        if category['id'] in exclude_categories:
-            exclude_groups.update(category['groups'])
-        else:
-            include_groups.update(category['groups'])
-
-    exclude_groups.difference_update(include_groups)
-
-    fcomps['groups'] = filter(lambda g: not g['id'] in exclude_groups, fcomps['groups'])
+    fcomps['groups'] = filter(lambda g: not g['category'] in exclude_categories, fcomps['groups'])
     fcomps['categories'] = filter(lambda c: not c['id'] in exclude_categories, fcomps['categories'])
 
     return fcomps
