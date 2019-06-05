@@ -222,6 +222,7 @@ export default {
 
     // get list of installed apps
     context.getApps();
+    context.refresh();
   },
   methods: {
     initGraphics() {
