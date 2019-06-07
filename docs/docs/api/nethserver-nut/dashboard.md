@@ -13,7 +13,7 @@ Valid actions are:
 Input example:
 ```json
 {
-  "app_info": "live"
+  "app_info": "configuration"
 }
 ```
 
@@ -56,7 +56,7 @@ Output example:
 
 #### status
 
-Return UPS status and connected clients. UPS status and connected clients are retrieved by `upsc` command
+Return UPS status and connected clients. This information is retrieved by executing `upsc` command
 
 Output example:
 ```json
@@ -105,7 +105,13 @@ Output example:
     "input_quality": "FF",
     "device_serial": "JS0636001865"
   },
-  "clients": [],
+  "clients": [
+    "192.168.5.85",
+    "localhost.vm.nethesis.it",
+    "192.168.5.42",
+    "192.168.5.41",
+    "192.168.5.48"
+  ],
   "configuration": {
     "nut_monitor": {
       "type": "service",
