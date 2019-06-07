@@ -115,7 +115,7 @@ Output example:
 If setting the node as server/master:
 
 - `status`: must be `enabled` or `disabled`
-- `Model`: must be one of the supported drivers
+- `Model`: must be one of the supported drivers declared in `/usr/share/nut/driver.list`
 - `Device`: must be one of: `auto`, `/dev/ttyS0`, `/dev/ttyS1`, `/dev/ttyS2`, `/dev/ttyUSB0`, `/dev/ttyUSB1`
 
 If setting the node as client/slave:
@@ -128,7 +128,7 @@ If setting the node as client/slave:
 
 ### Input
 
-Provide the complete configuration for `nut-server` and `nut-monitor` services.
+The complete configuration for `nut-server` and `nut-monitor` services.
 
 Example:
 ```json
