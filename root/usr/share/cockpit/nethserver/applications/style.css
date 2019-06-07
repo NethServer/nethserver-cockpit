@@ -398,3 +398,7 @@ li.active>a>span {
     text-decoration: underline;
     cursor: pointer;
 }
+
+.good-table>.responsive {
+    overflow: visible !important;
+}
