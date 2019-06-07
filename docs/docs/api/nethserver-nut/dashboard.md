@@ -4,11 +4,59 @@ NethServer NUT basic statistics.
 
 ## read
 
-The read API doesn't require any input.
+The read API requires an `app_info` field.
+Valid actions are:
+
+- `configuration`
+- `status`
+
+Input example:
+```json
+{
+  "app_info": "live"
+}
+```
 
 ### Output
 
-Return UPS status, configuration and connected clients. UPS status and connected clients are retrieved by `upsc` command. Configuration is returned by `nut-server` and `nut-monitor` services.
+#### configuration
+
+Return the current configuration of `nut-server` and `nut-monitor` services.
+
+Output example:
+```json
+{
+  "configuration": {
+    "nut_monitor": {
+      "type": "service",
+      "name": "nut-monitor",
+      "props": {
+        "status": "enabled",
+        "Master": "nethservice.nethesis.it",
+        "Notify": "disabled"
+      }
+    },
+    "nut_server": {
+      "type": "service",
+      "name": "nut-server",
+      "props": {
+        "status": "disabled",
+        "access": "green",
+        "User": "upsmon",
+        "TCPPort": "3493",
+        "Device": "auto",
+        "Model": "",
+        "Password": "$4fep$ssword",
+        "Ups": "UPS"
+      }
+    }
+  }
+}
+``` 
+
+#### status
+
+Return UPS status and connected clients. UPS status and connected clients are retrieved by `upsc` command
 
 Output example:
 ```json
