@@ -351,6 +351,36 @@
      <changefreq>daily</changefreq>
     </url>
     <url>
+     <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-vpn/dashboard/</loc>
+     <lastmod>2019-06-10</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-vpn/feature/</loc>
+     <lastmod>2019-06-10</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-vpn/ipsec/</loc>
+     <lastmod>2019-06-10</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-vpn/logs/</loc>
+     <lastmod>2019-06-10</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-vpn/openvpn-rw/</loc>
+     <lastmod>2019-06-10</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://nethserver.github.io/nethserver-cockpit/api/nethserver-vpn/openvpn-tunnel/</loc>
+     <lastmod>2019-06-10</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
      <loc>https://nethserver.github.io/nethserver-cockpit/ui_guidelines/</loc>
      <lastmod>2019-06-10</lastmod>
      <changefreq>daily</changefreq>
