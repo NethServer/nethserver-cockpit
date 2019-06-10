@@ -93,6 +93,13 @@ nav:
     - UPS helpers:
       - api/nethserver-nut/dashboard.md
       - api/nethserver-nut/settings.md
+    - VPN helpers:
+      - api/nethserver-vpn/dashboard.md
+      - api/nethserver-vpn/feature.md
+      - api/nethserver-vpn/ipsec.md
+      - api/nethserver-vpn/logs.md
+      - api/nethserver-vpn/openvpn-rw.md
+      - api/nethserver-vpn/openvpn-tunnel.md
 - UI:
   - ui_guidelines.md
   - i18n.md
