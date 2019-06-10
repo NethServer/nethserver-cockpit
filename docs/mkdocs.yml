@@ -90,6 +90,9 @@ nav:
     - IPS helpers:
       - api/nethserver-suricata/configuration.md
       - api/nethserver-suricata/dashboard.md
+    - UPS helpers:
+      - api/nethserver-nut/dashboard.md
+      - api/nethserver-nut/settings.md
 - UI:
   - ui_guidelines.md
   - i18n.md
