@@ -1172,20 +1172,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#create" title="create" class="md-nav__link">
-    create
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#delete" title="delete" class="md-nav__link">
-    delete
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#edit" title="edit" class="md-nav__link">
     edit
   </a>
@@ -1202,6 +1188,26 @@
           <li class="md-nav__item">
   <a href="#migrate" title="migrate" class="md-nav__link">
     migrate
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create" title="create" class="md-nav__link">
+    create
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delete" title="delete" class="md-nav__link">
+    delete
   </a>
   
 </li>
@@ -1374,6 +1380,54 @@
   <li class="md-nav__item">
     <a href="../../nethserver-suricata/dashboard/" title="dashboard" class="md-nav__link">
       dashboard
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-8" type="checkbox" id="nav-2-8">
+    
+    <label class="md-nav__link" for="nav-2-8">
+      UPS helpers
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-8">
+        UPS helpers
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../nethserver-nut/dashboard/" title="dashboard" class="md-nav__link">
+      dashboard
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../nethserver-nut/settings/" title="settings" class="md-nav__link">
+      settings
     </a>
   </li>
 
@@ -1681,20 +1735,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#create" title="create" class="md-nav__link">
-    create
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#delete" title="delete" class="md-nav__link">
-    delete
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#edit" title="edit" class="md-nav__link">
     edit
   </a>
@@ -1711,6 +1751,26 @@
           <li class="md-nav__item">
   <a href="#migrate" title="migrate" class="md-nav__link">
     migrate
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create" title="create" class="md-nav__link">
+    create
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delete" title="delete" class="md-nav__link">
+    delete
   </a>
   
 </li>
@@ -1870,33 +1930,10 @@ Esmith DB props.</p>
 
 
 <p>The following sections document available <code>action</code> values.</p>
-<h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">&para;</a></h3>
-<p>Creates a new shared folder. Set e-smith accounts DB and invokes the
-<code>ibay-create</code> event.</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
-    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;item&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="err">//</span> <span class="err">...</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-
-
-<h3 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h3>
-<p>Deletes an existing shared folder. Changes the e-smith record type and invokes
-the <code>ibay-delete</code> event.</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
-    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;item&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;the_record_key&quot;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-
-
 <h3 id="edit">edit<a class="headerlink" href="#edit" title="Permanent link">&para;</a></h3>
 <p>Changes an existing shared folder configuration. Updates the corresponding
-e-smith  accounts DB props and invokes the <code>ibay-modify</code> event.</p>
+e-smith  accounts DB props and invokes the <code>ibay-modify</code> event. See the
+<code>validate</code> script, for more information about the <code>item</code> object format.</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
     <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;edit&quot;</span><span class="p">,</span>
     <span class="nt">&quot;item&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -1923,6 +1960,32 @@ e-smith  accounts DB props and invokes the <code>ibay-modify</code> event.</p>
 folder must have some configuration props set by the NS6 nethserver-ibay module.</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
     <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;migrate&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;item&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;the_record_key&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="create">create<a class="headerlink" href="#create" title="Permanent link">&para;</a></h2>
+<p>Creates a new shared folder. Set e-smith accounts DB and invokes the
+<code>ibay-create</code> event.</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;item&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="err">//</span> <span class="err">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The <code>item</code> object format is the same used by the <code>edit</code> action in the <code>update</code>
+script.</p>
+<h3 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h3>
+<p>Deletes an existing shared folder. Changes the e-smith record type and invokes
+the <code>ibay-delete</code> event. It finally removes the e-smith DB record.</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
     <span class="nt">&quot;item&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;the_record_key&quot;</span>
     <span class="p">}</span>
