@@ -9,7 +9,7 @@ The read API takes an `action` field.
 Valid actions are:
 
 - `users`: list system users
-- `interfaces`: list red bridged interfaces
+- `interfaces`: list bridged interfaces
 - `configuration`: RW server configuration
 - `algorithms`: list all available cryptographic algorithms
 - `accounts`: list current VPN accounts
