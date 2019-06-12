@@ -191,11 +191,17 @@
                       </div>
                     </div>
                     <div class="list-view-pf-additional-info">
-                      <div v-if="roleKey == 'other'" class="list-view-pf-additional-info-item">
+                      <div
+                        v-if="roleKey == 'red' && i.type == 'xdsl'"
+                        class="list-view-pf-additional-info-item"
+                      >
                         <span class="fa fa-cube"></span>
-                        <strong>{{i.role == 'pppoe' ? 'PPPoE' : i.role | capitalize}}</strong>
+                        <strong>{{i.type == 'xdsl' ? 'PPPoE' : i.role | capitalize}}</strong>
                       </div>
-                      <div class="list-view-pf-additional-info-item">
+                      <div
+                        v-if="!(roleKey == 'red' && i.type == 'xdsl')"
+                        class="list-view-pf-additional-info-item"
+                      >
                         <span
                           :class="['pficon', interfaceStatus[i.name] && interfaceStatus[i.name].link == 1 ? 'pficon-plugged' : 'pficon-unplugged']"
                         ></span>
@@ -1339,7 +1345,7 @@
                     <div class="blank-slate-pf-main-action row wizard-where-choices">
                       <div
                         @click="selectTypePhysical('ethernet')"
-                        :class="['col-xs-12', wizardPhysical.role.choice == 'red' ? 'col-sm-6 col-md-6 col-lg-6' : 'col-sm-12 col-md-12 col-lg-12', 'card-pf', wizardPhysical.type.choice == 'ethernet' ? 'active-choose' : '']"
+                        :class="['col-xs-12', wizardPhysical.role.choice == 'red' && !alreadyPPPOE ? 'col-sm-6 col-md-6 col-lg-6' : 'col-sm-12 col-md-12 col-lg-12', 'card-pf', wizardPhysical.type.choice == 'ethernet' ? 'active-choose' : '']"
                       >
                         <div class="blank-slate-pf no-padding margin-top-sm white-background" id>
                           <div class="blank-slate-pf-icon small-size-wizard">
@@ -1349,7 +1355,7 @@
                         </div>
                       </div>
                       <div
-                        v-if="wizardPhysical.role.choice == 'red'"
+                        v-if="wizardPhysical.role.choice == 'red' && !alreadyPPPOE"
                         @click="selectTypePhysical('pppoe')"
                         :class="['col-xs-12', 'col-sm-6', 'col-md-6', 'col-lg-6', 'card-pf', wizardPhysical.type.choice == 'pppoe' ? 'active-choose' : '']"
                       >
@@ -1690,7 +1696,8 @@ export default {
       wizardPhysical: this.initWizardPhysical(),
       routes: {},
       routingInfo: null,
-      hints: {}
+      hints: {},
+      alreadyPPPOE: 0
     };
   },
   methods: {
@@ -2391,6 +2398,7 @@ export default {
 
           var interfaceNames = [];
           context.interfaces = success.configuration;
+          context.alreadyPPPOE = success.configuration.pppoe;
           for (var role in context.interfaces) {
             for (var i in context.interfaces[role]) {
               var int = context.interfaces[role][i];
@@ -3012,7 +3020,7 @@ export default {
       } else {
         delObj = {
           interface: int.name,
-          heir: int.successor
+          heir: int.type == "vlan" ? null : int.successor
         };
       }
 
