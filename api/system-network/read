@@ -51,7 +51,7 @@ sub list_free_interfaces
         }
     }
 
-    return @interfaces;
+    return sort(@interfaces);
 }
 
 sub interface_exists
