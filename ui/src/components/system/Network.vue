@@ -126,13 +126,13 @@
                         </a>
                       </li>
                       <li v-if="roleKey != 'missing'" role="separator" class="divider"></li>
-                      <li v-if="i.virtual == 0">
+                      <li v-if="i.virtual == 0 && roleKey != 'missing'">
                         <a @click="openReleaseRole(i)">
                           <span class="pficon pficon-unlocked span-right-margin"></span>
                           {{$t('network.release_role')}}
                         </a>
                       </li>
-                      <li v-if="i.virtual == 1">
+                      <li v-if="i.virtual == 1 || roleKey == 'missing'">
                         <a @click="openDeleteInterface(i)">
                           <span class="fa fa-times span-right-margin"></span>
                           {{$t('delete')}}
@@ -623,7 +623,7 @@
                 >{{$t('are_you_sure')}}?</label>
               </div>
               <div
-                v-if="currentInterface.type != 'xdsl' && currentInterface.type != 'vlan'"
+                v-if="currentInterface.type != 'xdsl' && currentInterface.type != 'vlan' && currentInterface.role != ''"
                 class="alert alert-warning alert-dismissable"
               >
                 <span class="pficon pficon-warning-triangle-o"></span>
@@ -631,7 +631,7 @@
                 {{$t('network.successor_hints')}}.
               </div>
               <div
-                v-if="currentInterface.type != 'xdsl' && currentInterface.type != 'vlan'"
+                v-if="currentInterface.type != 'xdsl' && currentInterface.type != 'vlan' && currentInterface.role != ''"
                 class="form-group"
               >
                 <label
@@ -1687,7 +1687,9 @@ export default {
       tableLangsTexts: this.tableLangs(),
       interfaces: [],
       interfaceStatus: {},
-      currentInterface: {},
+      currentInterface: {
+        successorList: []
+      },
       currentRoute: {},
       currentProxy: this.initProxy(),
       newInterface: this.initInterface(),
@@ -3020,7 +3022,7 @@ export default {
       } else {
         delObj = {
           interface: int.name,
-          heir: int.type == "vlan" ? null : int.successor
+          heir: int.type == "vlan" || int.role == "" ? null : int.successor
         };
       }
 
