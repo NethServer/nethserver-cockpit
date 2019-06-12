@@ -67,7 +67,9 @@ sub cat
     open my $fh, '<', $file or return $ret;
     $ret = do { local $/; <$fh> };
     close $fh;
-    chomp $ret;
+    if ($ret) {
+        chomp $ret;
+    }
     return $ret;
 }
 
@@ -132,10 +134,9 @@ if($cmd eq 'list') {
     }
 
     # prepare interface map with hardware info
-    foreach my $n ($ndb->get_all()) {
+    foreach my $n ($ndb->interfaces()) {
         my %props = $n->props;
         my $iname = $n->key;
-        next if(!is_valid_interface($n->prop('type')));
         if ($props{'type'} eq 'vlan') {
             my @tmp = split(/\./,$n->key);
             $props{'parent'} = $tmp[0];
@@ -187,8 +188,8 @@ if($cmd eq 'list') {
         my $role = $interface->{'role'} || 'free';
         my $type = $interface->{'type'};
 
-        # skip non-interfaces
-        next if(!is_valid_interface($type));
+        # safe-guard: skip non-interfaces
+        next if ($type =~ m/zone|provider|network/);
         # children will be handled later
         next if ($role eq 'alias' || $role eq 'pppoe' || $type eq 'provider');
 
