@@ -20,24 +20,11 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
+require "/usr/libexec/nethserver/api/lib/network_functions.pl";
 
 use warnings;
 use strict;
 use esmith::NetworksDB;
-
-sub cleanup_providers
-{
-    my $interface = shift;
-    my $db = shift;
-
-    foreach ($db->get_all_by_prop('type' => 'provider')) {
-        if (($_->prop('interface') || '') eq $interface) {
-            $_->delete();
-        }
-    }
-}
-
 
 our $ndb = esmith::NetworksDB->open();
 
@@ -78,6 +65,11 @@ if ($input->{'heir'}) {
     $heir->set_prop('ipaddr', $i->prop('ipaddr') || '');
     $heir->set_prop('netmask', $i->prop('netmask') || '');
     $heir->set_prop('gateway', $i->prop('gateway') || '');
+
+    # auto-configure the provider
+    if ($heir->prop('role') eq 'red') {
+        create_provider($heir->key, $ndb);
+    }
 }
 
 cleanup_providers($input->{'interface'}, $ndb);

@@ -20,7 +20,7 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
+require "/usr/libexec/nethserver/api/lib/network_functions.pl";
 
 use warnings;
 use strict;
@@ -30,43 +30,6 @@ my $ndb = esmith::NetworksDB->open();
 
 my $input = readInput();
 my $cmd = $input->{'action'};
-
-sub cleanup_providers
-{
-    my $interface = shift;
-    my $db = shift;
-
-    foreach ($db->get_all_by_prop('type' => 'provider')) {
-        if (($_->prop('interface') || '') eq $interface) {
-            $_->delete();
-        }
-    }
-}
-
-sub has_provider
-{
-    my $interface = shift;
-    my $db = shift;
-
-    foreach ($db->get_all_by_prop('type' => 'provider')) {
-        if ($_->prop('interface') eq $interface) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-sub create_provider
-{
-    my $interface = shift;
-    my $db = shift;
-
-    if (!has_provider($interface, $db)) {
-        my $max = scalar $db->get_all_by_prop('type' => 'provider');
-        my $name = "red".($max+1);
-        $db->new_record($name, {'type' => 'provider', 'weight' => 1, 'interface' => $interface});
-    }
-}
 
 if($cmd eq 'release-role') {
 
