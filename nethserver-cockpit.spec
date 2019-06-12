@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.7.0
+Version: 0.8.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -60,6 +60,10 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Wed Jun 12 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.8.0-1
+- ui. added overflow visible for dropups
+- ui. handle missing icon on application list
+
 * Tue May 28 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.7.0-1
 - File server Cockpit UI - NethServer/dev#5754
 - IPS Cockpit UI - NethServer/dev#5756
