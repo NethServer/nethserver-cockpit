@@ -35,7 +35,7 @@ function used_ip($ip, $exclude) {
         }
     }
     $db = new EsmithDatabase('configuration');
-    if ($db->getProp('nsdc','IpAddress')) {
+    if ($db->getProp('nsdc','IpAddress') == $ip) {
         $v->addValidationError('ipaddr', 'ip_address_used_by_nsdc');
     }
 }
@@ -151,7 +151,9 @@ if ($action == 'create-alias') {
 } else if ($action == 'create-bridge') {
 
     check_devices($data['devices']);
-    check_network_config($data);
+    # exclude the ip address from the device which will be bridged
+    $exclude = $data['devices'][0];
+    check_network_config($data, $exclude);
 
 } else if ($action == 'create-vlan') {
 

@@ -967,6 +967,7 @@
     "valid_cidrBlock": "Must be a valid CIDR network",
     "route_key_exists": "Given route alrady exists",
     "ip_address_already_in_use": "IP address already in use",
+    "ip_address_used_by_nsdc": "IP address already used by Active Directory",
     "non_existing_interface": "Selected interface doesn't exists",
     "invalid_role": "Invalid role",
     "interface_already_in_use": "One ore more selected interface are already in use",
