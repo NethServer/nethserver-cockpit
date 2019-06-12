@@ -70,6 +70,17 @@ sub create_provider
 
 if($cmd eq 'release-role') {
 
+    my $interface = $ndb->get($input->{'interface'});
+    error() if (!$interface);
+
+    # remove all properties
+    my %props = $interface->props;
+    foreach (keys %props) {
+        next if ($_ eq 'type');
+        $ndb->get_prop_and_delete($input->{'interface'}, $_);
+    }
+
+    # set empty role
     $ndb->set_prop($input->{'interface'}, 'role', '');
 
     cleanup_providers($input->{'interface'}, $ndb);
