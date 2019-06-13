@@ -27,11 +27,15 @@ use strict;
 use JSON;
 use esmith::ConfigDB;
 use File::Basename;
+use Data::Dumper qw(Dumper);
+use JSON::Parse ':all';
+use MIME::Base64;
 
 our $path = "/usr/share/cockpit/nethserver/applications/";
 my $ret = {};
 my $input = readInput();
 my $cmd = $input->{'action'};
+my $db = esmith::ConfigDB->open();
 
 sub read_json
 {
@@ -39,7 +43,7 @@ sub read_json
     my $json;
     {
         local $/; #Enable 'slurp' mode
-        open my $fh, "<", $file;
+        open (my $fh, "<", $file) or die "Cannot read from Application file";
         $json = <$fh>;
         close $fh;
     }
@@ -58,6 +62,17 @@ sub has_shortcut
     return 0;
 }
 
+sub has_pin
+{
+    my $app = shift;
+    my $db = shift;
+    my $pins = $db->get_prop('cockpit.socket', 'Pins') || '';
+    foreach (split(",",$pins)) {
+        return 1 if ($_ eq $app);
+    }
+    return 0;
+}
+
 sub apply
 {
     my $out = `/sbin/e-smith/expand-template /usr/share/cockpit/nethserver/manifest.json`;
@@ -68,11 +83,48 @@ sub apply
     }
 }
 
-if ($< != 0) {
-    error()
+sub writeJsonToHome
+{
+    # 1. read Pins prop for all pinned apps
+    # 2. for in pins and read /usr/share/cockpit/nethserver/applications/<Pin>.json
+    # 3. push object parse in JSON to FinalArray (final array contains all json pinned apps)
+    # 4. write FinalArray object to JSON in /var/www/html/applications.json
+    
+    my $pins = $db->get_prop('cockpit.socket', 'Pins') || '';
+    my @appArray;
+
+    foreach (split(",",$pins)) {
+        my $appPath = "/usr/share/cockpit/nethserver/applications/$_.json";
+        open(my $fn, '<', $appPath) or die("Cannot read $_.json");
+        sysread($fn, my $result, -s $fn);
+        close $fn;
+
+        my $json = decode_json($result);
+
+        # read and convert to base64 -> /usr/share/cockpit/nethserver-mail/logo.png
+        open (IMAGE, "/usr/share/cockpit/$_/logo.png") or die("Error converting icon in base64");
+        my $rawString = do{ local $/ = undef; <IMAGE>; };
+        my $base64 = encode_base64( $rawString );
+
+        # create new field in object: icon_base64
+        my ($key, $val) = ('icon_base64', "data:image/png;base64,$base64");
+        $json->{$key} = $val;
+
+        push @appArray, $json;
+    }
+
+    my $jsonFileName = "/usr/share/httpd/noindex/res/applications.json";
+    open(my $fh, '>', $jsonFileName) or die("Cannot read from pinned applications file");
+    print $fh encode_json(\@appArray);
+    close $fh;
+
+    if ($< != 0) {
+        error()
+    }else {
+        success();
+    }
 }
 
-my $db = esmith::ConfigDB->open();
 if($cmd eq 'remove-shortcut') {
 
     my $app = $input->{'name'};
@@ -85,7 +137,6 @@ if($cmd eq 'remove-shortcut') {
     apply();
 
 } elsif ($cmd eq 'add-shortcut') {
-
     my $app = $input->{'name'};
     if (!has_shortcut($app, $db)) {
         my $shortcuts = $db->get_prop('cockpit.socket', 'Shortcuts') || '';
@@ -95,6 +146,27 @@ if($cmd eq 'remove-shortcut') {
     }
     apply();
 
-} else {
+}elsif ($cmd eq 'add-pin'){
+    my $app = $input->{'name'};
+    if (!has_pin($app, $db)) {
+        my $pins = $db->get_prop('cockpit.socket', 'Pins') || '';
+        my @tmp = split(",",$pins);
+        push(@tmp, $app);
+        $db->set_prop('cockpit.socket', 'Pins', join(",",@tmp));
+    }
+    writeJsonToHome();	
+    
+
+} elsif ($cmd eq 'remove-pin'){
+    my $app = $input->{'name'};
+    if (has_pin($app, $db)) {
+        my $pins = $db->get_prop('cockpit.socket', 'Pins') || '';
+        my @tmp = split(",",$pins);
+        @tmp = grep(!/^$app$/, @tmp);
+        $db->set_prop('cockpit.socket', 'Pins', join(",",@tmp));
+    }
+    writeJsonToHome();
+
+}else {
     error();
 }
