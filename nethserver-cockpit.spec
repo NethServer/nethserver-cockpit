@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.8.0
+Version: 0.9.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -60,6 +60,12 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Fri Jun 14 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.9.0-1
+- ui. improve network page visualization
+- ui. fix for pppoe network visualization
+- network api: improve provider management
+- ui. added delete button for missing interfaces
+
 * Wed Jun 12 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.8.0-1
 - ui. added overflow visible for dropups
 - ui. handle missing icon on application list
