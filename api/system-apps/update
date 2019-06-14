@@ -27,8 +27,6 @@ use strict;
 use JSON;
 use esmith::ConfigDB;
 use File::Basename;
-use Data::Dumper qw(Dumper);
-use JSON::Parse ':all';
 use MIME::Base64;
 
 our $path = "/usr/share/cockpit/nethserver/applications/";
