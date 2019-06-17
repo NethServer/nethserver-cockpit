@@ -100,6 +100,8 @@ nav:
       - api/nethserver-vpn/logs.md
       - api/nethserver-vpn/openvpn-rw.md
       - api/nethserver-vpn/openvpn-tunnel.md
+    - HTTP helpers:
+      - api/nethserver-httpd/ftp.md
 - UI:
   - ui_guidelines.md
   - i18n.md
