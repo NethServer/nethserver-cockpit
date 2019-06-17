@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.9.0
+Version: 0.9.1
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -60,6 +60,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon Jun 17 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.9.1-1
+- ui. support NFS for rsync backup engine (nethserver-cockpit#103)
+
 * Fri Jun 14 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.9.0-1
 - ui. improve network page visualization
 - ui. fix for pppoe network visualization
