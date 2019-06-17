@@ -267,7 +267,8 @@
     "destination_available": "Available",
     "destination_usage": "Used",
     "storage_usage": "Destination storage usage",
-    "overwrite_all_data": "the restore will overwrite all data"
+    "overwrite_all_data": "the restore will overwrite all data",
+    "nfs_rsync_info": "Make sure the NFS server supports hard links, otherwise the backup will fail"
   },
   "disk_usage": {
     "title": "Disk usage",
