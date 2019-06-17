@@ -1788,7 +1788,13 @@
                       </div>
                       <!-- -->
                       <!-- RSYNC -->
-                      <div v-if="wizard.how.choice == 'rsync'"></div>
+                      <div v-if="wizard.how.choice == 'rsync'">
+                        <div class="alert alert-info alert-dismissable col-sm-12">
+                          <span class="pficon pficon-info"></span>
+                            <strong>{{$t('info')}}: </strong>
+                            {{$t('backup.nfs_rsync_info')}}.
+                        </div>
+                      </div>
                       <!-- -->
                     </div>
                   </form>
@@ -2525,7 +2531,9 @@ export default {
         this.wizard.where.choice == "s3";
 
       var rsync =
-        this.wizard.where.choice == "sftp" || this.wizard.where.choice == "usb";
+        this.wizard.where.choice == "sftp" ||
+        this.wizard.where.choice == "usb" ||
+        this.wizard.where.choice == "nfs";
 
       num += duplicity ? 1 : 0;
       num += restic ? 1 : 0;
