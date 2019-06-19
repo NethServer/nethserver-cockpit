@@ -55,9 +55,11 @@ $ret['status'] = $leases;
 
 # Merge list of available interfaces with dhcp configuration
 $dhcp_db = new EsmithDatabase('dhcp');
+$ndb = new EsmithDatabase('networks');
 foreach (getNetworkInterfaces() as $i => $props) {
     $range = $dhcp_db->getKey($i);
-    $record = array("name" => $i ,"type" => "range");
+    $nslabel = $ndb->getProp($i, 'nslabel');
+    $record = array("name" => $i ,"type" => "range", "nslabel" => $nslabel);
     if ($range) {
         foreach (array('DhcpDNS', 'DhcpWINS', 'DhcpNTP', 'DhcpTFTP') as $field) {
             if (isset($range[$field])) {

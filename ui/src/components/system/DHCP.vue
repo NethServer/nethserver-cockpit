@@ -22,7 +22,7 @@
     <h3>{{$t('dhcp.interfaces')}}</h3>
     <div v-for="i in ranges" v-bind:key="i.name">
       <div class="row">
-        <h4 class="dhcp-int col-sm-2">{{i.name}}</h4>
+        <h4 class="dhcp-int col-sm-2">{{i.name}} <span v-if="i.nslabel" class="gray">{{i.nslabel? ' - '+i.nslabel : ''}}</span></h4>
         <toggle-button
           class="min-toggle"
           :width="40"
