@@ -39,21 +39,6 @@ sub is_valid_interface
     }
 }
 
-sub list_free_interfaces
-{
-    my @interfaces;
-    foreach my $n ($ndb->get_all()) {
-        next if(!is_valid_interface($n->prop('type')));
-
-        my $role = $n->prop('role') || '';
-        if ($role eq '') {
-            push(@interfaces, $n->key);
-        }
-    }
-
-    return sort(@interfaces);
-}
-
 sub interface_exists
 {
     my $interface = shift;
@@ -242,6 +227,10 @@ if($cmd eq 'list') {
         } else {
             push($ret->{'configuration'}{'missing'}, $interface);
         }
+    }
+
+    foreach my $krole (keys %{$ret->{'configuration'}}) {
+        $ret->{'configuration'}{$krole} = [sort { $a->{'name'} cmp $b->{'name'} } @{$ret->{'configuration'}{$krole}}];
     }
 
     my $ppp0 = $ndb->get('ppp0');
