@@ -862,6 +862,8 @@
     "copy_id": "Copy ID"
   },
   "hints": {
+    "policy": "TLS policy",
+    "change_default_policy": "The default policy may use weak encryption protocols and ciphers",
     "Password": "Password",
     "change_default_root_password": "Change the default root password",
     "Company": "Company",
