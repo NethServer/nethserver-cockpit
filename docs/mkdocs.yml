@@ -103,6 +103,8 @@ nav:
     - HTTP helpers:
       - api/nethserver-httpd/dashboard.md
       - api/nethserver-httpd/ftp.md
+      - api/nethserver-httpd/proxypass.md
+      - api/nethserver-httpd/virtualhost.md
 - UI:
   - ui_guidelines.md
   - i18n.md
