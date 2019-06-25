@@ -1,28 +1,41 @@
 # dashboard
 
-## Input
+Display Informations on the usage and statistics of the FTP and Apache services
+
+## Read
+
+### Input
 
 Available query sections
 
-- `live`: rpm versions of the installed Lamp stack and number of the vhost/proxypass created
+- `live`: rpm versions of the installed Lamp stack and number of the vhost/proxypass, FTP users created
 - `apacheStatus`: statistics on the apache service
 
 The input query format is:
 
 ```json
-echo '{"action":"live"}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/dashboard/read | jq
-
-echo '{"action":"apacheStatus"}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/dashboard/read | jq
+{
+    "action":"live"
+}
 ```
 
-## Output
+```json
+{
+    "action":"apacheStatus"
+}
+```
 
-The output contains the queried sections. Possible keys are:
+### Output
 
-- `live`
+The output contains the queried sections.
 
-detection of databases and php rpm (from nethserver integration of software collection)
-detection if nethserver-httpd-virtualhosts is installed (0 or 1)
+#### Live
+
+* Detection of installed databases and php (from nethserver integration of software collection)
+* Detection of versions of databases and php (from nethserver integration of software collection)
+* number of the vhost/proxypass and ftp user created
+* Detection if nethserver-httpd-virtualhosts is installed (0 or 1)
+* Detection if nethserver-vsftpd is installed (0 or 1)
 
 ```json
 {
@@ -41,9 +54,11 @@ detection if nethserver-httpd-virtualhosts is installed (0 or 1)
     }
   },
   "packages": {
-    "virtualhost": 1
+    "virtualhost": 1,
+    "vsftpd": 1
   },
   "statistics": {
+    "FTP": 1,
     "ProxyPass": 0,
     "VhostReverse": 2,
     "virtualhosts": 4
@@ -60,7 +75,7 @@ detection if nethserver-httpd-virtualhosts is installed (0 or 1)
 }
 ```
 
-- `apacheSatus`
+#### ApacheStatus
 
 Statistics on the apache service based on Apache mod_status
 

@@ -1,20 +1,31 @@
 # proxypass
 
-API to read, validate and save  reverse proxy settings to the proxypass database
+Manage reverse proxy for the Apache server
 
-## Input
+## Read
 
-Invocation example:
+The read API requires an `action` field:
 
-### Read output in a json format
+- `proxypass`
 
- all proxypass (ProxyPass and VhostReverse) type from the proxypass database
+### Input 
 
-```bash
-echo '{"action":"proxypass"}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/proxypass/read | jq
+#### Proxypass
+
+Return the list of all configured reverse proxy and the array of the TLS certificates
+
+Input example:
+```json
+{
+  "action": "proxypass"
+}
 ```
-To differentiate the two types of reverse proxy, the name starts by a `/` for a ProxyPass (not saved in esmith database)
 
+### Output
+
+#### Proxypass
+
+Output example:
 ```json
 {
   "certificates": [
@@ -26,7 +37,7 @@ To differentiate the two types of reverse proxy, the name starts by a `/` for a 
       "Target": "http://plop.com",
       "CertVerification": "no",
       "name": "domain.com",
-      "ValidFrom": "",
+      "ValidFrom": ["1.1.1.0/16","10.10.10.0/24"],
       "HTTPS": "yes",
       "PreserveHost": "yes",
       "type": "VhostReverse",
@@ -34,11 +45,11 @@ To differentiate the two types of reverse proxy, the name starts by a `/` for a 
       "Description": "reverse2"
     },
     {
-      "ValidFrom": "",
+      "ValidFrom": ["1.1.1.0/16","10.10.10.0/24"],
       "HTTP": "no",
       "Target": "http://domain.com",
       "HTTPS": "yes",
-      "name": "/reverse",
+      "name": "reverse",
       "type": "ProxyPass",
       "Description": "reverse3"
     }
@@ -46,42 +57,90 @@ To differentiate the two types of reverse proxy, the name starts by a `/` for a 
 }
 ```
 
-### Validate the input before to be saved
+## Validate
 
-valid values are : 
+The validate API requires an `action` field. Valid `action` are :
+
+- `create`
+- `edit`
+- `delete`
+
+Constraint are :
 
 - `HTTP` : 'yes' or 'no'
 - `HTTPS` : 'yes' or 'no'
 - `Target`: a valid url starting by 'http://' or 'https://'
 - `CertVerification`: 'yes' or 'no'
-- `name`: a valid hostname for the type `VhostReverse` or starting by '/' for a `ProxyPass` type
+- `name`: a valid hostname
 - `ValidFrom`: valid CIDR array or empty
 - `PreserveHost`: 'yes' or 'no'
 - `SslCertificate`: empty or path to the certificate file
 - `Description`: anything
 
+To differentiate the two types of reverse proxy in the user Interface, the name starts by a `/` for a ProxyPass (only valid in `name` field of UI, therefore not saved in esmith database)
 
-```bash
- echo '{"action":"edit","proxypass":{"name":"domain.com","Description":"reverse2","Target":"http://plop.com","HTTP":"no","HTTPS":"yes","PreserveHost":"yes","SslCertificate":"","ValidFrom":["1.1.1.0/16","10.10.10.0/24"],"CertVerification":"no","type":"VhostReverse"}}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/proxypass/validate | jq
+
+### Input
+
+#### Create
+
+Create the key in the database, the key name must not be already existing.
+
+Example:
+
+- VhostReverse type
+```json
+{
+    "action":"create",
+    "proxypass":{
+        "name":"domain.com",
+        "Description":"reverse2",
+        "Target":"http://plop.com",
+        "HTTP":"no",
+        "HTTPS":"yes",
+        "PreserveHost":"yes",
+        "SslCertificate":"",
+        "ValidFrom":["1.1.1.0/16","10.10.10.0/24"],
+        "CertVerification":"no",
+        "type":"VhostReverse"}
+}
 ```
-```bash
- echo '{"action":"edit","proxypass":{"name":"reverse","Description":"reverse3","Target":"http://domain.com","HTTP":"no","HTTPS":"yes","PreserveHost":"","SslCertificate":"","ValidFrom":["1.1.1.0/16","10.10.10.0/24"],"CertVerification":"","type":"ProxyPass"}}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/proxypass/validate | jq
+
+- ProxyPass type
+```json
+{
+    "action":"create",
+    "proxypass":{
+        "name":"reverse",
+        "Description":"reverse3",
+        "Target":"http://domain.com",
+        "HTTP":"no",
+        "HTTPS":"yes",
+        "PreserveHost":"yes",
+        "SslCertificate":"",
+        "ValidFrom":["1.1.1.0/16","10.10.10.0/24"],
+        "CertVerification":"",
+        "type":"ProxyPass"}
+}
+```
+#### Edit
+
+Same input as `create` of validate API.
+
+#### Delete
+
+delete the given reverse proxy
+
+Example:
+```json
+{
+    "action":"delete",
+    "proxypass":{
+        "name":"reverse"
+    }
+}
 ```
 
-### Update the input once validated to proxypass database
+## update
 
-For the creation, `"action":"create"` is used, `"action":"edit"` for all modifications after
-
-```bash
- echo '{"action":"edit","proxypass":{"name":"domain.com","Description":"reverse2","Target":"http://plop.com","HTTP":"no","HTTPS":"yes","PreserveHost":"yes","SslCertificate":"","ValidFrom":["1.1.1.0/16","10.10.10.0/24"],"CertVerification":"no","type":"VhostReverse"}}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/proxypass/update | jq
-```
-
-```bash
- echo '{"action":"edit","proxypass":{"name":"reverse","Description":"vhost3","Target":"http://domain.com","HTTP":"no","HTTPS":"yes","PreserveHost":"","SslCertificate":"","ValidFrom":["1.1.1.0/16","10.10.10.0/24"],"CertVerification":"","type":"ProxyPass"}}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/proxypass/update | jq
-```
-
-### Delete the reverse proxy
-
-```bash
- echo '{"action":"delete","proxypass":{"name":"reverse"}}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/proxypass/update | jq
- ```
+Same input from validate API.

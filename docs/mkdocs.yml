@@ -102,6 +102,7 @@ nav:
       - api/nethserver-vpn/openvpn-tunnel.md
     - HTTP helpers:
       - api/nethserver-httpd/dashboard.md
+      - api/nethserver-httpd/feature.md
       - api/nethserver-httpd/ftp.md
       - api/nethserver-httpd/proxypass.md
       - api/nethserver-httpd/virtualhost.md

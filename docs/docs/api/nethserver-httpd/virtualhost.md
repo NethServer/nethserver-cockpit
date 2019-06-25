@@ -1,17 +1,31 @@
 # virtualhost
 
-API to read, validate and save  virtualhost settings to the vhosts database
+Manage virtualhost configuration for apache server.
 
-## Input
+## Read
 
-Invocation example:
+The read API requires an `action` field:
 
-### Read output in a json format all vhost type from the vhosts database
+- `virtualhost`
 
-```bash
-echo '{"action":"virtualhost"}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/virtualhost/read | jq
+### Input 
+
+#### Virtualhost
+
+Return the list of all configured virtualhost, TLS certificates array and if vsftpd server is installed
+
+Input example:
+```json
+{
+  "action": "virtualhost"
+}
 ```
 
+### Output
+
+#### Virtualhost
+
+Output example:
 ```json
 {
   "virtualhost": [
@@ -48,37 +62,87 @@ echo '{"action":"virtualhost"}' | /usr/bin/sudo /usr/libexec/nethserver/api/neth
 }
 ```
 
-### Validate the input before to be saved
+## Validate
 
-valid values are : 
+The validate API requires an `action` field. Valid `action` are :
+
+- `create`
+- `edit`
+- `delete`
+
+Constraint are :
 
 - `PasswordStatus` : 'enabled' or 'disabled'
 - `PasswordValue`: anything
 - `ServerNames`: Must be a valid hostname array, one hostname is a mandatory
 - `status`: 'enabled' or 'disabled'
-- `name`: random string created by the UI
+- `name`: random string created by the UI, must not be an existing key name
 - `FtpStatus`: 'enabled' or 'disabled'
 - `FtpPassword`: anything
 - `Indexes`: 'enabled' or 'disabled'
-- `SslCertificate`: empty or path to the cert file
+- `SslCertificate`: empty or path to the certificate file
 - `Description`: anything
 - `Access`: 'private' or 'public'
 
+### Input
 
-```bash
-echo '{"action":"edit","virtualhost":{"name":"9f9e1ab8746cc26","Description":"vhost1","ServerNames":["domain.com","domain2.com"],"Access":"private","PasswordStatus":"disabled","PasswordValue":"","ForceSslStatus":"disabled","Indexes":"disabled","FtpStatus":"disabled","FtpPassword":"","SslCertificate":"","status":"enabled"}}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/virtualhost/update | jq
+#### Create
+
+Create the key in the database, the key name must not be already existing.
+
+Example:
+```json
+{
+    "action":"create",
+    "virtualhost":{
+        "name":"9f9e1ab8746cc26",
+        "Description":"vhost1",
+        "ServerNames":["domain.com","domain2.com"],
+        "Access":"private",
+        "PasswordStatus":"disabled",
+        "PasswordValue":"",
+        "ForceSslStatus":"disabled",
+        "Indexes":"disabled",
+        "FtpStatus":"disabled",
+        "FtpPassword":"",
+        "SslCertificate":"",
+        "status":"enabled"
+    }
+}
 ```
 
-### Update the input once validated to vhosts database
+#### Edit
 
-For the creation, `"action":"create"` is used, `"action":"edit"` for all modifications after
+Same input as `create` of validate API.
 
-```bash
-echo '{"action":"edit","virtualhost":{"name":"9f9e1ab8746cc26","Description":"vhost1","ServerNames":["domain.com","domain2.com"],"Access":"private","PasswordStatus":"disabled","PasswordValue":"","ForceSslStatus":"disabled","Indexes":"disabled","FtpStatus":"disabled","FtpPassword":"","SslCertificate":"","status":"enabled"}}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/virtualhost/update | jq
+#### Delete
+
+delete the given virtualhost
+Example:
+```json
+{
+    "action":"delete",
+    "virtualhost":{
+        "name":"9f9e1ab8746cc26"
+    }
+}
 ```
 
-### Delete the virtualhost
+## Update
 
-```bash
-echo '{"action":"delete","virtualhost":{"name":"9f9e1ab8746cc26"}}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/virtualhost/update | jq
+Same input from validate API.
+
+You can disable a virtualhost by the action `toggle-lock`
+
+### Input
+
+#### Toggle-lock
+
+Example:
+```json
+{
+    "action":"toggle-lock",
+    "virtualhost":{
+        "name":"9f9e1ab8746cc26"}
+}
 ```
