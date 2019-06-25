@@ -874,7 +874,7 @@ export default {
               : "software_center.install_ok"
           );
 
-          context.$parent.checkSystemTaks();
+          context.$parent.checkSystemTasks();
 
           // get updates
           context.getApplications();
@@ -928,7 +928,7 @@ export default {
             "software_center.updates_ok"
           );
 
-          context.$parent.checkSystemTaks();
+          context.$parent.checkSystemTasks();
 
           // get updates
           context.getUpdates();
@@ -965,7 +965,7 @@ export default {
             "software_center.updates_ok"
           );
 
-          context.$parent.checkSystemTaks();
+          context.$parent.checkSystemTasks();
 
           // get updates
           context.getUpdates();
@@ -1002,7 +1002,7 @@ export default {
             "software_center.upgrade_ok"
           );
 
-          context.$parent.checkSystemTaks();
+          context.$parent.checkSystemTasks();
 
           // get updates
           context.getUpdates();

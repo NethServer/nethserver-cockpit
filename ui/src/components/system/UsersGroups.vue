@@ -2797,7 +2797,7 @@ export default {
             "users_groups.local_ldap_installed_ok"
           );
 
-          context.$parent.checkSystemTaks();
+          context.$parent.checkSystemTasks();
 
           // get provider info
           context.getInfo();
@@ -2968,7 +2968,7 @@ export default {
               "users_groups.remote_ad_installed_ok"
             );
 
-            context.$parent.checkSystemTaks();
+            context.$parent.checkSystemTasks();
 
             // get provider info
             context.getInfo();
@@ -3006,7 +3006,7 @@ export default {
             "users_groups.local_ad_installed_ok"
           );
 
-          context.$parent.checkSystemTaks();
+          context.$parent.checkSystemTasks();
 
           // get provider info
           context.getInfo();
