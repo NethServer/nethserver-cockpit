@@ -1,6 +1,6 @@
-## Dashboard
+# dashboard
 
-### Input
+## Input
 
 Available query sections
 
@@ -15,7 +15,7 @@ echo '{"action":"live"}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-
 echo '{"action":"apacheStatus"}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/dashboard/read | jq
 ```
 
-### Output
+## Output
 
 The output contains the queried sections. Possible keys are:
 

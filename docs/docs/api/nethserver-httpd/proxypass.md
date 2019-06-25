@@ -1,17 +1,17 @@
-## reverse proxy
+# proxypass
 
 API to read, validate and save  reverse proxy settings to the proxypass database
 
-### Input
+## Input
 
 Invocation example:
 
-#### Read output in a json format
+### Read output in a json format
 
  all proxypass (ProxyPass and VhostReverse) type from the proxypass database
 
 ```bash
-echo '{"action":"virtualhost"}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/virtualhost/read | jq
+echo '{"action":"proxypass"}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/proxypass/read | jq
 ```
 To differentiate the two types of reverse proxy, the name starts by a `/` for a ProxyPass (not saved in esmith database)
 
@@ -46,7 +46,7 @@ To differentiate the two types of reverse proxy, the name starts by a `/` for a 
 }
 ```
 
-#### Validate the input before to be saved
+### Validate the input before to be saved
 
 valid values are : 
 
@@ -68,7 +68,7 @@ valid values are :
  echo '{"action":"edit","proxypass":{"name":"reverse","Description":"reverse3","Target":"http://domain.com","HTTP":"no","HTTPS":"yes","PreserveHost":"","SslCertificate":"","ValidFrom":["1.1.1.0/16","10.10.10.0/24"],"CertVerification":"","type":"ProxyPass"}}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/proxypass/validate | jq
 ```
 
-#### Update the input once validated to proxypass database
+### Update the input once validated to proxypass database
 
 For the creation, `"action":"create"` is used, `"action":"edit"` for all modifications after
 
@@ -80,7 +80,7 @@ For the creation, `"action":"create"` is used, `"action":"edit"` for all modific
  echo '{"action":"edit","proxypass":{"name":"reverse","Description":"vhost3","Target":"http://domain.com","HTTP":"no","HTTPS":"yes","PreserveHost":"","SslCertificate":"","ValidFrom":["1.1.1.0/16","10.10.10.0/24"],"CertVerification":"","type":"ProxyPass"}}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/proxypass/update | jq
 ```
 
-#### Delete the reverse proxy
+### Delete the reverse proxy
 
 ```bash
  echo '{"action":"delete","proxypass":{"name":"reverse"}}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/proxypass/update | jq

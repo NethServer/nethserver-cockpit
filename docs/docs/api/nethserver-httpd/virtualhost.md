@@ -1,12 +1,12 @@
-## virtualhosts
+# virtualhost
 
 API to read, validate and save  virtualhost settings to the vhosts database
 
-### Input
+## Input
 
 Invocation example:
 
-#### Read output in a json format all vhost type from the vhosts database
+### Read output in a json format all vhost type from the vhosts database
 
 ```bash
 echo '{"action":"virtualhost"}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/virtualhost/read | jq
@@ -48,7 +48,7 @@ echo '{"action":"virtualhost"}' | /usr/bin/sudo /usr/libexec/nethserver/api/neth
 }
 ```
 
-#### Validate the input before to be saved
+### Validate the input before to be saved
 
 valid values are : 
 
@@ -69,7 +69,7 @@ valid values are :
 echo '{"action":"edit","virtualhost":{"name":"9f9e1ab8746cc26","Description":"vhost1","ServerNames":["domain.com","domain2.com"],"Access":"private","PasswordStatus":"disabled","PasswordValue":"","ForceSslStatus":"disabled","Indexes":"disabled","FtpStatus":"disabled","FtpPassword":"","SslCertificate":"","status":"enabled"}}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/virtualhost/update | jq
 ```
 
-#### Update the input once validated to vhosts database
+### Update the input once validated to vhosts database
 
 For the creation, `"action":"create"` is used, `"action":"edit"` for all modifications after
 
@@ -77,7 +77,7 @@ For the creation, `"action":"create"` is used, `"action":"edit"` for all modific
 echo '{"action":"edit","virtualhost":{"name":"9f9e1ab8746cc26","Description":"vhost1","ServerNames":["domain.com","domain2.com"],"Access":"private","PasswordStatus":"disabled","PasswordValue":"","ForceSslStatus":"disabled","Indexes":"disabled","FtpStatus":"disabled","FtpPassword":"","SslCertificate":"","status":"enabled"}}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/virtualhost/update | jq
 ```
 
-#### Delete the virtualhost
+### Delete the virtualhost
 
 ```bash
 echo '{"action":"delete","virtualhost":{"name":"9f9e1ab8746cc26"}}' | /usr/bin/sudo /usr/libexec/nethserver/api/nethserver-httpd/virtualhost/update | jq
