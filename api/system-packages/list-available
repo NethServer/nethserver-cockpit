@@ -30,6 +30,7 @@ import sys
 import simplejson
 import yum.misc
 import json
+import urlgrabber
 
 def compsdump(yb):
     metadata = '/usr/share/cockpit/nethserver/categories/categories.json'
@@ -91,8 +92,52 @@ def compsdump(yb):
     for c in categories:
         c.pop('groups', None)
 
-    print( simplejson.dumps({'categories' : categories, 'groups': groups}) )
+    print( simplejson.dumps(filtercomps(yb, {'categories' : categories, 'groups': groups})) )
 
+def filtercomps(yb, fcomps):
+    # default settings for grabfunc module
+    override_ugopts = {
+        'checkfunc': None,
+        'reget': None,
+        'progress_obj': None,
+        'copy_local': 0,
+        'range': None,
+        'interrupt_callback': None,
+        'failure_callback': None,
+        'retrycodes': [],
+    }
+
+    exclude_categories = set()
+
+    for repo in yb.repos.listEnabled():
+        if repo.cache:
+            # Skip remote API call if yum is invoked with -C flag
+            continue
+        if not repo.enablesubscription:
+            # Skip a repo if subscription API is not enabled
+            continue
+
+        last_error_message = ''
+        for url in repo.urls:
+            if url[-1:] != '/':
+                url += '/'
+
+            try:
+                response = repo.grabfunc.urlread(url + 'api/subscription.json', **override_ugopts)
+                exclude_categories.update(simplejson.loads(response)['exclude_categories'])
+            except Exception, e:
+                last_error_message = "%s" % e
+            else:
+                # if no exception is risen, exit loop immediately
+                break
+        else:
+            # no "break" was hit: the query to subscription API has failed
+            raise Exception("api/subscription error: %s" % last_error_message)
+
+    fcomps['groups'] = filter(lambda g: not g['category'] in exclude_categories, fcomps['groups'])
+    fcomps['categories'] = filter(lambda c: not c['id'] in exclude_categories, fcomps['categories'])
+
+    return fcomps
 
 def parse_pkginfo_conf():
     repos = []
@@ -109,6 +154,7 @@ def parse_pkginfo_conf():
 
 def main():
     try:
+        yum.config.RepoConf.enablesubscription = yum.config.BoolOption(False)
         yum.misc.setup_locale()
 
         ypbc = yum._YumPreBaseConf()
