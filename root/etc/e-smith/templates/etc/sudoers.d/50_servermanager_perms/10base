@@ -1,0 +1,11 @@
+#
+# Cmnd_Alias association to group permission
+#
+
+# all users
+%locals ALL=NOPASSWD: NSAPI_PUBLIC
+%domain\ users ALL=NOPASSWD: NSAPI_PUBLIC
+
+# server-manager does not require a tty
+Defaults:%locals !requiretty
+Defaults:%domain\ users !requiretty

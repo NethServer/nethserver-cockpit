@@ -1,0 +1,81 @@
+{
+    use strict;
+    use warnings;
+    use JSON;
+
+    require "/usr/libexec/nethserver/api/lib/auth_functions.pl";
+
+    # Following the user's permissions 
+    # we could not be granted to the esmith API
+    my $groupAdmins = `sudo /sbin/e-smith/db configuration getprop admins group`;
+    chop $groupAdmins; # clean EOL
+
+    my $jsonFile = '/etc/nethserver/cockpit/authorization/roles.json';
+    my $data = read_json ($jsonFile); 
+
+    # Here make links between system and API
+    # when system needs several API
+    # when system name doesn't match API name
+    my %controllers = (
+        "disk-usage"        => ["NSAPI_SYSTEM_DISK_USAGE"],
+        "certificates"      => ["NSAPI_SYSTEM_CERTIFICATES"],
+        "dns"               => ["NSAPI_SYSTEM_DNS"],
+        "dhcp"              => ["NSAPI_SYSTEM_DHCP"],
+        "backup"            => ["NSAPI_SYSTEM_BACKUP"],
+        "services"          => ["NSAPI_SYSTEM_SERVICES"],
+        "users-groups"      => ["NSAPI_SYSTEM_USERS_GROUPS"],
+        "network"           => ["NSAPI_SYSTEM_NETWORK"],
+        "ssh"               => ["NSAPI_SYSTEM_SSH"],
+        "tls-policy"        => ["NSAPI_SYSTEM_TLS_POLICY"],
+        "trusted-networks"  => ["NSAPI_SYSTEM_TRUSTED_NETWORKS"],
+        "logs"              => ["NSAPI_SYSTEM_LOGS"],
+        "subscription"      => ["NSAPI_SYSTEM_SUBSCRIPTION"]
+    );
+
+
+
+    foreach my $key (keys %{$data}) {
+
+        next if ($key eq $groupAdmins);
+        my @systems = @{$data->{$key}->{'system'}};
+        my @applications = @{$data->{$key}->{'applications'}};
+        my @roles = ();
+
+        #Here all default sudo commands
+        my @commands = ();
+
+        foreach my $system (@systems){
+            push @roles, $system;
+        }
+
+        foreach my $application (@applications){
+            push @roles, $application; 
+        }
+
+        # Hack when the group name gets a space
+        # for example 'domain admins', visudo doesn't like it
+        (my $Cmnd_Alias = $key) =~ s/ //;
+        $key =~s/ /\\ /;
+
+        $OUT .= "\n#\n# Role delegations for $key\n#";
+
+
+        foreach my $role (@roles) {
+
+            if (! exists $controllers{$role}){
+                if ($role =~ /^nethserver-/) {
+                    $role =~ s/-/_/g;
+                    push @commands, uc "APP_$role";
+                }
+            } else { 
+                foreach my $api (@{$controllers{$role}}) {
+                    push @commands, $api;
+                }
+            }  
+       }
+
+        $OUT .= "\n\n%".$key." ALL=NOPASSWD: ". join (', ',@commands);;
+        $OUT .= "\n# server-manager does not require a tty";
+        $OUT .= "\nDefaults:%".$key." !requiretty\n";
+    }
+}
