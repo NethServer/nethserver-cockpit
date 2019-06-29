@@ -1,0 +1,134 @@
+#
+# 10_servermanager_api -- command aliases and roles definition for
+#                         the NethServer Cockpit based Server Manager
+#
+
+Cmnd_Alias NSAPI_PUBLIC = \
+    /usr/libexec/nethserver/api/system-dns/read, \
+    /usr/libexec/nethserver/api/system-company/read, \
+    /usr/libexec/nethserver/api/system-hostname/read, \
+    /usr/libexec/nethserver/api/system-aliases/read, \
+    /usr/libexec/nethserver/api/system-time/read, \
+    /usr/libexec/nethserver/api/system-status/read, \
+    /usr/libexec/nethserver/api/system-task/read, \
+    /usr/libexec/nethserver/api/system-authorization/read, \
+    /usr/libexec/nethserver/api/system-settings/read, \
+    /usr/libexec/nethserver/api/system-apps/read, \
+    /sbin/e-smith/validate, \
+    /sbin/e-smith/db configuration getprop admins group
+
+Cmnd_Alias NSAPI_SYSTEM_DISK_USAGE = \
+    /usr/libexec/nethserver/api/system-disk-usage/read, \
+    /usr/libexec/nethserver/api/system-disk-usage/update
+    
+Cmnd_Alias NSAPI_SYSTEM_CERTIFICATES = \
+    /usr/libexec/nethserver/api/system-certificate/read, \
+    /usr/libexec/nethserver/api/system-certificate/update, \
+    /usr/libexec/nethserver/api/system-certificate/validate
+
+Cmnd_Alias NSAPI_SYSTEM_DNS = \
+    /usr/libexec/nethserver/api/system-hosts/create, \
+    /usr/libexec/nethserver/api/system-hosts/delete, \
+    /usr/libexec/nethserver/api/system-hosts/read, \
+    /usr/libexec/nethserver/api/system-hosts/update, \
+    /usr/libexec/nethserver/api/system-hosts/validate, \
+    /usr/libexec/nethserver/api/system-dns/hints, \
+    /usr/libexec/nethserver/api/system-dns/read, \
+    /usr/libexec/nethserver/api/system-dns/update, \
+    /usr/libexec/nethserver/api/system-dns/validate
+
+Cmnd_Alias NSAPI_SYSTEM_DHCP = \
+    /usr/libexec/nethserver/api/system-dhcp/create, \
+    /usr/libexec/nethserver/api/system-dhcp/delete, \
+    /usr/libexec/nethserver/api/system-dhcp/read, \
+    /usr/libexec/nethserver/api/system-dhcp/update, \
+    /usr/libexec/nethserver/api/system-dhcp/validate
+
+Cmnd_Alias NSAPI_SYSTEM_BACKUP = \
+    /usr/libexec/nethserver/api/system-backup/check-b2, \
+    /usr/libexec/nethserver/api/system-backup/check-cifs, \
+    /usr/libexec/nethserver/api/system-backup/check-disk, \
+    /usr/libexec/nethserver/api/system-backup/check-nfs, \
+    /usr/libexec/nethserver/api/system-backup/check-s3, \
+    /usr/libexec/nethserver/api/system-backup/check-sftp, \
+    /usr/libexec/nethserver/api/system-backup/check-webdav, \
+    /usr/libexec/nethserver/api/system-backup/create, \
+    /usr/libexec/nethserver/api/system-backup/delete, \
+    /usr/libexec/nethserver/api/system-backup/execute, \
+    /usr/libexec/nethserver/api/system-backup/format-disk, \
+    /usr/libexec/nethserver/api/system-backup/hints, \
+    /usr/libexec/nethserver/api/system-backup/mount-webdav, \
+    /usr/libexec/nethserver/api/system-backup/need-remap, \
+    /usr/libexec/nethserver/api/system-backup/read, \
+    /usr/libexec/nethserver/api/system-backup/update, \
+    /usr/libexec/nethserver/api/system-backup/validate
+
+Cmnd_Alias NSAPI_SYSTEM_SERVICES = \
+    /usr/libexec/nethserver/api/system-services/hints, \
+    /usr/libexec/nethserver/api/system-services/read, \
+    /usr/libexec/nethserver/api/system-services/update
+
+Cmnd_Alias NSAPI_SYSTEM_USERS_GROUPS = \
+    /usr/libexec/nethserver/api/system-roles/delete, \
+    /usr/libexec/nethserver/api/system-roles/read, \
+    /usr/libexec/nethserver/api/system-roles/update, \
+    /usr/libexec/nethserver/api/system-password-policy/read, \
+    /usr/libexec/nethserver/api/system-password-policy/update, \
+    /usr/libexec/nethserver/api/system-password-policy/validate, \
+    /usr/libexec/nethserver/api/system-accounts-provider/read, \
+    /usr/libexec/nethserver/api/system-accounts-provider/update, \
+    /usr/libexec/nethserver/api/system-accounts-provider/validate, \
+    /usr/libexec/nethserver/api/system-users/create, \
+    /usr/libexec/nethserver/api/system-users/delete, \
+    /usr/libexec/nethserver/api/system-users/read, \
+    /usr/libexec/nethserver/api/system-users/update, \
+    /usr/libexec/nethserver/api/system-users/validate,\
+    /usr/libexec/nethserver/api/system-users/create, \
+    /usr/libexec/nethserver/api/system-users/delete, \
+    /usr/libexec/nethserver/api/system-users/read, \
+    /usr/libexec/nethserver/api/system-users/update, \
+    /usr/libexec/nethserver/api/system-users/validate
+
+Cmnd_Alias NSAPI_SYSTEM_NETWORK = \
+    /usr/libexec/nethserver/api/system-routes/create, \
+    /usr/libexec/nethserver/api/system-routes/delete, \
+    /usr/libexec/nethserver/api/system-routes/read, \
+    /usr/libexec/nethserver/api/system-routes/update, \
+    /usr/libexec/nethserver/api/system-routes/validate, \
+    /usr/libexec/nethserver/api/system-proxy/read, \
+    /usr/libexec/nethserver/api/system-proxy/update, \
+    /usr/libexec/nethserver/api/system-proxy/validate, \
+    /usr/libexec/nethserver/api/system-network/create, \
+    /usr/libexec/nethserver/api/system-network/delete, \
+    /usr/libexec/nethserver/api/system-network/hints, \
+    /usr/libexec/nethserver/api/system-network/read, \
+    /usr/libexec/nethserver/api/system-network/update, \
+    /usr/libexec/nethserver/api/system-network/validate
+
+Cmnd_Alias NSAPI_SYSTEM_SSH = \
+    /usr/libexec/nethserver/api/system-openssh/hints, \
+    /usr/libexec/nethserver/api/system-openssh/read, \
+    /usr/libexec/nethserver/api/system-openssh/update, \
+    /usr/libexec/nethserver/api/system-openssh/validate
+
+Cmnd_Alias NSAPI_SYSTEM_TLS_POLICY = \
+    /usr/libexec/nethserver/api/system-tls-policy/hints, \
+    /usr/libexec/nethserver/api/system-tls-policy/read, \
+    /usr/libexec/nethserver/api/system-tls-policy/update, \
+    /usr/libexec/nethserver/api/system-tls-policy/validate
+
+Cmnd_Alias NSAPI_SYSTEM_TRUSTED_NETWORKS = \
+    /usr/libexec/nethserver/api/system-trusted-networks/create, \
+    /usr/libexec/nethserver/api/system-trusted-networks/delete, \
+    /usr/libexec/nethserver/api/system-trusted-networks/read, \
+    /usr/libexec/nethserver/api/system-trusted-networks/update, \
+    /usr/libexec/nethserver/api/system-trusted-networks/validate
+
+Cmnd_Alias NSAPI_SYSTEM_LOGS = \
+    /usr/libexec/nethserver/api/system-logs/execute
+
+Cmnd_Alias NSAPI_SYSTEM_SUBSCRIPTION = \
+    /usr/libexec/nethserver/api/system-subscription/hints, \
+    /usr/libexec/nethserver/api/system-subscription/read, \
+    /usr/libexec/nethserver/api/system-subscription/update, \
+    /usr/libexec/nethserver/api/system-subscription/validate
