@@ -1,0 +1,50 @@
+{
+    use strict;
+    use warnings;
+    use esmith::ConfigDB;
+
+    my $db = esmith::ConfigDB->open_ro();
+    my $groupAdmins = $db->get_prop('admins','group') || 'domain admins';
+
+    my @Keys = split(',', $db->get_prop('cockpit.socket','delegation') || '');
+
+    foreach (@Keys) {
+
+        my @roles = ();
+        my @systems =();
+        my @applications = ();
+
+        my @props = split(':',$_);
+        if ($props[1]) { # find if we have at least one delegation
+            my $group = shift(@props);
+            foreach (@props) {
+                push @roles, $_ ;
+            }
+
+            # Hack when the group name gets a space
+            # for example 'domain admins', visudo doesn't like it
+            (my $Cmnd_Alias = $group) =~ s/ //;
+            $group =~ s/ /\\ /;
+
+            $OUT .= "\n#\n# Role delegations for $group\n#";
+
+            foreach my $role (@roles) {
+                if ($role =~ /^nethserver-/) {
+                    $role =~ s/-/_/g;
+                    push @applications, uc "APP_$role";
+                } else {
+                   $role =~ s/-/_/g;
+                   push @systems, 'NSAPI_SYSTEM_'. uc $role;
+
+                }
+            }
+
+            # if at least one application delegation, push sudo power
+            push @applications, 'NSAPI_SYSTEM_APPS' if (scalar @applications > 0);
+
+            my @CmndAlias = (@systems,@applications);
+            $OUT .= "\n\n%".$group." ALL=NOPASSWD: ". join (', ',@CmndAlias);;
+            $OUT .= "\n";
+        }
+    }
+}

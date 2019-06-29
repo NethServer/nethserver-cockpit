@@ -1,0 +1,8 @@
+#
+# Cmnd_Alias association to group permission
+#
+
+# all users
+%locals ALL=NOPASSWD: NSAPI_PUBLIC
+%domain\ users ALL=NOPASSWD: NSAPI_PUBLIC
+

@@ -14,7 +14,7 @@
             <span class="fa fa-cube"></span>
             <span class="list-group-item-value">{{$t('menu.dashboard')}}</span>
             <span
-              v-if="hints.hostname.count > 0 || hints.upstreamDns.count > 0 || hints.company.count > 0"
+              v-if="(hints.hostname.count > 0 || hints.upstreamDns.count > 0 || hints.company.count > 0) && status.isAdmin"
               class="badge"
             >{{hints.hostname.count+hints.upstreamDns.count+hints.company.count}}</span>
           </a>
@@ -194,7 +194,7 @@
           <a href="#/settings">
             <span class="fa fa-gear"></span>
             <span class="list-group-item-value">{{$t('menu.settings')}}</span>
-            <span v-if="hints.settings.count > 0" class="badge badge-small">{{hints.settings.count}}</span>
+            <span v-if="hints.settings.count > 0 && status.isAdmin" class="badge badge-small">{{hints.settings.count}}</span>
           </a>
         </li>
 
@@ -446,6 +446,7 @@ export default {
             console.error(e);
           }
           context.auths = success.system || [];
+          context.status = success.status || {"isAdmin":0};
         },
         function(error) {
           console.error(error);

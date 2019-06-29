@@ -49,8 +49,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %files -f file.lst
 %license COPYING
 %doc README.rst
-%config /etc/nethserver/cockpit/authorization/roles.json
 %config /usr/share/cockpit/nethserver/categories/categories.json
+%attr(0640,root,root) /etc/sudoers.d/10_servermanager_api
+%attr(0640,root,root) %config(noreplace) /etc/sudoers.d/50_servermanager_perms
 %dir %{_nseventsdir}/%{name}-update
 %dir /usr/libexec/nethserver/api/
 
