@@ -18,6 +18,10 @@ textarea {
     min-height: 125px;
 }
 
+.handle-overflow {
+    overflow: auto;
+}
+
 .no-cursor {
     cursor: initial !important;
 }

@@ -5,11 +5,11 @@ body.login-pf {
     padding-top: 60px;
 }
 
-.disable_a_href{
-  color: #363636;
-  cursor: not-allowed;
-  text-decoration: none;
-  pointer-events: none;
+.disable_a_href {
+    color: #363636;
+    cursor: not-allowed;
+    text-decoration: none;
+    pointer-events: none;
 }
 
 #authorized-input {
@@ -212,4 +212,10 @@ li.credential-lock>a:first-child {
 
 input[type="checkbox"].form-control {
     width: 6% !important;
+}
+
+@media screen and (max-width: 767px) {
+    .area-ct-navbar {
+        grid-row: 3/4 !important;
+    }
 }

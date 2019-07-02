@@ -218,7 +218,7 @@
         </li>
       </ul>
     </nav>
-    <div :class="['container-fluid', 'container-cards-pf'+ ( !routesAvailable() ? '-apps' : '')]">
+    <div :class="['container-fluid', 'container-cards-pf'+ ( !routesAvailable() ? '-apps' : ''), 'handle-overflow']">
       <router-view></router-view>
     </div>
 
