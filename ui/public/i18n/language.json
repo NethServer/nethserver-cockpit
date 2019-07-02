@@ -885,7 +885,8 @@
     "hostname": "Hostname",
     "hostname_should_not_contain_localhost": "Hostname should not contains localhost",
     "subscription": "Subscription",
-    "support_active": "A remote support session is active"
+    "support_active": "A remote support session is active",
+    "hostname_should_not_contain_localdomain": "The hostname should not contain 'localdomain'"
   },
   "validation": {
     "weak_password": "Password too weak, it could be inside a dictionary or too similar to the previous one",
