@@ -25,24 +25,34 @@ require "/usr/libexec/nethserver/api/lib/auth_functions.pl";
 
 use warnings;
 use strict;
+use JSON;
 use esmith::ConfigDB;
 use esmith::event;
 
 my $db = esmith::ConfigDB->open();
 my $delegations = $db->get_prop('cockpit.socket','delegation')|| '';
 
-my $exitCode = 0;
-my $ret;
-
+my $jsonFile = '/etc/nethserver/cockpit/authorization/roles.json';
+my $data = read_json($jsonFile);
 my $input = readInput();
 my $role = $input->{'role'} || '';
 my $groupAdmins = get_adminGroup();
+
+my $exitCode = 0;
+my $ret;
 my $values = '';
 
 if ($role ne  $groupAdmins) {
-    if ($delegations !~ /,$role:|^$role:/) {# the role doesn't exist
-        error('NotValidRole','This role does not exist');
-    } else {
+        if ($delegations !~ /,$role:|^$role:/) {# the role doesn't exist
+            error('NotValidRoleinConfigDB','This role does not exist in the cockpit.socket/delegation prop');
+        } elsif ( ! exists($data->{$role})) {
+            error('NotValidRoleInJson','This role does not exist in the roles.json');
+        } else {
+        #delete in roles.json
+        delete ($data->{$role});
+        write_json ($jsonFile,$data);
+        
+        #delete in cockpit.socket/delegation
         my @Keys = split(',', $delegations);
         foreach (@Keys) {
             my @props = split(':',$_);
