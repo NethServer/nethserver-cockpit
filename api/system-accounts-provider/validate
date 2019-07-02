@@ -59,9 +59,15 @@ function validate_localad($data) {
     $workgroupValidator = $v->createValidator(Validate::HOSTNAME_SIMPLE)->maxLength(15);
     $realmValidator = $v->createValidator(Validate::HOSTNAME_FQDN)->platform('dcrealm');
     $ipAddressValidator = $v->createValidator(Validate::IP)->platform('dcipaddr');
-    $v->declareParameter('Realm', $realmValidator);
-    $v->declareParameter('Workgroup', $workgroupValidator);
-    $v->declareParameter('IpAddress', $ipAddressValidator);
+    if (!$realmValidator->evaluate($data['Realm'])) {
+        $v->addValidationError('Realm', 'dcrealm_validation_error');
+    }
+    if (!$workgroupValidator->evaluate($data['Workgroup'])) {
+        $v->addValidationError('Workgroup', 'workgroup_simple_hostname_max_15');
+    }
+    if (!$ipAddressValidator->evaluate($data['IpAddress'])) {
+        $v->addValidationError('IpAddress', 'dcipaddr_validation_error');
+    }
 
     if (!$v->validate()) {
         error($v);
