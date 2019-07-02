@@ -254,6 +254,8 @@ export default {
         d3.select("#sizeFolder").text(
           context.$options.filters.byteFormat(d.size_actual)
         );
+
+        updateBreadcrumbs([]);
       }
 
       function mouseover(d) {
