@@ -267,6 +267,7 @@ export default {
           context.rows = success;
           context.view.isLoaded = true;
           context.initGraphics();
+          context.refresh();
         },
         function(error) {
           context.view.isLoaded = true;
@@ -320,6 +321,7 @@ export default {
             "applications.remove_ok"
           );
 
+          context.getApps();
           context.refresh();
         },
         function(error) {
@@ -342,6 +344,7 @@ export default {
         },
         null,
         function(success) {
+          context.getApps();
           context.refresh();
         },
         function(error) {
@@ -361,6 +364,7 @@ export default {
         },
         null,
         function(success) {
+          context.getApps();
           context.refresh();
         },
         function(error) {
@@ -374,7 +378,6 @@ export default {
           bus: "internal"
         })
         .call("/packages", "cockpit.Packages", "Reload", []);
-      this.getApps();
     }
   }
 };
