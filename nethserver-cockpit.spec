@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.9.2
+Version: 0.9.3
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -60,6 +60,12 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Jul 02 2019 Davide Principi <davide.principi@nethesis.it> - 0.9.3-1
+- Migrate YUM repositories hosting to Porthos - nethesis/dev#5641
+- ui. Fix invalid function call checkSystemTasks()
+- Add TLS policy missing translations (#105)
+ 
+
 * Wed Jun 19 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.9.2-1
 - api. sort interfaces for network page
 - ui & api. display nslabel on dhcp page
