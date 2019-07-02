@@ -983,7 +983,8 @@
     "invalid_secret": "Invalid secret",
     "valid_lessThan_90": "Days must be less than 90",
     "dhcp_reservation_system_validator": "The host must be reacheable and should be part of a local network. Make sure also there is no other reservation for the same MAC address",
-    "valid_hostname_simple_0_0": "Must be a simple hostname like 'myhost'"
+    "valid_hostname_simple_0_0": "Must be a simple hostname like 'myhost'",
+    "dcipaddr_validation_error": "The IP address must be not in use and it must belong to an existing green network. Also, the green interface must be configured with a static IP address."
   },
   "docs": {
     "more_info_about": "More info about",
