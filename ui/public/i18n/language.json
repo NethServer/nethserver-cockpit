@@ -981,7 +981,9 @@
     "bond_valid_mode_between_0_and_6": "Bond mode must be a number between 0 and 6",
     "valid_macAddress": "Must be a valid MAC address",
     "invalid_secret": "Invalid secret",
-    "valid_lessThan_90": "Days must be less than 90"
+    "valid_lessThan_90": "Days must be less than 90",
+    "dhcp_reservation_system_validator": "The host must be reacheable and should be part of a local network. Make sure also there is no other reservation for the same MAC address",
+    "valid_hostname_simple_0_0": "Must be a simple hostname like 'myhost'"
   },
   "docs": {
     "more_info_about": "More info about",

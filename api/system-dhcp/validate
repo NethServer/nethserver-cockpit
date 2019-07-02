@@ -47,13 +47,17 @@ if ($action == 'create-reservation') {
     $ipAddressValidator = $v->createValidator(Validate::IP)->platform('dhcp-reservation', $data['MacAddress'], $data['name']);
     $v->declareParameter('name', Validate::HOSTNAME_SIMPLE);
     $v->declareParameter('MacAddress', Validate::MACADDRESS);
-    $v->declareParameter('IpAddress', $ipAddressValidator);
+    if (!$ipAddressValidator->evaluate($data['IpAddress'])) {
+        $v->addValidationError('IpAddress','dhcp_reservation_system_validator');
+    }
 
 } else if ($action == 'update-reservation') {
     $ipAddressValidator = $v->createValidator(Validate::IP)->platform('dhcp-reservation', $data['MacAddress'], $data['name']);
     $v->declareParameter('name', Validate::HOSTNAME_SIMPLE);
     $v->declareParameter('MacAddress', Validate::MACADDRESS);
-    $v->declareParameter('IpAddress', $ipAddressValidator);
+    if (!$ipAddressValidator->evaluate($data['IpAddress'])) {
+        $v->addValidationError('IpAddress','dhcp_reservation_system_validator');
+    }
 
 } else if ($action == 'update-range') {
 
