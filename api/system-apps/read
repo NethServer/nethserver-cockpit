@@ -66,6 +66,7 @@ sub invoke_info_api
 sub app_info
 {
     my $app = shift;
+    my $shortcuts = shift;
     my $file = "$path$app.json";
     my $data = read_json($file);
     my $extended_data = {};
@@ -85,9 +86,8 @@ sub app_info
     $data = {%$data, %$extended_data}; # merges the input hashes
 
     # Set hardcoded attributes:
-    $data->{'editable'} = is_editable();
-    $data->{'shortcut'} = has_shortcut($app);
-    $data->{'legacy'} = 0;
+    $data->{'shortcut'} = defined($shortcuts->{$app}) ? 1 : 0;
+    $data->{'editable'} = 1;
     return $data;
 }
 
@@ -100,23 +100,6 @@ sub authorized_apps
     } else {
         return ();
     }
-}
-
-sub is_editable
-{
-    return ($< == 0) ? 1 : 0; # map to integer
-}
-
-sub has_shortcut
-{
-    my $app = shift;
-    return 0 if ($< != 0); # non-root users can't access the config db
-    my $db = esmith::ConfigDB->open_ro();
-    my $shortcuts = $db->get_prop('cockpit.socket', 'Shortcuts') || '';
-    foreach (split(",",$shortcuts)) {
-        return 1 if ($_ eq $app);
-    }
-    return 0;
 }
 
 sub is_installed
@@ -138,38 +121,23 @@ sub has_cockpit_support
 if($cmd eq 'list') {
 
     my @apps;
+    my %shortcuts;
+    if ($< == 0) { # non-root users can't access the config db
+        my $db = esmith::ConfigDB->open_ro();
+        my $shortcuts = $db->get_prop('cockpit.socket', 'Shortcuts') || '';
+        foreach (split(",",$shortcuts)) {
+            $shortcuts{$_} = 1;
+        }
+    }
 
     my $authorized = authorized_apps();
+
 
     foreach my $f (glob("$path*.json")) {
         my ($name,$path,$suffix) = fileparse($f,(".json"));
         if (grep(/^$name$/, @$authorized)) {
-            my $data = app_info($name) || next;
+            my $data = app_info($name, \%shortcuts) || next;
             push(@apps, $data);
-        }
-    }
-
-    if (is_editable()) {
-        my @installed = `rpm -qa --queryformat "%{NAME}\n" nethserver-\*`;
-        chomp @installed;
-        my $legacy_apps = read_json("/etc/nethserver/cockpit/legacy-apps.json");
-        foreach my $app (keys(%$legacy_apps)) {
-            next if (!is_installed($app, \@installed));
-            next if (has_cockpit_support($app));
-            my $id = $app;
-            $app =~ s/nethserver-//g;
-            $app =~ s/-/ /g;
-            push(@apps, {
-                    "editable" => 0,
-                    "shortcut" => 0,
-                    "release" => { "version" => "legacy" },
-                    "legacy" => 1,
-                    "description" => "-",
-                    "icon" => "legacy.png",
-                    "name" => ucfirst($app),
-                    "url" => $legacy_apps->{$id},
-                    "id" => $id
-                });
         }
     }
 
