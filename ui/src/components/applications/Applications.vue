@@ -161,7 +161,6 @@
 </template>
 
 <script>
-/*global cockpit*/
 export default {
   name: "Applications",
   data() {
@@ -218,11 +217,10 @@ export default {
     var context = this;
     setTimeout(function() {
       context.initGraphics();
-    }, 250);
+    }, 150);
 
     // get list of installed apps
     context.getApps();
-    context.refresh();
   },
   methods: {
     initGraphics() {
@@ -237,10 +235,10 @@ export default {
       $("#app").css("background", "");
       $("#app").css("color", "");
     },
-    getApps() {
+    getApps(silently) {
       var context = this;
 
-      context.view.isLoaded = false;
+      context.view.isLoaded = silently ? true : false;
       context.exec(
         ["system-apps/read"],
         {
@@ -266,8 +264,6 @@ export default {
           }
           context.rows = success;
           context.view.isLoaded = true;
-          context.initGraphics();
-          context.refresh();
         },
         function(error) {
           context.view.isLoaded = true;
@@ -322,7 +318,6 @@ export default {
           );
 
           context.getApps();
-          context.refresh();
         },
         function(error) {
           // notification
@@ -335,7 +330,6 @@ export default {
     addShortcut(application) {
       var context = this;
 
-      context.view.isLoaded = false;
       context.exec(
         ["system-apps/update"],
         {
@@ -344,7 +338,7 @@ export default {
         },
         null,
         function(success) {
-          context.getApps();
+          context.getApps(true);
           context.refresh();
         },
         function(error) {
@@ -355,7 +349,6 @@ export default {
     removeShortcut(application) {
       var context = this;
 
-      context.view.isLoaded = false;
       context.exec(
         ["system-apps/update"],
         {
@@ -364,7 +357,7 @@ export default {
         },
         null,
         function(success) {
-          context.getApps();
+          context.getApps(true);
           context.refresh();
         },
         function(error) {
@@ -378,6 +371,11 @@ export default {
           bus: "internal"
         })
         .call("/packages", "cockpit.Packages", "Reload", []);
+
+      var context = this;
+      setTimeout(function() {
+        context.initGraphics();
+      }, 1500);
     }
   }
 };
