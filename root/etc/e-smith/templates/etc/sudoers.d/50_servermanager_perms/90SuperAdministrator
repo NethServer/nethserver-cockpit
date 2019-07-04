@@ -1,10 +1,8 @@
 {
     use File::Find;
-
-    # Following the user's permissions
-    # we could not be granted to the esmith API
-    my $groupAdmins = `sudo /sbin/e-smith/db configuration getprop admins group`;
-    chop $groupAdmins; # clean EOL
+    use esmith::ConfigDB;
+    my $db = esmith::ConfigDB->open_ro();
+    my $groupAdmins = $db->get_prop('admins','group') || 'domain admins';
 
     (my $groupAdminsAlias = uc $groupAdmins) =~ s/ //;
     (my $groupAdminsSudo = $groupAdmins) =~ s/ /\\ /;

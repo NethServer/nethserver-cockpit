@@ -1,0 +1,41 @@
+#!/usr/bin/perl
+#
+##
+## Copyright (C) 2019 Nethesis S.r.l.
+## http://www.nethesis.it - nethserver@nethesis.it
+##
+## This script is part of NethServer.
+##
+## NethServer is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License,
+## or any later version.
+##
+## NethServer is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with NethServer.  If not, see COPYING.
+##
+#
+require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
+require "/usr/libexec/nethserver/api/lib/auth_functions.pl";
+
+use warnings;
+use strict;
+use JSON;
+use esmith::ConfigDB;
+
+my $db = esmith::ConfigDB->open();
+my $groupAdmins = $db->get_prop('admins','group')|| 'domain admins';
+
+# all users are not granted to read the config database
+# we need to expand the admins_group inside to retrieve it
+# and allow permissions with system-authorisations/read
+ 
+my $jsonFile = '/etc/nethserver/cockpit/authorization/roles.json';
+my $data = read_json ($jsonFile);
+$data->{'admins_group'} = $groupAdmins;
+write_json ($jsonFile,$data);

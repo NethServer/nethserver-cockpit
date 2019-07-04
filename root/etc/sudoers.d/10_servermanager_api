@@ -14,8 +14,8 @@ Cmnd_Alias NSAPI_PUBLIC = \
     /usr/libexec/nethserver/api/system-authorization/read, \
     /usr/libexec/nethserver/api/system-settings/read, \
     /usr/libexec/nethserver/api/system-apps/read, \
-    /sbin/e-smith/validate, \
-    /sbin/e-smith/db configuration getprop admins group
+    /usr/libexec/nethserver/api/system-docs/read, \
+    /sbin/e-smith/validate
 
 Cmnd_Alias NSAPI_SYSTEM_DISK_USAGE = \
     /usr/libexec/nethserver/api/system-disk-usage/read, \

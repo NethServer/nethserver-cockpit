@@ -28,6 +28,7 @@ use esmith::Build::CreateLinks  qw(:all);
 
 event_actions('nethserver-cockpit-update', qw(
       initialize-default-databases   00
+      nethserver-cockpit_update_admins_group 10
 ));
 
 event_templates('nethserver-cockpit-update', qw(
@@ -76,6 +77,10 @@ event_templates('nethserver-sssd-save', qw(
 #
 event_templates('delegation-save', qw(
     /etc/sudoers.d/50_servermanager_perms
+));
+
+event_actions('delegation-save', qw(
+      nethserver-cokcpit_Update_admins_group 10
 ));
 #
 # Test events for development

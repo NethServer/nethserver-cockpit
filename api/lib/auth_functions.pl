@@ -80,10 +80,10 @@ sub list_applications
 }
 
 sub get_adminGroup {
-    #Following the user's permissions we could not be granted to the esmith API
-    my $groupAdmins = `sudo /sbin/e-smith/db configuration getprop admins group`;
-    chop $groupAdmins; # clean EOL
-    return $groupAdmins
+    my $roles = read_json("/etc/nethserver/cockpit/authorization/roles.json");
+    if(exists($roles->{'admins_group'})) {
+        return $roles->{'admins_group'}
+    }
 }
 
 sub get_groups {
