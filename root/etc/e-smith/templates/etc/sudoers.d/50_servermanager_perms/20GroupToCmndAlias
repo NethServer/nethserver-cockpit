@@ -2,10 +2,15 @@
     use strict;
     use warnings;
     use esmith::ConfigDB;
+    use File::Find;
 
     my $db = esmith::ConfigDB->open_ro();
     my $groupAdmins = $db->get_prop('admins','group') || 'domain admins';
 
+    sub uniq {
+        my %seen;
+        grep !$seen{lc($_)}++, @_;
+    }
 
     # Here make links between system and API
     # when system needs several API
@@ -27,6 +32,8 @@
     );
 
     my @Keys = split(',', $db->get_prop('cockpit.socket','delegation') || '');
+    my @applications = ();
+
     foreach (@Keys) {
 
         my @roles = ();
@@ -50,6 +57,7 @@
 
                 if (! exists $controllers{$role}){
                     if ($role =~ /^nethserver-/) {
+                        push @applications, $role;
                         $role =~ s/-/_/g;
                         push @commands, uc "APP_$role";
                     }
@@ -63,6 +71,38 @@
             $OUT .= "\n\n%".$group." ALL=NOPASSWD: ". join (', ',@commands);;
             $OUT .= "\n# server-manager does not require a tty";
             $OUT .= "\nDefaults:%".$group." !requiretty\n";
+        }
+    }
+
+    #Enable API for applications when the apps has been delegated at least one time
+    foreach (uniq @applications) {
+        # here we list all API inside the nethserver-* of the application
+        my @files;
+        my @dirpath=qw(/usr/libexec/nethserver/api/).$_;
+
+        find(sub {
+                push @files,$File::Find::name if (-d $File::Find::name );
+        }, @dirpath);
+
+        my @CmndAlias =();
+        foreach ((@files)) {
+            foreach ( glob($_.'/*')) {
+                push @CmndAlias, $_ if (-f $_);
+            }
+        }
+        #sudo do not like '-'
+        $_ =~ s/-/_/g;
+        $OUT .= "\n".'Cmnd_Alias APP_'.uc $_.' = \\';
+
+        # we start the counter, sudoers file must not be ended with a ', \'
+        my $count = 1;
+
+        foreach (@CmndAlias) {
+            my $countarray = scalar @CmndAlias;
+            $OUT.= "\n    ";
+            $OUT.= $_.', \\' if ($count < $countarray);
+            $OUT.= $_."\n" if ($count == $countarray);
+            $count++;
         }
     }
 }
