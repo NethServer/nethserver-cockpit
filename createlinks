@@ -79,6 +79,13 @@ event_templates('delegation-save', qw(
     /etc/sudoers.d/50_servermanager_perms
 ));
 
+#
+# runlevel-adjust
+#
+event_templates('runlevel-adjust', qw(
+    /etc/sudoers.d/50_servermanager_perms
+));
+
 event_actions('delegation-save', qw(
       nethserver-cokcpit_Update_admins_group 10
 ));
