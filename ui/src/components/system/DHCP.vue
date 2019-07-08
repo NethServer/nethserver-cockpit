@@ -38,7 +38,7 @@
           class="btn btn-primary dhcp-mod-btn"
         >{{$t('modify')}}</button>
         <span
-          v-if="i.props.DhcpRangeStart.length > 0 && i.props.DhcpRangeEnd.length > 0"
+          v-if="i.props.DhcpRangeStart && i.props.DhcpRangeStart.length > 0 && i.props.DhcpRangeEnd && i.props.DhcpRangeEnd.length > 0"
           class="gray margin-left-md"
         >({{i.props.DhcpRangeStart}} - {{i.props.DhcpRangeEnd}})</span>
       </div>
