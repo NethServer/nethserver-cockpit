@@ -33,10 +33,10 @@
             target="_blank"
             :href="props.row.url"
           >
-            <img class="apps-icon" :src="'../'+props.row.id+'/logo.png'">
+            <img class="apps-icon" :src="'../'+props.row.id+'/'+(props.row.icon || 'logo.png')">
           </a>
           <span v-if="!props.row.url || props.row.url.length == 0">
-            <img class="apps-icon" :src="'../'+props.row.id+'/logo.png'">
+            <img class="apps-icon" :src="'../'+props.row.id+'/'+(props.row.icon || 'logo.png')">
           </span>
         </td>
         <td class="fancy">
