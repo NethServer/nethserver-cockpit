@@ -927,6 +927,10 @@ circle {
     }
 }
 
+.dl-horizontal dd {
+    word-break: break-all !important;
+}
+
 .remove-item-inline {
     color: white;
     margin-left: 4px;
