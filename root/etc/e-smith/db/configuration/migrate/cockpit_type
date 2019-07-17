@@ -1,0 +1,10 @@
+{
+    # Force cockpit type to 'configuration':
+    # firewall rules will be handled by a special fragment
+
+    $DB->set_prop('cockpit.socket', 'type', 'configuration');
+    $DB->get_prop_and_delete('cockpit.socket', 'status');
+    $DB->get_prop_and_delete('cockpit.socket', 'TCPPort');
+
+    '';
+}
