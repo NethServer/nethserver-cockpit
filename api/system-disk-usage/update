@@ -22,6 +22,11 @@
 
 . /usr/libexec/nethserver/api/lib/helper_functions
 
+data=$(cat /dev/stdin)
+one_file_system=$(echo $data | jq -r ".oneFileSystem")
+
+/sbin/e-smith/config setprop duc OneFileSystem "$one_file_system"
+
 /sbin/e-smith/signal-event -j nethserver-duc-save
 
 if [ $? -gt 0 ]; then
