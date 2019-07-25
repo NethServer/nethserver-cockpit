@@ -986,3 +986,7 @@ circle {
 .margin-bottom-20 {
     margin-bottom: 20px;
 }
+
+.list-view-pf-additional-info {
+    width: 35% !important;
+}
