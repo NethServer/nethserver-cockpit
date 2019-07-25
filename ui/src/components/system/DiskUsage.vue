@@ -1,20 +1,46 @@
 <template>
   <div v-if="view.isAuth">
     <h2>{{$t('disk_usage.title')}}</h2>
-    <h3>{{$t('actions')}}</h3>
-    <button @click="updateJSONUsage()" class="btn btn-primary btn-lg" type="button">{{$t('disk_usage.update_data')}}</button>
-    <h4>{{$t('disk_usage.update_at')}} <b>{{disk.updatedAt | dateFormat}}</b></h4>
+    <h4 class="right gray">{{$t('disk_usage.update_at')}} <b>{{disk.updatedAt | dateFormat}}</b></h4>
 
-    <h3>{{$t('info')}}</h3>
-    <div id="baseContainer" v-if="view.isLoaded">
-      <a href="" onclick="$.reset();" id="baseBread">/</a>
-    </div>
-    <div id="sequence" v-if="view.isLoaded"></div>
+    <div id="hover-chart">
+      <form class="form-horizontal" v-if="view.isLoaded">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">
+            {{$t('disk_usage.one_file_system')}}
+          </label>
+          <div class="col-sm-5">
+            <input
+              type="checkbox"
+              v-model="oneFileSystem"
+              class="form-control"
+              @click="toggleOneFileSystem()"
+            >
+          </div>
+        </div>
 
-    <div id="explanation" v-if="view.isLoaded">
-      <button @click="copyPath()" class="btn btn-primary copy-path" type="button">{{$t('disk_usage.copy_path')}}</button>
-      <span v-if="view.copied" class="fa fa-check green copy-ok"></span>
-      <p id="sizeFolder"></p>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">
+            
+          </label>
+          <div class="col-sm-5">
+                  <button @click="updateJSONUsage()" class="btn btn-primary" type="button">{{$t('disk_usage.update_data')}}</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="divider padding-right-20 margin-bottom-20"></div>
+
+      <div id="baseContainer" v-if="view.isLoaded">
+        <a href="" onclick="$.reset();" id="baseBread">/</a>
+      </div>
+      <div id="sequence" v-if="view.isLoaded"></div>
+
+      <div id="explanation" v-if="view.isLoaded">
+        <button @click="copyPath()" class="btn btn-primary copy-path" type="button">{{$t('disk_usage.copy_path')}}</button>
+        <span v-if="view.copied" class="fa fa-check green copy-ok"></span>
+        <p id="sizeFolder"></p>
+      </div>
     </div>
 
     <div id="loader" class="spinner"></div>
@@ -66,7 +92,11 @@ export default {
         isLoaded: true,
         isAuth: false,
         copied: false
-      }
+      },
+      ducConfig: null,
+      oneFileSystem: false,
+      currentDir: "/",
+      currentSize: "-"
     };
   },
   methods: {
@@ -187,23 +217,6 @@ export default {
         // Add the mouseleave handler to the bounding circle.
         d3.select("#container").on("mouseleave", mouseleave);
 
-        d3.selectAll("input").on("change", function change() {
-          var value =
-            this.value === "count"
-              ? function() {
-                  return 1;
-                }
-              : function(d) {
-                  return d.size_actual;
-                };
-
-          path
-            .data(partition.value(value).nodes)
-            .transition()
-            .duration(250)
-            .attrTween("d", arcTweenData);
-        });
-
         var sizeFolder = document.getElementById("sizeFolder");
         sizeFolder.innerHTML = context.$options.filters.byteFormat(
           root.size_actual
@@ -215,6 +228,9 @@ export default {
             .transition()
             .duration(250)
             .attrTween("d", arcTweenZoom(d));
+
+          context.currentDir = $("#baseBread").text();
+          context.currentSize = $("#sizeFolder").text();
         }
 
         function gotoBase() {
@@ -255,7 +271,8 @@ export default {
           context.$options.filters.byteFormat(d.size_actual)
         );
 
-        updateBreadcrumbs([]);
+        $("#baseBread").text(context.currentDir);
+        $("#sizeFolder").text(context.currentSize);
       }
 
       function mouseover(d) {
@@ -376,6 +393,8 @@ export default {
         function(success) {
           try {
             success = JSON.parse(success);
+            context.ducConfig = success.configuration;
+            context.oneFileSystem = context.ducConfig.OneFileSystem === 'enabled'
           } catch (e) {
             console.error(e);
           }
@@ -398,7 +417,9 @@ export default {
 
       context.exec(
         ["system-disk-usage/update"],
-        null,
+        {
+          "oneFileSystem": context.oneFileSystem ? 'enabled' : 'disabled'
+        },
         function(stream) {
           console.info("disk-usage", stream);
         },
@@ -418,6 +439,13 @@ export default {
           );
         }
       );
+    },
+    toggleOneFileSystem() {
+      if (this.ducConfig.OneFileSystem === "enabled") {
+        this.ducConfig.OneFileSystem = "disabled"
+      } else {
+        this.ducConfig.OneFileSystem = "enabled"
+      }
     }
   }
 };

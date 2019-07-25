@@ -279,7 +279,8 @@
     "update_at": "Update at",
     "disk_updated_ok": "Disk usage updated successfully!",
     "disk_updated_error": "Disk usage not updated",
-    "copy_path": "Copy path"
+    "copy_path": "Copy path",
+    "one_file_system": "Don't cross filesystem boundaries"
   },
   "storage": {
     "title": "Storage"

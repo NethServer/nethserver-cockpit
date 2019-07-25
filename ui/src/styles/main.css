@@ -343,10 +343,12 @@ circle {
 
 #explanation {
     color: #666;
-    z-index: 10;
-    top: 220px;
-    position: fixed;
-    z-index: 1;
+    /* z-index: 10; */
+    /* top: 252px;
+    position: fixed; */
+    /* z-index: 1; */
+    clear: both;
+    /* margin-top: 40px; */
 }
 
 #totalSize {
@@ -968,4 +970,19 @@ circle {
 
 .panel.panel-default {
     box-shadow: none !important;
+}
+
+#hover-chart {
+    top: 100px;
+    z-index: 1;
+    position: sticky;
+    width: 100%;
+}
+
+.padding-right-20 {
+    padding-right: 20px;
+}
+
+.margin-bottom-20 {
+    margin-bottom: 20px;
 }
