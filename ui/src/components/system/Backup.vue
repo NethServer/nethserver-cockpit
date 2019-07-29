@@ -180,12 +180,13 @@
       <div class="list-group list-view-pf">
         <div
           v-if="backupData.length > 0"
-          class="list-group-item"
+          :class="['list-group-item', b.props.status == 'disabled' ? 'gray' : '']"
           v-for="(b, bk) in filteredBackupList"
           v-bind:key="bk"
         >
           <div class="list-view-pf-actions">
             <button
+              :disabled="b.props.status == 'disabled'"
               @click="b.ready == 1 ? openExecuteData(b) : openEditBackupData(b)"
               class="btn btn-default"
             >
@@ -207,6 +208,14 @@
                   <a @click="openEditBackupData(b)">
                     <span class="fa fa-edit span-right-margin"></span>
                     {{$t('backup.edit_backup')}}
+                  </a>
+                </li>
+                <li>
+                  <a @click="toggleStatus(b)">
+                    <span
+                      :class="['span-right-margin', b.props.status == 'disabled' ? 'fa fa-check' : 'fa fa-lock']"
+                    ></span>
+                    {{b.props.status == 'disabled' ? $t('backup.enable') : $t('backup.disable')}}
                   </a>
                 </li>
                 <li :class="b.status.result == 'unknown' ? 'disabled' : ''">
@@ -234,10 +243,11 @@
             <div class="list-view-pf-body">
               <div class="list-view-pf-description">
                 <div
-                  @click="b.ready == 1 ? openExecuteData(b) : openEditBackupData(b)"
+                  @click="b.props.status == 'enabled' ? b.ready == 1 ? openExecuteData(b) : openEditBackupData(b) : undefined"
                   class="list-group-item-heading"
                 >
-                  <a>{{b.name}}</a>
+                  <a v-if="b.props.status == 'enabled'">{{b.name}}</a>
+                  <span v-if="b.props.status == 'disabled'">{{b.name}}</span>
                 </div>
                 <div class="list-group-item-text">
                   <span>{{b.props.BackupTime | cronToHuman}}</span>
@@ -3138,6 +3148,37 @@ export default {
         }
       );
     },
+    toggleStatus(b) {
+      var context = this;
+
+      var backupObj = b.props;
+      backupObj.name = b.name;
+      backupObj.status = backupObj.status == "enabled" ? "disabled" : "enabled";
+      backupObj.action = "update-backup-data";
+
+      context.exec(
+        ["system-backup/update"],
+        backupObj,
+        function(stream) {
+          console.info("backup-data", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "backup.backup_update_ok"
+          );
+
+          // get hosts
+          context.getBackupInfo();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "backup.backup_update_error"
+          );
+        }
+      );
+    },
     createDataBackup() {
       var context = this;
 
@@ -3296,5 +3337,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.list-view-pf-description {
+  flex: 1 0 65% !important;
+}
 </style>

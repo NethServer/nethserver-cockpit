@@ -29,49 +29,38 @@
       <template slot="table-row" slot-scope="props">
         <td class="fancy">
           <a
-            v-if="(props.row.url || props.row.url.length > 0 ) && !props.row.legacy"
+            v-if="(props.row.url || props.row.url.length > 0 )"
             target="_blank"
-            :href="'/'+props.row.url"
+            :href="props.row.url"
           >
-            <img
-              class="apps-icon"
-              :src="props.row.legacy ? 'assets/legacy.png' : '../'+props.row.id+'/logo.png'"
-            >
+            <img class="apps-icon" :src="'../'+props.row.id+'/'+(props.row.icon || 'logo.png')">
           </a>
-          <span v-if="!props.row.url || props.row.url.length == 0 || props.row.legacy">
-            <img
-              class="apps-icon"
-              :src="props.row.legacy ? 'assets/legacy.png' : '../'+props.row.id+'/logo.png'"
-            >
+          <span v-if="!props.row.url || props.row.url.length == 0">
+            <img class="apps-icon" :src="'../'+props.row.id+'/'+(props.row.icon || 'logo.png')">
           </span>
         </td>
         <td class="fancy">
           <strong>
             <a
-              v-if="(props.row.url || props.row.url.length > 0 ) && !props.row.legacy"
+              v-if="(props.row.url || props.row.url.length > 0 )"
               target="_blank"
               :href="props.row.url"
             >{{props.row.name}}</a>
-            <span
-              v-if="!props.row.url || props.row.url.length == 0 || props.row.legacy"
-            >{{props.row.name}}</span>
+            <span v-if="!props.row.url || props.row.url.length == 0">{{props.row.name}}</span>
           </strong>
         </td>
         <td class="fancy">{{ props.row.description}}</td>
         <td class="fancy">
-          settings
           <strong>{{props.row.release.version | capitalize}}</strong>
         </td>
         <td>
           <a
-            :target="(props.row.legacy || props.row.external) ? '_blank' : ''"
-            :href="(props.row.legacy || props.row.external) ? (props.row.legacy ? legacyUrl : '' )+props.row.url : '#/applications/'+props.row.id"
+            :target="props.row.external ? '_blank' : ''"
+            :href="props.row.external ? (props.row.legacy ? legacyUrl : '' )+props.row.url : '#/applications/'+props.row.id"
             class="btn btn-primary button-minimum"
           >
-            <span
-              :class="['fa', (props.row.legacy || props.row.external) ? 'fa-external-link' : 'fa-cogs']"
-            ></span>
-            {{(props.row.legacy || props.row.external) ? $t('applications.open') : $t('applications.settings')}}
+            <span :class="['fa', props.row.external ? 'fa-external-link' : 'fa-cogs']"></span>
+            {{props.row.external ? $t('applications.open') : $t('applications.settings')}}
           </a>
           <div
             v-if="props.row.editable == 1 && !props.row.legacy"
@@ -161,7 +150,6 @@
 </template>
 
 <script>
-/*global cockpit*/
 export default {
   name: "Applications",
   data() {
@@ -218,7 +206,7 @@ export default {
     var context = this;
     setTimeout(function() {
       context.initGraphics();
-    }, 250);
+    }, 150);
 
     // get list of installed apps
     context.getApps();
@@ -237,10 +225,10 @@ export default {
       $("#app").css("background", "");
       $("#app").css("color", "");
     },
-    getApps() {
+    getApps(silently) {
       var context = this;
 
-      context.view.isLoaded = false;
+      context.view.isLoaded = silently ? true : false;
       context.exec(
         ["system-apps/read"],
         {
@@ -266,7 +254,6 @@ export default {
           }
           context.rows = success;
           context.view.isLoaded = true;
-          context.initGraphics();
         },
         function(error) {
           context.view.isLoaded = true;
@@ -320,7 +307,7 @@ export default {
             "applications.remove_ok"
           );
 
-          context.refresh();
+          context.getApps();
         },
         function(error) {
           // notification
@@ -333,7 +320,6 @@ export default {
     addShortcut(application) {
       var context = this;
 
-      context.view.isLoaded = false;
       context.exec(
         ["system-apps/update"],
         {
@@ -342,6 +328,7 @@ export default {
         },
         null,
         function(success) {
+          context.getApps(true);
           context.refresh();
         },
         function(error) {
@@ -352,7 +339,6 @@ export default {
     removeShortcut(application) {
       var context = this;
 
-      context.view.isLoaded = false;
       context.exec(
         ["system-apps/update"],
         {
@@ -361,6 +347,7 @@ export default {
         },
         null,
         function(success) {
+          context.getApps(true);
           context.refresh();
         },
         function(error) {
@@ -374,7 +361,11 @@ export default {
           bus: "internal"
         })
         .call("/packages", "cockpit.Packages", "Reload", []);
-      this.getApps();
+
+      var context = this;
+      setTimeout(function() {
+        context.initGraphics();
+      }, 2000);
     }
   }
 };

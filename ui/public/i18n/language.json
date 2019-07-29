@@ -172,6 +172,9 @@
     "backup_configured": "Backups configured",
     "choose_file": "Choose file (*.tar.gz)",
     "automatic_backups_keep": "Automatic backups to keep (number)",
+    "enable": "Enable",
+    "disable": "Disable",
+    "format_warning": "All data in the disk will be erased, cannot be undone.",
     "when": "When",
     "where": "Where",
     "how": "How",
@@ -276,7 +279,8 @@
     "update_at": "Update at",
     "disk_updated_ok": "Disk usage updated successfully!",
     "disk_updated_error": "Disk usage not updated",
-    "copy_path": "Copy path"
+    "copy_path": "Copy path",
+    "one_file_system": "Don't cross filesystem boundaries"
   },
   "storage": {
     "title": "Storage"
@@ -885,7 +889,8 @@
     "hostname": "Hostname",
     "hostname_should_not_contain_localhost": "Hostname should not contains localhost",
     "subscription": "Subscription",
-    "support_active": "A remote support session is active"
+    "support_active": "A remote support session is active",
+    "hostname_should_not_contain_localdomain": "The hostname should not contain 'localdomain'"
   },
   "validation": {
     "weak_password": "Password too weak, it could be inside a dictionary or too similar to the previous one",
@@ -980,7 +985,12 @@
     "bond_valid_mode_between_0_and_6": "Bond mode must be a number between 0 and 6",
     "valid_macAddress": "Must be a valid MAC address",
     "invalid_secret": "Invalid secret",
-    "valid_lessThan_90": "Days must be less than 90"
+    "valid_lessThan_90": "Days must be less than 90",
+    "dhcp_reservation_system_validator": "The host must be reacheable and should be part of a local network. Make sure also there is no other reservation for the same MAC address",
+    "valid_hostname_simple_0_0": "Must be a simple hostname like 'myhost'",
+    "dcipaddr_validation_error": "The IP address must be not in use and it must belong to an existing green network. Also, the green interface must be configured with a static IP address.",
+    "workgroup_simple_hostname_max_15": "Must be a simple hostname like 'WORKGROUP'. Maximum length is 15 characters.",
+    "dcrealm_validation_error": "Must be different from machine host name."
   },
   "docs": {
     "more_info_about": "More info about",

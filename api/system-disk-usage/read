@@ -23,5 +23,7 @@
 DB="/var/cache/duc/duc.json"
 date=$(stat -c %Y $DB)
 duc=$(cat $DB)
+duc_json=$(/sbin/e-smith/config getjson duc)
+duc_config=$(echo $duc_json | jq -r ".props")
 
-printf '{"status":{"date":%s,"data":%s},"configuration":""}' "$date" "$duc"
+printf '{"status":{"date":%s,"data":%s},"configuration":%s}' "$date" "$duc" "$duc_config"

@@ -422,12 +422,7 @@
                   >{{newUser.errorProps['newPassword']}}</span>
                 </div>
                 <div class="col-sm-2 adjust-index">
-                  <button
-                    tabindex="-1"
-                    @click="togglePass()"
-                    type="button"
-                    class="btn btn-primary"
-                  >
+                  <button tabindex="-1" @click="togglePass()" type="button" class="btn btn-primary">
                     <span :class="[!newUser.togglePass ? 'fa fa-eye' : 'fa fa-eye-slash']"></span>
                   </button>
                 </div>
@@ -1247,7 +1242,9 @@
                     <h3 class="wizard-pf-contents-title">{{$t('users_groups.became_dc')}}</h3>
                     <form id="local-ad" class="form-horizontal">
                       <div class="modal-body">
-                        <div class="form-group">
+                        <div
+                          :class="['form-group', newProvider.errors.Realm.hasError ? 'has-error' : '']"
+                        >
                           <label
                             class="col-sm-3 control-label"
                             for="textInput-modal-markup"
@@ -1259,9 +1256,15 @@
                               v-model="newProvider.Realm"
                               class="form-control"
                             >
+                            <span v-if="newProvider.errors.Realm.hasError" class="help-block">
+                              {{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+newProvider.errors.Realm.message)}}
+                            </span>
                           </div>
                         </div>
-                        <div class="form-group">
+                        <div
+                          :class="['form-group', newProvider.errors.Workgroup.hasError ? 'has-error' : '']"
+                        >
                           <label
                             class="col-sm-3 control-label"
                             for="textInput-modal-markup"
@@ -1273,6 +1276,10 @@
                               v-model="newProvider.Workgroup"
                               class="form-control"
                             >
+                            <span v-if="newProvider.errors.Workgroup.hasError" class="help-block">
+                              {{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+newProvider.errors.Workgroup.message)}}
+                            </span>
                           </div>
                         </div>
                         <div class="alert alert-warning alert-dismissable">
@@ -1283,7 +1290,9 @@
                             <li>{{$t('users_groups.ip_warning_message_3')}}</li>
                           </ul>
                         </div>
-                        <div class="form-group">
+                        <div
+                          :class="['form-group', newProvider.errors.IpAddress.hasError ? 'has-error' : '']"
+                        >
                           <label
                             class="col-sm-3 control-label"
                             for="textInput-modal-markup"
@@ -1295,6 +1304,10 @@
                               v-model="newProvider.IpAddress"
                               class="form-control"
                             >
+                            <span v-if="newProvider.errors.IpAddress.hasError" class="help-block">
+                              {{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+newProvider.errors.IpAddress.message)}}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -1571,11 +1584,29 @@ export default {
       newUser: this.initUser(),
       newGroup: this.initGroup(),
       toDelete: {},
-      newProvider: {},
+      newProvider: {
+        errors: this.initProvidersErrors()
+      },
       currentStep: 1
     };
   },
   methods: {
+    initProvidersErrors() {
+      return {
+        IpAddress: {
+          hasError: false,
+          message: ""
+        },
+        Workgroup: {
+          hasError: false,
+          message: ""
+        },
+        Realm: {
+          hasError: false,
+          message: ""
+        }
+      };
+    },
     toggleDetails() {
       this.view.opened = !this.view.opened;
     },
@@ -1590,12 +1621,16 @@ export default {
     selectProvider(provider) {
       this.users.chooseProvider = provider;
       this.users.chooseBind = null;
-      this.newProvider = {};
+      this.newProvider = {
+        errors: this.initProvidersErrors()
+      };
     },
 
     selectBind(bind) {
       this.users.chooseBind = bind;
-      this.newProvider = {};
+      this.newProvider = {
+        errors: this.initProvidersErrors()
+      };
       this.getAdDefault();
     },
 
@@ -2707,7 +2742,7 @@ export default {
             "users_groups.provider_uninstalled_ok"
           );
 
-          context.newProvider = {};
+          context.newProvider = { errors: context.initProvidersErrors() };
           context.currentStep = 1;
           context.newUser = context.initUser();
           context.newGroup = context.initGroup();
@@ -2988,34 +3023,68 @@ export default {
 
       var adObj = newProvider;
       adObj.action = "local-ad";
-      context.newProvider.isLoading = true;
+
+      // validate
+      context.newProvider.isChecking = true;
+      context.newProvider.errors.Workgroup.hasError = false;
+      context.newProvider.errors.Realm.hasError = false;
+      context.newProvider.errors.IpAddress.hasError = false;
       context.$forceUpdate();
 
-      $("#accountProviderWizard").modal("hide");
-
-      // update values
       context.exec(
-        ["system-accounts-provider/update"],
+        ["system-accounts-provider/validate"],
         adObj,
-        function(stream) {
-          console.info("accounts-provider", stream);
-        },
+        null,
         function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "users_groups.local_ad_installed_ok"
+          $("#accountProviderWizard").modal("hide");
+          context.newProvider.isLoading = true;
+          context.newProvider.isChecking = false;
+          context.$forceUpdate();
+
+          // update values
+          context.exec(
+            ["system-accounts-provider/update"],
+            adObj,
+            function(stream) {
+              console.info("accounts-provider", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "users_groups.local_ad_installed_ok"
+              );
+
+              context.$parent.checkSystemTasks();
+
+              // get provider info
+              context.getInfo();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "users_groups.local_ad_installed_error"
+              );
+            }
           );
-
-          context.$parent.checkSystemTasks();
-
-          // get provider info
-          context.getInfo();
         },
         function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "users_groups.local_ad_installed_error"
-          );
+          var errorData = {};
+          context.newProvider.isChecking = false;
+          context.newProvider.errors.Workgroup.hasError = false;
+          context.newProvider.errors.Realm.hasError = false;
+          context.newProvider.errors.IpAddress.hasError = false;
+
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.newProvider.errors[attr.parameter].hasError = true;
+              context.newProvider.errors[attr.parameter].message = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
+          }
+          context.$forceUpdate();
         }
       );
     },

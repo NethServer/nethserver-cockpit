@@ -78,7 +78,12 @@ case $action in
         ;;
 
     "run-backup-config")
-        /usr/libexec/nethserver/backup-config-history push -t snapshot -d "$(_get name)"
+        /sbin/e-smith/backup-config -f
+        if [ $? -gt 0 ]; then
+            error
+        else
+            /usr/libexec/nethserver/backup-config-history push -t snapshot -d "$(_get name)"
+        fi
         ;;
 
     "download-backup-config")

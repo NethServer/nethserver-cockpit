@@ -91,7 +91,7 @@
           </div>
         </div>
         <div id="providerDetails" class="list-group list-view-pf wizard-pf-contents-title collapse">
-          <div class="list-group-item" v-for="u in updates.nethserver" v-bind:key="u">
+          <div class="list-group-item" v-for="(u,uk) in updates.nethserver" v-bind:key="uk">
             <div class="list-group-item-header">
               <div class="list-view-pf-actions compact-list-actions">
                 <button
@@ -147,7 +147,7 @@
               :class="['list-group-item-container container-fluid', u.isOpen ? 'active' : 'hidden']"
             >
               <div class="row">
-                <div v-for="l in u.updates" v-bind:key="l" class="col-xs-12">
+                <div v-for="(l,lk) in u.updates" v-bind:key="lk" class="col-xs-12">
                   <div class="list-view-pf-additional-info-item">
                     <h4 class="col-xs-4 text-align-right">{{l.name}}</h4>
                     <div class="version-details col-xs-8 text-align-left">
@@ -210,7 +210,7 @@
         </div>
       </form>
       <div v-if="view.appsLoaded" class="row row-cards-pf adjust-top">
-        <div v-for="c in categories" v-bind:key="c" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+        <div v-for="(c,ck) in categories" v-bind:key="ck" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
           <div
             @click="selectCategory(c)"
             :class="['card-pf card-pf-accented selectable-cat', c.selected ? 'selected' : '']"

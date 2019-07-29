@@ -1,5 +1,9 @@
+#
+# 60cockpit
+#
+?COMMENT cockpit
 {
-    my $port = ${'cockpit.socket'}{'TCPPort'} || '9090';
+    my $port = '9090';
     my $access = ${'cockpit.socket'}{'access'} || 'green';
     my $limit = ${'cockpit.socket'}{'LimitAccess'} || '';
 

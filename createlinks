@@ -28,6 +28,7 @@ use esmith::Build::CreateLinks  qw(:all);
 
 event_actions('nethserver-cockpit-update', qw(
       initialize-default-databases   00
+      nethserver-cockpit-conf        20
       nethserver-cockpit_update_admins_group 10
 ));
 
@@ -41,10 +42,6 @@ event_templates('nethserver-cockpit-update', qw(
     /etc/shells
 ));
 
-event_services('nethserver-cockpit-update', qw(
-    cockpit restart
-));
-
 #
 # certificate-update event
 #
@@ -53,8 +50,8 @@ event_templates('certificate-update', qw(
     /etc/cockpit/ws-certs.d/99-nethserver.cert
 ));
 
-event_services('certificate-update', qw(
-    cockpit restart
+event_actions('certificate-update', qw(
+      nethserver-cockpit-conf        20
 ));
 
 #

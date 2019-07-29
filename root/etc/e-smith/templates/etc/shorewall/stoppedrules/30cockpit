@@ -1,1 +1,5 @@
-ACCEPT  -  $FW  tcp  {${'cockpit.socket'}{'TCPPort'}}
+#
+# 30cockpit
+#
+
+ACCEPT  -  $FW  tcp  9090
