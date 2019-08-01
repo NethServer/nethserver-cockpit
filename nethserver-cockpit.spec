@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.10.0
+Version: 0.11.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -60,6 +60,10 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Thu Aug 01 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.11.0-1
+- Disk usage configuration: don't cross filesystem boundaries - NethServer/dev#5795
+- ui. fixed overflow in button
+
 * Tue Jul 23 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.10.0-1
 - Refactor cockpit firewall access (#108)
 - Support enable/disable backup data
