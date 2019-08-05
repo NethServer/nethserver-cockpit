@@ -89,6 +89,7 @@ nav:
       - api/nethserver-squid/rules.md
     - IPS helpers:
       - api/nethserver-suricata/configuration.md
+      - api/nethserver-suricata/bypass.md
       - api/nethserver-suricata/dashboard.md
     - UPS helpers:
       - api/nethserver-nut/dashboard.md
