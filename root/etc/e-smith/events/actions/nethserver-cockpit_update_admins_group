@@ -20,7 +20,6 @@
 ## along with NethServer.  If not, see COPYING.
 ##
 #
-require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
 require "/usr/libexec/nethserver/api/lib/auth_functions.pl";
 
 use warnings;

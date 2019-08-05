@@ -84,7 +84,7 @@ event_templates('runlevel-adjust', qw(
 ));
 
 event_actions('delegation-save', qw(
-      nethserver-cokcpit_Update_admins_group 10
+      nethserver-cockpit_update_admins_group 10
 ));
 #
 # Test events for development
