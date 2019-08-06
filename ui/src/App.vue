@@ -194,7 +194,7 @@
           <a href="#/settings">
             <span class="fa fa-gear"></span>
             <span class="list-group-item-value">{{$t('menu.settings')}}</span>
-            <span v-if="hints.settings.count > 0" class="badge badge-small">{{hints.settings.count}}</span>
+            <span v-if="hints.settings.count > 0 && status.isAdmin" class="badge badge-small">{{hints.settings.count}}</span>
           </a>
         </li>
 
@@ -439,6 +439,7 @@ export default {
             console.error(e);
           }
           context.auths = success.system || [];
+          context.status = success.status || {"isAdmin":0};
         },
         function(error) {
           console.error(error);
