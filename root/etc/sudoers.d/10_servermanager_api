@@ -15,7 +15,16 @@ Cmnd_Alias NSAPI_PUBLIC = \
     /usr/libexec/nethserver/api/system-settings/read, \
     /usr/libexec/nethserver/api/system-apps/read, \
     /usr/libexec/nethserver/api/system-docs/read, \
-    /sbin/e-smith/validate
+    /sbin/e-smith/validate, \
+    /usr/libexec/nethserver/api/system-backup/hints, \
+    /usr/libexec/nethserver/api/system-company/hints, \
+    /usr/libexec/nethserver/api/system-dns/hints, \
+    /usr/libexec/nethserver/api/system-hostname/hints, \
+    /usr/libexec/nethserver/api/system-openssh/hints, \
+    /usr/libexec/nethserver/api/system-services/hints, \
+    /usr/libexec/nethserver/api/system-settings/hints, \
+    /usr/libexec/nethserver/api/system-subscription/hints, \
+     /usr/libexec/nethserver/api/system-tls-policy/hints
 
 Cmnd_Alias NSAPI_SYSTEM_DISK_USAGE = \
     /usr/libexec/nethserver/api/system-disk-usage/read, \
