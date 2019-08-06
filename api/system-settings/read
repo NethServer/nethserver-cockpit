@@ -34,28 +34,28 @@ use JSON;
 use esmith::ConfigDB;
 my %ret;
 
-my $groupAdmins = get_adminGroup();
-my $is_root = ($< == 0);
 my $input = readInput();
 my $cmd = $input->{'action'};
 
 if($cmd eq 'hints') {
     my %r;
-    if (( grep /^$groupAdmins$/, get_groups()) or ($is_root)) {
-        my $db = esmith::ConfigDB->open("configuration");
-        $r{'hints'} = $db->get_prop('cockpit.socket', 'ShowHints');
-    } else {
-        $r{'hints'} = 'disabled';
-    }
+    my $db = esmith::ConfigDB->open("configuration");
+    $r{'hints'} = $db->get_prop('cockpit.socket', 'ShowHints') || 'disabled';
     print encode_json(\%r);
     exit(0);
 
 } elsif ($cmd eq 'settings') {
 
-    $ret{'status'}{'canChangePassword'} = 1;
+    my $nsdc = system("/usr/bin/systemctl status nsdc &>/dev/null");
+    my $ldap = system("/usr/bin/systemctl status slapd &>/dev/null");
+    if ($nsdc > 0 && $ldap > 0) { # sssd is configured for remote account provider
+        $ret{'status'}{'canChangePassword'} = 0; 
+        $ret{'configuration'} = undef;
+        print encode_json(\%ret);
+        exit(0);
+    } else {
 
-    if (( grep /^$groupAdmins$/, get_groups()) || ($is_root)) {
-
+        $ret{'status'}{'canChangePassword'} = 1;
         my $db = esmith::ConfigDB->open("configuration");
         my $postfix = $db->get('postfix');
         my %smarthost = (
@@ -103,17 +103,6 @@ if($cmd eq 'hints') {
         $ret{'configuration'}{'logrotate'} = \%logrotate;
 
         print encode_json(\%ret);
-    } else {
-
-        my $nsdc = system("/usr/bin/systemctl status nsdc &>/dev/null");
-        my $ldap = system("/usr/bin/systemctl status slapd &>/dev/null");
-        if ($nsdc > 0 && $ldap > 0) { # sssd is configured for remote account provider
-            $ret{'status'}{'canChangePassword'} = 0; 
-        }
-
-        $ret{'configuration'} = undef;
-        print encode_json(\%ret);
-        exit(0);
     }
 } else {
     error();
