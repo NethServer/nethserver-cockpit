@@ -1,48 +1,38 @@
 {
-    use File::Find;
     use esmith::ConfigDB;
+    require '/usr/libexec/nethserver/api/lib/auth_functions.pl';
     my $db = esmith::ConfigDB->open_ro();
     my $groupAdmins = $db->get_prop('admins','group') || 'domain admins';
 
     (my $groupAdminsAlias = uc $groupAdmins) =~ s/ //;
     (my $groupAdminsSudo = $groupAdmins) =~ s/ /\\ /;
 
+
+    my @commands = ();
+    my @apps = list_applications();
+    foreach (@apps) {
+        $_ =~ s/-/_/g;
+        $_ = 'APP_'. uc $_;
+        push @commands, $_;
+    }
+    
+    my @system_routes = list_system_routes();
+    foreach (@system_routes) {
+        $_ =~ s/-/_/g;
+        $_ = 'NSAPI_SYSTEM_'. uc $_;
+        push @commands, $_;
+    }
+
     $OUT .= qq (
 #
 # default group administrator $groupAdmins
 #
-
-%$groupAdminsSudo ALL=NOPASSWD: NSAPI_SUPER_ADMINISTRATOR
-# server-manager does not require a tty
-Defaults:%$groupAdminsSudo !requiretty
 );
 
-    # here we list all API and enable it for administrators
-    my @files;
-    my @dirpath=qw(/usr/libexec/nethserver/api);
-    
-    find(sub {
-            push @files,$File::Find::name if (-d $File::Find::name );
-          }, @dirpath);
-
-    my @CmndAlias;
-    foreach ((@files)) {
-        foreach ( glob($_.'/*')) {
-            push @CmndAlias, $_ if (-f $_);
-        }
+    $OUT .= "\n%$groupAdminsSudo ALL=NOPASSWD: ". join (', ', @commands);
+    $OUT .= "\n\n# server-manager does not require a tty";
+    foreach (@commands) {
+        $OUT .= "\nDefaults!".$_." !requiretty";
     }
-
-    $OUT .= "\n".'Cmnd_Alias NSAPI_SUPER_ADMINISTRATOR = \\';
-    
-    # we start the counter, sudoers file must not be ended with a ', \'
-    my $count = 1;
-    
-    foreach (@CmndAlias) {
-        my $countarray = scalar @CmndAlias;
-        $OUT.= "\n    ";
-        $OUT.= $_.', \\' if ($count < $countarray);
-        $OUT.= $_."\n" if ($count == $countarray);
-        $count++;
-    }
-
+    $OUT .= "\n";
 }
