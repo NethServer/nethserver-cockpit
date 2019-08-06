@@ -640,7 +640,8 @@
     "int_model": "Model",
     "int_speed": "Speed",
     "int_driver": "Driver",
-    "int_mac": "MAC"
+    "int_mac": "MAC",
+    "no_additional_info_available": "No additional info available"
   },
   "ssh": {
     "title": "SSH",

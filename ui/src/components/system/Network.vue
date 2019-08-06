@@ -152,6 +152,12 @@
                           {{i.name}}
                           <span v-if="i.nslabel">({{i.nslabel}})</span>
                         </span>
+                        <div 
+                          class="gray" 
+                          v-if="interfaceStatus[i.name] && interfaceStatus[i.name].mac"
+                        >
+                          {{ interfaceStatus[i.name] && interfaceStatus[i.name].mac }}
+                        </div>
                       </div>
                       <div class="list-group-item-text details-ip">
                         <span class="pficon pficon-screen starred-marging"></span>
@@ -1036,7 +1042,9 @@
                       <!-- -->
                       <!-- VLAN -->
                       <div v-if="wizard.type.choice == 'vlan'">
-                        <div class="form-group">
+                        <div 
+                          :class="['form-group', wizard.review.errors.tag.hasError ? 'has-error' : '']"
+                        >
                           <label
                             class="col-sm-3 control-label"
                             for="textInput-modal-markup"
@@ -1050,6 +1058,10 @@
                               type="number"
                               min="1"
                             >
+                            <span v-if="wizard.review.errors.tag.hasError" class="help-block">
+                              {{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+wizard.review.errors.tag.message)}}
+                            </span>
                           </div>
                         </div>
                         <div class="form-group">
@@ -1699,7 +1711,13 @@ export default {
       routes: {},
       routingInfo: null,
       hints: {},
-      alreadyPPPOE: 0
+      alreadyPPPOE: 0,
+      logicInterfaceErrorsStepMap: {
+        tag: 2,
+        ipaddr: 3,
+        netmask: 3,
+        gateway: 3
+      }
     };
   },
   methods: {
@@ -1805,6 +1823,10 @@ export default {
               message: ""
             },
             gateway: {
+              hasError: false,
+              message: ""
+            },
+            tag: {
               hasError: false,
               message: ""
             }
@@ -2456,29 +2478,33 @@ export default {
             } catch (e) {
               console.error(e);
             }
-            popover.options.content =
+            popover.options.content = '';
+            var isRed = context.interfaces.red.find(iface => iface.name === int.name);
+
+            if (isRed) {
+              popover.options.content +=
               '<b class="col-sm-6">' +
               context.$i18n.t("network.public_ip") +
               '</b><span class="col-sm-6">' +
               (success.ip || "-") +
               "</span>";
-            popover.options.content +=
-              '<b class="col-sm-6">' +
-              context.$i18n.t("network.reverse_lookup") +
-              '</b><span class="col-sm-6">' +
-              (success.hostname || "-") +
-              "</span>";
-            popover.options.content +=
-              '<b class="col-sm-6 advanced">' +
-              context.$i18n.t("network.country") +
-              '</b><span class="col-sm-6 advanced">' +
-              (success.country_iso || "-") +
-              "</span>";
-
-            if (int.virtual == 0) {
+              popover.options.content +=
+                '<b class="col-sm-6">' +
+                context.$i18n.t("network.reverse_lookup") +
+                '</b><span class="col-sm-6">' +
+                (success.hostname || "-") +
+                "</span>";
+              popover.options.content +=
+                '<b class="col-sm-6 advanced">' +
+                context.$i18n.t("network.country") +
+                '</b><span class="col-sm-6 advanced">' +
+                (success.country_iso || "-") +
+                "</span>";
               popover.options.content +=
                 '<div class="divider col-sm-12"></div>';
+            }
 
+            if (int.virtual == 0) {
               popover.options.content +=
                 '<b class="col-sm-6 stats-text">' +
                 context.$i18n.t("network.int_model") +
@@ -2497,13 +2523,12 @@ export default {
                 '</b><span class="col-sm-6">' +
                 context.interfaceStatus[int.name].driver +
                 "</span>";
-              popover.options.content +=
-                '<b class="col-sm-6">' +
-                context.$i18n.t("network.int_mac") +
-                '</b><span class="col-sm-6">' +
-                context.interfaceStatus[int.name].mac +
-                "</span>";
             }
+
+            if (popover.options.content === '') {
+              popover.options.content = context.$i18n.t("network.no_additional_info_available");
+            }
+
             int.moreInfoOpened = true;
             popover.show();
           },
@@ -2756,8 +2781,13 @@ export default {
             errorData = JSON.parse(data);
             for (var e in errorData.attributes) {
               var attr = errorData.attributes[e];
+
+              console.log("attr", attr, "attr.parameter", attr.parameter) // todo del
+
               context.wizard.review.errors[attr.parameter].hasError = true;
               context.wizard.review.errors[attr.parameter].message = attr.error;
+              var step = context.logicInterfaceErrorsStepMap[attr.parameter];
+              context.wizard.currentStep = step;
             }
           } catch (e) {
             console.error(e);

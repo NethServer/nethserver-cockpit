@@ -166,8 +166,7 @@ if ($action == 'create-alias') {
     }
     $v->declareParameter('tag', Validate::POSITIVE_INTEGER);
     foreach ($db->getAll() as $i => $props) {
-        $tmp = explode(".", $i);
-        if (isset($tmp[1]) && $tmp[1] == $data['tag']) {
+        if ($i == $data['parent'].".".$data['tag']) {
             $v->addValidationError('tag', 'vlan_tag_already_used');
         }
     }
