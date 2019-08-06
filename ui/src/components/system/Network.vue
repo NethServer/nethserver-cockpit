@@ -1182,7 +1182,9 @@
                           </span>
                         </div>
                       </div>
-                      <div class="form-group">
+                      <div 
+                        :class="['form-group', wizard.review.errors.nslabel.hasError ? 'has-error' : '']"
+                      >
                         <label class="col-sm-3 control-label" for="textInput-modal-markup">
                           {{$t('network.label')}}
                           <span class="optional-label">({{$t('optional')}})</span>
@@ -1194,6 +1196,10 @@
                             class="form-control"
                             type="text"
                           >
+                          <span v-if="wizard.review.errors.nslabel.hasError" class="help-block">
+                            {{$t('validation.validation_failed')}}:
+                            {{$t('validation.'+wizard.review.errors.nslabel.message)}}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -1484,7 +1490,9 @@
                             </span>
                           </div>
                         </div>
-                        <div class="form-group">
+                        <div 
+                          :class="['form-group', wizard.review.errors.nslabel.hasError ? 'has-error' : '']"
+                        >
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">
                             {{$t('network.label')}}
                             <span class="optional-label">({{$t('optional')}})</span>
@@ -1496,6 +1504,10 @@
                               class="form-control"
                               type="text"
                             >
+                            <span v-if="wizard.review.errors.nslabel.hasError" class="help-block">
+                              {{$t('validation.validation_failed')}}:
+                              {{$t('validation.'+wizard.review.errors.nslabel.message)}}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -1711,13 +1723,7 @@ export default {
       routes: {},
       routingInfo: null,
       hints: {},
-      alreadyPPPOE: 0,
-      logicInterfaceErrorsStepMap: {
-        tag: 2,
-        ipaddr: 3,
-        netmask: 3,
-        gateway: 3
-      }
+      alreadyPPPOE: 0
     };
   },
   methods: {
@@ -1829,6 +1835,10 @@ export default {
             tag: {
               hasError: false,
               message: ""
+            },
+            nslabel: {
+              hasError: false,
+              message: ""
             }
           }
         }
@@ -1877,6 +1887,10 @@ export default {
               message: ""
             },
             password: {
+              hasError: false,
+              message: ""
+            },
+            nslabel: {
               hasError: false,
               message: ""
             }
@@ -2369,6 +2383,10 @@ export default {
           netmask: {
             hasError: false,
             message: ""
+          },
+          nslabel: {
+            hasError: false,
+            message: ""
           }
         },
         isLoading: false
@@ -2781,13 +2799,12 @@ export default {
             errorData = JSON.parse(data);
             for (var e in errorData.attributes) {
               var attr = errorData.attributes[e];
-
-              console.log("attr", attr, "attr.parameter", attr.parameter) // todo del
-
               context.wizard.review.errors[attr.parameter].hasError = true;
               context.wizard.review.errors[attr.parameter].message = attr.error;
-              var step = context.logicInterfaceErrorsStepMap[attr.parameter];
-              context.wizard.currentStep = step;
+
+              if (attr.parameter === 'tag') {
+                context.wizard.currentStep = 2;
+              }
             }
           } catch (e) {
             console.error(e);

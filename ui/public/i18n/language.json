@@ -982,7 +982,7 @@
     "interface_already_in_use": "One ore more selected interface are already in use",
     "one_green_interface_must_always_exists": "The system must have at least one green interface",
     "invalid_vlan_parent": "Invalid parent for a VLAN",
-    "vlan_tag_already_used": "This tag is already used by another VLAN",
+    "vlan_tag_already_used": "This tag is already used by another VLAN on the same interface",
     "bond_valid_mode_between_0_and_6": "Bond mode must be a number between 0 and 6",
     "valid_macAddress": "Must be a valid MAC address",
     "invalid_secret": "Invalid secret",
@@ -991,7 +991,8 @@
     "valid_hostname_simple_0_0": "Must be a simple hostname like 'myhost'",
     "dcipaddr_validation_error": "The IP address must be not in use and it must belong to an existing green network. Also, the green interface must be configured with a static IP address.",
     "workgroup_simple_hostname_max_15": "Must be a simple hostname like 'WORKGROUP'. Maximum length is 15 characters.",
-    "dcrealm_validation_error": "Must be different from machine host name."
+    "dcrealm_validation_error": "Must be different from machine host name.",
+    "invalid_nslabel": "Label must not contain spaces and must be up to 20 characters long"
   },
   "docs": {
     "more_info_about": "More info about",
