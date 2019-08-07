@@ -14,7 +14,7 @@
             <span class="fa fa-cube"></span>
             <span class="list-group-item-value">{{$t('menu.dashboard')}}</span>
             <span
-              v-if="hints.hostname.count > 0 || hints.upstreamDns.count > 0 || hints.company.count > 0"
+              v-if="(hints.hostname.count > 0 || hints.upstreamDns.count > 0 || hints.company.count > 0) && status.isAdmin"
               class="badge"
             >{{hints.hostname.count+hints.upstreamDns.count+hints.company.count}}</span>
           </a>
