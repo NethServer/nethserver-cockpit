@@ -26,12 +26,12 @@
     );
 
     my @Keys = split(',', $db->get_prop('cockpit.socket','delegation') || '');
-    my @applications = ();
 
     foreach (@Keys) {
 
         my @roles = ();
         my @commands =();
+        my @applications = ();
 
         my @props = split(':',$_);
         if ($props[1]) { # find if we have at least one delegation
@@ -48,12 +48,10 @@
             $OUT .= "\n#\n# Role delegations for $group\n#";
 
             foreach my $role (@roles) {
-
                 if (! exists $controllers{$role}){
                     if ($role =~ /^nethserver-/) {
-                        push @applications, $role;
                         $role =~ s/-/_/g;
-                        push @commands, uc "APP_$role";
+                        push @applications, uc "APP_$role";
                     }
                 } else {
                     foreach my $api (@{$controllers{$role}}) {
@@ -62,8 +60,12 @@
                 }
             }
 
+            # if at least one application delegation, push sudo power
+            push @applications, 'NSAPI_SYSTEM_APPS' if (scalar @applications > 0);
+
+            @commands = (@commands,@applications);
             $OUT .= "\n\n%".$group." ALL=NOPASSWD: ". join (', ',@commands);;
-            $OUT .= "\n# server-manager does not require a tty";
+            $OUT .= "\n";
         }
     }
 }

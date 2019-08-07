@@ -8,7 +8,7 @@
     (my $groupAdminsSudo = $groupAdmins) =~ s/ /\\ /;
 
 
-    my @commands = ();
+    my @commands = ('NSAPI_SYSTEM_APPS');
     my @apps = list_applications();
     foreach (@apps) {
         $_ =~ s/-/_/g;
