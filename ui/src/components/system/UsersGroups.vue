@@ -11,7 +11,7 @@
 
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
 
-    <div v-if="view.isLoaded && users.provider !== null">
+    <div v-if="view.isLoaded && users.provider !== null && view.isRoot">
       <h3>{{$t('users_groups.account_provider')}}</h3>
       <div class="panel panel-default" id="provider-markup">
         <div class="panel-heading">
@@ -62,7 +62,7 @@
       <div class="divider"></div>
     </div>
 
-    <div v-if="view.isLoaded">
+    <div v-if="view.isLoaded && view.isRoot">
       <h3>{{$t('users_groups.password_policy')}}</h3>
       <div class="panel panel-default" id="provider-markup">
         <div class="panel-heading">
