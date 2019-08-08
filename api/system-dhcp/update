@@ -53,8 +53,6 @@ case $action in
             DhcpLeaseTime "$(_get DhcpLeaseTime)" DhcpDomain "$(_get DhcpDomain)" DhcpDNS "$(_get_array DhcpDNS)" DhcpWINS "$(_get_array DhcpWINS)" DhcpNTP "$(_get_array DhcpNTP)" DhcpTFTP "$(_get_array DhcpTFTP)"
         if [ $? -gt 0 ]; then
             error "EventFailed" "See /var/log/messages"
-        else
-            success
         fi
         /sbin/e-smith/signal-event -j nethserver-dnsmasq-save
         ;;
