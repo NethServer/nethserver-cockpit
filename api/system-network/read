@@ -145,10 +145,15 @@ if($cmd eq 'list') {
                  $status{$n->key}{$k} = $i->{$k}
             }
         } else {
-            # retrieve info for virtual interfaces
+            # retrieve carrier for virtual interfaces
             my $carrier_file = "/sys/class/net/".$n->key."/carrier";
             if (-f $carrier_file) {
                 $status{$n->key}{'link'} = cat($carrier_file);
+            }
+            # retrieve mac address for virtual interfaces
+            my $mac_file = "/sys/class/net/".$n->key."/address";
+            if (-f $mac_file) {
+                $status{$n->key}{'mac'} = cat($mac_file);
             }
         }
 
