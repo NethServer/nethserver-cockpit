@@ -6,5 +6,3 @@
 %locals ALL=NOPASSWD: NSAPI_PUBLIC
 %domain\ users ALL=NOPASSWD: NSAPI_PUBLIC
 
-# server-manager does not require a tty
-Defaults!NSAPI_PUBLIC !requiretty

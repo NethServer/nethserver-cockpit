@@ -26,17 +26,29 @@ Cmnd_Alias NSAPI_PUBLIC = \
     /usr/libexec/nethserver/api/system-subscription/hints, \
     /usr/libexec/nethserver/api/system-tls-policy/hints
 
+# server-manager does not require a tty
+Defaults!NSAPI_PUBLIC !requiretty
+
 Cmnd_Alias NSAPI_SYSTEM_APPS = \
     /usr/libexec/nethserver/api/system-apps/update
+
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_APPS !requiretty
 
 Cmnd_Alias NSAPI_SYSTEM_DISK_USAGE = \
     /usr/libexec/nethserver/api/system-disk-usage/read, \
     /usr/libexec/nethserver/api/system-disk-usage/update
-    
+
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_DISK_USAGE !requiretty
+
 Cmnd_Alias NSAPI_SYSTEM_CERTIFICATES = \
     /usr/libexec/nethserver/api/system-certificate/read, \
     /usr/libexec/nethserver/api/system-certificate/update, \
     /usr/libexec/nethserver/api/system-certificate/validate
+
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_CERTIFICATES !requiretty
 
 Cmnd_Alias NSAPI_SYSTEM_DNS = \
     /usr/libexec/nethserver/api/system-hosts/create, \
@@ -48,12 +60,18 @@ Cmnd_Alias NSAPI_SYSTEM_DNS = \
     /usr/libexec/nethserver/api/system-dns/update, \
     /usr/libexec/nethserver/api/system-dns/validate
 
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_DNS !requiretty
+
 Cmnd_Alias NSAPI_SYSTEM_DHCP = \
     /usr/libexec/nethserver/api/system-dhcp/create, \
     /usr/libexec/nethserver/api/system-dhcp/delete, \
     /usr/libexec/nethserver/api/system-dhcp/read, \
     /usr/libexec/nethserver/api/system-dhcp/update, \
     /usr/libexec/nethserver/api/system-dhcp/validate
+
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_DHCP !requiretty
 
 Cmnd_Alias NSAPI_SYSTEM_BACKUP = \
     /usr/libexec/nethserver/api/system-backup/check-b2, \
@@ -73,9 +91,15 @@ Cmnd_Alias NSAPI_SYSTEM_BACKUP = \
     /usr/libexec/nethserver/api/system-backup/update, \
     /usr/libexec/nethserver/api/system-backup/validate
 
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_BACKUP !requiretty
+
 Cmnd_Alias NSAPI_SYSTEM_SERVICES = \
     /usr/libexec/nethserver/api/system-services/read, \
     /usr/libexec/nethserver/api/system-services/update
+
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_SERVICES !requiretty
 
 Cmnd_Alias NSAPI_SYSTEM_USERS_GROUPS = \
     /usr/libexec/nethserver/api/system-password-policy/read, \
@@ -91,6 +115,9 @@ Cmnd_Alias NSAPI_SYSTEM_USERS_GROUPS = \
     /usr/libexec/nethserver/api/system-users/read, \
     /usr/libexec/nethserver/api/system-users/update, \
     /usr/libexec/nethserver/api/system-users/validate
+
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_USERS_GROUPS !requiretty
 
 Cmnd_Alias NSAPI_SYSTEM_NETWORK = \
     /usr/libexec/nethserver/api/system-routes/create, \
@@ -108,15 +135,24 @@ Cmnd_Alias NSAPI_SYSTEM_NETWORK = \
     /usr/libexec/nethserver/api/system-network/update, \
     /usr/libexec/nethserver/api/system-network/validate
 
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_NETWORK !requiretty
+
 Cmnd_Alias NSAPI_SYSTEM_SSH = \
     /usr/libexec/nethserver/api/system-openssh/read, \
     /usr/libexec/nethserver/api/system-openssh/update, \
     /usr/libexec/nethserver/api/system-openssh/validate
 
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_SSH !requiretty
+
 Cmnd_Alias NSAPI_SYSTEM_TLS_POLICY = \
     /usr/libexec/nethserver/api/system-tls-policy/read, \
     /usr/libexec/nethserver/api/system-tls-policy/update, \
     /usr/libexec/nethserver/api/system-tls-policy/validate
+
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_TLS_POLICY !requiretty
 
 Cmnd_Alias NSAPI_SYSTEM_TRUSTED_NETWORKS = \
     /usr/libexec/nethserver/api/system-trusted-networks/create, \
@@ -125,18 +161,30 @@ Cmnd_Alias NSAPI_SYSTEM_TRUSTED_NETWORKS = \
     /usr/libexec/nethserver/api/system-trusted-networks/update, \
     /usr/libexec/nethserver/api/system-trusted-networks/validate
 
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_TRUSTED_NETWORKS !requiretty
+
 Cmnd_Alias NSAPI_SYSTEM_LOGS = \
     /usr/libexec/nethserver/api/system-logs/execute
+
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_LOGS !requiretty
 
 Cmnd_Alias NSAPI_SYSTEM_SUBSCRIPTION = \
     /usr/libexec/nethserver/api/system-subscription/read, \
     /usr/libexec/nethserver/api/system-subscription/update, \
     /usr/libexec/nethserver/api/system-subscription/validate
 
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_SUBSCRIPTION !requiretty
+
 Cmnd_Alias NSAPI_SYSTEM_SETTINGS = \
     /usr/libexec/nethserver/api/system-settings/check-default-password, \
     /usr/libexec/nethserver/api/system-settings/update, \
     /usr/libexec/nethserver/api/system-settings/validate
+    
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_SETTINGS !requiretty
 
 Cmnd_Alias NSAPI_SYSTEM_HOSTNAME = \
     /usr/libexec/nethserver/api/system-hostname/validate, \
@@ -144,16 +192,28 @@ Cmnd_Alias NSAPI_SYSTEM_HOSTNAME = \
     /usr/libexec/nethserver/api/system-hostname/update, \
     /usr/libexec/nethserver/api/system-aliases/update
 
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_HOSTNAME !requiretty
+
 Cmnd_Alias NSAPI_SYSTEM_TIME = \
     /usr/libexec/nethserver/api/system-time/validate, \
     /usr/libexec/nethserver/api/system-time/update
+
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_TIME !requiretty
 
 Cmnd_Alias NSAPI_SYSTEM_COMPANY = \
     /usr/libexec/nethserver/api/system-company/validate, \
     /usr/libexec/nethserver/api/system-company/update
 
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_COMPANY !requiretty
+
 Cmnd_Alias NSAPI_SYSTEM_SHUTDOWN = \
     /usr/libexec/nethserver/api/system-shutdown/update
+
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_SHUTDOWN !requiretty
 
 Cmnd_Alias NSAPI_SYSTEM_PACKAGES = \
     /usr/libexec/nethserver/api/system-packages/read, \
@@ -163,3 +223,5 @@ Cmnd_Alias NSAPI_SYSTEM_PACKAGES = \
     /usr/libexec/nethserver/api/system-packages/list-updates, \
     /usr/libexec/nethserver/api/system-packages/update
 
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_PACKAGES !requiretty

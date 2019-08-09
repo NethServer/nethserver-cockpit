@@ -40,9 +40,5 @@
 );
 
     $OUT .= "\n%$groupAdminsSudo ALL=NOPASSWD: ". join (', ', @commands);
-    $OUT .= "\n\n# server-manager does not require a tty";
-    foreach (@commands) {
-        $OUT .= "\nDefaults!".$_." !requiretty";
-    }
     $OUT .= "\n";
 }
