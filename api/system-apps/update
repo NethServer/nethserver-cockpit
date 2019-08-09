@@ -81,13 +81,54 @@ sub apply
     }
 }
 
+sub invoke_info_api
+{
+    use IPC::Open2;
+    my $helper_path = shift;
+    my $helper_input = shift;
+    my($chld_out, $chld_in, $pid);
+
+    $helper_input = {%$input, 'action' => 'app-info', %$helper_input}; # merges the input hashes
+    $pid = open2($chld_out, $chld_in, $helper_path);
+    print $chld_in encode_json($helper_input);
+    close($chld_in);
+    my $raw_response = <$chld_out>;
+    close($chld_out);
+    waitpid( $pid, 0 );
+    return safe_decode_json($raw_response);
+}
+
+sub app_info
+{
+    my $app = shift;
+    my $file = "$path$app.json";
+    my $data = read_json($file);
+    my $extended_data = {};
+
+    # If available, invoke the infoapi provider
+    # to extend the manifest data dynamically
+    if($data->{'infoapi'}) {
+        if(-x '/usr/libexec/nethserver/api/' . $data->{'infoapi'}->{'path'}) {
+            $extended_data = invoke_info_api(
+                '/usr/libexec/nethserver/api/' . $data->{'infoapi'}->{'path'},
+                safe_decode_json($data->{'infoapi'}->{'input'})
+            );
+        } else {
+            warn "[ERROR] missing executable script! Actual `infoapi.path` value: " . $data->{'infoapi'}->{'path'} . "\n";
+        }
+    }
+    $data = {%$data, %$extended_data}; # merges the input hashes
+
+    return $data;
+}
+
 sub writeJsonToHome
 {
     # 1. read Pins prop for all pinned apps
     # 2. for in pins and read /usr/share/cockpit/nethserver/applications/<Pin>.json
     # 3. push object parse in JSON to FinalArray (final array contains all json pinned apps)
     # 4. write FinalArray object to JSON in /var/www/html/applications.json
-    
+
     my $pins = $db->get_prop('cockpit.socket', 'Pins') || '';
     my @appArray;
 
@@ -99,7 +140,10 @@ sub writeJsonToHome
 
         my $json = decode_json($result);
 
-        # read and convert to base64 -> /usr/share/cockpit/nethserver-mail/logo.png
+        # check if there is an infoapi attr
+        $json = app_info($_) || next;
+
+        # read and convert to base64 -> /usr/share/cockpit/<app_name>/logo.png
         open (IMAGE, "/usr/share/cockpit/$_/logo.png") or die("Error converting icon in base64");
         my $rawString = do{ local $/ = undef; <IMAGE>; };
         my $base64 = encode_base64( $rawString );
@@ -152,8 +196,8 @@ if($cmd eq 'remove-shortcut') {
         push(@tmp, $app);
         $db->set_prop('cockpit.socket', 'Pins', join(",",@tmp));
     }
-    writeJsonToHome();	
-    
+    writeJsonToHome();
+
 
 } elsif ($cmd eq 'remove-pin'){
     my $app = $input->{'name'};
