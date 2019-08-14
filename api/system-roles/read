@@ -28,19 +28,19 @@ use strict;
 use JSON;
 use esmith::ConfigDB;
 my $db = esmith::ConfigDB->open_ro();
+my $groupAdmins = $db->get_prop('admins','group');
 
 my $input = readInput();
 my $role = $input->{'role'} || '';
 my $cmd = $input->{'action'} || '';
-my $groupAdmins = get_adminGroup();
 
 if (($cmd eq 'applications') ||
-        ($role eq $groupAdmins)) {
-
+    ($role eq $groupAdmins)) {
+    # Admins group gets all delegations but without the cross button removal
+    # Specific sudo command delegation must be added in sudoers.d
     my $ret = {"system" => [], "applications" => []};
     my @apps = list_applications();
     my @system_routes = list_system_routes();
-    my $system_routes = read_json("/etc/nethserver/cockpit/authorization/system-routes.json");
 
     foreach my $r (@system_routes) {
         push($ret->{"system"}, $r)
@@ -56,6 +56,7 @@ if (($cmd eq 'applications') ||
 }
 
 if ($cmd eq 'role') {
+    # Specific sudo command delegation must be added in sudoers.d
     my @system = ();
     my @applications =();
 

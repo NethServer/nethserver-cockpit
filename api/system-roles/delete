@@ -25,57 +25,44 @@ require "/usr/libexec/nethserver/api/lib/auth_functions.pl";
 
 use warnings;
 use strict;
-use JSON;
 use esmith::ConfigDB;
 use esmith::event;
 
 my $db = esmith::ConfigDB->open();
 my $delegations = $db->get_prop('cockpit.socket','delegation')|| '';
 
-my $jsonFile = '/etc/nethserver/cockpit/authorization/roles.json';
-my $data = read_json($jsonFile);
 my $input = readInput();
 my $role = $input->{'role'} || '';
-my $groupAdmins = get_adminGroup();
+my $groupAdmins = $db->get_prop('admins','group');
 
 my $exitCode = 0;
 my $ret;
 my $values = '';
 
 if ($role ne  $groupAdmins) {
-        if ($delegations !~ /,$role:|^$role:/) {# the role doesn't exist
-            error('NotValidRoleinConfigDB','This role does not exist in the cockpit.socket/delegation prop');
-        } elsif ( ! exists($data->{$role})) {
-            error('NotValidRoleInJson','This role does not exist in the roles.json');
-        } else {
-        #delete in roles.json
-        delete ($data->{$role});
-        write_json ($jsonFile,$data);
-        
-        #delete in cockpit.socket/delegation
-        my @Keys = split(',', $delegations);
-        foreach (@Keys) {
-            my @props = split(':',$_);
-            if ($props[0] ne $role) { #keep these values
-                my $group = shift(@props);
-                $values .= $group.':'.join(':',@props).',';
-            }
+    #delete in cockpit.socket/delegation
+    my @Keys = split(',', $delegations);
+    foreach (@Keys) {
+        my @props = split(':',$_);
+        if ($props[0] ne $role) { #keep these values
+            my $group = shift(@props);
+            $values .= $group.':'.join(':',@props).',';
         }
-        $values =~ s/,$//;
-        $db->set_prop('cockpit.socket','delegation', $values); 
-        if(esmith::event::event_signal('delegation-save')) {
-            $ret = {'state' => 'success'};
-        } else {
-            $ret = {
-                'type' => 'Error',
-                'message' => 'delegation.api_delete_failed',
-                'attributes' => {
-                    'event_name' => 'delegation-save',
-                }
-            };
-            $exitCode = 1;
-        }
-        print encode_json($ret);
-        exit($exitCode);
     }
+    $values =~ s/,$//;
+    $db->set_prop('cockpit.socket','delegation', $values); 
+    if(esmith::event::event_signal('delegation-save')) {
+        $ret = {'state' => 'success'};
+    } else {
+        $ret = {
+            'type' => 'Error',
+            'message' => 'delegation.api_delete_failed',
+            'attributes' => {
+                'event_name' => 'delegation-save',
+            }
+        };
+        $exitCode = 1;
+    }
+    print encode_json($ret);
+    exit($exitCode);
 }

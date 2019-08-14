@@ -26,7 +26,6 @@ require "/usr/libexec/nethserver/api/lib/auth_functions.pl";
 use warnings;
 use strict;
 use esmith::ConfigDB;
-use JSON;
 use esmith::event;
 
 my $db = esmith::ConfigDB->open();
@@ -37,9 +36,7 @@ my $ret;
 
 my $input = readInput();
 my $role = $input->{'role'} || '';
-my $groupAdmins = get_adminGroup();
-my $jsonFile = '/etc/nethserver/cockpit/authorization/roles.json';
-my $data = read_json ($jsonFile);
+my $groupAdmins = $db->get_prop('admins','group');
 
 my @system = @{$input->{'system'}}; 
 my @applications = @{$input->{'applications'}};
@@ -51,13 +48,6 @@ my $values = '';
 if ($role ne '') {
 
     if ($role ne  $groupAdmins) {
-
-        # Update to role.json for user missing 
-        # permission to read esmith database
-        $data->{$role}->{'system'} = $input->{'system'};
-        $data->{$role}->{'applications'} = $input->{'applications'};
-        write_json ($jsonFile,$data);
-        
         #Update to cockpit.socket/delegation
         if ($delegations !~ /,$role:|^$role:/) {
             # search and if it doesn't exist, push it to values
