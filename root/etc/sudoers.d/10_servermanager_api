@@ -225,3 +225,16 @@ Cmnd_Alias NSAPI_SYSTEM_PACKAGES = \
 
 # server-manager does not require a tty
 Defaults!NSAPI_SYSTEM_PACKAGES !requiretty
+
+Cmnd_Alias NSAPI_SYSTEM_TERMINAL = \
+    /usr/libexec/nethserver/api/system-terminal/update
+
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_TERMINAL !requiretty
+
+Cmnd_Alias NSAPI_SYSTEM_STORAGE = \
+    /usr/libexec/nethserver/api/system-storage/update
+
+# server-manager does not require a tty
+Defaults!NSAPI_SYSTEM_STORAGE !requiretty
+
