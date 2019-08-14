@@ -6,31 +6,12 @@
     my $db = esmith::ConfigDB->open_ro();
     my $groupAdmins = $db->get_prop('admins','group') || 'domain admins';
 
-    # Here make links between system and API
-    # when system needs several API
-    # when system name doesn't match API name
-    my %controllers = (
-        "disk-usage"        => ["NSAPI_SYSTEM_DISK_USAGE"],
-        "certificates"      => ["NSAPI_SYSTEM_CERTIFICATES"],
-        "dns"               => ["NSAPI_SYSTEM_DNS"],
-        "dhcp"              => ["NSAPI_SYSTEM_DHCP"],
-        "backup"            => ["NSAPI_SYSTEM_BACKUP"],
-        "services"          => ["NSAPI_SYSTEM_SERVICES"],
-        "users-groups"      => ["NSAPI_SYSTEM_USERS_GROUPS"],
-        "network"           => ["NSAPI_SYSTEM_NETWORK"],
-        "ssh"               => ["NSAPI_SYSTEM_SSH"],
-        "tls-policy"        => ["NSAPI_SYSTEM_TLS_POLICY"],
-        "trusted-networks"  => ["NSAPI_SYSTEM_TRUSTED_NETWORKS"],
-        "logs"              => ["NSAPI_SYSTEM_LOGS"],
-        "subscription"      => ["NSAPI_SYSTEM_SUBSCRIPTION"]
-    );
-
     my @Keys = split(',', $db->get_prop('cockpit.socket','delegation') || '');
 
     foreach (@Keys) {
 
         my @roles = ();
-        my @commands =();
+        my @systems =();
         my @applications = ();
 
         my @props = split(':',$_);
@@ -48,23 +29,21 @@
             $OUT .= "\n#\n# Role delegations for $group\n#";
 
             foreach my $role (@roles) {
-                if (! exists $controllers{$role}){
-                    if ($role =~ /^nethserver-/) {
-                        $role =~ s/-/_/g;
-                        push @applications, uc "APP_$role";
-                    }
+                if ($role =~ /^nethserver-/) {
+                    $role =~ s/-/_/g;
+                    push @applications, uc "APP_$role";
                 } else {
-                    foreach my $api (@{$controllers{$role}}) {
-                        push @commands, $api;
-                    }
+                   $role =~ s/-/_/g;
+                   push @systems, 'NSAPI_SYSTEM_'. uc $role;
+
                 }
             }
 
             # if at least one application delegation, push sudo power
             push @applications, 'NSAPI_SYSTEM_APPS' if (scalar @applications > 0);
 
-            @commands = (@commands,@applications);
-            $OUT .= "\n\n%".$group." ALL=NOPASSWD: ". join (', ',@commands);;
+            my @CmndAlias = (@systems,@applications);
+            $OUT .= "\n\n%".$group." ALL=NOPASSWD: ". join (', ',@CmndAlias);;
             $OUT .= "\n";
         }
     }
