@@ -30,16 +30,15 @@ my $input = readInput();
 my $cmd = $input->{'action'};
 my $name = $input->{'name'};
 my $user = whoami();
-my $groupAdmins = get_adminGroup();
+my $isAdmin = isAdmin($user);
 
 # root can always access everything
 if (($user eq 'root') ||
-        (grep /^$groupAdmins$/, get_groups())) {
+        ( $isAdmin == 1)) {
     success();
 }
 
-my $role = get_role($user);
-my $acl = get_acl($user, $role);
+my $acl = get_acl($user);
 
 if ($cmd eq 'check-app') {
     foreach my $i (@{$acl->{'applications'}}) {

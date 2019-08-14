@@ -23,8 +23,6 @@
 use strict;
 use warnings;
 use JSON;
-use POSIX qw(getgroups);
-use File::Basename;
 
 sub read_json
 {
@@ -79,36 +77,44 @@ sub list_applications
     return @apps;
 }
 
-sub get_adminGroup {
-    my $roles = read_json("/etc/nethserver/cockpit/authorization/roles.json");
-    if(exists($roles->{'admins_group'})) {
-        return $roles->{'admins_group'}
-    }
-}
-
-sub get_groups {
-    my @gnames;
-    my @groups = getgroups();
-    foreach my $g (getgroups()) {
-        my $gname = getgrgid($g);
-        $gname =~ s/@.*$//; # strip domain
-        push @gnames, $gname;
-    }
-    return @gnames;
+sub isAdmin
+{
+    my $user = shift;
+    my @roles = sudo ($user);
+    my $isAdmin = 0;
+    # when user is delegated to settings -> member of admin groups
+    my %hash = map {$_ => 1} @roles;
+    $isAdmin = 1 if (defined $hash{'system-settings'})
 }
 
 sub get_acl
 {
     my $user = shift;
-    my $role = shift;
-    my $roles = read_json("/etc/nethserver/cockpit/authorization/roles.json");
+    my $ret = {"system" => [], "applications" => []};
 
-    if(exists($roles->{$role})) {
-        return $roles->{$role}
+    my @roles = sudo($user);
+    my %controllers = (
+        'system-users' => ["users-groups"],
+        'system-certificate' => ["certificates"],
+        'system-openssh'          => ["ssh"],
+    );
+    foreach my $role (@roles) {
+        if (! exists $controllers{$role}){
+            if ($role =~ /^nethserver-/) {
+                push($ret->{"applications"}, $role)
+            } else {
+                $role  =~ s/system-//;
+                push($ret->{"system"}, $role);
+            }
+        } else {
+            foreach my $api (@{$controllers{$role}}) {
+                push ($ret->{"system"}, $api);
+            }
+        }
     }
-
-    return {"system" => [],"applications" => []};
+    return $ret;
 }
+
 
 sub list_system_routes
 {
@@ -121,19 +127,44 @@ sub in_array {
     return grep {$search_for eq $_} @arr;
 }
 
-sub get_role
+sub uniq {
+  my %seen;
+  return grep { !$seen{$_}++ } @_;
+}
+
+sub sudo 
 {
-    my $user = shift || return undef;
-    my @groups = getgroups();
-    my $roles = read_json("/etc/nethserver/cockpit/authorization/roles.json");
-    foreach my $g (getgroups()) {
-        my $gname = getgrgid($g);
-        $gname =~ s/@.*$//; # strip domain
-        foreach my $r (keys $roles) {
-            return $gname if ($r eq $gname);
-        }
+    my $user = shift;
+    my @sudo = `/usr/bin/sudo -ll -U $user`;
+    @sudo = uniq(@sudo);
+    my @commands = ();
+
+    foreach (@sudo) {
+        # clean up sudo -ll
+        $_ =~ s/\t//g;
+        $_ =~ s/ //g;
+        $_ =~ s/\n//g;
+        next if ($_ =~ /!requiretty/);
+        next if ($_ !~ /\/usr\/libexec\/nethserver\/api\//);
+        $_ =~ s/\/usr\/libexec\/nethserver\/api\///;
+    
+        # we do not need this, multiple api for one delegation
+        next if ($_ =~ /system-apps/); # needed for shortcut
+        next if ($_ =~ /system-routes/); # needed by network
+        next if ($_ =~ /system-hosts/); # needed by dns
+        next if ($_ =~ /system-proxy/); # needed by network
+    
+        if (
+           ($_ =~ /\w+\/update/) ||
+           ($_ =~ /system-logs\/execute/) ||
+           ($_ =~ /\w+\/dashboard\/read/) ) {
+                #Clean all path, let the directory name
+                $_ =~ s/\/\w+//g;
+                $_ =~ s/\/+$//g;
+                push @commands,  $_;
+           }
     }
-    return '';
+    return uniq (@commands);
 }
 
 1
