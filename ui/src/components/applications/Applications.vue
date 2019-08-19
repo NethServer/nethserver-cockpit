@@ -88,11 +88,11 @@
                 </a>
               </li>
               <li
-                v-if="props.row.editable == 1 && !props.row.external"
+                v-if="props.row.editable == 1 && !props.row.external && hideUninstall === 'disabled'"
                 role="presentation"
                 class="divider"
               ></li>
-              <li>
+              <li v-if="hideUninstall === 'disabled'">
                 <a @click="openRemoveApp(props.row)">
                   <span class="fa fa-times action-icon-menu"></span>
                   {{$t('applications.remove')}}
@@ -195,7 +195,8 @@ export default {
         window.location.protocol +
         "//" +
         window.location.hostname +
-        ":980/en-US/"
+        ":980/en-US/",
+      hideUninstall: 'disabled'
     };
   },
   beforeRouteLeave(to, from, next) {
@@ -209,7 +210,7 @@ export default {
     }, 150);
 
     // get list of installed apps
-    context.getApps();
+    context.getHideUninstall();
     context.refresh();
   },
   methods: {
@@ -366,6 +367,29 @@ export default {
       setTimeout(function() {
         context.initGraphics();
       }, 2000);
+    },
+    getHideUninstall() {
+      var context = this;
+      context.exec(
+        ["system-apps/read"],
+        {
+          action: "hide-uninstall"
+        },
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+            context.hideUninstall = success.HideUninstall;
+            context.getApps();
+          } catch (e) {
+            console.error(e);
+          }
+        },
+        function(error) {
+          console.error(error);
+        },
+        false
+      );
     }
   }
 };
