@@ -164,8 +164,44 @@ sub platform_validator
 }
 
 #
+# Read a file in memory and try to decode its contents as a JSON object.
+# Provide a fallback value as second argument in case of decode failure.
+#
+sub safe_read_json
+{
+    my $file = shift || return undef;
+    my $default = shift;
+    return undef if (! -e $file);
+
+    my $json;
+    {
+        local $/; #Enable 'slurp' mode
+        open my $fh, "<", $file or return undef;
+        $json = <$fh>;
+        close $fh;
+    }
+
+    return safe_decode_json($json, $default);
+}
+
+#
+# Return the list of installed application identifiers
+#
+sub list_applications
+{
+    my @apps;
+    foreach my $manifest (glob("/usr/share/cockpit/nethserver/applications/*.json")) {
+        my $app = NethServer::ApiTools::safe_read_json($manifest, {});
+        if($app->{'id'}) {
+            push(@apps, $app->{'id'});
+        }
+    }
+    return @apps;
+}
+
+#
 # Retrieve information about a Cockpit application
-# 
+#
 sub invoke_info_api
 {
     use IPC::Open2;
@@ -183,6 +219,5 @@ sub invoke_info_api
     waitpid( $pid, 0 );
     return safe_decode_json($raw_response);
 }
-
 
 1;

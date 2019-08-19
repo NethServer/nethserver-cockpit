@@ -21,36 +21,7 @@
 #
 
 use strict;
-use warnings;
+use NethServer::ApiTools;
 
-require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
-require '/usr/libexec/nethserver/api/lib/auth_functions.pl';
-
-my $input = readInput();
-my $cmd = $input->{'action'};
-my $name = $input->{'name'};
-my $user = whoami();
-my $isAdmin = isAdmin($user);
-
-# root can always access everything
-if (($user eq 'root') ||
-        ( $isAdmin == 1)) {
-    success();
-}
-
-my $acl = get_acl($user);
-
-if ($cmd eq 'check-app') {
-    foreach my $i (@{$acl->{'applications'}}) {
-        if ($i eq $name) {
-            success();
-        }
-    }
-} elsif ($cmd eq 'check-system') {
-    foreach my $i (@{$acl->{'system'}}) {
-        if ($i eq $name) {
-            success();
-        }
-    }
-}
-error("NotValid","permission_denied");
+NethServer::ApiTools::readInput();
+NethServer::ApiTools::success();

@@ -20,13 +20,10 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
-require "/usr/libexec/nethserver/api/lib/auth_functions.pl";
-
-use warnings;
 use strict;
 use esmith::ConfigDB;
 use esmith::event;
+use NethServer::ApiTools qw(readInput error);
 
 my $db = esmith::ConfigDB->open();
 my $delegations = $db->get_prop('cockpit.socket','delegation')|| '';

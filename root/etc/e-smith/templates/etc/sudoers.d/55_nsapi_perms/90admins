@@ -1,0 +1,16 @@
+#
+# 90admins
+#
+{
+    use NethServer::ApiTools;
+
+    my $adminGroup = ($admins{'group'} || 'domain admins') =~ s/ /\\ /r;
+    my $adminUser = ($admins{'user'} || 'admin') =~ s/ /\\ /r;
+
+    my $commands = join ', ', sort map { 'NSAPI_' . uc($_ =~ tr/-/_/r) } 'admins', 'public', NethServer::ApiTools::list_applications();
+
+    $OUT .= '%' . $adminGroup . ' ALL=NOPASSWD: ' . $commands . "\n";
+    $OUT .= $adminUser . ' ALL=NOPASSWD: ' . $commands . "\n";
+}
+
+

@@ -37,7 +37,7 @@ event_templates('nethserver-cockpit-update', qw(
     /usr/share/cockpit/nethserver/manifest.json
     /etc/nethserver/ldappasswd.conf
     /etc/sudoers.d/30_nethserver_cockpit_roles
-    /etc/sudoers.d/50_servermanager_perms
+    /etc/sudoers.d/55_nsapi_perms
     /etc/shells
 ));
 
@@ -72,14 +72,14 @@ event_templates('nethserver-sssd-save', qw(
 #  delegation-save
 #
 event_templates('delegation-save', qw(
-    /etc/sudoers.d/50_servermanager_perms
+    /etc/sudoers.d/55_nsapi_perms
 ));
 
 #
-# runlevel-adjust
+# runlevel-adjust: refresh delegations after YUM transactions
 #
 event_templates('runlevel-adjust', qw(
-    /etc/sudoers.d/50_servermanager_perms
+    /etc/sudoers.d/55_nsapi_perms
 ));
 
 #

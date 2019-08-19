@@ -1,8 +1,7 @@
 #
-# Cmnd_Alias association to group permission
+# 10base
 #
-
-# all users
 %locals ALL=NOPASSWD: NSAPI_PUBLIC
 %domain\ users ALL=NOPASSWD: NSAPI_PUBLIC
+
 

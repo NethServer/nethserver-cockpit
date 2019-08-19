@@ -24,11 +24,8 @@
 # Return current ssh connections and sshd configuration
 #
 
-use warnings;
 use strict;
-
-require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
-require '/usr/libexec/nethserver/api/lib/auth_functions.pl';
+use NethServer::ApiTools qw(readInput error);
 
 use JSON;
 use esmith::ConfigDB;
