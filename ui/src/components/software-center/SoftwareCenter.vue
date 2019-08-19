@@ -1,5 +1,5 @@
 <template>
-  <div>
+<div v-show="view.isAuth">
     <h2>{{$t('software_center.title')}}</h2>
     <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
       <span class="pficon pficon-warning-triangle-o"></span>
@@ -539,7 +539,8 @@ export default {
         isInstalling: false,
         updateProgress: 100,
         installProgress: 100,
-        isEditable: true
+        isEditable: true,
+        isAuth: false
       },
       hints: {},
       applications: [],
@@ -562,9 +563,32 @@ export default {
       searchString: ""
     };
   },
-  beforeRouteLeave(to, from, next) {
-    $(".modal").modal("hide");
-    next();
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.exec(
+        ["system-authorization/read"],
+        null,
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+
+          if (success.system.indexOf(to.path.substring(1)) == -1) {
+            window.location.hash = "#/";
+            vm.$router.push("/");
+          }
+
+          vm.view.isAuth = true;
+        },
+        function(error) {
+          console.error(error);
+        },
+        false
+      );
+    });
   },
   mounted() {
     var context = this;
