@@ -67,6 +67,7 @@ sub app_info
 {
     my $app = shift;
     my $shortcuts = shift;
+    my $pins = shift;
     my $file = "$path$app.json";
     my $data = read_json($file);
     my $extended_data = {};
@@ -87,6 +88,7 @@ sub app_info
 
     # Set hardcoded attributes:
     $data->{'shortcut'} = defined($shortcuts->{$app}) ? 1 : 0;
+    $data->{'pin'} = defined($pins->{$app}) ? 1 : 0;
     $data->{'editable'} = 1;
     return $data;
 }
@@ -122,11 +124,18 @@ if($cmd eq 'list') {
 
     my @apps;
     my %shortcuts;
+    my %pins;
     if ($< == 0) { # non-root users can't access the config db
         my $db = esmith::ConfigDB->open_ro();
+
         my $shortcuts = $db->get_prop('cockpit.socket', 'Shortcuts') || '';
         foreach (split(",",$shortcuts)) {
             $shortcuts{$_} = 1;
+        }
+
+        my $pins = $db->get_prop('cockpit.socket', 'Pins') || '';
+        foreach (split(",",$pins)) {
+            $pins{$_} = 1;
         }
     }
 
@@ -136,7 +145,7 @@ if($cmd eq 'list') {
     foreach my $f (glob("$path*.json")) {
         my ($name,$path,$suffix) = fileparse($f,(".json"));
         if (grep(/^$name$/, @$authorized)) {
-            my $data = app_info($name, \%shortcuts) || next;
+            my $data = app_info($name, \%shortcuts, \%pins) || next;
             push(@apps, $data);
         }
     }

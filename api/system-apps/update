@@ -27,8 +27,12 @@ use strict;
 use JSON;
 use esmith::ConfigDB;
 use File::Basename;
+use File::Path qw( make_path );
+use MIME::Base64;
 
 our $path = "/usr/share/cockpit/nethserver/applications/";
+my $pinned_apps_file_path = "/usr/share/httpd/noindex/res/applications.json";
+my $cockpit_path = "/usr/share/cockpit/";
 my $ret = {};
 my $input = readInput();
 my $cmd = $input->{'action'};
@@ -56,6 +60,119 @@ sub has_shortcut
         return 1 if ($_ eq $app);
     }
     return 0;
+}
+
+sub has_pin
+{
+    my $app = shift;
+    my $db = shift;
+    my $pins = $db->get_prop('cockpit.socket', 'Pins') || '';
+    foreach (split(",",$pins)) {
+        return 1 if ($_ eq $app);
+    }
+    return 0;
+}
+
+sub update_pins_file
+{
+    my @pinned_apps;
+    my @pinned_apps_names;
+    my %shortcuts;
+    my %pins;
+    my $pinned_apps_file;
+
+    if ($< == 0) { # non-root users can't access the config db
+        my $db = esmith::ConfigDB->open_ro();
+
+        my $shortcuts = $db->get_prop('cockpit.socket', 'Shortcuts') || '';
+        foreach (split(",",$shortcuts)) {
+            $shortcuts{$_} = 1;
+        }
+
+        my $pins = $db->get_prop('cockpit.socket', 'Pins') || '';
+        foreach (split(",",$pins)) {
+            $pins{$_} = 1;
+            push(@pinned_apps_names, $_);
+        }
+    }
+
+    foreach my $f (glob("$path*.json")) {
+        my ($name,$path,$suffix) = fileparse($f,(".json"));
+        if (grep(/^$name$/, @pinned_apps_names)) {
+            my $data = app_info($name, \%shortcuts, \%pins) || next;
+            push(@pinned_apps, $data);
+        }
+    }
+
+    # Check that pinned apps directory exists
+    my ( $file, $directories ) = fileparse $pinned_apps_file_path;
+
+    if ( !-d $directories ) {
+        make_path $directories or die "Failed to create path: $directories";
+    }
+
+    # Create the file
+    unless(open $pinned_apps_file, '>'.$pinned_apps_file_path) {
+        # Die with error message if we can't open it
+        die "\nUnable to create $pinned_apps_file_path\n";
+    }
+    print $pinned_apps_file encode_json(\@pinned_apps);
+    close $pinned_apps_file;
+}
+
+sub app_info
+{
+    my $app = shift;
+    my $shortcuts = shift;
+    my $pins = shift;
+    my $file = "$path$app.json";
+    my $data = read_json($file);
+    my $extended_data = {};
+    my $encoded;
+    my $raw_string;
+
+    # If available, invoke the infoapi provider
+    # to extend the manifest data dynamically
+    if($data->{'infoapi'}) {
+        if(-x '/usr/libexec/nethserver/api/' . $data->{'infoapi'}->{'path'}) {
+            $extended_data = invoke_info_api(
+                '/usr/libexec/nethserver/api/' . $data->{'infoapi'}->{'path'},
+                safe_decode_json($data->{'infoapi'}->{'input'})
+            );
+        } else {
+            warn "[ERROR] missing executable script! Actual `infoapi.path` value: " . $data->{'infoapi'}->{'path'} . "\n";
+        }
+    }
+    $data = {%$data, %$extended_data}; # merges the input hashes
+
+    # Set hardcoded attributes:
+    $data->{'shortcut'} = defined($shortcuts->{$app}) ? 1 : 0;
+    $data->{'pin'} = defined($pins->{$app}) ? 1 : 0;
+    $data->{'editable'} = 1;
+    # Base64 icon
+    open (my $image, "$cockpit_path$app/" . $data->{'icon'}) or die "$!";
+    $raw_string = do{ local $/ = undef; <$image>; };
+    $encoded = encode_base64($raw_string);
+    $encoded =~ s/\R//g;
+    $data->{'iconBase64'} = $encoded;
+    return $data;
+}
+
+sub invoke_info_api
+{
+    use IPC::Open2;
+    my $helper_path = shift;
+    my $helper_input = shift;
+    my($chld_out, $chld_in, $pid);
+
+    $helper_input = {%$input, 'action' => 'app-info', %$helper_input}; # merges the input hashes
+    $pid = open2($chld_out, $chld_in, $helper_path);
+    print $chld_in encode_json($helper_input);
+    close($chld_in);
+    my $raw_response = <$chld_out>;
+    close($chld_out);
+    waitpid( $pid, 0 );
+    return safe_decode_json($raw_response);
 }
 
 sub apply
@@ -93,6 +210,29 @@ if($cmd eq 'remove-shortcut') {
         push(@tmp, $app);
         $db->set_prop('cockpit.socket', 'Shortcuts', join(",",@tmp));
     }
+    apply();
+} elsif($cmd eq 'remove-pin') {
+
+    my $app = $input->{'name'};
+    if (has_pin($app, $db)) {
+        my $pins = $db->get_prop('cockpit.socket', 'Pins') || '';
+        my @tmp = split(",",$pins);
+        @tmp = grep(!/^$app$/, @tmp);
+        $db->set_prop('cockpit.socket', 'Pins', join(",",@tmp));
+    }
+    update_pins_file();
+    apply();
+
+} elsif ($cmd eq 'add-pin') {
+
+    my $app = $input->{'name'};
+    if (!has_pin($app, $db)) {
+        my $pins = $db->get_prop('cockpit.socket', 'Pins') || '';
+        my @tmp = split(",",$pins);
+        push(@tmp, $app);
+        $db->set_prop('cockpit.socket', 'Pins', join(",",@tmp));
+    }
+    update_pins_file();
     apply();
 
 } else {
