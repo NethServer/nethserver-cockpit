@@ -158,6 +158,10 @@
                     </div>
                   </div>
                 </div>
+                <div v-if="!u.updates || (u.updates && u.updates.length == 0)" class="alert alert-info compact">
+                  <span class="pficon pficon-info"></span>
+                  {{$t('software_center.no_more_details')}}.
+                </div>
               </div>
             </div>
           </div>
@@ -656,6 +660,7 @@ export default {
     },
     toggleOpen(u) {
       u.isOpen = !u.isOpen;
+      this.$forceUpdate();
     },
     selectCategory(cat) {
       cat.selected = !cat.selected;
@@ -825,6 +830,7 @@ export default {
               console.error(e);
             }
             context.currentPackage.details = success.data || "-";
+            context.$forceUpdate();
           },
           function(error) {
             console.error(error);
@@ -853,6 +859,7 @@ export default {
           details += "\n";
         }
         this.currentPackage.details = details;
+        this.$forceUpdate();
       }
 
       $("#viewDetailsModal").modal("show");

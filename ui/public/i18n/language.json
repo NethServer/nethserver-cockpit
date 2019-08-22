@@ -813,7 +813,8 @@
     "nethserver_upgrade_message": "A system upgrade for NethServer is available. \nThe system upgrade procedure switches to \"unlocked\" software updates origin and updates all installed packages",
     "there_is_upgrade_from": "There is an upgrade from",
     "to": "to",
-    "upgrade_now": "Upgrade now"
+    "upgrade_now": "Upgrade now",
+    "no_more_details":"No more details"
   },
   "terminal": {
     "title": "Terminal"
