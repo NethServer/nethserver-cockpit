@@ -21,7 +21,7 @@
 use strict;
 package NethServer::ApiTools;
 use Exporter 'import';
-our @EXPORT_OK = qw(hints success error readInput safe_decode_json);
+our @EXPORT_OK = qw(hints success error readInput safe_decode_json invoke_info_api);
 
 #
 # Basic helper functions for cockpit
@@ -161,6 +161,27 @@ sub platform_validator
         $exitCode = $? >> 8;
     }
     return ($exitCode, $message);
+}
+
+#
+# Retrieve information about a Cockpit application
+# 
+sub invoke_info_api
+{
+    use IPC::Open2;
+    my $helper_path = shift;
+    my $helper_input = shift;
+    my $input = shift;
+    my($chld_out, $chld_in, $pid);
+
+    $helper_input = {%$input, 'action' => 'app-info', %$helper_input}; # merges the input hashes
+    $pid = open2($chld_out, $chld_in, $helper_path);
+    print $chld_in encode_json($helper_input);
+    close($chld_in);
+    my $raw_response = <$chld_out>;
+    close($chld_out);
+    waitpid( $pid, 0 );
+    return safe_decode_json($raw_response);
 }
 
 

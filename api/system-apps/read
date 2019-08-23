@@ -20,8 +20,7 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
-
+use NethServer::ApiTools qw(hints success error readInput safe_decode_json invoke_info_api);
 use warnings;
 use strict;
 use JSON;
@@ -46,23 +45,6 @@ sub read_json
     return decode_json($json);
 }
 
-sub invoke_info_api
-{
-    use IPC::Open2;
-    my $helper_path = shift;
-    my $helper_input = shift;
-    my($chld_out, $chld_in, $pid);
-
-    $helper_input = {%$input, 'action' => 'app-info', %$helper_input}; # merges the input hashes
-    $pid = open2($chld_out, $chld_in, $helper_path);
-    print $chld_in encode_json($helper_input);
-    close($chld_in);
-    my $raw_response = <$chld_out>;
-    close($chld_out);
-    waitpid( $pid, 0 );
-    return safe_decode_json($raw_response);
-}
-
 sub app_info
 {
     my $app = shift;
@@ -78,7 +60,8 @@ sub app_info
         if(-x '/usr/libexec/nethserver/api/' . $data->{'infoapi'}->{'path'}) {
             $extended_data = invoke_info_api(
                 '/usr/libexec/nethserver/api/' . $data->{'infoapi'}->{'path'},
-                safe_decode_json($data->{'infoapi'}->{'input'})
+                safe_decode_json($data->{'infoapi'}->{'input'}),
+                $input
             );
         } else {
             warn "[ERROR] missing executable script! Actual `infoapi.path` value: " . $data->{'infoapi'}->{'path'} . "\n";
