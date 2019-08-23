@@ -246,6 +246,10 @@ iframe>.breadcrumb {
     margin-right: 5px;
 }
 
+.starred-marging-left {
+    margin-left: 5px;
+}
+
 .icon-net-margin {
     margin-right: 9px;
 }
@@ -331,7 +335,7 @@ circle {
 }
 
 #chart {
-    top: 120px;
+    top: 140px;
     bottom: 25px;
     position: fixed;
     z-index: 0;
@@ -977,6 +981,7 @@ circle {
     z-index: 1;
     position: sticky;
     width: 100%;
+    display: contents;
 }
 
 .padding-right-20 {

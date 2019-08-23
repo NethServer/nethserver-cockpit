@@ -23,11 +23,18 @@
 . /usr/libexec/nethserver/api/lib/helper_functions
 
 data=$(cat /dev/stdin)
-one_file_system=$(echo $data | jq -r ".oneFileSystem")
+action=$(echo $data | jq -r '.action')
 
-/sbin/e-smith/config setprop duc OneFileSystem "$one_file_system"
+case $action in
+    "update-config")
+        one_file_system=$(echo $data | jq -r ".oneFileSystem")
+        /sbin/e-smith/config setprop duc OneFileSystem "$one_file_system"
+    ;;
 
-/sbin/e-smith/signal-event -j nethserver-duc-save
+    "update-index")
+        /sbin/e-smith/signal-event -j nethserver-duc-save
+    ;;
+esac
 
 if [ $? -gt 0 ]; then
     error "EventFailed" "See /var/log/messages"

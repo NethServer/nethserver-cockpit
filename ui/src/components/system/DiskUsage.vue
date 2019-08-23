@@ -1,30 +1,35 @@
 <template>
   <div v-if="view.isAuth">
     <h2>{{$t('disk_usage.title')}}</h2>
-    <h4 class="right gray">{{$t('disk_usage.update_at')}} <b>{{disk.updatedAt | dateFormat}}</b></h4>
+    <h4 class="right gray">
+      {{$t('disk_usage.update_at')}}
+      <b>{{disk.updatedAt | dateFormat}}</b>
+      <button
+        class="btn btn-primary starred-marging-left"
+        type="button"
+        data-toggle="modal"
+        data-target="#indexingModal"
+      >{{$t('disk_usage.update_now')}}</button>
+    </h4>
 
     <div id="hover-chart">
       <form class="form-horizontal" v-if="view.isLoaded">
         <div class="form-group">
-          <label class="col-sm-2 control-label">
-            {{$t('disk_usage.one_file_system')}}
-          </label>
+          <label class="col-sm-2 control-label">{{$t('disk_usage.one_file_system')}}</label>
           <div class="col-sm-5">
             <input
               type="checkbox"
               v-model="oneFileSystem"
               class="form-control"
               @click="toggleOneFileSystem()"
-            >
+            />
           </div>
         </div>
 
         <div class="form-group">
-          <label class="col-sm-2 control-label">
-            
-          </label>
+          <label class="col-sm-2 control-label"></label>
           <div class="col-sm-5">
-                  <button @click="updateJSONUsage()" class="btn btn-primary" type="button">{{$t('disk_usage.update_data')}}</button>
+            <button @click="saveConfig()" class="btn btn-primary" type="button">{{$t('save')}}</button>
           </div>
         </div>
       </form>
@@ -32,19 +37,51 @@
       <div class="divider padding-right-20 margin-bottom-20"></div>
 
       <div id="baseContainer" v-if="view.isLoaded">
-        <a href="" onclick="$.reset();" id="baseBread">/</a>
+        <a href onclick="$.reset();" id="baseBread">/</a>
       </div>
       <div id="sequence" v-if="view.isLoaded"></div>
 
       <div id="explanation" v-if="view.isLoaded">
-        <button @click="copyPath()" class="btn btn-primary copy-path" type="button">{{$t('disk_usage.copy_path')}}</button>
+        <button
+          @click="copyPath()"
+          class="btn btn-primary copy-path"
+          type="button"
+        >{{$t('disk_usage.copy_path')}}</button>
         <span v-if="view.copied" class="fa fa-check green copy-ok"></span>
         <p id="sizeFolder"></p>
       </div>
     </div>
 
     <div id="loader" class="spinner"></div>
-    <div id="chart" v-if="view.isLoaded">
+    <div id="chart" v-if="view.isLoaded"></div>
+
+    <div class="modal" id="indexingModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('disk_usage.update_data')}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="updateJSONUsage()">
+            <div class="modal-body">
+              <div class="alert alert-warning">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>{{$t('warning')}}:</strong>
+                {{$t('disk_usage.index_time')}}
+              </div>
+              <div class="form-group">
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-primary" type="submit">{{$t('update')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -394,7 +431,8 @@ export default {
           try {
             success = JSON.parse(success);
             context.ducConfig = success.configuration;
-            context.oneFileSystem = context.ducConfig.OneFileSystem === 'enabled'
+            context.oneFileSystem =
+              context.ducConfig.OneFileSystem === "enabled";
           } catch (e) {
             console.error(e);
           }
@@ -412,13 +450,40 @@ export default {
         }
       );
     },
-    updateJSONUsage() {
+    saveConfig() {
       var context = this;
 
       context.exec(
         ["system-disk-usage/update"],
         {
-          "oneFileSystem": context.oneFileSystem ? 'enabled' : 'disabled'
+          action: "update-config",
+          oneFileSystem: context.oneFileSystem ? "enabled" : "disabled"
+        },
+        function(stream) {
+          console.info("disk-usage", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "disk_usage.disk_updated_ok"
+          );
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "disk_usage.disk_updated_error"
+          );
+        }
+      );
+    },
+    updateJSONUsage() {
+      var context = this;
+
+      $("#indexingModal").modal("hide");
+      context.exec(
+        ["system-disk-usage/update"],
+        {
+          action: "update-index"
         },
         function(stream) {
           console.info("disk-usage", stream);
@@ -442,9 +507,9 @@ export default {
     },
     toggleOneFileSystem() {
       if (this.ducConfig.OneFileSystem === "enabled") {
-        this.ducConfig.OneFileSystem = "disabled"
+        this.ducConfig.OneFileSystem = "disabled";
       } else {
-        this.ducConfig.OneFileSystem = "enabled"
+        this.ducConfig.OneFileSystem = "enabled";
       }
     }
   }
