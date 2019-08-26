@@ -157,7 +157,9 @@ Example:
 Take an `action` field. Valid actions are:
 
 - `add-shortcut`: add given application to left menu
-- `remove-shortcut`: remove given application form the left menu
+- `remove-shortcut`: remove given application from the left menu
+- `add-pin`: add given application to Nethserver home page
+- `remove-pin`: remove given application from Nethserver home page
 
 ### Input
 
@@ -166,7 +168,7 @@ Take an `action` field. Valid actions are:
 Example:
 ```json
 {
-  "action": "add-shortcut",
+  "action": "add-pin",
   "name": "nethserver-firewall"
 }
 ```
@@ -176,11 +178,11 @@ Example:
 Example:
 ```json
 {
-  "action": "remove-shortcut",
+  "action": "remove-pin",
   "name": "nethserver-firewall"
 }
 ```
 
 ### Output
 
-Each actions return a standard success or error object.
+Each action returns a standard success or error object.

@@ -20,8 +20,7 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
-
+use NethServer::ApiTools qw(hints success error readInput safe_decode_json invoke_info_api);
 use warnings;
 use strict;
 use JSON;
@@ -46,27 +45,11 @@ sub read_json
     return decode_json($json);
 }
 
-sub invoke_info_api
-{
-    use IPC::Open2;
-    my $helper_path = shift;
-    my $helper_input = shift;
-    my($chld_out, $chld_in, $pid);
-
-    $helper_input = {%$input, 'action' => 'app-info', %$helper_input}; # merges the input hashes
-    $pid = open2($chld_out, $chld_in, $helper_path);
-    print $chld_in encode_json($helper_input);
-    close($chld_in);
-    my $raw_response = <$chld_out>;
-    close($chld_out);
-    waitpid( $pid, 0 );
-    return safe_decode_json($raw_response);
-}
-
 sub app_info
 {
     my $app = shift;
     my $shortcuts = shift;
+    my $pins = shift;
     my $file = "$path$app.json";
     my $data = read_json($file);
     my $extended_data = {};
@@ -77,7 +60,8 @@ sub app_info
         if(-x '/usr/libexec/nethserver/api/' . $data->{'infoapi'}->{'path'}) {
             $extended_data = invoke_info_api(
                 '/usr/libexec/nethserver/api/' . $data->{'infoapi'}->{'path'},
-                safe_decode_json($data->{'infoapi'}->{'input'})
+                safe_decode_json($data->{'infoapi'}->{'input'}),
+                $input
             );
         } else {
             warn "[ERROR] missing executable script! Actual `infoapi.path` value: " . $data->{'infoapi'}->{'path'} . "\n";
@@ -87,6 +71,7 @@ sub app_info
 
     # Set hardcoded attributes:
     $data->{'shortcut'} = defined($shortcuts->{$app}) ? 1 : 0;
+    $data->{'pin'} = defined($pins->{$app}) ? 1 : 0;
     $data->{'editable'} = 1;
     return $data;
 }
@@ -122,11 +107,18 @@ if($cmd eq 'list') {
 
     my @apps;
     my %shortcuts;
+    my %pins;
     if ($< == 0) { # non-root users can't access the config db
         my $db = esmith::ConfigDB->open_ro();
+
         my $shortcuts = $db->get_prop('cockpit.socket', 'Shortcuts') || '';
         foreach (split(",",$shortcuts)) {
             $shortcuts{$_} = 1;
+        }
+
+        my $pins = $db->get_prop('cockpit.socket', 'Pins') || '';
+        foreach (split(",",$pins)) {
+            $pins{$_} = 1;
         }
     }
 
@@ -136,7 +128,7 @@ if($cmd eq 'list') {
     foreach my $f (glob("$path*.json")) {
         my ($name,$path,$suffix) = fileparse($f,(".json"));
         if (grep(/^$name$/, @$authorized)) {
-            my $data = app_info($name, \%shortcuts) || next;
+            my $data = app_info($name, \%shortcuts, \%pins) || next;
             push(@apps, $data);
         }
     }

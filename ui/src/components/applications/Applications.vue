@@ -87,6 +87,17 @@
                   ? $t('remove_shortcut') : $t('add_shortcut')}}
                 </a>
               </li>
+              <li>
+                <a
+                  @click="props.row.pin == 1 ? removePin(props.row.id) : addPin(props.row.id)"
+                >
+                  <span
+                    :class="['fa', 'fa-map-pin', 'action-icon-menu']"
+                  ></span>
+                  {{props.row.pin == 1
+                  ? $t('remove_pin') : $t('add_pin')}}
+                </a>
+              </li>
               <li
                 v-if="props.row.editable == 1 && !props.row.external && hideUninstall === 'disabled'"
                 role="presentation"
@@ -337,6 +348,25 @@ export default {
         }
       );
     },
+    addPin(application) {
+      var context = this;
+
+      context.exec(
+        ["system-apps/update"],
+        {
+          action: "add-pin",
+          name: application
+        },
+        null,
+        function(success) {
+          context.getApps(true);
+          context.refresh();
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
     removeShortcut(application) {
       var context = this;
 
@@ -344,6 +374,25 @@ export default {
         ["system-apps/update"],
         {
           action: "remove-shortcut",
+          name: application
+        },
+        null,
+        function(success) {
+          context.getApps(true);
+          context.refresh();
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+    removePin(application) {
+      var context = this;
+
+      context.exec(
+        ["system-apps/update"],
+        {
+          action: "remove-pin",
           name: application
         },
         null,
