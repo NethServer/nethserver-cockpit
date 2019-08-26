@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.11.0
+Version: 0.12.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -61,6 +61,11 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon Aug 26 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.12.0-1
+- Cockpit. fix various bugs - Bug Nethserver/dev#5810
+- Multiple UI improvements
+- Cockpit: link apps in home page - NethServer/dev#5806
+
 * Thu Aug 01 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.11.0-1
 - Disk usage configuration: don't cross filesystem boundaries - NethServer/dev#5795
 - ui. fixed overflow in button
