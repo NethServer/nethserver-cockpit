@@ -1216,7 +1216,7 @@ export default {
 
 .selectable:hover {
   cursor: pointer;
-  background: #def3ff;
+  background: #6ccaff;
 }
 
 .selected {
