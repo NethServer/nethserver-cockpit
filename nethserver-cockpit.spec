@@ -51,7 +51,6 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %doc README.rst
 %config /etc/nethserver/cockpit/authorization/roles.json
 %config /usr/share/cockpit/nethserver/categories/categories.json
-%config /etc/nethserver/pinned_apps.json
 %dir %{_nseventsdir}/%{name}-update
 %dir /usr/libexec/nethserver/api/
 
