@@ -98,6 +98,9 @@ function validate_remotead($data) {
 
 
 function validate_adcredentials($data) {
+    if (!array_key_exists('AdDns', $data)) {
+        $data['AdDns'] = gethostbyname($data['AdRealm']);
+    }
     $output = shell_exec("/usr/sbin/account-provider-test probead {$data['AdRealm']} {$data['AdDns']}");
     if (!$output) {
         error();
