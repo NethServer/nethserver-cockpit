@@ -218,12 +218,15 @@
         </li>
       </ul>
     </nav>
-    <div :class="['container-fluid', 'container-cards-pf'+ ( !routesAvailable() ? '-apps' : ''), 'handle-overflow']">
+    <div
+      :class="['container-fluid', 'container-cards-pf'+ ( !routesAvailable() ? '-apps' : ''), 'handle-overflow']"
+    >
       <router-view></router-view>
     </div>
 
     <div
       v-if="notifications.success.show"
+      @mouseover="hideNotification(notifications.success)"
       :style="{ top: notifications.addMargin ? 72+'px' : 10+'px', minWidth: 390+'px', right: 10+'px', zIndex: 5, position: 'fixed'}"
       class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable"
     >
@@ -255,7 +258,7 @@
         <code>API</code>
         {{$t('for_more_info')}}:
       </span>
-      <br>
+      <br />
       <code>{{notifications.error.api}}</code>
       <button
         @click="copyCommand(notifications.error.command)"
@@ -383,6 +386,10 @@ export default {
     };
   },
   methods: {
+    hideNotification(notification) {
+      notification.show = false;
+      this.$forceUpdate();
+    },
     routesAvailable() {
       var path = this.$route.path;
       return this.systemRoutes.indexOf(path) >= 0;

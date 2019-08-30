@@ -74,7 +74,7 @@ export default {
   methods: {
     getInfo() {
       var context = this;
-      nethserver.exec(
+      context.exec(
         ["system-subscription/read"],
         null,
         null,
