@@ -98,6 +98,15 @@ function validate_remotead($data) {
 
 
 function validate_adcredentials($data) {
+    if (!array_key_exists('AdDns', $data)) {
+        $db = new EsmithDatabase('configuration');
+        $nameServers = explode(",", $db->getProp('dns', 'NameServers'));
+        if (isset($nameServers[0]) && $nameServers[0]) {
+            $data['AdDns'] = $nameServers[0];
+        } else {
+            $data['AdDns'] = "127.0.0.1";
+        }
+    }
     $output = shell_exec("/usr/sbin/account-provider-test probead {$data['AdRealm']} {$data['AdDns']}");
     if (!$output) {
         error();
