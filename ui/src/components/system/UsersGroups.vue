@@ -3007,11 +3007,16 @@ export default {
     joinADomain(action, newProvider) {
       var context = this;
 
+      // if needed, add domain to username
+      var username = newProvider.info.BindDN;
+      if (!username.includes("@")) {
+        username += "@" + newProvider.Realm;
+      }
       var adObj = {
         action: "remote-ad",
         AdRealm: newProvider.Realm,
         AdDns: newProvider.AdDns,
-        AdUsername: newProvider.info.BindDN,
+        AdUsername: username,
         AdPassword: newProvider.info.BindPassword
       };
 
