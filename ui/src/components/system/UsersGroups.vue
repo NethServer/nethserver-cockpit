@@ -1286,7 +1286,7 @@
                           <span class="pficon pficon-warning-triangle-o"></span>
                           <strong>{{$t('users_groups.ip_warning_message_1')}}</strong>
                           <ul>
-                            <li>{{$t('users_groups.ip_warning_message_2')}}</li>
+                            <li>{{$t('users_groups.ip_warning_message_2')}} {{ greenSubnetAddress }}</li>
                             <li>{{$t('users_groups.ip_warning_message_3')}}</li>
                           </ul>
                         </div>
@@ -1587,7 +1587,8 @@ export default {
       newProvider: {
         errors: this.initProvidersErrors()
       },
-      currentStep: 1
+      currentStep: 1,
+      greenSubnetAddress: "192.168.1.0/24" // default
     };
   },
   methods: {
@@ -1698,6 +1699,53 @@ export default {
       }
     },
 
+    getSubnetAddress(ipWithNetmask) {
+      // example ipWithNetmask: "192.168.5.92/24"
+      var tokens = ipWithNetmask.split("/");
+      var ip = tokens[0];
+      var netmaskBits = parseInt(tokens[1]);
+      // convert ip to decimal number
+      var ipDecimal = ip.split('.').reduce(function(ipInt, octet) { return (ipInt<<8) + parseInt(octet, 10)}, 0) >>> 0;
+      var ipDecimalStr = ipDecimal.toString();
+
+      // convert ip from decimal to binary
+      var ipBinaryStr = (+ipDecimalStr).toString(2);
+
+      var subnetChunk = ipBinaryStr.substr(0, netmaskBits);
+      var zerosChunk = "0".repeat(32 - netmaskBits);
+      var subnetBinaryStr = subnetChunk + zerosChunk;
+
+      // convert subnet from binary to decimal
+      var subnetDecimal = parseInt(subnetBinaryStr, 2);
+
+      // convert subnet from decimal to ip format
+      var subnet = ( (subnetDecimal>>>24) +'.' + (subnetDecimal>>16 & 255) +'.' + (subnetDecimal>>8 & 255) +'.' + (subnetDecimal & 255) );
+      return subnet + "/" + netmaskBits; // e.g. "192.168.5.0/24"
+    },
+
+    loadGreenIpAddress() {
+      var context = this;
+      context.exec(
+        ["system-network/read"],
+        {
+          action: "list"
+        },
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+            var greenIpAddressWithNetmask = success.configuration.green[0].cidr;
+            context.greenSubnetAddress = context.getSubnetAddress(greenIpAddressWithNetmask);
+          } catch (e) {
+            console.error(e);
+          }
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+
     nextStep() {
       if (this.currentStep == 3) {
         if (
@@ -1725,6 +1773,14 @@ export default {
           this.joinADomain("update", this.newProvider);
         }
       } else {
+        if (
+          this.currentStep == 2 &&
+          this.users.chooseProvider == "ad" &&
+          this.users.chooseBind == "local"
+        ) {
+          this.loadGreenIpAddress();
+        }
+
         this.currentStep++;
       }
     },

@@ -457,7 +457,7 @@
     "ldap_description": "An LDAP database can store users, groups and passwords. It is required a RFC2307 compatible LDAP schema",
     "dc_description": "Computers in an Active Directory domain can be simple members or domain controllers (DC)",
     "ip_warning_message_1": "The chosen IP address must satisfy all of the following conditions",
-    "ip_warning_message_2": "The IP address must be in the same subnet range of a green network: es. 192.168.1.0/24",
+    "ip_warning_message_2": "The IP address must be in the same subnet range of a green network: e.g.",
     "ip_warning_message_3": "The IP address must be unused currently",
     "you_choose": "Account provider",
     "choose_bind_method": "Choose bind method",
