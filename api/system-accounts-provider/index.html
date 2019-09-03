@@ -482,6 +482,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#bind-credentials" title="bind-credentials" class="md-nav__link">
+    bind-credentials
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -538,6 +545,13 @@
           <li class="md-nav__item">
   <a href="#remote-ad_1" title="remote-ad" class="md-nav__link">
     remote-ad
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bind-credentials_1" title="bind-credentials" class="md-nav__link">
+    bind-credentials
   </a>
   
 </li>
@@ -1428,6 +1442,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../nethserver-suricata/bypass/" title="bypass" class="md-nav__link">
+      bypass
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../nethserver-suricata/dashboard/" title="dashboard" class="md-nav__link">
       dashboard
     </a>
@@ -1995,6 +2021,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#bind-credentials" title="bind-credentials" class="md-nav__link">
+    bind-credentials
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2051,6 +2084,13 @@
           <li class="md-nav__item">
   <a href="#remote-ad_1" title="remote-ad" class="md-nav__link">
     remote-ad
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bind-credentials_1" title="bind-credentials" class="md-nav__link">
+    bind-credentials
   </a>
   
 </li>
@@ -2115,8 +2155,6 @@
    <span class="nt">&quot;LdapURI&quot;</span> <span class="p">:</span> <span class="s2">&quot;ldap://127.0.0.1&quot;</span><span class="p">,</span>
    <span class="nt">&quot;DiscoverDcType&quot;</span> <span class="p">:</span> <span class="s2">&quot;dns&quot;</span><span class="p">,</span>
    <span class="nt">&quot;StartTls&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-   <span class="nt">&quot;port&quot;</span> <span class="p">:</span> <span class="mi">389</span><span class="p">,</span>
-   <span class="nt">&quot;host&quot;</span> <span class="p">:</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span>
    <span class="nt">&quot;isAD&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
    <span class="nt">&quot;isLdap&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
    <span class="nt">&quot;UserDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;dc=edo,dc=nethesis,dc=it&quot;</span><span class="p">,</span>
@@ -2125,7 +2163,7 @@
    <span class="nt">&quot;BaseDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;dc=edo,dc=nethesis,dc=it&quot;</span><span class="p">,</span>
    <span class="nt">&quot;NsdcIp&quot;</span> <span class="p">:</span> <span class="s2">&quot;1.2.3.4&quot;</span><span class="p">,</span>
    <span class="nt">&quot;IsLocal&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-   <span class="nt">&quot;LdapUriDn&quot;</span> <span class="p">:</span> <span class="s2">&quot;ldap:///dc%3Dedo%2Cdc%3Dnethesis%2Cdc%3Dit&quot;</span>
+   <span class="nt">&quot;AuthRequired&quot;</span><span class="p">:</span> <span class="kc">false</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -2265,6 +2303,7 @@ possible with a root DSE query.</p>
 <li><code>local-ad</code></li>
 <li><code>remote-ad</code></li>
 <li><code>change-ad-ip</code></li>
+<li><code>bind-credentials</code></li>
 </ul>
 <p>Constraints for <code>remote-ldap</code>:</p>
 <ul>
@@ -2284,6 +2323,13 @@ possible with a root DSE query.</p>
 <li>AdDns: must be a valid IP address or empty, checked also using ad-dns system validator</li>
 <li>AdRealm: must be a FQDN, checked also using ad-dns system validator</li>
 <li>AdUsername and AdPassword: not empty, check if credentials are valid</li>
+</ul>
+<p>Constraints for <code>bind-credentials</code>:</p>
+<ul>
+<li>StartTls: can be enabled or disabled</li>
+<li>The credentials must be valid</li>
+<li>StartTLS can't be enabled if LDAP URI uses <code>ldaps</code> schema</li>
+<li>Authentication is required if there is at least one application using it</li>
 </ul>
 <h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
 <h4 id="remote-ldap">remote-ldap<a class="headerlink" href="#remote-ldap" title="Permanent link">&para;</a></h4>
@@ -2336,6 +2382,21 @@ possible with a root DSE query.</p>
 </pre></div>
 
 
+<h4 id="bind-credentials">bind-credentials<a class="headerlink" href="#bind-credentials" title="Permanent link">&para;</a></h4>
+<p>Input example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;StartTls&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;BindPassword&quot;</span><span class="p">:</span> <span class="s2">&quot;Nethesis,1234&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;BaseDN&quot;</span><span class="p">:</span> <span class="s2">&quot;DC=adnethesis,DC=it&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;BindDN&quot;</span><span class="p">:</span> <span class="s2">&quot;davidep@adnethesis.it&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;LdapURI&quot;</span><span class="p">:</span> <span class="s2">&quot;ldap://w2k12.adnethesis.it&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;UserDN&quot;</span><span class="p">:</span> <span class="s2">&quot;DC=adnethesis,DC=it&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;GroupDN&quot;</span><span class="p">:</span> <span class="s2">&quot;DC=adnethesis,DC=it&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;bind-credentials&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
 <p>It takes an <code>action</code> argument, supported actions are:</p>
 <ul>
@@ -2384,6 +2445,8 @@ Return the output of <code>pkgaction</code> in json format.</p>
 <h3 id="remote-ad_1">remote-ad<a class="headerlink" href="#remote-ad_1" title="Permanent link">&para;</a></h3>
 <p>Try to join the domain, if the join fails, rollback to previous state.</p>
 <p>Output the state of all executed events and of netherver-dc package installation (see localldap for the output).</p>
+<h3 id="bind-credentials_1">bind-credentials<a class="headerlink" href="#bind-credentials_1" title="Permanent link">&para;</a></h3>
+<p>Set credentials for applications which need LDAP bind.</p>
                 
                   
                 

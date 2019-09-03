@@ -1378,6 +1378,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../nethserver-suricata/bypass/" title="bypass" class="md-nav__link">
+      bypass
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../nethserver-suricata/dashboard/" title="dashboard" class="md-nav__link">
       dashboard
     </a>
@@ -2126,13 +2138,15 @@
 <p>Take an <code>action</code> field. Valid actions are:</p>
 <ul>
 <li><code>add-shortcut</code>: add given application to left menu</li>
-<li><code>remove-shortcut</code>: remove given application form the left menu</li>
+<li><code>remove-shortcut</code>: remove given application from the left menu</li>
+<li><code>add-pin</code>: add given application to Nethserver home page</li>
+<li><code>remove-pin</code>: remove given application from Nethserver home page</li>
 </ul>
 <h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
 <h5 id="add-shortcut">add-shortcut<a class="headerlink" href="#add-shortcut" title="Permanent link">&para;</a></h5>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add-shortcut&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add-pin&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;nethserver-firewall&quot;</span>
 <span class="p">}</span>
 </pre></div>
@@ -2141,14 +2155,14 @@
 <h5 id="remove-shortcut">remove-shortcut<a class="headerlink" href="#remove-shortcut" title="Permanent link">&para;</a></h5>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;remove-shortcut&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;remove-pin&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;nethserver-firewall&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
 
 <h3 id="output_1">Output<a class="headerlink" href="#output_1" title="Permanent link">&para;</a></h3>
-<p>Each actions return a standard success or error object.</p>
+<p>Each action returns a standard success or error object.</p>
                 
                   
                 
