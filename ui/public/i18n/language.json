@@ -557,7 +557,11 @@
     "bind_dn": "Bind DN",
     "bind_password": "Bind Password",
     "edit_provider_ok": "Configuration edited successfully!",
-    "edit_provider_error": "Configuration not edited."
+    "edit_provider_error": "Configuration not edited.",
+    "no_users_found": "No users found",
+    "no_users_found_desc": "If your provider is local, click on button below to create a new user or add it on remote provider",
+    "no_groups_found": "No groups found",
+    "no_groups_found_desc": "If your provider is local, click on button below to create a new group or add it on remote provider"
   },
   "network": {
     "title": "Network",

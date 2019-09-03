@@ -193,6 +193,44 @@
 
       <div class="list-group list-view-pf">
         <div
+          v-if="currentSearchFilter == 'user' && Object.keys(filteredUserList).length == 0"
+          class="blank-slate-pf"
+          id
+        >
+          <div class="blank-slate-pf-icon">
+            <span class="fa fa-user"></span>
+          </div>
+          <h1>{{$t('users_groups.no_users_found')}}</h1>
+          <p>{{$t('users_groups.no_users_found_desc')}}.</p>
+          <button
+            v-if="users.providerInfo.IsLocal"
+            @click="openCreateUser()"
+            class="btn btn-primary btn-lg shutdown-privileged"
+            data-action="restart"
+            data-container="body"
+          >{{$t('users_groups.create_user')}}</button>
+        </div>
+
+        <div
+          v-if="currentSearchFilter == 'group' && Object.keys(filteredGroupList).length == 0"
+          class="blank-slate-pf"
+          id
+        >
+          <div class="blank-slate-pf-icon">
+            <span class="fa fa-users"></span>
+          </div>
+          <h1>{{$t('users_groups.no_groups_found')}}</h1>
+          <p>{{$t('users_groups.no_groups_found_desc')}}.</p>
+          <button
+            v-if="users.providerInfo.IsLocal"
+            @click="openCreateGroup()"
+            class="btn btn-primary btn-lg shutdown-privileged"
+            data-action="restart"
+            data-container="body"
+          >{{$t('users_groups.create_group')}}</button>
+        </div>
+
+        <div
           v-if="currentSearchFilter == 'user'"
           v-for="(u, ku) in filteredUserList"
           v-bind:key="ku"
