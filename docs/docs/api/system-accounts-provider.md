@@ -40,8 +40,6 @@ Output:
    "LdapURI" : "ldap://127.0.0.1",
    "DiscoverDcType" : "dns",
    "StartTls" : "",
-   "port" : 389,
-   "host" : "127.0.0.1",
    "isAD" : "",
    "isLdap" : "",
    "UserDN" : "dc=edo,dc=nethesis,dc=it",
@@ -50,7 +48,7 @@ Output:
    "BaseDN" : "dc=edo,dc=nethesis,dc=it",
    "NsdcIp" : "1.2.3.4",
    "IsLocal": 1,
-   "LdapUriDn" : "ldap:///dc%3Dedo%2Cdc%3Dnethesis%2Cdc%3Dit"
+   "AuthRequired": false
 }
 ```
 
@@ -207,6 +205,7 @@ Valid actions:
 - `local-ad`
 - `remote-ad`
 - `change-ad-ip`
+- `bind-credentials`
 
 Constraints for `remote-ldap`:
 
@@ -227,6 +226,13 @@ Constraints for `remote-ad`:
 - AdDns: must be a valid IP address or empty, checked also using ad-dns system validator
 - AdRealm: must be a FQDN, checked also using ad-dns system validator
 - AdUsername and AdPassword: not empty, check if credentials are valid
+
+Constraints for `bind-credentials`:
+
+- StartTls: can be enabled or disabled
+- The credentials must be valid
+- StartTLS can't be enabled if LDAP URI uses `ldaps` schema
+- Authentication is required if there is at least one application using it
 
 ### Input
 
@@ -287,6 +293,21 @@ Input example:
 }
 ```
 
+#### bind-credentials
+
+Input example:
+```json
+{
+  "StartTls": "enabled",
+  "BindPassword": "Nethesis,1234",
+  "BaseDN": "DC=adnethesis,DC=it",
+  "BindDN": "davidep@adnethesis.it",
+  "LdapURI": "ldap://w2k12.adnethesis.it",
+  "UserDN": "DC=adnethesis,DC=it",
+  "GroupDN": "DC=adnethesis,DC=it",
+  "action": "bind-credentials"
+}
+```
 
 ## update
 
@@ -349,3 +370,7 @@ Change nsdc container IP address.
 Try to join the domain, if the join fails, rollback to previous state.
 
 Output the state of all executed events and of netherver-dc package installation (see localldap for the output).
+
+### bind-credentials
+
+Set credentials for applications which need LDAP bind.

@@ -21,6 +21,12 @@
             data-target="#changeProviderModal"
             class="btn btn-primary"
           >{{$t('users_groups.change_provider')}}</button>
+          <button
+            id="edit-provider-btn"
+            data-toggle="modal"
+            data-target="#editProviderModal"
+            class="btn btn-default right starred-marging"
+          >{{$t('users_groups.edit_provider')}}</button>
           <span class="panel-title">
             {{$t('users_groups.'+(users.providerInfo.IsLocal ? 'local_' : 'remote_'
             )+users.provider)}}
@@ -35,6 +41,10 @@
             <span :class="['fa', view.opened ? 'fa-angle-down' : 'fa-angle-right']"></span>
             {{$t('users_groups.details')}}
           </span>
+          <span v-if="users.providerInfo.AuthRequired" class="starred-marging-left">
+            <span class="pficon pficon-warning-triangle-o starred-marging adjust-warning"></span>
+            <span>{{$t('users_groups.auth_required')}}</span>
+          </span>
         </div>
         <div id="providerDetails" class="panel-collapse collapse">
           <dl class="dl-horizontal details-container">
@@ -44,10 +54,10 @@
               v-bind:key="k"
             >
               <dt
-                v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal' && k != 'NsdcIp'"
+                v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal' && k != 'NsdcIp' && k != 'ValidHostname' && k != 'AuthRequired' && k != 'errors'"
               >{{k | capitalize}}</dt>
               <dd
-                v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal' && k != 'NsdcIp'"
+                v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal' && k != 'NsdcIp' && k != 'ValidHostname' && k != 'AuthRequired' && k != 'errors' && k != 'BindDN'  && k != 'BindPassword'"
               >{{v | normalize(k)}}</dd>
               <dt
                 v-if="k == 'NsdcIp' && users.provider.isAD && users.providerInfo.IsLocal"
@@ -55,6 +65,17 @@
               <dd v-if="k == 'NsdcIp' && users.provider.isAD && users.providerInfo.IsLocal">
                 <a data-toggle="modal" data-target="#nsdcIpChangeModal" href="#">{{v}}</a>
               </dd>
+
+              <dd v-if="k == 'BindDN' && v.length == 0">
+                <span class="pficon pficon-warning-triangle-o starred-marging"></span>
+                <span>{{$t('users_groups.binddn_empty')}}</span>
+              </dd>
+              <dd v-if="k == 'BindPassword' && v.length == 0">
+                <span class="pficon pficon-warning-triangle-o starred-marging"></span>
+                <span>{{$t('users_groups.bindpassword_empty')}}</span>
+              </dd>
+              <dd v-if="k == 'BindDN' && v.length > 0">{{v}}</dd>
+              <dd v-if="k == 'BindPassword' && v.length > 0">{{v}}</dd>
             </span>
           </dl>
         </div>
@@ -165,7 +186,7 @@
               class="form-control input-lg"
               id="filter"
               :placeholder="$t('users_groups.filter_by') +' '+ availableSearchFilter[currentSearchFilter] +'...'"
-            >
+            />
           </div>
         </div>
       </form>
@@ -334,7 +355,7 @@
                     type="text"
                     v-model="newUser.name"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="newUser.errorProps['name']"
                     class="help-block"
@@ -350,7 +371,7 @@
                   for="textInput-modal-markup"
                 >{{$t('users_groups.name')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="newUser.gecos" class="form-control">
+                  <input required type="text" v-model="newUser.gecos" class="form-control" />
                   <span
                     v-if="newUser.errorProps['gecos']"
                     class="help-block"
@@ -415,7 +436,7 @@
                     :type="newUser.togglePass ? 'text' : 'password'"
                     v-model="newUser.newPassword"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="newUser.errorProps['newPassword']"
                     class="help-block"
@@ -466,7 +487,7 @@
                     class="form-control"
                     v-model="newUser.expires"
                     :disabled="passwordPolicy.PassExpires == 'no'"
-                  >
+                  />
                 </div>
               </div>
               <div v-if="!newUser.isPassEdit && newUser.advanced" class="form-group">
@@ -475,7 +496,7 @@
                   for="shell"
                 >{{$t('users_groups.remote_shell')}}</label>
                 <div class="col-sm-9">
-                  <input type="checkbox" id="shell" class="form-control" v-model="newUser.shell">
+                  <input type="checkbox" id="shell" class="form-control" v-model="newUser.shell" />
                 </div>
               </div>
             </div>
@@ -525,7 +546,7 @@
                     type="text"
                     v-model="newGroup.name"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="newGroup.errorProps['name']"
                     class="help-block"
@@ -771,7 +792,7 @@
                     type="text"
                     v-model="users.providerInfo.oldIp"
                     class="form-control"
-                  >
+                  />
                 </div>
               </div>
               <div class="form-group">
@@ -785,13 +806,161 @@
                     type="text"
                     v-model="users.providerInfo.newIp"
                     class="form-control"
-                  >
+                  />
                 </div>
               </div>
             </div>
             <div class="modal-footer">
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('change')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="editProviderModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('users_groups.edit_provider')}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="editProvider()">
+            <div class="modal-body">
+              <div
+                :class="['form-group', users.providerInfo.errors.LdapURI.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-6 control-label"
+                  for="ldap_server_uri"
+                >{{$t('users_groups.ldap_server_uri')}}</label>
+                <div class="col-sm-6">
+                  <input
+                    type="url"
+                    id="ldap_server_uri"
+                    v-model="users.providerInfo.LdapURI"
+                    class="form-control"
+                  />
+                  <span
+                    v-if="users.providerInfo.errors.LdapURI.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+users.providerInfo.errors.LdapURI.message)}}</span>
+                </div>
+              </div>
+              <div
+                :class="['form-group', users.providerInfo.errors.StartTls.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-6 control-label"
+                  for="start_tls"
+                >{{$t('users_groups.start_tls')}}</label>
+                <div class="col-sm-6">
+                  <input
+                    type="checkbox"
+                    id="start_tls"
+                    v-model="users.providerInfo.StartTls"
+                    class="form-control"
+                  />
+                  <span
+                    v-if="users.providerInfo.errors.StartTls.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+users.providerInfo.errors.StartTls.message)}}</span>
+                </div>
+              </div>
+              <div
+                :class="['form-group', users.providerInfo.errors.BaseDN.hasError ? 'has-error' : '']"
+              >
+                <label class="col-sm-6 control-label" for="base_dn">{{$t('users_groups.base_dn')}}</label>
+                <div class="col-sm-6">
+                  <input
+                    type="text"
+                    id="base_dn"
+                    v-model="users.providerInfo.BaseDN"
+                    class="form-control"
+                  />
+                  <span
+                    v-if="users.providerInfo.errors.BaseDN.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+users.providerInfo.errors.BaseDN.message)}}</span>
+                </div>
+              </div>
+              <div
+                :class="['form-group', users.providerInfo.errors.UserDN.hasError ? 'has-error' : '']"
+              >
+                <label class="col-sm-6 control-label" for="user_dn">{{$t('users_groups.user_dn')}}</label>
+                <div class="col-sm-6">
+                  <input
+                    type="text"
+                    id="user_dn"
+                    v-model="users.providerInfo.UserDN"
+                    class="form-control"
+                  />
+                  <span
+                    v-if="users.providerInfo.errors.UserDN.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+users.providerInfo.errors.UserDN.message)}}</span>
+                </div>
+              </div>
+              <div
+                :class="['form-group', users.providerInfo.errors.GroupDN.hasError ? 'has-error' : '']"
+              >
+                <label class="col-sm-6 control-label" for="group_dn">{{$t('users_groups.group_dn')}}</label>
+                <div class="col-sm-6">
+                  <input
+                    type="text"
+                    id="group_dn"
+                    v-model="users.providerInfo.GroupDN"
+                    class="form-control"
+                  />
+                  <span
+                    v-if="users.providerInfo.errors.GroupDN.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+users.providerInfo.errors.GroupDN.message)}}</span>
+                </div>
+              </div>
+              <legend class="fields-section-header-pf" aria-expanded="true">
+                <span class="field-section-toggle-pf">{{$t('users_groups.auth_credentials')}}</span>
+              </legend>
+              <div
+                :class="['form-group', users.providerInfo.errors.BindDN.hasError ? 'has-error' : '']"
+              >
+                <label class="col-sm-6 control-label" for="bind_dn">{{$t('users_groups.bind_dn')}}</label>
+                <div class="col-sm-6">
+                  <input
+                    type="text"
+                    id="bind_dn"
+                    v-model="users.providerInfo.BindDN"
+                    class="form-control"
+                  />
+                  <span
+                    v-if="users.providerInfo.errors.BindDN.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+users.providerInfo.errors.BindDN.message)}}</span>
+                </div>
+              </div>
+              <div
+                :class="['form-group', users.providerInfo.errors.BindPassword.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-6 control-label"
+                  for="bind_password"
+                >{{$t('users_groups.bind_password')}}</label>
+                <div class="col-sm-6">
+                  <input
+                    type="text"
+                    id="bind_password"
+                    v-model="users.providerInfo.BindPassword"
+                    class="form-control"
+                  />
+                  <span
+                    v-if="users.providerInfo.errors.BindPassword.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+users.providerInfo.errors.BindPassword.message)}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-primary" type="submit">{{$t('edit')}}</button>
             </div>
           </form>
         </div>
@@ -816,7 +985,7 @@
                     id="Users"
                     v-model="passwordPolicy.Users"
                     class="form-control"
-                  >
+                  />
                 </div>
               </div>
               <div class="form-group">
@@ -830,7 +999,7 @@
                     id="PassExpires"
                     v-model="passwordPolicy.PassExpires"
                     class="form-control"
-                  >
+                  />
                 </div>
               </div>
               <div class="form-group">
@@ -845,7 +1014,7 @@
                     min="0"
                     v-model="passwordPolicy.MinPassAge"
                     class="form-control"
-                  >
+                  />
                 </div>
               </div>
               <div class="form-group">
@@ -860,7 +1029,7 @@
                     min="0"
                     v-model="passwordPolicy.MaxPassAge"
                     class="form-control"
-                  >
+                  />
                 </div>
               </div>
             </div>
@@ -963,7 +1132,7 @@
                               required
                               class="form-control"
                               type="text"
-                            >
+                            />
                             <span v-if="users.hostname.errors.hasError" class="help-block">
                               {{$t('validation.validation_failed')}}:
                               {{$t('validation.'+users.hostname.errors.message)}}
@@ -1132,7 +1301,7 @@
                               type="text"
                               v-model="newProvider.hostname"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div v-if="!newProvider.isChecked" class="form-group">
@@ -1146,7 +1315,7 @@
                               placeholder="389"
                               v-model="newProvider.tcpport"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <!-- <div v-if="!newProvider.isChecked" class="form-group">
@@ -1177,7 +1346,7 @@
                               v-model="newProvider.info[k]"
                               @change="updateValues(k,newProvider.info[k])"
                               class="form-control"
-                            >
+                            />
 
                             <input
                               v-if="k == 'StartTls'"
@@ -1185,7 +1354,7 @@
                               class="form-control"
                               :value="v == 'enabled'"
                               @click="changeStartTLS(v)"
-                            >
+                            />
 
                             <input
                               v-if="k == 'BindType'"
@@ -1194,7 +1363,7 @@
                               v-model="newProvider.info.BindType"
                               value="authenticated"
                               @click="changeBindType('authenticated')"
-                            >
+                            />
                             <span
                               for="BindType-1"
                               class="span-right-margin-lg"
@@ -1208,7 +1377,7 @@
                               v-model="newProvider.info.BindType"
                               value="anonymous"
                               @click="changeBindType('anonymous')"
-                            >
+                            />
                             <span
                               for="BindType-2"
                               v-if="k == 'BindType'"
@@ -1255,7 +1424,7 @@
                               type="text"
                               v-model="newProvider.Realm"
                               class="form-control"
-                            >
+                            />
                             <span v-if="newProvider.errors.Realm.hasError" class="help-block">
                               {{$t('validation.validation_failed')}}:
                               {{$t('validation.'+newProvider.errors.Realm.message)}}
@@ -1275,7 +1444,7 @@
                               type="text"
                               v-model="newProvider.Workgroup"
                               class="form-control"
-                            >
+                            />
                             <span v-if="newProvider.errors.Workgroup.hasError" class="help-block">
                               {{$t('validation.validation_failed')}}:
                               {{$t('validation.'+newProvider.errors.Workgroup.message)}}
@@ -1303,7 +1472,7 @@
                               type="text"
                               v-model="newProvider.IpAddress"
                               class="form-control"
-                            >
+                            />
                             <span v-if="newProvider.errors.IpAddress.hasError" class="help-block">
                               {{$t('validation.validation_failed')}}:
                               {{$t('validation.'+newProvider.errors.IpAddress.message)}}
@@ -1353,7 +1522,7 @@
                               type="text"
                               v-model="newProvider.Realm"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div
@@ -1365,7 +1534,7 @@
                             for="textInput-modal-markup"
                           >{{$t('users_groups.ad_dns_server')}}</label>
                           <div class="col-sm-9">
-                            <input type="text" v-model="newProvider.AdDns" class="form-control">
+                            <input type="text" v-model="newProvider.AdDns" class="form-control" />
                           </div>
                         </div>
                         <!-- <div v-if="!newProvider.isChecked" class="form-group">
@@ -1391,7 +1560,7 @@
                               type="text"
                               v-model="newProvider.info.BindDN"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div v-if="newProvider.info && newProvider.isChecked" class="form-group">
@@ -1405,7 +1574,7 @@
                               type="password"
                               v-model="newProvider.info.BindPassword"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div class="form-group">
@@ -1565,7 +1734,8 @@ export default {
         chooseBind: null,
         providerInfo: {
           oldIp: "",
-          newIp: ""
+          newIp: "",
+          errors: this.initEditProvidersErrors()
         },
         hostname: {
           valid: false,
@@ -1603,6 +1773,38 @@ export default {
           message: ""
         },
         Realm: {
+          hasError: false,
+          message: ""
+        }
+      };
+    },
+    initEditProvidersErrors() {
+      return {
+        LdapURI: {
+          hasError: false,
+          message: ""
+        },
+        StartTls: {
+          hasError: false,
+          message: ""
+        },
+        BaseDN: {
+          hasError: false,
+          message: ""
+        },
+        UserDN: {
+          hasError: false,
+          message: ""
+        },
+        GroupDN: {
+          hasError: false,
+          message: ""
+        },
+        BindDN: {
+          hasError: false,
+          message: ""
+        },
+        BindPassword: {
           hasError: false,
           message: ""
         }
@@ -1705,7 +1907,10 @@ export default {
       var ip = tokens[0];
       var netmaskBits = parseInt(tokens[1]);
       // convert ip to decimal number
-      var ipDecimal = ip.split('.').reduce(function(ipInt, octet) { return (ipInt<<8) + parseInt(octet, 10)}, 0) >>> 0;
+      var ipDecimal =
+        ip.split(".").reduce(function(ipInt, octet) {
+          return (ipInt << 8) + parseInt(octet, 10);
+        }, 0) >>> 0;
       var ipDecimalStr = ipDecimal.toString();
 
       // convert ip from decimal to binary
@@ -1719,7 +1924,14 @@ export default {
       var subnetDecimal = parseInt(subnetBinaryStr, 2);
 
       // convert subnet from decimal to ip format
-      var subnet = ( (subnetDecimal>>>24) +'.' + (subnetDecimal>>16 & 255) +'.' + (subnetDecimal>>8 & 255) +'.' + (subnetDecimal & 255) );
+      var subnet =
+        (subnetDecimal >>> 24) +
+        "." +
+        ((subnetDecimal >> 16) & 255) +
+        "." +
+        ((subnetDecimal >> 8) & 255) +
+        "." +
+        (subnetDecimal & 255);
       return subnet + "/" + netmaskBits; // e.g. "192.168.5.0/24"
     },
 
@@ -1735,7 +1947,9 @@ export default {
           try {
             success = JSON.parse(success);
             var greenIpAddressWithNetmask = success.configuration.green[0].cidr;
-            context.greenSubnetAddress = context.getSubnetAddress(greenIpAddressWithNetmask);
+            context.greenSubnetAddress = context.getSubnetAddress(
+              greenIpAddressWithNetmask
+            );
           } catch (e) {
             console.error(e);
           }
@@ -1947,6 +2161,7 @@ export default {
             : null;
           context.users.providerInfo = success;
           context.users.providerInfo.oldIp = success["NsdcIp"];
+          context.users.providerInfo.errors = context.initEditProvidersErrors();
 
           context.users.hostname.valid = success["ValidHostname"] == 1;
 
@@ -3186,6 +3401,70 @@ export default {
           );
         }
       );
+    },
+    editProvider() {
+      var context = this;
+
+      var providerObj = {
+        StartTls: context.users.providerInfo.StartTls ? "enabled" : "disabled",
+        BindPassword: context.users.providerInfo.BindPassword,
+        BaseDN: context.users.providerInfo.BaseDN,
+        BindDN: context.users.providerInfo.BindDN,
+        LdapURI: context.users.providerInfo.LdapURI,
+        UserDN: context.users.providerInfo.UserDN,
+        GroupDN: context.users.providerInfo.GroupDN,
+        action: "bind-credentials"
+      };
+
+      context.users.hostname.errors.hasError = false;
+      context.exec(
+        ["system-accounts-provider/validate"],
+        providerObj,
+        null,
+        function(success) {
+          $("#editProviderModal").modal("hide");
+
+          // update values
+          context.exec(
+            ["system-accounts-provider/update"],
+            providerObj,
+            function(stream) {
+              console.info("accounts-provider", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "users_groups.edit_provider_ok"
+              );
+
+              context.getInfo();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "users_groups.edit_provider_error"
+              );
+            }
+          );
+        },
+        function(error, data) {
+          var errorData = {};
+          context.users.providerInfo.errors = context.initEditProvidersErrors();
+
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.users.providerInfo.errors[attr.parameter].hasError = true;
+              context.users.providerInfo.errors[attr.parameter].message =
+                attr.error;
+            }
+            context.$forceUpdate();
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      );
     }
   }
 };
@@ -3197,5 +3476,8 @@ export default {
 }
 .adjust-index {
   z-index: 1;
+}
+.adjust-warning {
+  font-size: 16px !important;
 }
 </style>
