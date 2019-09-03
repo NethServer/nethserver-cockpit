@@ -429,6 +429,7 @@
     "bind": "Bind",
     "no_account_provider_configured": "Account provider not configured",
     "change_provider": "Change provider",
+    "edit_provider": "Edit provider",
     "account_provider": "Account provider",
     "configure_account_provider": "Configure the account provider",
     "choose_account_provider": "Choose the account provider",
@@ -542,7 +543,21 @@
     "role_deleted_ok": "Role deleted OK",
     "role_deleted_error": "Role deleted errors",
     "define_authorization": "Define authorizations for this group",
-    "define_authorization_description": "Select views and applications that members of this group can view"
+    "define_authorization_description": "Select views and applications that members of this group can view",
+    "binddn_empty": "BindDN is empty",
+    "bindpassword_empty": "BindPassword is empty",
+    "binddn_bindpass_empty": "BindDN and BindPassword are empty",
+    "auth_required": "Bind credentials are required for external applications",
+    "ldap_server_uri": "LDAP server URI",
+    "start_tls": "STARTTLS",
+    "base_dn": "Base DN",
+    "user_dn": "User DN",
+    "group_dn": "Group DN",
+    "auth_credentials": "Authentication credentials for LDAP applications",
+    "bind_dn": "Bind DN",
+    "bind_password": "Bind Password",
+    "edit_provider_ok": "Configuration edited successfully!",
+    "edit_provider_error": "Configuration not edited."
   },
   "network": {
     "title": "Network",
@@ -1000,7 +1015,14 @@
     "dcipaddr_validation_error": "The IP address must be not in use and it must belong to an existing green network. Also, the green interface must be configured with a static IP address.",
     "workgroup_simple_hostname_max_15": "Must be a simple hostname like 'WORKGROUP'. Maximum length is 15 characters.",
     "dcrealm_validation_error": "Must be different from machine host name.",
-    "invalid_nslabel": "Label must not contain spaces and must be up to 20 characters long"
+    "valid_adldapcredentials_required": "BindDN and BindPassword fields cannot be empty",
+    "invalid_nslabel": "Label must not contain spaces and must be up to 20 characters long",
+    "ldapcredentials_required": "Set BindDN and BindPassword fields",
+    "ldap-credentials,ldaptestbind,49": "Invalid LDAP credentials",
+    "ldap-credentials,ldaptestbind,1": "LDAP connection error",
+    "ldap-credentials,ldaptestbind,32": "Base DN was not found or insufficient rights",
+    "ldap-credentials,ldaptestbind,34": "Invalid DN syntax",
+    "valid_starttls_urischeme": "Start TLS conflicts with 'ldaps://' URI scheme"
   },
   "docs": {
     "more_info_about": "More info about",
