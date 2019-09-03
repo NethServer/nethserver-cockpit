@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.12.0
+Version: 0.13.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -60,6 +60,12 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Sep 03 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.13.0-1
+- Cockpit: AD custom bind credentials - NethServer/dev#5825
+- Cockpit: show green subnet range while creating AD provider - NethServer/dev#5822
+- Cockpit: AD DNS server validation - NethServer/dev#5817
+- Various UI improvements
+
 * Mon Aug 26 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.12.0-1
 - Cockpit. fix various bugs - Bug Nethserver/dev#5810
 - Multiple UI improvements
