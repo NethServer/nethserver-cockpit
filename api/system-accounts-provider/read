@@ -247,6 +247,8 @@ if($cmd eq 'probe-ldap') {
 
     # check if current hostname is a good one
     my $db = esmith::ConfigDB->open_ro();
+    my $bindDn = $db->get_prop('sssd', 'BindDN') || '';
+    my $bindPassword = $db->get_prop('sssd', 'BindPassword') || '';
     my $fqdn = $db->get_value('SystemName').".".$db->get_value('DomainName');
     my $validHostname = 1;
     my $count = () = $fqdn =~ /\Q./g;
@@ -255,7 +257,18 @@ if($cmd eq 'probe-ldap') {
         $validHostname = 0;
     }
     $dump->{'ValidHostname'} = $validHostname;
-
+    foreach (qw(DiscoverDcType LdapUriDn port host)) {
+        delete($dump->{$_});
+    }
+    $dump->{'AuthRequired'} = JSON::false;
+    if ($bindPassword eq '' && $bindDn eq '') { # hide machine account credentials
+       $dump->{'BindDN'} = '';
+       $dump->{'BindPassword'} = '';
+       my $out = `/usr/libexec/nethserver/ldap-credentials-optional`;
+       if ($? > 0) {
+           $dump->{'AuthRequired'} = JSON::true;
+       }
+    }
     print JSON->new()->encode($dump);
     exit(0);
 

@@ -141,6 +141,41 @@ function validate_changeadip($data) {
     }
 }
 
+function validate_credentials($data) {
+    $v = new LegacyValidator($data);
+    $db = new EsmithDatabase('configuration');
+    $v->declareParameter('StartTls', Validate::SERVICESTATUS);
+
+    if ($data['BindDN']) {
+        $cmd = "/sbin/e-smith/validate ldap-credentials {$data['BaseDN']} {$data['LdapURI']} ".($data['StartTls'] === 'enabled' ? '1' : '""')." {$data['BindDN']} {$data['BindPassword']} 2>/dev/null";
+        exec($cmd, $out, $ret);
+        if ($ret > 0) {
+            $v->addValidationError('BindDN', implode("",$out));
+        }
+    } else {
+        # check if credentials are required
+        $bindPassword = $db->getProp('sssd', 'BindPassword');
+        $bindDn = $db->getProp('sssd', 'BindDn');
+        if (!$bindPassword && !$bindDn) {
+            exec("/usr/libexec/nethserver/ldap-credentials-optional", $output, $exit_code);
+            if ($exit_code == 2) {
+                $v->addValidationError('BindDN', "valid_adldapcredentials_required");
+            }
+        }
+    }
+
+    if($data['StartTls'] === 'enabled' && substr($data['LdapURI'], 0, 6) === 'ldaps:') {
+        $v->addValidationError('StartTls', 'valid_starttls_urischeme');
+    }    
+
+    if (!$v->validate()) {
+        error($v);
+    } else {
+        success();
+    }
+}
+
+
 $data = readInput();
 
 if($data['action'] == 'remote-ldap') {
@@ -151,6 +186,8 @@ if($data['action'] == 'remote-ldap') {
     validate_remotead($data);
 } else if($data['action'] == 'change-ad-ip') {
     validate_changeadip($data);
+} else if($data['action'] == 'bind-credentials') {
+    validate_credentials($data);
 } else {
     error();
 }

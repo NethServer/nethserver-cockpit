@@ -152,4 +152,20 @@ if ($cmd eq 'local-ldap') {
     system("/sbin/e-smith/signal-event -j nethserver-dc-change-ip ".$input->{'IpAddress'});
     exit($?>>8);
 
+} elsif ($cmd eq 'bind-credentials') {
+
+    my $db = esmith::ConfigDB->open();
+    $db->set_prop('sssd', 'BindDN', $input->{'BindDN'});
+    $db->set_prop('sssd', 'BindPassword', $input->{'BindPassword'});
+    $db->set_prop('sssd', 'LdapURI', $input->{'LdapURI'});
+    $db->set_prop('sssd', 'StartTls', $input->{'StartTls'});
+    $db->set_prop('sssd', 'UserDN', $input->{'UserDN'});
+    $db->set_prop('sssd', 'GroupDN', $input->{'GroupDN'});
+    $db->set_prop('sssd', 'BaseDN', $input->{'BaseDN'});
+
+    system("/sbin/e-smith/signal-event -j nethserver-sssd-save");
+    exit($?>>8);
+
+} else {
+    error();
 }
