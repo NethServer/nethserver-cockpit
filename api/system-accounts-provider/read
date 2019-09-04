@@ -261,7 +261,7 @@ if($cmd eq 'probe-ldap') {
         delete($dump->{$_});
     }
     $dump->{'AuthRequired'} = JSON::false;
-    if ($bindPassword eq '' && $bindDn eq '') { # hide machine account credentials
+    if ($bindPassword eq '' && $bindDn eq '' && !$dump->{'IsLocal'}) { # hide machine account credentials
        $dump->{'BindDN'} = '';
        $dump->{'BindPassword'} = '';
        my $out = `/usr/libexec/nethserver/ldap-credentials-optional`;
