@@ -768,7 +768,9 @@ export default {
       var context = this;
       context.exec(
         ["system-dhcp/read"],
-        null,
+        {
+          action: "list"
+        },
         null,
         function(success) {
           try {
@@ -930,7 +932,9 @@ export default {
       var context = this;
       context.exec(
         ["system-dhcp/read"],
-        null,
+        {
+          action: "list"
+        },
         null,
         function(success) {
           try {
@@ -1098,8 +1102,9 @@ export default {
       context.view.isScanning = true;
       context.nic = nic;
       context.exec(
-        ["system-dhcp/scanNetwork"],
+        ["system-dhcp/read"],
         {
+          action: "scan",
           nic: nic
         },
         null,
