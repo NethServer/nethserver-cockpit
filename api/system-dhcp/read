@@ -23,6 +23,9 @@
 
 require_once("/usr/libexec/nethserver/api/lib/dhcp_functions.php");
 
+$data = readInput();
+$action = $data['action'];
+
 function not_expired($r)
 {
     if (time() > $r['expire']) {
@@ -36,54 +39,82 @@ $ranges = array();
 $leases = array();
 $reservations = array();
 
-# List current leases
-if (file_exists("/var/lib/dnsmasq/dnsmasq.leases")) {
-    $output = shell_exec("/usr/libexec/nethserver/read-dhcp-leases");
-    foreach (json_decode($output, TRUE) as $lease) {
-        if (time() > $lease['expire']) {
-            continue;
+if ($action === 'list') {
+    # List current leases
+    if (file_exists("/var/lib/dnsmasq/dnsmasq.leases")) {
+        $output = shell_exec("/usr/libexec/nethserver/read-dhcp-leases");
+        foreach (json_decode($output, TRUE) as $lease) {
+            if (time() > $lease['expire']) {
+                continue;
+            }
+            if (!$lease['name']) {
+                $tmp = explode(".",$lease['ip']);
+                $lease['name'] = "host-".$tmp[3];
+            }
+            $leases[] = $lease;
         }
-        if (!$lease['name']) {
-            $tmp = explode(".",$lease['ip']);
-            $lease['name'] = "host-".$tmp[3];
-        }
-        $leases[] = $lease;
     }
-}
-$ret['status'] = $leases;
+    $ret['status'] = $leases;
 
-
-# Merge list of available interfaces with dhcp configuration
-$dhcp_db = new EsmithDatabase('dhcp');
-$ndb = new EsmithDatabase('networks');
-foreach (getNetworkInterfaces() as $i => $props) {
-    $range = $dhcp_db->getKey($i);
-    $nslabel = $ndb->getProp($i, 'nslabel');
-    $record = array("name" => $i ,"type" => "range", "nslabel" => $nslabel);
-    if ($range) {
-        foreach (array('DhcpDNS', 'DhcpWINS', 'DhcpNTP', 'DhcpTFTP') as $field) {
-            if (isset($range[$field])) {
-                if ($range[$field]) {
-                    $range[$field] = explode(",", $range[$field]);
-                } else {
-                    $range[$field] = array();
+    # Merge list of available interfaces with dhcp configuration
+    $dhcp_db = new EsmithDatabase('dhcp');
+    $ndb = new EsmithDatabase('networks');
+    foreach (getNetworkInterfaces() as $i => $props) {
+        $range = $dhcp_db->getKey($i);
+        $nslabel = $ndb->getProp($i, 'nslabel');
+        $record = array("name" => $i ,"type" => "range", "nslabel" => $nslabel);
+        if ($range) {
+            foreach (array('DhcpDNS', 'DhcpWINS', 'DhcpNTP', 'DhcpTFTP') as $field) {
+                if (isset($range[$field])) {
+                    if ($range[$field]) {
+                        $range[$field] = explode(",", $range[$field]);
+                    } else {
+                        $range[$field] = array();
+                    }
                 }
             }
+            $record['props'] = $range;
+        } else {
+            $record['props'] = getDefaults($props);
         }
-        $record['props'] = $range;
-    } else {
-        $record['props'] = getDefaults($props);
+        $ranges[] = $record;
     }
-    $ranges[] = $record;
-}
-$ret['configuration']['ranges'] = $ranges;
+    $ret['configuration']['ranges'] = $ranges;
 
-$hosts_db = new  EsmithDatabase('hosts');
-foreach ($hosts_db->getAll("local") as $key => $props) {
-    $record = array("name" => $key ,"type" => "local", "props" => $props);
-    $reservations[] = $record;
-}
-$ret['configuration']['reservations'] = $reservations;
+    $hosts_db = new  EsmithDatabase('hosts');
+    foreach ($hosts_db->getAll("local") as $key => $props) {
+        $record = array("name" => $key ,"type" => "local", "props" => $props);
+        $reservations[] = $record;
+    }
+    $ret['configuration']['reservations'] = $reservations;
 
-# JSON output
-print json_encode($ret); 
+    # JSON output
+    print json_encode($ret); 
+}
+
+elseif ($action === 'scan') {
+    # scan the nic, check if the mac address is not already reserved
+    $nic = $data['nic'];
+    $hosts_db = new  EsmithDatabase('hosts');
+    $macs = array();
+
+    foreach ($hosts_db->getAll("local") as $key => $props) {
+        $mac = $hosts_db->getProp($key, 'MacAddress');
+        $macs[] = array_push ($macs,$mac);
+    }
+
+    exec("arp-scan -lx -I ".escapeshellarg($nic), $output, $ret);
+    $data = array();
+    if ($ret == 0) {
+        foreach ($output as $line) {
+            $tmp = explode("\t", $line);
+            # Find if the mac address is not already reserved
+            $reserved = false;
+            if (array_search($tmp[1], $macs)) {
+                $reserved = true;
+            }
+            $data[] = array( "ip" => $tmp[0], "mac" => $tmp[1], "name" => $tmp[2], "reserved" => $reserved );
+        }
+    }
+    echo json_encode($data);
+}

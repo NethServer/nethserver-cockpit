@@ -393,7 +393,9 @@
     "range_create_ok": "Range created successfully!",
     "range_create_error": "Range not created.",
     "range_update_ok": "Range updated successfully!",
-    "range_update_error": "Range not updated."
+    "range_update_error": "Range not updated.",
+    "scan_network": "Scan network",
+    "Scanned_Network": "Scanning of the network interface"
   },
   "services": {
     "title": "Services",

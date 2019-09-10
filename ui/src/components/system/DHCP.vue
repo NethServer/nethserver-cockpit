@@ -23,6 +23,13 @@
     <div v-for="i in ranges" v-bind:key="i.name">
       <div class="row">
         <h4 class="dhcp-int col-sm-2">{{i.name}} <span v-if="i.nslabel" class="gray">{{i.nslabel? ' - '+i.nslabel : ''}}</span></h4>
+        <button
+          @click="scanNetwork(i.name)"
+          class="btn btn-primary span-right-margin-lg dhcp-mod-btn"
+          data-action="restart"
+          data-container="body"
+        >{{$t('dhcp.scan_network')}}</button>
+        
         <toggle-button
           class="min-toggle"
           :width="40"
@@ -226,6 +233,63 @@
               <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="scanNetworkModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              {{$t('dhcp.Scanned_Network') + ' : '+ nic}}
+            </h4>
+            <div v-if="view.isScanning" class="spinner spinner-lg"></div>
+          </div>      
+            <div class="modal-body">
+              <vue-good-table
+                v-if="!view.isScanning"
+                :customRowsPerPageDropdown="[10,25,50,100]"
+                :perPage="10"
+                :columns="columnsScan"
+                :rows="rowsScan"
+                :lineNumbers="false"
+                :defaultSortBy="{field: 'ip', type: 'asc'}"
+                :globalSearch="true"
+                :paginate="true"
+                styleClass="table"
+                :nextText="tableLangsTexts.nextText"
+                :prevText="tableLangsTexts.prevText"
+                :rowsPerPageText="tableLangsTexts.rowsPerPageText"
+                :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
+                :ofText="tableLangsTexts.ofText"
+              >
+                <template slot="table-row" slot-scope="props">
+                  <td class="fancy">
+                      <strong>{{ props.row.ip}}</strong>
+                  </td>
+                  <td class="fancy">
+                    {{ props.row.mac}}
+                  </td>
+                  <td class="fancy">
+                    {{props.row.name}}
+                  </td>
+                  <td>
+                    <button
+                      :disabled="props.row.reserved"
+                      @click="addMacReservation(props.row)"
+                      class="btn btn-default btn-primary"
+                      >
+                      <span class="pficon pficon-network span-right-margin"></span>
+                      {{$t('dhcp.ip_reservation')}}
+                    </button>
+                  </td>
+                </template>
+              </vue-good-table>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
+            </div>
         </div>
       </div>
     </div>
@@ -526,8 +590,40 @@ export default {
     return {
       view: {
         isLoaded: false,
-        isAuth: false
+        isAuth: false,
+        isScanning: true
       },
+      columnsScan: [
+        {
+          label: this.$i18n.t("dhcp.ip_address"),
+          field: "ip",
+          filterable: true,
+          sortFn: function(a, b, col, rowX, rowY) {
+            a = a.split(".");
+            b = b.split(".");
+            for (var i = 0; i < a.length; i++) {
+              if ((a[i] = parseInt(a[i])) < (b[i] = parseInt(b[i]))) return -1;
+              else if (a[i] > b[i]) return 1;
+            }
+          }
+        },
+        {
+          label: this.$i18n.t("dhcp.mac_address"),
+          field: "mac",
+          filterable: true
+        },
+        {
+          label: this.$i18n.t("dhcp.description"),
+          field: "name",
+          filterable: true
+        },
+        {
+          label: this.$i18n.t("action"),
+          field: "",
+          filterable: true,
+          sortable: false
+        }
+      ],
       tableLangsTexts: this.tableLangs(),
       columns: [
         {
@@ -565,6 +661,7 @@ export default {
           sortable: false
         }
       ],
+      nic: "",
       rows: [],
       ranges: [],
       currentRange: this.initRange(),
@@ -671,7 +768,9 @@ export default {
       var context = this;
       context.exec(
         ["system-dhcp/read"],
-        null,
+        {
+          action: "list"
+        },
         null,
         function(success) {
           try {
@@ -833,7 +932,9 @@ export default {
       var context = this;
       context.exec(
         ["system-dhcp/read"],
-        null,
+        {
+          action: "list"
+        },
         null,
         function(success) {
           try {
@@ -972,6 +1073,14 @@ export default {
         }
       );
     },
+    addMacReservation(ipres) {
+      this.newReservation = this.initReservation();
+      this.newReservation.props.Description = ipres.name;
+      this.newReservation.props.IpAddress = ipres.ip;
+      this.newReservation.props.MacAddress = ipres.mac;
+      $("#scanNetworkModal").modal("hide");
+      $("#newReservationModal").modal("show");
+    },
     addReservation(ipres) {
       this.newReservation = this.initReservation();
       this.newReservation.name = ipres.name;
@@ -983,6 +1092,37 @@ export default {
     newIPReservation() {
       this.newReservation = this.initReservation();
       $("#newReservationModal").modal("show");
+    },
+    scanNetwork(nic) {
+      this.doScan(nic);
+      $("#scanNetworkModal").modal("show");
+    },
+    doScan(nic) {
+      var context = this;
+      context.view.isScanning = true;
+      context.nic = nic;
+      context.exec(
+        ["system-dhcp/read"],
+        {
+          action: "scan",
+          nic: nic
+        },
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+          context.view.isScanning = false;
+          context.rowsScan = success;
+
+        },
+        function(error) {
+          console.error(error);
+          context.view.isScanning = false;
+        }
+      );
     },
     editReservation(ipres) {
       this.newReservation.name = ipres.name;

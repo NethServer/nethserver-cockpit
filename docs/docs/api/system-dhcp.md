@@ -3,9 +3,35 @@
 Manage DHCP configuration for DNSMasq.
 
 ## read
+### Input
 
+It takes a mandatory `action` argument.
+
+#### list
+
+List all available configurations.
+
+Example:
+```json
+{
+  "action": "list"
+}
+```
+
+#### scan
+
+Scan all available hosts on a specific network interface. `arp-scan` sends ARP packets to hosts on the local network and displays any responses that are received. 
+
+Example:
+```json
+{
+  "action": "scan",
+  "nic": "eth0"
+}
+```
 ### Output
 
+#### list
 Inside the `configuration` field return:
 
 - `reservations`: all configured reservation records from the `hosts`
@@ -60,6 +86,32 @@ Inside the `configuration` field return:
     ]
   }
 }
+```
+
+#### scan 
+
+Scan the hosts on the network
+
+- `ip`: The IP address of the host
+- `mac`: The mac address of the host 
+- `name`:The vendor description of the host network interface
+- `reserved`: if true an IP reservation has been made in the DHCP server.
+
+```json
+[
+  {
+    "ip": "192.168.56.1",
+    "mac": "0a:00:27:00:00:00",
+    "name": "(Unknown)",
+    "reserved": true
+  },
+  {
+    "ip": "192.168.56.2",
+    "mac": "08:00:27:f0:78:c1",
+    "name": "PCS Systemtechnik GmbH",
+    "reserved": false
+  }
+]
 ```
 
 ## validate
