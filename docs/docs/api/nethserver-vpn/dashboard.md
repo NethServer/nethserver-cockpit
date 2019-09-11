@@ -39,6 +39,7 @@ Input example:
 #### status
 
 Return current IPSec tunnels and OpenVPN status.
+`topTrafficAccounts` field specifies the accounts who generated more download/upload data. `traffic` field is represented in bytes.
 
 Output example:
 ```json
@@ -62,6 +63,16 @@ Output example:
       "mode": "routed",
       "status": "enabled",
       "connected": 0,
+      "topTrafficAccounts": [
+        {
+          "traffic": 7261,
+          "account": "test-account"
+        },
+        {
+          "traffic": 6093,
+          "account": "andreal"
+        }
+      ],
       "port": "1194",
       "total": 4
     }
