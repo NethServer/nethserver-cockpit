@@ -99,8 +99,9 @@ elseif ($action === 'scan') {
     $macs = array();
 
     foreach ($hosts_db->getAll("local") as $key => $props) {
-        $mac = $hosts_db->getProp($key, 'MacAddress');
-        $macs[] = array_push ($macs,$mac);
+        if (@$props['MacAddress']) {
+            $macs[] = strtolower($props['MacAddress']);
+        }
     }
 
     exec("arp-scan -lx -I ".escapeshellarg($nic), $output, $ret);
@@ -110,7 +111,7 @@ elseif ($action === 'scan') {
             $tmp = explode("\t", $line);
             # Find if the mac address is not already reserved
             $reserved = false;
-            if (array_search($tmp[1], $macs)) {
+            if (in_array($tmp[1], $macs)) { # assume mac is always lower case
                 $reserved = true;
             }
             $data[] = array( "ip" => $tmp[0], "mac" => $tmp[1], "name" => $tmp[2], "reserved" => $reserved );
