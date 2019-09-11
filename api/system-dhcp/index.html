@@ -476,9 +476,56 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#input" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list" title="list" class="md-nav__link">
+    list
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scan" title="scan" class="md-nav__link">
+    scan
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#output" title="Output" class="md-nav__link">
     Output
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list_1" title="list" class="md-nav__link">
+    list
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scan_1" title="scan" class="md-nav__link">
+    scan
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -503,7 +550,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#input" title="Input" class="md-nav__link">
+  <a href="#input_1" title="Input" class="md-nav__link">
     Input
   </a>
   
@@ -1901,9 +1948,56 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#input" title="Input" class="md-nav__link">
+    Input
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list" title="list" class="md-nav__link">
+    list
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scan" title="scan" class="md-nav__link">
+    scan
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#output" title="Output" class="md-nav__link">
     Output
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list_1" title="list" class="md-nav__link">
+    list
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scan_1" title="scan" class="md-nav__link">
+    scan
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1928,7 +2022,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#input" title="Input" class="md-nav__link">
+  <a href="#input_1" title="Input" class="md-nav__link">
     Input
   </a>
   
@@ -2062,7 +2156,29 @@
                 <h1 id="system-dhcp">system-dhcp<a class="headerlink" href="#system-dhcp" title="Permanent link">&para;</a></h1>
 <p>Manage DHCP configuration for DNSMasq.</p>
 <h2 id="read">read<a class="headerlink" href="#read" title="Permanent link">&para;</a></h2>
+<h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
+<p>It takes a mandatory <code>action</code> argument.</p>
+<h4 id="list">list<a class="headerlink" href="#list" title="Permanent link">&para;</a></h4>
+<p>List all available configurations.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;list&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="scan">scan<a class="headerlink" href="#scan" title="Permanent link">&para;</a></h4>
+<p>Scan all available hosts on a specific network interface. <code>arp-scan</code> sends ARP packets to hosts on the local network and displays any responses that are received. </p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;scan&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;nic&quot;</span><span class="p">:</span> <span class="s2">&quot;eth0&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
+<h4 id="list_1">list<a class="headerlink" href="#list_1" title="Permanent link">&para;</a></h4>
 <p>Inside the <code>configuration</code> field return:</p>
 <ul>
 <li><code>reservations</code>: all configured reservation records from the <code>hosts</code></li>
@@ -2119,6 +2235,31 @@
 </pre></div>
 
 
+<h4 id="scan_1">scan<a class="headerlink" href="#scan_1" title="Permanent link">&para;</a></h4>
+<p>Scan the hosts on the network</p>
+<ul>
+<li><code>ip</code>: The IP address of the host</li>
+<li><code>mac</code>: The mac address of the host </li>
+<li><code>name</code>:The vendor description of the host network interface</li>
+<li><code>reserved</code>: if true an IP reservation has been made in the DHCP server.</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.56.1&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;0a:00:27:00:00:00&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;(Unknown)&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;reserved&quot;</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.56.2&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;08:00:27:f0:78:c1&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;PCS Systemtechnik GmbH&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;reserved&quot;</span><span class="p">:</span> <span class="kc">false</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+
+
 <h2 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h2>
 <h3 id="constraints">Constraints<a class="headerlink" href="#constraints" title="Permanent link">&para;</a></h3>
 <p>The request must contain an <code>action</code> field. Valid actions are:</p>
@@ -2147,7 +2288,7 @@
 <li>DhcpDomain: domain or empty</li>
 <li>DhcpDNS, 'DhcpWINS, DhcpNTP, DhcpTFTP: a valid IP or empty</li>
 </ul>
-<h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
+<h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
 <h4 id="create-reservation">create-reservation<a class="headerlink" href="#create-reservation" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>

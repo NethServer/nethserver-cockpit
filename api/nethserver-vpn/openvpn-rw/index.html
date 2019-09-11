@@ -1468,6 +1468,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#connectionhistory" title="connectionHistory" class="md-nav__link">
+    connectionHistory
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1526,6 +1533,13 @@
           <li class="md-nav__item">
   <a href="#mail_1" title="mail" class="md-nav__link">
     mail
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connectionhistory_1" title="connectionHistory" class="md-nav__link">
+    connectionHistory
   </a>
   
 </li>
@@ -2014,6 +2028,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#connectionhistory" title="connectionHistory" class="md-nav__link">
+    connectionHistory
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2072,6 +2093,13 @@
           <li class="md-nav__item">
   <a href="#mail_1" title="mail" class="md-nav__link">
     mail
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connectionhistory_1" title="connectionHistory" class="md-nav__link">
+    connectionHistory
   </a>
   
 </li>
@@ -2186,6 +2214,7 @@
 <li><code>accounts</code>: list current VPN accounts</li>
 <li><code>download</code>: download given configuration or certificates</li>
 <li><code>mail</code>: send the configuration to the given mail address </li>
+<li><code>connectionHistory</code>: list data about all the connections an account has established so far</li>
 </ul>
 <h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
 <h4 id="users">users<a class="headerlink" href="#users" title="Permanent link">&para;</a></h4>
@@ -2257,6 +2286,21 @@
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;mail&quot;</span><span class="p">,</span>
   <span class="nt">&quot;address&quot;</span><span class="p">:</span> <span class="s2">&quot;test@mydomain.org&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;account1&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="connectionhistory">connectionHistory<a class="headerlink" href="#connectionhistory" title="Permanent link">&para;</a></h4>
+<p>It takes 2 extra fields: </p>
+<ul>
+<li><code>account</code>: the account name of interest</li>
+<li><code>timeInterval</code>: time interval search; valid values are <code>today</code>, <code>last_week</code> and <code>last_month</code></li>
+</ul>
+<p>Input example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;connectionHistory&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;andreal&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;timeInterval&quot;</span><span class="p">:</span> <span class="s2">&quot;last_week&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -2360,6 +2404,7 @@
 
 
 <h4 id="accounts_1">accounts<a class="headerlink" href="#accounts_1" title="Permanent link">&para;</a></h4>
+<p><code>lastConnected</code> field is represented in UNIX Epoch time.</p>
 <p>Output example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;accounts&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -2369,6 +2414,7 @@
       <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
       <span class="nt">&quot;VPNRemoteNetwork&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
       <span class="nt">&quot;ShortName&quot;</span><span class="p">:</span> <span class="s2">&quot;giacomo&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;lastConnected&quot;</span><span class="p">:</span> <span class="mi">1568186022</span><span class="p">,</span>
       <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;giacomo@local.neth.eu&quot;</span><span class="p">,</span>
       <span class="nt">&quot;OpenVpnIp&quot;</span><span class="p">:</span> <span class="s2">&quot;11.10.10.24&quot;</span><span class="p">,</span>
       <span class="nt">&quot;VPNRemoteNetmask&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -2388,6 +2434,7 @@
       <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
       <span class="nt">&quot;VPNRemoteNetwork&quot;</span><span class="p">:</span> <span class="s2">&quot;12.13.14.0&quot;</span><span class="p">,</span>
       <span class="nt">&quot;ShortName&quot;</span><span class="p">:</span> <span class="s2">&quot;ra1&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;lastConnected&quot;</span><span class="p">:</span> <span class="mi">1568111138</span><span class="p">,</span>
       <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;ra1&quot;</span><span class="p">,</span>
       <span class="nt">&quot;OpenVpnIp&quot;</span><span class="p">:</span> <span class="s2">&quot;11.10.10.2&quot;</span><span class="p">,</span>
       <span class="nt">&quot;VPNRemoteNetmask&quot;</span><span class="p">:</span> <span class="s2">&quot;255.255.255.0&quot;</span><span class="p">,</span>
@@ -2412,6 +2459,35 @@
 
 <h4 id="mail_1">mail<a class="headerlink" href="#mail_1" title="Permanent link">&para;</a></h4>
 <p>Standard error/sucess output.</p>
+<h4 id="connectionhistory_1">connectionHistory<a class="headerlink" href="#connectionhistory_1" title="Permanent link">&para;</a></h4>
+<p><code>startTime</code> and <code>endTime</code> fields are represented in UNIX Epoch time. <code>duration</code> field is represented in seconds.</p>
+<p>Output example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;connectionHistory&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;endTime&quot;</span><span class="p">:</span> <span class="mi">1568041178</span><span class="p">,</span>
+      <span class="nt">&quot;bytesSent&quot;</span><span class="p">:</span> <span class="mi">3775</span><span class="p">,</span>
+      <span class="nt">&quot;startTime&quot;</span><span class="p">:</span> <span class="mi">1568041138</span><span class="p">,</span>
+      <span class="nt">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
+      <span class="nt">&quot;bytesReceived&quot;</span><span class="p">:</span> <span class="mi">3439</span><span class="p">,</span>
+      <span class="nt">&quot;virtualIpAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.10.10&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;remoteIpAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.5.216&quot;</span>
+    <span class="p">},</span>
+    <span class="err">...</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;endTime&quot;</span><span class="p">:</span> <span class="mi">1568101636</span><span class="p">,</span>
+      <span class="nt">&quot;bytesSent&quot;</span><span class="p">:</span> <span class="mi">2443</span><span class="p">,</span>
+      <span class="nt">&quot;startTime&quot;</span><span class="p">:</span> <span class="mi">1568101624</span><span class="p">,</span>
+      <span class="nt">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+      <span class="nt">&quot;bytesReceived&quot;</span><span class="p">:</span> <span class="mi">3646</span><span class="p">,</span>
+      <span class="nt">&quot;virtualIpAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.10.10&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;remoteIpAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.5.216&quot;</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <h2 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h2>
 <p>Valid actions are:</p>
 <ul>

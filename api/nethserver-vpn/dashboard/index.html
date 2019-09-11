@@ -1927,7 +1927,8 @@
 
 <h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
 <h4 id="status_1">status<a class="headerlink" href="#status_1" title="Permanent link">&para;</a></h4>
-<p>Return current IPSec tunnels and OpenVPN status.</p>
+<p>Return current IPSec tunnels and OpenVPN status.
+<code>topTrafficAccounts</code> field specifies the accounts who generated more download/upload data. <code>traffic</code> field is represented in bytes.</p>
 <p>Output example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;openvpn&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -1949,6 +1950,16 @@
       <span class="nt">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;routed&quot;</span><span class="p">,</span>
       <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
       <span class="nt">&quot;connected&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nt">&quot;topTrafficAccounts&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="nt">&quot;traffic&quot;</span><span class="p">:</span> <span class="mi">7261</span><span class="p">,</span>
+          <span class="nt">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;test-account&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="nt">&quot;traffic&quot;</span><span class="p">:</span> <span class="mi">6093</span><span class="p">,</span>
+          <span class="nt">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;andreal&quot;</span>
+        <span class="p">}</span>
+      <span class="p">],</span>
       <span class="nt">&quot;port&quot;</span><span class="p">:</span> <span class="s2">&quot;1194&quot;</span><span class="p">,</span>
       <span class="nt">&quot;total&quot;</span><span class="p">:</span> <span class="mi">4</span>
     <span class="p">}</span>
