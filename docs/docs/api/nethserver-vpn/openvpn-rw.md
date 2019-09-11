@@ -15,6 +15,7 @@ Valid actions are:
 - `accounts`: list current VPN accounts
 - `download`: download given configuration or certificates
 - `mail`: send the configuration to the given mail address 
+- `connectionHistory`: list data about all the connections an account has established so far
 
 ### Input
 
@@ -97,6 +98,22 @@ Input example:
   "action": "mail",
   "address": "test@mydomain.org",
   "name": "account1"
+}
+```
+
+#### connectionHistory
+
+It takes 2 extra fields: 
+
+- `account`: the account name of interest
+- `timeInterval`: time interval search; valid values are `today`, `last_week` and `last_month`
+
+Input example:
+```json
+{
+  "action": "connectionHistory",
+  "account": "andreal",
+  "timeInterval": "last_week"
 }
 ```
 
@@ -207,6 +224,8 @@ Output example:
 
 #### accounts 
 
+`lastConnected` field is represented in UNIX Epoch time.
+
 Output example:
 ```json
 {
@@ -217,6 +236,7 @@ Output example:
       "status": "enabled",
       "VPNRemoteNetwork": "",
       "ShortName": "giacomo",
+      "lastConnected": 1568186022,
       "name": "giacomo@local.neth.eu",
       "OpenVpnIp": "11.10.10.24",
       "VPNRemoteNetmask": "",
@@ -236,6 +256,7 @@ Output example:
       "status": "enabled",
       "VPNRemoteNetwork": "12.13.14.0",
       "ShortName": "ra1",
+      "lastConnected": 1568111138,
       "name": "ra1",
       "OpenVpnIp": "11.10.10.2",
       "VPNRemoteNetmask": "255.255.255.0",
@@ -262,6 +283,37 @@ Output example:
 #### mail
 
 Standard error/sucess output.
+
+#### connectionHistory
+
+`startTime` and `endTime` fields are represented in UNIX Epoch time. `duration` field is represented in seconds.
+
+Output example:
+```json
+{
+  "connectionHistory": [
+    {
+      "endTime": 1568041178,
+      "bytesSent": 3775,
+      "startTime": 1568041138,
+      "duration": 40,
+      "bytesReceived": 3439,
+      "virtualIpAddress": "10.0.10.10",
+      "remoteIpAddress": "192.168.5.216"
+    },
+    ...
+    {
+      "endTime": 1568101636,
+      "bytesSent": 2443,
+      "startTime": 1568101624,
+      "duration": 12,
+      "bytesReceived": 3646,
+      "virtualIpAddress": "10.0.10.10",
+      "remoteIpAddress": "192.168.5.216"
+    }
+  ]
+}
+```
 
 
 ## validate
