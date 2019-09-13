@@ -416,7 +416,7 @@
                   <label
                     class="col-sm-3 control-label"
                     for="textInput-modal-markup"
-                  >{{$t('dhcp.host')}}</label>
+                  >{{$t('network.host')}}</label>
                   <div class="col-sm-9">
                     <input
                       placeholder="nethserver.org"
@@ -427,7 +427,7 @@
                     <span
                       v-if="traceroute.errors.host.hasError"
                       class="help-block"
-                    >{{$t('validation.validation_failed')}}: {{$t('validation.'+traceroute.errors.host.message)}}</span>
+                    >{{$t('validation.validation_failed')}}: {{$t('validation.traceroute_validator_'+traceroute.errors.host.message)}}</span>
                   </div>
                 </div>
                 
@@ -458,7 +458,7 @@
                   <label
                     class="col-sm-3 control-label"
                     for="textInput-modal-markup"
-                  >{{$t('dhcp.host')}}</label>
+                  >{{$t('network.host')}}</label>
                   <div class="col-sm-9">
                     <input
                       placeholder="nethserver.org"
@@ -469,7 +469,7 @@
                     <span
                       v-if="ping.errors.host.hasError"
                       class="help-block"
-                    >{{$t('validation.validation_failed')}}: {{$t('validation.'+ping.errors.host.message)}}</span>
+                    >{{$t('validation.validation_failed')}}: {{$t('validation.ping_validator_'+ping.errors.host.message)}}</span>
                   </div>
                 </div>
                 
@@ -2506,57 +2506,117 @@ export default {
       );
     },
     getPingInfo(host) {
-      var context = this;
-      context.ping.isLoading = true;
-      context.ping.info = null;
-            context.exec(
-        ["system-network/read"],
+        var context = this;
+        context.ping.errors.host.hasError = false;
+        context.ping.errors.host.message = "";
+        context.ping.isLoading = true;
+        context.ping.info = null;
+        if (!host) {
+          host = 'nethserver.org';
+        }
+      nethserver.exec(
+        ["system-network/validate"],
         {
           action: "ping",
           host: host
         },
         null,
         function(success) {
+          nethserver.exec(
+            ["system-network/read"],
+            {
+              action: "ping",
+              host: host
+            },
+            null,
+            function(success) {
+                  try {
+                    success = JSON.parse(success);
+                  } catch (e) {
+                    console.error(e);
+                  }
+              context.ping.info = success.data;
+              context.ping.isLoading = false;
+            },
+            function(error) {
+             context.ping.isLoading = false;
+              console.error(error);
+            },
+            true //sudo
+          );
+        },
+        function(error, data) {
+          var errorData = {};
           try {
-            success = JSON.parse(success);
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.ping.errors[attr.parameter].hasError = true;
+              context.ping.errors[attr.parameter].message = attr.error;
+              context.ping.isLoading = false;
+            }
           } catch (e) {
             console.error(e);
           }
-          context.ping.info = success.data;
-          context.ping.isLoading = false;
-
-        },
-        function(error) {
-          context.ping.isLoading = false;
-          console.error(error);
-        }
+      },
+        true // sudo
       );
     },
     getTracerouteInfo(host) {
-      var context = this;
-      context.traceroute.isLoading = true;
-      context.traceroute.info = null;
-            context.exec(
-        ["system-network/read"],
+        var context = this;
+        context.traceroute.errors.host.hasError = false;
+        context.traceroute.errors.host.message = "";
+        context.traceroute.isLoading = true;
+        context.traceroute.info = null;
+        if (!host) {
+          host = 'nethserver.org';
+        }
+      nethserver.exec(
+        ["system-network/validate"],
         {
           action: "traceroute",
           host: host
         },
         null,
         function(success) {
+          nethserver.exec(
+            ["system-network/read"],
+            {
+              action: "traceroute",
+              host: host
+            },
+            null,
+            function(success) {
+                  try {
+                    success = JSON.parse(success);
+                  } catch (e) {
+                    console.error(e);
+                  }
+              context.traceroute.info = success.data;
+              context.traceroute.isLoading = false;
+            },
+            function(error) {
+             context.traceroute.isLoading = false;
+              console.error(error);
+            },
+            true //sudo
+          );
+        },
+        function(error, data) {
+          var errorData = {};
           try {
-            success = JSON.parse(success);
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.traceroute.errors[attr.parameter].hasError = true;
+              context.traceroute.errors[attr.parameter].message = attr.error;
+              context.traceroute.isLoading = false;
+            }
           } catch (e) {
             console.error(e);
           }
-          context.traceroute.info = success.data;
-          context.traceroute.isLoading = false;
-
-        },
-        function(error) {
-          context.traceroute.isLoading = false;
-          console.error(error);
-        }
+      },
+        true // sudo
       );
     },
     initInterface() {
