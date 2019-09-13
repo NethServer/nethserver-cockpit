@@ -97,10 +97,15 @@ elseif ($action === 'scan') {
     $nic = $data['nic'];
     $hosts_db = new  EsmithDatabase('hosts');
     $macs = array();
+    $hosts = array();
 
     foreach ($hosts_db->getAll("local") as $key => $props) {
         if (@$props['MacAddress']) {
             $macs[] = strtolower($props['MacAddress']);
+        }
+        # find the hostname
+        if (@$props['IpAddress']) {
+            $hosts[$props['IpAddress']] = $key;
         }
     }
 
@@ -114,7 +119,7 @@ elseif ($action === 'scan') {
             if (in_array($tmp[1], $macs)) { # assume mac is always lower case
                 $reserved = true;
             }
-            $data[] = array( "ip" => $tmp[0], "mac" => $tmp[1], "name" => $tmp[2], "reserved" => $reserved );
+            $data[] = array( "ip" => $tmp[0], "mac" => $tmp[1], "name" => $tmp[2], "reserved" => $reserved, "host" => @$hosts[$tmp[0]] );
         }
     }
     echo json_encode($data);
