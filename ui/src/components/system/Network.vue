@@ -65,15 +65,43 @@
       <div class="col-sm-12">
         <h3>
           {{$t('network.interface_list')}}
-          <a
-            id="routing-info"
-            data-toggle="modal"
-            data-target="#routingInfoModal"
-            :class="['right', !routingInfo ? 'disabled' : '']"
-          >
-            <span class="pficon pficon-route starred-marging"></span>
-            {{$t('network.routing_info')}}
-          </a>
+          <div class="right">
+            <button
+              @click="openRoutingInfo()"
+              class="btn btn-default"
+            >
+              <span class="pficon pficon-route span-right-margin"></span>
+              {{$t('network.routing_info')}}
+            </button>
+            
+            <div class="margin-left-md span-right-margin-networkTools dropup pull-right dropdown-kebab-pf">
+              <button
+                class="btn btn-link dropdown-toggle panel-icon"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="true"
+              >
+                <span class="fa fa-ellipsis-v"></span>
+              </button>
+              <ul
+                class="dropdown-menu dropdown-menu-right"
+              >
+                <li >
+                  <a @click="openTracerouteInfo()">
+                    <span class="pficon pficon-tenant span-right-margin"></span>
+                    {{$t('network.traceroute')}}
+                  </a>
+                </li>
+                <li >
+                  <a @click="openPingInfo()">
+                    <span class="pficon pficon-domain span-right-margin"></span>
+                    {{$t('network.ping')}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </h3>
         <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
 
@@ -369,6 +397,90 @@
             </div>
             <div class="modal-footer">
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="tracerouteModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('network.traceroute_info')}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="getTracerouteInfo(traceroute.host)">
+            <div class="modal-body">
+                <div
+                  :class="['form-group', traceroute.errors.host.hasError ? 'has-error' : '']"
+                >
+                  <label
+                    class="col-sm-3 control-label"
+                    for="textInput-modal-markup"
+                  >{{$t('dhcp.host')}}</label>
+                  <div class="col-sm-9">
+                    <input
+                      placeholder="nethserver.org"
+                      type="text"
+                      v-model="traceroute.host"
+                      class="form-control"
+                    >
+                    <span
+                      v-if="traceroute.errors.host.hasError"
+                      class="help-block"
+                    >{{$t('validation.validation_failed')}}: {{$t('validation.'+traceroute.errors.host.message)}}</span>
+                  </div>
+                </div>
+                
+                <div class="col-sm-12">
+                  <div v-if="traceroute.isLoading" class="spinner spinner-sm"></div>
+                  <pre v-if="traceroute.info && ! traceroute.isLoading" class="prettyprint">{{traceroute.info}}</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
+              <button class="btn btn-primary" type="submit">{{$t('network.traceroute')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="pingModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('network.ping_info')}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="getPingInfo(ping.host)">
+            <div class="modal-body">
+                <div
+                  :class="['form-group', ping.errors.host.hasError ? 'has-error' : '']"
+                >
+                  <label
+                    class="col-sm-3 control-label"
+                    for="textInput-modal-markup"
+                  >{{$t('dhcp.host')}}</label>
+                  <div class="col-sm-9">
+                    <input
+                      placeholder="nethserver.org"
+                      type="text"
+                      v-model="ping.host"
+                      class="form-control"
+                    >
+                    <span
+                      v-if="ping.errors.host.hasError"
+                      class="help-block"
+                    >{{$t('validation.validation_failed')}}: {{$t('validation.'+ping.errors.host.message)}}</span>
+                  </div>
+                </div>
+                
+                <div class="col-sm-12">
+                  <div v-if="ping.isLoading" class="spinner spinner-sm"></div>
+                  <pre v-if="ping.info && ! ping.isLoading" class="prettyprint">{{ping.info}}</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
+              <button class="btn btn-primary" type="submit">{{$t('network.ping')}}</button>
             </div>
           </form>
         </div>
@@ -1722,6 +1834,28 @@ export default {
       wizardPhysical: this.initWizardPhysical(),
       routes: {},
       routingInfo: null,
+      traceroute: {
+        info: null,
+        host: null,
+        isLoading: false,
+        errors: {
+            host: {
+            hasError: false,
+            message: ""
+          }
+        }
+      },
+      ping: {
+        info: null,
+        host: null,
+        isLoading: false,
+        errors: {
+            host: {
+            hasError: false,
+            message: ""
+          }
+        }
+      },
       hints: {},
       alreadyPPPOE: 0
     };
@@ -2371,6 +2505,60 @@ export default {
         }
       );
     },
+    getPingInfo(host) {
+      var context = this;
+      context.ping.isLoading = true;
+      context.ping.info = null;
+            context.exec(
+        ["system-network/read"],
+        {
+          action: "ping",
+          host: host
+        },
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+          context.ping.info = success.data;
+          context.ping.isLoading = false;
+
+        },
+        function(error) {
+          context.ping.isLoading = false;
+          console.error(error);
+        }
+      );
+    },
+    getTracerouteInfo(host) {
+      var context = this;
+      context.traceroute.isLoading = true;
+      context.traceroute.info = null;
+            context.exec(
+        ["system-network/read"],
+        {
+          action: "traceroute",
+          host: host
+        },
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+          context.traceroute.info = success.data;
+          context.traceroute.isLoading = false;
+
+        },
+        function(error) {
+          context.traceroute.isLoading = false;
+          console.error(error);
+        }
+      );
+    },
     initInterface() {
       return {
         ipaddr: "",
@@ -2556,6 +2744,22 @@ export default {
         );
       }
     },
+    openRoutingInfo() {
+      this.getRoutingInfo();
+      $("#routingInfoModal").modal("show");
+    },
+    openTracerouteInfo() {
+      var context = this;
+      context.traceroute.host = null;
+      context.traceroute.info = null;
+      $("#tracerouteModal").modal("show");
+    },
+    openPingInfo() {
+      var context = this;
+      context.ping.host = null;
+      context.ping.info = null;
+      $("#pingModal").modal("show");
+  },
     openConfigureInterface(i) {
       if (i.virtual == 1 && i.type != "xdsl") {
         this.wizard = this.initWizard(i);

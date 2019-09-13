@@ -748,6 +748,9 @@ circle {
     margin-right: 20px;
 }
 
+.span-right-margin-networkTools {
+    margin-right: 16px;
+}
 .Password__field {
     width: 100% !important;
     height: 26px !important;
