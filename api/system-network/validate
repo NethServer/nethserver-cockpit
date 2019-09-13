@@ -119,6 +119,7 @@ function list_current_devices($virtual) {
 
 $data = readInput();
 $action = $data['action'];
+$host = $data['host'];
 
 $v = new LegacyValidator($data);
 $db = new EsmithDatabase('networks');
@@ -140,6 +141,16 @@ if ($action == 'create-alias') {
         $v->addValidationError('interface', 'non_existing_interface');
     }
     can_release($data['interface']);
+
+} else if ($action == 'ping') {
+
+    $vh = $v->createValidator(Validate::HOSTADDRESS);
+    $v->declareParameter('host', $vh);
+    
+} else if ($action == 'traceroute') {
+
+    $vh = $v->createValidator(Validate::HOSTADDRESS);
+    $v->declareParameter('host', $vh);
 
 } else if ($action == 'release-role') {
     
