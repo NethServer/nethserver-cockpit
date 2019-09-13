@@ -96,6 +96,7 @@ Scan the hosts on the network
 - `mac`: The mac address of the host 
 - `name`:The vendor description of the host network interface
 - `reserved`: if true an IP reservation has been made in the DHCP server.
+- `host`: Display the hostname if an IP reservation has been made in the DHCP server, else set `null`.
 
 ```json
 [
@@ -103,13 +104,15 @@ Scan the hosts on the network
     "ip": "192.168.56.1",
     "mac": "0a:00:27:00:00:00",
     "name": "(Unknown)",
-    "reserved": true
+    "reserved": true,
+    "host": "plop.local"
   },
   {
     "ip": "192.168.56.2",
     "mac": "08:00:27:f0:78:c1",
     "name": "PCS Systemtechnik GmbH",
-    "reserved": false
+    "reserved": false,
+    "host": null
   }
 ]
 ```

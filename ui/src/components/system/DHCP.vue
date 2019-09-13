@@ -274,6 +274,9 @@
                   <td class="fancy">
                     {{props.row.name}}
                   </td>
+                  <td class="fancy">
+                    {{props.row.host}}
+                  </td>
                   <td>
                     <button
                       :disabled="props.row.reserved"
@@ -615,6 +618,11 @@ export default {
         {
           label: this.$i18n.t("dhcp.description"),
           field: "name",
+          filterable: true
+        },
+        {
+          label: this.$i18n.t("dhcp.hostname"),
+          field: "host",
           filterable: true
         },
         {
