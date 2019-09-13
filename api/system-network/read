@@ -60,6 +60,7 @@ sub cat
 
 my $input = readInput();
 my $cmd = $input->{'action'};
+my $host = $input->{'host'};
 
 if($cmd eq 'list') {
     my %interfaces;
@@ -312,6 +313,19 @@ if($cmd eq 'list') {
 
    $ret = undef;
    $ret->{'data'} = `route -n`;
+   
+} elsif ($cmd eq 'traceroute') {
+
+   $ret = undef;
+   error('MissingHost','The host is a mandatory argument') if (! $host);
+   $ret->{'data'} = `traceroute -I -n $host`;
+   
+} elsif ($cmd eq 'ping') {
+
+   $ret = undef;
+   error('MissingHost','The host is a mandatory argument') if (! $host);
+   $ret->{'data'} = `ping -n -c4 $host`;
+   
 } elsif ($cmd eq 'info') {
 
    my $i = $input->{'name'};
