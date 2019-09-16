@@ -99,6 +99,12 @@
                     {{$t('network.ping')}}
                   </a>
                 </li>
+                <li >
+                  <a @click="openNslookupInfo()">
+                    <span class="pficon pficon-search span-right-margin"></span>
+                    {{$t('network.nslookup')}}
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -486,7 +492,89 @@
         </div>
       </div>
     </div>
-
+    <div class="modal" id="nslookupModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('network.nslookup_info')}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="getNslookupInfo(nslookup)">
+            <div class="modal-body">
+                <div
+                  :class="['form-group', nslookup.errors.host.hasError ? 'has-error' : '']"
+                >
+                  <label
+                    class="col-sm-3 control-label"
+                    for="textInput-modal-markup"
+                  >{{$t('network.host')}}</label>
+                  <div class="col-sm-9">
+                    <input
+                      placeholder="nethserver.org"
+                      type="text"
+                      v-model="nslookup.host"
+                      class="form-control"
+                    >
+                    <span
+                      v-if="nslookup.errors.host.hasError"
+                      class="help-block"
+                    >{{$t('validation.validation_failed')}}: {{$t('validation.nslookup_validator_'+nslookup.errors.host.message)}}</span>
+                  </div>
+                </div>
+                  <div class="form-group">
+                    <label
+                      class="col-sm-3 control-label"
+                      for="textInput-modal-markup"
+                    >{{$t('network.nameServer')}}</label>
+                    <div class="col-sm-9">
+                      <select
+                        required
+                        type="text"
+                        v-model="nslookup.nameServerSelect"
+                        class="combobox form-control"
+                      >
+                        <option value="localhost">{{$t('network.localhost_name_server')}}</option>
+                        <option value="google">{{$t('network.google_name_server')}}</option>
+                        <option value="custom">{{$t('network.custom_name_server')}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div v-if="nslookup.nameServerSelect === 'custom'"
+                    :class="['form-group', nslookup.errors.nameServer.hasError ? 'has-error' : '']"
+                  >
+                    <label
+                      class="col-sm-3 control-label"
+                      for="textInput-modal-markup"
+                    >{{$t('network.custom_name_server')}}</label>
+                    <div class="col-sm-9">
+                      <input
+                        required
+                        placeholder="8.8.4.4"
+                        type="text"
+                        v-model="nslookup.nameServer"
+                        class="form-control"
+                      >
+                      <span
+                        v-if="nslookup.errors.nameServer.hasError"
+                        class="help-block"
+                      >{{$t('validation.validation_failed')}}: {{$t('validation.nslookup_validator_'+nslookup.errors.nameServer.message)}}</span>
+                    </div>
+                  </div>
+                  
+                <div class="col-sm-12">
+                  <div v-if="nslookup.isLoading" class="spinner spinner-sm"></div>
+                  <pre v-if="nslookup.info && ! nslookup.isLoading" class="prettyprint">{{nslookup.info}}</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
+              <button :disabled="nslookup.isLoading" class="btn btn-primary" type="submit">{{$t('network.nslookup')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
     <div
       class="modal"
       id="createInterfaceAliasModal"
@@ -1856,6 +1944,24 @@ export default {
           }
         }
       },
+      nslookup: {
+        info: null,
+        host: null,
+        nameServer: "",
+        nameServerSelect: "localhost",
+        nameServer: null,
+        isLoading: false,
+        errors: {
+            host: {
+            hasError: false,
+            message: ""
+          },
+            nameServer: {
+            hasError: false,
+            message: ""
+          }
+        }
+      },
       hints: {},
       alreadyPPPOE: 0
     };
@@ -2619,6 +2725,78 @@ export default {
         true // sudo
       );
     },
+    getNslookupInfo(nslookup) {
+        var context = this;
+        context.nslookup.errors.host.hasError = false;
+        context.nslookup.errors.host.message = "";
+        context.nslookup.errors.nameServer.hasError = false;
+        context.nslookup.errors.nameServer.message = "";
+        context.nslookup.isLoading = true;
+        context.nslookup.info = null;
+        
+        if (!nslookup.host) {
+          nslookup.host = 'nethserver.org';
+        }
+
+        if (nslookup.nameServerSelect === 'localhost') {
+          nslookup.nameServer = '127.0.0.1';
+        } else if (nslookup.nameServerSelect === 'google') {
+          nslookup.nameServer = '8.8.4.4';
+        } else if (nslookup.nameServerSelect === 'custom') {
+          nslookup.nameServer = nslookup.nameServer;
+        } else {
+          nslookup.nameServer = '127.0.0.1';
+        }
+      nethserver.exec(
+        ["system-network/validate"],
+        {
+          action: "nslookup",
+          host: nslookup.host,
+          nameServer: nslookup.nameServer
+        },
+        null,
+        function(success) {
+          nethserver.exec(
+            ["system-network/read"],
+            {
+              action: "nslookup",
+              host: nslookup.host,
+              nameServer: nslookup.nameServer
+            },
+            null,
+            function(success) {
+                  try {
+                    success = JSON.parse(success);
+                  } catch (e) {
+                    console.error(e);
+                  }
+              context.nslookup.info = success.data;
+              context.nslookup.isLoading = false;
+            },
+            function(error) {
+             context.nslookup.isLoading = false;
+              console.error(error);
+            },
+            true //sudo
+          );
+        },
+        function(error, data) {
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.nslookup.errors[attr.parameter].hasError = true;
+              context.nslookup.errors[attr.parameter].message = attr.error;
+              context.nslookup.isLoading = false;
+            }
+          } catch (e) {
+            console.error(e);
+          }
+      },
+        true // sudo
+      );
+    },
     initInterface() {
       return {
         ipaddr: "",
@@ -2812,12 +2990,24 @@ export default {
       var context = this;
       context.traceroute.host = null;
       context.traceroute.info = null;
+      context.traceroute.errors.host.hasError = false;
       $("#tracerouteModal").modal("show");
+    },
+    openNslookupInfo() {
+      var context = this;
+      context.nslookup.host = null;
+      context.nslookup.info = null;
+      context.nslookup.nameServerSelect = 'localhost';
+      context.nslookup.nameServer = null;
+      context.nslookup.errors.host.hasError = false;
+      context.nslookup.errors.nameServer.hasError = false;
+      $("#nslookupModal").modal("show");
     },
     openPingInfo() {
       var context = this;
       context.ping.host = null;
       context.ping.info = null;
+      context.traceroute.errors.host.hasError = false;
       $("#pingModal").modal("show");
   },
     openConfigureInterface(i) {
