@@ -438,7 +438,7 @@
             </div>
             <div class="modal-footer">
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
-              <button class="btn btn-primary" type="submit">{{$t('network.traceroute')}}</button>
+              <button :disabled="traceroute.isLoading" class="btn btn-primary" type="submit">{{$t('network.traceroute')}}</button>
             </div>
           </form>
         </div>
@@ -480,7 +480,7 @@
             </div>
             <div class="modal-footer">
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
-              <button class="btn btn-primary" type="submit">{{$t('network.ping')}}</button>
+              <button :disabled="ping.isLoading" class="btn btn-primary" type="submit">{{$t('network.ping')}}</button>
             </div>
           </form>
         </div>
