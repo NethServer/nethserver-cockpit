@@ -670,6 +670,12 @@
     "no_additional_info_available": "No additional info available",
     "traceroute_info": "Show the route to a host",
     "traceroute": "Traceroute",
+    "nslookup_info": "Query Internet name servers",
+    "nslookup": "Nslookup",
+    "nameServer": "DNS Server",
+    "custom_name_server": "Custom DNS Server",
+    "google_name_server": "Google DNS Server",
+    "localhost_name_server": "Localhost DNS Server",
     "ping": "Ping",
     "ping_info": "Ping a host",
     "host":"Host"
