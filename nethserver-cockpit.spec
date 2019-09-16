@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.13.1
+Version: 0.14
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -60,6 +60,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon Sep 16 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.14-1
+- Cockpit: scan the network to make IP reservation - NethServer/dev#5830
+
 * Wed Sep 04 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.13.1-1
 - Do not raise bind credentials warning for local account providers - Regression from NethServer/dev#5825
 
