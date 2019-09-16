@@ -326,6 +326,13 @@ if($cmd eq 'list') {
    error('MissingHost','The host is a mandatory argument') if (! $host);
    $ret->{'data'} = `ping -n -c4 $host`;
    
+} elsif ($cmd eq 'nslookup') {
+
+   $ret = undef;
+   my $nameServer = $input->{'nameServer'} || '127.0.0.1';
+   error('MissingHost','The host is a mandatory argument') if (! $host);
+   $ret->{'data'} = `nslookup $host $nameServer`;
+   
 } elsif ($cmd eq 'info') {
 
    my $i = $input->{'name'};

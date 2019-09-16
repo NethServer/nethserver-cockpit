@@ -152,6 +152,11 @@ if ($action == 'create-alias') {
     $vh = $v->createValidator(Validate::HOSTADDRESS);
     $v->declareParameter('host', $vh);
 
+} else if ($action == 'nslookup') {
+
+    $v->declareParameter('host', Validate::HOSTNAME_FQDN);
+    $v->declareParameter('nameServer', Validate::IPv4);
+
 } else if ($action == 'release-role') {
     
     $parent = $db->getKey($data['interface']);
