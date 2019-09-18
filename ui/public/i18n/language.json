@@ -671,14 +671,12 @@
     "traceroute_info": "Show the route to a host",
     "traceroute": "Traceroute",
     "nslookup_info": "Query Internet name servers",
-    "nslookup": "Nslookup",
+    "nslookup": "Dns lookup",
     "nameServer": "DNS Server",
-    "custom_name_server": "Custom DNS Server",
-    "google_name_server": "Google DNS Server",
-    "localhost_name_server": "Localhost DNS Server",
     "ping": "Ping",
     "ping_info": "Ping a host",
-    "host":"Host"
+    "host":"Host",
+    "success":"Success"
   },
   "ssh": {
     "title": "SSH",
@@ -1041,7 +1039,9 @@
     "ldap-credentials,ldaptestbind,34": "Invalid DN syntax",
     "valid_starttls_urischeme": "Start TLS conflicts with 'ldaps://' URI scheme",
     "traceroute_validator_valid_ipV4Address": "Invalid IPv4 address or hostname, it must be something like '10.0.0.1' or 'nethserver.org'",
-    "ping_validator_valid_ipV4Address": "Invalid IPv4 address or hostname, it must be something like '10.0.0.1' or 'nethserver.org'"
+    "ping_validator_valid_ipV4Address": "Invalid IPv4 address or hostname, it must be something like '10.0.0.1' or 'nethserver.org'",
+    "nslookup_validator_valid_ipV4Address": "Invalid IPv4 address, it must be something like '10.0.0.1'",
+    "nslookup_validator_valid_hostname_fqdn_1_9223372036854775807": "Invalid fully qualified domain name, it must be something like 'domain.org'"
   },
   "docs": {
     "more_info_about": "More info about",

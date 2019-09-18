@@ -88,12 +88,6 @@
                 class="dropdown-menu dropdown-menu-right"
               >
                 <li >
-                  <a @click="openTracerouteInfo()">
-                    <span class="pficon pficon-tenant span-right-margin"></span>
-                    {{$t('network.traceroute')}}
-                  </a>
-                </li>
-                <li >
                   <a @click="openPingInfo()">
                     <span class="pficon pficon-domain span-right-margin"></span>
                     {{$t('network.ping')}}
@@ -103,6 +97,12 @@
                   <a @click="openNslookupInfo()">
                     <span class="pficon pficon-search span-right-margin"></span>
                     {{$t('network.nslookup')}}
+                  </a>
+                </li>
+                <li >
+                  <a @click="openTracerouteInfo()">
+                    <span class="pficon pficon-tenant span-right-margin"></span>
+                    {{$t('network.traceroute')}}
                   </a>
                 </li>
               </ul>
@@ -436,7 +436,16 @@
                     >{{$t('validation.validation_failed')}}: {{$t('validation.traceroute_validator_'+traceroute.errors.host.message)}}</span>
                   </div>
                 </div>
-                
+                <div class="form-group" v-if="traceroute.info && ! traceroute.isLoading">
+                  <label
+                    class="col-sm-3 control-label"
+                    for="textInput-modal-markup"
+                  >{{$t('network.success')}}
+                  </label>
+                  <div class="col-sm-9">
+                    <span v-if="traceroute.info && ! traceroute.isLoading" :class="['fa', traceroute.success ? 'fa-check green' : 'fa-times red']"></span>
+                  </div>
+                </div>
                 <div class="col-sm-12">
                   <div v-if="traceroute.isLoading" class="spinner spinner-sm"></div>
                   <pre v-if="traceroute.info && ! traceroute.isLoading" class="prettyprint">{{traceroute.info}}</pre>
@@ -464,9 +473,10 @@
                   <label
                     class="col-sm-3 control-label"
                     for="textInput-modal-markup"
-                  >{{$t('network.host')}}</label>
+                  >{{$t('network.host')}}
+                  </label>
                   <div class="col-sm-9">
-                    <input
+                    <input 
                       placeholder="nethserver.org"
                       type="text"
                       v-model="ping.host"
@@ -478,7 +488,16 @@
                     >{{$t('validation.validation_failed')}}: {{$t('validation.ping_validator_'+ping.errors.host.message)}}</span>
                   </div>
                 </div>
-                
+                <div class="form-group" v-if="ping.info && ! ping.isLoading">
+                  <label
+                    class="col-sm-3 control-label"
+                    for="textInput-modal-markup"
+                  >{{$t('network.success')}}
+                  </label>
+                  <div class="col-sm-9">
+                    <span v-if="ping.info && ! ping.isLoading" :class="['fa', ping.success ? 'fa-check green' : 'fa-times red']"></span>
+                  </div>
+                </div>
                 <div class="col-sm-12">
                   <div v-if="ping.isLoading" class="spinner spinner-sm"></div>
                   <pre v-if="ping.info && ! ping.isLoading" class="prettyprint">{{ping.info}}</pre>
@@ -520,47 +539,36 @@
                     >{{$t('validation.validation_failed')}}: {{$t('validation.nslookup_validator_'+nslookup.errors.host.message)}}</span>
                   </div>
                 </div>
-                  <div class="form-group">
+                <div
+                  :class="['form-group', nslookup.errors.nameServer.hasError ? 'has-error' : '']"
+                >
+                  <label
+                    class="col-sm-3 control-label"
+                    for="textInput-modal-markup"
+                  >{{$t('network.nameServer')}}</label>
+                  <div class="col-sm-9">
+                    <input
+                      placeholder="127.0.0.1"
+                      type="text"
+                      v-model="nslookup.nameServer"
+                      class="form-control"
+                    >
+                    <span
+                      v-if="nslookup.errors.nameServer.hasError"
+                      class="help-block"
+                    >{{$t('validation.validation_failed')}}: {{$t('validation.nslookup_validator_'+nslookup.errors.nameServer.message)}}</span>
+                  </div>
+                </div>
+                  <div class="form-group" v-if="nslookup.info && ! nslookup.isLoading">
                     <label
                       class="col-sm-3 control-label"
                       for="textInput-modal-markup"
-                    >{{$t('network.nameServer')}}</label>
+                    >{{$t('network.success')}}
+                    </label>
                     <div class="col-sm-9">
-                      <select
-                        required
-                        type="text"
-                        v-model="nslookup.nameServerSelect"
-                        class="combobox form-control"
-                      >
-                        <option value="localhost">{{$t('network.localhost_name_server')}}</option>
-                        <option value="google">{{$t('network.google_name_server')}}</option>
-                        <option value="custom">{{$t('network.custom_name_server')}}</option>
-                      </select>
+                      <span v-if="nslookup.info && ! nslookup.isLoading" :class="['fa', nslookup.success ? 'fa-check green' : 'fa-times red']"></span>
                     </div>
                   </div>
-                  
-                  <div v-if="nslookup.nameServerSelect === 'custom'"
-                    :class="['form-group', nslookup.errors.nameServer.hasError ? 'has-error' : '']"
-                  >
-                    <label
-                      class="col-sm-3 control-label"
-                      for="textInput-modal-markup"
-                    >{{$t('network.custom_name_server')}}</label>
-                    <div class="col-sm-9">
-                      <input
-                        required
-                        placeholder="8.8.4.4"
-                        type="text"
-                        v-model="nslookup.nameServer"
-                        class="form-control"
-                      >
-                      <span
-                        v-if="nslookup.errors.nameServer.hasError"
-                        class="help-block"
-                      >{{$t('validation.validation_failed')}}: {{$t('validation.nslookup_validator_'+nslookup.errors.nameServer.message)}}</span>
-                    </div>
-                  </div>
-                  
                 <div class="col-sm-12">
                   <div v-if="nslookup.isLoading" class="spinner spinner-sm"></div>
                   <pre v-if="nslookup.info && ! nslookup.isLoading" class="prettyprint">{{nslookup.info}}</pre>
@@ -1947,9 +1955,7 @@ export default {
       nslookup: {
         info: null,
         host: null,
-        nameServer: "",
-        nameServerSelect: "localhost",
-        nameServer: null,
+        nameServer: "127.0.0.1",
         isLoading: false,
         errors: {
             host: {
@@ -2642,6 +2648,7 @@ export default {
                     console.error(e);
                   }
               context.ping.info = success.data;
+              context.ping.success = success.success;
               context.ping.isLoading = false;
             },
             function(error) {
@@ -2699,6 +2706,7 @@ export default {
                     console.error(e);
                   }
               context.traceroute.info = success.data;
+              context.traceroute.success = success.success;
               context.traceroute.isLoading = false;
             },
             function(error) {
@@ -2738,15 +2746,10 @@ export default {
           nslookup.host = 'nethserver.org';
         }
 
-        if (nslookup.nameServerSelect === 'localhost') {
-          nslookup.nameServer = '127.0.0.1';
-        } else if (nslookup.nameServerSelect === 'google') {
-          nslookup.nameServer = '8.8.4.4';
-        } else if (nslookup.nameServerSelect === 'custom') {
-          nslookup.nameServer = nslookup.nameServer;
-        } else {
+        if (! nslookup.nameServer) {
           nslookup.nameServer = '127.0.0.1';
         }
+
       nethserver.exec(
         ["system-network/validate"],
         {
@@ -2771,6 +2774,7 @@ export default {
                     console.error(e);
                   }
               context.nslookup.info = success.data;
+              context.nslookup.success = success.success;
               context.nslookup.isLoading = false;
             },
             function(error) {
@@ -2997,8 +3001,7 @@ export default {
       var context = this;
       context.nslookup.host = null;
       context.nslookup.info = null;
-      context.nslookup.nameServerSelect = 'localhost';
-      context.nslookup.nameServer = null;
+      context.nslookup.nameServer = '127.0.0.1';
       context.nslookup.errors.host.hasError = false;
       context.nslookup.errors.nameServer.hasError = false;
       $("#nslookupModal").modal("show");
@@ -3007,7 +3010,7 @@ export default {
       var context = this;
       context.ping.host = null;
       context.ping.info = null;
-      context.traceroute.errors.host.hasError = false;
+      context.ping.errors.host.hasError = false;
       $("#pingModal").modal("show");
   },
     openConfigureInterface(i) {
