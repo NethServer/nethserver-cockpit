@@ -266,6 +266,10 @@ iframe>.breadcrumb {
     margin-top: 15px;
 }
 
+.adjust-top-diag-result {
+    margin-top: 3px;
+}
+
 .adjust-top-col {
     margin-top: 0px !important;
 }

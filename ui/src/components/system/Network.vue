@@ -440,10 +440,11 @@
                   <label
                     class="col-sm-3 control-label"
                     for="textInput-modal-markup"
-                  >{{$t('network.success')}}
+                  >{{$t('network.result')}}
                   </label>
-                  <div class="col-sm-9">
-                    <span v-if="traceroute.info && ! traceroute.isLoading" :class="['fa', traceroute.success ? 'fa-check green' : 'fa-times red']"></span>
+                  <div class="col-sm-9 adjust-top-diag-result">
+                    <span  v-if="(traceroute.info && ! traceroute.isLoading)">{{traceroute.result ? $t('network.success') : $t('network.error') }}</span>
+                    <span  v-if="(traceroute.info && ! traceroute.isLoading)" :class="['fa margin-left-sm', traceroute.result ? 'fa-check green' : 'fa-times red']"></span>
                   </div>
                 </div>
                 <div class="col-sm-12">
@@ -492,10 +493,11 @@
                   <label
                     class="col-sm-3 control-label"
                     for="textInput-modal-markup"
-                  >{{$t('network.success')}}
+                  >{{$t('network.result')}}
                   </label>
-                  <div class="col-sm-9">
-                    <span v-if="ping.info && ! ping.isLoading" :class="['fa', ping.success ? 'fa-check green' : 'fa-times red']"></span>
+                  <div class="col-sm-9 adjust-top-diag-result">
+                    <span  v-if="(ping.info && ! ping.isLoading)">{{ping.result ? $t('network.success') : $t('network.error') }}</span>
+                    <span  v-if="(ping.info && ! ping.isLoading)" :class="['fa margin-left-sm', ping.result ? 'fa-check green' : 'fa-times red']"></span>
                   </div>
                 </div>
                 <div class="col-sm-12">
@@ -563,10 +565,11 @@
                     <label
                       class="col-sm-3 control-label"
                       for="textInput-modal-markup"
-                    >{{$t('network.success')}}
+                    >{{$t('network.result')}}
                     </label>
-                    <div class="col-sm-9">
-                      <span v-if="nslookup.info && ! nslookup.isLoading" :class="['fa', nslookup.success ? 'fa-check green' : 'fa-times red']"></span>
+                    <div class="col-sm-9 adjust-top-diag-result">
+                      <span  v-if="(nslookup.info && ! nslookup.isLoading)">{{nslookup.result ? $t('network.success') : $t('network.error') }}</span>
+                      <span  v-if="(nslookup.info && ! nslookup.isLoading)" :class="['fa margin-left-sm', nslookup.result ? 'fa-check green' : 'fa-times red']"></span>
                     </div>
                   </div>
                 <div class="col-sm-12">
@@ -2648,7 +2651,7 @@ export default {
                     console.error(e);
                   }
               context.ping.info = success.data;
-              context.ping.success = success.success;
+              context.ping.result = success.result;
               context.ping.isLoading = false;
             },
             function(error) {
@@ -2706,7 +2709,7 @@ export default {
                     console.error(e);
                   }
               context.traceroute.info = success.data;
-              context.traceroute.success = success.success;
+              context.traceroute.result = success.result;
               context.traceroute.isLoading = false;
             },
             function(error) {
@@ -2774,7 +2777,7 @@ export default {
                     console.error(e);
                   }
               context.nslookup.info = success.data;
-              context.nslookup.success = success.success;
+              context.nslookup.result = success.result;
               context.nslookup.isLoading = false;
             },
             function(error) {

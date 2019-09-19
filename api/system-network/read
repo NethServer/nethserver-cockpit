@@ -320,14 +320,14 @@ if($cmd eq 'list') {
    $ret = undef;
    error('MissingHost','The host is a mandatory argument') if (! $host);
    $ret->{'data'} = `traceroute -I -n $host 2>&1`;
-   $ret->{'success'} = ($? > 0) ? JSON::false : JSON::true;
+   $ret->{'result'} = ($? > 0) ? JSON::false : JSON::true;
 
 } elsif ($cmd eq 'ping') {
 
    $ret = undef;
    error('MissingHost','The host is a mandatory argument') if (! $host);
    $ret->{'data'} = `ping -n -c4 $host 2>&1`;
-   $ret->{'success'} = ($? > 0) ? JSON::false : JSON::true;
+   $ret->{'result'} = ($? > 0) ? JSON::false : JSON::true;
 
 } elsif ($cmd eq 'nslookup') {
 
@@ -335,7 +335,7 @@ if($cmd eq 'list') {
    my $nameServer = $input->{'nameServer'} || '127.0.0.1';
    error('MissingHost','The host is a mandatory argument') if (! $host);
    $ret->{'data'} = `nslookup $host $nameServer 2>&1`;
-   $ret->{'success'} = ($? > 0) ? JSON::false : JSON::true;
+   $ret->{'result'} = ($? > 0) ? JSON::false : JSON::true;
 
 } elsif ($cmd eq 'info') {
 
