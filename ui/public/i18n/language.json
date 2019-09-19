@@ -667,7 +667,18 @@
     "int_speed": "Speed",
     "int_driver": "Driver",
     "int_mac": "MAC",
-    "no_additional_info_available": "No additional info available"
+    "no_additional_info_available": "No additional info available",
+    "traceroute_info": "Show the route to a host",
+    "traceroute": "Traceroute",
+    "nslookup_info": "Query Internet name servers",
+    "nslookup": "DNS lookup",
+    "nameServer": "DNS Server",
+    "ping": "Ping",
+    "ping_info": "Ping a host",
+    "host":"Host",
+    "result":"Result",
+    "success": "Success",
+    "error": "Error"
   },
   "ssh": {
     "title": "SSH",
@@ -1028,7 +1039,11 @@
     "ldap-credentials,ldaptestbind,1": "LDAP connection error",
     "ldap-credentials,ldaptestbind,32": "Base DN was not found or insufficient rights",
     "ldap-credentials,ldaptestbind,34": "Invalid DN syntax",
-    "valid_starttls_urischeme": "Start TLS conflicts with 'ldaps://' URI scheme"
+    "valid_starttls_urischeme": "Start TLS conflicts with 'ldaps://' URI scheme",
+    "traceroute_validator_valid_ipV4Address": "Invalid IPv4 address or hostname, it must be something like '10.0.0.1' or 'nethserver.org'",
+    "ping_validator_valid_ipV4Address": "Invalid IPv4 address or hostname, it must be something like '10.0.0.1' or 'nethserver.org'",
+    "nslookup_validator_valid_ipV4Address": "Invalid IPv4 address, it must be something like '10.0.0.1'",
+    "nslookup_validator_valid_hostname_fqdn_1_9223372036854775807": "Invalid fully qualified domain name, it must be something like 'domain.org'"
   },
   "docs": {
     "more_info_about": "More info about",

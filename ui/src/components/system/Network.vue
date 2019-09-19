@@ -65,15 +65,49 @@
       <div class="col-sm-12">
         <h3>
           {{$t('network.interface_list')}}
-          <a
-            id="routing-info"
-            data-toggle="modal"
-            data-target="#routingInfoModal"
-            :class="['right', !routingInfo ? 'disabled' : '']"
-          >
-            <span class="pficon pficon-route starred-marging"></span>
-            {{$t('network.routing_info')}}
-          </a>
+          <div class="right">
+            <button
+              @click="openRoutingInfo()"
+              class="btn btn-default"
+            >
+              <span class="pficon pficon-route span-right-margin"></span>
+              {{$t('network.routing_info')}}
+            </button>
+            
+            <div class="margin-left-md span-right-margin-networkTools dropup pull-right dropdown-kebab-pf">
+              <button
+                class="btn btn-link dropdown-toggle panel-icon"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="true"
+              >
+                <span class="fa fa-ellipsis-v"></span>
+              </button>
+              <ul
+                class="dropdown-menu dropdown-menu-right"
+              >
+                <li >
+                  <a @click="openPingInfo()">
+                    <span class="pficon pficon-domain span-right-margin"></span>
+                    {{$t('network.ping')}}
+                  </a>
+                </li>
+                <li >
+                  <a @click="openNslookupInfo()">
+                    <span class="pficon pficon-search span-right-margin"></span>
+                    {{$t('network.nslookup')}}
+                  </a>
+                </li>
+                <li >
+                  <a @click="openTracerouteInfo()">
+                    <span class="pficon pficon-tenant span-right-margin"></span>
+                    {{$t('network.traceroute')}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </h3>
         <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
 
@@ -374,7 +408,184 @@
         </div>
       </div>
     </div>
-
+    <div class="modal" id="tracerouteModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('network.traceroute_info')}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="getTracerouteInfo(traceroute.host)">
+            <div class="modal-body">
+                <div
+                  :class="['form-group', traceroute.errors.host.hasError ? 'has-error' : '']"
+                >
+                  <label
+                    class="col-sm-3 control-label"
+                    for="textInput-modal-markup"
+                  >{{$t('network.host')}}</label>
+                  <div class="col-sm-9">
+                    <input
+                      placeholder="nethserver.org"
+                      type="text"
+                      v-model="traceroute.host"
+                      class="form-control"
+                    >
+                    <span
+                      v-if="traceroute.errors.host.hasError"
+                      class="help-block"
+                    >{{$t('validation.validation_failed')}}: {{$t('validation.traceroute_validator_'+traceroute.errors.host.message)}}</span>
+                  </div>
+                </div>
+                <div class="form-group" v-if="traceroute.info && ! traceroute.isLoading">
+                  <label
+                    class="col-sm-3 control-label"
+                    for="textInput-modal-markup"
+                  >{{$t('network.result')}}
+                  </label>
+                  <div class="col-sm-9 adjust-top-diag-result">
+                    <span  v-if="(traceroute.info && ! traceroute.isLoading)">{{traceroute.result ? $t('network.success') : $t('network.error') }}</span>
+                    <span  v-if="(traceroute.info && ! traceroute.isLoading)" :class="['fa margin-left-sm', traceroute.result ? 'fa-check green' : 'fa-times red']"></span>
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div v-if="traceroute.isLoading" class="spinner spinner-sm"></div>
+                  <pre v-if="traceroute.info && ! traceroute.isLoading" class="prettyprint">{{traceroute.info}}</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
+              <button :disabled="traceroute.isLoading" class="btn btn-primary" type="submit">{{$t('network.traceroute')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="pingModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('network.ping_info')}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="getPingInfo(ping.host)">
+            <div class="modal-body">
+                <div
+                  :class="['form-group', ping.errors.host.hasError ? 'has-error' : '']"
+                >
+                  <label
+                    class="col-sm-3 control-label"
+                    for="textInput-modal-markup"
+                  >{{$t('network.host')}}
+                  </label>
+                  <div class="col-sm-9">
+                    <input 
+                      placeholder="nethserver.org"
+                      type="text"
+                      v-model="ping.host"
+                      class="form-control"
+                    >
+                    <span
+                      v-if="ping.errors.host.hasError"
+                      class="help-block"
+                    >{{$t('validation.validation_failed')}}: {{$t('validation.ping_validator_'+ping.errors.host.message)}}</span>
+                  </div>
+                </div>
+                <div class="form-group" v-if="ping.info && ! ping.isLoading">
+                  <label
+                    class="col-sm-3 control-label"
+                    for="textInput-modal-markup"
+                  >{{$t('network.result')}}
+                  </label>
+                  <div class="col-sm-9 adjust-top-diag-result">
+                    <span  v-if="(ping.info && ! ping.isLoading)">{{ping.result ? $t('network.success') : $t('network.error') }}</span>
+                    <span  v-if="(ping.info && ! ping.isLoading)" :class="['fa margin-left-sm', ping.result ? 'fa-check green' : 'fa-times red']"></span>
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div v-if="ping.isLoading" class="spinner spinner-sm"></div>
+                  <pre v-if="ping.info && ! ping.isLoading" class="prettyprint">{{ping.info}}</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
+              <button :disabled="ping.isLoading" class="btn btn-primary" type="submit">{{$t('network.ping')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="nslookupModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('network.nslookup_info')}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="getNslookupInfo(nslookup)">
+            <div class="modal-body">
+                <div
+                  :class="['form-group', nslookup.errors.host.hasError ? 'has-error' : '']"
+                >
+                  <label
+                    class="col-sm-3 control-label"
+                    for="textInput-modal-markup"
+                  >{{$t('network.host')}}</label>
+                  <div class="col-sm-9">
+                    <input
+                      placeholder="nethserver.org"
+                      type="text"
+                      v-model="nslookup.host"
+                      class="form-control"
+                    >
+                    <span
+                      v-if="nslookup.errors.host.hasError"
+                      class="help-block"
+                    >{{$t('validation.validation_failed')}}: {{$t('validation.nslookup_validator_'+nslookup.errors.host.message)}}</span>
+                  </div>
+                </div>
+                <div
+                  :class="['form-group', nslookup.errors.nameServer.hasError ? 'has-error' : '']"
+                >
+                  <label
+                    class="col-sm-3 control-label"
+                    for="textInput-modal-markup"
+                  >{{$t('network.nameServer')}}</label>
+                  <div class="col-sm-9">
+                    <input
+                      placeholder="127.0.0.1"
+                      type="text"
+                      v-model="nslookup.nameServer"
+                      class="form-control"
+                    >
+                    <span
+                      v-if="nslookup.errors.nameServer.hasError"
+                      class="help-block"
+                    >{{$t('validation.validation_failed')}}: {{$t('validation.nslookup_validator_'+nslookup.errors.nameServer.message)}}</span>
+                  </div>
+                </div>
+                  <div class="form-group" v-if="nslookup.info && ! nslookup.isLoading">
+                    <label
+                      class="col-sm-3 control-label"
+                      for="textInput-modal-markup"
+                    >{{$t('network.result')}}
+                    </label>
+                    <div class="col-sm-9 adjust-top-diag-result">
+                      <span  v-if="(nslookup.info && ! nslookup.isLoading)">{{nslookup.result ? $t('network.success') : $t('network.error') }}</span>
+                      <span  v-if="(nslookup.info && ! nslookup.isLoading)" :class="['fa margin-left-sm', nslookup.result ? 'fa-check green' : 'fa-times red']"></span>
+                    </div>
+                  </div>
+                <div class="col-sm-12">
+                  <div v-if="nslookup.isLoading" class="spinner spinner-sm"></div>
+                  <pre v-if="nslookup.info && ! nslookup.isLoading" class="prettyprint">{{nslookup.info}}</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
+              <button :disabled="nslookup.isLoading" class="btn btn-primary" type="submit">{{$t('network.nslookup')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
     <div
       class="modal"
       id="createInterfaceAliasModal"
@@ -1722,6 +1933,44 @@ export default {
       wizardPhysical: this.initWizardPhysical(),
       routes: {},
       routingInfo: null,
+      traceroute: {
+        info: null,
+        host: null,
+        isLoading: false,
+        errors: {
+            host: {
+            hasError: false,
+            message: ""
+          }
+        }
+      },
+      ping: {
+        info: null,
+        host: null,
+        isLoading: false,
+        errors: {
+            host: {
+            hasError: false,
+            message: ""
+          }
+        }
+      },
+      nslookup: {
+        info: null,
+        host: null,
+        nameServer: "127.0.0.1",
+        isLoading: false,
+        errors: {
+            host: {
+            hasError: false,
+            message: ""
+          },
+            nameServer: {
+            hasError: false,
+            message: ""
+          }
+        }
+      },
       hints: {},
       alreadyPPPOE: 0
     };
@@ -2371,6 +2620,190 @@ export default {
         }
       );
     },
+    getPingInfo(host) {
+        var context = this;
+        context.ping.errors.host.hasError = false;
+        context.ping.errors.host.message = "";
+        context.ping.isLoading = true;
+        context.ping.info = null;
+        if (!host) {
+          host = 'nethserver.org';
+        }
+      nethserver.exec(
+        ["system-network/validate"],
+        {
+          action: "ping",
+          host: host
+        },
+        null,
+        function(success) {
+          nethserver.exec(
+            ["system-network/read"],
+            {
+              action: "ping",
+              host: host
+            },
+            null,
+            function(success) {
+                  try {
+                    success = JSON.parse(success);
+                  } catch (e) {
+                    console.error(e);
+                  }
+              context.ping.info = success.data;
+              context.ping.result = success.result;
+              context.ping.isLoading = false;
+            },
+            function(error) {
+             context.ping.isLoading = false;
+              console.error(error);
+            },
+            true //sudo
+          );
+        },
+        function(error, data) {
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.ping.errors[attr.parameter].hasError = true;
+              context.ping.errors[attr.parameter].message = attr.error;
+              context.ping.isLoading = false;
+            }
+          } catch (e) {
+            console.error(e);
+          }
+      },
+        true // sudo
+      );
+    },
+    getTracerouteInfo(host) {
+        var context = this;
+        context.traceroute.errors.host.hasError = false;
+        context.traceroute.errors.host.message = "";
+        context.traceroute.isLoading = true;
+        context.traceroute.info = null;
+        if (!host) {
+          host = 'nethserver.org';
+        }
+      nethserver.exec(
+        ["system-network/validate"],
+        {
+          action: "traceroute",
+          host: host
+        },
+        null,
+        function(success) {
+          nethserver.exec(
+            ["system-network/read"],
+            {
+              action: "traceroute",
+              host: host
+            },
+            null,
+            function(success) {
+                  try {
+                    success = JSON.parse(success);
+                  } catch (e) {
+                    console.error(e);
+                  }
+              context.traceroute.info = success.data;
+              context.traceroute.result = success.result;
+              context.traceroute.isLoading = false;
+            },
+            function(error) {
+             context.traceroute.isLoading = false;
+              console.error(error);
+            },
+            true //sudo
+          );
+        },
+        function(error, data) {
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.traceroute.errors[attr.parameter].hasError = true;
+              context.traceroute.errors[attr.parameter].message = attr.error;
+              context.traceroute.isLoading = false;
+            }
+          } catch (e) {
+            console.error(e);
+          }
+      },
+        true // sudo
+      );
+    },
+    getNslookupInfo(nslookup) {
+        var context = this;
+        context.nslookup.errors.host.hasError = false;
+        context.nslookup.errors.host.message = "";
+        context.nslookup.errors.nameServer.hasError = false;
+        context.nslookup.errors.nameServer.message = "";
+        context.nslookup.isLoading = true;
+        context.nslookup.info = null;
+        
+        if (!nslookup.host) {
+          nslookup.host = 'nethserver.org';
+        }
+
+        if (! nslookup.nameServer) {
+          nslookup.nameServer = '127.0.0.1';
+        }
+
+      nethserver.exec(
+        ["system-network/validate"],
+        {
+          action: "nslookup",
+          host: nslookup.host,
+          nameServer: nslookup.nameServer
+        },
+        null,
+        function(success) {
+          nethserver.exec(
+            ["system-network/read"],
+            {
+              action: "nslookup",
+              host: nslookup.host,
+              nameServer: nslookup.nameServer
+            },
+            null,
+            function(success) {
+                  try {
+                    success = JSON.parse(success);
+                  } catch (e) {
+                    console.error(e);
+                  }
+              context.nslookup.info = success.data;
+              context.nslookup.result = success.result;
+              context.nslookup.isLoading = false;
+            },
+            function(error) {
+             context.nslookup.isLoading = false;
+              console.error(error);
+            },
+            true //sudo
+          );
+        },
+        function(error, data) {
+          var errorData = {};
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.nslookup.errors[attr.parameter].hasError = true;
+              context.nslookup.errors[attr.parameter].message = attr.error;
+              context.nslookup.isLoading = false;
+            }
+          } catch (e) {
+            console.error(e);
+          }
+      },
+        true // sudo
+      );
+    },
     initInterface() {
       return {
         ipaddr: "",
@@ -2556,6 +2989,33 @@ export default {
         );
       }
     },
+    openRoutingInfo() {
+      this.getRoutingInfo();
+      $("#routingInfoModal").modal("show");
+    },
+    openTracerouteInfo() {
+      var context = this;
+      context.traceroute.host = null;
+      context.traceroute.info = null;
+      context.traceroute.errors.host.hasError = false;
+      $("#tracerouteModal").modal("show");
+    },
+    openNslookupInfo() {
+      var context = this;
+      context.nslookup.host = null;
+      context.nslookup.info = null;
+      context.nslookup.nameServer = '127.0.0.1';
+      context.nslookup.errors.host.hasError = false;
+      context.nslookup.errors.nameServer.hasError = false;
+      $("#nslookupModal").modal("show");
+    },
+    openPingInfo() {
+      var context = this;
+      context.ping.host = null;
+      context.ping.info = null;
+      context.ping.errors.host.hasError = false;
+      $("#pingModal").modal("show");
+  },
     openConfigureInterface(i) {
       if (i.virtual == 1 && i.type != "xdsl") {
         this.wizard = this.initWizard(i);

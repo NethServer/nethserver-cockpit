@@ -25,6 +25,7 @@ require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
 use warnings;
 use strict;
 use esmith::NetworksDB;
+use JSON;
 
 my $ret = {"status" => undef, "configuration" => {'green' => [], 'red' => [] , 'orange' => [], 'blue' => [], 'free' => [], 'other' => [], 'missing' => [] }};
 our $ndb = esmith::NetworksDB->open_ro();
@@ -60,6 +61,7 @@ sub cat
 
 my $input = readInput();
 my $cmd = $input->{'action'};
+my $host = $input->{'host'};
 
 if($cmd eq 'list') {
     my %interfaces;
@@ -312,6 +314,29 @@ if($cmd eq 'list') {
 
    $ret = undef;
    $ret->{'data'} = `route -n`;
+   
+} elsif ($cmd eq 'traceroute') {
+
+   $ret = undef;
+   error('MissingHost','The host is a mandatory argument') if (! $host);
+   $ret->{'data'} = `traceroute -I -n $host 2>&1`;
+   $ret->{'result'} = ($? > 0) ? JSON::false : JSON::true;
+
+} elsif ($cmd eq 'ping') {
+
+   $ret = undef;
+   error('MissingHost','The host is a mandatory argument') if (! $host);
+   $ret->{'data'} = `ping -n -c4 $host 2>&1`;
+   $ret->{'result'} = ($? > 0) ? JSON::false : JSON::true;
+
+} elsif ($cmd eq 'nslookup') {
+
+   $ret = undef;
+   my $nameServer = $input->{'nameServer'} || '127.0.0.1';
+   error('MissingHost','The host is a mandatory argument') if (! $host);
+   $ret->{'data'} = `nslookup $host $nameServer 2>&1`;
+   $ret->{'result'} = ($? > 0) ? JSON::false : JSON::true;
+
 } elsif ($cmd eq 'info') {
 
    my $i = $input->{'name'};

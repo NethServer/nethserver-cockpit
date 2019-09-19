@@ -266,6 +266,10 @@ iframe>.breadcrumb {
     margin-top: 15px;
 }
 
+.adjust-top-diag-result {
+    margin-top: 3px;
+}
+
 .adjust-top-col {
     margin-top: 0px !important;
 }
@@ -748,6 +752,9 @@ circle {
     margin-right: 20px;
 }
 
+.span-right-margin-networkTools {
+    margin-right: 16px;
+}
 .Password__field {
     width: 100% !important;
     height: 26px !important;
