@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.14
+Version: 0.15.1
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -60,6 +60,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Fri Sep 20 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.15.1-1
+- Cockpit: make network diagnostic tools - NethServer/dev#5839
+
 * Mon Sep 16 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.14-1
 - Cockpit: scan the network to make IP reservation - NethServer/dev#5830
 
