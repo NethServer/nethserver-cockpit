@@ -98,15 +98,30 @@ elseif ($action === 'scan') {
     $hosts_db = new  EsmithDatabase('hosts');
     $macs = array();
     $hosts = array();
+    $description = array();
 
     foreach ($hosts_db->getAll("local") as $key => $props) {
         if (@$props['MacAddress']) {
             $macs[] = strtolower($props['MacAddress']);
         }
-        # find the hostname
+        # find the hostname and description
         if (@$props['IpAddress']) {
             $hosts[$props['IpAddress']] = $key;
+            $description[$props['IpAddress']] = $props['Description'];
         }
+    }
+
+    exec("arp -a", $outputARP, $retARP);
+    $arp = array();
+    if ($retARP == 0) {
+       foreach ($outputARP as $line) {
+            $tmp = explode(" ", $line);
+            if ($tmp[0] === '?') {
+                continue;
+            }
+            $tmp[1] = str_replace( array ('(',')') ,'',$tmp[1]);
+            $arp[] = array( "hostname" => $tmp[0], "ip" => $tmp[1]);
+       }
     }
 
     exec("arp-scan -lx -I ".escapeshellarg($nic), $output, $ret);
@@ -118,6 +133,17 @@ elseif ($action === 'scan') {
             $reserved = false;
             if (in_array($tmp[1], $macs)) { # assume mac is always lower case
                 $reserved = true;
+                # reserved is true, use the esmith description prop instead arp-scan one
+                $tmp[2] = @$description[$tmp[0]]; 
+            }
+            if (!$reserved) { # if reserved the description is from esmith description prop 
+                foreach ($arp as $key => $props) { 
+                   if (($props['hostname'] !== '?') && ($tmp[0] === $props['ip'])) { 
+                        # check if arp knows the name and if IP corresponds to a arp-scan IP
+                        # replace arp-scan nic name vendor by arp hostname
+                        $tmp[2] = $props['hostname'];
+                    }
+                }
             }
             $data[] = array( "ip" => $tmp[0], "mac" => $tmp[1], "name" => $tmp[2], "reserved" => $reserved, "host" => @$hosts[$tmp[0]] );
         }
