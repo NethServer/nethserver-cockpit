@@ -755,6 +755,7 @@ circle {
 .span-right-margin-networkTools {
     margin-right: 16px;
 }
+
 .Password__field {
     width: 100% !important;
     height: 26px !important;
@@ -1001,4 +1002,8 @@ circle {
 
 .list-view-pf-additional-info {
     width: 35% !important;
+}
+
+.list-view-pf-actions {
+    z-index: 2;
 }

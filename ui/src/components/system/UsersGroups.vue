@@ -498,6 +498,18 @@
                   <password-meter></password-meter>
                 </div>
               </div>
+              <div v-if="newUser.newPassword.length > 0 && !newUser.passwordStrength && passwordPolicy.Users == 'no'" class="form-group">
+                <label
+                  class="col-sm-3 control-label"
+                  for="shell"
+                ></label>
+                <div class="col-sm-9">
+                  <div class="alert alert-warning alert-dismissable">
+                    <span class="pficon pficon-warning-triangle-o"></span>
+                    <strong>{{$t('warning')}}: </strong> {{$t('users_groups.weak_password')}}.
+                  </div>
+                </div>
+              </div>
 
               <legend
                 v-if="!newUser.isPassEdit"
@@ -542,7 +554,7 @@
               <div v-if="newUser.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button
-                :disabled="!newUser.isEdit && !newUser.passwordStrength"
+                :disabled="!newUser.isEdit && (!newUser.passwordStrength && passwordPolicy.Users == 'yes')"
                 class="btn btn-primary"
                 type="submit"
               >

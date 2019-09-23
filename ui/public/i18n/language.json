@@ -563,7 +563,8 @@
     "no_users_found": "No users found",
     "no_users_found_desc": "If your provider is local, click on button below to create a new user or add it on remote provider",
     "no_groups_found": "No groups found",
-    "no_groups_found_desc": "If your provider is local, click on button below to create a new group or add it on remote provider"
+    "no_groups_found_desc": "If your provider is local, click on button below to create a new group or add it on remote provider",
+    "weak_password": "Your policy allows you to insert weak password, it not recommended for security reasons"
   },
   "network": {
     "title": "Network",
