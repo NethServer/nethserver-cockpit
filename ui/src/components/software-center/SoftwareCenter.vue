@@ -874,8 +874,8 @@ export default {
       var context = this;
       var appToInstall = [];
 
-      for (var a in this.filteredAppsList) {
-        var app = this.filteredAppsList[a];
+      for (var a in this.applications) {
+        var app = this.applications[a];
         if (app.selected) {
           app.isInstalling = true;
           appToInstall.push(app.id);
