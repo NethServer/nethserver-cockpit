@@ -850,7 +850,7 @@
     "centos_upgrade": "CentOS upgrade",
     "nethserver_upgrade": "NethServer upgrade",
     "upgrade_nethserver": "Upgrade NethServer",
-    "nethserver_upgrade_message": "A system upgrade for NethServer is available. \nThe system upgrade procedure switches to \"unlocked\" software updates origin and updates all installed packages",
+    "nethserver_upgrade_message": "A system upgrade for NethServer is available. \nThe system upgrade procedure enables the new version repositories and updates any installed package",
     "there_is_upgrade_from": "There is an upgrade from",
     "to": "to",
     "upgrade_now": "Upgrade now",
