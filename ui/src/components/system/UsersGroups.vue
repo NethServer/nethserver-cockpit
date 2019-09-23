@@ -1682,6 +1682,9 @@
 <script>
 import PasswordMeter from "../../directives/PasswordMeter.vue";
 
+var appList = [];
+var sysList = [];
+
 export default {
   name: "UsersGroups",
   beforeRouteEnter(to, from, next) {
@@ -1704,6 +1707,8 @@ export default {
 
           vm.view.isAuth = true;
           vm.view.isRoot = success.status.isRoot == 1;
+          Array.prototype.push.apply(appList, success.applications);
+          Array.prototype.push.apply(sysList, success.system);
         },
         function(error) {
           console.error(error);
@@ -1723,7 +1728,6 @@ export default {
     this.initGraphics();
     this.getInfo();
     this.getPasswordPolicy();
-    this.getRoles();
   },
   computed: {
     filteredUserList() {
@@ -1762,7 +1766,10 @@ export default {
         group: "Groups"
       },
       roles: {
-        list: {},
+        list: {
+            applications: appList,
+            system: sysList,
+        },
         editable: true
       },
       users: {
@@ -2317,31 +2324,6 @@ export default {
           }
           context.newProvider.Realm = success.Realm;
           context.newProvider.Workgroup = success.Workgroup;
-        },
-        function(error) {
-          console.error(error);
-        }
-      );
-    },
-
-    getRoles() {
-      var context = this;
-      context.view.isLoaded = false;
-      context.exec(
-        ["system-roles/read"],
-        {
-          action: "applications"
-        },
-        null,
-        function(success) {
-          try {
-            success = JSON.parse(success);
-          } catch (e) {
-            console.error(e);
-          }
-
-          context.roles.list.applications = success.applications;
-          context.roles.list.system = success.system;
         },
         function(error) {
           console.error(error);

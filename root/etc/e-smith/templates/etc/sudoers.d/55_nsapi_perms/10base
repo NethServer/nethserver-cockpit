@@ -1,0 +1,7 @@
+#
+# 10base
+#
+%locals ALL=NOPASSWD: NSAPI_PUBLIC
+%domain\ users ALL=NOPASSWD: NSAPI_PUBLIC
+
+

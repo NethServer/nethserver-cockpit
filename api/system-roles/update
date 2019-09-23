@@ -20,34 +20,62 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-require "/usr/libexec/nethserver/api/lib/helper_functions.pl";
-require "/usr/libexec/nethserver/api/lib/auth_functions.pl";
-
-use warnings;
 use strict;
-use JSON;
+use esmith::ConfigDB;
+use esmith::event;
+use NethServer::ApiTools qw(readInput error);
 
-my $jsonFile = '/etc/nethserver/cockpit/authorization/roles.json';
+my $db = esmith::ConfigDB->open();
+my $delegations = $db->get_prop('cockpit.socket','delegation')|| '';
+
+my $exitCode = 0;
+my $ret;
+
 my $input = readInput();
 my $role = $input->{'role'} || '';
-my $groupAdmins = get_adminGroup();
+my $groupAdmins = $db->get_prop('admins','group');
 
-my $data = read_json ($jsonFile); 
+my @system = @{$input->{'system'}}; 
+my @applications = @{$input->{'applications'}};
+my @permissions = ();
+push @permissions,(@system,@applications);
+my $values = '';
+
 
 if ($role ne '') {
 
     if ($role ne  $groupAdmins) {
-        $data->{$role}->{'system'} = $input->{'system'};
-        $data->{$role}->{'applications'} = $input->{'applications'};
-        write_json ($jsonFile,$data);
-    }
-
-    my $out = `/sbin/e-smith/expand-template /etc/sudoers.d/30_nethserver_cockpit_roles`;
-
-    if ($? > 0) {
-        error("EventFailed", "");
-    } else {
-        success();
+        #Update to cockpit.socket/delegation
+        if ($delegations !~ /,$role:|^$role:/) {
+            # search and if it doesn't exist, push it to values
+            $values .=  $role .':'. join(':',@permissions).','.$delegations;
+        } else {
+            my @Keys = split(',', $delegations);
+            foreach (@Keys) {
+                my @props = split(':',$_);
+                if ($props[0] eq $role) { # bingo we find the values to update
+                    $values .= $role .':'. join(':',@permissions) .',';
+                } else { # this value is not the one to update, push it to values
+                   $values .= $_.',';
+                }
+            }
+        }
+        $values =~ s/,$//;
+        $db->set_prop('cockpit.socket','delegation', $values); 
+        if(esmith::event::event_signal('delegation-save')) {
+            $ret = {'state' => 'success'};
+        } else {
+            $ret = {
+                'type' => 'Error',
+                'message' => 'delegation.api_update_failed',
+                'attributes' => {
+                    'event_name' => 'delegation-save',
+                }
+            };
+            $exitCode = 1;
+        }
+        print encode_json($ret);
+        exit($exitCode);
     }
 } else {
    error('NotValidAction','The action value is not valid');

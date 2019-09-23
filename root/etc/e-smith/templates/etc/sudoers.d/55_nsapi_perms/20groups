@@ -1,0 +1,23 @@
+#
+# 20groups
+#
+{
+    foreach my $rule (split(',', ${'cockpit.socket'}{'delegation'} || '')) {
+
+        my ($group, @modules) = split(':', $rule);
+
+        if(!$group || !@modules) {
+            next;
+        }
+
+        my %CmndAliases = ('NSAPI_PUBLIC' => 1);
+
+        foreach (@modules) {
+            $CmndAliases{(m/^nethserver-/ ? 'NSAPI_' : 'NSAPI_SYSTEM_') . uc(tr/-/_/r)} = 1;
+        }
+
+        $OUT .= '%' . ($group =~ s/ /\\ /r) . ' ALL=NOPASSWD: ' . join(', ', sort keys %CmndAliases) . "\n";
+    }
+}
+
+

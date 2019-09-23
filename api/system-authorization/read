@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 #
-# Copyright (C) 2018 Nethesis S.r.l.
+# Copyright (C) 2019 Nethesis S.r.l.
 # http://www.nethesis.it - nethserver@nethesis.it
 #
 # This script is part of NethServer.
@@ -21,36 +21,81 @@
 #
 
 use strict;
-use warnings;
 use JSON;
+use NethServer::ApiTools;
 
-require '/usr/libexec/nethserver/api/lib/auth_functions.pl';
+my %appRoutes = ();
+my %sysRoutes = ();
 
-my $ret = {"system" => [], "applications" => []};
-my $user = whoami();
+# Map of system modules that have a name different from their API path
+# The key is the directory name suffix, the value is the corresponding UI route
+# The dir name prefix is "system-".
+my %pathMap = (
+    "certificate" => "certificates",
+    "users" => "users-groups",
+    "openssh" => "ssh",
+    "packages" => "software-center",
+);
+my $isAdmin = 0;
+my $isRoot = $> eq 0 ? 1 : 0;
 
-my @apps = list_applications();
-my @system_routes = list_system_routes();
-my $system_routes = read_json("/etc/nethserver/cockpit/authorization/system-routes.json");
-my $groupAdmins = get_adminGroup();
-my $role = get_role($user);
-
-# root and members of domain admins group can always access everything
-    if (($user eq 'root') || 
-        (grep /^$groupAdmins$/, get_groups())) {
-    foreach my $r (@system_routes) {
-        push($ret->{"system"}, $r)
+$ENV{'LANG'} = 'C';
+my $skip = 1;
+foreach my $line (split "\n", NethServer::ApiTools::exec_slurp('/usr/bin/sudo', '-ll')) {
+    if($line =~ /^Sudoers entry:/) {
+        $skip = 0;
+        next;
     }
-    foreach my $a (@apps) {
-        push($ret->{"applications"}, $a);
+    if($skip) {
+        next;
     }
-    $ret->{'status'}->{'isAdmin'} = int((grep /^$groupAdmins$/, get_groups()) || int($user eq 'root'));  
-    $ret->{'status'}->{'isRoot'} = int($user eq 'root');
-    print encode_json($ret);
-    exit(0);
+
+    if($line =~ m|^\s+/usr/libexec/nethserver/api/system-([-\w]+)/([-\w]+/)*update|) {
+        $sysRoutes{exists $pathMap{$1} ? $pathMap{$1} : $1} = 1;
+    } elsif($line =~ m|^\s+/usr/libexec/nethserver/api/(nethserver-[-\w]+)(/[-\w]+)+|) {
+        $appRoutes{$1} = 1;
+    }
+
+    # isAdmin assertion: true if ALL commands are enabled (wheel-like access)
+    # or special system-apps/update is available
+    if($line =~ m{^\s+(ALL|/usr/libexec/nethserver/api/system-apps/update)$}) {
+        $isAdmin = 1;
+    }
 }
 
-$ret = get_acl($user, $role);
-$ret->{'status'}->{'isRoot'} = int($user eq 'root');
-$ret->{'status'}->{'isAdmin'} = int(0);
-print encode_json($ret);
+# Grant access to all known sys modules and apps to root and admins users
+if($isRoot || $isAdmin) {
+    %sysRoutes = (%sysRoutes, map { $_ => 1 } (
+        "storage",
+        "disk-usage",
+        "certificates",
+        "dns",
+        "dhcp",
+        "backup",
+        "services",
+        "users-groups",
+        "network",
+        "ssh",
+        "tls-policy",
+        "trusted-networks",
+        "logs",
+        "software-center",
+        "subscription"
+    ));
+    %appRoutes = (%appRoutes, map { $_ => 1 } NethServer::ApiTools::list_applications());
+}
+
+# Terminal access is granted if a *sh shell is set for the user
+my $userShell = (getpwuid($>))[8];
+if($userShell =~ m/sh$/) {
+    $sysRoutes{'terminal'} = 1;
+}
+
+print encode_json({
+    "system" => [sort keys %sysRoutes],
+    "applications" => [sort keys %appRoutes],
+    "status" => {
+        "isRoot" => $isRoot,
+        "isAdmin" => $isAdmin,
+    }
+});

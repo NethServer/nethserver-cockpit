@@ -3,7 +3,7 @@
     <h2>{{$t('settings.title')}}</h2>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <div v-if="view.isLoaded">
-      <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
+      <div v-if="hints.count > 0 && view.isAdmin" class="alert alert-warning alert-dismissable">
         <span class="pficon pficon-warning-triangle-o"></span>
         <strong>{{$t('hints_suggested')}}:</strong>
         <li v-for="(m,t) in hints.details" v-bind:key="t">

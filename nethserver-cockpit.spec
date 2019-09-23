@@ -44,13 +44,19 @@ gzip -v %{buildroot}/usr/share/cockpit/nethserver/css/*
 mkdir -p %{buildroot}/usr/libexec/nethserver/
 mv api/ %{buildroot}/usr/libexec/nethserver/
 %{genfilelist}  %{buildroot} | \
-    grep -v -e '^/usr/libexec/nethserver/api/lib' -e '^%{perl_vendorlib}' > file.lst
+    grep -v \
+    -e '^/usr/libexec/nethserver/api/lib' \
+    -e '^%{perl_vendorlib}' \
+    -e '^/usr/share/cockpit/nethserver/categories/categories.json' \
+    -e '^/etc/sudoers.d/50_nsapi' \
+    > file.lst
 
 %files -f file.lst
 %license COPYING
 %doc README.rst
-%config /etc/nethserver/cockpit/authorization/roles.json
 %config /usr/share/cockpit/nethserver/categories/categories.json
+%attr(0440,root,root) /etc/sudoers.d/50_nsapi
+%attr(0440,root,root) %ghost /etc/sudoers.d/55_nsapi_perms
 %dir %{_nseventsdir}/%{name}-update
 %dir /usr/libexec/nethserver/api/
 

@@ -2,7 +2,7 @@
   <div>
     <h2>{{$t('dashboard.title')}}</h2>
     <div
-      v-if="(hints.details.hostname && hints.details.hostname.count > 0) || (hints.details.dns && hints.details.dns.count > 0) || (hints.details.company && hints.details.company.count > 0)"
+      v-if="(view.isAdmin && (hints.details.hostname && hints.details.hostname.count > 0)) || (view.isAdmin && (hints.details.dns && hints.details.dns.count > 0)) || (view.isAdmin && (hints.details.company && hints.details.company.count > 0))"
       class="alert alert-warning alert-dismissable"
     >
       <span class="pficon pficon-warning-triangle-o"></span>
