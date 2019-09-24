@@ -23,13 +23,10 @@
 use strict;
 use esmith::ConfigDB;
 use esmith::event;
-use NethServer::ApiTools qw(readInput error);
+use NethServer::ApiTools qw(readInput error success);
 
 my $db = esmith::ConfigDB->open();
 my $delegations = $db->get_prop('cockpit.socket','delegation')|| '';
-
-my $exitCode = 0;
-my $ret;
 
 my $input = readInput();
 my $role = $input->{'role'} || '';
@@ -40,7 +37,6 @@ my @applications = @{$input->{'applications'}};
 my @permissions = ();
 push @permissions,(@system,@applications);
 my $values = '';
-
 
 if ($role ne '') {
 
@@ -63,20 +59,12 @@ if ($role ne '') {
         $values =~ s/,$//;
         $db->set_prop('cockpit.socket','delegation', $values); 
         if(esmith::event::event_signal('delegation-save')) {
-            $ret = {'state' => 'success'};
+            success();
         } else {
-            $ret = {
-                'type' => 'Error',
-                'message' => 'delegation.api_update_failed',
-                'attributes' => {
-                    'event_name' => 'delegation-save',
-                }
-            };
-            $exitCode = 1;
+               error("EventError", "delegation-save failed update");
         }
-        print encode_json($ret);
-        exit($exitCode);
     }
+
 } else {
    error('NotValidAction','The action value is not valid');
 }
