@@ -27,25 +27,28 @@
         </td>
         <td class="fancy">{{ props.row.props.Mask}}</td>
         <td class="fancy">
-          {{props.row.props.Description}}
+          {{ props.row.props.Description }}
         </td>
         <td>
-          <button @click="editNetwork(props.row)" class="btn btn-default">
-            <span class="fa fa-pencil span-right-margin"></span>
-            {{$t('edit')}}
-          </button>
-          <div class="dropup pull-right dropdown-kebab-pf">
-            <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              <span class="fa fa-ellipsis-v"></span>
+          <!-- allow edit and delete only for custom trusted networks -->
+          <div v-if="props.row.custom">
+            <button @click="editNetwork(props.row)" class="btn btn-default">
+              <span class="fa fa-pencil span-right-margin"></span>
+              {{$t('edit')}}
             </button>
-            <ul class="dropdown-menu dropdown-menu-right">
-              <li>
-                <a @click="openDeleteNetwork(props.row)">
-                  <span class="fa fa-times span-right-margin"></span>
-                  {{$t('delete')}}
-                </a>
-              </li>
-            </ul>
+            <div class="dropup pull-right dropdown-kebab-pf">
+              <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <span class="fa fa-ellipsis-v"></span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li>
+                  <a @click="openDeleteNetwork(props.row)">
+                    <span class="fa fa-times span-right-margin"></span>
+                    {{$t('delete')}}
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </td>
       </template>
@@ -229,15 +232,43 @@ export default {
           } catch (e) {
             console.error(e);
           }
+          context.rows = context.mapTrustedNetworks(success);
           context.view.isLoaded = true;
-          context.rows = success.configuration;
         },
         function(error) {
           console.error(error);
         }
       );
     },
+    mapTrustedNetworks(trustedNetworksOutput) {
+      for (var network of trustedNetworksOutput.configuration) {
+        // configuration contains custom trusted networks
+        network.custom = true;
+      }
+      var trustedNetworks = trustedNetworksOutput.configuration;
 
+      for (var network of trustedNetworksOutput.status) {
+        // status contains both custom and builtin trusted networks
+
+        if (network.provider != 'networksdb') {
+          // builtin trusted network
+          var networkAddress = network.mask.split("/")[0];
+          var networkMask = network.mask.split("/")[1];
+
+          var builtinTrustedNetwork = {
+            props: {
+              Mask: networkMask,
+              Description: network.provider,
+            },
+            name: networkAddress,
+            type: 'network',
+            custom: false
+          }
+          trustedNetworks.push(builtinTrustedNetwork);
+        }
+      }
+      return trustedNetworks;
+    },
     saveNetwork(network) {
       var context = this;
 
