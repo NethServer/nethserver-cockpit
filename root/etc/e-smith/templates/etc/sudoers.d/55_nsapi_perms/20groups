@@ -15,6 +15,10 @@
         foreach (@modules) {
             $CmndAliases{(m/^nethserver-/ ? 'NSAPI_' : 'NSAPI_SYSTEM_') . uc(tr/-/_/r)} = 1;
         }
+        
+        if (grep /^nethserver-/, @modules) {
+            $CmndAliases{'NSAPI_SYSTEM_APPS'} = 1;
+        }
 
         $OUT .= '%' . ($group =~ s/ /\\ /r) . ' ALL=NOPASSWD: ' . join(', ', sort keys %CmndAliases) . "\n";
     }
