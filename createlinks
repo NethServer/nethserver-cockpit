@@ -38,7 +38,6 @@ event_templates('nethserver-cockpit-update', qw(
     /etc/nethserver/ldappasswd.conf
     /etc/sudoers.d/30_nethserver_cockpit_roles
     /etc/sudoers.d/55_nsapi_perms
-    /etc/shells
 ));
 
 #
