@@ -449,7 +449,7 @@
     "strength": "Strength",
     "advanced_options": "Advanced options",
     "password_expiration": "Password expiration",
-    "remote_shell": "Remote shell (SSH)",
+    "remote_shell": "Shell",
     "delete_user": "Delete user",
     "delete_group": "Delete group",
     "caution": "Caution",
@@ -545,7 +545,7 @@
     "role_deleted_ok": "Role deleted OK",
     "role_deleted_error": "Role deleted errors",
     "define_authorization": "Define authorizations for this group",
-    "define_authorization_description": "Select views and applications that members of this group can view",
+    "define_authorization_description": "Select views and applications that members of this group can view. Make sure delegated users have the \"Shell\" option enabled",
     "binddn_empty": "BindDN is empty",
     "bindpassword_empty": "BindPassword is empty",
     "binddn_bindpass_empty": "BindDN and BindPassword are empty",
@@ -676,8 +676,8 @@
     "nameServer": "DNS Server",
     "ping": "Ping",
     "ping_info": "Ping a host",
-    "host":"Host",
-    "result":"Result",
+    "host": "Host",
+    "result": "Result",
     "success": "Success",
     "error": "Error"
   },
@@ -1061,6 +1061,7 @@
     "dns_wildcard": "If enabled, match also all sub-domains.",
     "limit_access": "Restict access to port 9090 only to given IP addresses",
     "dhcp_comma_separated_field": "Insert an IP address or a comma-separated list of IP addesses",
-    "dhcp_servers": "Servers"
+    "dhcp_servers": "Servers",
+    "remote_shell": "Enable this option to grant access to the Terminal and the Server Manager."
   }
 }

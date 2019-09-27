@@ -544,7 +544,14 @@
                 <label
                   class="col-sm-3 control-label"
                   for="shell"
-                >{{$t('users_groups.remote_shell')}}</label>
+                >{{$t('users_groups.remote_shell')}}
+                <doc-info
+                  :placement="'top'"
+                  :title="$t('users_groups.remote_shell')"
+                  :chapter="'remote_shell'"
+                  :inline="true"
+                ></doc-info>
+                </label>
                 <div class="col-sm-9">
                   <input type="checkbox" id="shell" class="form-control" v-model="newUser.shell" />
                 </div>
