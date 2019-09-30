@@ -16,6 +16,7 @@ Requires:       cockpit, cockpit-storaged, cockpit-packagekit
 Requires:       jq, openldap-clients, expect, python-pwquality
 Requires:       nethserver-subscription
 Requires:       arp-scan
+Requires:       nethserver-lang-cockpit
 %description
 NethServer Server Manager Web UI based on Cockpit
 
