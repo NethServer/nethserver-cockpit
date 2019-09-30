@@ -215,4 +215,5 @@ Cmnd_Alias NSAPI_ADMINS = \
     NSAPI_SYSTEM_TERMINAL, \
     NSAPI_SYSTEM_STORAGE, \
     NSAPI_SYSTEM_USERS_GROUPS, \
+    NSAPI_SYSTEM_APPS, \
     /usr/libexec/nethserver/api/system-apps/update
