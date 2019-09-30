@@ -29,8 +29,6 @@ Cmnd_Alias NSAPI_PUBLIC = \
     /usr/libexec/nethserver/api/system-subscription/hints, \
     /usr/libexec/nethserver/api/system-tls-policy/hints
 
-Cmnd_Alias NSAPI_SYSTEM_APPS= \
-    /usr/libexec/nethserver/api/system-apps/update
 
 Cmnd_Alias NSAPI_SYSTEM_DISK_USAGE = \
     /usr/libexec/nethserver/api/system-disk-usage/read, \
