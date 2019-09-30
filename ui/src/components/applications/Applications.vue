@@ -33,10 +33,10 @@
             target="_blank"
             :href="props.row.url"
           >
-            <img class="apps-icon" :src="'../'+props.row.id+'/'+(props.row.icon || 'logo.png')">
+            <img class="apps-icon" :src="'../'+props.row.id+'/'+(props.row.icon || 'logo.png')" />
           </a>
           <span v-if="!props.row.url || props.row.url.length == 0">
-            <img class="apps-icon" :src="'../'+props.row.id+'/'+(props.row.icon || 'logo.png')">
+            <img class="apps-icon" :src="'../'+props.row.id+'/'+(props.row.icon || 'logo.png')" />
           </span>
         </td>
         <td class="fancy">
@@ -63,7 +63,7 @@
             {{props.row.external ? $t('applications.open') : $t('applications.settings')}}
           </a>
           <div
-            v-if="props.row.editable == 1 && !props.row.legacy"
+            v-if="props.row.editable == 1 && !props.row.legacy && view.isRoot"
             class="dropup pull-right dropdown-kebab-pf"
           >
             <button
@@ -88,12 +88,8 @@
                 </a>
               </li>
               <li>
-                <a
-                  @click="props.row.pin == 1 ? removePin(props.row.id) : addPin(props.row.id)"
-                >
-                  <span
-                    :class="['fa', 'fa-map-pin', 'action-icon-menu']"
-                  ></span>
+                <a @click="props.row.pin == 1 ? removePin(props.row.id) : addPin(props.row.id)">
+                  <span :class="['fa', 'fa-map-pin', 'action-icon-menu']"></span>
                   {{props.row.pin == 1
                   ? $t('remove_pin') : $t('add_pin')}}
                 </a>
@@ -166,7 +162,8 @@ export default {
   data() {
     return {
       view: {
-        isLoaded: false
+        isLoaded: false,
+        isRoot: false
       },
       tableLangsTexts: this.tableLangs(),
       columns: [
@@ -207,8 +204,30 @@ export default {
         "//" +
         window.location.hostname +
         ":980/en-US/",
-      hideUninstall: 'disabled'
+      hideUninstall: "disabled"
     };
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.exec(
+        ["system-authorization/read"],
+        null,
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+
+          vm.view.isRoot = success.status.isRoot;
+        },
+        function(error) {
+          console.error(error);
+        },
+        false
+      );
+    });
   },
   beforeRouteLeave(to, from, next) {
     $(".modal").modal("hide");
