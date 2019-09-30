@@ -59,7 +59,7 @@ sub app_info
     if($data->{'infoapi'}) {
         if(-x '/usr/libexec/nethserver/api/' . $data->{'infoapi'}->{'path'}) {
             $extended_data = invoke_info_api(
-                '/usr/libexec/nethserver/api/' . $data->{'infoapi'}->{'path'},
+                '/usr/bin/sudo -n /usr/libexec/nethserver/api/' . $data->{'infoapi'}->{'path'},
                 safe_decode_json($data->{'infoapi'}->{'input'}),
                 $input
             );
@@ -85,22 +85,6 @@ sub authorized_apps
     } else {
         return ();
     }
-}
-
-sub is_installed
-{
-    my $app = shift;
-    my $installed = shift;
-    foreach (@$installed) {
-        return 1 if ($app eq $_);
-    }
-    return 0;
-}
-
-sub has_cockpit_support
-{
-    my $app = shift;
-    return (-f "$path$app.json");
 }
 
 if($cmd eq 'list') {
