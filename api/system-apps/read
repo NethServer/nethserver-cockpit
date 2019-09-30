@@ -87,22 +87,6 @@ sub authorized_apps
     }
 }
 
-sub is_installed
-{
-    my $app = shift;
-    my $installed = shift;
-    foreach (@$installed) {
-        return 1 if ($app eq $_);
-    }
-    return 0;
-}
-
-sub has_cockpit_support
-{
-    my $app = shift;
-    return (-f "$path$app.json");
-}
-
 if($cmd eq 'list') {
 
     my @apps;
