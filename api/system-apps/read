@@ -59,7 +59,7 @@ sub app_info
     if($data->{'infoapi'}) {
         if(-x '/usr/libexec/nethserver/api/' . $data->{'infoapi'}->{'path'}) {
             $extended_data = invoke_info_api(
-                '/usr/libexec/nethserver/api/' . $data->{'infoapi'}->{'path'},
+                '/usr/bin/sudo -n /usr/libexec/nethserver/api/' . $data->{'infoapi'}->{'path'},
                 safe_decode_json($data->{'infoapi'}->{'input'}),
                 $input
             );
