@@ -45,62 +45,59 @@ if($cmd eq 'hints') {
 
     my $nsdc = system("/usr/bin/systemctl status nsdc &>/dev/null");
     my $ldap = system("/usr/bin/systemctl status slapd &>/dev/null");
-    if ($nsdc > 0 && $ldap > 0) { # sssd is configured for remote account provider
+    my $is_root = ($< == 0);
+    if ($nsdc > 0 && $ldap > 0 && !$is_root) { # sssd is configured for remote account provider, root is always local
         $ret{'status'}{'canChangePassword'} = 0; 
-        $ret{'configuration'} = undef;
-        print encode_json(\%ret);
-        exit(0);
     } else {
-
         $ret{'status'}{'canChangePassword'} = 1;
-        my $db = esmith::ConfigDB->open("configuration");
-        my $postfix = $db->get('postfix');
-        my %smarthost = (
-            SmartHostStatus => $postfix->prop('SmartHostStatus'),
-            SmartHostName => $postfix->prop('SmartHostName'),
-            SmartHostPort => $postfix->prop('SmartHostPort'),
-            SmartHostUsername => $postfix->prop('SmartHostUsername'),
-            SmartHostPassword => $postfix->prop('SmartHostPassword'),
-            SmartHostTlsStatus => $postfix->prop('SmartHostTlsStatus'),
-        );
-
-        my @addresses = ();
-        my $email_address = $db->get_prop('root', 'EmailAddress');
-        if ($email_address) {
-            @addresses = split(",",$email_address);
-        }
-
-        if ($email_address) {
-            @addresses = split(",",$email_address);
-        }
-        my %root = (
-            EmailAddress => \@addresses,
-            KeepMessageCopy => $db->get_prop('root', 'KeepMessageCopy'),
-            SenderAddress => $db->get_prop('root', 'SenderAddress')
-        );
-
-        my %cockpit = (
-            access => $db->get_prop('cockpit.socket', 'access'),
-            LimitAccess => $db->get_prop('cockpit.socket', 'LimitAccess'),
-            ShowHints => $db->get_prop('cockpit.socket', 'ShowHints')
-        );
-
-        my $logrotate = $db->get('logrotate') ||
-                $db->new_record('logrotate', { type => "configuration" });
-
-        my %logrotate = (
-            Compression => $logrotate->prop('Compression'),
-            Rotate => $logrotate->prop('Rotate'),
-            Times => $logrotate->prop('Times')
-        );
-
-        $ret{'configuration'}{'smarthost'} = \%smarthost;
-        $ret{'configuration'}{'cockpit'} = \%cockpit;
-        $ret{'configuration'}{'root'} = \%root;
-        $ret{'configuration'}{'logrotate'} = \%logrotate;
-
-        print encode_json(\%ret);
     }
+    my $db = esmith::ConfigDB->open("configuration");
+    my $postfix = $db->get('postfix');
+    my %smarthost = (
+        SmartHostStatus => $postfix->prop('SmartHostStatus'),
+        SmartHostName => $postfix->prop('SmartHostName'),
+        SmartHostPort => $postfix->prop('SmartHostPort'),
+        SmartHostUsername => $postfix->prop('SmartHostUsername'),
+        SmartHostPassword => $postfix->prop('SmartHostPassword'),
+        SmartHostTlsStatus => $postfix->prop('SmartHostTlsStatus'),
+    );
+
+    my @addresses = ();
+    my $email_address = $db->get_prop('root', 'EmailAddress');
+    if ($email_address) {
+        @addresses = split(",",$email_address);
+    }
+
+    if ($email_address) {
+        @addresses = split(",",$email_address);
+    }
+    my %root = (
+        EmailAddress => \@addresses,
+        KeepMessageCopy => $db->get_prop('root', 'KeepMessageCopy'),
+        SenderAddress => $db->get_prop('root', 'SenderAddress')
+    );
+
+    my %cockpit = (
+        access => $db->get_prop('cockpit.socket', 'access'),
+        LimitAccess => $db->get_prop('cockpit.socket', 'LimitAccess'),
+        ShowHints => $db->get_prop('cockpit.socket', 'ShowHints')
+    );
+
+    my $logrotate = $db->get('logrotate') ||
+    $db->new_record('logrotate', { type => "configuration" });
+
+    my %logrotate = (
+        Compression => $logrotate->prop('Compression'),
+        Rotate => $logrotate->prop('Rotate'),
+        Times => $logrotate->prop('Times')
+    );
+
+    $ret{'configuration'}{'smarthost'} = \%smarthost;
+    $ret{'configuration'}{'cockpit'} = \%cockpit;
+    $ret{'configuration'}{'root'} = \%root;
+    $ret{'configuration'}{'logrotate'} = \%logrotate;
+
+    print encode_json(\%ret);
 } else {
     error();
 }
