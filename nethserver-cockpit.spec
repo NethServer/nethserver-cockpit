@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 0.15.1
+Version: 1.0.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -67,6 +67,12 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Oct 01 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.0-1
+- Cockpit: make network diagnostic tools - NethServer/dev#5839
+- Sudoers based authorizations for Cockpit UI - Nethserver/dev#5805
+- Cockpit: Display the hostname during a network scan - NethServer/dev#5844
+- Sudoers based authorizations for Cockpit UI - NethServer/dev#5805
+
 * Fri Sep 20 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.15.1-1
 - Cockpit: make network diagnostic tools - NethServer/dev#5839
 
