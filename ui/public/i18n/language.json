@@ -140,7 +140,8 @@
     "datetime_save_ok": "Date and Time saved successfully!",
     "datetime_save_error": "Date and Time not saved.",
     "shutdown_ok": "The system is shutting down...",
-    "shutdown_error": "Shutting down error occured."
+    "shutdown_error": "Shutting down error occured.",
+    "hostname_change":"After hostname change you have to login again"
   },
   "backup": {
     "title": "Backup",

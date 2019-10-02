@@ -498,15 +498,16 @@
                   <password-meter></password-meter>
                 </div>
               </div>
-              <div v-if="newUser.newPassword.length > 0 && !newUser.passwordStrength && passwordPolicy.Users == 'no'" class="form-group">
-                <label
-                  class="col-sm-3 control-label"
-                  for="shell"
-                ></label>
+              <div
+                v-if="newUser.newPassword.length > 0 && !newUser.passwordStrength && passwordPolicy.Users == 'no'"
+                class="form-group"
+              >
+                <label class="col-sm-3 control-label" for="shell"></label>
                 <div class="col-sm-9">
                   <div class="alert alert-warning alert-dismissable">
                     <span class="pficon pficon-warning-triangle-o"></span>
-                    <strong>{{$t('warning')}}: </strong> {{$t('users_groups.weak_password')}}.
+                    <strong>{{$t('warning')}}:</strong>
+                    {{$t('users_groups.weak_password')}}.
                   </div>
                 </div>
               </div>
@@ -541,16 +542,14 @@
                 </div>
               </div>
               <div v-if="!newUser.isPassEdit && newUser.advanced" class="form-group">
-                <label
-                  class="col-sm-3 control-label"
-                  for="shell"
-                >{{$t('users_groups.remote_shell')}}
-                <doc-info
-                  :placement="'top'"
-                  :title="$t('users_groups.remote_shell')"
-                  :chapter="'remote_shell'"
-                  :inline="true"
-                ></doc-info>
+                <label class="col-sm-3 control-label" for="shell">
+                  {{$t('users_groups.remote_shell')}}
+                  <doc-info
+                    :placement="'top'"
+                    :title="$t('users_groups.remote_shell')"
+                    :chapter="'remote_shell'"
+                    :inline="true"
+                  ></doc-info>
                 </label>
                 <div class="col-sm-9">
                   <input type="checkbox" id="shell" class="form-control" v-model="newUser.shell" />
@@ -1199,11 +1198,17 @@
                             <button class="btn btn-primary" type="submit">{{$t('modify')}}</button>
                           </div>
                         </div>
+                        <div class="alert alert-warning">
+                          <span class="pficon pficon-warning-triangle-o"></span>
+                          <strong>{{$t('warning')}}:</strong>
+                          {{$t('dashboard.hostname_change')}}.
+                        </div>
                       </form>
                     </div>
-
-                    <strong>{{$t('users_groups.choose_account_provider')}}:</strong>
-                    <div class="blank-slate-pf-main-action">
+                    <strong
+                      v-show="users.hostname.valid"
+                    >{{$t('users_groups.choose_account_provider')}}:</strong>
+                    <div v-show="users.hostname.valid" class="blank-slate-pf-main-action">
                       <div
                         @click="selectProvider('ldap')"
                         :class="['col-xs-12 col-sm-6 col-md-6 col-lg-6 card-pf', users.chooseProvider == 'ldap' ? 'active-choose' : '']"
@@ -1786,8 +1791,8 @@ export default {
       },
       roles: {
         list: {
-            applications: appList,
-            system: sysList,
+          applications: appList,
+          system: sysList
         },
         editable: true
       },

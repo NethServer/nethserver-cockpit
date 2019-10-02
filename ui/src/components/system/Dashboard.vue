@@ -262,6 +262,10 @@
             v-on:submit.prevent="saveHostname(system.summary.newHostname)"
           >
             <div class="modal-body">
+              <div v-if="system.summary.hostnameIsEdit" class="alert alert-warning">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>{{$t('warning')}}:</strong> {{$t('dashboard.hostname_change')}}.
+              </div>
               <div :class="['form-group', system.errors.hostname.hasError ? 'has-error' : '']">
                 <label
                   class="col-sm-3 control-label"
@@ -274,7 +278,7 @@
                     type="text"
                     v-model="system.summary.newHostname"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="system.errors.hostname.hasError"
                     class="help-block"
@@ -291,7 +295,7 @@
                   $t('dashboard.alias') : ''}}
                 </label>
                 <div class="col-xs-7 col-sm-6">
-                  <input type="text" v-model="a.key" class="form-control">
+                  <input type="text" v-model="a.key" class="form-control" />
                   <span
                     v-if="system.summary.aliases[i].hasError"
                     class="help-block"
@@ -345,7 +349,7 @@
                     type="text"
                     v-model="system.summary.dns[0].dns"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="system.errors.dns1.hasError"
                     class="help-block"
@@ -358,7 +362,7 @@
                   for="textInput-modal-markup"
                 >2° {{$t('dashboard.dns')}}</label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="system.summary.dns[1].dns" class="form-control">
+                  <input type="text" v-model="system.summary.dns[1].dns" class="form-control" />
                   <span
                     v-if="system.errors.dns2.hasError"
                     class="help-block"
@@ -455,7 +459,7 @@
                       v-model="system.summary.newDate"
                       type="text"
                       class="form-control bootstrap-datepicker"
-                    >
+                    />
                     <span class="input-group-addon">
                       <span class="fa fa-calendar"></span>
                     </span>
@@ -472,7 +476,7 @@
                       v-model="system.summary.newTime"
                       type="text"
                       class="form-control"
-                    >
+                    />
                     <span class="input-group-addon btn btn-default">
                       <span class="fa fa-clock-o"></span>
                     </span>
@@ -498,7 +502,7 @@
                     type="text"
                     v-model="system.summary.newNtpServer"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="system.errors.datetime.NTPServer.hasError"
                     class="help-block"
@@ -538,7 +542,7 @@
                     type="text"
                     v-model="system.newOrganization.company"
                     class="form-control"
-                  >
+                  />
                 </div>
               </div>
               <div class="form-group">
@@ -552,7 +556,7 @@
                     type="text"
                     v-model="system.newOrganization.city"
                     class="form-control"
-                  >
+                  />
                 </div>
               </div>
               <div class="form-group">
@@ -566,7 +570,7 @@
                     type="text"
                     v-model="system.newOrganization.department"
                     class="form-control"
-                  >
+                  />
                 </div>
               </div>
               <div class="form-group">
@@ -580,7 +584,7 @@
                     type="text"
                     v-model="system.newOrganization.phone"
                     class="form-control"
-                  >
+                  />
                 </div>
               </div>
               <div class="form-group">
@@ -594,7 +598,7 @@
                     type="text"
                     v-model="system.newOrganization.address"
                     class="form-control"
-                  >
+                  />
                 </div>
               </div>
             </div>
