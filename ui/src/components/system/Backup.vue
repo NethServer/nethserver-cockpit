@@ -477,6 +477,10 @@
                 <span>{{$t('backup.remap_interface_config')}}</span>
                 <div class="divider divider-advanced"></div>
               </div>
+              <div v-if="currentConfigBackup.remap" class="alert alert-warning alert-dismissable">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>{{$t('warning')}}:</strong> {{$t('backup.during_remap_warning')}}.
+              </div>
               <div
                 v-if="currentConfigBackup.remap"
                 v-for="(o, ok) in currentConfigBackup.remapInterfaces.old"
@@ -515,7 +519,9 @@
                       {{n.name}}
                       <span v-if="n.nslabel && n.nslabel.length > 0">({{n.nslabel}})</span>
                       - {{n.role}}
-                      <span v-if="n.ipaddr && n.ipaddr.length > 0">| {{n.ipaddr || '-'}}</span>
+                      <span
+                        v-if="n.ipaddr && n.ipaddr.length > 0"
+                      >| {{n.ipaddr || '-'}}</span>
                     </option>
                   </select>
                 </div>
