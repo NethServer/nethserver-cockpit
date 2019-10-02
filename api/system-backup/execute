@@ -35,10 +35,17 @@ function _restore
 {
     id=$1
     # transform remap map to a comma-separated list
-    remap=$(echo $2 | jq -r ". | to_entries[] | [.key, .value] | join(\",\")")
+    remap=$(echo $2 | jq -r ". | to_entries[] | [.key, .value] | join(\",\")" | tr '\n' , | sed 's/,$//')
     if [ ! -z $remap ]; then
         remap="--remap-interfaces $remap"
     fi
+
+    # check reinstall option
+    reinstall=""
+    if [ "$3" == "disabled" ]; then
+        reinstall="--noreinstall"
+    fi
+
     # Simulate json event output
     echo '{"steps":2,"pid":"","args":"","event":"restore-config"}'
     echo '{"step":1,"pid":"","action":"Pulling from history","event":"restore-config","state":"running"}'
@@ -47,7 +54,7 @@ function _restore
     echo '{"progress":"0.50","time":"2.00","exit":0,"event":"restore-config","state":"done","step":1,"pid":"","action":"Pulling from history"}';
 
     echo '{"step":2,"pid":"","action":"Restoring configuration","event":"restore-config","state":"running"}'
-    /sbin/e-smith/restore-config $remap &>/dev/null
+    /sbin/e-smith/restore-config $remap $reinstall &>/dev/null
     ret=$?
     echo "{\"progress\":\"1.00\",\"time\":\"\",\"exit\":$ret,\"event\":\"restore-config\",\"state\":\"done\",\"step\":2,\"pid\":\"\",\"action\":\"Restoring configuration\"}"
     if [ $ret -gt 0 ]; then
@@ -105,7 +112,7 @@ case $action in
                 # retrieve uploaded id
                 id=$(/usr/libexec/nethserver/backup-config-history list | jq ".[0].id" -r)
 
-                _restore $id "$(_get remap)"
+                _restore $id "$(_get remap)" $(_get InstallPackages)
                 ;;
             "url")
                 tmp_file=$(mktemp)
@@ -116,10 +123,10 @@ case $action in
                 # retrieve uploaded id
                 id=$(/usr/libexec/nethserver/backup-config-history list | jq ".[0].id" -r)
 
-                _restore $id "$(_get remap)"
+                _restore $id "$(_get remap)" $(_get InstallPackages)
                 ;;
             "backup")
-                _restore "$(_get data)" "$(_get remap)"
+                _restore "$(_get data)" "$(_get remap)" $(_get InstallPackages)
                 ;;
         esac
 
