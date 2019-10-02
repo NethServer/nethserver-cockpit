@@ -275,7 +275,9 @@
     "destination_usage": "Used",
     "storage_usage": "Destination storage usage",
     "overwrite_all_data": "the restore will overwrite all data",
-    "nfs_rsync_info": "Make sure the NFS server supports hard links, otherwise the backup will fail"
+    "nfs_rsync_info": "Make sure the NFS server supports hard links, otherwise the backup will fail",
+    "during_remap_warning": "During interface remapping, if one or more interface change its IP address, you have to login again in the new IP address",
+    "interface_remap": "Interface remapping"
   },
   "disk_usage": {
     "title": "Disk usage",

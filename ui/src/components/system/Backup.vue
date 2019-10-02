@@ -37,11 +37,11 @@
           >{{$t('backup.configure')}}</button>
           <button
             :disabled="backupConfigurations.length == 0"
-            @click="openRestoreConfig(b)"
+            @click="openRestoreConfig()"
             class="btn btn-default right panel-icon"
           >{{$t('backup.restore')}}</button>
           <button
-            @click="openExecuteConfig(b)"
+            @click="openExecuteConfig()"
             class="btn btn-primary right span-right-margin"
           >{{$t('backup.execute_now')}}</button>
           <span
@@ -111,7 +111,7 @@
                 <div class="list-view-pf-additional-info">
                   <div class="list-view-pf-additional-info-item">
                     <span class="fa fa-clock-o panel-icon"></span>
-                    {{b.push_ts | dateFormat}}
+                    {{b.original_ts | dateFormat}}
                   </div>
                   <div class="list-view-pf-additional-info-item">
                     <span class="fa fa-archive panel-icon"></span>
@@ -139,7 +139,7 @@
             class="btn btn-default right panel-icon"
           >{{$t('backup.restore')}}</button>
           <button
-            @click="openCreateData(b)"
+            @click="openCreateData()"
             class="btn btn-primary right span-right-margin"
           >{{$t('backup.schedule')}}</button>
           <span class="panel-title">
@@ -172,7 +172,7 @@
               v-model="searchString"
               class="form-control input-lg"
               :placeholder="$t('search')+'...'"
-            >
+            />
           </div>
         </div>
       </form>
@@ -316,7 +316,7 @@
                     type="text"
                     v-model="currentConfigBackup.Description"
                     class="form-control"
-                  >
+                  />
                 </div>
               </div>
             </div>
@@ -357,7 +357,7 @@
                   id="restoreURL-1"
                   value="url"
                   v-model="currentConfigBackup.restoreMode"
-                >
+                />
                 <label
                   :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'url' ? 'gray' : '']"
                   for="restoreURL-1"
@@ -370,7 +370,7 @@
                     v-model="currentConfigBackup.restoreURL"
                     class="form-control"
                     placeholder="https://mysite.com/archive/backup-last.tar.xz"
-                  >
+                  />
                 </div>
               </div>
               <div class="advanced">
@@ -385,7 +385,7 @@
                   id="restoreFile-1"
                   value="file"
                   v-model="currentConfigBackup.restoreMode"
-                >
+                />
                 <label
                   :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'file' ? 'gray' : '']"
                   for="restoreFile-1"
@@ -407,7 +407,7 @@
                     name="file-upload-backup"
                     type="file"
                     accept=".tar.xz"
-                  >
+                  />
                 </div>
               </div>
               <div class="advanced">
@@ -422,7 +422,7 @@
                   id="restoreBackup-1"
                   value="backup"
                   v-model="currentConfigBackup.restoreMode"
-                >
+                />
                 <label
                   :class="['col-sm-2 control-label', currentConfigBackup.restoreMode != 'backup' ? 'gray' : '']"
                   for="restoreBackup-1"
@@ -453,14 +453,14 @@
                     type="checkbox"
                     v-model="currentConfigBackup.restoreInstallPackages"
                     class="form-control"
-                  >
+                  />
                 </div>
               </div>
               <div class="form-group">
                 <label
                   class="col-sm-4 control-label"
                   for="textInput-modal-markup"
-                >{{$t('backup.config')}}</label>
+                >{{$t('backup.interface_remap')}}</label>
                 <div class="col-sm-4">
                   <button
                     :disabled="(currentConfigBackup.restoreURL.length == 0 && currentConfigBackup.restoreFile.length == 0 && currentConfigBackup.restoreBackup.length == 0) || currentConfigBackup.isChecking"
@@ -477,6 +477,10 @@
                 <span>{{$t('backup.remap_interface_config')}}</span>
                 <div class="divider divider-advanced"></div>
               </div>
+              <div v-if="currentConfigBackup.remap" class="alert alert-warning alert-dismissable">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>{{$t('warning')}}:</strong> {{$t('backup.during_remap_warning')}}.
+              </div>
               <div
                 v-if="currentConfigBackup.remap"
                 v-for="(o, ok) in currentConfigBackup.remapInterfaces.old"
@@ -489,9 +493,9 @@
                       {{o.name}}
                       <span v-if="o.nslabel">({{o.nslabel}})</span>
                     </span>
-                    <br>
+                    <br />
                     {{o.ipaddr}}
-                    <br>
+                    <br />
                     {{o.role == 'pppoe' ? 'PPPoE' : o.role | capitalize}}
                   </label>
                 </div>
@@ -509,8 +513,16 @@
                     <option
                       v-for="(n, nk) in currentConfigBackup.remapInterfaces.new"
                       v-bind:key="nk"
+                      v-if="n.role && n.role.length > 0"
                       :value="n.name"
-                    >{{n.name}}</option>
+                    >
+                      {{n.name}}
+                      <span v-if="n.nslabel && n.nslabel.length > 0">({{n.nslabel}})</span>
+                      - {{n.role}}
+                      <span
+                        v-if="n.ipaddr && n.ipaddr.length > 0"
+                      >| {{n.ipaddr || '-'}}</span>
+                    </option>
                   </select>
                 </div>
               </div>
@@ -553,7 +565,7 @@
                     min="0"
                     v-model="currentConfigBackup.HistoryLength"
                     class="form-control"
-                  >
+                  />
                 </div>
               </div>
             </div>
@@ -756,7 +768,7 @@
                     type="checkbox"
                     v-model="globalDataBackup.IncludeLogs"
                     class="form-control"
-                  >
+                  />
                 </div>
               </div>
             </div>
@@ -863,7 +875,7 @@
                             min="0"
                             max="59"
                             class="form-control"
-                          >
+                          />
                         </div>
                         <!-- -->
                         <!-- DAY -->
@@ -879,7 +891,7 @@
                             min="0"
                             max="23"
                             class="form-control"
-                          >
+                          />
                         </div>
                         <label
                           v-if="wizard.when.every == 'day'"
@@ -893,7 +905,7 @@
                             min="0"
                             max="59"
                             class="form-control"
-                          >
+                          />
                         </div>
                         <!-- -->
                         <!-- WEEK -->
@@ -921,7 +933,7 @@
                             v-model="wizard.when.hour_minute"
                             type="text"
                             class="col-sm-1 form-control reset-width"
-                          >
+                          />
                         </div>
                         <!-- -->
                         <!-- MONTH -->
@@ -937,7 +949,7 @@
                             min="1"
                             max="31"
                             class="form-control"
-                          >
+                          />
                         </div>
                         <label
                           v-if="wizard.when.every == 'month'"
@@ -949,7 +961,7 @@
                             v-model="wizard.when.hour_minute"
                             type="text"
                             class="col-sm-1 form-control reset-width"
-                          >
+                          />
                         </div>
                         <!-- -->
                       </div>
@@ -961,7 +973,7 @@
                             type="text"
                             class="form-control input-lg password-hints"
                             v-model="wizard.when.crontab"
-                          >
+                          />
                         </div>
                         <div class="col-sm-2">
                           <button
@@ -1094,7 +1106,7 @@
                               type="text"
                               v-model="wizard.where.nfs.NFSShare"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div class="form-group">
@@ -1108,7 +1120,7 @@
                               type="text"
                               v-model="wizard.where.nfs.NFSHost"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                       </div>
@@ -1126,7 +1138,7 @@
                               type="text"
                               v-model="wizard.where.cifs.SMBShare"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div class="form-group">
@@ -1140,7 +1152,7 @@
                               type="text"
                               v-model="wizard.where.cifs.SMBHost"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div class="form-group">
@@ -1160,7 +1172,7 @@
                               type="text"
                               v-model="wizard.where.cifs.SMBLogin"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div class="form-group">
@@ -1174,7 +1186,7 @@
                               :type="wizard.where.cifs.togglePass ? 'text' : 'password'"
                               v-model="wizard.where.cifs.SMBPassword"
                               class="form-control"
-                            >
+                            />
                           </div>
                           <div class="col-sm-1">
                             <button
@@ -1258,7 +1270,7 @@
                               type="text"
                               v-model="wizard.where.usb.USBLabel"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div
@@ -1276,7 +1288,7 @@
                               type="text"
                               v-model="wizard.where.usb.USBLabel"
                               class="form-control"
-                            >
+                            />
                           </div>
                           <div class="col-sm-3">
                             <button @click="editUSBDevice()" class="btn btn-primary">{{$t('edit')}}</button>
@@ -1297,7 +1309,7 @@
                               type="text"
                               v-model="wizard.where.webdav.WebDAVLogin"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div class="form-group">
@@ -1311,7 +1323,7 @@
                               :type="wizard.where.webdav.togglePass ? 'text' : 'password'"
                               v-model="wizard.where.webdav.WebDAVPassword"
                               class="form-control"
-                            >
+                            />
                           </div>
                           <div class="col-sm-1">
                             <button
@@ -1337,7 +1349,7 @@
                               type="text"
                               v-model="wizard.where.webdav.WebDAVUrl"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                       </div>
@@ -1355,7 +1367,7 @@
                               type="text"
                               v-model="wizard.where.sftp.SftpHost"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div class="form-group">
@@ -1369,7 +1381,7 @@
                               type="text"
                               v-model="wizard.where.sftp.SftpPort"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div class="form-group">
@@ -1383,7 +1395,7 @@
                               type="text"
                               v-model="wizard.where.sftp.SftpUser"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div class="form-group">
@@ -1405,7 +1417,7 @@
                               v-model="wizard.where.sftp.SftpPassword"
                               class="form-control"
                               :placeholder="$t('backup.password_is_the_key')"
-                            >
+                            />
                           </div>
                           <div class="col-sm-1">
                             <button
@@ -1445,7 +1457,7 @@
                               type="text"
                               v-model="wizard.where.sftp.SftpDirectory"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                       </div>
@@ -1463,7 +1475,7 @@
                               type="text"
                               v-model="wizard.where.b2.B2Bucket"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div class="form-group">
@@ -1477,7 +1489,7 @@
                               type="text"
                               v-model="wizard.where.b2.B2AccountId"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div class="form-group">
@@ -1491,7 +1503,7 @@
                               type="text"
                               v-model="wizard.where.b2.B2AccountKey"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                       </div>
@@ -1509,7 +1521,7 @@
                               type="text"
                               v-model="wizard.where.s3.S3Bucket"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div class="form-group">
@@ -1523,7 +1535,7 @@
                               type="text"
                               v-model="wizard.where.s3.S3Host"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div class="form-group">
@@ -1537,7 +1549,7 @@
                               type="text"
                               v-model="wizard.where.s3.S3AccessKey"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                         <div class="form-group">
@@ -1551,7 +1563,7 @@
                               type="text"
                               v-model="wizard.where.s3.S3SecretKey"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                       </div>
@@ -1746,7 +1758,7 @@
                               min="2"
                               v-model="wizard.how.duplicity.VolSize"
                               class="form-control"
-                            >
+                            />
                           </div>
                         </div>
                       </div>
@@ -1801,8 +1813,8 @@
                       <div v-if="wizard.how.choice == 'rsync'">
                         <div class="alert alert-info alert-dismissable col-sm-12">
                           <span class="pficon pficon-info"></span>
-                            <strong>{{$t('info')}}: </strong>
-                            {{$t('backup.nfs_rsync_info')}}.
+                          <strong>{{$t('info')}}:</strong>
+                          {{$t('backup.nfs_rsync_info')}}.
                         </div>
                       </div>
                       <!-- -->
@@ -1837,7 +1849,7 @@
                             type="text"
                             v-model="wizard.review.Name"
                             class="form-control"
-                          >
+                          />
                           <span v-if="wizard.review.errors.name.hasError" class="help-block">
                             {{$t('validation.validation_failed')}}:
                             {{$t('validation.'+wizard.review.errors.name.message)}}
@@ -1872,7 +1884,7 @@
                             type="radio"
                             v-model="wizard.review.notifyToChoice"
                             value="root"
-                          >
+                          />
                           <label
                             class="col-sm-10 col-xs-10 control-label text-align-left"
                             for="notifyToChoice-1"
@@ -1883,7 +1895,7 @@
                             type="radio"
                             v-model="wizard.review.notifyToChoice"
                             value="custom"
-                          >
+                          />
                           <label
                             class="col-sm-10 col-xs-10 control-label text-align-left"
                             for="notifyToChoice-2"
@@ -2569,7 +2581,7 @@ export default {
         isLoading: false,
         isChecking: false,
         restoreMode: "url",
-        restoreInstallPackages: false,
+        restoreInstallPackages: true,
         remapCalled: false,
         remap: false,
         remapInterfaces: {
@@ -2891,7 +2903,7 @@ export default {
       );
     },
     setRemapping(oldInt) {
-      this.currentConfigBackup.remapNew[oldInt.name] = oldInt.newInt;
+      this.currentConfigBackup.remapNew[oldInt.newInt] = oldInt.name;
     },
     configureConfigBackup() {
       var context = this;
