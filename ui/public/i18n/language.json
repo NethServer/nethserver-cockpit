@@ -734,7 +734,7 @@
     "notify_to": "Destination (To:)",
     "add_email": "Add email",
     "web_shell": "Server Manager",
-    "hints": "Confguration hints",
+    "hints": "Configuration hints",
     "show_hints": "Display hints",
     "limit_access": "Grant access from Wan (Red)",
     "allow_only": "Allowed IPs (one per line)",
