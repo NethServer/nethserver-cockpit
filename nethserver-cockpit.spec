@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.0.1
+Version: 1.0.2
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,10 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Thu Oct 03 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.2-1
+- Cockpit: yum is locked by packagekit - Bug NethServer/dev#5854
+- Cockpit: restore of backup-config failed - Bug NethServer/dev#5853
+
 * Tue Oct 01 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.1-1
 - settings: allow changes for delegated users and root (#140)
 
