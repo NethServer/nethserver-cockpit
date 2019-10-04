@@ -479,7 +479,8 @@
               </div>
               <div v-if="currentConfigBackup.remap" class="alert alert-warning alert-dismissable">
                 <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>{{$t('warning')}}:</strong> {{$t('backup.during_remap_warning')}}.
+                <strong>{{$t('warning')}}:</strong>
+                {{$t('backup.during_remap_warning')}}.
               </div>
               <div
                 v-if="currentConfigBackup.remap"
@@ -1995,6 +1996,7 @@
       </div>
     </div>
     <!-- END BACKUP DATA -->
+    <iframe width="1" height="1" id="download-backup" style="display: none;"></iframe>
   </div>
 </template>
 
@@ -2961,11 +2963,18 @@ export default {
         },
         null,
         function(success) {
-          require("downloadjs")(
-            "data:application/x-gtar;base64," + success,
-            b.id + ".tar.xz",
-            "application/x-gtar"
-          );
+          if (navigator.userAgent.indexOf("Firefox") != -1) {
+            var blob = "data:application/octet-stream;base64," + success;
+            var encodedUri = encodeURI(blob);
+            var link = document.getElementById("download-backup");
+            link.setAttribute("src", encodedUri);
+          } else {
+            require("downloadjs")(
+              "data:application/octet-stream;base64," + success,
+              b.id + ".tar.xz",
+              "application/octet-stream"
+            );
+          }
         },
         function(error) {
           console.error(error);
