@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.0.2
+Version: 1.0.3
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon Oct 07 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.3-1
+- Cockpit downloads fail on Firefox - Bug Nethserver/dev#5855
+
 * Thu Oct 03 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.2-1
 - Cockpit: yum is locked by packagekit - Bug NethServer/dev#5854
 - Cockpit: restore of backup-config failed - Bug NethServer/dev#5853
