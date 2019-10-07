@@ -21,7 +21,7 @@
   "of": "of",
   "or": "or",
   "with": "with",
-  "rows_per_page": "Row per page",
+  "rows_per_page": "Rows per page",
   "search": "Search",
   "all": "All",
   "info": "Info",
@@ -253,7 +253,7 @@
     "last_log": "Last log",
     "last_log_for": "Last log for backup data",
     "view_last_log": "View last log",
-    "choose_from": "Choose from",
+    "choose_from": "Choose source",
     "reinstall_packages": "Reinstall packages",
     "restore_config_backup_ok": "Restore configuration backup executed successfully!",
     "restore_config_backup_error": "Restore configuration backup not executed.",
@@ -288,7 +288,7 @@
     "disk_updated_ok": "Disk usage updated successfully!",
     "disk_updated_error": "Disk usage not updated",
     "copy_path": "Copy path",
-    "one_file_system": "Don't cross filesystem boundaries"
+    "one_file_system": "Analyze only the root filesystem"
   },
   "storage": {
     "title": "Storage"
@@ -926,13 +926,13 @@
     "must_configure_backup_data": "You should configure at least one data backup",
     "change_default_ssh_port": "Change the default SSH port to lower brute force attack rates",
     "limit_red_access_by_ip": "Limit access to server manager specifying the allowed IP addresses",
-    "LimitAccess": "Limit access",
+    "LimitAccess": "Server Manager",
     "backup": "Backup",
     "centos_upgrade": "A new upstream distribution release is available as update. To avoid installing it, switch the software updates origin to \"Locked\"",
     "dhcp_on_green_can_cause_unexpected_behavior": "Using DHCP on green interfaces leads to unexpected behavior. Please, change the interface to static if possible.",
     "interface_must_be_static": "A green interface must have a static IP address",
     "hostname": "Hostname",
-    "hostname_should_not_contain_localhost": "Hostname should not contains localhost",
+    "hostname_should_not_contain_localhost": "Hostname should not contain localhost",
     "subscription": "Subscription",
     "support_active": "A remote support session is active",
     "hostname_should_not_contain_localdomain": "The hostname should not contain 'localdomain'"
