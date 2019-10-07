@@ -88,7 +88,7 @@ export default {
           {
             chapter: this.chapter,
             section: this.section,
-            language: this.lang
+            language: ns.currentLocale || this.lang
           },
           null,
           function(success) {

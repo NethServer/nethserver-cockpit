@@ -166,8 +166,10 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                {{availableSearchFilter[currentSearchFilter]}}
-                <span class="caret"></span>
+                {{$t('users_groups.'+availableSearchFilter[currentSearchFilter].toLowerCase())}}
+                <span
+                  class="caret"
+                ></span>
               </button>
               <ul class="dropdown-menu">
                 <li
@@ -185,7 +187,7 @@
               type="text"
               class="form-control input-lg"
               id="filter"
-              :placeholder="$t('users_groups.filter_by') +' '+ availableSearchFilter[currentSearchFilter] +'...'"
+              :placeholder="$t('users_groups.filter_by') +' '+ $t('users_groups.'+availableSearchFilter[currentSearchFilter].toLowerCase()) +'...'"
             />
           </div>
         </div>

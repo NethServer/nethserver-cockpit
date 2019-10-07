@@ -29,7 +29,7 @@
           data-action="restart"
           data-container="body"
         >{{$t('dhcp.scan_network')}}</button>
-        
+
         <toggle-button
           class="min-toggle"
           :width="40"
@@ -245,7 +245,7 @@
               {{$t('dhcp.Scanned_Network') + ' : '+ nic}}
             </h4>
             <div v-if="view.isScanning" class="spinner spinner-lg"></div>
-          </div>      
+          </div>
             <div class="modal-body">
               <vue-good-table
                 v-if="!view.isScanning"
@@ -454,6 +454,7 @@
                     :title="$t('docs.dhcp_servers')"
                     :chapter="'dhcp_comma_separated_field'"
                     :inline="true"
+                    :section="1"
                   ></doc-info>
                 </label>
                 <div class="col-sm-9">
@@ -475,6 +476,7 @@
                     :title="$t('docs.dhcp_servers')"
                     :chapter="'dhcp_comma_separated_field'"
                     :inline="true"
+                    :section="2"
                   ></doc-info>
                 </label>
                 <div class="col-sm-9">
@@ -496,6 +498,7 @@
                     :title="$t('docs.dhcp_servers')"
                     :chapter="'dhcp_comma_separated_field'"
                     :inline="true"
+                    :section="3"
                   ></doc-info>
                 </label>
                 <div class="col-sm-9">
@@ -517,6 +520,7 @@
                     :title="$t('docs.dhcp_servers')"
                     :chapter="'dhcp_comma_separated_field'"
                     :inline="true"
+                    :section="4"
                   ></doc-info>
                 </label>
                 <div class="col-sm-9">
