@@ -229,7 +229,8 @@
 
             <div class="modal-footer">
               <div v-if="newReservation.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
-              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button v-if="view.isScanning" class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button v-if="!view.isScanning" class="btn btn-default" type="button" @click="Back2scanNetwork()">{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
             </div>
           </form>
@@ -1093,16 +1094,22 @@ export default {
       $("#scanNetworkModal").modal("hide");
       $("#newReservationModal").modal("show");
     },
+    Back2scanNetwork() {
+      $("#newReservationModal").modal("hide");
+      $("#scanNetworkModal").modal("show");
+    },
     addReservation(ipres) {
       this.newReservation = this.initReservation();
       this.newReservation.name = ipres.name;
       this.newReservation.props.Description = ipres.props.Description;
       this.newReservation.props.IpAddress = ipres.props.IpAddress;
       this.newReservation.props.MacAddress = ipres.props.MacAddress;
+      this.view.isScanning = true;
       $("#newReservationModal").modal("show");
     },
     newIPReservation() {
       this.newReservation = this.initReservation();
+      this.view.isScanning = true;
       $("#newReservationModal").modal("show");
     },
     scanNetwork(nic) {
@@ -1142,6 +1149,7 @@ export default {
       this.newReservation.props.MacAddress = ipres.props.MacAddress;
       this.newReservation.props.Description = ipres.props.Description;
 
+      this.view.isScanning = true;
       this.newReservation.isEdit = true;
       this.newReservation.errors = {
         name: {
