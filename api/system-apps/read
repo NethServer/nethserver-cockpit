@@ -125,7 +125,6 @@ if($cmd eq 'list') {
     # pinned apps is returned
 
     my @apps;
-    my %pins;
     my $appIds = $input->{'appIds'} || undef;
 
     if (!$appIds && $< == 0) { # non-root users can't access the config db
@@ -142,7 +141,7 @@ if($cmd eq 'list') {
 
         # check if app is installed (i.e. if manifest exists)
         if (-e $file) {
-            my $data = app_info($appId, (), \%pins) || next;
+            my $data = app_info($appId, undef, undef) || next;
             push(@apps, $data);
         }
     }
