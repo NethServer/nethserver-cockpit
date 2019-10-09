@@ -262,9 +262,16 @@
             v-on:submit.prevent="saveHostname(system.summary.newHostname)"
           >
             <div class="modal-body">
-              <div v-if="system.summary.hostnameIsEdit" class="alert alert-warning">
+              <div v-if="view.lockHostname" class="alert alert-warning alert-dismissable">
                 <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>{{$t('warning')}}:</strong> {{$t('dashboard.hostname_change')}}.
+                <strong>{{$t('warning')}}:</strong>
+                {{$t('dashboard.hostname_invalid_warn')}}.
+              </div>
+
+              <div v-if="system.summary.hostnameIsEdit" class="alert alert-info">
+                <span class="pficon pficon-info"></span>
+                <strong>{{$t('info')}}:</strong>
+                {{$t('dashboard.hostname_change')}}.
               </div>
               <div :class="['form-group', system.errors.hostname.hasError ? 'has-error' : '']">
                 <label
@@ -286,6 +293,7 @@
                 </div>
               </div>
               <div
+                v-if="!view.lockHostname"
                 v-for="(a, i) in system.summary.aliases"
                 v-bind:key="i"
                 :class="['form-group', system.summary.aliases[i].hasError ? 'has-error' : '']"
@@ -307,7 +315,7 @@
                   </button>
                 </div>
               </div>
-              <div class="form-group">
+              <div v-if="!view.lockHostname" class="form-group">
                 <div class="col-sm-3 control-label"></div>
                 <div class="col-sm-9">
                   <button @click="addAlias()" class="btn btn-default" type="button">
@@ -322,7 +330,12 @@
                 v-if="system.errors.aliases.isLoading || system.errors.aliases.isLoading"
                 class="spinner spinner-sm form-spinner-loader"
               ></div>
-              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button
+                :disabled="view.lockHostname"
+                class="btn btn-default"
+                type="button"
+                data-dismiss="modal"
+              >{{$t('cancel')}}</button>
               <button class="btn btn-primary" value="submit" type="submit">{{$t('save')}}</button>
             </div>
           </form>
@@ -682,7 +695,8 @@ export default {
   data() {
     return {
       view: {
-        isAdmin: false
+        isAdmin: false,
+        lockHostname: false
       },
       loaders: {
         summary: true,
@@ -915,6 +929,11 @@ export default {
           context.system.summary.hostname = success.hostname;
           context.system.summary.newHostname = success.hostname;
           context.system.summary.hostnameIsEdit = success.editable == 1;
+
+          if (success.hostname == "localhost.localdomain") {
+            context.view.lockHostname = true;
+            $("#hostnameChangeModal").modal("show");
+          }
 
           context.loaders.hostname = false;
           context.$forceUpdate();
