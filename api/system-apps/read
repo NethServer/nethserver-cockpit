@@ -119,6 +119,35 @@ if($cmd eq 'list') {
 
     print encode_json(\@apps);
 
+} elsif ($cmd eq 'launcher') {
+    # Return data of specific apps without checking authorization.
+    # If a list of app IDs is not provided (appIds) then data about
+    # pinned apps is returned
+
+    my @apps;
+    my $appIds = $input->{'appIds'} || undef;
+
+    if (!$appIds && $< == 0) { # non-root users can't access the config db
+        my $db = esmith::ConfigDB->open_ro();
+
+        my $pins = $db->get_prop('cockpit.socket', 'Pins') || '';
+        foreach (split(",",$pins)) {
+            push(@$appIds, $_);
+        }
+    }
+
+    foreach my $appId (@$appIds) {
+        my $file = "$path$appId.json";
+
+        # check if app is installed (i.e. if manifest exists)
+        if (-e $file) {
+            my $data = app_info($appId, undef, undef) || next;
+            push(@apps, $data);
+        }
+    }
+
+    print encode_json(\@apps);
+
 } elsif ($cmd eq 'info') {
 
     print encode_json(app_info($input->{'name'}));

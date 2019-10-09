@@ -9,6 +9,8 @@ The `action` field must have one of the following values:
 - `list`: list all available applications. The list contains only the applications accessible to user running the script.
   Also legacy installed applications are listed.
 - `info`: retrieve information of the given application
+- `hide-uninstall`: tell if uninstall application command is shown or hidden.
+- `launcher`: retrieve data about specific apps without checking user authorization. If an input list of app IDs is not provided then data about pinned apps (i.e. applications added to home page) is returned
 
 Each application object contains 2 special fields:
 
@@ -38,6 +40,31 @@ Example:
 }
 ```
 
+#### hide-uninstall
+
+Example:
+```json
+{
+  "action": "hide-uninstall"
+}
+```
+
+#### launcher
+
+Example:
+```json
+{
+  "action": "launcher",
+  "appIds": [
+    "nethserver-mattermost",
+    "nethserver-dante"
+  ],
+  "location": {
+    "hostname": "ns7test.nethesis.it",
+    "protocol": "https:"
+  }
+}
+```
 
 ### Output
 
@@ -150,6 +177,64 @@ Example:
   ],
   "shortcut": 1
 }
+```
+
+#### hide-uninstall
+
+Example:
+```bash
+{
+  "HideUninstall": "enabled"
+}
+```
+
+#### launcher
+
+Example:
+```bash
+[
+  {
+    "pin": 0,
+    "icon": "logo.png",
+    "bugs": {
+      "url": "https://github.com/NethServer/dev/issues"
+    },
+    "author": {
+      "email": "edoardo.spadoni@nethesis.it, giacomo.sanchietti@nethesis.it",
+      "url": "https://github.com/NethServer/nethserver-dante",
+      "name": "Edoardo Spadoni, Giacomo Sanchietti"
+    },
+    "summary": "Nethserver integration of nethesisdante project",
+    "url": "",
+    "id": "nethserver-dante",
+    "name": "Report",
+    "release": {
+      "version": "1.0.0"
+    },
+    "license": "GPL-3.0",
+    "description": "Nethserver integration of nethesisdante project",
+    "tags": [
+      "report",
+      "dante",
+      "charts"
+    ],
+    "homepage": "https://github.com/NethServer/nethserver-dante",
+    "provides": [
+      "nethserver-dante"
+    ],
+    "editable": 1,
+    "shortcut": 0
+  },
+  {
+    "pin": 0,
+    "icon": "logo.png",
+    "bugs": {
+      "url": "https://github.com/NethServer/dev/issues"
+    },
+    ...
+  }
+  ...
+]
 ```
 
 ## update
