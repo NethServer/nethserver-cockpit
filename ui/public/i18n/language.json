@@ -966,6 +966,7 @@
     "valid_platform,ad-dns,srv_record,": "Could not find an Active Directory domain controller",
     "valid_hostname_fqdn_1_9223372036854775807": "Must contain at least two dots, like 'myhost.example.com'",
     "valid_hostname_fqdn_0_9223372036854775807": "Must contain at least two dots, like 'myhost.example.com'",
+    "valid_hostname_fqdn_long_2_9223372036854775807": "Must contain at least two dots, like 'myhost.example.com'",
     "permission_denied": "Permission denied",
     "backuptime_not_enough_elements": "Invalid cron time format: not enough elements",
     "backuptime_not_found": "No cron time provided",
