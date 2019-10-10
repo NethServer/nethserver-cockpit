@@ -454,7 +454,7 @@
                     :title="$t('docs.dhcp_servers')"
                     :chapter="'dhcp_comma_separated_field'"
                     :inline="true"
-                    :section="1"
+                    :section="'1'"
                   ></doc-info>
                 </label>
                 <div class="col-sm-9">
@@ -476,7 +476,7 @@
                     :title="$t('docs.dhcp_servers')"
                     :chapter="'dhcp_comma_separated_field'"
                     :inline="true"
-                    :section="2"
+                    :section="'2'"
                   ></doc-info>
                 </label>
                 <div class="col-sm-9">
@@ -498,7 +498,7 @@
                     :title="$t('docs.dhcp_servers')"
                     :chapter="'dhcp_comma_separated_field'"
                     :inline="true"
-                    :section="3"
+                    :section="'3'"
                   ></doc-info>
                 </label>
                 <div class="col-sm-9">
@@ -520,7 +520,7 @@
                     :title="$t('docs.dhcp_servers')"
                     :chapter="'dhcp_comma_separated_field'"
                     :inline="true"
-                    :section="4"
+                    :section="'4'"
                   ></doc-info>
                 </label>
                 <div class="col-sm-9">
