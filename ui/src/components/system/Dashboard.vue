@@ -251,7 +251,7 @@
       </div>
     </div>
 
-    <div class="modal" id="hostnameChangeModal" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal" id="hostnameChangeModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
