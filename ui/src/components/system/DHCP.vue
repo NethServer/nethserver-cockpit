@@ -195,6 +195,7 @@
                 >{{$t('dhcp.mac_address')}}</label>
                 <div class="col-sm-9">
                   <input
+                    :disabled="view.isScanned"
                     required
                     type="text"
                     v-model="newReservation.props.MacAddress"
@@ -229,8 +230,8 @@
 
             <div class="modal-footer">
               <div v-if="newReservation.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
-              <button v-if="view.isScanning" class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
-              <button v-if="!view.isScanning" class="btn btn-default" type="button" @click="Back2scanNetwork()">{{$t('cancel')}}</button>
+              <button v-if="!view.isScanned" class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button v-if="view.isScanned" class="btn btn-default" type="button" @click="back2scanNetworkModal()">{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
             </div>
           </form>
@@ -599,7 +600,8 @@ export default {
       view: {
         isLoaded: false,
         isAuth: false,
-        isScanning: true
+        isScanning: true,
+        isScanned: false
       },
       columnsScan: [
         {
@@ -676,6 +678,7 @@ export default {
       ],
       nic: "",
       rows: [],
+      rowsScan:[],
       ranges: [],
       currentRange: this.initRange(),
       currentReservation: {},
@@ -1052,8 +1055,22 @@ export default {
                   "dhcp.ip_reservation_create_ok"
                 );
 
-                // get reservations
-                context.getReservations();
+                if (!context.view.isScanned) {
+                    // get reservations
+                    context.getReservations();
+                } else {
+                  context.getReservations();
+                  //update the new modal values to the reservation we made
+                  for(var i=0; i <context.rowsScan.length; i++) {
+                      if ( ipres.props.MacAddress == context.rowsScan[i].mac) {
+                            context.rowsScan[i].name = ipres.props.Description;
+                            context.rowsScan[i].reserved = true;
+                            context.rowsScan[i].host = ipres.name;
+                            context.rowsScan[i].ip = ipres.props.IpAddress;
+                      }
+                  }
+                  $("#scanNetworkModal").modal("show");
+                }
               },
               function(error, data) {
                 // notification
@@ -1094,7 +1111,7 @@ export default {
       $("#scanNetworkModal").modal("hide");
       $("#newReservationModal").modal("show");
     },
-    Back2scanNetwork() {
+    back2scanNetworkModal() {
       $("#newReservationModal").modal("hide");
       $("#scanNetworkModal").modal("show");
     },
@@ -1104,12 +1121,12 @@ export default {
       this.newReservation.props.Description = ipres.props.Description;
       this.newReservation.props.IpAddress = ipres.props.IpAddress;
       this.newReservation.props.MacAddress = ipres.props.MacAddress;
-      this.view.isScanning = true;
+      this.view.isScanned = false;
       $("#newReservationModal").modal("show");
     },
     newIPReservation() {
       this.newReservation = this.initReservation();
-      this.view.isScanning = true;
+      this.view.isScanned = false;
       $("#newReservationModal").modal("show");
     },
     scanNetwork(nic) {
@@ -1134,6 +1151,7 @@ export default {
             console.error(e);
           }
           context.view.isScanning = false;
+          context.view.isScanned = true;
           context.rowsScan = success;
 
         },
@@ -1149,7 +1167,7 @@ export default {
       this.newReservation.props.MacAddress = ipres.props.MacAddress;
       this.newReservation.props.Description = ipres.props.Description;
 
-      this.view.isScanning = true;
+      this.view.isScanned = false;
       this.newReservation.isEdit = true;
       this.newReservation.errors = {
         name: {
