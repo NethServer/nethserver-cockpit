@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.0.3
+Version: 1.1.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,11 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Thu Oct 10 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.1.0-1
+- Cockpit: prevent usage of localhost.localdomain hostname - NethServer/dev#5861
+- Improve app launcher loading - NethServer/dev#5859
+- Cockpit: improve English labels - NethServer/dev#5856
+
 * Mon Oct 07 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.3-1
 - Cockpit downloads fail on Firefox - Bug Nethserver/dev#5855
 
