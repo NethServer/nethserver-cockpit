@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.1.1
+Version: 1.1.2
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Fri Oct 11 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.1.2-1
+- Cockpit: can't configure upstream proxy without user and password - Bug NethServer/dev#5863
+
 * Thu Oct 10 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.1.1-1
 - ui. fix doc info errors in console
 - improve DHCP scan behavior - NethServer/nethserver-cockpit#145
