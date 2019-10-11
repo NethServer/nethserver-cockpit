@@ -927,7 +927,6 @@
                 >{{$t('network.username')}}</label>
                 <div class="col-sm-9">
                   <input
-                    required
                     type="text"
                     v-model="currentProxy.configuration.props.user"
                     class="form-control"
@@ -947,7 +946,6 @@
                 >{{$t('network.password')}}</label>
                 <div class="col-sm-9">
                   <input
-                    required
                     type="password"
                     v-model="currentProxy.configuration.props.password"
                     class="form-control"
