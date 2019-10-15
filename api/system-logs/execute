@@ -31,6 +31,7 @@ my $input = readInput();
 my $cmd = $input->{'action'};
 my $lines = $input->{'lines'} || '50';
 my $filter = $input->{'filter'} || '';
+my $format_time = $input->{'format_time'} eq 'true' || 0;
 
 sub dump_logs
 {
@@ -38,6 +39,7 @@ sub dump_logs
     my $lines = shift;
     my $mode = shift;
     my $follow = shift;
+    my $format_time = shift;
     my $cmd = '';
     my $args = '';
     my $watchdog = '';
@@ -48,6 +50,11 @@ sub dump_logs
     } else {
         $cmd .= "tail ";
         $args = shell_quote(join(" ",@$paths));
+
+        if ($format_time) {
+            # $| = 1; force flush to console
+            $args .= ' | perl -p -e \'$| = 1;s/^([0-9]*)(\.[0-9]*)?/"[".localtime($1)."]"/e\'';
+        }
     }
     if ($follow) {
         $cmd .= " -f ";
@@ -57,24 +64,34 @@ sub dump_logs
         $cmd .= " -n ".shell_quote($lines);
     }
     if ($filter ne '') {
-        $args .= " | grep '".shell_quote($filter)."'";
+        $args .= " | grep --line-buffered '".shell_quote($filter)."'";
     }
 
-    # Make sure there is only one instance running
-    my $pid = `pgrep -o -f /usr/libexec/nethserver/api/system-logs/execute`;
-    chomp $pid;
-    if ($pid != $$) {
-        system("kill -9 $pid");
+    my @procs_to_kill = (
+        "timeout .*@$paths[0]",
+        "tail .*@$paths[0]",
+        "grep --line-buffered",
+        "journalctl .*@$paths[0]"
+    );
+
+    for (@procs_to_kill) {
+        my @pids = `pgrep -f "$_"`;
+        chomp @pids;
+
+        foreach my $pid (@pids) {
+            if ($pid ne "" && $pid != $$) {
+                system("kill -9 $pid");
+            }
+        }
     }
 
     system("$watchdog $cmd $args");
 }
 
-
 if($cmd eq 'follow') {
-    dump_logs($input->{'paths'}, $lines, $input->{'mode'}, 1);
+    dump_logs($input->{'paths'}, $lines, $input->{'mode'}, 1, $format_time);
 } elsif ($cmd eq 'dump') {
-    dump_logs($input->{'paths'}, $lines, $input->{'mode'}, 0);
+    dump_logs($input->{'paths'}, $lines, $input->{'mode'}, 0, $format_time);
 } else {
     error();
 }
