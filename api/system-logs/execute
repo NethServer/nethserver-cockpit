@@ -64,7 +64,7 @@ sub dump_logs
         $cmd .= " -n ".shell_quote($lines);
     }
     if ($filter ne '') {
-        $args .= " | grep --line-buffered '".shell_quote($filter)."'";
+        $args .= " | grep --line-buffered ".shell_quote($filter);
     }
 
     my @procs_to_kill = (
