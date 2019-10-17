@@ -40,7 +40,7 @@ export default {
       ["system-authorization/validate"],
       {
         action: "check-app",
-        name: context.application
+        name: this.$route.params.name
       },
       null,
       function(success) {
@@ -120,7 +120,7 @@ export default {
             .attr("href");
 
           var appName = href.substr(href.lastIndexOf("/") + 1);
-          if (appName == context.application) {
+          if (appName == this.$route.params.name) {
             $(this).addClass("active");
           }
         });
@@ -132,7 +132,7 @@ export default {
         ["system-apps/read"],
         {
           action: "info",
-          name: context.application
+          name: this.$route.params.name
         },
         null,
         function(success) {
