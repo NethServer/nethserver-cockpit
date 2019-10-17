@@ -1,10 +1,8 @@
 <template>
   <div>
-    <iframe
-      id="app-frame"
-      class="iframe-embedded"
-      :src="'/cockpit/@localhost/'+application+'/index.html'"
-    ></iframe>
+    <h2 v-if="!view.isLoaded"></h2>
+    <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner loader-frame"></div>
+    <iframe v-show="view.isLoaded" id="app-frame" class="iframe-embedded" :src="iframeSrc"></iframe>
   </div>
 </template>
 
@@ -17,6 +15,26 @@ export default {
   },
   mounted() {
     var context = this;
+
+    $("#app-frame").on("load", function() {
+      $("#app-frame")
+        .contents()
+        .find("#topnav")
+        .hide();
+      $("#app-frame")
+        .contents()
+        .find("#multi-dashboard")
+        .hide();
+      $("#app-frame")
+        .contents()
+        .find("#host-nav")
+        .hide();
+
+      context.view.isLoaded = true;
+      setTimeout(function() {
+        context.initGraphics();
+      }, 500);
+    });
 
     context.exec(
       ["system-authorization/validate"],
@@ -32,7 +50,6 @@ export default {
           console.error(e);
         }
         if (success.state == "success") {
-          context.view.isLoaded = true;
           setTimeout(function() {
             context.initGraphics();
           }, 50);
@@ -57,11 +74,20 @@ export default {
     }
   },
   data() {
+    var application = this.$route.params.name;
+    var location = window.location.pathname.split("@")[1].split("/")[0];
+    var iframeSrc = "/cockpit/@" + location + "/" + application + "/index.html";
+
+    if (location != "localhost") {
+      iframeSrc = window.location.origin + "/@" + location + "/" + application;
+    }
+
     return {
       view: {
         isLoaded: false
       },
-      application: this.$route.params.name,
+      application: application,
+      iframeSrc: iframeSrc,
       info: {}
     };
   },
@@ -102,7 +128,6 @@ export default {
     getAppInfo() {
       var context = this;
 
-      context.view.isLoaded = false;
       context.exec(
         ["system-apps/read"],
         {
@@ -117,7 +142,6 @@ export default {
             console.error(e);
           }
           context.info = success;
-          context.view.isLoaded = true;
           context.initGraphics();
         },
         function(error) {
@@ -134,5 +158,8 @@ export default {
 #app-frame {
   width: 100%;
   height: 100%;
+}
+#loader-frame {
+  margin-top: 50px;
 }
 </style>

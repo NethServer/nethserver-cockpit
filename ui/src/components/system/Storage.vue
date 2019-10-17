@@ -1,9 +1,9 @@
 <template>
   <div v-show="view.isAuth">
-   <h2>{{$t('storage.title')}}</h2>
-   <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
-   <iframe id="storage-frame" class="iframe-embedded" src="/cockpit/@localhost/storage/index.html"></iframe>
-   <div v-if="view.modalFake" class="fake-modal-backdrop"></div>
+    <h2>{{$t('storage.title')}}</h2>
+    <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner loader-frame"></div>
+    <iframe v-show="view.isLoaded" id="storage-frame" class="iframe-embedded" :src="iframeSrc"></iframe>
+    <div v-if="view.modalFake" class="fake-modal-backdrop"></div>
   </div>
 </template>
 
@@ -40,6 +40,19 @@ export default {
   mounted() {
     var context = this;
     $("#storage-frame").on("load", function() {
+      $("#storage-frame")
+        .contents()
+        .find("#topnav")
+        .hide();
+      $("#storage-frame")
+        .contents()
+        .find("#multi-dashboard")
+        .hide();
+      $("#storage-frame")
+        .contents()
+        .find("#host-nav")
+        .hide();
+
       context.view.isLoaded = true;
 
       // select the target node
@@ -77,12 +90,22 @@ export default {
     $("#app").css("color", "");
   },
   data() {
+    var application = "storage";
+    var location = window.location.pathname.split("@")[1].split("/")[0];
+    var iframeSrc = "/cockpit/@" + location + "/" + application + "/index.html";
+
+    if (location != "localhost") {
+      iframeSrc = window.location.origin + "/@" + location + "/" + application;
+    }
+
     return {
       view: {
         isLoaded: false,
         isAuth: false,
         modalFake: false
-      }
+      },
+      application: application,
+      iframeSrc: iframeSrc
     };
   }
 };
@@ -91,5 +114,8 @@ export default {
 <style>
 #storage-frame {
   margin-top: -8px;
+}
+#loader-frame {
+  margin-top: 50px;
 }
 </style>

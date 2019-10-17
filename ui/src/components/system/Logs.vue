@@ -1,8 +1,8 @@
 <template>
   <div v-show="view.isAuth">
     <h2>{{$t('logs.title')}}</h2>
-    <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
-    <iframe id="logs-frame" class="iframe-embedded" src="/cockpit/@localhost/system/logs.html"></iframe>
+    <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner loader-frame"></div>
+    <iframe v-show="view.isLoaded" id="logs-frame" class="iframe-embedded" :src="iframeSrc"></iframe>
     <div v-if="view.modalFake" class="fake-modal-backdrop"></div>
   </div>
 </template>
@@ -40,6 +40,18 @@ export default {
   mounted() {
     var context = this;
     $("#logs-frame").on("load", function() {
+      $("#logs-frame")
+        .contents()
+        .find("#topnav")
+        .hide();
+      $("#logs-frame")
+        .contents()
+        .find("#multi-dashboard")
+        .hide();
+      $("#logs-frame")
+        .contents()
+        .find("#host-nav")
+        .hide();
       context.view.isLoaded = true;
 
       // select the target node
@@ -70,16 +82,30 @@ export default {
     $("#app").css("color", "");
   },
   data() {
+    var application = "system";
+    var location = window.location.pathname.split("@")[1].split("/")[0];
+    var iframeSrc = "/cockpit/@" + location + "/" + application + "/logs.html";
+
+    if (location != "localhost") {
+      iframeSrc =
+        window.location.origin + "/@" + location + "/" + application + "/logs";
+    }
+
     return {
       view: {
         isLoaded: false,
         isAuth: false,
         modalFake: false
-      }
+      },
+      application: application,
+      iframeSrc: iframeSrc
     };
   }
 };
 </script>
 
 <style>
+#loader-frame {
+  margin-top: 50px;
+}
 </style>

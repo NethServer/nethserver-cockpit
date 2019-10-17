@@ -1,12 +1,8 @@
 <template>
   <div v-show="view.isAuth">
     <h2>{{$t('terminal.title')}}</h2>
-    <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
-    <iframe
-      id="terminal-frame"
-      class="iframe-embedded"
-      src="/cockpit/@localhost/system/terminal.html"
-    ></iframe>
+    <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner loader-frame"></div>
+    <iframe v-show="view.isLoaded" id="terminal-frame" class="iframe-embedded" :src="iframeSrc"></iframe>
     <div v-if="view.modalFake" class="fake-modal-backdrop"></div>
   </div>
 </template>
@@ -44,6 +40,18 @@ export default {
   mounted() {
     var context = this;
     $("#terminal-frame").on("load", function() {
+      $("#terminal-frame")
+        .contents()
+        .find("#topnav")
+        .hide();
+      $("#terminal-frame")
+        .contents()
+        .find("#multi-dashboard")
+        .hide();
+      $("#terminal-frame")
+        .contents()
+        .find("#host-nav")
+        .hide();
       context.view.isLoaded = true;
 
       // select the target node
@@ -98,12 +106,29 @@ export default {
     }, 150);
   },
   data() {
+    var application = "system";
+    var location = window.location.pathname.split("@")[1].split("/")[0];
+    var iframeSrc =
+      "/cockpit/@" + location + "/" + application + "/terminal.html";
+
+    if (location != "localhost") {
+      iframeSrc =
+        window.location.origin +
+        "/@" +
+        location +
+        "/" +
+        application +
+        "/terminal";
+    }
+
     return {
       view: {
         isLoaded: false,
         isAuth: false,
         modalFake: false
-      }
+      },
+      application: application,
+      iframeSrc: iframeSrc
     };
   }
 };
@@ -114,5 +139,9 @@ export default {
   margin-top: 0px;
   width: 100%;
   height: 94.1%;
+}
+
+#loader-frame {
+  margin-top: 50px;
 }
 </style>
