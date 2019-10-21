@@ -144,14 +144,14 @@ nethserver = {
             error(errorResp, errorData)
         });
     },
-    readLogs(input, stream, success, error, superuser = true, override = false) {
+    readLogs(input, stream, success, error, superuser = true) {
         var args = []
 
         if (superuser) {
             args[0] = "/usr/bin/sudo"
-            args[1] = override ? override : "/usr/libexec/nethserver/api/system-logs/execute"
+            args[1] = "/usr/libexec/nethserver/api/system-logs/execute"
         } else {
-            args[0] = override ? override : "/usr/libexec/nethserver/api/system-logs/execute"
+            args[0] = "/usr/libexec/nethserver/api/system-logs/execute"
         }
 
         var process = cockpit.spawn(args);
