@@ -83,7 +83,10 @@ export default {
   },
   data() {
     var application = "system";
-    var location = window.location.pathname.split("@")[1].split("/")[0];
+    var location =
+      window.location.pathname.indexOf("@") > -1
+        ? window.location.pathname.split("@")[1].split("/")[0]
+        : "localhost";
     var iframeSrc = "/cockpit/@" + location + "/" + application + "/logs.html";
 
     if (location != "localhost") {

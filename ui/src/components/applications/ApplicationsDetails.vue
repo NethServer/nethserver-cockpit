@@ -75,7 +75,10 @@ export default {
   },
   data() {
     var application = this.$route.params.name;
-    var location = window.location.pathname.split("@")[1].split("/")[0];
+    var location =
+      window.location.pathname.indexOf("@") > -1
+        ? window.location.pathname.split("@")[1].split("/")[0]
+        : "localhost";
     var iframeSrc = "/cockpit/@" + location + "/" + application + "/index.html";
 
     if (location != "localhost") {
