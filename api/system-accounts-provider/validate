@@ -65,7 +65,8 @@ function validate_localad($data) {
     if (!$workgroupValidator->evaluate($data['Workgroup'])) {
         $v->addValidationError('Workgroup', 'workgroup_simple_hostname_max_15');
     }
-    if (!$ipAddressValidator->evaluate($data['IpAddress'])) {
+    $parts = explode('.',$data['IpAddress']); # IP address can't be a network or a broadcast address
+    if ($parts[3] == "0" || $parts[3] == "255" || !$ipAddressValidator->evaluate($data['IpAddress'])) {
         $v->addValidationError('IpAddress', 'dcipaddr_validation_error');
     }
 
@@ -132,7 +133,10 @@ function validate_adcredentials($data) {
 function validate_changeadip($data) {
     $v = new LegacyValidator($data);
     $ipAddressValidator = $v->createValidator(Validate::IP)->platform('dcipaddr');
-    $v->declareParameter('IpAddress', $ipAddressValidator);
+    $parts = explode('.',$data['IpAddress']); # IP address can't be a network or a broadcast address
+    if ($parts[3] == "0" || $parts[3] == "255" || !$ipAddressValidator->evaluate($data['IpAddress'])) {
+        $v->addValidationError('IpAddress', 'dcipaddr_validation_error');
+    }
 
     if (!$v->validate()) {
         error($v);
