@@ -65,7 +65,7 @@ function validate_letsencrypt($props)
     $cmd = "/usr/libexec/nethserver/letsencrypt-certs -e '".escapeshellarg($props['LetsEncryptMail'])."' -t -d ". escapeshellarg(join(",",$domains))." 2>&1";
     exec($cmd, $output, $ret);
     if ($ret!=0) {
-        $v->addValidationError('LetsEncryptDomains', strstr($output[0],'"<!',true));
+        $v->addValidationError('LetsEncryptDomains', "letencrypt_domain_failed");
         error($v);
     }
     if ($v->validate()) {

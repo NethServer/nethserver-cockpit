@@ -55,13 +55,13 @@
             >
               <dt
                 v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal' && k != 'NsdcIp' && k != 'ValidHostname' && k != 'AuthRequired' && k != 'errors'"
-              >{{k | capitalize}}</dt>
+              >{{$t('users_groups.'+k)}}</dt>
               <dd
                 v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal' && k != 'NsdcIp' && k != 'ValidHostname' && k != 'AuthRequired' && k != 'errors' && k != 'BindDN'  && k != 'BindPassword'"
               >{{v | normalize(k)}}</dd>
               <dt
                 v-if="k == 'NsdcIp' && users.provider == 'ad' && users.providerInfo.IsLocal"
-              >{{k | capitalize}}</dt>
+              >{{$t('users_groups.'+k)}}</dt>
               <dd v-if="k == 'NsdcIp' && users.provider == 'ad' && users.providerInfo.IsLocal">
                 <a data-toggle="modal" data-target="#nsdcIpChangeModal" href="#">{{v}}</a>
               </dd>
@@ -399,7 +399,7 @@
                   <span
                     v-if="newUser.errorProps['name']"
                     class="help-block"
-                  >{{newUser.errorProps['name']}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newUser.errorProps['name'])}}</span>
                 </div>
               </div>
               <div
@@ -415,7 +415,7 @@
                   <span
                     v-if="newUser.errorProps['gecos']"
                     class="help-block"
-                  >{{newUser.errorProps['gecos']}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newUser.errorProps['gecos'])}}</span>
                 </div>
               </div>
               <div
@@ -438,7 +438,7 @@
                   <span
                     v-if="newUser.errorProps['groups']"
                     class="help-block"
-                  >{{newUser.errorProps['groups']}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newUser.errorProps['groups'])}}</span>
                 </div>
               </div>
               <div v-if="newUser.loadGroups" class="form-group">
@@ -480,7 +480,7 @@
                   <span
                     v-if="newUser.errorProps['newPassword']"
                     class="help-block"
-                  >{{newUser.errorProps['newPassword']}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newUser.errorProps['newPassword'])}}</span>
                 </div>
                 <div class="col-sm-2 adjust-index">
                   <button tabindex="-1" @click="togglePass()" type="button" class="btn btn-primary">
@@ -608,7 +608,7 @@
                   <span
                     v-if="newGroup.errorProps['name']"
                     class="help-block"
-                  >{{newGroup.errorProps['name']}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newGroup.errorProps['name'])}}</span>
                 </div>
               </div>
               <div :class="['form-group', newGroup.errorProps['members'] ? 'has-error' : '']">
@@ -632,7 +632,7 @@
                   <span
                     v-if="newGroup.errorProps['members']"
                     class="help-block"
-                  >{{newGroup.errorProps['members']}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newGroup.errorProps['members'])}}</span>
                 </div>
               </div>
               <div v-if="newGroup.loadMembers" class="form-group">
@@ -686,7 +686,7 @@
                     <span
                       v-if="newGroup.errorProps['system']"
                       class="help-block"
-                    >{{newGroup.errorProps['system']}}</span>
+                    >{{$t('validation.validation_failed')}}: {{$t('validation.'+newGroup.errorProps['system'])}}</span>
                   </div>
                 </div>
                 <div v-if="newGroup.loadMembers" class="form-group">
@@ -730,7 +730,7 @@
                     <span
                       v-if="newGroup.errorProps['applications']"
                       class="help-block"
-                    >{{newGroup.errorProps['applications']}}</span>
+                    >{{$t('validation.validation_failed')}}: {{$t('validation.'+newGroup.errorProps['applications'])}}</span>
                   </div>
                 </div>
                 <div v-if="newGroup.loadMembers" class="form-group">
@@ -1484,6 +1484,7 @@
                           >{{$t('users_groups.domain_name')}}</label>
                           <div class="col-sm-9">
                             <input
+                              :disabled="newProvider.isChecking"
                               required
                               type="text"
                               v-model="newProvider.Realm"
@@ -1504,6 +1505,7 @@
                           >{{$t('users_groups.netbios_domain_name')}}</label>
                           <div class="col-sm-9">
                             <input
+                              :disabled="newProvider.isChecking"
                               required
                               type="text"
                               v-model="newProvider.Workgroup"
@@ -1532,6 +1534,7 @@
                           >{{$t('users_groups.dc_ip_address')}}</label>
                           <div class="col-sm-9">
                             <input
+                              :disabled="newProvider.isChecking"
                               required
                               type="text"
                               v-model="newProvider.IpAddress"
@@ -1826,7 +1829,8 @@ export default {
       newGroup: this.initGroup(),
       toDelete: {},
       newProvider: {
-        errors: this.initProvidersErrors()
+        errors: this.initProvidersErrors(),
+        isChecking: false
       },
       currentStep: 1,
       greenSubnetAddress: "192.168.1.0/24" // default
@@ -1896,14 +1900,16 @@ export default {
       this.users.chooseProvider = provider;
       this.users.chooseBind = null;
       this.newProvider = {
-        errors: this.initProvidersErrors()
+        errors: this.initProvidersErrors(),
+        isChecking: false
       };
     },
 
     selectBind(bind) {
       this.users.chooseBind = bind;
       this.newProvider = {
-        errors: this.initProvidersErrors()
+        errors: this.initProvidersErrors(),
+        isChecking: false
       };
       this.getAdDefault();
     },
@@ -1952,7 +1958,8 @@ export default {
             this.newProvider.Workgroup &&
             this.newProvider.Workgroup.length > 0 &&
             this.newProvider.IpAddress &&
-            this.newProvider.IpAddress.length > 0
+            this.newProvider.IpAddress.length > 0 &&
+            this.newProvider.isChecking == false
           ) {
             return false;
           } else {
