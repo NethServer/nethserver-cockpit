@@ -69,7 +69,7 @@ if (!$v->validate()) {
 // check the "network" parameter is consistent with its "Mask" (only 0-bits in tail)
 $net = long2ip(ip2long($data['name']) & ip2long($data['props']['Mask']));
 if ($net != $data['name']) {
-    $v->addValidationError('network', 'invalid_network', $data['name']);
+    $v->addValidationError('name', 'invalid_network', $data['name']);
 }
 
 # Validate the input
