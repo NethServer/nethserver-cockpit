@@ -36,6 +36,7 @@ case $action in
             Organization "$(_get Organization)" CertificateDuration "$(_get CertificateDuration)" \
             Locality "$(_get Locality)" CommonName "$(_get CommonName)" \
             CountryCode "$(_get CountryCode)" OrganizationalUnitName "$(_get OrganizationalUnitName)" 
+        /etc/e-smith/events/actions/nethserver-generate-certificate
         /sbin/e-smith/signal-event -j certificate-update
         ;;
 
