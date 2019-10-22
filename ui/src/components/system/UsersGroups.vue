@@ -399,7 +399,7 @@
                   <span
                     v-if="newUser.errorProps['name']"
                     class="help-block"
-                  >{{newUser.errorProps['name']}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newUser.errorProps['name'])}}</span>
                 </div>
               </div>
               <div
@@ -415,7 +415,7 @@
                   <span
                     v-if="newUser.errorProps['gecos']"
                     class="help-block"
-                  >{{newUser.errorProps['gecos']}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newUser.errorProps['gecos'])}}</span>
                 </div>
               </div>
               <div
@@ -438,7 +438,7 @@
                   <span
                     v-if="newUser.errorProps['groups']"
                     class="help-block"
-                  >{{newUser.errorProps['groups']}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newUser.errorProps['groups'])}}</span>
                 </div>
               </div>
               <div v-if="newUser.loadGroups" class="form-group">
@@ -480,7 +480,7 @@
                   <span
                     v-if="newUser.errorProps['newPassword']"
                     class="help-block"
-                  >{{newUser.errorProps['newPassword']}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newUser.errorProps['newPassword'])}}</span>
                 </div>
                 <div class="col-sm-2 adjust-index">
                   <button tabindex="-1" @click="togglePass()" type="button" class="btn btn-primary">
@@ -608,7 +608,7 @@
                   <span
                     v-if="newGroup.errorProps['name']"
                     class="help-block"
-                  >{{newGroup.errorProps['name']}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newGroup.errorProps['name'])}}</span>
                 </div>
               </div>
               <div :class="['form-group', newGroup.errorProps['members'] ? 'has-error' : '']">
@@ -632,7 +632,7 @@
                   <span
                     v-if="newGroup.errorProps['members']"
                     class="help-block"
-                  >{{newGroup.errorProps['members']}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+newGroup.errorProps['members'])}}</span>
                 </div>
               </div>
               <div v-if="newGroup.loadMembers" class="form-group">
@@ -686,7 +686,7 @@
                     <span
                       v-if="newGroup.errorProps['system']"
                       class="help-block"
-                    >{{newGroup.errorProps['system']}}</span>
+                    >{{$t('validation.validation_failed')}}: {{$t('validation.'+newGroup.errorProps['system'])}}</span>
                   </div>
                 </div>
                 <div v-if="newGroup.loadMembers" class="form-group">
@@ -730,7 +730,7 @@
                     <span
                       v-if="newGroup.errorProps['applications']"
                       class="help-block"
-                    >{{newGroup.errorProps['applications']}}</span>
+                    >{{$t('validation.validation_failed')}}: {{$t('validation.'+newGroup.errorProps['applications'])}}</span>
                   </div>
                 </div>
                 <div v-if="newGroup.loadMembers" class="form-group">
