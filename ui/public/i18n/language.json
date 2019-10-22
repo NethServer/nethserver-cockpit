@@ -923,7 +923,7 @@
     "change_default_company": "Change the default company",
     "one_or_more_dns_not_working": "One or more DNS servers are not responding",
     "TCPPort": "TCP port",
-    "service_is_enabled_but_is_not_running": "The service is enabled but is not running",
+    "service_is_enabled_but_is_not_running": "The service is either not running or not enabled",
     "must_configure_backup_data": "You should configure at least one data backup",
     "change_default_ssh_port": "Change the default SSH port to lower brute force attack rates",
     "limit_red_access_by_ip": "Limit access to server manager specifying the allowed IP addresses",
