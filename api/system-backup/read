@@ -121,7 +121,7 @@ sub get_latest_stats
         if ($line =~ /^Backup status: (.*)/) {
             if ($1 eq 'SUCCESS') {
                 $status{'result'} = 'success';
-            } elsif ($1 eq 'SUCCESS') {
+            } else {
                 $status{'result'} = 'fail';
             }
         }
