@@ -16,7 +16,8 @@ Example:
   "WorkgroupEditable": false,
   "Workgroup": "LOCAL",
   "HomeAdmStatus": "disabled",
-  "ShareAdmStatus": "disabled"
+  "ShareAdmStatus": "disabled",
+  "AuditLogRead": "disabled"
 }
 ```
 
@@ -26,7 +27,7 @@ The `WorkgroupEditable` is set to `false` if the user account provider is set to
 
 Constraints::
 
-- ShareAdmStatus, HomeAdmStatus: can be `enabled` or `disabled`
+- ShareAdmStatus, HomeAdmStatus, AuditLogRead: can be `enabled` or `disabled`
 - InheritOwner: can be `yes` or `no`
 - Workgroup: a simple hostname, maximum length is 15 characters
 
@@ -38,7 +39,8 @@ Input example:
   "InheritOwner": "no",
   "Workgroup": "LOCAL",
   "HomeAdmStatus": "disabled",
-  "ShareAdmStatus": "disabled"
+  "ShareAdmStatus": "disabled",
+  "AuditLogRead": "disabled"
 }
 ```
 
