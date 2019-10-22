@@ -974,7 +974,7 @@
     "backup_already_exists": "A backup with the same name already exists",
     "valid_email,generic_failure": "Invalid mail address: it should be something like 'myname@domain.com'",
     "valid_mail_address": "Invalid mail address: it should be something like 'myname@domain.com'",
-    "valid_ipV4Address": "Invalid IPv4 address: it should be something like '10.0.0.1'",
+    "valid_ipV4Address": "Invalid address",
     "valid_ipV4Netmask": "Invalid IPv4 network mask: it should be something like '255.255.255.0'",
     "all_domains_must_be_fqdn": "All domains must be valid FQDN (Fully Qualified Domain Name)",
     "letencrypt_domain_failed": "Challenge failed for this domain(s)",
