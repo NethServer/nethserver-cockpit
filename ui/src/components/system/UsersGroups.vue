@@ -1484,6 +1484,7 @@
                           >{{$t('users_groups.domain_name')}}</label>
                           <div class="col-sm-9">
                             <input
+                              :disabled="newProvider.isChecking"
                               required
                               type="text"
                               v-model="newProvider.Realm"
@@ -1504,6 +1505,7 @@
                           >{{$t('users_groups.netbios_domain_name')}}</label>
                           <div class="col-sm-9">
                             <input
+                              :disabled="newProvider.isChecking"
                               required
                               type="text"
                               v-model="newProvider.Workgroup"
@@ -1532,6 +1534,7 @@
                           >{{$t('users_groups.dc_ip_address')}}</label>
                           <div class="col-sm-9">
                             <input
+                              :disabled="newProvider.isChecking"
                               required
                               type="text"
                               v-model="newProvider.IpAddress"
@@ -1826,7 +1829,8 @@ export default {
       newGroup: this.initGroup(),
       toDelete: {},
       newProvider: {
-        errors: this.initProvidersErrors()
+        errors: this.initProvidersErrors(),
+        isChecking: false
       },
       currentStep: 1,
       greenSubnetAddress: "192.168.1.0/24" // default
@@ -1896,14 +1900,16 @@ export default {
       this.users.chooseProvider = provider;
       this.users.chooseBind = null;
       this.newProvider = {
-        errors: this.initProvidersErrors()
+        errors: this.initProvidersErrors(),
+        isChecking: false
       };
     },
 
     selectBind(bind) {
       this.users.chooseBind = bind;
       this.newProvider = {
-        errors: this.initProvidersErrors()
+        errors: this.initProvidersErrors(),
+        isChecking: false
       };
       this.getAdDefault();
     },
@@ -1952,7 +1958,8 @@ export default {
             this.newProvider.Workgroup &&
             this.newProvider.Workgroup.length > 0 &&
             this.newProvider.IpAddress &&
-            this.newProvider.IpAddress.length > 0
+            this.newProvider.IpAddress.length > 0 &&
+            this.newProvider.isChecking == false
           ) {
             return false;
           } else {
