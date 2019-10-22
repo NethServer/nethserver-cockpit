@@ -977,6 +977,7 @@
     "valid_ipV4Address": "Invalid IPv4 address: it should be something like '10.0.0.1'",
     "valid_ipV4Netmask": "Invalid IPv4 network mask: it should be something like '255.255.255.0'",
     "all_domains_must_be_fqdn": "All domains must be valid FQDN (Fully Qualified Domain Name)",
+    "letencrypt_domain_failed": "Challenge failed for this domain(s)",
     "invalid_x509_ceritficate": "X.509 certificate (PEM encoding)",
     "invalid_x509_key": "RSA or EC private key (PEM encoding)",
     "cert_safetyguard": "The selected ECC certificate is not compatible with the current TLS policy",
