@@ -55,13 +55,13 @@
             >
               <dt
                 v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal' && k != 'NsdcIp' && k != 'ValidHostname' && k != 'AuthRequired' && k != 'errors'"
-              >{{k | capitalize}}</dt>
+              >{{$t('users_groups.'+k)}}</dt>
               <dd
                 v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal' && k != 'NsdcIp' && k != 'ValidHostname' && k != 'AuthRequired' && k != 'errors' && k != 'BindDN'  && k != 'BindPassword'"
               >{{v | normalize(k)}}</dd>
               <dt
                 v-if="k == 'NsdcIp' && users.provider.isAD && users.providerInfo.IsLocal"
-              >{{k | capitalize}}</dt>
+              >{{$t('users_groups.'+k)}}</dt>
               <dd v-if="k == 'NsdcIp' && users.provider.isAD && users.providerInfo.IsLocal">
                 <a data-toggle="modal" data-target="#nsdcIpChangeModal" href="#">{{v}}</a>
               </dd>
