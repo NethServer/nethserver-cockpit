@@ -60,9 +60,9 @@
                 v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal' && k != 'NsdcIp' && k != 'ValidHostname' && k != 'AuthRequired' && k != 'errors' && k != 'BindDN'  && k != 'BindPassword'"
               >{{v | normalize(k)}}</dd>
               <dt
-                v-if="k == 'NsdcIp' && users.provider.isAD && users.providerInfo.IsLocal"
+                v-if="k == 'NsdcIp' && users.provider == 'ad' && users.providerInfo.IsLocal"
               >{{k | capitalize}}</dt>
-              <dd v-if="k == 'NsdcIp' && users.provider.isAD && users.providerInfo.IsLocal">
+              <dd v-if="k == 'NsdcIp' && users.provider == 'ad' && users.providerInfo.IsLocal">
                 <a data-toggle="modal" data-target="#nsdcIpChangeModal" href="#">{{v}}</a>
               </dd>
 
@@ -95,11 +95,11 @@
           <span class="panel-title">
             <span>{{$t('users_groups.strong_password')}}</span>
             <span
-              :class="['fa', passwordPolicy.Users == true || passwordPolicy.Users == 'yes' ? 'fa-check green' : 'fa-times red']"
+              :class="['fa', passwordPolicy.Users == true || passwordPolicy.Users == 'yes' ? 'fa-check green' : 'fa-times red', 'margin-left-sm']"
             ></span>
             <span class="margin-left-md">{{$t('users_groups.expiration_password')}}</span>
             <span
-              :class="['fa', passwordPolicy.PassExpires == true || passwordPolicy.PassExpires == 'yes' ? 'fa-check green' : 'fa-times red']"
+              :class="['fa', passwordPolicy.PassExpires == true || passwordPolicy.PassExpires == 'yes' ? 'fa-check green' : 'fa-times red', 'margin-left-sm']"
             ></span>
           </span>
         </div>
