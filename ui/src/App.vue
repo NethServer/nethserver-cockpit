@@ -253,16 +253,19 @@
       <p
         style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"
       >{{notifications.error.message || '-'}}</p>
-      <span>
-        {{$t('check')}}
-        <code>API</code>
-        {{$t('for_more_info')}}:
-      </span>
-      <br />
-      <code>{{notifications.error.api}}</code>
+      <div class="stats-text">
+        <span>
+          {{$t('for_more_info')}}:
+        </span>
+        <br />
+        <code>{{notifications.error.api}}</code>
+        <div>
+          {{$t('check')}}.
+        </div>
+      </div>
       <button
         @click="copyCommand(notifications.error.command)"
-        class="btn btn-primary copy-path"
+        class="btn btn-primary copy-path display-inline-block"
         type="button"
       >{{$t('copy_command')}}</button>
       <span v-if="copied" class="fa fa-check green copy-ok"></span>
