@@ -6,70 +6,83 @@ Display and manage Samba Audit logs.
 
 ### Input
 
-The read API requires an `action` field.
-Valid actions are:
+It requires an `action` field. Available actions:
 
-- `query`
+- `file-access`
+- `file-access-details`
 
-#### query
 
-Execute a query inside the database with given filters.
-If no filter is given, all records are returned.
+#### file-access
 
-Input example:
+Return the list of last actions for each user inside the database.
+
+Example:
 ```json
 {
-  "action": "query",
-  "username": "myuser",
-  "address": "",
-  "share": "",
-  "operation": "",
+  "action": "file-access",
   "message": "",
-  "from": "1546300800",
-  "to": "1557360000"
+  "hostname": "myhost.nethserver.org"
+}
+```
+
+If `message` is set, search for actions that match the given file path.
+
+#### file-access-details
+
+Return the list of all operations for the given user on the given path.
+Operations results are limited to 500 entries.
+
+Example:
+```json
+{
+  "action": "file-access-details",
+  "username": "myuser@nethserver.org",
+  "share": "server",
+  "message": "w|readme.txt",
+  "from": 1570744800,
+  "to": 1570831140,
 }
 ```
 
 ### Output
 
-##### query
+#### file-access
+
+Output example:
+```json
+{
+  "list": [
+    {
+      "when": "2019-10-10 19:28:50",
+      "user": "myuser@nethserver.org",
+      "share": "share1",
+      "op": "write",
+      "arg": "readme.txt",
+      "raw_arg": "w|readne.txt"
+    },
+    ...
+  ],
+  "updated": "1570937859",
+  "alias": "https://myserver.nethserver.org/43dggryttfghftuuunnhjju5654641a4b7cb233a"
+}
+```
+
+#### file-access-details
 
 Output example:
 ```json
 [
   {
-    "id": "17",
-    "when": "2019-05-08 15:13:05",
-    "share": "iba1",
-    "ip": "192.168.1.22",
-    "user": "giacomo@local.neth.eu",
-    "op": "read",
-    "result": "ok",
-    "arg": "test.log"
+    "when": "2019-10-11 00:30:10",
+    "op": "write"
   },
   {
-    "id": "20",
-    "when": "2019-05-08 16:49:59",
-    "share": "iba1",
-    "ip": "192.168.1.22",
-    "user": "giacomo@local.neth.eu",
-    "op": "write",
-    "result": "ok",
-    "arg": "test.log"
-  },
-  {
-    "id": "21",
-    "when": "2019-05-08 16:50:05",
-    "share": "iba1",
-    "ip": "192.168.1.22",
-    "user": "giacomo@local.neth.eu",
-    "op": "rename",
-    "result": "ok",
-    "arg": "test.log -> test2.log"
+    "when": "2019-10-11 12:30:14",
+    "op": "unlink"
   }
-  ...
 ]
 ```
+
 
 ## update
 
@@ -77,15 +90,3 @@ The update API parses `/var/log/smbaudit.log` log and insert records inside the 
 
 No input is required.
 
-## delete
-
-The delete API takes the same input from `read` API for the `query` action.
-Selected records are deleted instead of returned.
-
-Output example:
-```json
-{
-  "state": "success",
-  "deleted": 2
-}
-```
