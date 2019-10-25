@@ -839,7 +839,9 @@
           </div>
           <form class="form-horizontal" v-on:submit.prevent="changeNsdcIp()">
             <div class="modal-body">
-              <div class="form-group">
+              <div
+                :class="['form-group', users.providerInfo.errors.oldIp.hasError ? 'has-error' : '']"
+              >
                 <label
                   class="col-sm-3 control-label"
                   for="textInput-modal-markup"
@@ -851,9 +853,15 @@
                     v-model="users.providerInfo.oldIp"
                     class="form-control"
                   />
+                  <span
+                    v-if="users.providerInfo.errors.oldIp.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+users.providerInfo.errors.oldIp.message)}}</span>
                 </div>
               </div>
-              <div class="form-group">
+              <div
+                :class="['form-group', users.providerInfo.errors.newIp.hasError ? 'has-error' : '']"
+              >
                 <label
                   class="col-sm-3 control-label"
                   for="textInput-modal-markup"
@@ -865,10 +873,17 @@
                     v-model="users.providerInfo.newIp"
                     class="form-control"
                   />
+                  <span
+                    v-if="users.providerInfo.errors.newIp.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+users.providerInfo.errors.newIp.message)}}</span>
                 </div>
               </div>
             </div>
             <div class="modal-footer">
+              <div v-if="users.providerInfo.isChecking" class="col-sm-1">
+                <div class="spinner"></div>
+              </div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('change')}}</button>
             </div>
@@ -1880,6 +1895,14 @@ export default {
           message: ""
         },
         BindPassword: {
+          hasError: false,
+          message: ""
+        },
+        oldIp: {
+          hasError: false,
+          message: ""
+        },
+        newIp: {
           hasError: false,
           message: ""
         }
@@ -3424,34 +3447,61 @@ export default {
         action: "change-ad-ip",
         IpAddress: context.users.providerInfo.newIp
       };
+      context.users.providerInfo.isChecking = true;
+      context.users.providerInfo.errors["newIp"].hasError = false;
       context.$forceUpdate();
 
-      $("#nsdcIpChangeModal").modal("hide");
-
-      // update values
       context.exec(
-        ["system-accounts-provider/update"],
+        ["system-accounts-provider/validate"],
         nsdcIpObj,
-        function(stream) {
-          console.info("nsdc-ip-change", stream);
-        },
+        null,
         function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "users_groups.nsdc_ip_address_change_ok"
+          context.users.providerInfo.isChecking = false;
+          $("#nsdcIpChangeModal").modal("hide");
+
+          // update values
+          context.exec(
+            ["system-accounts-provider/update"],
+            nsdcIpObj,
+            function(stream) {
+              console.info("nsdc-ip-change", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "users_groups.nsdc_ip_address_change_ok"
+              );
+
+              context.users.providerInfo.oldIp = "";
+              context.users.providerInfo.newIp = "";
+
+              // get provider info
+              context.getInfo();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "users_groups.nsdc_ip_address_change_error"
+              );
+            }
           );
-
-          context.users.providerInfo.oldIp = "";
-          context.users.providerInfo.newIp = "";
-
-          // get provider info
-          context.getInfo();
         },
         function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "users_groups.nsdc_ip_address_change_error"
-          );
+          var errorData = {};
+          context.users.providerInfo.isChecking = false;
+          context.users.providerInfo.errors = context.initEditProvidersErrors();
+
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.users.providerInfo.errors["newIp"].hasError = true;
+              context.users.providerInfo.errors["newIp"].message = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
+          }
+          context.$forceUpdate();
         }
       );
     },
