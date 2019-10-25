@@ -123,7 +123,7 @@ export default {
             .attr("href");
 
           var appName = href.substr(href.lastIndexOf("/") + 1);
-          if (appName == this.$route.params.name) {
+          if (appName == context.$route.params.name) {
             $(this).addClass("active");
           }
         });
