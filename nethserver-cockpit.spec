@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.1.2
+Version: 1.2.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,15 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon Oct 28 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.2.0-1
+- Cockpit: add missing validation labels - Bug Nethserver/dev#5884
+- Cockpit: add missing validation labels - Bug NethServer/dev#5884
+- backup-data: view last log grayed out - Bug Nethserver/dev#5877
+- Cockpit: invalid IP address allowed for DC - Bug NethServer/dev#5871
+- Cockpit: cannot edit the self-signed certificate - Bug NethServer/dev#5872
+- Cockpit dashboard: wrong path loaded in applications - Bug Nethserver/dev#5869
+- Cockpit: invalid IP address allowed for DC - Bug Nethserver/dev#5871
+
 * Fri Oct 11 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.1.2-1
 - Cockpit: can't configure upstream proxy without user and password - Bug NethServer/dev#5863
 
