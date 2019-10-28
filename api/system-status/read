@@ -56,11 +56,11 @@ function readCPU()
     # find cpu model name (x86_64 4th, arm 2th line)
     foreach ($f as $linenumber => $line) {
         if (strpos($line, 'model name') !== false) {
-            $linemumber++;
+            $linenumber++;
         break;
         }
     }
-    $tmp = explode(':',$f[$linenumber]);
+    $tmp = explode(':',$f[$linenumber-1]);
     return array('model' => trim($tmp[1]), 'n' => $ret);
 }
 
@@ -71,7 +71,7 @@ function readLoad()
 
 function readDMI()
 {
-    if (file_exists("/sys/devices/virtual/dmi/id/$id")) {
+    if (file_exists("/sys/devices/virtual/dmi/id/")) {
     return trim(@file_get_contents("/sys/devices/virtual/dmi/id/sys_vendor"))." ".@trim(@file_get_contents("/sys/devices/virtual/dmi/id/product_name"));
     // also try to fetch info for devicetree based (arm)devices
     } elseif (file_exists("/sys/firmware/devicetree/base/model")) {
