@@ -245,7 +245,7 @@
     "refresh": "Refresh",
     "execute_config_backup_ok": "Config backup executed successfully!",
     "execute_config_backup_error": "Config backup not executed.",
-    "execute_data_backup_ok": "Data backup executed successfully!",
+    "execute_data_backup_ok": "Data backup started successfully!",
     "execute_data_backup_error": "Data backup not executed.",
     "delete_config_backup_ok": "Config backup deleted successfully!",
     "delete_config_backup_error": "Config backup not deleted.",
