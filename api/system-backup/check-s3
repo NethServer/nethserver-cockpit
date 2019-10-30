@@ -33,7 +33,7 @@ SECRET_KEY=$2
 BUCKET=$3
 HOST=${4:-s3.amazonaws.com}
 
-date=$(date -R)
+date=$(TZ=UTC date -R)
 # Prepare file to upload
 tmp_file=$(mktemp)
 echo $RANMDOM > $tmp_file
