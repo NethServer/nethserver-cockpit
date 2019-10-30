@@ -56,6 +56,9 @@ sub set_backup
     }
     system("/sbin/e-smith/signal-event -j nethserver-backup-data-save $args");
     if ($? > 0) {
+        # rollback: delete backup record
+        my $b = $db->get($name);
+        $b->delete();
         error();
     } else {
         success();
