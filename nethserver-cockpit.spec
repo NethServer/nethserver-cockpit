@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.2.0
+Version: 1.2.1
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Thu Oct 31 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.2.1-1
+- Cockpit backup: remove record from db if failed - Bug NethServer/dev#5882
+
 * Mon Oct 28 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.2.0-1
 - Cockpit: add missing validation labels - Bug Nethserver/dev#5884
 - Cockpit: add missing validation labels - Bug NethServer/dev#5884
