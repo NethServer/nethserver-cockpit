@@ -84,6 +84,21 @@ function check_network_config($data, $exclude = "") {
         $v->declareParameter('gateway', Validate::IPv4_OR_EMPTY);
         used_ip($data['ipaddr'], $exclude);
     }
+
+    check_nslabel($data);
+}
+
+function check_nslabel($data) {
+    global $v;
+
+    if (isset($data['nslabel'])) {
+        # Spaces not allowed, maximum 20 characters
+        $pos = strpos($data['nslabel'], " ");
+
+        if ($pos !== false || strlen($data['nslabel']) > 20) {
+            $v->addValidationError('nslabel', 'invalid_nslabel');
+        }
+    }
 }
 
 function check_devices($devices, $current = array()) {
@@ -119,7 +134,7 @@ function list_current_devices($virtual) {
 
 $data = readInput();
 $action = $data['action'];
-$host = $data['host'];
+$host = @$data['host'];
 
 $v = new LegacyValidator($data);
 $db = new EsmithDatabase('networks');
@@ -171,14 +186,6 @@ if ($action == 'create-alias') {
     $exclude = $data['devices'][0];
     check_network_config($data, $exclude);
 
-    if (isset($data['nslabel'])) {
-        # Spaces not allowed, maximum 20 characters
-        $pos = strpos($data['nslabel'], " ");
-
-        if ($pos !== false || strlen($data['nslabel']) > 20) {
-            $v->addValidationError('nslabel', 'invalid_nslabel');
-        }
-    }
 
 } else if ($action == 'create-vlan') {
 
@@ -197,15 +204,6 @@ if ($action == 'create-alias') {
     }
     check_network_config($data);
 
-    if (isset($data['nslabel'])) {
-        # Spaces not allowed, maximum 20 characters
-        $pos = strpos($data['nslabel'], " ");
-
-        if ($pos !== false || strlen($data['nslabel']) > 20) {
-            $v->addValidationError('nslabel', 'invalid_nslabel');
-        }
-    }
-
 } else if ($action == 'create-bond') {
 
     if ($data['BondOptMode'] < 0 || $data['BondOptMode'] > 6) {
@@ -213,15 +211,6 @@ if ($action == 'create-alias') {
     }
     check_devices($data['devices']);
     check_network_config($data);
-
-    if (isset($data['nslabel'])) {
-        # Spaces not allowed, maximum 20 characters
-        $pos = strpos($data['nslabel'], " ");
-
-        if ($pos !== false || strlen($data['nslabel']) > 20) {
-            $v->addValidationError('nslabel', 'invalid_nslabel');
-        }
-    }
 
 } else if ($action == 'change-properties') {
 
