@@ -2402,6 +2402,10 @@ export default {
         case "usb":
           this.wizard.how.choice = "rsync";
           break;
+        case "b2":
+        case "s3":
+          this.wizard.how.choice = "restic";
+          break;
       }
       this.getUSBDevices();
     },
