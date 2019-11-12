@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.2.1
+Version: 1.2.2
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,10 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Nov 12 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.2.2-1
+- Cockpit: vlan parameters without a role are not displayed - Bug Nethserver/dev#5895
+- Cockpit: network label can't contain spaces - Bug NethServer/dev#5893
+
 * Thu Oct 31 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.2.1-1
 - Cockpit backup: remove record from db if failed - Bug NethServer/dev#5882
 
