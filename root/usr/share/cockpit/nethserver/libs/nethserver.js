@@ -24,7 +24,11 @@ nethserver = {
         var process = cockpit.spawn(args);
 
         if (input) {
-            process.input(JSON.stringify(input))
+            var data = JSON.stringify(input)
+            for (var i = 0; i < data.length; i += 65536) {
+                process.input(data.substr(i, 65536), true);
+            }
+            process.input() // send EOF
         }
 
         var command = (input ? " echo '" + JSON.stringify(input) + "' | " : "") + args.join(' ') + " | jq"
