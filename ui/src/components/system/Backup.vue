@@ -407,6 +407,14 @@
                   />
                 </div>
               </div>
+              <div
+                v-if="currentConfigBackup.oversize"
+                class="alert alert-warning alert-dismissable"
+              >
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>{{$t('warning')}}:</strong>
+                {{$t('backup.oversize_max_128')}}.
+              </div>
               <div class="advanced">
                 <span class="display-inline-block"></span>
                 <div class="divider divider-advanced"></div>
@@ -452,14 +460,15 @@
                   />
                 </div>
               </div>
+              <p class="divider"></p>
               <div class="form-group">
                 <label
                   class="col-sm-4 control-label"
                   for="textInput-modal-markup"
-                >{{$t('backup.interface_remap')}}</label>
+                >{{$t('backup.check_configuration')}}</label>
                 <div class="col-sm-4">
                   <button
-                    :disabled="(currentConfigBackup.restoreURL.length == 0 && currentConfigBackup.restoreFile.length == 0 && currentConfigBackup.restoreBackup.length == 0) || currentConfigBackup.isChecking"
+                    :disabled="currentConfigBackup.oversize || (currentConfigBackup.restoreURL.length == 0 && currentConfigBackup.restoreFile.length == 0 && currentConfigBackup.restoreBackup.length == 0) || currentConfigBackup.isChecking"
                     @click="checkConfiguration()"
                     type="button"
                     class="btn btn-primary"
@@ -469,17 +478,40 @@
                   <div class="spinner"></div>
                 </div>
               </div>
-              <div v-if="currentConfigBackup.remap" class="advanced">
+              <div
+                v-if="currentConfigBackup.errorMessage"
+                class="alert alert-danger alert-dismissable"
+              >
+                <span class="pficon pficon-error-circle-o"></span>
+                <strong>{{$t('error')}}:</strong>
+                {{$t('backup.'+currentConfigBackup.errorMessage)}}.
+              </div>
+              <div v-if="!currentConfigBackup.isValid" class="advanced">
+                <span>{{$t('backup.register_system')}}</span>
+                <div class="divider divider-advanced"></div>
+              </div>
+              <div v-if="!currentConfigBackup.isValid" class="alert alert-danger alert-dismissable">
+                <span class="pficon pficon-error-circle-o"></span>
+                <strong>{{$t('error')}}:</strong>
+                {{$t('backup.register_system_desc')}}.
+                <a
+                  href="#/subscription"
+                >{{$t('backup.register_now')}}</a>
+              </div>
+              <div v-if="currentConfigBackup.remap && currentConfigBackup.isValid" class="advanced">
                 <span>{{$t('backup.remap_interface_config')}}</span>
                 <div class="divider divider-advanced"></div>
               </div>
-              <div v-if="currentConfigBackup.remap" class="alert alert-warning alert-dismissable">
+              <div
+                v-if="currentConfigBackup.remap && currentConfigBackup.isValid"
+                class="alert alert-warning alert-dismissable"
+              >
                 <span class="pficon pficon-warning-triangle-o"></span>
                 <strong>{{$t('warning')}}:</strong>
                 {{$t('backup.during_remap_warning')}}.
               </div>
               <div
-                v-if="currentConfigBackup.remap"
+                v-if="currentConfigBackup.remap && currentConfigBackup.isValid"
                 v-for="(o, ok) in currentConfigBackup.remapInterfaces.old"
                 v-bind:key="ok"
                 class="form-group"
@@ -507,7 +539,7 @@
                     v-model="o.newInt"
                     class="combobox form-control"
                   >
-                    <option value="">-</option>
+                    <option value>-</option>
                     <option
                       v-for="(n, nk) in currentConfigBackup.remapInterfaces.new"
                       v-bind:key="nk"
@@ -2587,6 +2619,9 @@ export default {
         restoreInstallPackages: true,
         remapCalled: false,
         remap: false,
+        isValid: true,
+        errorMessage: false,
+        oversize: false,
         remapInterfaces: {
           old: [],
           new: []
@@ -2606,6 +2641,9 @@ export default {
       var context = this;
       this.getBase64(event.target.files[0], function(resp) {
         context.currentConfigBackup.restoreFile = resp.split(",")[1];
+        context.currentConfigBackup.oversize =
+          (parseInt(context.currentConfigBackup.restoreFile.length) * 3) / 4 >
+          120000;
       });
     },
     getBackupStatus() {
@@ -2822,10 +2860,11 @@ export default {
       }
 
       context.currentConfigBackup.isChecking = true;
+      context.currentConfigBackup.oversize = false;
       context.exec(
         ["system-backup/read"],
         {
-          action: "remapping-backup-config",
+          action: "check-backup-config",
           mode: context.currentConfigBackup.restoreMode,
           data: data
         },
@@ -2837,18 +2876,26 @@ export default {
             console.error(e);
           }
           context.currentConfigBackup.isChecking = false;
-          context.currentConfigBackup.remapCalled = true;
+          context.currentConfigBackup.remapCalled = success.valid == 1;
           context.currentConfigBackup.remap = success.remap;
           context.currentConfigBackup.remapInterfaces.old =
             success.current || [];
           context.currentConfigBackup.remapInterfaces.new =
             success.restore || [];
+          context.currentConfigBackup.isValid = success.valid == 1;
+          context.currentConfigBackup.errorMessage = false;
         },
-        function(error) {
+        function(error, data) {
           console.error(error);
+          try {
+            data = JSON.parse(data);
+          } catch (e) {
+            console.error(e);
+          }
           context.currentConfigBackup.isChecking = false;
-          context.currentConfigBackup.remapCalled = true;
+          context.currentConfigBackup.remapCalled = false;
           context.currentConfigBackup.remap = false;
+          context.currentConfigBackup.errorMessage = data.message;
         }
       );
     },
@@ -2906,7 +2953,9 @@ export default {
       );
     },
     setRemapping(oldInt) {
-      this.currentConfigBackup.remapNew[oldInt.newInt] = oldInt.name;
+      if (oldInt.newInt.length > 0) {
+        this.currentConfigBackup.remapNew[oldInt.newInt] = oldInt.name;
+      }
     },
     configureConfigBackup() {
       var context = this;

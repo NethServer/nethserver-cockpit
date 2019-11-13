@@ -285,9 +285,13 @@ if($cmd eq 'backup-info') {
     }
 
     my $out = `/usr/libexec/nethserver/api/system-backup/need-remap $tmp_file`;
-    unlink($tmp_file);
+    if ($? > 0) {
+        unlink($tmp_file);
+        error("InvalidBackup", "invalid_backup_format");
+    }
     my $ret = decode_json($out);
-    system("/usr/libexec/nethserver/restore-config-check-registration");
+    system("/usr/libexec/nethserver/restore-config-check-registration $tmp_file");
+    unlink($tmp_file);
     $ret->{'valid'} = ($? > 0) ? 0 : 1;
 
     print encode_json($ret);

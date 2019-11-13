@@ -98,11 +98,33 @@ if ($ret->{'remap'}) {
     my $ndb = esmith::NetworksDB->open_ro();
     foreach (@available_interfaces) {
         my $i = $ndb->get($_) || next;
+        my $bootproto = $i->prop('bootproto') || '';
+        my $ipaddr = $i->prop('ipaddr') || uc($bootproto);
+        my $role = $i->prop('role') || '';
+        my $nslabel = $i->prop('nslabel') || '';
+        my $parent = undef;
+        if ($role eq 'bridged') {
+            $parent = $ndb->get($i->prop('bridge'))
+        }
+        if ($role eq 'slave') {
+            $parent = $ndb->get($i->prop('master'));
+        }
+
+        if ($parent) {
+            $ipaddr = $parent->prop('ipaddr') || uc($parent->prop('bootproto'));
+            $ipaddr .= " - ".$parent->key;
+            $role = $parent->prop('role') || '';
+            $nslabel = $parent->prop('nslabel') || '';
+        }
+        if ($role eq '') {
+            $ipaddr = '';
+            $nslabel = '';
+        }
         push(@current, {
                 "name" => $i->key,
-                "nslabel" => $i->prop('nslabel') || '',
-                "ipaddr" => $i->prop('ipaddr') || '',
-                "role" => $i->prop('role') || '',
+                "nslabel" => $nslabel,
+                "ipaddr" => $ipaddr,
+                "role" => $role,
             });
 
     }
