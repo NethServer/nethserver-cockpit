@@ -92,7 +92,7 @@
                     type="text"
                     v-model="newDns.name"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="newDns.errors.name.hasError"
                     class="help-block"
@@ -105,7 +105,7 @@
                   for="textInput-modal-markup"
                 >{{$t('dns.ip_address')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="newDns.props.IpAddress" class="form-control">
+                  <input required type="text" v-model="newDns.props.IpAddress" class="form-control" />
                   <span
                     v-if="newDns.errors.IpAddress.hasError"
                     class="help-block"
@@ -118,7 +118,7 @@
                   for="textInput-modal-markup"
                 >{{$t('dns.description')}}</label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="newDns.props.Description" class="form-control">
+                  <input type="text" v-model="newDns.props.Description" class="form-control" />
                   <span
                     v-if="newDns.errors.Description.hasError"
                     class="help-block"
@@ -141,7 +141,7 @@
                     :value="newDns.props.WildcardMode == 'enabled'"
                     v-model="newDns.props.WildcardMode"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="newDns.errors.WildcardMode.hasError"
                     class="help-block"
@@ -168,6 +168,11 @@
           </div>
           <form class="form-horizontal" v-on:submit.prevent="deleteDNS(currentDns)">
             <div class="modal-body">
+              <div v-show="currentDns.isError" class="alert alert-warning alert-dismissable">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>{{$t('warning')}}.</strong>
+                {{$t('validation.'+currentDns.isError)}}.
+              </div>
               <div class="form-group">
                 <label
                   class="col-sm-3 control-label"
@@ -474,34 +479,55 @@ export default {
     },
     openDeleteDNS(host) {
       this.currentDns = Object.assign({}, host);
+      this.currentDns.isError = null;
       $("#deleteDNSModal").modal("show");
     },
     deleteDNS(host) {
       var context = this;
 
-      $("#deleteDNSModal").modal("hide");
-      context.exec(
-        ["system-hosts/delete"],
+      nethserver.exec(
+        ["nethserver-firewall-base/objects/validate"],
         {
-          name: host.name
+          name: host.name,
+          action: "delete-host"
         },
-        function(stream) {
-          console.info("hosts", stream);
-        },
+        null,
         function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "dns.host_delete_ok"
-          );
+          $("#deleteDNSModal").modal("hide");
+          context.exec(
+            ["system-hosts/delete"],
+            {
+              name: host.name
+            },
+            function(stream) {
+              console.info("hosts", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "dns.host_delete_ok"
+              );
 
-          // get hosts
-          context.getDns();
+              // get hosts
+              context.getDns();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "dns.host_delete_error"
+              );
+            }
+          );
         },
         function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "dns.host_delete_error"
-          );
+          console.error(error, data);
+          try {
+            var errorData = JSON.parse(data);
+            context.currentDns.isError = errorData.attributes[0].error;
+            context.$forceUpdate();
+          } catch (e) {
+            console.error(e);
+          }
         }
       );
     }

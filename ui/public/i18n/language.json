@@ -1064,7 +1064,8 @@
     "traceroute_validator_valid_ipV4Address": "Invalid IPv4 address or hostname, it must be something like '10.0.0.1' or 'nethserver.org'",
     "ping_validator_valid_ipV4Address": "Invalid IPv4 address or hostname, it must be something like '10.0.0.1' or 'nethserver.org'",
     "nslookup_validator_valid_ipV4Address": "Invalid IPv4 address, it must be something like '10.0.0.1'",
-    "nslookup_validator_valid_hostname_fqdn_1_9223372036854775807": "Invalid fully qualified domain name, it must be something like 'domain.org'"
+    "nslookup_validator_valid_hostname_fqdn_1_9223372036854775807": "Invalid fully qualified domain name, it must be something like 'domain.org'",
+    "host_not_removable": "This host can't be removed because it is in use"
   },
   "docs": {
     "more_info_about": "More info about",
