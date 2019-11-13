@@ -273,6 +273,7 @@ if($cmd eq 'backup-info') {
 } elsif ($cmd eq 'check-backup-config') {
 
     my $tmp_file = "/tmp/cockpit-temp-backup-config.tar.xz";
+    my $tmp_file_64 = "$tmp_file.b64";
     my $data = $input->{'data'};
     my $mode = $input->{'mode'};
 
@@ -281,17 +282,21 @@ if($cmd eq 'backup-info') {
     } elsif ($mode eq 'backup') {
         system("/bin/cp /var/lib/nethserver/backup/history/$data.tar.xz $tmp_file");
     } elsif ($mode eq 'file') {
-        system("echo $data | base64 -d > $tmp_file");
+        open(FH, '>', $tmp_file_64) or exit 1;
+        print FH $data;
+        close F;
+
+        system("base64 -d $tmp_file_64 > $tmp_file");
     }
 
     my $out = `/usr/libexec/nethserver/api/system-backup/need-remap $tmp_file`;
     if ($? > 0) {
-        unlink($tmp_file);
+        unlink($tmp_file, $tmp_file_64);
         error("InvalidBackup", "invalid_backup_format");
     }
     my $ret = decode_json($out);
     system("/usr/libexec/nethserver/restore-config-check-registration $tmp_file");
-    unlink($tmp_file);
+    unlink($tmp_file, $tmp_file_64);
     $ret->{'valid'} = ($? > 0) ? 0 : 1;
 
     print encode_json($ret);
