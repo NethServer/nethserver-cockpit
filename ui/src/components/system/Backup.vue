@@ -36,7 +36,6 @@
             class="btn btn-default right"
           >{{$t('backup.configure')}}</button>
           <button
-            :disabled="backupConfigurations.length == 0"
             @click="openRestoreConfig()"
             class="btn btn-default right panel-icon"
           >{{$t('backup.restore')}}</button>
@@ -351,7 +350,6 @@
               </div>
               <div class="form-group">
                 <input
-                  required
                   class="col-xs-2 col-sm-4 control-label"
                   type="radio"
                   id="restoreURL-1"
@@ -364,7 +362,7 @@
                 >{{$t('backup.from_url')}}</label>
                 <div class="col-sm-6">
                   <input
-                    :required="currentConfigBackup.restoreMode == 'url'"
+                    :required="currentConfigBackup.restoreMode == 'url' ? 'true' : 'false'"
                     :disabled="currentConfigBackup.restoreMode != 'url'"
                     type="url"
                     v-model="currentConfigBackup.restoreURL"
@@ -379,7 +377,6 @@
               </div>
               <div class="form-group">
                 <input
-                  required
                   class="col-xs-2 col-sm-4 control-label"
                   type="radio"
                   id="restoreFile-1"
@@ -399,7 +396,7 @@
                     {{$t('backup.choose_file')}}
                   </label>
                   <input
-                    :required="currentConfigBackup.restoreMode == 'file'"
+                    :required="currentConfigBackup.restoreMode == 'file' ? 'true' : 'false'"
                     :disabled="currentConfigBackup.restoreMode != 'file'"
                     class="inputfile"
                     @change="onChangeInput($event)"
@@ -416,7 +413,6 @@
               </div>
               <div class="form-group">
                 <input
-                  required
                   class="col-xs-2 col-sm-4 control-label"
                   type="radio"
                   id="restoreBackup-1"
@@ -429,7 +425,7 @@
                 >{{$t('backup.from_backup')}}</label>
                 <div class="col-sm-6">
                   <select
-                    :required="currentConfigBackup.restoreMode == 'backup'"
+                    :required="currentConfigBackup.restoreMode == 'backup' ? 'true' : 'false'"
                     :disabled="currentConfigBackup.restoreMode != 'backup'"
                     v-model="currentConfigBackup.restoreBackup"
                     class="combobox form-control"
@@ -495,7 +491,7 @@
                       <span v-if="o.nslabel">({{o.nslabel}})</span>
                     </span>
                     <br />
-                    {{o.ipaddr}}
+                    {{o.ipaddr || '-'}}
                     <br />
                     {{o.role == 'pppoe' ? 'PPPoE' : o.role | capitalize}}
                   </label>
@@ -511,6 +507,7 @@
                     v-model="o.newInt"
                     class="combobox form-control"
                   >
+                    <option value="">-</option>
                     <option
                       v-for="(n, nk) in currentConfigBackup.remapInterfaces.new"
                       v-bind:key="nk"

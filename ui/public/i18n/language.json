@@ -175,7 +175,7 @@
     "data_list": "Data list",
     "last_backup_status": "Last backup status",
     "backup_configured": "Backups configured",
-    "choose_file": "Choose file (*.tar.gz)",
+    "choose_file": "Choose file (*.tar.xz)",
     "automatic_backups_keep": "Automatic backups to keep (number)",
     "enable": "Enable",
     "disable": "Disable",
