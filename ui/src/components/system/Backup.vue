@@ -407,14 +407,6 @@
                   />
                 </div>
               </div>
-              <div
-                v-if="currentConfigBackup.oversize"
-                class="alert alert-warning alert-dismissable"
-              >
-                <span class="pficon pficon-warning-triangle-o"></span>
-                <strong>{{$t('warning')}}:</strong>
-                {{$t('backup.oversize_max_128')}}.
-              </div>
               <div class="advanced">
                 <span class="display-inline-block"></span>
                 <div class="divider divider-advanced"></div>
@@ -468,7 +460,7 @@
                 >{{$t('backup.check_configuration')}}</label>
                 <div class="col-sm-4">
                   <button
-                    :disabled="currentConfigBackup.oversize || (currentConfigBackup.restoreURL.length == 0 && currentConfigBackup.restoreFile.length == 0 && currentConfigBackup.restoreBackup.length == 0) || currentConfigBackup.isChecking"
+                    :disabled="(currentConfigBackup.restoreURL.length == 0 && currentConfigBackup.restoreFile.length == 0 && currentConfigBackup.restoreBackup.length == 0) || currentConfigBackup.isChecking"
                     @click="checkConfiguration()"
                     type="button"
                     class="btn btn-primary"
@@ -2621,7 +2613,6 @@ export default {
         remap: false,
         isValid: true,
         errorMessage: false,
-        oversize: false,
         remapInterfaces: {
           old: [],
           new: []
@@ -2641,9 +2632,6 @@ export default {
       var context = this;
       this.getBase64(event.target.files[0], function(resp) {
         context.currentConfigBackup.restoreFile = resp.split(",")[1];
-        context.currentConfigBackup.oversize =
-          (parseInt(context.currentConfigBackup.restoreFile.length) * 3) / 4 >
-          120000;
       });
     },
     getBackupStatus() {
@@ -2860,7 +2848,6 @@ export default {
       }
 
       context.currentConfigBackup.isChecking = true;
-      context.currentConfigBackup.oversize = false;
       context.exec(
         ["system-backup/read"],
         {
