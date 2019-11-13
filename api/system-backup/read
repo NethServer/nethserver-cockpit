@@ -270,7 +270,7 @@ if($cmd eq 'backup-info') {
         close $fh;
     }
     print encode_json($ret);
-} elsif ($cmd eq 'remapping-backup-config') {
+} elsif ($cmd eq 'check-backup-config') {
 
     my $tmp_file = "/tmp/cockpit-temp-backup-config.tar.xz";
     my $data = $input->{'data'};
@@ -284,8 +284,13 @@ if($cmd eq 'backup-info') {
         system("echo $data | base64 -d > $tmp_file");
     }
 
-    system("/usr/libexec/nethserver/api/system-backup/need-remap $tmp_file");
+    my $out = `/usr/libexec/nethserver/api/system-backup/need-remap $tmp_file`;
     unlink($tmp_file);
+    my $ret = decode_json($out);
+    system("/usr/libexec/nethserver/restore-config-check-registration");
+    $ret->{'valid'} = ($? > 0) ? 0 : 1;
+
+    print encode_json($ret);
 
 } else {
     error();

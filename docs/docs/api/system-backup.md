@@ -13,7 +13,7 @@ Valid actions:
 - `list-disks`
 - `last-log`
 - `running-info`
-- `remapping-backup-config`
+- `check-backup-config`
 
 Example:
 ```json
@@ -68,9 +68,10 @@ Example:
 }
 ```
 
-#### remapping-backup-config
+#### check-backup-config
 
-Check if the backup to be restored needs network remapping.
+Check if the backup to be restored needs network remapping and if the machine must be register
+before performing the restore.
 
 The `data` backup can contain multiple information based on the `mode` field.
 The `mode` field can be:
@@ -257,11 +258,12 @@ Example:
 ```
 
 
-#### remapping-backup-config
+#### check-backup-config
 
 The `remap` field is set to `1` if remap is needed, `0` otherwise.
 The `current` field contains the list of ethernet interfaces present inside the system,
 while `restore` field contains the list of ethernet interfaces from the backup.
+The `valid` field is set to `1` if the machine doesn't require registration, `0` otherwise.
 
 Example:
 ```json
@@ -282,7 +284,8 @@ Example:
       "role": "green",
       "ipaddr": "1.2.3.4"
     }
-  ]
+  ],
+  valid: 1
 }
 ```
 
