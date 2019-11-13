@@ -313,6 +313,14 @@
           </div>
           <form class="form-horizontal" v-on:submit.prevent="deleteReservation(currentReservation)">
             <div class="modal-body">
+              <div
+                v-show="currentReservation.isError"
+                class="alert alert-warning alert-dismissable"
+              >
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>{{$t('warning')}}.</strong>
+                {{$t('validation.'+currentReservation.isError)}}.
+              </div>
               <div class="form-group">
                 <label
                   class="col-sm-3 control-label"
@@ -1191,35 +1199,56 @@ export default {
     },
     openDeleteReservation(ipres) {
       this.currentReservation = Object.assign({}, ipres);
+      this.currentReservation.isError = null;
       $("#deleteReservationModal").modal("show");
     },
     deleteReservation(ipres) {
       var context = this;
 
-      $("#deleteReservationModal").modal("hide");
-      context.exec(
-        ["system-dhcp/delete"],
+      nethserver.exec(
+        ["nethserver-firewall-base/objects/validate"],
         {
           name: ipres.name,
-          action: "delete-reservation"
+          action: "delete-host"
         },
-        function(stream) {
-          console.info("ip-reservation-delete", stream);
-        },
+        null,
         function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "dhcp.ip_reservation_delete_ok"
-          );
+          $("#deleteReservationModal").modal("hide");
+          context.exec(
+            ["system-dhcp/delete"],
+            {
+              name: ipres.name,
+              action: "delete-reservation"
+            },
+            function(stream) {
+              console.info("ip-reservation-delete", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "dhcp.ip_reservation_delete_ok"
+              );
 
-          // get reservations
-          context.getReservations();
+              // get reservations
+              context.getReservations();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "dhcp.ip_reservation_delete_error"
+              );
+            }
+          );
         },
         function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "dhcp.ip_reservation_delete_error"
-          );
+          console.error(error, data);
+          try {
+            var errorData = JSON.parse(data);
+            context.currentReservation.isError = errorData.attributes[0].error;
+            context.$forceUpdate();
+          } catch (e) {
+            console.error(e);
+          }
         }
       );
     }
