@@ -92,7 +92,7 @@
                     type="text"
                     v-model="newDns.name"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="newDns.errors.name.hasError"
                     class="help-block"
@@ -105,7 +105,7 @@
                   for="textInput-modal-markup"
                 >{{$t('dns.ip_address')}}</label>
                 <div class="col-sm-9">
-                  <input required type="text" v-model="newDns.props.IpAddress" class="form-control">
+                  <input required type="text" v-model="newDns.props.IpAddress" class="form-control" />
                   <span
                     v-if="newDns.errors.IpAddress.hasError"
                     class="help-block"
@@ -118,7 +118,7 @@
                   for="textInput-modal-markup"
                 >{{$t('dns.description')}}</label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="newDns.props.Description" class="form-control">
+                  <input type="text" v-model="newDns.props.Description" class="form-control" />
                   <span
                     v-if="newDns.errors.Description.hasError"
                     class="help-block"
@@ -141,7 +141,7 @@
                     :value="newDns.props.WildcardMode == 'enabled'"
                     v-model="newDns.props.WildcardMode"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="newDns.errors.WildcardMode.hasError"
                     class="help-block"

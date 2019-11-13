@@ -22,7 +22,10 @@
     <h3>{{$t('dhcp.interfaces')}}</h3>
     <div v-for="i in ranges" v-bind:key="i.name">
       <div class="row">
-        <h4 class="dhcp-int col-sm-2">{{i.name}} <span v-if="i.nslabel" class="gray">{{i.nslabel? ' - '+i.nslabel : ''}}</span></h4>
+        <h4 class="dhcp-int col-sm-2">
+          {{i.name}}
+          <span v-if="i.nslabel" class="gray">{{i.nslabel? ' - '+i.nslabel : ''}}</span>
+        </h4>
         <button
           @click="scanNetwork(i.name)"
           class="btn btn-primary span-right-margin-lg dhcp-mod-btn"
@@ -159,7 +162,7 @@
                     type="text"
                     v-model="newReservation.name"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="newReservation.errors.name.hasError"
                     class="help-block"
@@ -179,7 +182,7 @@
                     type="text"
                     v-model="newReservation.props.IpAddress"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="newReservation.errors.IpAddress.hasError"
                     class="help-block"
@@ -200,7 +203,7 @@
                     type="text"
                     v-model="newReservation.props.MacAddress"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="newReservation.errors.MacAddress.hasError"
                     class="help-block"
@@ -219,7 +222,7 @@
                     type="text"
                     v-model="newReservation.props.Description"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="newReservation.errors.Description.hasError"
                     class="help-block"
@@ -230,8 +233,18 @@
 
             <div class="modal-footer">
               <div v-if="newReservation.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
-              <button v-if="!view.isScanned" class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
-              <button v-if="view.isScanned" class="btn btn-default" type="button" @click="back2scanNetworkModal()">{{$t('cancel')}}</button>
+              <button
+                v-if="!view.isScanned"
+                class="btn btn-default"
+                type="button"
+                data-dismiss="modal"
+              >{{$t('cancel')}}</button>
+              <button
+                v-if="view.isScanned"
+                class="btn btn-default"
+                type="button"
+                @click="back2scanNetworkModal()"
+              >{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
             </div>
           </form>
@@ -243,58 +256,50 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">
-              {{$t('dhcp.Scanned_Network') + ' : '+ nic}}
-            </h4>
+            <h4 class="modal-title">{{$t('dhcp.Scanned_Network') + ' : '+ nic}}</h4>
             <div v-if="view.isScanning" class="spinner spinner-lg"></div>
           </div>
-            <div class="modal-body">
-              <vue-good-table
-                v-if="!view.isScanning"
-                :customRowsPerPageDropdown="[10,25,50,100]"
-                :perPage="10"
-                :columns="columnsScan"
-                :rows="rowsScan"
-                :lineNumbers="false"
-                :defaultSortBy="{field: 'ip', type: 'asc'}"
-                :globalSearch="true"
-                :paginate="true"
-                styleClass="table"
-                :nextText="tableLangsTexts.nextText"
-                :prevText="tableLangsTexts.prevText"
-                :rowsPerPageText="tableLangsTexts.rowsPerPageText"
-                :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
-                :ofText="tableLangsTexts.ofText"
-              >
-                <template slot="table-row" slot-scope="props">
-                  <td class="fancy">
-                      <strong>{{ props.row.ip}}</strong>
-                  </td>
-                  <td class="fancy">
-                    {{ props.row.mac}}
-                  </td>
-                  <td class="fancy">
-                    {{props.row.name}}
-                  </td>
-                  <td class="fancy">
-                    {{props.row.host}}
-                  </td>
-                  <td>
-                    <button
-                      :disabled="props.row.reserved"
-                      @click="addMacReservation(props.row)"
-                      class="btn btn-default btn-primary"
-                      >
-                      <span class="pficon pficon-network span-right-margin"></span>
-                      {{$t('dhcp.ip_reservation')}}
-                    </button>
-                  </td>
-                </template>
-              </vue-good-table>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
-            </div>
+          <div class="modal-body">
+            <vue-good-table
+              v-if="!view.isScanning"
+              :customRowsPerPageDropdown="[10,25,50,100]"
+              :perPage="10"
+              :columns="columnsScan"
+              :rows="rowsScan"
+              :lineNumbers="false"
+              :defaultSortBy="{field: 'ip', type: 'asc'}"
+              :globalSearch="true"
+              :paginate="true"
+              styleClass="table"
+              :nextText="tableLangsTexts.nextText"
+              :prevText="tableLangsTexts.prevText"
+              :rowsPerPageText="tableLangsTexts.rowsPerPageText"
+              :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
+              :ofText="tableLangsTexts.ofText"
+            >
+              <template slot="table-row" slot-scope="props">
+                <td class="fancy">
+                  <strong>{{ props.row.ip}}</strong>
+                </td>
+                <td class="fancy">{{ props.row.mac}}</td>
+                <td class="fancy">{{props.row.name}}</td>
+                <td class="fancy">{{props.row.host}}</td>
+                <td>
+                  <button
+                    :disabled="props.row.reserved"
+                    @click="addMacReservation(props.row)"
+                    class="btn btn-default btn-primary"
+                  >
+                    <span class="pficon pficon-network span-right-margin"></span>
+                    {{$t('dhcp.ip_reservation')}}
+                  </button>
+                </td>
+              </template>
+            </vue-good-table>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
+          </div>
         </div>
       </div>
     </div>
@@ -367,7 +372,7 @@
                     type="text"
                     v-model="currentRange.DhcpRangeStart"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="currentRange.errors.DhcpRangeStart.hasError"
                     class="help-block"
@@ -387,7 +392,7 @@
                     type="text"
                     v-model="currentRange.DhcpRangeEnd"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="currentRange.errors.DhcpRangeEnd.hasError"
                     class="help-block"
@@ -414,7 +419,7 @@
                   for="textInput-modal-markup"
                 >{{$t('dhcp.gateway_ip')}}</label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="currentRange.DhcpGatewayIP" class="form-control">
+                  <input type="text" v-model="currentRange.DhcpGatewayIP" class="form-control" />
                   <span
                     v-if="currentRange.errors.DhcpGatewayIP.hasError"
                     class="help-block"
@@ -430,7 +435,7 @@
                   for="textInput-modal-markup"
                 >{{$t('dhcp.lease_time')}}</label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="currentRange.DhcpLeaseTime" class="form-control">
+                  <input type="text" v-model="currentRange.DhcpLeaseTime" class="form-control" />
                   <span
                     v-if="currentRange.errors.DhcpLeaseTime.hasError"
                     class="help-block"
@@ -446,7 +451,7 @@
                   for="textInput-modal-markup"
                 >{{$t('dhcp.domain')}}</label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="currentRange.DhcpDomain" class="form-control">
+                  <input type="text" v-model="currentRange.DhcpDomain" class="form-control" />
                   <span
                     v-if="currentRange.errors.DhcpDomain.hasError"
                     class="help-block"
@@ -468,7 +473,7 @@
                   ></doc-info>
                 </label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="currentRange.DhcpDNS" class="form-control">
+                  <input type="text" v-model="currentRange.DhcpDNS" class="form-control" />
                   <span
                     v-if="currentRange.errors.DhcpDNS.hasError"
                     class="help-block"
@@ -490,7 +495,7 @@
                   ></doc-info>
                 </label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="currentRange.DhcpWINS" class="form-control">
+                  <input type="text" v-model="currentRange.DhcpWINS" class="form-control" />
                   <span
                     v-if="currentRange.errors.DhcpWINS.hasError"
                     class="help-block"
@@ -512,7 +517,7 @@
                   ></doc-info>
                 </label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="currentRange.DhcpNTP" class="form-control">
+                  <input type="text" v-model="currentRange.DhcpNTP" class="form-control" />
                   <span
                     v-if="currentRange.errors.DhcpNTP.hasError"
                     class="help-block"
@@ -534,7 +539,7 @@
                   ></doc-info>
                 </label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="currentRange.DhcpTFTP" class="form-control">
+                  <input type="text" v-model="currentRange.DhcpTFTP" class="form-control" />
                   <span
                     v-if="currentRange.errors.DhcpTFTP.hasError"
                     class="help-block"
@@ -686,7 +691,7 @@ export default {
       ],
       nic: "",
       rows: [],
-      rowsScan:[],
+      rowsScan: [],
       ranges: [],
       currentRange: this.initRange(),
       currentReservation: {},
@@ -1064,18 +1069,18 @@ export default {
                 );
 
                 if (!context.view.isScanned) {
-                    // get reservations
-                    context.getReservations();
+                  // get reservations
+                  context.getReservations();
                 } else {
                   context.getReservations();
                   //update the new modal values to the reservation we made
-                  for(var i=0; i <context.rowsScan.length; i++) {
-                      if ( ipres.props.MacAddress == context.rowsScan[i].mac) {
-                            context.rowsScan[i].name = ipres.props.Description;
-                            context.rowsScan[i].reserved = true;
-                            context.rowsScan[i].host = ipres.name;
-                            context.rowsScan[i].ip = ipres.props.IpAddress;
-                      }
+                  for (var i = 0; i < context.rowsScan.length; i++) {
+                    if (ipres.props.MacAddress == context.rowsScan[i].mac) {
+                      context.rowsScan[i].name = ipres.props.Description;
+                      context.rowsScan[i].reserved = true;
+                      context.rowsScan[i].host = ipres.name;
+                      context.rowsScan[i].ip = ipres.props.IpAddress;
+                    }
                   }
                   $("#scanNetworkModal").modal("show");
                 }
@@ -1161,7 +1166,6 @@ export default {
           context.view.isScanning = false;
           context.view.isScanned = true;
           context.rowsScan = success;
-
         },
         function(error) {
           console.error(error);
