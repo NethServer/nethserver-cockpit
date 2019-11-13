@@ -452,6 +452,7 @@
                   />
                 </div>
               </div>
+              <p class="divider"></p>
               <div class="form-group">
                 <label
                   class="col-sm-4 control-label"
@@ -469,17 +470,37 @@
                   <div class="spinner"></div>
                 </div>
               </div>
-              <div v-if="currentConfigBackup.remap" class="advanced">
+              <div v-if="currentConfigBackup.notFound" class="alert alert-danger alert-dismissable">
+                <span class="pficon pficon-error-circle-o"></span>
+                <strong>{{$t('error')}}:</strong>
+                {{$t('backup.not_found_invalid')}}.
+              </div>
+              <div v-if="!currentConfigBackup.isValid" class="advanced">
+                <span>{{$t('backup.register_system')}}</span>
+                <div class="divider divider-advanced"></div>
+              </div>
+              <div v-if="!currentConfigBackup.isValid" class="alert alert-danger alert-dismissable">
+                <span class="pficon pficon-error-circle-o"></span>
+                <strong>{{$t('error')}}:</strong>
+                {{$t('backup.register_system_desc')}}.
+                <a
+                  href="#/subscription"
+                >{{$t('backup.register_now')}}</a>
+              </div>
+              <div v-if="currentConfigBackup.remap && currentConfigBackup.isValid" class="advanced">
                 <span>{{$t('backup.remap_interface_config')}}</span>
                 <div class="divider divider-advanced"></div>
               </div>
-              <div v-if="currentConfigBackup.remap" class="alert alert-warning alert-dismissable">
+              <div
+                v-if="currentConfigBackup.remap && currentConfigBackup.isValid"
+                class="alert alert-warning alert-dismissable"
+              >
                 <span class="pficon pficon-warning-triangle-o"></span>
                 <strong>{{$t('warning')}}:</strong>
                 {{$t('backup.during_remap_warning')}}.
               </div>
               <div
-                v-if="currentConfigBackup.remap"
+                v-if="currentConfigBackup.remap && currentConfigBackup.isValid"
                 v-for="(o, ok) in currentConfigBackup.remapInterfaces.old"
                 v-bind:key="ok"
                 class="form-group"
@@ -507,7 +528,7 @@
                     v-model="o.newInt"
                     class="combobox form-control"
                   >
-                    <option value="">-</option>
+                    <option value>-</option>
                     <option
                       v-for="(n, nk) in currentConfigBackup.remapInterfaces.new"
                       v-bind:key="nk"
@@ -2587,6 +2608,8 @@ export default {
         restoreInstallPackages: true,
         remapCalled: false,
         remap: false,
+        isValid: true,
+        notFound: false,
         remapInterfaces: {
           old: [],
           new: []
@@ -2825,7 +2848,7 @@ export default {
       context.exec(
         ["system-backup/read"],
         {
-          action: "remapping-backup-config",
+          action: "check-backup-config",
           mode: context.currentConfigBackup.restoreMode,
           data: data
         },
@@ -2837,18 +2860,21 @@ export default {
             console.error(e);
           }
           context.currentConfigBackup.isChecking = false;
-          context.currentConfigBackup.remapCalled = true;
+          context.currentConfigBackup.remapCalled = success.valid == 1;
           context.currentConfigBackup.remap = success.remap;
           context.currentConfigBackup.remapInterfaces.old =
             success.current || [];
           context.currentConfigBackup.remapInterfaces.new =
             success.restore || [];
+          context.currentConfigBackup.isValid = success.valid == 1;
+          context.currentConfigBackup.notFound = false;
         },
         function(error) {
           console.error(error);
           context.currentConfigBackup.isChecking = false;
-          context.currentConfigBackup.remapCalled = true;
+          context.currentConfigBackup.remapCalled = false;
           context.currentConfigBackup.remap = false;
+          context.currentConfigBackup.notFound = true;
         }
       );
     },
@@ -2906,7 +2932,9 @@ export default {
       );
     },
     setRemapping(oldInt) {
-      this.currentConfigBackup.remapNew[oldInt.newInt] = oldInt.name;
+      if (oldInt.newInt.length > 0) {
+        this.currentConfigBackup.remapNew[oldInt.newInt] = oldInt.name;
+      }
     },
     configureConfigBackup() {
       var context = this;
