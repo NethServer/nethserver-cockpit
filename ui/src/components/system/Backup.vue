@@ -457,7 +457,7 @@
                 <label
                   class="col-sm-4 control-label"
                   for="textInput-modal-markup"
-                >{{$t('backup.interface_remap')}}</label>
+                >{{$t('backup.check_configuration')}}</label>
                 <div class="col-sm-4">
                   <button
                     :disabled="(currentConfigBackup.restoreURL.length == 0 && currentConfigBackup.restoreFile.length == 0 && currentConfigBackup.restoreBackup.length == 0) || currentConfigBackup.isChecking"
