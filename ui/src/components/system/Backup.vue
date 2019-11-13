@@ -470,10 +470,13 @@
                   <div class="spinner"></div>
                 </div>
               </div>
-              <div v-if="currentConfigBackup.notFound" class="alert alert-danger alert-dismissable">
+              <div
+                v-if="currentConfigBackup.errorMessage"
+                class="alert alert-danger alert-dismissable"
+              >
                 <span class="pficon pficon-error-circle-o"></span>
                 <strong>{{$t('error')}}:</strong>
-                {{$t('backup.not_found_invalid')}}.
+                {{$t('backup.'+currentConfigBackup.errorMessage)}}.
               </div>
               <div v-if="!currentConfigBackup.isValid" class="advanced">
                 <span>{{$t('backup.register_system')}}</span>
@@ -2609,7 +2612,7 @@ export default {
         remapCalled: false,
         remap: false,
         isValid: true,
-        notFound: false,
+        errorMessage: false,
         remapInterfaces: {
           old: [],
           new: []
@@ -2867,14 +2870,19 @@ export default {
           context.currentConfigBackup.remapInterfaces.new =
             success.restore || [];
           context.currentConfigBackup.isValid = success.valid == 1;
-          context.currentConfigBackup.notFound = false;
+          context.currentConfigBackup.errorMessage = false;
         },
-        function(error) {
+        function(error, data) {
           console.error(error);
+          try {
+            data = JSON.parse(data);
+          } catch (e) {
+            console.error(e);
+          }
           context.currentConfigBackup.isChecking = false;
           context.currentConfigBackup.remapCalled = false;
           context.currentConfigBackup.remap = false;
-          context.currentConfigBackup.notFound = true;
+          context.currentConfigBackup.errorMessage = data.message;
         }
       );
     },
