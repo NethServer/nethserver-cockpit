@@ -284,7 +284,7 @@ if($cmd eq 'backup-info') {
     } elsif ($mode eq 'file') {
         open(FH, '>', $tmp_file_64) or exit 1;
         print FH $data;
-        close F;
+        close FH;
 
         system("base64 -d $tmp_file_64 > $tmp_file");
     }
