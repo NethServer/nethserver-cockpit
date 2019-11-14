@@ -764,7 +764,10 @@
     "rotation_daily": "Daily",
     "rotation_weekly": "Weekly",
     "rotation_monthly": "Monthly",
-    "log_rotate": "Rotate logs"
+    "log_rotate": "Rotate logs",
+    "test_mail": "Test mail",
+    "mail_sent_ok": "Mail sent successfully!",
+    "mail_sent_error": "Mail not sent."
   },
   "logs": {
     "title": "Logs"
