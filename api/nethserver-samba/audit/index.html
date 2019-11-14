@@ -1096,8 +1096,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#query" title="query" class="md-nav__link">
-    query
+  <a href="#file-access" title="file-access" class="md-nav__link">
+    file-access
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-access-details" title="file-access-details" class="md-nav__link">
+    file-access-details
   </a>
   
 </li>
@@ -1116,8 +1123,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#query_1" title="query" class="md-nav__link">
-    query
+  <a href="#file-access_1" title="file-access" class="md-nav__link">
+    file-access
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-access-details_1" title="file-access-details" class="md-nav__link">
+    file-access-details
   </a>
   
 </li>
@@ -1135,13 +1149,6 @@
         <li class="md-nav__item">
   <a href="#update" title="update" class="md-nav__link">
     update
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#delete" title="delete" class="md-nav__link">
-    delete
   </a>
   
 </li>
@@ -1828,8 +1835,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#query" title="query" class="md-nav__link">
-    query
+  <a href="#file-access" title="file-access" class="md-nav__link">
+    file-access
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-access-details" title="file-access-details" class="md-nav__link">
+    file-access-details
   </a>
   
 </li>
@@ -1848,8 +1862,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#query_1" title="query" class="md-nav__link">
-    query
+  <a href="#file-access_1" title="file-access" class="md-nav__link">
+    file-access
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-access-details_1" title="file-access-details" class="md-nav__link">
+    file-access-details
   </a>
   
 </li>
@@ -1867,13 +1888,6 @@
         <li class="md-nav__item">
   <a href="#update" title="update" class="md-nav__link">
     update
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#delete" title="delete" class="md-nav__link">
-    delete
   </a>
   
 </li>
@@ -1901,63 +1915,70 @@
 <p>Display and manage Samba Audit logs.</p>
 <h2 id="read">read<a class="headerlink" href="#read" title="Permanent link">&para;</a></h2>
 <h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
-<p>The read API requires an <code>action</code> field.
-Valid actions are:</p>
+<p>It requires an <code>action</code> field. Available actions:</p>
 <ul>
-<li><code>query</code></li>
+<li><code>file-access</code></li>
+<li><code>file-access-details</code></li>
 </ul>
-<h4 id="query">query<a class="headerlink" href="#query" title="Permanent link">&para;</a></h4>
-<p>Execute a query inside the database with given filters.
-If no filter is given, all records are returned.</p>
-<p>Input example:</p>
+<h4 id="file-access">file-access<a class="headerlink" href="#file-access" title="Permanent link">&para;</a></h4>
+<p>Return the list of last actions for each user inside the database.</p>
+<p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;query&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;myuser&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;address&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;share&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;file-access&quot;</span><span class="p">,</span>
   <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;1546300800&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;1557360000&quot;</span>
+  <span class="nt">&quot;hostname&quot;</span><span class="p">:</span> <span class="s2">&quot;myhost.nethserver.org&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>If <code>message</code> is set, search for actions that match the given file path.</p>
+<h4 id="file-access-details">file-access-details<a class="headerlink" href="#file-access-details" title="Permanent link">&para;</a></h4>
+<p>Return the list of all operations for the given user on the given path.
+Operations results are limited to 500 entries.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;file-access-details&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;myuser@nethserver.org&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;share&quot;</span><span class="p">:</span> <span class="s2">&quot;server&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;w|readme.txt&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="mi">1570744800</span><span class="p">,</span>
+  <span class="nt">&quot;to&quot;</span><span class="p">:</span> <span class="mi">1570831140</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 
 
 <h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
-<h5 id="query_1">query<a class="headerlink" href="#query_1" title="Permanent link">&para;</a></h5>
+<h4 id="file-access_1">file-access<a class="headerlink" href="#file-access_1" title="Permanent link">&para;</a></h4>
+<p>Output example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;list&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;when&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-10-10 19:28:50&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;myuser@nethserver.org&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;share&quot;</span><span class="p">:</span> <span class="s2">&quot;share1&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;write&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;readme.txt&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;raw_arg&quot;</span><span class="p">:</span> <span class="s2">&quot;w|readne.txt&quot;</span>
+    <span class="p">},</span>
+    <span class="err">...</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;updated&quot;</span><span class="p">:</span> <span class="s2">&quot;1570937859&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;https://myserver.nethserver.org/43dggryttfghftuuunnhjju5654641a4b7cb233a&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="file-access-details_1">file-access-details<a class="headerlink" href="#file-access-details_1" title="Permanent link">&para;</a></h4>
 <p>Output example:</p>
 <div class="codehilite"><pre><span></span><span class="p">[</span>
   <span class="p">{</span>
-    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;17&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;when&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-05-08 15:13:05&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;share&quot;</span><span class="p">:</span> <span class="s2">&quot;iba1&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.22&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;giacomo@local.neth.eu&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;read&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;result&quot;</span><span class="p">:</span> <span class="s2">&quot;ok&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;test.log&quot;</span>
+    <span class="nt">&quot;when&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-10-11 00:30:10&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;write&quot;</span>
   <span class="p">},</span>
   <span class="p">{</span>
-    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;20&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;when&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-05-08 16:49:59&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;share&quot;</span><span class="p">:</span> <span class="s2">&quot;iba1&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.22&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;giacomo@local.neth.eu&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;write&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;result&quot;</span><span class="p">:</span> <span class="s2">&quot;ok&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;test.log&quot;</span>
-  <span class="p">},</span>
-  <span class="p">{</span>
-    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;21&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;when&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-05-08 16:50:05&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;share&quot;</span><span class="p">:</span> <span class="s2">&quot;iba1&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.22&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;giacomo@local.neth.eu&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;rename&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;result&quot;</span><span class="p">:</span> <span class="s2">&quot;ok&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;test.log -&gt; test2.log&quot;</span>
+    <span class="nt">&quot;when&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-10-11 12:30:14&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;unlink&quot;</span>
   <span class="p">}</span>
-  <span class="err">...</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -1965,15 +1986,6 @@ If no filter is given, all records are returned.</p>
 <h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
 <p>The update API parses <code>/var/log/smbaudit.log</code> log and insert records inside the database.</p>
 <p>No input is required.</p>
-<h2 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h2>
-<p>The delete API takes the same input from <code>read</code> API for the <code>query</code> action.
-Selected records are deleted instead of returned.</p>
-<p>Output example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;deleted&quot;</span><span class="p">:</span> <span class="mi">2</span>
-<span class="p">}</span>
-</pre></div>
                 
                   
                 

@@ -2242,19 +2242,22 @@
 <li><code>mac</code>: The mac address of the host </li>
 <li><code>name</code>:The vendor description of the host network interface</li>
 <li><code>reserved</code>: if true an IP reservation has been made in the DHCP server.</li>
+<li><code>host</code>: Display the hostname if an IP reservation has been made in the DHCP server, else set <code>null</code>.</li>
 </ul>
 <div class="codehilite"><pre><span></span><span class="p">[</span>
   <span class="p">{</span>
     <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.56.1&quot;</span><span class="p">,</span>
     <span class="nt">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;0a:00:27:00:00:00&quot;</span><span class="p">,</span>
     <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;(Unknown)&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;reserved&quot;</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="nt">&quot;reserved&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;plop.local&quot;</span>
   <span class="p">},</span>
   <span class="p">{</span>
     <span class="nt">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.56.2&quot;</span><span class="p">,</span>
     <span class="nt">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;08:00:27:f0:78:c1&quot;</span><span class="p">,</span>
     <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;PCS Systemtechnik GmbH&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;reserved&quot;</span><span class="p">:</span> <span class="kc">false</span>
+    <span class="nt">&quot;reserved&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;host&quot;</span><span class="p">:</span> <span class="kc">null</span>
   <span class="p">}</span>
 <span class="p">]</span>
 </pre></div>

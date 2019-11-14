@@ -1566,44 +1566,78 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ui-sections" title="UI sections" class="md-nav__link">
-    UI sections
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#roles" title="Roles" class="md-nav__link">
-    Roles
+  <a href="#architecture" title="Architecture" class="md-nav__link">
+    Architecture
   </a>
   
     <nav class="md-nav">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#web-routes" title="Web routes" class="md-nav__link">
-    Web routes
+  <a href="#ui-sections" title="UI sections" class="md-nav__link">
+    UI sections
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#apis" title="APIs" class="md-nav__link">
-    APIs
+  <a href="#api-scripts" title="API scripts" class="md-nav__link">
+    API scripts
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#default-roles" title="Default roles" class="md-nav__link">
-    Default roles
+  <a href="#default-authorizations" title="Default authorizations" class="md-nav__link">
+    Default authorizations
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#creating-new-roles" title="Creating new roles" class="md-nav__link">
-    Creating new roles
+  <a href="#delegation-storage" title="Delegation storage" class="md-nav__link">
+    Delegation storage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sudoers-configuration" title="sudoers configuration" class="md-nav__link">
+    sudoers configuration
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" title="How it works" class="md-nav__link">
+    How it works
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authorizations-vs-applications" title="Authorizations vs applications" class="md-nav__link">
+    Authorizations vs applications
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#development-hints" title="Development hints" class="md-nav__link">
+    Development hints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authorization-implementation" title="Authorization implementation" class="md-nav__link">
+    Authorization implementation
   </a>
   
 </li>
@@ -1789,44 +1823,78 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ui-sections" title="UI sections" class="md-nav__link">
-    UI sections
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#roles" title="Roles" class="md-nav__link">
-    Roles
+  <a href="#architecture" title="Architecture" class="md-nav__link">
+    Architecture
   </a>
   
     <nav class="md-nav">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#web-routes" title="Web routes" class="md-nav__link">
-    Web routes
+  <a href="#ui-sections" title="UI sections" class="md-nav__link">
+    UI sections
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#apis" title="APIs" class="md-nav__link">
-    APIs
+  <a href="#api-scripts" title="API scripts" class="md-nav__link">
+    API scripts
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#default-roles" title="Default roles" class="md-nav__link">
-    Default roles
+  <a href="#default-authorizations" title="Default authorizations" class="md-nav__link">
+    Default authorizations
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#creating-new-roles" title="Creating new roles" class="md-nav__link">
-    Creating new roles
+  <a href="#delegation-storage" title="Delegation storage" class="md-nav__link">
+    Delegation storage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sudoers-configuration" title="sudoers configuration" class="md-nav__link">
+    sudoers configuration
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" title="How it works" class="md-nav__link">
+    How it works
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authorizations-vs-applications" title="Authorizations vs applications" class="md-nav__link">
+    Authorizations vs applications
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#development-hints" title="Development hints" class="md-nav__link">
+    Development hints
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authorization-implementation" title="Authorization implementation" class="md-nav__link">
+    Authorization implementation
   </a>
   
 </li>
@@ -1856,22 +1924,27 @@
                 
                 
                 <h1 id="authorizations">Authorizations<a class="headerlink" href="#authorizations" title="Permanent link">&para;</a></h1>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
 <p>Cockpit allows the login of any system users with a valid shell, that is the user shell must listed inside <code>/etc/shells</code> file.</p>
-<p>The web interface can be profiled using two different methods:</p>
+<p>The web user interface (UI) can be profiled using two different methods:</p>
 <ul>
-<li>the left most menu containing the main sections like "System" and "Applications" is part of the Cockpit project,
-   and can be customized following the <a href="https://cockpit-project.org/guide/149/packages.html">upstream documentation</a></li>
-<li>the inner menu inside "System" or "Applications" can be customized using nethserver-cockpit <a href="#roles">roles</a>.</li>
+<li>
+<p>the left most menu containing the main sections like "System" and "Applications" is part of the Cockpit project,
+   and can be customized following the <a href="https://cockpit-project.org/guide/149/packages.html">upstream documentation</a></p>
+</li>
+<li>
+<p>the inner menu inside "System" or "Applications" can be customized as documented here</p>
+</li>
 </ul>
-<h2 id="ui-sections">UI sections<a class="headerlink" href="#ui-sections" title="Permanent link">&para;</a></h2>
+<h3 id="ui-sections">UI sections<a class="headerlink" href="#ui-sections" title="Permanent link">&para;</a></h3>
 <p>The UI is split into 2 main sections:</p>
 <ul>
 <li>
 <p><code>System</code>: contains all modules shipped with nethserver-cockpit and available on any installation.
   Modules inside the system section can be used to configure the server basic behavior which is common to all modules.
   Some examples of system modules can be: the hostname, DNS configuration, account providers and so on.
-  System modules are statically defined inside the <code>/etc/nethserver/cockpit/authorization/system-routes.json</code> and should
-  not be modified </p>
+  System modules are statically defined inside the <code>system-authorization/read</code> API and should
+  not be modified.</p>
 </li>
 <li>
 <p><code>Applications</code>: contains all modules shipped with extra RPM packages.
@@ -1879,82 +1952,185 @@
   Some examples of applications can be: the firewall module, nextcloud or the mail server.</p>
 </li>
 </ul>
-<p>A user can be granted access to specific applications or system modules.</p>
-<h2 id="roles">Roles<a class="headerlink" href="#roles" title="Permanent link">&para;</a></h2>
-<p>A role is composed by 2 parts:</p>
+<p>A group of users can be granted access to specific applications or system modules.</p>
+<h3 id="api-scripts">API scripts<a class="headerlink" href="#api-scripts" title="Permanent link">&para;</a></h3>
+<p>When accessing an application or a system module, the UI runs one or more
+API scripts to display and edit data. API scripts often require root
+privileges, so they are invoked with the <code>sudo</code> command.</p>
+<p>It is possible to inspect the sudo configuration for any user by running as 
+root a command like:</p>
+<div class="codehilite"><pre><span></span>sudo -ll -U john
+</pre></div>
+
+
+<p>If run without <code>-U</code> argument, <code>sudo</code> prints the configuration for the current
+user.</p>
+<p>API scripts are located under the <code>/usr/libexec/nethserver/api/</code> directory.</p>
+<h3 id="default-authorizations">Default authorizations<a class="headerlink" href="#default-authorizations" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p>The <code>root</code> user can read and write everything.</p>
+</li>
+<li>
+<p>The <code>admins</code> key in e-smith <code>configuration</code> DB defines the system admin
+    <strong>user</strong> and admins <strong>group</strong>. By default they are respectively <code>admin</code> and
+    <code>domain admins</code>. Designed admins are allowed to use any System module and any
+    installed Application, provided that the correct sudoers configuration is
+    shipped (read more about this later on this page).</p>
+</li>
+<li>
+<p>Only <code>root</code> is allowed to grant authorizations. Admins cannot grant or
+    modify authorizations on System modules and Applications for themselves or other
+    users.</p>
+</li>
+</ol>
+<h3 id="delegation-storage">Delegation storage<a class="headerlink" href="#delegation-storage" title="Permanent link">&para;</a></h3>
+<p>The association of groups with applications and system modules describes who can
+do what. It is stored in the <code>delegation</code> prop of the <code>cockpit.socket</code> key in
+the <code>configuration</code> e-smith DB.</p>
+<p>For instance the <code>delegation</code> prop value could be:</p>
+<div class="codehilite"><pre><span></span>[root@vm5 ~]# config getprop cockpit.socket delegation 
+g1:tls-policy:ssh:dns:nethserver-httpd,g2:nethserver-httpd
+</pre></div>
+
+
+<p>It states that</p>
 <ul>
-<li>web routes: a list of modules accessible by the logged user</li>
-<li>APIs: a list of underlay scripts executable by the logged user using <code>sudo</code></li>
+<li>
+<p>the group <code>g1</code> has access to <code>tls-policy</code>, <code>ssh</code> and <code>dns</code> system modules. It is
+  granted access also to the <code>nethserver-httpd</code> application.</p>
+</li>
+<li>
+<p>the group <code>g2</code> has access to the <code>nethserver-httpd</code> application.</p>
+</li>
 </ul>
-<h3 id="web-routes">Web routes<a class="headerlink" href="#web-routes" title="Permanent link">&para;</a></h3>
-<p>Each role must be defined inside <code>/etc/nethserver/cockpit/authorization/roles.json</code>.</p>
-<p>A role is defined by:</p>
+<p>The <code>delegation</code> property syntax is a comma-separated list of records. Each
+record is a colon-separated list of fields, where the first field identifies a
+group name, and the rest of the fields identify applications or system modules.</p>
+<h3 id="sudoers-configuration">sudoers configuration<a class="headerlink" href="#sudoers-configuration" title="Permanent link">&para;</a></h3>
+<p>The <code>delegation</code> prop value is translated to configuration for <code>sudo</code>, by expanding
+the <code>/etc/sudoers.d/55_nsapi_perms</code> template. The contents of that file uses
+other sudoers symbols (<code>Cmnd_Alias</code> commands lists), defined in <code>/etc/sudoers.d/50_nsapi</code>
+and (by convention) <code>/etc/sudoers.d/50_nsapi_*</code> files.</p>
+<p>Every time <code>delegation</code> changes or the sudoers configuration is altered (i.e. an
+application is installed/removed), the event <code>delegation-save</code> must be signaled.</p>
+<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
+<p>The UI runs the API script <code>system-authorizations/read</code> to know what UI routes
+(system modules and applications) are accessible to the currently logged in
+user.</p>
+<p><code>system-authorizations/read</code> calls <code>sudo -ll</code> to see what commands the currently
+logged in user can run. The listed script absolute paths are mapped to UI routes
+  with the following rules:</p>
 <ul>
-<li>a name, a unique identifier for the role; a groups with the same name must
-  exists inside the system</li>
-<li>an array of system modules inside the <code>system</code> key</li>
-<li>an array of applications inside the <code>applications</code></li>
+<li>
+<p>API dirs prefixed by <code>system-</code> define access to System modules. The API
+  implementation obtains the UI route by discarding the prefix.  A few
+  exceptions to this method exist and are handled by
+  <code>system-authorizations/read</code> itself.</p>
+</li>
+<li>
+<p>Access to System modules is granted if the current user can run at least one
+  <code>update</code> script under a given <code>system-</code> prefixed directory.</p>
+</li>
+<li>
+<p>Directories that have a prefix different from <code>system</code> are considered
+  application routes. Access to Applications is granted if the current user can
+  run at least one script under a given application directory.</p>
+</li>
 </ul>
-<p>Only listed modules will be accessible by the user, except
-"Dashboard", "Settings" and "About" modules which are accessible by all users.</p>
-<p>Role example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
-    <span class="err">...</span>
-    <span class="nt">&quot;managers&quot;</span><span class="p">:</span>
-    <span class="p">{</span>
-        <span class="nt">&quot;system&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s2">&quot;services&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;users-groups&quot;</span>
-        <span class="p">],</span>
-        <span class="nt">&quot;applications&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">]</span>
-    <span class="p">}</span>
-    <span class="err">...</span>
-<span class="p">}</span>
+<h2 id="authorizations-vs-applications">Authorizations vs applications<a class="headerlink" href="#authorizations-vs-applications" title="Permanent link">&para;</a></h2>
+<p>If an application does not ship a correct authorizations configuration only the
+<code>root</code> user can run it. Admins and delegated groups typically cannot see it in
+the UI menu, or hit against errors and weird behaviors.</p>
+<h3 id="development-hints">Development hints<a class="headerlink" href="#development-hints" title="Permanent link">&para;</a></h3>
+<p>The golden rule to observe during application development is:</p>
+<blockquote>
+<p>check the access for the <code>admin</code> user!</p>
+</blockquote>
+<p>That means doing the following things:</p>
+<ol>
+<li>
+<p>run <code>sudo -ll -U admin</code>, and verify that any API script required by the application is listed</p>
+</li>
+<li>
+<p>log in as <code>admin</code> and verify that the things still work</p>
+</li>
+<li>
+<p>check also for unauthorized access: the output from <code>sudo -ll -U notadmin</code>
+   <strong>must not list</strong> the application API scripts. After logging in, a non-admin 
+   user <strong>must not see</strong> the application in the UI</p>
+</li>
+</ol>
+<p>Validate the sudoers configuration with the following command:</p>
+<div class="codehilite"><pre><span></span># visudo -c
+/etc/sudoers: parsed OK
+...
+/etc/sudoers.d/50_nsapi: parsed OK
+/etc/sudoers.d/50_nsapi_nethserver_samba: parsed OK
+/etc/sudoers.d/55_nsapi_perms: parsed OK
 </pre></div>
 
 
-<h3 id="apis">APIs<a class="headerlink" href="#apis" title="Permanent link">&para;</a></h3>
-<p>When accessing a web page, the interface calls some system APIs to display and edit data inside pages.
-To grant a role to a user, create a system group named like the role itself.
-Then grant to the group the ability to execute APIs calls using <code>sudo</code> configuration.</p>
-<p>Please note also that each page could call multiple APIs.</p>
-<h3 id="default-roles">Default roles<a class="headerlink" href="#default-roles" title="Permanent link">&para;</a></h3>
-<p>The <code>root</code> user can always read and write everything, it can't be overridden.</p>
-<p>Pre-defined roles are:</p>
+<h3 id="authorization-implementation">Authorization implementation<a class="headerlink" href="#authorization-implementation" title="Permanent link">&para;</a></h3>
+<p>The application RPM must ship a correct sudoers configuration file. For instance
+the  <code>nethserver-samba</code> RPM/application has the following file for sudoers:</p>
+<div class="codehilite"><pre><span></span>/etc/sudoers.d/50_nsapi_nethserver_samba
+</pre></div>
+
+
+<p>Note that:</p>
 <ul>
-<li><code>admins</code>: same privileges as root, it can be customized</li>
-<li><code>managers</code>: access only user ad groups, services and disk-usage, it can be customized</li>
+<li>
+<p>The file must be owned by <code>root.root</code> and permissions must be <code>0440</code>
+  (ensure the RPM <code>.spec</code> file also knows it)</p>
+</li>
+<li>
+<p>The path prefix is <code>/etc/sudoers.d/</code>, required by sudoers configuration</p>
+</li>
+<li>
+<p>The file name prefix is <code>50_nsapi_</code>, required by our naming conventions to
+  group together similar files</p>
+</li>
+<li>
+<p>The file name contains the RPM and the application name, required by our naming conventions</p>
+</li>
+<li>
+<p>The <code>-</code> (minus) sign in the rest of the file name has been replaced by '_' (underscore)</p>
+</li>
 </ul>
-<p>To activate a role, create a group named like the role itself using the web interface
-or <code>groupadd</code> command, then add one or more user to it.</p>
-<h3 id="creating-new-roles">Creating new roles<a class="headerlink" href="#creating-new-roles" title="Permanent link">&para;</a></h3>
-<p>Follow these steps to create a new role.</p>
-<p>Add a new object inside the <code>roles.json</code> file. Example:</p>
-<div class="codehilite"><pre><span></span><span class="err">...</span>
-<span class="s2">&quot;auditors&quot;</span><span class="err">:</span>
-<span class="p">{</span>
-   <span class="nt">&quot;system&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;ssh&quot;</span> <span class="p">],</span>
-   <span class="nt">&quot;applications&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;nethserver-cgp&quot;</span> <span class="p">]</span>
-<span class="p">}</span>
-<span class="err">...</span>
+<p>The sudoers configuration file content declares a <code>Cmnd_Alias</code>, that is a named
+list of commands. </p>
+<p>The list name is important and <strong>must match</strong> the application name (the same used
+in <code>manifest.json</code>).</p>
+<div class="codehilite"><pre><span></span>Cmnd_Alias NSAPI_NETHSERVER_SAMBA = ...
 </pre></div>
 
 
-<p>Create a new group. Using the account provider:</p>
-<div class="codehilite"><pre><span></span>echo &#39;{&quot;action&quot;:&quot;group-create&quot;,&quot;name&quot;:&quot;auditors1&quot;}&#39; | /usr/libexec/nethserver/api/system-users/create
+<p>The list naming rules are:</p>
+<ol>
+<li>
+<p><code>NSAPI_</code> prefix</p>
+</li>
+<li>
+<p>Write the application name in capital letters</p>
+</li>
+<li>
+<p>Replace <code>-</code> (minus) with <code>_</code> (underscore)</p>
+</li>
+</ol>
+<p>The commands are listed using <code>,</code> (comma) as separator. It is possible to break
+a line with <code>\</code>. Refer to <code>man sudoers</code> for the complete syntax. To get an
+initial command list for your application run this command:</p>
+<div class="codehilite"><pre><span></span>find /usr/libexec/nethserver/api/nethserver-samba -type f -executable -printf &#39;    %p, \\\n&#39;
 </pre></div>
 
 
-<p>Configure sudo.</p>
-<p>Example, `visudo -f /etc/sudoers.d/30_cockpit_auditors:</p>
-<div class="codehilite"><pre><span></span>Cmnd_Alias MANAGER = /usr/libexec/nethserver/api/system-ssh/*
-
-%auditors ALL=NOPASSWD: MANAGER
-
-# server-manager does not require a tty
-Defaults:%managers !requiretty
+<p>Another important declaration stated by the sudoers configuration file is:</p>
+<div class="codehilite"><pre><span></span>Defaults!NSAPI_NETHSERVER_SAMBA !requiretty
 </pre></div>
+
+
+<p>This allows the UI to spawn the API scripts without TTY allocation.</p>
                 
                   
                 

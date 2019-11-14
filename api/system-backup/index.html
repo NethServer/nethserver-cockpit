@@ -476,8 +476,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#remapping-backup-config" title="remapping-backup-config" class="md-nav__link">
-    remapping-backup-config
+  <a href="#check-backup-config" title="check-backup-config" class="md-nav__link">
+    check-backup-config
   </a>
   
 </li>
@@ -524,8 +524,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#remapping-backup-config_1" title="remapping-backup-config" class="md-nav__link">
-    remapping-backup-config
+  <a href="#check-backup-config_1" title="check-backup-config" class="md-nav__link">
+    check-backup-config
   </a>
   
 </li>
@@ -2198,8 +2198,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#remapping-backup-config" title="remapping-backup-config" class="md-nav__link">
-    remapping-backup-config
+  <a href="#check-backup-config" title="check-backup-config" class="md-nav__link">
+    check-backup-config
   </a>
   
 </li>
@@ -2246,8 +2246,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#remapping-backup-config_1" title="remapping-backup-config" class="md-nav__link">
-    remapping-backup-config
+  <a href="#check-backup-config_1" title="check-backup-config" class="md-nav__link">
+    check-backup-config
   </a>
   
 </li>
@@ -2592,7 +2592,7 @@ Valid actions:</p>
 <li><code>list-disks</code></li>
 <li><code>last-log</code></li>
 <li><code>running-info</code></li>
-<li><code>remapping-backup-config</code></li>
+<li><code>check-backup-config</code></li>
 </ul>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
@@ -2639,8 +2639,9 @@ The <code>name</code> field must contain the backup name.</p>
 </pre></div>
 
 
-<h4 id="remapping-backup-config">remapping-backup-config<a class="headerlink" href="#remapping-backup-config" title="Permanent link">&para;</a></h4>
-<p>Check if the backup to be restored needs network remapping.</p>
+<h4 id="check-backup-config">check-backup-config<a class="headerlink" href="#check-backup-config" title="Permanent link">&para;</a></h4>
+<p>Check if the backup to be restored needs network remapping and if the machine must be register
+before performing the restore.</p>
 <p>The <code>data</code> backup can contain multiple information based on the <code>mode</code> field.
 The <code>mode</code> field can be:</p>
 <ul>
@@ -2819,10 +2820,11 @@ If the disk alredy has a formatted partition, the <code>formatted</code> flag is
 </pre></div>
 
 
-<h4 id="remapping-backup-config_1">remapping-backup-config<a class="headerlink" href="#remapping-backup-config_1" title="Permanent link">&para;</a></h4>
+<h4 id="check-backup-config_1">check-backup-config<a class="headerlink" href="#check-backup-config_1" title="Permanent link">&para;</a></h4>
 <p>The <code>remap</code> field is set to <code>1</code> if remap is needed, <code>0</code> otherwise.
 The <code>current</code> field contains the list of ethernet interfaces present inside the system,
-while <code>restore</code> field contains the list of ethernet interfaces from the backup.</p>
+while <code>restore</code> field contains the list of ethernet interfaces from the backup.
+The <code>valid</code> field is set to <code>1</code> if the machine doesn't require registration, <code>0</code> otherwise.</p>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;remap&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -2841,7 +2843,8 @@ while <code>restore</code> field contains the list of ethernet interfaces from t
       <span class="nt">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span>
       <span class="nt">&quot;ipaddr&quot;</span><span class="p">:</span> <span class="s2">&quot;1.2.3.4&quot;</span>
     <span class="p">}</span>
-  <span class="p">]</span>
+  <span class="p">],</span>
+  <span class="err">valid:</span> <span class="err">1</span>
 <span class="p">}</span>
 </pre></div>
 

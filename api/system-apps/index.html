@@ -437,6 +437,20 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#hide-uninstall" title="hide-uninstall" class="md-nav__link">
+    hide-uninstall
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launcher" title="launcher" class="md-nav__link">
+    launcher
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -460,6 +474,20 @@
           <li class="md-nav__item">
   <a href="#info_1" title="info" class="md-nav__link">
     info
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hide-uninstall_1" title="hide-uninstall" class="md-nav__link">
+    hide-uninstall
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launcher_1" title="launcher" class="md-nav__link">
+    launcher
   </a>
   
 </li>
@@ -1888,6 +1916,20 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#hide-uninstall" title="hide-uninstall" class="md-nav__link">
+    hide-uninstall
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launcher" title="launcher" class="md-nav__link">
+    launcher
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1911,6 +1953,20 @@
           <li class="md-nav__item">
   <a href="#info_1" title="info" class="md-nav__link">
     info
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hide-uninstall_1" title="hide-uninstall" class="md-nav__link">
+    hide-uninstall
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launcher_1" title="launcher" class="md-nav__link">
+    launcher
   </a>
   
 </li>
@@ -1999,6 +2055,8 @@
 <li><code>list</code>: list all available applications. The list contains only the applications accessible to user running the script.
   Also legacy installed applications are listed.</li>
 <li><code>info</code>: retrieve information of the given application</li>
+<li><code>hide-uninstall</code>: tell if uninstall application command is shown or hidden.</li>
+<li><code>launcher</code>: retrieve data about specific apps without checking user authorization. If an input list of app IDs is not provided then data about pinned apps (i.e. applications added to home page) is returned</li>
 </ul>
 <p>Each application object contains 2 special fields:</p>
 <ul>
@@ -2020,6 +2078,30 @@
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;info&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;nethserver-firewall&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="hide-uninstall">hide-uninstall<a class="headerlink" href="#hide-uninstall" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;hide-uninstall&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="launcher">launcher<a class="headerlink" href="#launcher" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;launcher&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;appIds&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;nethserver-mattermost&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nethserver-dante&quot;</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;hostname&quot;</span><span class="p">:</span> <span class="s2">&quot;ns7test.nethesis.it&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;protocol&quot;</span><span class="p">:</span> <span class="s2">&quot;https:&quot;</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -2131,6 +2213,62 @@
   <span class="p">],</span>
   <span class="nt">&quot;shortcut&quot;</span><span class="p">:</span> <span class="mi">1</span>
 <span class="p">}</span>
+</pre></div>
+
+
+<h4 id="hide-uninstall_1">hide-uninstall<a class="headerlink" href="#hide-uninstall_1" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="o">{</span>
+  <span class="s2">&quot;HideUninstall&quot;</span>: <span class="s2">&quot;enabled&quot;</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h4 id="launcher_1">launcher<a class="headerlink" href="#launcher_1" title="Permanent link">&para;</a></h4>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><span class="o">[</span>
+  <span class="o">{</span>
+    <span class="s2">&quot;pin&quot;</span>: <span class="m">0</span>,
+    <span class="s2">&quot;icon&quot;</span>: <span class="s2">&quot;logo.png&quot;</span>,
+    <span class="s2">&quot;bugs&quot;</span>: <span class="o">{</span>
+      <span class="s2">&quot;url&quot;</span>: <span class="s2">&quot;https://github.com/NethServer/dev/issues&quot;</span>
+    <span class="o">}</span>,
+    <span class="s2">&quot;author&quot;</span>: <span class="o">{</span>
+      <span class="s2">&quot;email&quot;</span>: <span class="s2">&quot;edoardo.spadoni@nethesis.it, giacomo.sanchietti@nethesis.it&quot;</span>,
+      <span class="s2">&quot;url&quot;</span>: <span class="s2">&quot;https://github.com/NethServer/nethserver-dante&quot;</span>,
+      <span class="s2">&quot;name&quot;</span>: <span class="s2">&quot;Edoardo Spadoni, Giacomo Sanchietti&quot;</span>
+    <span class="o">}</span>,
+    <span class="s2">&quot;summary&quot;</span>: <span class="s2">&quot;Nethserver integration of nethesisdante project&quot;</span>,
+    <span class="s2">&quot;url&quot;</span>: <span class="s2">&quot;&quot;</span>,
+    <span class="s2">&quot;id&quot;</span>: <span class="s2">&quot;nethserver-dante&quot;</span>,
+    <span class="s2">&quot;name&quot;</span>: <span class="s2">&quot;Report&quot;</span>,
+    <span class="s2">&quot;release&quot;</span>: <span class="o">{</span>
+      <span class="s2">&quot;version&quot;</span>: <span class="s2">&quot;1.0.0&quot;</span>
+    <span class="o">}</span>,
+    <span class="s2">&quot;license&quot;</span>: <span class="s2">&quot;GPL-3.0&quot;</span>,
+    <span class="s2">&quot;description&quot;</span>: <span class="s2">&quot;Nethserver integration of nethesisdante project&quot;</span>,
+    <span class="s2">&quot;tags&quot;</span>: <span class="o">[</span>
+      <span class="s2">&quot;report&quot;</span>,
+      <span class="s2">&quot;dante&quot;</span>,
+      <span class="s2">&quot;charts&quot;</span>
+    <span class="o">]</span>,
+    <span class="s2">&quot;homepage&quot;</span>: <span class="s2">&quot;https://github.com/NethServer/nethserver-dante&quot;</span>,
+    <span class="s2">&quot;provides&quot;</span>: <span class="o">[</span>
+      <span class="s2">&quot;nethserver-dante&quot;</span>
+    <span class="o">]</span>,
+    <span class="s2">&quot;editable&quot;</span>: <span class="m">1</span>,
+    <span class="s2">&quot;shortcut&quot;</span>: <span class="m">0</span>
+  <span class="o">}</span>,
+  <span class="o">{</span>
+    <span class="s2">&quot;pin&quot;</span>: <span class="m">0</span>,
+    <span class="s2">&quot;icon&quot;</span>: <span class="s2">&quot;logo.png&quot;</span>,
+    <span class="s2">&quot;bugs&quot;</span>: <span class="o">{</span>
+      <span class="s2">&quot;url&quot;</span>: <span class="s2">&quot;https://github.com/NethServer/dev/issues&quot;</span>
+    <span class="o">}</span>,
+    ...
+  <span class="o">}</span>
+  ...
+<span class="o">]</span>
 </pre></div>
 
 
