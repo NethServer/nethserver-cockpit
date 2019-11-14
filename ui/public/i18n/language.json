@@ -785,7 +785,9 @@
     "helpdesk": "Helpdesk",
     "documentation": "Documentation",
     "wiki": "Wiki",
-    "subscription": "Subscription"
+    "subscription": "Subscription",
+    "phonehome": "Phone home is used to track all NethServer installations around the world.",
+    "map": "Map"
   },
   "wizard": {
     "title": "Wizard"
