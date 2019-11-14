@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Copyright (C) 2019 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+
+. /usr/libexec/nethserver/api/lib/helper_functions
+
+data=$(cat /dev/stdin)
+action=$(echo $data | jq -r '.action')
+email=$(echo $data | jq -r '.email')
+
+if [[ -z "$email" || "$email" == "null" ]]; then
+    error "InvalidMail" "invalid_mail_address"
+fi
+
+from=$(/sbin/e-smith/config getprop root SenderAddress)
+if [ -z "$from" ];then
+    from="root@"$(hostname -d)
+fi
+case $action in
+
+    "test-mail")
+        hostname=$(hostname)
+        text="Subject: Test mail from $hostname\n\nThis is a test mail from your NethServer $hostname.\n\nHappy hacking!\n"
+        echo -e $text | /usr/lib/sendmail -F $hostname -f $from $email 2>&1
+        ;;
+esac
