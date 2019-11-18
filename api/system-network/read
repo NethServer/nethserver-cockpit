@@ -240,6 +240,32 @@ if($cmd eq 'list') {
         $ret->{'configuration'}{$krole} = [sort { $a->{'name'} cmp $b->{'name'} } @{$ret->{'configuration'}{$krole}}];
     }
 
+    # add free interfaces not already listed inside the db
+    # this could happen after a restor from cockpit
+    foreach my $i (keys %info) {
+        my $found = 0;
+        foreach my $config_arr (keys $ret->{'configuration'}) {
+            foreach (@{$ret->{'configuration'}{$config_arr}}) {
+                if ($_->{'name'} eq $i) {
+                    $found = 1;
+                }
+            }
+        }
+        if (!$found) {
+            push(@{$ret->{'configuration'}{'free'}}, {
+                    exisiting => 1,
+                    name => $i,
+                    cidr => '',
+                    devices => [],
+                    virtual => 0,
+                    aliases => [],
+                    type => 'ethernet',
+                    role => ''
+
+                });
+        }
+    }
+
     my $ppp0 = $ndb->get('ppp0');
     if($ppp0->prop('type') eq 'xdsl-disabled') {
         $ret->{'configuration'}{'pppoe'} = 0;
