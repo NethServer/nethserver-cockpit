@@ -321,9 +321,7 @@ if($cmd eq 'backup-info') {
         }
     }
     my $ret = decode_json($out);
-    system("/usr/libexec/nethserver/restore-config-check-registration $tmp_file");
     unlink($tmp_file, $tmp_file_64);
-    $ret->{'valid'} = ($? > 0) ? 0 : 1;
     $ret->{'name'} = $name;
 
     print encode_json($ret);

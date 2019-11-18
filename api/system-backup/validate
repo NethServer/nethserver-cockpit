@@ -56,6 +56,19 @@ function fail($parameter, $error)
 
 }
 
+function find_role($db, $interface) {
+    $i = $db->getKey($interface);
+    $role = @$i['role'];
+    if ($role == 'bridged') {
+        $role = $db->getProp($i['bridge'], 'role');
+    }
+    if ($role == 'slave') {
+        $role = $db->getProp($i['master'], 'role');
+    }
+
+    return $role;
+}
+
 $data = readInput();
 $action = $data['action'];
 
@@ -212,6 +225,35 @@ if ($action == 'create-backup-data' || $action == 'update-backup-data') {
     } else {
         success();
     }
+
+} else if ($action == 'restore-backup-config') {
+
+    # Pull the backup from history to a temporary file
+    $tmp = tempnam(sys_get_temp_dir(), 'restore-config-validation');
+    $tmp_dir = sys_get_temp_dir()."/restore-config-tmp";
+    $tmp_db = $tmp_dir."/var/lib/nethserver/db/networks";
+    @mkdir($tmp_dir);
+    exec("/usr/libexec/nethserver/backup-config-history pull -f $tmp -i ".$data['data']);
+    exec("tar xf $tmp -C $tmp_dir var/lib/nethserver/db/networks");
+
+    $green_found = false;
+    $ndb = new EsmithDatabase($tmp_db);
+    foreach ($data['remap'] as $dest=>$cur) {
+        if (find_role($ndb, $dest) == 'green') {
+            $green_found = true;
+        }
+    }
+    if (!$green_found) {
+        $v->addValidationError('remap','remap_at_least_one_green');
+    }
+
+    exec("/usr/libexec/nethserver/restore-config-check-registration $tmp", $out, $ret);
+    if ($ret > 0) {
+        $v->addValidationError('register_before_restore');
+    }
+
+    unlink($tmp);
+    exec("rm -rf $tmp_dir");
 
 } else {
     error();
