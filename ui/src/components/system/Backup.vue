@@ -503,6 +503,14 @@
                 {{$t('backup.during_remap_warning')}}.
               </div>
               <div
+                v-if="currentConfigBackup.errorMessageValidate"
+                class="alert alert-danger alert-dismissable"
+              >
+                <span class="pficon pficon-error-circle-o"></span>
+                <strong>{{$t('error')}}:</strong>
+                {{$t('backup.'+currentConfigBackup.errorMessageValidate)}}.
+              </div>
+              <div
                 v-if="currentConfigBackup.remap && currentConfigBackup.isValid"
                 v-for="(o, ok) in currentConfigBackup.remapInterfaces.old"
                 v-bind:key="ok"
@@ -514,10 +522,10 @@
                       {{o.name}}
                       <span v-if="o.nslabel">({{o.nslabel}})</span>
                     </span>
+                    {{o.ipaddr ? ' - '+o.ipaddr : '-'}}
                     <br />
-                    {{o.ipaddr || '-'}}
-                    <br />
-                    {{o.role == 'pppoe' ? 'PPPoE' : o.role | capitalize}}
+                    <b>{{(o.link == 1 ? 'UP' : 'DOWN') + ' - '}}</b>
+                    {{o.role == 'pppoe' ? 'PPPoE' : o.role | uppercase}}
                   </label>
                 </div>
                 <div class="col-sm-1">
@@ -537,13 +545,12 @@
                       v-bind:key="nk"
                       v-if="n.role && n.role.length > 0"
                       :value="n.name"
+                      :disabled="currentConfigBackup.remapNew[n.name]"
                     >
                       {{n.name}}
                       <span v-if="n.nslabel && n.nslabel.length > 0">({{n.nslabel}})</span>
-                      - {{n.role}}
-                      <span
-                        v-if="n.ipaddr && n.ipaddr.length > 0"
-                      >| {{n.ipaddr || '-'}}</span>
+                      <span v-if="n.ipaddr && n.ipaddr.length > 0">{{' - '+n.ipaddr || '-'}}</span>
+                      - {{n.role | uppercase}}
                     </option>
                   </select>
                 </div>
@@ -556,7 +563,7 @@
               ></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button
-                :disabled="currentConfigBackup.isChecking || !currentConfigBackup.remapCalled"
+                :disabled="currentConfigBackup.isChecking"
                 class="btn btn-primary"
                 type="submit"
               >{{$t('backup.restore')}}</button>
@@ -2600,6 +2607,7 @@ export default {
     },
     initBackupConfiguration() {
       return {
+        name: "",
         restoreURL: "",
         restoreFile: "",
         restoreBackup: "",
@@ -2609,10 +2617,10 @@ export default {
         isChecking: false,
         restoreMode: "url",
         restoreInstallPackages: true,
-        remapCalled: false,
         remap: false,
         isValid: true,
         errorMessage: false,
+        errorMessageValidate: false,
         remapInterfaces: {
           old: [],
           new: []
@@ -2846,7 +2854,7 @@ export default {
           data = context.currentConfigBackup.restoreBackup;
           break;
       }
-
+      context.currentConfigBackup.errorMessageValidate = null;
       context.currentConfigBackup.isChecking = true;
       context.exec(
         ["system-backup/read"],
@@ -2862,15 +2870,28 @@ export default {
           } catch (e) {
             console.error(e);
           }
+          context.currentConfigBackup.name = success.name;
           context.currentConfigBackup.isChecking = false;
-          context.currentConfigBackup.remapCalled = success.valid == 1;
           context.currentConfigBackup.remap = success.remap;
           context.currentConfigBackup.remapInterfaces.old =
             success.current || [];
           context.currentConfigBackup.remapInterfaces.new =
             success.restore || [];
-          context.currentConfigBackup.isValid = success.valid == 1;
           context.currentConfigBackup.errorMessage = false;
+          context.currentConfigBackup.errorMessageValidate = false;
+
+          context.currentConfigBackup.remapNew = {};
+          context.currentConfigBackup.remapInterfaces.old.filter(function(old) {
+            var newInt = context.currentConfigBackup.remapInterfaces.new.filter(
+              function(i) {
+                if (i.name == old.name && (old.role && old.role.length > 0)) {
+                  context.currentConfigBackup.remapNew[i.name] = old.name;
+                  return true;
+                }
+              }
+            )[0];
+            old.newInt = (newInt && newInt.name) || "";
+          });
         },
         function(error, data) {
           console.error(error);
@@ -2880,7 +2901,6 @@ export default {
             console.error(e);
           }
           context.currentConfigBackup.isChecking = false;
-          context.currentConfigBackup.remapCalled = false;
           context.currentConfigBackup.remap = false;
           context.currentConfigBackup.errorMessage = data.message;
         }
@@ -2889,60 +2909,80 @@ export default {
     restoreConfigBackup() {
       var context = this;
 
-      var data = "";
-      switch (context.currentConfigBackup.restoreMode) {
-        case "url":
-          data = context.currentConfigBackup.restoreURL;
-          break;
-
-        case "file":
-          data = context.currentConfigBackup.restoreFile;
-          break;
-
-        case "backup":
-          data = context.currentConfigBackup.restoreBackup;
-          break;
-      }
-
-      $("#restoreConfigModal").modal("hide");
+      var backupObj = {
+        action: "restore-backup-config",
+        data: context.currentConfigBackup.name,
+        InstallPackages: context.currentConfigBackup.restoreInstallPackages
+          ? "enabled"
+          : "disabled",
+        remap: context.currentConfigBackup.remapNew
+      };
+	
+      context.currentConfigBackup.errorMessageValidate = null;
+      context.currentConfigBackup.isChecking = true;
       context.exec(
-        ["system-backup/execute"],
-        {
-          action: "restore-backup-config",
-          mode: context.currentConfigBackup.restoreMode,
-          data: data,
-          InstallPackages: context.currentConfigBackup.restoreInstallPackages
-            ? "enabled"
-            : "disabled",
-          remap: context.currentConfigBackup.remapNew
-        },
-        function(stream) {
-          console.info("backup-config-restore", stream);
-        },
+        ["system-backup/validate"],
+        backupObj,
+        null,
         function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "backup.restore_config_backup_ok"
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+
+          context.currentConfigBackup.isValid = success.valid == 1;
+          context.currentConfigBackup.isChecking = false;
+          $("#restoreConfigModal").modal("hide");
+          context.exec(
+            ["system-backup/execute"],
+            backupObj,
+            function(stream) {
+              console.info("backup-config-restore", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "backup.restore_config_backup_ok"
+              );
+
+              // refresh interface
+              context.refresh();
+
+              // get backup info
+              context.getBackupInfo();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "backup.restore_config_backup_error"
+              );
+            }
           );
-
-          // refresh interface
-          context.refresh();
-
-          // get backup info
-          context.getBackupInfo();
         },
         function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "backup.restore_config_backup_error"
-          );
+          var errorData = {};
+          context.currentConfigBackup.isChecking = false;
+
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.currentConfigBackup.errorMessageValidate = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
+          }
         }
       );
     },
     setRemapping(oldInt) {
-      if (oldInt.newInt.length > 0) {
+      if (oldInt.newInt && oldInt.newInt.length > 0) {
         this.currentConfigBackup.remapNew[oldInt.newInt] = oldInt.name;
+      } else {
+        delete this.currentConfigBackup.remapNew[oldInt.name];
       }
+      this.$forceUpdate();
     },
     configureConfigBackup() {
       var context = this;

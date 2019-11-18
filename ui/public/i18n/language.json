@@ -282,7 +282,8 @@
     "register_system": "Register system",
     "register_system_desc": "You are trying to restore a backup with a subscription. Please register the machine before restoring this backup",
     "register_now": "Register now",
-    "invalid_backup_format": "Backup not found or invalid"
+    "invalid_backup_format": "Backup not found or invalid",
+    "remap_at_least_one_green": "You have to select at least one green to remap"
   },
   "disk_usage": {
     "title": "Disk usage",
