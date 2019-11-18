@@ -52,6 +52,11 @@ if($cmd eq 'release-role') {
 } elsif($cmd eq 'change-properties') {
 
     my $i = $ndb->get($input->{'interface'});
+    # create interface if not exists, this should happen only in case of partial remap after restore
+    if (!$i) {
+        $ndb->new_record($input->{'interface'}, {'role' => '', 'type' => 'ethernet'});
+        $i = $ndb->get($input->{'interface'});
+    }
 
     $i->set_prop('role', $input->{'role'});
     $i->set_prop('bootproto', $input->{'bootproto'});
