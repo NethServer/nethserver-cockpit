@@ -138,11 +138,13 @@
             <div class="col-sm-9">
               <div class="btn-group">
                 <button
+                  type="button"
                   :disabled="!view.isAdmin"
                   @click="openPowerModal('reboot')"
                   class="btn btn-default"
                 >{{$t('dashboard.reboot')}}</button>
                 <button
+                  type="button"
                   :disabled="!view.isAdmin"
                   data-toggle="dropdown"
                   class="btn btn-default dropdown-toggle"

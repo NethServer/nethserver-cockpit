@@ -3323,6 +3323,7 @@ export default {
           function(success) {
             context.newProvider.isChecking = false;
             context.newProvider.isValid = true;
+            context.newProvider.joinError = false;
             context.$forceUpdate();
           },
           function(error, data) {
