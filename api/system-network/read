@@ -244,6 +244,7 @@ if($cmd eq 'list') {
     # this could happen after a restor from cockpit
     foreach my $i (keys %info) {
         my $found = 0;
+        next if ($ndb->get($i)); # skip existing interface inside the db
         foreach my $config_arr (keys $ret->{'configuration'}) {
             foreach (@{$ret->{'configuration'}{$config_arr}}) {
                 if ($_->{'name'} eq $i) {
@@ -294,6 +295,22 @@ if($cmd eq 'list') {
             next;
         }
     }
+
+    # add free interfaces not already listed inside the db
+    # this could happen after a restor from cockpit
+    open my $in, "/usr/libexec/nethserver/nic-info |";
+    while (my $line = <$in>)
+    {
+        chomp $line;
+        my ($name,$mac,$bus,$model,$driver,$speed,$link) = split(",",$line);
+
+        if ($ndb->get($name)) {
+            next;
+        } else {
+            push(@interfaces, $name);
+        }
+    }
+    close($in);
 
     $ret = \@interfaces;
 
