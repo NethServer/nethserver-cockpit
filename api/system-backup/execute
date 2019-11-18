@@ -104,34 +104,7 @@ case $action in
         ;;
 
     "restore-backup-config")
-
-        case "$(_get mode)" in
-            "file")
-                tmp_file=$(mktemp)
-                echo "$(_get data)" | base64 -d > $tmp_file
-                /usr/libexec/nethserver/backup-config-history push -t upload -f $tmp_file -d "Upload from UI"
-                rm -f $tmp_file
-                # retrieve uploaded id
-                id=$(/usr/libexec/nethserver/backup-config-history list | jq ".[0].id" -r)
-
-                _restore $id "$(_get remap)" $(_get InstallPackages)
-                ;;
-            "url")
-                tmp_file=$(mktemp)
-                description=$(echo "$(_get data)" | sed -e 's|^[^/]*//||' -e 's|/.*$||') # extract host name
-                wget --quiet "$(_get data)" -O $tmp_file
-                /usr/libexec/nethserver/backup-config-history push -t upload -f $tmp_file -d "Downloaded from $description"
-                rm -f $tmp_file
-                # retrieve uploaded id
-                id=$(/usr/libexec/nethserver/backup-config-history list | jq ".[0].id" -r)
-
-                _restore $id "$(_get remap)" $(_get InstallPackages)
-                ;;
-            "backup")
-                _restore "$(_get data)" "$(_get remap)" $(_get InstallPackages)
-                ;;
-        esac
-
+        _restore "$(_get data)" "$(_get remap)" $(_get InstallPackages)
         ;;
 
     "restore-backup-data")
