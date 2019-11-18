@@ -586,6 +586,7 @@ export default {
       this.getHints("system-dns", "upstreamDns");
       this.getHints("system-company", "company");
       this.getHints("system-services", "services");
+      this.getHints("system-network", "network");
       this.getHints("system-backup", "backup");
       this.getHints("system-openssh", "ssh");
       this.getHints("system-tls-policy", "tls_policy");
