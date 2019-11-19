@@ -39,28 +39,50 @@ sub cleanup
 
 sub get_available_interfaces
 {
-    my @interfaces;
-    my @lines = `/usr/libexec/nethserver/nic-info`;
-    foreach (@lines) {
-        my @tmp = split(",",$_);
-        push(@interfaces, $tmp[0]);
+    my $interfaces;
+    # Read hardware info
+    open my $in, "/usr/libexec/nethserver/nic-info |";
+    while (my $line = <$in>)
+    {
+        chomp $line;
+        my ($name,$mac,$bus,$model,$driver,$speed,$link) = split(",",$line);
+        $interfaces->{$name} = $link;
     }
-    return @interfaces;
+    close($in);
+    return $interfaces;
 }
 
-sub get_map_info
+sub get_nic_info
 {
-    my @ret;
-    my @interfaces = shift;
-    foreach (@interfaces) {
-        push(@ret, {
-                "name" => $_->key,
-                "nslabel" => $_->prop('nslabel') || '',
-                "ipaddr" => $_->prop('ipaddr') || '',
-                "role" => $_->prop('role') || '',
-            });
+    my $db = shift;
+    my $interface = shift;
+
+    my $ret = {'name' => $interface};
+    my $i = $db->get($interface) || return $ret;
+    my $bootproto = $i->prop('bootproto') || '';
+    $ret->{'ipaddr'} = $i->prop('ipaddr') || uc($bootproto);
+    $ret->{'role'} = $i->prop('role') || '';
+    $ret->{'nslabel'} = $i->prop('nslabel') || '';
+    my $parent = undef;
+    if ($ret->{'role'} eq 'bridged') {
+        $parent = $db->get($i->prop('bridge'))
     }
-    return \@ret;
+    if ($ret->{'role'} eq 'slave') {
+        $parent = $db->get($i->prop('master'));
+    }
+
+    if ($parent) {
+        $ret->{'ipaddr'} = $parent->prop('ipaddr') || uc($parent->prop('bootproto'));
+        $ret->{'ipaddr'} .= " - ".$parent->key;
+        $ret->{'role'} = $parent->prop('role') || '';
+        $ret->{'nslabel'} = $parent->prop('nslabel') || '';
+    }
+    if ($ret->{'role'} eq '') {
+        $ret->{'ipaddr'} = '';
+        $ret->{'nslabel'} = '';
+    }
+
+    return $ret;
 }
 
 if ( ! -e $file) {
@@ -77,10 +99,10 @@ if ( ! -e $file) {
 my $ret = { "remap" => 0, "restore" => (), "current" => () };
 my $restore_db = esmith::NetworksDB->open_ro($tmpdir."/".$db_file);
 
-my @available_interfaces = get_available_interfaces();
+my $available_interfaces = get_available_interfaces();
 foreach ($restore_db->ethernets) {
     # check if interface from restore is present
-    if (!grep(/^$_->key$/, @available_interfaces)) {
+    if (!grep(/^$_->key$/, keys $available_interfaces)) {
         $ret->{'remap'} = 1;
     }
 }
@@ -88,45 +110,14 @@ if ($ret->{'remap'}) {
     my @restore;
     my @current;
     foreach ($restore_db->ethernets) {
-        push(@restore, {
-                "name" => $_->key,
-                "nslabel" => $_->prop('nslabel') || '',
-                "ipaddr" => $_->prop('ipaddr') || '',
-                "role" => $_->prop('role') || '',
-            });
+        my $info = get_nic_info($restore_db, $_->key);
+        push(@restore, $info);
     }
     my $ndb = esmith::NetworksDB->open_ro();
-    foreach (@available_interfaces) {
-        my $i = $ndb->get($_) || next;
-        my $bootproto = $i->prop('bootproto') || '';
-        my $ipaddr = $i->prop('ipaddr') || uc($bootproto);
-        my $role = $i->prop('role') || '';
-        my $nslabel = $i->prop('nslabel') || '';
-        my $parent = undef;
-        if ($role eq 'bridged') {
-            $parent = $ndb->get($i->prop('bridge'))
-        }
-        if ($role eq 'slave') {
-            $parent = $ndb->get($i->prop('master'));
-        }
-
-        if ($parent) {
-            $ipaddr = $parent->prop('ipaddr') || uc($parent->prop('bootproto'));
-            $ipaddr .= " - ".$parent->key;
-            $role = $parent->prop('role') || '';
-            $nslabel = $parent->prop('nslabel') || '';
-        }
-        if ($role eq '') {
-            $ipaddr = '';
-            $nslabel = '';
-        }
-        push(@current, {
-                "name" => $i->key,
-                "nslabel" => $nslabel,
-                "ipaddr" => $ipaddr,
-                "role" => $role,
-            });
-
+    foreach (keys $available_interfaces) {
+        my $info = get_nic_info($ndb, $_);
+        $info->{'link'} = $available_interfaces->{$_};
+        push(@current, $info);
     }
     $ret->{'restore'} = \@restore;
     $ret->{'current'} = \@current;

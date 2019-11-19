@@ -276,28 +276,53 @@ if($cmd eq 'backup-info') {
     my $tmp_file_64 = "$tmp_file.b64";
     my $data = $input->{'data'};
     my $mode = $input->{'mode'};
+    my $name = undef;
 
     if ($mode eq 'url') {
+        # downlad from remote
         system("wget --quiet '$data' -O $tmp_file");
-    } elsif ($mode eq 'backup') {
-        system("/bin/cp /var/lib/nethserver/backup/history/$data.tar.xz $tmp_file");
     } elsif ($mode eq 'file') {
+        # upload from UI
         open(FH, '>', $tmp_file_64) or exit 1;
         print FH $data;
         close FH;
 
         system("base64 -d $tmp_file_64 > $tmp_file");
+    } elsif ($mode eq 'backup') {
+        # pull existing backup
+
+        # create empty file otherwise backup-config-history will fail
+        open my $th, '>', $tmp_file;
+        close $th;
+        system("/usr/libexec/nethserver/backup-config-history pull -f $tmp_file -i $data");
+        $name = $data;
+    } else {
+        error();
     }
 
     my $out = `/usr/libexec/nethserver/api/system-backup/need-remap $tmp_file`;
     if ($? > 0) {
+        # invalid backup: cleanup and erturn error
         unlink($tmp_file, $tmp_file_64);
         error("InvalidBackup", "invalid_backup_format");
+    } else {
+        # valid backup: add to history download or uploaded file
+        if ($mode eq 'file' || $mode eq 'url') {
+            system("/usr/libexec/nethserver/backup-config-history push -t upload -f $tmp_file -d 'Upload from UI'");
+            # retrieve last upload backup id
+            my $maxts = 0;
+            my $backups = decode_json(`/usr/libexec/nethserver/backup-config-history list`);
+            foreach (@$backups) {
+                if ($_->{'push_ts'} > $maxts) {
+                    $maxts = $_->{'push_ts'};
+                    $name = $_->{'id'};
+                }
+            }
+        }
     }
     my $ret = decode_json($out);
-    system("/usr/libexec/nethserver/restore-config-check-registration $tmp_file");
     unlink($tmp_file, $tmp_file_64);
-    $ret->{'valid'} = ($? > 0) ? 0 : 1;
+    $ret->{'name'} = $name;
 
     print encode_json($ret);
 

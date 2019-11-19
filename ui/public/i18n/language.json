@@ -282,7 +282,8 @@
     "register_system": "Register system",
     "register_system_desc": "You are trying to restore a backup with a subscription. Please register the machine before restoring this backup",
     "register_now": "Register now",
-    "invalid_backup_format": "Backup not found or invalid"
+    "invalid_backup_format": "Backup not found or invalid",
+    "remap_at_least_one_green": "You have to select at least one green to remap"
   },
   "disk_usage": {
     "title": "Disk usage",
@@ -947,14 +948,14 @@
     "LimitAccess": "Server Manager",
     "backup": "Backup",
     "centos_upgrade": "A new upstream distribution release is available as update. To avoid installing it, switch the software updates origin to \"Locked\"",
-    "dhcp_on_green_can_cause_unexpected_behavior": "Using DHCP on green interfaces leads to unexpected behavior. Please, change the interface to static if possible.",
-    "interface_must_be_static": "A green interface must have a static IP address",
+    "interface_must_be_static": "A green interface must have a static IP address. Using DHCP on green interfaces leads to unexpected behavior. Please, change the interface to static if possible.",
     "hostname": "Hostname",
     "hostname_should_not_contain_localhost": "Hostname should not contain localhost",
     "subscription": "Subscription",
     "support_active": "A remote support session is active",
     "hostname_should_not_contain_localdomain": "The hostname should not contain 'localdomain'",
-    "first_hostname_part_maximum_length_15": "First hostname part must be maximum 15 characters lenght"
+    "first_hostname_part_maximum_length_15": "First hostname part must be maximum 15 characters lenght",
+    "unmapped_interface_from_restore": "This interface has not been activated after the restore. Assign the role to a new interface or remove it"
   },
   "validation": {
     "weak_password": "Password too weak, it could be inside a dictionary or too similar to the previous one",
