@@ -46,6 +46,11 @@ if ($out && -f '/var/run/.nethserver-fixnetwork') {
     }
 }
 
+my $ret = system('ip link show brtmp &>/dev/null');
+if ($ret == 0) {
+    $details->{'network-recovery'} = 'network_recovery_mode';
+}
+
 if ($details) {
     hints(undef,$details);
 } else {

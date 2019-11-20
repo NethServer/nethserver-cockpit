@@ -955,7 +955,8 @@
     "support_active": "A remote support session is active",
     "hostname_should_not_contain_localdomain": "The hostname should not contain 'localdomain'",
     "first_hostname_part_maximum_length_15": "First hostname part must be maximum 15 characters lenght",
-    "unmapped_interface_from_restore": "This interface has not been activated after the restore. Assign the role to a new interface or remove it"
+    "unmapped_interface_from_restore": "This interface has not been activated after the restore. Assign the role to a new interface or remove it",
+    "network_recovery_mode": "The system is configured with a temporary IP address by the network-recovery tool: any change to this page will restore the network configuration as set below."
   },
   "validation": {
     "weak_password": "Password too weak, it could be inside a dictionary or too similar to the previous one",
