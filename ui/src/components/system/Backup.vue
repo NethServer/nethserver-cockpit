@@ -2919,7 +2919,7 @@ export default {
           : "disabled",
         remap: context.currentConfigBackup.remapNew
       };
-	
+
       context.currentConfigBackup.errorMessageValidate = null;
       context.currentConfigBackup.isChecking = true;
       context.exec(
@@ -2982,7 +2982,12 @@ export default {
       if (oldInt.newInt && oldInt.newInt.length > 0) {
         this.currentConfigBackup.remapNew[oldInt.newInt] = oldInt.name;
       } else {
-        delete this.currentConfigBackup.remapNew[oldInt.name];
+        for (var i in this.currentConfigBackup.remapNew) {
+          var int = this.currentConfigBackup.remapNew[i];
+          if (int == oldInt.name) {
+            delete this.currentConfigBackup.remapNew[i];
+          }
+        }
       }
       this.$forceUpdate();
     },
