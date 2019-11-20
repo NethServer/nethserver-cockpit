@@ -2874,7 +2874,9 @@ export default {
           context.currentConfigBackup.isChecking = false;
           context.currentConfigBackup.remap = success.remap;
           context.currentConfigBackup.remapInterfaces.old =
-            success.current || [];
+            success.current.sort((a, b) =>
+              a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+            ) || [];
           context.currentConfigBackup.remapInterfaces.new =
             success.restore || [];
           context.currentConfigBackup.errorMessage = false;
