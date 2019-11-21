@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.2.2
+Version: 1.3.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,15 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Thu Nov 21 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.0-1
+- Improve configuration restore - Nethserver/dev#5907
+- Cockpit: validate host deletion - Bug NethServer/dev#5909
+- Cannot upload config backup file as first element - Bug Nethserver/dev#5906
+- Cockpit: validate host deletion - Bug Nethserver/dev#5909
+- Password change: handle backslash - Bug NethServer/dev#5927
+- Improve configuration restore - NethServer/dev#5907
+- Multiple UI cosmetic fixes
+
 * Tue Nov 12 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.2.2-1
 - Cockpit: vlan parameters without a role are not displayed - Bug Nethserver/dev#5895
 - Cockpit: network label can't contain spaces - Bug NethServer/dev#5893
