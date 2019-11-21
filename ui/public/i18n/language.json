@@ -277,13 +277,15 @@
     "storage_usage": "Destination storage usage",
     "overwrite_all_data": "the restore will overwrite all data",
     "nfs_rsync_info": "Make sure the NFS server supports hard links, otherwise the backup will fail",
-    "during_remap_warning": "During interface remapping, if one or more interface change its IP address, you have to login again in the new IP address",
+    "during_remap_warning": "During interface remapping, if one or more interfaces change its IP address, you have to login again in the new IP address",
     "check_configuration": "Check configuration",
     "register_system": "Register system",
     "register_before_restore": "You are trying to restore a backup with a subscription. Please register the machine before restoring this backup",
     "register_now": "Register now",
     "invalid_backup_format": "Backup not found or invalid",
-    "remap_at_least_one_green": "You have to select at least one green to remap"
+    "remap_at_least_one_green": "You have to select at least one green to remap",
+    "assign_later": "Assign later",
+    "current_int": "System interfaces"
   },
   "disk_usage": {
     "title": "Disk usage",

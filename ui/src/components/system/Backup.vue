@@ -512,7 +512,21 @@
               </div>
               <div
                 v-if="currentConfigBackup.remap && currentConfigBackup.isValid"
-                v-for="(o, ok) in currentConfigBackup.remapInterfaces.old"
+                class="form-group"
+              >
+                <div class="col-sm-4">
+                  <label class="control-label display-block">{{$t('backup.from_backup')}}</label>
+                </div>
+                <div class="col-sm-1">
+                  <label class="control-label display-block"></label>
+                </div>
+                <div class="col-sm-4">
+                  <label class="control-label display-block">{{$t('backup.current_int')}}</label>
+                </div>
+              </div>
+              <div
+                v-if="currentConfigBackup.remap && currentConfigBackup.isValid"
+                v-for="(o, ok) in currentConfigBackup.remapInterfaces.new"
                 v-bind:key="ok"
                 class="form-group"
               >
@@ -524,7 +538,6 @@
                     </span>
                     {{o.ipaddr ? ' - '+o.ipaddr : '-'}}
                     <br />
-                    <b>{{(o.link == 1 ? 'UP' : 'DOWN') + ' - '}}</b>
                     {{o.role == 'pppoe' ? 'PPPoE' : o.role | uppercase}}
                   </label>
                 </div>
@@ -539,9 +552,9 @@
                     v-model="o.newInt"
                     class="combobox form-control"
                   >
-                    <option value>-</option>
+                    <option value>{{$t('backup.assign_later')}}</option>
                     <option
-                      v-for="(n, nk) in currentConfigBackup.remapInterfaces.new"
+                      v-for="(n, nk) in currentConfigBackup.remapInterfaces.old"
                       v-bind:key="nk"
                       v-if="n.role && n.role.length > 0"
                       :value="n.name"
@@ -550,7 +563,8 @@
                       {{n.name}}
                       <span v-if="n.nslabel && n.nslabel.length > 0">({{n.nslabel}})</span>
                       <span v-if="n.ipaddr && n.ipaddr.length > 0">{{' - '+n.ipaddr || '-'}}</span>
-                      - {{n.role | uppercase}}
+                      <span v-if="n.link">{{' - '+ (n.link == 1 ? 'UP' : 'DOWN') + ' - '}}</span>
+                      {{n.role | uppercase}}
                     </option>
                   </select>
                 </div>
@@ -2610,6 +2624,7 @@ export default {
         name: "",
         restoreURL: "",
         restoreFile: "",
+        restoreFileName: "",
         restoreBackup: "",
         HistoryLength: 0,
         Description: "",
@@ -2640,6 +2655,8 @@ export default {
       var context = this;
       this.getBase64(event.target.files[0], function(resp) {
         context.currentConfigBackup.restoreFile = resp.split(",")[1];
+        context.currentConfigBackup.restoreFileName =
+          event.target.files[0].name;
       });
     },
     getBackupStatus() {
@@ -2861,7 +2878,11 @@ export default {
         {
           action: "check-backup-config",
           mode: context.currentConfigBackup.restoreMode,
-          data: data
+          data: data,
+          filename:
+            context.currentConfigBackup.restoreFileName.length > 0
+              ? context.currentConfigBackup.restoreFileName
+              : null
         },
         null,
         function(success) {
@@ -2883,16 +2904,21 @@ export default {
           context.currentConfigBackup.errorMessageValidate = false;
 
           context.currentConfigBackup.remapNew = {};
-          context.currentConfigBackup.remapInterfaces.old.filter(function(old) {
-            var newInt = context.currentConfigBackup.remapInterfaces.new.filter(
+          context.currentConfigBackup.remapInterfaces.new.filter(function(
+            newI
+          ) {
+            var newInt = context.currentConfigBackup.remapInterfaces.old.filter(
               function(i) {
-                if (i.name == old.name && (old.role && old.role.length > 0)) {
-                  context.currentConfigBackup.remapNew[i.name] = old.name;
+                if (
+                  i.name == newI.name &&
+                  (newI.role && newI.role.length > 0)
+                ) {
+                  context.currentConfigBackup.remapNew[i.name] = newI.name;
                   return true;
                 }
               }
             )[0];
-            old.newInt = (newInt && newInt.name) || "";
+            newI.newInt = (newInt && newInt.name) || "";
           });
         },
         function(error, data) {
@@ -2908,6 +2934,13 @@ export default {
         }
       );
     },
+    swap(json) {
+      var ret = {};
+      for (var key in json) {
+        ret[json[key]] = key;
+      }
+      return ret;
+    },
     restoreConfigBackup() {
       var context = this;
 
@@ -2917,7 +2950,7 @@ export default {
         InstallPackages: context.currentConfigBackup.restoreInstallPackages
           ? "enabled"
           : "disabled",
-        remap: context.currentConfigBackup.remapNew
+        remap: context.swap(context.currentConfigBackup.remapNew)
       };
 
       context.currentConfigBackup.errorMessageValidate = null;
