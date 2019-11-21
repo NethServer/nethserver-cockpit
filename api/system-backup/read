@@ -26,6 +26,7 @@ use esmith::ConfigDB;
 use NethServer::BackupData;
 use JSON;
 use File::stat;
+use URI;
 
 require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
 
@@ -276,12 +277,18 @@ if($cmd eq 'backup-info') {
     my $tmp_file_64 = "$tmp_file.b64";
     my $data = $input->{'data'};
     my $mode = $input->{'mode'};
+    my $filename = $input->{'filename'};
     my $name = undef;
+    my $desc = "";
 
     if ($mode eq 'url') {
+        my $url = URI->new( $data );
+        $desc = $url->host || substr($data, 0, 20);
+
         # downlad from remote
         system("wget --quiet '$data' -O $tmp_file");
     } elsif ($mode eq 'file') {
+        $desc = $filename;
         # upload from UI
         open(FH, '>', $tmp_file_64) or exit 1;
         print FH $data;
@@ -308,7 +315,7 @@ if($cmd eq 'backup-info') {
     } else {
         # valid backup: add to history download or uploaded file
         if ($mode eq 'file' || $mode eq 'url') {
-            system("/usr/libexec/nethserver/backup-config-history push -t upload -f $tmp_file -d 'Upload from UI'");
+            system("/usr/libexec/nethserver/backup-config-history push -t upload -f $tmp_file -d '$desc'");
             # retrieve last upload backup id
             my $maxts = 0;
             my $backups = decode_json(`/usr/libexec/nethserver/backup-config-history list`);
