@@ -20,6 +20,8 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-read secret
-echo -e "$secret\n$secret" | passwd
-exit $?
+read -r secret
+exec passwd <<EOF
+${secret}
+${secret}
+EOF
