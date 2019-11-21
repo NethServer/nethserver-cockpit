@@ -249,7 +249,7 @@ if ($action == 'create-backup-data' || $action == 'update-backup-data') {
 
     exec("/usr/libexec/nethserver/restore-config-check-registration $tmp", $out, $ret);
     if ($ret > 0) {
-        $v->addValidationError('register_before_restore');
+        $v->addValidationError('data','register_before_restore');
     }
 
     unlink($tmp);

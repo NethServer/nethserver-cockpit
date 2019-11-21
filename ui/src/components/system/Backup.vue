@@ -485,7 +485,7 @@
               <div v-if="!currentConfigBackup.isValid" class="alert alert-danger alert-dismissable">
                 <span class="pficon pficon-error-circle-o"></span>
                 <strong>{{$t('error')}}:</strong>
-                {{$t('backup.register_system_desc')}}.
+                {{$t('backup.register_before_restore')}}.
                 <a
                   href="#/subscription"
                 >{{$t('backup.register_now')}}</a>
