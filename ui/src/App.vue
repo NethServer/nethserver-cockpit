@@ -194,7 +194,10 @@
           <a href="#/settings">
             <span class="fa fa-gear"></span>
             <span class="list-group-item-value">{{$t('menu.settings')}}</span>
-            <span v-if="hints.settings.count > 0 && status.isAdmin" class="badge badge-small">{{hints.settings.count}}</span>
+            <span
+              v-if="hints.settings.count > 0 && status.isAdmin"
+              class="badge badge-small"
+            >{{hints.settings.count}}</span>
           </a>
         </li>
 
@@ -254,14 +257,10 @@
         style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"
       >{{notifications.error.message || '-'}}</p>
       <div class="stats-text">
-        <span>
-          {{$t('for_more_info')}}:
-        </span>
+        <span>{{$t('for_more_info')}}:</span>
         <br />
         <code>{{notifications.error.api}}</code>
-        <div>
-          {{$t('check')}}.
-        </div>
+        <div>{{$t('check')}}.</div>
       </div>
       <button
         @click="copyCommand(notifications.error.command)"
@@ -321,6 +320,14 @@ export default {
 
     // get hints
     this.checkHints();
+
+    // set document title
+    var hostname = window.top.document.title.split("-")[1].trim();
+    var name =
+      this.$route.name == "ApplicationsDetails"
+        ? this.$route.params.name
+        : this.$i18n.t("menu." + this.$route.name);
+    window.top.document.title = name + " - " + hostname;
   },
   watch: {
     $route(to, from) {
@@ -330,6 +337,16 @@ export default {
       this.notifications.addMargin = false;
 
       this.checkSystemTasks();
+
+      // change title
+      var hostname = window.top.document.title.split("-")[1].trim();
+      var name =
+        to.name == "ApplicationsDetails"
+          ? to.params.name
+          : this.$i18n.t("menu." + to.name);
+      setTimeout(function() {
+        window.top.document.title = name + " - " + hostname;
+      }, 250);
     }
   },
   data() {
@@ -449,7 +466,7 @@ export default {
             console.error(e);
           }
           context.auths = success.system || [];
-          context.status = success.status || {"isAdmin":0};
+          context.status = success.status || { isAdmin: 0 };
         },
         function(error) {
           console.error(error);
