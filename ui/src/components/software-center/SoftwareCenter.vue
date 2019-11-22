@@ -158,7 +158,7 @@
                     </div>
                   </div>
                 </div>
-                <div v-if="!u.updates" class="alert alert-info compact">
+                <div v-if="!u.updates && (u.updates && u.updates.length == 0)" class="alert alert-info compact">
                   <span class="pficon pficon-info"></span>
                   {{$t('software_center.no_more_details')}}.
                 </div>
