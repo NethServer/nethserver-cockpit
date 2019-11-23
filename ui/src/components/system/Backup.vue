@@ -225,7 +225,7 @@
                 </li>
                 <li>
                   <a @click="openCheckDestination(b)">
-                    <span class="fa fa-question span-right-margin"></span>
+                    <span class="fa fa-map-marker-alt span-right-margin"></span>
                     {{$t('backup.check_destination')}}
                   </a>
                 </li>
@@ -772,8 +772,9 @@
             <div class="modal-body">
               <div class="form-group">
                 <div class="col-sm-12">
-                  <div v-if="!currentDataBackup.checkDestination" class="spinner spinner-sm"></div>
-                  <pre v-if="currentDataBackup.checkDestination">{{currentDataBackup.checkDestination}}</pre>
+                  <div v-if="!currentDataBackup.checkDestinationResult" class="spinner spinner-sm"></div>
+                  <pre v-if="currentDataBackup.checkDestinationResult == 'success'" class="prettyprint"><span class="fa fa-check span-right-margin" style='color:green'></span>{{currentDataBackup.checkDestinationDescription}}</pre>
+                  <pre v-if="currentDataBackup.checkDestinationResult == 'failed'" class="prettyprint"><span class="fa fa-times span-right-margin" style='color:darkred'></span>{{currentDataBackup.checkDestinationDescription}}</pre>
                 </div>
               </div>
             </div>
@@ -3218,37 +3219,95 @@ export default {
     },
     openCheckDestination(b){
       var context = this;
+      
+      context.currentDataBackup = context.initBackupData();
+      context.currentDataBackup.name = b.name;
+      context.currentDataBackup.checkDestinationDescription = null;
+      context.currentDataBackup.checkDestinationResult = null;
+      
       var method = "exec";
       var api = "system-backup/validate";
-      var configObj = b.props[b.props.VFSType];
-      configObj.action = b.props.VFSType + "-credentials";
+      var configObj = null;
       
-      $("#checkDestinationModal").modal("show");
-      if (b.props.VFSType == "usb") {
-        configObj.action =
-          configObj.USBDevice.formatted == 1 ? "disk-access" : "format-disk";
-        configObj.name =
-          configObj.USBDevice.formatted == 1 ? null : configObj.USBDevice.name;
-        api =
-          configObj.USBDevice.formatted == 1
-            ? "system-backup/validate"
-            : context.currentBackupData.checkDestination = context.$i18n.t('usb_disk_not_formatted');
+      switch(b.props.VFSType){
+	      case "cifs":
+	      	configObj = {
+		      	SMBShare: b.props.SMBShare,
+			  	SMBHost: b.props.SMBHost,
+			  	SMBLogin: b.props.SMBLogin,
+			  	SMBPassword: b.props.SMBPassword
+	      	}
+		  	break;
+		  	
+	      case "smb":
+	      	configObj = {
+		      	NFSHost: b.props.NFSHost,
+		      	NFSShare: b.props.NFSShare
+	      	}
+		  	break;
+		  	
+	      case "usb":
+	      	configObj = {
+	      		USBLabel: b.props.USBLabel
+	      	}
+		  	break;
+		  	
+		  case "sftp":
+		  	configObj = {
+			  	SftpHost: b.props.SftpHost,
+			  	SftpPort: b.props.SftpPort,
+			  	SftpUser: b.props.SftpUser,
+			  	SftpDirectory: b.props.SftpDirectory
+		  	}
+		  	break;
+		  
+		  case "webdav":
+		  	configObj = {
+			  	WebDAVLogin: b.props.WebDAVLogin,
+			  	WebDAVPassword: b.props.WebDAVPassword,
+			  	WebDAVUrl: b.props.WebDAVUrl
+		  	}
+		  	break;
+		  
+		  case "b2":
+		  	configObj = {
+			  	B2AccountId: b.props.B2AccountId,
+			  	B2AccountKey: b.props.B2AccountKey,
+			  	B2Bucket: b.props.B2Bucket
+		  	}
+		  	break;
+		  	
+		  case "s3":
+		  	configObj = {
+			  	S3AccessKey: b.props.S3AccessKey,
+			  	S3Bucket: b.props.S3Bucket,
+			  	S3SecretKey: b.props.S3SecretKey,
+			  	S3Host: b.props.S3Host
+		  	}
+		  	break;
       }
-      context.currentBackupData.checkDestination = null;
+      
+      configObj.action = b.props.VFSType = "usb" ? "disk-access" : b.props.VFSType + "-credentials";
+      $("#checkDestinationModal").modal("show");
+      
       context.exec(
         [api],
         configObj,
+        null,
         function(success) {
-          context.currentBackupData.checkDestination = context.$i18n.t('backup_destination_is_reachable');
+          context.currentDataBackup.checkDestinationDescription = context.$i18n.t('backup_destination_is_reachable');
+          context.currentDataBackup.checkDestinationResult = 'success';
         },
         function(error) {
           console.error(error);
-          context.currentBackupData.checkDestination = context.$i18n.t('backup_destination_is_not_reachable');
+          context.currentDataBackup.checkDestinationDescription = context.$i18n.t('backup_destination_is_not_reachable') + "\n" + context.$i18n.t('backup_destination_error_cause') + ": " + error;
+          context.currentDataBackup.checkDestinationResult = 'failed';
         }
       );
-    },
+    }, 
     cleanCheckDestination(){
-      this.currentDataBackup.checkDestination = null;
+      this.currentDataBackup.checkDestinationResult = null;
+      this.currentDataBackup.checkDestinationDescription = null;
     },
     openDeleteData(b) {
       this.currentDataBackup = this.initBackupData();
