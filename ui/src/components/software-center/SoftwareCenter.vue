@@ -62,7 +62,7 @@
           >{{$t('software_center.update_all')}}</button>
           <span class="panel-title">
             <span
-              v-if="(updates.nethserver.length + updates.other.length) > 0"
+              *ngIf="updates.packages" v-if="(updates.nethserver.length + updates.other.length) > 0"
               class="pficon pficon-warning-triangle-o starred-marging"
             ></span>
             {{$t('software_center.updates_available')}}:
@@ -316,7 +316,7 @@
       </div>
     </div>
     <div class="modal" id="viewDetailsModal" tabindex="-1" role="dialog" data-backdrop="static">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">{{$t('software_center.details_for')}} {{currentPackage.title}}</h4>
@@ -858,11 +858,10 @@ export default {
           null,
           function(success) {
             try {
-              success = JSON.parse(success);
+              context.currentPackage.details = success;
             } catch (e) {
               console.error(e);
             }
-            context.currentPackage.details = success.data;
             context.$forceUpdate();
           },
           function(error) {
