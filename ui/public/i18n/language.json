@@ -285,7 +285,11 @@
     "invalid_backup_format": "Backup not found or invalid",
     "remap_at_least_one_green": "You have to select at least one green to remap",
     "assign_later": "Assign later",
-    "current_int": "System interfaces"
+    "current_int": "System interfaces",
+    "check_destination": "Check destination",
+    "check_destination_for": "Check destination of",
+    "backup.destination_is_reachable": "Backup destination is reachable",
+    "backup.destination_is_not_reachable": "Backup destination is reachable"
   },
   "disk_usage": {
     "title": "Disk usage",
