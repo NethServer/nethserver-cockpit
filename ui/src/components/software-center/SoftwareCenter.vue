@@ -40,6 +40,11 @@
         >
           <button
             :disabled="view.isUpdating"
+            @click="viewPackage('installed')"
+            class="btn btn-default right panel-icon"
+          >{{$t('software_center.installed_packages')}}</button>
+          <button
+            :disabled="view.isUpdating"
             data-toggle="modal"
             data-target="#configureUpdatesModal"
             class="btn btn-default right"
@@ -810,7 +815,7 @@ export default {
         .call("/packages", "cockpit.Packages", "Reload", []);
     },
     viewPackage(pack) {
-      if (pack) {
+      if (pack == "changelog") {
         this.currentPackage.title = this.$i18n.t("software_center.updates_low");
         this.currentPackage.type = "changelog";
 
@@ -821,6 +826,32 @@ export default {
           ["system-packages/read"],
           {
             action: "changelog"
+          },
+          null,
+          function(success) {
+            try {
+              success = JSON.parse(success);
+            } catch (e) {
+              console.error(e);
+            }
+            context.currentPackage.details = success.data || "-";
+            context.$forceUpdate();
+          },
+          function(error) {
+            console.error(error);
+          }
+        );
+      } else if(pack == "installed") {
+        this.currentPackage.title = this.$i18n.t("software_center.installed_low");
+        this.currentPackage.type = "installed";
+
+        // open details for packages
+        var context = this;
+
+        context.exec(
+          ["system-packages/read"],
+          {
+            action: "installed"
           },
           null,
           function(success) {
