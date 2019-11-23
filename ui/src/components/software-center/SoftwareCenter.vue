@@ -66,7 +66,7 @@
               class="pficon pficon-warning-triangle-o starred-marging"
             ></span>
             {{$t('software_center.updates_available')}}:
-            {{update.packages.length}}
+            {{updates.packages.length}}
           </span>
           <span
             class="provider-details margin-left-md"
@@ -380,8 +380,7 @@
                 <strong>{{$t('warning')}}.</strong>
                 {{$t('software_center.this_action_will_install')}}
                 <b>
-                  {{updates.nethserver.length
-                  + updates.other.length}}
+                  {{updates.packages.length}}
                 </b>
                 {{updates.other.length == 1 ? $t('software_center.update_low') : $t('software_center.updates_low')}}.
               </div>
@@ -697,7 +696,6 @@ export default {
     },
     getUpdates() {
       var context = this;
-
       context.updates = {
         nethserver: [],
         other: [],
@@ -716,7 +714,6 @@ export default {
           } catch (e) {
             console.error(e);
           }
-
           context.hints = success.hints || {};
           if (
             context.hints.details &&
@@ -725,26 +722,24 @@ export default {
           ) {
             $("#upgradeModal").modal("show");
           }
-
           for (var u in success.updates) {
             var update = success.updates[u];
             update.isUpdating = false;
             update.details = null;
             update.isOpen = false;
             update.progress = 100;
-
             if (update.nethserver) {
               context.updates.nethserver.push(update);
               for(var x = 0; x < update.updates.length; x++){
-                if(context.update.packages.find(update.updates[x].name) == "undefined"){
-                    context.update.packages.push(update.updates[x].name);
+                if(context.updates.packages.indexOf(update.updates[x].name.toString()) == -1){
+                    context.updates.packages.push(update.updates[x].name.toString());
                 }
               }
             } else {
               context.updates.other.push(update);
               for(var x = 0; x < update.updates.length; x++){
-                if(context.update.packages.find(update.updates[x].name) == "undefined"){
-                    context.update.packages.push(update.updates[x].name);
+                if(context.updates.packages.indexOf(update.updates[x].name) == -1){
+                    context.updates.packages.push(update.updates[x].name);
                 }
               }
             }
@@ -1140,21 +1135,6 @@ export default {
         }
       );
     },
-    sumUpdates(ns,ot){
-        var arrayns = ns.toString().split(",");
-        var arrayot = ot.toString().split(",");
-        var countup = 0;
-        
-        for(var x = 0; x < arrayns.length; x++){
-            countup += arrayns[x];
-        }
-        
-        for(var x = 0; x < arrayot.length; x++){
-            countup += arrayot[x];
-        }
-        
-        return countup;
-    }
   }
 };
 </script>
