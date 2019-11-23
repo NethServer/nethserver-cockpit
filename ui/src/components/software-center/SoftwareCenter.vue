@@ -62,7 +62,7 @@
           >{{$t('software_center.update_all')}}</button>
           <span class="panel-title">
             <span
-              *ngIf="updates.packages" v-if="(updates.nethserver.length + updates.other.length) > 0"
+              v-if="(updates.nethserver.length + updates.other.length) > 0"
               class="pficon pficon-warning-triangle-o starred-marging"
             ></span>
             {{$t('software_center.updates_available')}}:
