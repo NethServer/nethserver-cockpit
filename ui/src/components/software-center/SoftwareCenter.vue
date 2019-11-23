@@ -41,13 +41,13 @@
           <button
             :disabled="view.isUpdating"
             @click="viewPackage('installed')"
-            class="btn btn-default right panel-icon"
+            class="btn btn-default right"
           >{{$t('software_center.installed_packages')}}</button>
           <button
             :disabled="view.isUpdating"
             data-toggle="modal"
             data-target="#configureUpdatesModal"
-            class="btn btn-default right"
+            class="btn btn-default right panel-icon"
           >{{$t('software_center.configure')}}</button>
           <button
             :disabled="(updates.nethserver.length + updates.other.length) == 0"
@@ -154,12 +154,9 @@
               <div class="row">
                 <div v-for="(l,lk) in u.updates" v-bind:key="lk" class="col-xs-12">
                   <div class="list-view-pf-additional-info-item">
-                    <h4 class="col-xs-4 text-align-right">{{l.name}}</h4>
+                    <h5 class="col-xs-4 text-align-right">{{l.name}}</h5>
                     <div class="version-details col-xs-8 text-align-left">
-                      <span class="fa fa-info"></span>
-                      <strong>{{l.installed_version}}-{{l.installed_release}}</strong>
-                      <span class="fa fa-arrow-right"></span>
-                      <strong>{{l.version}}-{{l.release}}</strong>
+                      <strong>{{l.version}}</strong> <small>{{$t('software_center.release')}}: {{l.version}}-{{l.release}}</small>
                     </div>
                   </div>
                 </div>
@@ -737,9 +734,9 @@ export default {
             update.progress = 100;
 
             if (update.nethserver) {
-              context.updates.nethserver.push(update);
+              context.updates.nethserver.push(update.updates.length);
             } else {
-              context.updates.other.push(update);
+              context.updates.other.push(update.updates.length);
             }
           }
           context.view.updatesLoaded = true;
@@ -1285,7 +1282,8 @@ export default {
 }
 
 .version-details {
-  margin-left: 20px;
+  margin-left: 10px;
+  font-size: 13.28px;
 }
 
 .has-updates {
