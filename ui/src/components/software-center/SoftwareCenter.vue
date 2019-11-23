@@ -66,7 +66,7 @@
               class="pficon pficon-warning-triangle-o starred-marging"
             ></span>
             {{$t('software_center.updates_available')}}:
-            sumUpdates("{{updates.nethserver}}","{{updates.other}"")
+            {{updates.count}}
           </span>
           <span
             class="provider-details margin-left-md"
@@ -700,7 +700,8 @@ export default {
 
       context.updates = {
         nethserver: [],
-        other: []
+        other: [],
+        count: 0
       };
       context.view.updatesLoaded = false;
       context.exec(
@@ -734,8 +735,10 @@ export default {
 
             if (update.nethserver) {
               context.updates.nethserver.push(update);
+              context.updates.count += update.updates.length;
             } else {
               context.updates.other.push(update);
+              context.updates.count += update.updates.length;
             }
           }
           context.view.updatesLoaded = true;
