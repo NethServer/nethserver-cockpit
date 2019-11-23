@@ -880,7 +880,8 @@
     "upgrade_now": "Upgrade now",
     "no_more_details": "No more details",
     "installed_packages": "Installed",
-    "release": "Release"
+    "release": "Release",
+    "installed_low": "installed packages"
   },
   "terminal": {
     "title": "Terminal"
