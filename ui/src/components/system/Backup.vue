@@ -223,6 +223,12 @@
                     {{$t('backup.view_last_log')}}
                   </a>
                 </li>
+                <li>
+                  <a @click="openCheckDestination(b)">
+                    <span class="fa fa-question span-right-margin"></span>
+                    {{$t('backup.check_destination')}}
+                  </a>
+                </li>
                 <li role="presentation" class="divider"></li>
                 <li>
                   <a @click="openDeleteData(b)">
@@ -747,6 +753,33 @@
             <div class="modal-footer">
               <button
                 @click="cleanLastLog()"
+                class="btn btn-default"
+                type="button"
+                data-dismiss="modal"
+              >{{$t('cancel')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="checkDestinationModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('backup.check_destination_for')}} {{currentDataBackup.name}}</h4>
+          </div>
+          <form class="form-horizontal">
+            <div class="modal-body">
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <div v-if="!currentDataBackup.checkDestination" class="spinner spinner-sm"></div>
+                  <pre v-if="currentDataBackup.checkDestination">{{currentDataBackup.checkDestination}}</pre>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                @click="cleanCheckDestination()"
                 class="btn btn-default"
                 type="button"
                 data-dismiss="modal"
@@ -3182,6 +3215,40 @@ export default {
     },
     cleanLastLog() {
       this.currentDataBackup.lastLog = null;
+    },
+    openCheckDestination(b){
+      var context = this;
+      var method = "exec";
+      var api = "system-backup/validate";
+      var configObj = b.props[b.props.VFSType];
+      configObj.action = b.props.VFSType + "-credentials";
+      
+      $("#checkDestinationModal").modal("show");
+      if (b.props.VFSType == "usb") {
+        configObj.action =
+          configObj.USBDevice.formatted == 1 ? "disk-access" : "format-disk";
+        configObj.name =
+          configObj.USBDevice.formatted == 1 ? null : configObj.USBDevice.name;
+        api =
+          configObj.USBDevice.formatted == 1
+            ? "system-backup/validate"
+            : context.currentBackupData.checkDestination = context.$i18n.t('usb_disk_not_formatted');
+      }
+      context.currentBackupData.checkDestination = null;
+      context.exec(
+        [api],
+        configObj,
+        function(success) {
+          context.currentBackupData.checkDestination = context.$i18n.t('backup_destination_is_reachable');
+        },
+        function(error) {
+          console.error(error);
+          context.currentBackupData.checkDestination = context.$i18n.t('backup_destination_is_not_reachable');
+        }
+      );
+    },
+    cleanCheckDestination(){
+      this.currentDataBackup.checkDestination = null;
     },
     openDeleteData(b) {
       this.currentDataBackup = this.initBackupData();
