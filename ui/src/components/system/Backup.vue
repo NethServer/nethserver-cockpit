@@ -225,7 +225,7 @@
                 </li>
                 <li>
                   <a @click="openCheckDestination(b)">
-                    <span class="fa fa-map-marker-alt span-right-margin"></span>
+                    <span class="fa fa-save span-right-margin"></span>
                     {{$t('backup.check_destination')}}
                   </a>
                 </li>
@@ -773,8 +773,8 @@
               <div class="form-group">
                 <div class="col-sm-12">
                   <div v-if="!currentDataBackup.checkDestinationResult" class="spinner spinner-sm"></div>
-                  <pre v-if="currentDataBackup.checkDestinationResult == 'success'" class="prettyprint"><span class="fa fa-check span-right-margin" style='color:green'></span>{{currentDataBackup.checkDestinationDescription}}</pre>
-                  <pre v-if="currentDataBackup.checkDestinationResult == 'failed'" class="prettyprint"><span class="fa fa-times span-right-margin" style='color:darkred'></span>{{currentDataBackup.checkDestinationDescription}}</pre>
+                  <pre v-if="currentDataBackup.checkDestinationResult == 'success'" class="prettyprint"><span class="fa fa-check span-right-margin" style='color:green'></span>&nbsp;{{currentDataBackup.checkDestinationDescription}}</pre>
+                  <pre v-if="currentDataBackup.checkDestinationResult == 'failed'" class="prettyprint"><span class="fa fa-times span-right-margin" style='color:darkred'></span>&nbsp;{{currentDataBackup.checkDestinationDescription}}</pre>
                 </div>
               </div>
             </div>
@@ -3287,7 +3287,7 @@ export default {
 		  	break;
       }
       
-      configObj.action = b.props.VFSType = "usb" ? "disk-access" : b.props.VFSType + "-credentials";
+      configObj.action = b.props.VFSType == "usb" ? "disk-access" : b.props.VFSType + "-credentials";
       $("#checkDestinationModal").modal("show");
       
       context.exec(
