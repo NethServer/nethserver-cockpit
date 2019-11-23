@@ -88,7 +88,12 @@ if($cmd eq 'list-updates') {
     }
     print $out;
 
-} elsif ($cmd eq 'list-removed') {
+}  elsif ($cmd eq 'list-installed') {
+
+    my $out = `/bin/rpm -qa --queryformat '%{NAME}:%{VERSION}:%{VERSION}-%{RELEASE}\n' | sort | column -t -s :`;    
+	print $out;
+
+}  elsif ($cmd eq 'list-removed') {
 
     my $packages = $input->{'packages'};
     $packages = join(" ", @$packages);
