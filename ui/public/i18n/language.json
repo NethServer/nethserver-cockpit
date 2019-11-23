@@ -289,7 +289,7 @@
     "check_destination": "Check destination",
     "check_destination_for": "Check destination of",
     "backup.destination_is_reachable": "Backup destination is reachable",
-    "backup.destination_is_not_reachable": "Backup destination is reachable"
+    "backup.destination_is_not_reachable": "Backup destination is not reachable"
   },
   "disk_usage": {
     "title": "Disk usage",
