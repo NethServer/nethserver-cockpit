@@ -88,7 +88,7 @@ def list_updates(yb):
     for p in yb.doPackageLists(pkgnarrow='installed').installed:
         installed_versions[p.name] = (p.version, p.release)
 
-    updates = map(lambda i: {'name': i.name + ' ' + i.version, 'arch': i.arch, 'epoch': i.epoch, 'installed_version': installed_versions[i.name][0], 'installed_release': installed_versions[i.name][1], 'version': i.version, 'release': i.release, 'repo': i.repoid}, yb.doPackageLists(pkgnarrow='updates').updates)
+    updates = map(lambda i: {'name': i.name, 'arch': i.arch, 'epoch': i.epoch, 'installed_version': installed_versions[i.name][0], 'installed_release': installed_versions[i.name][1], 'version': i.version, 'release': i.release, 'repo': i.repoid}, yb.doPackageLists(pkgnarrow='updates').updates)
     return updates
 
 def parse_pkginfo_conf():
