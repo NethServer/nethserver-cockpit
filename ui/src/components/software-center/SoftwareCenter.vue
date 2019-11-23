@@ -66,12 +66,7 @@
               class="pficon pficon-warning-triangle-o starred-marging"
             ></span>
             {{$t('software_center.updates_available')}}:
-            {{updates.nethserver.length + updates.other.length}} 
-            <span v-if="(updates.nethserver.length + updates.other.length) == 1">{{$t('software_center.module')}}</span>
-            <span v-else>{{$t('software_center.module')}}</span>
-            <small>| {{updates.count}} 
-            <span v-if="updates.count == 1">{{$t('software_center.package')}}</span>
-            <span v-else>{{$t('software_center.packages')}}</span>
+            {{update.packages.length}}
           </span>
           <span
             class="provider-details margin-left-md"
@@ -160,7 +155,7 @@
                   <div class="list-view-pf-additional-info-item">
                     <h5 class="col-xs-4 text-align-right">{{l.name}}</h5>
                     <div class="version-details col-xs-8 text-align-left">
-                      <strong>{{l.version}}</strong> <small>- {{$t('software_center.release')}}: {{l.version}}-{{l.release}}</small>
+                      <strong>{{l.version}}</strong>&nbsp;&nbsp;&nbsp;<small>{{$t('software_center.release')}}: {{l.version}}-{{l.release}}</small>
                     </div>
                   </div>
                 </div>
@@ -706,7 +701,7 @@ export default {
       context.updates = {
         nethserver: [],
         other: [],
-        count: 0
+        packages: []
       };
       context.view.updatesLoaded = false;
       context.exec(
@@ -740,10 +735,18 @@ export default {
 
             if (update.nethserver) {
               context.updates.nethserver.push(update);
-              context.updates.count += update.updates.length;
+              for(var x = 0; x < update.updates.length; x++){
+                if(context.update.packages.find(update.updates[x].name) == "undefined"){
+                    context.update.packages.push(update.updates[x].name);
+                }
+              }
             } else {
               context.updates.other.push(update);
-              context.updates.count += update.updates.length;
+              for(var x = 0; x < update.updates.length; x++){
+                if(context.update.packages.find(update.updates[x].name) == "undefined"){
+                    context.update.packages.push(update.updates[x].name);
+                }
+              }
             }
           }
           context.view.updatesLoaded = true;
@@ -855,7 +858,7 @@ export default {
         context.exec(
           ["system-packages/read"],
           {
-            action: "installed"
+            action: "list-installed"
           },
           null,
           function(success) {
@@ -864,7 +867,7 @@ export default {
             } catch (e) {
               console.error(e);
             }
-            context.currentPackage.details = success.data || "-";
+            context.currentPackage.details = success.data;
             context.$forceUpdate();
           },
           function(error) {
