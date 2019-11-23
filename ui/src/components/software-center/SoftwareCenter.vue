@@ -66,8 +66,7 @@
               class="pficon pficon-warning-triangle-o starred-marging"
             ></span>
             {{$t('software_center.updates_available')}}:
-            {{updates.nethserver.length +
-            updates.other.length}}
+            sumUpdates("{{updates.nethserver}}","{{updates.other}"")
           </span>
           <span
             class="provider-details margin-left-md"
@@ -734,9 +733,9 @@ export default {
             update.progress = 100;
 
             if (update.nethserver) {
-              context.updates.nethserver.push(update.updates.length);
+              context.updates.nethserver.push(update);
             } else {
-              context.updates.other.push(update.updates.length);
+              context.updates.other.push(update);
             }
           }
           context.view.updatesLoaded = true;
@@ -1129,6 +1128,21 @@ export default {
           );
         }
       );
+    },
+    sumUpdates(ns,ot){
+        var arrayns = ns.toString().split(",");
+        var arrayot = ot.toString().split(",");
+        var countup = 0;
+        
+        for(var x = 0; x < arrayns.length; x++){
+            countup += arrayns[x];
+        }
+        
+        for(var x = 0; x < arrayot.length; x++){
+            countup += arrayot[x];
+        }
+        
+        return countup;
     }
   }
 };
