@@ -225,7 +225,7 @@
                 </li>
                 <li>
                   <a @click="openCheckDestination(b)">
-                    <span class="fa fa-save span-right-margin"></span>
+                    <span class="fa fa-database span-right-margin"></span>
                     {{$t('backup.check_destination')}}
                   </a>
                 </li>
@@ -3295,12 +3295,12 @@ export default {
         configObj,
         null,
         function(success) {
-          context.currentDataBackup.checkDestinationDescription = context.$i18n.t('backup_destination_is_reachable');
+          context.currentDataBackup.checkDestinationDescription = context.$i18n.t('backup.destination_is_reachable');
           context.currentDataBackup.checkDestinationResult = 'success';
         },
         function(error) {
           console.error(error);
-          context.currentDataBackup.checkDestinationDescription = context.$i18n.t('backup_destination_is_not_reachable') + "\n" + context.$i18n.t('backup_destination_error_cause') + ": " + error;
+          context.currentDataBackup.checkDestinationDescription = context.$i18n.t('backup.destination_is_not_reachable') + "\n" + context.$i18n.t('backup.destination_error_cause') + ": " + error;
           context.currentDataBackup.checkDestinationResult = 'failed';
         }
       );
