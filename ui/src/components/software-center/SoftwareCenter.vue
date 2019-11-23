@@ -732,9 +732,9 @@ export default {
             update.progress = 100;
 
             if (update.nethserver) {
-              context.updates.nethserver.push(...update.updates);
+              context.updates.nethserver.push(update);
             } else {
-              context.updates.other.push(...update.updates);
+              context.updates.other.push(update);
             }
           }
           context.view.updatesLoaded = true;
@@ -845,17 +845,22 @@ export default {
 
         var details = "";
         for (var o in this.updates.other) {
-          var pack = this.updates.other[o];
-          details += pack.name + " ";
-          details +=
-            "@" +
-            pack.version +
-            "-" +
-            pack.release +
-            " " +
-            this.$i18n.t("from") +
-            " " +
-            pack.repo;
+          details += this.updates.other[o].name + ":\n";
+          for (var l in this.updates.other[o].updates) {
+            var pack = this.updates.other[o].updates[l];
+            details +=
+              "  " +
+              pack.name +
+              "@" +
+              pack.version +
+              "-" +
+              pack.release +
+              " " +
+              this.$i18n.t("from") +
+              " " +
+              pack.repo +
+              "\n";
+          }
           details += "\n";
         }
         this.currentPackage.details = details;
