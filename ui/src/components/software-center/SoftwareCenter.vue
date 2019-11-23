@@ -66,7 +66,12 @@
               class="pficon pficon-warning-triangle-o starred-marging"
             ></span>
             {{$t('software_center.updates_available')}}:
-            {{updates.count}}
+            {{updates.nethserver.length + updates.other.length}} 
+            <span v-if="(updates.nethserver.length + updates.other.length) == 1">{{$t('software_center.module')}}</span>
+            <span v-else>{{$t('software_center.module')}}</span>
+            <small>| {{updates.count}} 
+            <span v-if="updates.count == 1">{{$t('software_center.package')}}</span>
+            <span v-else>{{$t('software_center.packages')}}</span>
           </span>
           <span
             class="provider-details margin-left-md"
@@ -155,7 +160,7 @@
                   <div class="list-view-pf-additional-info-item">
                     <h5 class="col-xs-4 text-align-right">{{l.name}}</h5>
                     <div class="version-details col-xs-8 text-align-left">
-                      <strong>{{l.version}}</strong> <small>{{$t('software_center.release')}}: {{l.version}}-{{l.release}}</small>
+                      <strong>{{l.version}}</strong> <small>- {{$t('software_center.release')}}: {{l.version}}-{{l.release}}</small>
                     </div>
                   </div>
                 </div>
@@ -1299,8 +1304,8 @@ export default {
 }
 
 .version-details {
-  margin-left: 10px;
   font-size: 13.28px;
+  padding-left: 0px;
 }
 
 .has-updates {
