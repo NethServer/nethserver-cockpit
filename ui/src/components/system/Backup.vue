@@ -3230,61 +3230,68 @@ export default {
       var configObj = null;
       
       switch(b.props.VFSType){
-	      case "cifs":
-	      	configObj = {
-		      	SMBShare: b.props.SMBShare,
-			  	SMBHost: b.props.SMBHost,
-			  	SMBLogin: b.props.SMBLogin,
-			  	SMBPassword: b.props.SMBPassword
-	      	}
-		  	break;
+	    case "cifs":
+	      configObj = {
+		    SMBShare: b.props.SMBShare,
+			SMBHost: b.props.SMBHost,
+			SMBLogin: b.props.SMBLogin,
+			SMBPassword: b.props.SMBPassword,
+			HostToPing: b.props.SMBHost
+	      }
+		  break;
 		  	
-	      case "smb":
-	      	configObj = {
-		      	NFSHost: b.props.NFSHost,
-		      	NFSShare: b.props.NFSShare
-	      	}
-		  	break;
+	    case "smb":
+	      configObj = {
+		    NFSHost: b.props.NFSHost,
+		    NFSShare: b.props.NFSShare,
+		    HostToPing: b.props.NFSHost
+	      }
+		break;
 		  	
-	      case "usb":
-	      	configObj = {
-	      		USBLabel: b.props.USBLabel
-	      	}
-		  	break;
+	    case "usb":
+	      configObj = {
+	        USBLabel: b.props.USBLabel,
+	        HostToPing: null
+	      }
+		break;
 		  	
-		  case "sftp":
-		  	configObj = {
-			  	SftpHost: b.props.SftpHost,
-			  	SftpPort: b.props.SftpPort,
-			  	SftpUser: b.props.SftpUser,
-			  	SftpDirectory: b.props.SftpDirectory
-		  	}
-		  	break;
+		case "sftp":
+		  configObj = {
+		    SftpHost: b.props.SftpHost,
+		    SftpPort: b.props.SftpPort,
+		    SftpUser: b.props.SftpUser,
+		    SftpDirectory: b.props.SftpDirectory,
+		    HostToPing: b.props.SftpHost
+		  }
+		break;
 		  
-		  case "webdav":
-		  	configObj = {
-			  	WebDAVLogin: b.props.WebDAVLogin,
-			  	WebDAVPassword: b.props.WebDAVPassword,
-			  	WebDAVUrl: b.props.WebDAVUrl
-		  	}
-		  	break;
+		case "webdav":
+		  configObj = {
+		    WebDAVLogin: b.props.WebDAVLogin,
+		    WebDAVPassword: b.props.WebDAVPassword,
+		    WebDAVUrl: b.props.WebDAVUrl,
+		    HostToPing: 'nethserver.org' /* checking internet connection */
+		  }
+		break;
 		  
-		  case "b2":
-		  	configObj = {
-			  	B2AccountId: b.props.B2AccountId,
-			  	B2AccountKey: b.props.B2AccountKey,
-			  	B2Bucket: b.props.B2Bucket
-		  	}
-		  	break;
+		case "b2":
+		  configObj = {
+            B2AccountId: b.props.B2AccountId,
+		    B2AccountKey: b.props.B2AccountKey,
+		    B2Bucket: b.props.B2Bucket,
+		    HostToPing: 'nethserver.org' /* checking internet connection */
+		  }
+	    break;
 		  	
-		  case "s3":
-		  	configObj = {
-			  	S3AccessKey: b.props.S3AccessKey,
-			  	S3Bucket: b.props.S3Bucket,
-			  	S3SecretKey: b.props.S3SecretKey,
-			  	S3Host: b.props.S3Host
-		  	}
-		  	break;
+		case "s3":
+          configObj = {
+		    S3AccessKey: b.props.S3AccessKey,
+		    S3Bucket: b.props.S3Bucket,
+		    S3SecretKey: b.props.S3SecretKey,
+		    S3Host: b.props.S3Host,
+		    HostToPing: 'nethserver.org' /* checking internet connection */
+          }
+		break;
       }
       
       configObj.action = b.props.VFSType == "usb" ? "disk-access" : b.props.VFSType + "-credentials";
@@ -3300,11 +3307,56 @@ export default {
         },
         function(error) {
           console.error(error);
-          context.currentDataBackup.checkDestinationDescription = context.$i18n.t('backup.destination_is_not_reachable') + "\n" + context.$i18n.t('backup.destination_error_cause') + ": " + error;
-          context.currentDataBackup.checkDestinationResult = 'failed';
+
+          if(configObj.HostToPing != null){
+	          
+	          nethserver.exec(
+		        ["system-network/validate"],
+		        {
+		          action: "ping",
+		          host: configObj.HostToPing
+		        },
+		        null,
+		        function(success) {
+		          nethserver.exec(
+		            ["system-network/read"],
+		            {
+		              action: "ping",
+		              host: configObj.HostToPing
+		            },
+		            null,
+		            function(success) {
+		                  try {
+		                    success = JSON.parse(success);
+		                  } catch (e) {
+		                    console.error(e);
+		                  }
+		              context.currentDataBackup.checkDestinationDescription = context.$i18n.t('backup.destination_is_not_reachable') + "\n" + context.$i18n.t('backup.destination_error_cause') + ": " + error + "\n\n" + success.data;
+	                  context.currentDataBackup.checkDestinationResult = 'failed';
+		            },
+		            function(error) {
+		              console.error(error);
+		            },
+		            true //sudo
+		          );
+		        },
+		        function(error, data) {
+		          var errorData = {};
+		          try {
+		            errorData = JSON.parse(data);
+		            for (var e in errorData.attributes) {
+		              var attr = errorData.attributes[e];
+		              console.log(attr.parameter + " - HasError: " + true);
+		              console.log(attr.parameter + " - Message : " + attr.error);
+		            }
+		          } catch (e) {
+		            console.error(e);
+		          }
+          	  });
+          }
         }
       );
-    }, 
+    },
     cleanCheckDestination(){
       this.currentDataBackup.checkDestinationResult = null;
       this.currentDataBackup.checkDestinationDescription = null;
