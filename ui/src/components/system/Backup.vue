@@ -525,8 +525,8 @@
                 </div>
               </div>
               <div
-                v-if="currentConfigBackup.remap && currentConfigBackup.isValid"
                 v-for="(o, ok) in currentConfigBackup.remapInterfaces.new"
+                v-if="currentConfigBackup.remap && currentConfigBackup.isValid && o.role && o.role.length > 0"
                 v-bind:key="ok"
                 class="form-group"
               >
@@ -556,7 +556,6 @@
                     <option
                       v-for="(n, nk) in currentConfigBackup.remapInterfaces.old"
                       v-bind:key="nk"
-                      v-if="n.role && n.role.length > 0"
                       :value="n.name"
                       :disabled="currentConfigBackup.remapNew[n.name]"
                     >
