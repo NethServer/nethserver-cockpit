@@ -325,7 +325,7 @@ export default {
     var hostname = window.top.document.title.split("-")[1].trim();
     var name =
       this.$route.name == "ApplicationsDetails"
-        ? this.$route.params.name
+        ? this.$i18n.t("menu." + this.$route.params.name)
         : this.$i18n.t("menu." + this.$route.name);
     window.top.document.title = name + " - " + hostname;
   },
@@ -342,7 +342,7 @@ export default {
       var hostname = window.top.document.title.split("-")[1].trim();
       var name =
         to.name == "ApplicationsDetails"
-          ? to.params.name
+          ? this.$i18n.t("menu." + to.params.name)
           : this.$i18n.t("menu." + to.name);
       setTimeout(function() {
         window.top.document.title = name + " - " + hostname;
