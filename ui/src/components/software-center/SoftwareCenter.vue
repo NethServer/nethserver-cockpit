@@ -61,8 +61,7 @@
               class="pficon pficon-warning-triangle-o starred-marging"
             ></span>
             {{$t('software_center.updates_available')}}:
-            {{updates.nethserver.length +
-            updates.other.length}}
+            {{updates.packages.length}}
           </span>
           <span
             class="provider-details margin-left-md"
@@ -149,12 +148,9 @@
               <div class="row">
                 <div v-for="(l,lk) in u.updates" v-bind:key="lk" class="col-xs-12">
                   <div class="list-view-pf-additional-info-item">
-                    <h4 class="col-xs-4 text-align-right">{{l.name}}</h4>
+                    <h5 class="col-xs-4 text-align-right">{{l.name}}</h5>
                     <div class="version-details col-xs-8 text-align-left">
-                      <span class="fa fa-info"></span>
-                      <strong>{{l.installed_version}}-{{l.installed_release}}</strong>
-                      <span class="fa fa-arrow-right"></span>
-                      <strong>{{l.version}}-{{l.release}}</strong>
+                      <strong>{{l.version}}</strong>&nbsp;&nbsp;&nbsp;<small>{{$t('software_center.full_version')}}: {{l.version}}-{{l.release}} ({{$t('software_center.current_full_version')}}: {{l.installed_version}}-{{l.installed_release}})</small>
                     </div>
                   </div>
                 </div>
@@ -169,7 +165,7 @@
             {{updates.other.length == 1 ? $t('software_center.there_is') : $t('software_center.there_are')}}
             <b
               class="addtional-number"
-            >{{updates.other.length}}</b>
+            >{{updates.basepackages.length}}</b>
             {{updates.other.length == 1 ? $t('software_center.update_base_system') :
             $t('software_center.updates_base_system')}}
             <button
@@ -191,12 +187,20 @@
         <button
           @click="openInstallPackages()"
           :disabled="selectedApps == 0 || view.isInstalling || view.isUpdating"
-          class="btn btn-primary btn-lg"
+          class="btn btn-primary btn-lg panel-icon"
         >
           <span class="fa fa-download starred-marging"></span>
           {{$t('software_center.install')}} {{selectedApps}} {{selectedApps == 1 ?
           $t('software_center.application_low')
           : $t('software_center.applications_low')}}
+        </button>
+        <button
+          @click="viewPackage('installed')"
+          :disabled="view.isInstalling || view.isUpdating"
+          class="btn btn-primary btn-lg"
+        >
+          <span class="fa fa-box-open starred-marging"></span>
+          {{$t('software_center.installed_packages)}}
         </button>
       </div>
       <form class="search-pf has-button">
@@ -315,7 +319,7 @@
       </div>
     </div>
     <div class="modal" id="viewDetailsModal" tabindex="-1" role="dialog" data-backdrop="static">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">{{$t('software_center.details_for')}} {{currentPackage.title}}</h4>
@@ -379,8 +383,7 @@
                 <strong>{{$t('warning')}}.</strong>
                 {{$t('software_center.this_action_will_install')}}
                 <b>
-                  {{updates.nethserver.length
-                  + updates.other.length}}
+                  {{updates.packages.length}}
                 </b>
                 {{updates.other.length == 1 ? $t('software_center.update_low') : $t('software_center.updates_low')}}.
               </div>
@@ -552,7 +555,9 @@ export default {
       categoryColors: {},
       updates: {
         nethserver: [],
-        other: []
+        other: [],
+        nspackages: [],
+        basepackages: []
       },
       updatesConfig: {
         install: "download",
@@ -699,7 +704,9 @@ export default {
 
       context.updates = {
         nethserver: [],
-        other: []
+        other: [],
+        nspackages: [],
+        basepackages: []
       };
       context.view.updatesLoaded = false;
       context.exec(
@@ -733,8 +740,18 @@ export default {
 
             if (update.nethserver) {
               context.updates.nethserver.push(update);
+              for(var x = 0; x < update.updates.length; x++){
+                if(context.updates.nspackages.indexOf(update.updates[x].name.toString()) == -1){
+                    context.updates.nspackages.push(update.updates[x].name.toString());
+                }
+              }
             } else {
               context.updates.other.push(update);
+              for(var x = 0; x < update.updates.length; x++){
+                if(context.updates.basepackages.indexOf(update.updates[x].name) == -1){
+                    context.updates.basepackages.push(update.updates[x].name);
+                }
+              }
             }
           }
           context.view.updatesLoaded = true;
@@ -810,7 +827,7 @@ export default {
         .call("/packages", "cockpit.Packages", "Reload", []);
     },
     viewPackage(pack) {
-      if (pack) {
+      if (pack == "changelog") {
         this.currentPackage.title = this.$i18n.t("software_center.updates_low");
         this.currentPackage.type = "changelog";
 
@@ -830,6 +847,29 @@ export default {
               console.error(e);
             }
             context.currentPackage.details = success.data || "-";
+            context.$forceUpdate();
+          },
+          function(error) {
+            console.error(error);
+          }
+        );
+      } else if (pack == "installed") {
+	    this.currentPackage.title = this.$i18n.t("software_center.installed_low");
+        this.currentPackage.type = "installed";
+        // open details for packages
+        var context = this;
+        context.exec(
+          ["system-packages/read"],
+          {
+            action: "list-installed"
+          },
+          null,
+          function(success) {
+            try {
+              context.currentPackage.details = success;
+            } catch (e) {
+              console.error(e);
+            }
             context.$forceUpdate();
           },
           function(error) {
@@ -1254,7 +1294,8 @@ export default {
 }
 
 .version-details {
-  margin-left: 20px;
+  font-size: 13.28px;
+  padding-left: 0px;
 }
 
 .has-updates {

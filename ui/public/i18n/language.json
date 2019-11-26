@@ -902,7 +902,12 @@
     "there_is_upgrade_from": "There is an upgrade from",
     "to": "to",
     "upgrade_now": "Upgrade now",
-    "no_more_details": "No more details"
+    "no_more_details": "No more details",
+    "installed_packages": "Installed packages",
+    "full_version": "Full version",
+    "current_full_version": "Current",
+    "installed_low": "installed packages",
+    
   },
   "terminal": {
     "title": "Terminal"
