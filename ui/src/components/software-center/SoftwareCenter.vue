@@ -61,7 +61,7 @@
               class="pficon pficon-warning-triangle-o starred-marging"
             ></span>
             {{$t('software_center.updates_available')}}:
-            {{updates.packages.length}}
+            {{updates.nspackages.length + updates.basepackages.length}}
           </span>
           <span
             class="provider-details margin-left-md"
@@ -383,7 +383,7 @@
                 <strong>{{$t('warning')}}.</strong>
                 {{$t('software_center.this_action_will_install')}}
                 <b>
-                  {{updates.nspackages.length}}
+                  {{updates.nspackages.length + updates.basepackages.length}}
                 </b>
                 {{updates.other.length == 1 ? $t('software_center.update_low') : $t('software_center.updates_low')}}.
               </div>
