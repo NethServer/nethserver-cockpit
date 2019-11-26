@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.3.1
+Version: 1.3.2
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,10 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Nov 26 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.2-1
+- Improve configuration restore - NethServer/dev#5907
+- Cockpit: Software Center updates duplicates - Bug NethServer/dev#5950
+
 * Thu Nov 21 2019 Davide Principi <davide.principi@nethesis.it> - 1.3.1-1
 - Network recovery console tool - NethServer/dev#5874
 
