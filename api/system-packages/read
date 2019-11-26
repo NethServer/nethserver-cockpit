@@ -90,8 +90,8 @@ if($cmd eq 'list-updates') {
 
 } elsif ($cmd eq 'list-installed') {
 
-    my $out = `/bin/rpm -qa --queryformat '%{NAME}:%{VERSION}:%{VERSION}-%{RELEASE}\n' | sort | column -t -s :`;    
-	print $out;
+    my $out = `/bin/rpm -qa --queryformat '%{NAME}:%{VERSION}:%{VERSION}-%{RELEASE}\n' | sort | column -t -s :`;
+    print $out;
 
 } elsif ($cmd eq 'list-removed') {
 

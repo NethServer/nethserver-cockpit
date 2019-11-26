@@ -383,7 +383,7 @@
                 <strong>{{$t('warning')}}.</strong>
                 {{$t('software_center.this_action_will_install')}}
                 <b>
-                  {{updates.packages.length}}
+                  {{updates.nspackages.length}}
                 </b>
                 {{updates.other.length == 1 ? $t('software_center.update_low') : $t('software_center.updates_low')}}.
               </div>
