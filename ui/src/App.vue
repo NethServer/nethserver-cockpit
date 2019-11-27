@@ -331,7 +331,7 @@ export default {
         : this.$i18n.t("menu." + this.$route.name);
     setTimeout(function() {
       window.top.document.title = name + " - " + hostname;
-    }, 500);
+    }, 250);
   },
   watch: {
     $route(to, from) {
@@ -352,7 +352,7 @@ export default {
           : this.$i18n.t("menu." + to.name);
       setTimeout(function() {
         window.top.document.title = name + " - " + hostname;
-      }, 500);
+      }, 250);
     }
   },
   data() {
