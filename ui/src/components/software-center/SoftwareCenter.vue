@@ -93,6 +93,7 @@
           <div class="list-group-item" v-for="(u,uk) in updates.nethserver" v-bind:key="uk">
             <div class="list-group-item-header">
               <div class="list-view-pf-actions compact-list-actions">
+	            <a @click="toggleOpen(u)" class="panel-icon">{{$t('details')}}</a>
                 <button
                   :disabled="view.isUpdating || view.isInstalling"
                   @click="openUpdateSingle(u)"
@@ -116,9 +117,6 @@
                     </div>
                   </div>
                   <div class="list-view-pf-additional-info">
-                    <div v-if="!u.isUpdating" class="list-view-pf-additional-info-item">
-                      <a @click="toggleOpen(u)">{{$t('details')}}</a>
-                    </div>
                     <div v-if="u.isUpdating" class="progress-description progress-install">
                       <div class="spinner spinner-xs spinner-inline"></div>
                       <strong>{{$t('software_center.updating')}}...</strong>
@@ -341,7 +339,7 @@
                 class="btn btn-default"
                 type="button"
                 data-dismiss="modal"
-              >{{$t('cancel')}}</button>
+              >{{$t('close')}}</button>
             </div>
           </form>
         </div>
@@ -1155,8 +1153,15 @@ export default {
 
 @media (min-width: 992px) {
   .list-view-pf .list-group-item-heading {
-    flex: 1 0 calc(50% - 20px) !important;
+    flex: 1 0 calc(40% - 20px) !important;
   }
+  .list-view-pf .list-group-item-heading {
+    width: calc(60% - 50px) !important;
+  }
+}
+
+.list-view-pf-additional-info {
+  width: 15% !important;
 }
 
 .app-name {
