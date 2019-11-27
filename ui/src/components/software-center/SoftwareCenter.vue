@@ -200,7 +200,7 @@
           class="btn btn-primary btn-lg"
         >
           <span class="fa fa-box-open starred-marging"></span>
-          {{$t('software_center.installed_packages)}}
+          {{$t('software_center.installed_packages')}}
         </button>
       </div>
       <form class="search-pf has-button">
