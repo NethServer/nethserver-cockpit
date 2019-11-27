@@ -351,8 +351,6 @@ export default {
           ? this.$i18n.t("menu." + to.params.name)
           : this.$i18n.t("menu." + to.name);
       setTimeout(function() {
-        $('.modal-backdrop').remove();
-        $('body').removeClass('modal-open');
         window.top.document.title = name + " - " + hostname;
       }, 250);
     }
