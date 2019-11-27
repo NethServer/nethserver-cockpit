@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.3.2
+Version: 1.3.3
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,10 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Wed Nov 27 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.3-1
+- Cockpit: page title is not updated on page change - Bug Nethserver/dev#5946
+- Cockpit: overlay remains active after page change - Bug NethServer/dev#5961
+
 * Tue Nov 26 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.2-1
 - Improve configuration restore - NethServer/dev#5907
 - Cockpit: Software Center updates duplicates - Bug NethServer/dev#5950
