@@ -322,12 +322,16 @@ export default {
     this.checkHints();
 
     // set document title
-    var hostname = window.top.document.title.split("-")[1].trim();
+    var parts = window.top.document.title.split("-");
+    parts.shift();
+    var hostname = parts.join("-").trim();
     var name =
       this.$route.name == "ApplicationsDetails"
         ? this.$i18n.t("menu." + this.$route.params.name)
         : this.$i18n.t("menu." + this.$route.name);
-    window.top.document.title = name + " - " + hostname;
+    setTimeout(function() {
+      window.top.document.title = name + " - " + hostname;
+    }, 500);
   },
   watch: {
     $route(to, from) {
@@ -339,14 +343,16 @@ export default {
       this.checkSystemTasks();
 
       // change title
-      var hostname = window.top.document.title.split("-")[1].trim();
+      var parts = window.top.document.title.split("-");
+      parts.shift();
+      var hostname = parts.join("-").trim();
       var name =
         to.name == "ApplicationsDetails"
           ? this.$i18n.t("menu." + to.params.name)
           : this.$i18n.t("menu." + to.name);
       setTimeout(function() {
         window.top.document.title = name + " - " + hostname;
-      }, 250);
+      }, 500);
     }
   },
   data() {
