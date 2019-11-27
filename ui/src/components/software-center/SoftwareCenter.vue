@@ -1153,10 +1153,10 @@ export default {
 
 @media (min-width: 992px) {
   .list-view-pf .list-group-item-heading {
-    flex: 1 0 calc(40% - 20px) !important;
+    flex: 1 0 calc(35% - 20px) !important;
   }
-  .list-view-pf .list-group-item-heading {
-    width: calc(60% - 50px) !important;
+  .list-view-pf .list-group-item-text {
+    width: calc(70% - 50px) !important;
   }
 }
 
