@@ -150,7 +150,9 @@
                   <div class="list-view-pf-additional-info-item">
                     <h5 class="col-xs-4 text-align-right">{{l.name}}</h5>
                     <div class="version-details col-xs-8 text-align-left">
-                      <strong>{{l.version}}</strong>&nbsp;&nbsp;&nbsp;<small>{{$t('software_center.full_version')}}: {{l.version}}-{{l.release}} ({{$t('software_center.current_full_version')}}: {{l.installed_version}}-{{l.installed_release}})</small>
+                      <strong>{{l.version}}</strong>
+                      <small style='margin-left: 15px'>{{$t('software_center.full_version')}}: {{l.version}}-{{l.release}}</small>
+                      <small style='margin-left: 15px; color: gray'>{{$t('software_center.current_full_version')}}: {{l.installed_version}}-{{l.installed_release}}</small>
                     </div>
                   </div>
                 </div>
@@ -184,23 +186,23 @@
 
       <h3>{{$t('software_center.applications')}} ({{filteredAppsList.length}} {{$t('found')}})</h3>
       <div class="right">
+	    <button
+          @click="viewPackage('installed')"
+          :disabled="view.isInstalling || view.isUpdating"
+          class="btn btn-default panel-icon"
+        >
+          <span class="fa fa-archive starred-marging"></span>
+          {{$t('software_center.installed_packages')}}
+        </button>
         <button
           @click="openInstallPackages()"
           :disabled="selectedApps == 0 || view.isInstalling || view.isUpdating"
-          class="btn btn-primary btn-lg panel-icon"
+          class="btn btn-primary btn-lg"
         >
           <span class="fa fa-download starred-marging"></span>
           {{$t('software_center.install')}} {{selectedApps}} {{selectedApps == 1 ?
           $t('software_center.application_low')
           : $t('software_center.applications_low')}}
-        </button>
-        <button
-          @click="viewPackage('installed')"
-          :disabled="view.isInstalling || view.isUpdating"
-          class="btn btn-default btn-lg"
-        >
-          <span class="fa fa-archive starred-marging"></span>
-          {{$t('software_center.installed_packages')}}
         </button>
       </div>
       <form class="search-pf has-button">
