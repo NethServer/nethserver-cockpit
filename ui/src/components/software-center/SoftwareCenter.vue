@@ -197,9 +197,9 @@
         <button
           @click="viewPackage('installed')"
           :disabled="view.isInstalling || view.isUpdating"
-          class="btn btn-primary btn-lg"
+          class="btn btn-default btn-lg"
         >
-          <span class="fa fa-box-open starred-marging"></span>
+          <span class="fa fa-archive starred-marging"></span>
           {{$t('software_center.installed_packages')}}
         </button>
       </div>
