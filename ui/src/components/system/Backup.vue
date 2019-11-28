@@ -729,7 +729,7 @@
       </div>
     </div>
     <div class="modal" id="lastLogDataModal" tabindex="-1" role="dialog" data-backdrop="static">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">{{$t('backup.last_log_for')}} {{currentDataBackup.name}}</h4>
@@ -749,7 +749,7 @@
                 class="btn btn-default"
                 type="button"
                 data-dismiss="modal"
-              >{{$t('cancel')}}</button>
+              >{{$t('close')}}</button>
             </div>
           </form>
         </div>

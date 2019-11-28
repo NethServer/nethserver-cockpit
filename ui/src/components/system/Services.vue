@@ -131,7 +131,7 @@
     </vue-good-table>
 
     <div class="modal" id="statusModal" tabindex="-1" role="dialog" data-backdrop="static">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">{{$t('services.status_of')}} {{currentDetails.name}}</h4>
@@ -151,7 +151,7 @@
                 class="btn btn-default"
                 type="button"
                 data-dismiss="modal"
-              >{{$t('cancel')}}</button>
+              >{{$t('close')}}</button>
             </div>
           </form>
         </div>
@@ -200,7 +200,7 @@
               </div>
             </div>
             <div class="modal-footer submit">
-              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
             </div>
           </form>
         </div>
