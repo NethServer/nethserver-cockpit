@@ -554,7 +554,7 @@
     </div>
 
     <div class="modal" id="showCertificateModal" tabindex="-1" role="dialog" data-backdrop="static">
-      <div class="modal-dialog modal-lg">
+      <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">{{$t('certificates.view_certificate')}}</h4>
