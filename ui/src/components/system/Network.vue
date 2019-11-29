@@ -402,7 +402,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
             </div>
           </form>
         </div>

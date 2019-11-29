@@ -749,7 +749,7 @@
                 class="btn btn-default"
                 type="button"
                 data-dismiss="modal"
-              >{{$t('cancel')}}</button>
+              >{{$t('close')}}</button>
             </div>
           </form>
         </div>
