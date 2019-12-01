@@ -998,7 +998,7 @@ export default {
                   Description: "",
                   IpAddress: lease.ip,
                   MacAddress: lease.mac,
-                  LeaseExpiration: new Date(lease.expire*1000).toLocaleString(navigator.language, {dateStyle: "medium", timeStyle: "medium", hour12: false, timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).split(",").join(" ")
+                  LeaseExpiration: new Date(lease.expire*1000).toLocaleString(context.$i18n.locale, {dateStyle: "medium", timeStyle: "medium", hour12: false, timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).split(",").join(" ")
                 },
                 type: "disabled"
               });
