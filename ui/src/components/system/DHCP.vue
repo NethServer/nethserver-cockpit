@@ -92,15 +92,15 @@
         </td>
         <td class="fancy">{{ props.row.props.Description}}</td>
         <td class="fancy">
-          <span class="fa fa-desktop" style="margin-rigth: 5px"></span>
+          <span class="fa fa-desktop" style="margin-right: 5px"></span>
           {{props.row.props.IpAddress}}
         </td>
         <td class="fancy">
-          <span class="pficon pficon-plugged" style="margin-rigth: 5px"></span>
+          <span class="pficon pficon-plugged" style="margin-right: 5px"></span>
           {{props.row.props.MacAddress}}
         </td>
         <td class="fancy">
-          <span v-show="props.row.props.LeaseExpiration" class="fa fa-hourglass-end" style="margin-rigth: 5px"></span>
+          <span v-show="props.row.props.LeaseExpiration" class="fa fa-hourglass-end" style="margin-right: 5px"></span>
           {{props.row.props.LeaseExpiration}}
         </td>
         <td>
