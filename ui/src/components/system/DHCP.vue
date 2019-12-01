@@ -92,12 +92,16 @@
         </td>
         <td class="fancy">{{ props.row.props.Description}}</td>
         <td class="fancy">
-          <span class="fa fa-desktop"></span>
+          <span class="fa fa-desktop" style="margin-rigth: 5px"></span>
           {{props.row.props.IpAddress}}
         </td>
         <td class="fancy">
-          <span class="pficon pficon-plugged"></span>
+          <span class="pficon pficon-plugged" style="margin-rigth: 5px"></span>
           {{props.row.props.MacAddress}}
+        </td>
+        <td class="fancy">
+          <span v-show="props.row.props.LeaseExpiration" class="fa fa-hourglass-end" style="margin-rigth: 5px"></span>
+          {{props.row.props.LeaseExpiration}}
         </td>
         <td>
           <button
@@ -683,6 +687,11 @@ export default {
           filterable: true
         },
         {
+          label: this.$i18n.t("dhcp.lease_expiration"),
+          field: "props.LeaseExpiration",
+          filterable: true
+        },
+        {
           label: this.$i18n.t("action"),
           field: "",
           filterable: true,
@@ -988,7 +997,8 @@ export default {
                 props: {
                   Description: "",
                   IpAddress: lease.ip,
-                  MacAddress: lease.mac
+                  MacAddress: lease.mac,
+                  LeaseExpiration: new Date(lease.expire*1000).toLocaleString(navigator.language, {dateStyle: "medium", timeStyle: "medium", hour12: false, timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).split(",").join(" ")
                 },
                 type: "disabled"
               });

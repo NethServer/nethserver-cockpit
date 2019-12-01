@@ -430,7 +430,8 @@
     "range_update_ok": "Range updated successfully!",
     "range_update_error": "Range not updated.",
     "scan_network": "Scan network",
-    "Scanned_Network": "Scanning of the network interface"
+    "Scanned_Network": "Scanning of the network interface",
+    "lease_expiration": "Lease expiration"
   },
   "services": {
     "title": "Services",
