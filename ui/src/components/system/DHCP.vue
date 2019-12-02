@@ -92,16 +92,16 @@
         </td>
         <td class="fancy">{{ props.row.props.Description}}</td>
         <td class="fancy">
-          <span class="fa fa-desktop" style="margin-right: 5px"></span>
+          <span class="fa fa-desktop margin"></span>
           {{props.row.props.IpAddress}}
         </td>
         <td class="fancy">
-          <span class="pficon pficon-plugged" style="margin-right: 5px"></span>
+          <span class="pficon pficon-plugged margin"></span>
           {{props.row.props.MacAddress}}
         </td>
         <td class="fancy">
-          <span v-show="props.row.props.LeaseExpiration" class="fa fa-hourglass-end" style="margin-right: 5px"></span>
-          {{props.row.props.LeaseExpiration}}
+          <span v-show="props.row.props.LeaseExpiration" class="fa fa-hourglass-end margin"></span>
+          {{props.row.props.LeaseExpiration | dateFormat}}
         </td>
         <td>
           <button
@@ -998,7 +998,7 @@ export default {
                   Description: "",
                   IpAddress: lease.ip,
                   MacAddress: lease.mac,
-                  LeaseExpiration: new Date(lease.expire*1000).toLocaleString(context.$i18n.locale, {dateStyle: "medium", timeStyle: "medium", hour12: false, timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).split(",").join(" ")
+                  LeaseExpiration: lease.expire
                 },
                 type: "disabled"
               });
@@ -1271,4 +1271,7 @@ export default {
 </script>
 
 <style>
+.margin {
+  margin-right: 5px;
+}
 </style>
