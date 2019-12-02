@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.3.4
+Version: 1.3.5
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon Dec 02 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.5-1
+- Cockpit: improve modal view - NethServer/dev#5965
+
 * Thu Nov 28 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.4-1
 - Cockpit: improve Software Center view - NethServer/dev#5959
 
