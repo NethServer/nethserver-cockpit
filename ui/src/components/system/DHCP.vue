@@ -100,7 +100,7 @@
           {{props.row.props.MacAddress}}
         </td>
         <td class="fancy">
-          <span v-show="props.row.props.LeaseExpiration" class="fa fa-hourglass-end margin"></span>
+          <span class="fa fa-hourglass-end margin"></span>
           {{props.row.props.LeaseExpiration | dateFormat}}
         </td>
         <td>
@@ -689,7 +689,8 @@ export default {
         {
           label: this.$i18n.t("dhcp.lease_expiration"),
           field: "props.LeaseExpiration",
-          filterable: true
+          filterable: true,
+          type: "number"
         },
         {
           label: this.$i18n.t("action"),
