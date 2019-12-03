@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.3.7
+Version: 1.3.8
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Dec 03 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.8-1
+- IP and netmask validation in Network page - NethServer/dev#5974
+
 * Tue Dec 03 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.7-1
 - Cockpit: show DHCP lease expiration date - NethServer/dev#5972
 
