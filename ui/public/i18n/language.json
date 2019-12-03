@@ -1048,6 +1048,8 @@
     "valid_positive": "Must be a positive integer",
     "valid_lessThan_65536": "A valid TCP/UDP port is a number between 1 and 65536",
     "ip_address_or_cidr": "The value must be a valid IP like '10.0.0.1' or CIDR like '10.0.0.1/24'",
+    "ip_address_network_or_broadcast": "IP address can't be the network or broadcast address",
+    "this_network_overlaps_with_another_one": "This network overlaps with another one",
     "valid_date_YYYY-mm-dd": "The date format must be YYYY-mm-dd",
     "valid_time": "The time must be in the form HH:mm",
     "network_key_exists": "This network already exists",
