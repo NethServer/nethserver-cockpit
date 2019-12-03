@@ -92,12 +92,16 @@
         </td>
         <td class="fancy">{{ props.row.props.Description}}</td>
         <td class="fancy">
-          <span class="fa fa-desktop"></span>
+          <span class="fa fa-desktop margin"></span>
           {{props.row.props.IpAddress}}
         </td>
         <td class="fancy">
-          <span class="pficon pficon-plugged"></span>
+          <span class="pficon pficon-plugged margin"></span>
           {{props.row.props.MacAddress}}
+        </td>
+        <td class="fancy">
+          <span class="fa fa-hourglass-end margin"></span>
+          {{props.row.props.LeaseExpiration | dateFormat}}
         </td>
         <td>
           <button
@@ -683,6 +687,12 @@ export default {
           filterable: true
         },
         {
+          label: this.$i18n.t("dhcp.lease_expiration"),
+          field: "props.LeaseExpiration",
+          filterable: true,
+          type: "number"
+        },
+        {
           label: this.$i18n.t("action"),
           field: "",
           filterable: true,
@@ -988,7 +998,8 @@ export default {
                 props: {
                   Description: "",
                   IpAddress: lease.ip,
-                  MacAddress: lease.mac
+                  MacAddress: lease.mac,
+                  LeaseExpiration: lease.expire
                 },
                 type: "disabled"
               });
@@ -1261,4 +1272,7 @@ export default {
 </script>
 
 <style>
+.margin {
+  margin-right: 5px;
+}
 </style>
