@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.3.6
+Version: 1.3.7
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Dec 03 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.7-1
+- Cockpit: show DHCP lease expiration date - NethServer/dev#5972
+
 * Mon Dec 02 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.6-1
 - Cockpit: open group created in NethGUI generates error - Bug NethServer/dev#5970
 
