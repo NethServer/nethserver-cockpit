@@ -2398,7 +2398,7 @@ export default {
         null,
         function(success) {
           try {
-            success = JSON.parse(success);
+            success = context.sortList(JSON.parse(success));
           } catch (e) {
             console.error(e);
           }
@@ -2423,7 +2423,7 @@ export default {
         null,
         function(success) {
           try {
-            success = JSON.parse(success);
+            success = context.sortList(JSON.parse(success));
           } catch (e) {
             console.error(e);
           }
@@ -2435,6 +2435,27 @@ export default {
           console.error(error);
         }
       );
+    },
+    
+    sortList(obj) {
+      var sortable = [];
+      for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          sortable.push([key, obj[key]]);
+        }
+      }
+
+      sortable.sort(function (a, b) {
+        var x = a[0].toLowerCase(),
+            y = b[0].toLowerCase();
+        return x < y ? -1 : x > y ? 1 : 0;
+      });
+      
+      var json = JSON.stringify(sortable);
+      json = json.replace("[[","{").replace("]]","}");
+      json = json.split(",{").join(":{").split("],[").join(",").split(",[").join(",");
+      
+      return JSON.parse(json);
     },
 
     addGroupToUser(group) {
