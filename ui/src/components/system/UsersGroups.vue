@@ -2398,7 +2398,7 @@ export default {
         null,
         function(success) {
           try {
-            success = JSON.parse(success);
+            success = context.sortList(JSON.parse(success));
           } catch (e) {
             console.error(e);
           }
@@ -2423,7 +2423,7 @@ export default {
         null,
         function(success) {
           try {
-            success = JSON.parse(success);
+            success = context.sortList(JSON.parse(success));
           } catch (e) {
             console.error(e);
           }
@@ -2435,6 +2435,14 @@ export default {
           console.error(error);
         }
       );
+    },
+    
+    sortList(obj) {
+      var sorted = {};
+      Object.keys(obj).sort().forEach(function(key) {
+        sorted[key] = obj[key];
+      });
+      return sorted;
     },
 
     addGroupToUser(group) {
