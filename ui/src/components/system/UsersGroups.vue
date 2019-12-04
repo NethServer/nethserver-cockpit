@@ -2398,7 +2398,7 @@ export default {
         null,
         function(success) {
           try {
-            success = sortList(JSON.parse(success));
+            success = context.sortList(JSON.parse(success));
           } catch (e) {
             console.error(e);
           }
@@ -2423,7 +2423,7 @@ export default {
         null,
         function(success) {
           try {
-            success = sortList(JSON.parse(success));
+            success = context.sortList(JSON.parse(success));
           } catch (e) {
             console.error(e);
           }
