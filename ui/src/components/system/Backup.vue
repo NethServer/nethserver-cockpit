@@ -2217,16 +2217,66 @@ export default {
         }
       );
     },
-    editCronTab() {
-      this.wizard.when = {
-        every: "day",
-        minute: 5,
-        hour: 1,
-        hour_minute: "1:05",
-        week_day: 0,
-        day: 0,
-        crontab: ""
+    reverseCrontab(backupTime) {
+      var every = null;
+      var minute = null;
+      var hour = null;
+      var hour_minute = null;
+      var week_day = null;
+      var day = null;
+
+      // check every
+      if (backupTime.split("*").length - 1 == 4) {
+        every = "hour";
+      }
+      if (backupTime.split("*").length - 1 == 3) {
+        every = "day";
+      }
+      if (
+        backupTime.split("*").length - 1 == 2 &&
+        backupTime.split(" ")[4] != "*"
+      ) {
+        every = "week";
+      }
+      if (
+        backupTime.split("*").length - 1 == 2 &&
+        backupTime.split(" ")[4] == "*"
+      ) {
+        every = "month";
+      }
+
+      // check minute
+      if (every == "hour" || every == "day") {
+        minute = backupTime.split(" ")[0];
+      }
+
+      // check hour
+      if (every == "day") {
+        hour = backupTime.split(" ")[1];
+      }
+
+      // check week_day and hour_minute
+      if (every == "week") {
+        week_day = backupTime.split(" ")[4];
+        hour_minute = backupTime.split(" ")[1] + ":" + backupTime.split(" ")[0];
+      }
+
+      // check day and hour_minute
+      if (every == "month") {
+        day = backupTime.split(" ")[2];
+        hour_minute = backupTime.split(" ")[1] + ":" + backupTime.split(" ")[0];
+      }
+
+      return {
+        every: every ? every : "day",
+        minute: minute ? minute : 5,
+        hour: hour ? hour : 1,
+        hour_minute: hour_minute ? hour_minute : "1:05",
+        week_day: week_day ? week_day : 0,
+        day: day ? day : 0
       };
+    },
+    editCronTab() {
       this.wizard.isEditCron = false;
     },
     editUSBDevice() {
@@ -2250,12 +2300,30 @@ export default {
         isLoading: false,
         currentStep: 1,
         when: {
-          every: "day",
-          minute: 5,
-          hour: 1,
-          hour_minute: "1:05",
-          week_day: 0,
-          day: 0,
+          every:
+            b && b.props.BackupTime
+              ? this.reverseCrontab(b.props.BackupTime).every
+              : "day",
+          minute:
+            b && b.props.BackupTime
+              ? this.reverseCrontab(b.props.BackupTime).minute
+              : 5,
+          hour:
+            b && b.props.BackupTime
+              ? this.reverseCrontab(b.props.BackupTime).hour
+              : 1,
+          hour_minute:
+            b && b.props.BackupTime
+              ? this.reverseCrontab(b.props.BackupTime).hour_minute
+              : "1:05",
+          week_day:
+            b && b.props.BackupTime
+              ? this.reverseCrontab(b.props.BackupTime).week_day
+              : 0,
+          day:
+            b && b.props.BackupTime
+              ? this.reverseCrontab(b.props.BackupTime).day
+              : 0,
           crontab: b && b.props.BackupTime ? b.props.BackupTime : ""
         },
         where: {
