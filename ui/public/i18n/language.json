@@ -1114,7 +1114,7 @@
     "network": "Network",
     "tls_policy": "TLS Policy",
     "trusted_networks": "Trusted Networks",
-
+    "certificates": "Certificates",
     "sftp_password": "The password will not be saved. SSH connection will use a RSA key.",
     "smb_login": "If the target server is joined to a domain, use extended syntax like 'MyBindUser,domain=mydomain.com'.",
     "vol_size": "Size of backup chunks, keep small if the backup destination is a remote server. Default is 200MB.",

@@ -1,6 +1,14 @@
 <template>
   <div v-if="view.isAuth">
     <h2>{{$t('certificates.title')}}</h2>
+    <doc-info
+      :placement="'top'"
+      :title="$t('docs.certificates')"
+      :chapter="'base_system'"
+      :section="'server-certificate'"
+      :inline="false"
+    ></doc-info>
+
     <h3>{{$t('actions')}}</h3>
     <div class="btn-group">
       <button
