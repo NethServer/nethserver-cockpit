@@ -125,6 +125,11 @@
           </div>
           <form class="form-horizontal" v-on:submit.prevent="uploadCertificate(newCertificate)">
             <div class="modal-body">
+              <div class="alert alert-info">
+                <span class="pficon pficon-info"></span>
+                <strong>{{ $t('certificates.cockpit_reload_warning_title') }}</strong>&#x20;{{ $t('certificates.cockpit_reload_warning_message') }}
+              </div>
+
               <div v-if="newCertificate.errorMessage" class="alert alert-danger alert-dismissable">
                 <span class="pficon pficon-error-circle-o"></span>
                 <strong>{{$t('certificates.error')}}.</strong>
@@ -242,6 +247,11 @@
             v-on:submit.prevent="editCertificate(selfSignedCertificate)"
           >
             <div class="modal-body">
+              <div class="alert alert-info">
+                <span class="pficon pficon-info"></span>
+                <strong>{{ $t('certificates.cockpit_reload_warning_title') }}</strong>&#x20;{{ $t('certificates.cockpit_reload_warning_message') }}
+              </div>
+
               <div
                 :class="['form-group', selfSignedCertificate.errors.CountryCode.hasError ? 'has-error' : '']"
               >
@@ -452,6 +462,11 @@
             v-on:submit.prevent="requestLetsEncrypt(letsEncryptCertificate)"
           >
             <div class="modal-body">
+              <div class="alert alert-info">
+                <span class="pficon pficon-info"></span>
+                <strong>{{ $t('certificates.cockpit_reload_warning_title') }}</strong>&#x20;{{ $t('certificates.cockpit_reload_warning_message') }}
+              </div>
+
               <div
                 v-if="letsEncryptCertificate.errorMessage"
                 class="alert alert-danger alert-dismissable"
