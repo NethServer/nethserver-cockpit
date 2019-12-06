@@ -100,7 +100,7 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
               <li>
-                <a @click="setDefault(props.row)">
+                <a @click="openSetDefaultModal(props.row)">
                   <span class="fa fa-check span-right-margin"></span>
                   {{$t('certificates.set_as_default')}}
                 </a>
@@ -597,6 +597,33 @@
         </div>
       </div>
     </div>
+    <div class="modal" id="setDefaultModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('certificates.set_default_modal_title')}}</h4>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-info">
+              <span class="pficon pficon-info"></span>
+              <strong>{{ $t('certificates.cockpit_reload_warning_title') }}</strong>&#x20;{{ $t('certificates.cockpit_reload_warning_message') }}
+            </div>
+
+            <div class="form-group">
+              <div class="col-sm-12">
+                  <i18n path="certificates.set_default_modal_message" tag="span">
+                    <code>{{ selectedCertificate.file }}</code>
+                  </i18n>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+            <button class="btn btn-primary" type="button" v-on:click="setDefault(selectedCertificate)">{{$t('certificates.set_as_default')}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -640,6 +667,7 @@ export default {
   },
   data() {
     return {
+      selectedCertificate: {},
       view: {
         isLoaded: false,
         isAuth: false
@@ -843,7 +871,11 @@ export default {
         }
       );
     },
-
+    openSetDefaultModal(certificate) {
+        console.debug(certificate);
+        this.selectedCertificate = certificate;
+        $("#setDefaultModal").modal("show");
+    },
     openUploadCertificate() {
       this.newCertificate = {
         errors: {
@@ -1157,6 +1189,7 @@ export default {
 
     setDefault(certificate) {
       var context = this;
+      $("#setDefaultModal").modal("hide");
 
       context.exec(
         ["system-certificate/update"],

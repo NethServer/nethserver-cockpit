@@ -361,6 +361,8 @@
     "request": "Request",
     "cockpit_reload_warning_title": "Notice.",
     "cockpit_reload_warning_message": "The new certificate is applied to the Cockpit Server Manager 90 seconds after the last user is disconnected.",
+    "set_default_modal_title": "Set the default certificate",
+    "set_default_modal_message": "Do you want to set {0} as default certificate?",
     "view_certificate": "View certificate",
     "alternative_name": "Comma-separated list of FQDNs",
     "cert_default_ok": "Certificate set as default successfully!",
