@@ -2657,7 +2657,8 @@ export default {
       var duplicity =
         this.wizard.where.choice == "nfs" ||
         this.wizard.where.choice == "cifs" ||
-        this.wizard.where.choice == "usb";
+        this.wizard.where.choice == "usb" ||
+        this.wizard.where.choice == "webdav";
 
       var restic =
         this.wizard.where.choice == "nfs" ||
@@ -2665,12 +2666,14 @@ export default {
         this.wizard.where.choice == "usb" ||
         this.wizard.where.choice == "sftp" ||
         this.wizard.where.choice == "b2" ||
-        this.wizard.where.choice == "s3";
+        this.wizard.where.choice == "s3" ||
+        this.wizard.where.choice == "webdav";
 
       var rsync =
         this.wizard.where.choice == "sftp" ||
         this.wizard.where.choice == "usb" ||
-        this.wizard.where.choice == "nfs";
+        this.wizard.where.choice == "nfs" ||
+        this.wizard.where.choice == "webdav";
 
       num += duplicity ? 1 : 0;
       num += restic ? 1 : 0;
