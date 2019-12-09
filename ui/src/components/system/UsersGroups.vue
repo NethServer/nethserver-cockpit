@@ -295,15 +295,14 @@
                     :class="[u.locked == 1 ? 'disabled' : !users.providerInfo.IsLocal ? 'not-local-user' : '']"
                   >{{u.gecos}}</span>
                 </div>
-                <div class="list-group-item-text">
-                  <span :class="[u.expired ? 'fa fa-clock-o red' : 'fa fa-clock-o']"></span>
-                  <span :class="[u.expired ? 'red' : '']">
-                    {{u.expired ? $t('users_groups.expired') :
-                    $t('users_groups.not_expired')}}
-                  </span>
-                </div>
               </div>
-              <div class="list-view-pf-additional-info"></div>
+              <div class="list-view-pf-additional-info">
+                <span :class="[u.expired ? 'fa fa-clock-o red mg-right-5' : 'fa fa-clock-o mg-right-5']"></span>
+                <span :class="[u.expired ? 'red' : '']">
+                  {{u.expired ? $t('users_groups.expired') :
+                  $t('users_groups.not_expired')}}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -3585,6 +3584,9 @@ export default {
 <style>
 .mg-top-20 {
   margin-top: 20px;
+}
+.mg-right-5 {
+  margin-right: 5px;
 }
 .adjust-index {
   z-index: 1;
