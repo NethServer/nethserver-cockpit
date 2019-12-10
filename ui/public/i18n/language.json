@@ -1119,7 +1119,7 @@
     "smb_login": "If the target server is joined to a domain, use extended syntax like 'MyBindUser,domain=mydomain.com'.",
     "vol_size": "Size of backup chunks, keep small if the backup destination is a remote server. Default is 200MB.",
     "dns_wildcard": "If enabled, match also all sub-domains.",
-    "limit_access": "Restict access to port 9090 only to given IP addresses",
+    "limit_access": "Restrict access to port 9090 only to given IP addresses. For a more granular access control, use the firewall rules.",
     "dhcp_comma_separated_field": "Insert an IP address or a comma-separated list of IP addesses",
     "dhcp_servers": "Servers",
     "remote_shell": "Enable this option to grant access to the Terminal and the Server Manager."
