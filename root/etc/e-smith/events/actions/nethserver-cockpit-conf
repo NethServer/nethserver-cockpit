@@ -21,4 +21,3 @@
 #
 
 systemctl enable --now cockpit.socket
-systemctl restart cockpit 
