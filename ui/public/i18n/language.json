@@ -103,7 +103,8 @@
     "nethserver-suricata": "IPS",
     "nethserver-vpn-ui": "VPN",
     "nethserver-webtop5": "WebTop",
-    "nethserver-cgp": "Collectd Charts"
+    "nethserver-cgp": "Collectd Charts",
+    "nethserver-sogo": "SOGo"
   },
   "dashboard": {
     "title": "Dashboard",
