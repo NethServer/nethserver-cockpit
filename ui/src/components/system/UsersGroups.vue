@@ -561,7 +561,7 @@
               <div v-if="newUser.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button
-                :disabled="!newUser.isEdit && (!newUser.passwordStrength && passwordPolicy.Users == 'yes')"
+                :disabled="(!newUser.isEdit || newUser.isPassEdit) && (!newUser.passwordStrength && passwordPolicy.Users == 'yes')"
                 class="btn btn-primary"
                 type="submit"
               >
