@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.3.9
+Version: 1.3.10
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,13 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Wed Dec 11 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.10-1
+- Delegation regression in Cockpit pinned apps - Bug NethServer/dev#5976
+- SOGo: URL of webmail in the application cockpit list - NethServer/dev#5982
+- More intuitive behaviour in case of conflit among access rules to cockpit interface(only with firewall installed) - Bug NethServer/dev#5983
+- Certificate update event cut off by Cockpit UI - Bug NethServer/dev#5977
+- Backup: missing engine choice for WebDAV storage engine - Bug NethServer/dev#5981
+
 * Wed Dec 04 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.9-1
 - Cockpit: sort users and groups - NethServer/dev#5969
 
