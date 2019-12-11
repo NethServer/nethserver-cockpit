@@ -1061,6 +1061,7 @@
     "network_key_exists": "This network already exists",
     "already_used_network": "Network already in use",
     "invalid_network": "Invalid network address",
+    "user_exists": "A user with the same name already exists",
     "group_exists": "A group with the same name already exists",
     "non_existing_user": "The user doesn't exist",
     "not_removable": "This object can't be removed",
