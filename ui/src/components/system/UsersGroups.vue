@@ -2700,6 +2700,7 @@ export default {
 
           // get users
           context.getUsers();
+          context.$emit('password-modify', {});
         },
         function(error, data) {
           // notification
