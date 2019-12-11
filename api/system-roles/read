@@ -57,6 +57,7 @@ if ($cmd eq 'role') {
             $counter++;
             my $group = shift(@props);
             foreach (@props) {
+                next if ($_ eq 'terminal');
                 push @system, $_ if ($_ !~ /^nethserver-/ );
                 push @applications, $_ if ($_ =~ /^nethserver-/);
             }

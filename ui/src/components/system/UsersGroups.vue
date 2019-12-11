@@ -1751,7 +1751,7 @@ export default {
           vm.view.isAuth = true;
           vm.view.isRoot = success.status.isRoot == 1;
           Array.prototype.push.apply(appList, success.applications);
-          Array.prototype.push.apply(sysList, success.system);
+          Array.prototype.push.apply(sysList, success.system.filter(x => x != 'terminal'));
         },
         function(error) {
           console.error(error);
