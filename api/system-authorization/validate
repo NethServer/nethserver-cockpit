@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/bin/bash
 
 #
 # Copyright (C) 2018 Nethesis S.r.l.
@@ -20,8 +20,16 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-use strict;
-use NethServer::ApiTools;
+. /usr/libexec/nethserver/api/lib/helper_functions
 
-NethServer::ApiTools::readInput();
-NethServer::ApiTools::success();
+app=$(jq -r .name)
+
+# Check if the current user is either root or an admin, or is delegated to use $app
+/usr/libexec/nethserver/api/system-authorization/read  | \
+    jq -e --arg app "${app}" 'if (.status.isRoot == 1 or .status.isAdmin == 1 or (.applications | index($app)) >= 0) then 1 else null end' >/dev/null
+
+if [[ $? == 0 ]]; then
+    success
+else
+    error "NotAuthorized" "The application $app is not authorized for the current user"
+fi
