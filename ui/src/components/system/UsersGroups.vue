@@ -2679,33 +2679,56 @@ export default {
     changePassword(user) {
       var context = this;
 
-      $("#createUserModal").modal("hide");
-
+      var pwChangeObj = {
+        action: "change-password",
+        name: user.name,
+        newPassword: user.newPassword,
+        confirmNewPassword: user.confirmNewPassword
+      };
+      context.newUser.isLoading = true
       context.exec(
-        ["system-users/update"],
-        {
-          action: "change-password",
-          name: user.name,
-          newPassword: user.newPassword,
-          confirmNewPassword: user.confirmNewPassword
-        },
-        function(stream) {
-          console.info("user-change-password", stream);
-        },
+        ["system-users/validate"],
+        pwChangeObj,
+        null,
         function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "users_groups.user_pass_change_ok"
-          );
+          context.newUser.isLoading = false
+          $("#createUserModal").modal("hide");
+          context.exec(
+            ["system-users/update"],
+            pwChangeObj,
+            function(stream) {
+              console.info("user-change-password", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "users_groups.user_pass_change_ok"
+              );
 
-          // get users
-          context.getUsers();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "users_groups.user_pass_change_error"
+              // get users
+              context.getUsers();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "users_groups.user_pass_change_error"
+              );
+            }
           );
+        },
+        function (error, data) {
+          var errorData = {};
+          context.newUser.isLoading = false;
+
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.newUser.errorProps[attr.parameter] = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
+          }
         }
       );
     },
