@@ -32,6 +32,10 @@ export default {
   name: "PasswordMeter",
   mixins: [],
   data() {
+    this.$parent.$on('password-modify', data => {
+      this.confirmPassword = "";
+      this.$parent.newUser.passwordStrength = false;
+    });
     return {
       confirmPassword: this.$parent.newUser.confirmNewPassword,
       password: this.$parent.newUser.newPassword,
