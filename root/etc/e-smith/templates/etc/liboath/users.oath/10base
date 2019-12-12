@@ -1,0 +1,27 @@
+{
+  use strict;
+  use warnings;
+
+  use JSON;
+  use NethServer::Password;
+
+  my $users = decode_json(`/usr/libexec/nethserver/list-users`) or die("Can't read user list");
+
+  if ( ! -f "/var/lib/nethserver/secrets/root") {
+      my $root =`/usr/bin/openssl rand -hex 20 > /var/lib/nethserver/secrets/root` || 'FIXME';
+  }
+  my $root = NethServer::Password::store('root');
+  $OUT .= "HOTP/T30 root - ".$root."\n";
+
+  foreach (keys(%$users)) {
+      my $key = $_;
+      $key =~ s/(@.*)//; # strip domain
+      if ($users->{$_}->{'shell'} =~ 'bash') {
+          if ( ! -f "/var/lib/nethserver/secrets/$key") {
+              my $password =`/usr/bin/openssl rand -hex 20 > /var/lib/nethserver/secrets/$key` || 'FIXME';
+          }
+          my $password = NethServer::Password::store($key);
+          $OUT .= "HOTP/T30 ".$key." - $password"."\n";
+      }
+  }
+}
