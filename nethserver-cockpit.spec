@@ -17,6 +17,7 @@ Requires:       jq, openldap-clients, expect, python-pwquality
 Requires:       nethserver-subscription
 Requires:       arp-scan
 Requires:       nethserver-lang-cockpit
+Requires:       pam_oath liboath
 Obsoletes:      cockpit-packagekit, PackageKit, PackageKit-yum
 
 %description
