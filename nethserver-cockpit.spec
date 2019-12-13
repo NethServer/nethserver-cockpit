@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.3.10
+Version: 1.3.11
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Fri Dec 13 2019 Davide Principi <davide.principi@nethesis.it> - 1.3.11-1
+- Bad user password change validation in Cockpit - Bug NethServer/dev#5984
+
 * Wed Dec 11 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.10-1
 - Delegation regression in Cockpit pinned apps - Bug NethServer/dev#5976
 - SOGo: URL of webmail in the application cockpit list - NethServer/dev#5982
