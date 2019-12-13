@@ -68,10 +68,10 @@
           </div>
           <div class="list-group-item" v-for="(b, bk) in backupConfigurations" v-bind:key="bk">
             <div class="list-view-pf-actions">
-              <button @click="downloadConfigBackup(b)" class="btn btn-default">
+              <a :id="b.id + '-button'" class="btn btn-default">
                 <span class="fa fa-download span-right-margin"></span>
                 {{$t('backup.download')}}
-              </button>
+              </a>
               <div class="dropup pull-right dropdown-kebab-pf">
                 <button
                   class="btn btn-link dropdown-toggle"
@@ -100,8 +100,8 @@
               </div>
               <div class="list-view-pf-body">
                 <div class="list-view-pf-description">
-                  <div @click="downloadConfigBackup(b)" class="list-group-item-heading">
-                    <a>{{b.type | capitalize}}</a>
+                  <div class="list-group-item-heading">
+                    <a :id="b.id + '-div'">{{b.type | capitalize}}</a>
                   </div>
                   <div class="list-group-item-text">
                     <span>{{b.description}}</span>
@@ -2037,7 +2037,6 @@
       </div>
     </div>
     <!-- END BACKUP DATA -->
-    <iframe width="1" height="1" id="download-backup" style="display: none;"></iframe>
   </div>
 </template>
 
@@ -2191,6 +2190,10 @@ export default {
   },
   methods: {
     toggleDetails() {
+      var bconfigs = this.backupConfigurations;
+      for(var i = 0; i < bconfigs.length; i++) {
+        this.downloadConfigBackup(bconfigs[i]);
+      }
       this.view.opened = !this.view.opened;
     },
     initGraphics() {
@@ -3150,18 +3153,12 @@ export default {
         },
         null,
         function(success) {
-          if (navigator.userAgent.indexOf("Firefox") != -1) {
-            var blob = "data:application/octet-stream;base64," + success;
-            var encodedUri = encodeURI(blob);
-            var link = document.getElementById("download-backup");
-            link.setAttribute("src", encodedUri);
-          } else {
-            require("downloadjs")(
-              "data:application/octet-stream;base64," + success,
-              b.id + ".tar.xz",
-              "application/octet-stream"
-            );
-          }
+          var blob = "data:application/octet-stream;base64," + success;
+          var encodedUri = encodeURI(blob);
+          $("#" + b.id + "-button").attr('download', b.id + ".tar.xz")
+                                   .attr('href', encodedUri);
+          $("#" + b.id + "-div").attr('download', b.id + ".tar.xz")
+                                .attr('href', encodedUri);
         },
         function(error) {
           console.error(error);
