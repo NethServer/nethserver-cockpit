@@ -62,7 +62,7 @@
             </div>
           </div>
           <div class="form-group compact">
-            <label class="col-sm-3 control-label">{{$t('dashboard.hostname')}}</label>
+            <label class="col-sm-3 control-label">{{$t('dashboard.hostname')}} / {{$t('dashboard.alias')}}</label>
             <div class="col-sm-9 adjust-li">
               <div v-if="loaders.hostname" class="spinner spinner-xs list-spinner-loader"></div>
               <p>
@@ -246,6 +246,44 @@
                 <b>
                   <span class>{{system.memory.swap.available_bytes * 1024 | byteFormat}}</span>
                 </b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-6">
+        <h3>{{$t('dashboard.disk')}}</h3>
+        
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 resources-panel">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                <span class="icon-header-panel">
+                  <span class="fa fa-database right"></span>
+                </span>
+                {{$t('dashboard.root_partition')}}
+              </h3>
+            </div>
+            <div class="panel-body">
+              <div id="rootpartition-chart" class="text-center"></div>
+              <div class="row">
+                <div class="col-md-6">
+                  <span v-show="system.raid.status">
+                    {{$t('dashboard.raid')}}: 
+                    <span :class="system.raid.status == 'error' ? 'raidError' : ''">
+                      <b>
+                        {{$t('dashboard.' + system.raid.status)}}
+                      </b>
+                    </span>
+                  </span>
+                </div>
+                <div class="col-md-6 text-right">
+                  {{$t('dashboard.size')}}:
+                  <b>
+                    <span class>{{system.disk.root.available_bytes * 1024 | byteFormat}}</span>
+                  </b>
+                </div>
               </div>
             </div>
           </div>
@@ -760,6 +798,15 @@ export default {
             available_bytes: 0
           }
         },
+        disk: {
+          root: {
+            used_bytes: 0,
+            available_bytes: 0
+          }
+        },
+        raid: {
+          status: false
+        },
         systimeTypes: {
           manual: this.$i18n.t("dashboard.manual"),
           ntp: this.$i18n.t("dashboard.using_ntp_server")
@@ -907,9 +954,21 @@ export default {
               available_bytes: success.status.memory.SwapTotal
             }
           };
+          
+          context.system.disk = {
+            root: {
+              used_bytes: success.status.disk.root.used,
+              available_bytes: success.status.disk.root.total
+            }
+          };
+          
+          context.system.raid = {
+            status: success.status.raid.status
+          };
 
           context.loaders.summary = false;
           context.initMemoryCharts();
+          context.initDiskCharts();
         },
         function(error) {
           console.error(error);
@@ -1590,6 +1649,39 @@ export default {
         " Used"
       );
     },
+    initDiskCharts() {
+      var c3ChartDefaults = patternfly.c3ChartDefaults();
+      var rootConfig = c3ChartDefaults.getDefaultDonutConfig("A");
+
+      rootConfig.bindto = "#rootpartition-chart";
+
+      rootConfig.data = {
+        type: "donut",
+        columns: [
+          ["Used", this.system.disk.root.used_bytes * 1024],
+          ["Available", this.system.disk.root.available_bytes * 1024]
+        ],
+        groups: [["used", "available"]],
+        order: null
+      };
+      rootConfig.size = {
+        width: 180,
+        height: 180
+      };
+      
+      rootConfig.tooltip = {
+        contents: patternfly.pfGetUtilizationDonutTooltipContentsFn("GB")
+      };
+
+      c3.generate(rootConfig);
+      patternfly.pfSetDonutChartTitle(
+        "#rootpartition-chart",
+        this.$options.filters.byteFormat(
+          this.system.disk.root.used_bytes * 1024
+        ),
+        " Used"
+      );
+    },
     initSystemGraphs() {
       var series;
 
@@ -1761,4 +1853,7 @@ export default {
 </script>
 
 <style>
+  .raidError {
+    color: #470000;
+  }
 </style>

@@ -167,7 +167,13 @@
     "shutdown_ok": "The system is shutting down...",
     "shutdown_error": "Shutting down error occured.",
     "hostname_change": "After hostname change you have to login again",
-    "hostname_invalid_warn": "The server FQDN must not contain 'localhost' or 'localdomain'. You have to change your machine hostname before proceeding with other configurations"
+    "hostname_invalid_warn": "The server FQDN must not contain 'localhost' or 'localdomain'. You have to change your machine hostname before proceeding with other configurations",
+    "disk": "Disk",
+    "root_partition": "ROOT PARTITION",
+    "raid": "RAID",
+    "ok": "OK",
+    "error": "ERROR",
+    "alias": "Alias"
   },
   "backup": {
     "title": "Backup",
