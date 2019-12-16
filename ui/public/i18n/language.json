@@ -172,8 +172,7 @@
     "root_partition": "ROOT PARTITION",
     "raid": "RAID",
     "ok": "OK",
-    "error": "ERROR",
-    "alias": "Alias"
+    "error": "ERROR"
   },
   "backup": {
     "title": "Backup",
