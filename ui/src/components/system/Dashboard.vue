@@ -62,7 +62,7 @@
             </div>
           </div>
           <div class="form-group compact">
-            <label class="col-sm-3 control-label">{{$t('dashboard.hostname')}} / {{$t('dashboard.alias')}}</label>
+            <label class="col-sm-3 control-label">{{$t('dashboard.hostname')}}</label>
             <div class="col-sm-9 adjust-li">
               <div v-if="loaders.hostname" class="spinner spinner-xs list-spinner-loader"></div>
               <p>
@@ -271,7 +271,7 @@
                 <div class="col-md-6">
                   <span v-show="system.raid.status">
                     {{$t('dashboard.raid')}}: 
-                    <span :class="system.raid.status == 'error' ? 'raidError' : ''">
+                    <span :class="system.raid.status == 'error' ? 'red' : ''">
                       <b>
                         {{$t('dashboard.' + system.raid.status)}}
                       </b>
@@ -1853,7 +1853,4 @@ export default {
 </script>
 
 <style>
-  .raidError {
-    color: #470000;
-  }
 </style>
