@@ -281,7 +281,7 @@
                 <div class="col-md-6 text-right">
                   {{$t('dashboard.size')}}:
                   <b>
-                    <span class>{{system.disk.root.available_bytes * 1024 | byteFormat}}</span>
+                    <span class>{{system.disk.root.total_bytes * 1024 | byteFormat}}</span>
                   </b>
                 </div>
               </div>
@@ -801,7 +801,8 @@ export default {
         disk: {
           root: {
             used_bytes: 0,
-            available_bytes: 0
+            available_bytes: 0,
+            total_bytes: 0
           }
         },
         raid: {
@@ -958,7 +959,8 @@ export default {
           context.system.disk = {
             root: {
               used_bytes: success.status.disk.root.used,
-              available_bytes: success.status.disk.root.total
+              available_bytes: success.status.disk.root.free,
+              total_bytes: success.status.disk.root.total
             }
           };
           

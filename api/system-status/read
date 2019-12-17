@@ -47,7 +47,7 @@ function readDisk()
         if ($tmp[5] == "/") {
           $tmp[5] = "root";
         }
-        $ret[$tmp[5]] = array('total' => intval($tmp[1]), 'used' => intval($tmp[2]));
+        $ret[$tmp[5]] = array('total' => intval($tmp[1]), 'used' => intval($tmp[2]), 'free' => intval($tmp[3]));
     }
     return $ret; 
 }
@@ -56,7 +56,7 @@ function readRaid()
 {
     $out = array();
     $ret = array();
-    $out = json_decode(exec('/usr/libexec/nethserver/api/system-status/check-raid'), true);
+    $out = json_decode(exec('/usr/libexec/nethserver/raid-status'), true);
     $mds = $out['results'];
     $ret['status'] = false;
     for ($i=0; $i<count($mds) && $ret['status'] != 'error'; $i++) {
