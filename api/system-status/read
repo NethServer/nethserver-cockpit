@@ -111,10 +111,10 @@ function readRelease()
 }
 
 function readKernel()
-{
-    $tmp = @explode(' ',file_get_contents("/proc/version"));
-    return  @trim($tmp[2]);
-}
+    {
+        $tmp = @explode(' ',file_get_contents("/proc/version"));
+        return  @trim($tmp[2]);
+    }
 
 
 print json_encode(array(
