@@ -30,6 +30,17 @@
       </div>
     </div>
 
+    <h3>{{$t('actions')}}</h3>
+    <div class="mg-bottom-30">
+      <button
+        @click="openAddCustomServiceModal()"
+        class="btn btn-primary btn-lg"
+        data-action="addCustomService"
+        data-container="body"
+        v-if="view.isLoaded"
+      >{{$t('services.add_custom_service')}}</button>
+    </div>
+
     <h3>{{$t('list')}}</h3>
     <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
       <span class="pficon pficon-warning-triangle-o"></span>
@@ -43,12 +54,30 @@
       >{{hints.message && $t('hints.'+hints.message)}}</span>
     </div>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
+    <!-- show all / network services only -->
+    <form class="mg-top-20" v-if="view.isLoaded">
+      <div class="form-group">
+        <label
+          class="col-sm-3 control-label show-all-services"
+          for="show-all-services"
+        >{{$t('services.network_services_only')}}</label>
+        <div class="col-sm-1 mg-bottom-10">
+          <input
+            id="show-all-services"
+            type="checkbox"
+            :checked="showNetworkServicesOnly"
+            class="form-control mg-top-minus-2"
+            @click="toggleShowNetworkServicesOnly()"
+          />
+        </div>
+      </div>
+    </form>
     <vue-good-table
       v-if="view.isLoaded"
       :customRowsPerPageDropdown="[25,50,100]"
       :perPage="25"
       :columns="columns"
-      :rows="rows"
+      :rows="filteredRows"
       :lineNumbers="false"
       :defaultSortBy="{field: 'name', type: 'asc'}"
       :globalSearch="true"
@@ -67,6 +96,7 @@
             class="pficon pficon-warning-triangle-o panel-icon"
           ></span>
           <strong>{{ props.row.name}}</strong>
+          <span v-if="props.row.custom" class="gray mg-left-5">(custom)</span>
         </td>
         <td class="fancy">{{ props.row.description}}</td>
         <td class="fancy">
@@ -76,11 +106,35 @@
           <span :class="['fa', props.row.running ? 'fa-check green' : 'fa-times red']"></span>
         </td>
         <td class="fancy">
+          <span
+            v-for="(zone, i) in props.row.ports.access.split(',')"
+            v-bind:key="i"
+            :class="['label', 'label-info', defaultZones.includes(zone) ? 'bg-' + zone : 'bg-missing', 'pad-left-right-sm']"
+          >{{ zone }}</span>
+          <!-- show "localhost" for network services with access=<none> -->
+          <span
+            v-if="!props.row.ports.access && (props.row.ports.TCP.length > 0 ||
+            props.row.ports.UDP.length > 0)"
+            class="label label-info bg-gray pad-left-right-sm"
+          >localhost</span>
+        </td>
+        <td class="fancy">
+          <span v-if="props.row.ports.TCP.length">
+            <b>TCP:</b>
+            {{ props.row.ports.TCP.join(', ') }}&nbsp;&nbsp;
+          </span>
+          <span v-if="props.row.ports.UDP.length">
+            <b>UDP:</b>
+            {{ props.row.ports.UDP.join(', ') }}
+          </span>
+        </td>
+        <td class="fancy">
           <a @click="openDetails(props.row)">
             <span>{{$t('view')}}</span>
           </a>
         </td>
-        <td>
+        <!-- actions for systemd services -->
+        <td v-if="!props.row.custom">
           <button
             @click="props.row.running ? restartService(props.row.name) : startService(props.row.name)"
             class="btn btn-default button-minimum"
@@ -122,6 +176,38 @@
                 <a @click="stopService(props.row.name)">
                   <span class="fa fa-power-off action-icon-menu"></span>
                   {{$t('services.stop')}}
+                </a>
+              </li>
+              <li>
+                <a @click="openEditService(props.row)">
+                  <span class="fa fa-edit span-right-margin action-icon-menu"></span>
+                  {{$t('edit')}}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </td>
+        <!-- actions for custom services -->
+        <td v-if="props.row.custom">
+          <button @click="openEditService(props.row)" class="btn btn-default button-minimum">
+            <span class="fa fa-edit span-right-margin"></span>
+            {{ $t('edit') }}
+          </button>
+          <div class="dropup pull-right dropdown-kebab-pf">
+            <button
+              class="btn btn-link dropdown-toggle"
+              type="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="true"
+            >
+              <span class="fa fa-ellipsis-v"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li>
+                <a @click="openRemoveCustomService(props.row)">
+                  <span class="fa fa-times action-icon-menu"></span>
+                  {{$t('remove')}}
                 </a>
               </li>
             </ul>
@@ -206,6 +292,166 @@
         </div>
       </div>
     </div>
+
+    <!-- remove service modal -->
+    <div
+      class="modal"
+      id="removeCustomServiceModal"
+      tabindex="-1"
+      role="dialog"
+      data-backdrop="static"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4
+              class="modal-title"
+            >{{$t('services.remove_custom_service')}} {{ serviceToRemove.name }}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="removeCustomService()">
+            <div class="modal-body">
+              <div class="form-group">
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-danger" type="submit">{{$t('remove')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- add / edit service modal -->
+    <div class="modal" id="edit-service-modal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              <span v-if="currentService.isEdit">{{$t('services.edit_service')}}</span>
+              <span v-else>{{$t('services.add_custom_service')}}</span>
+            </h4>
+          </div>
+          <form
+            class="form-horizontal"
+            v-on:submit.prevent="currentService.isEdit ? editService() : addCustomService()"
+          >
+            <div class="modal-body">
+              <!-- name -->
+              <div
+                :class="['form-group', currentService.errorProps['serviceName'] ? 'has-error' : '']"
+              >
+                <label class="col-sm-3 control-label">{{$t('services.name')}}</label>
+                <div class="col-sm-9">
+                  <input
+                    required
+                    type="text"
+                    v-model="currentService.name"
+                    class="form-control"
+                    :disabled="currentService.isEdit"
+                  />
+                  <span
+                    v-if="currentService.errorProps['serviceName']"
+                    class="help-block"
+                  >{{$t('validation.' + currentService.errorProps['serviceName'])}}</span>
+                </div>
+              </div>
+              <!-- tcp ports -->
+              <div
+                :class="['form-group', currentService.errorProps['tcpPorts'] || currentService.errorProps['no_tcp_udp_ports'] ? 'has-error' : '']"
+              >
+                <label class="col-sm-3 control-label">
+                  {{$t('services.tcpPorts')}}
+                  <doc-info :placement="'top'" :chapter="'list_of_ports'" :inline="true"></doc-info>
+                </label>
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    v-model="currentService.tcpPorts"
+                    class="form-control"
+                    :disabled="!currentService.custom"
+                  />
+                  <span
+                    v-if="currentService.errorProps['tcpPorts']"
+                    class="help-block"
+                  >{{$t('validation.' + currentService.errorProps['tcpPorts'])}}</span>
+                </div>
+              </div>
+              <!-- udp ports -->
+              <div
+                :class="['form-group', currentService.errorProps['udpPorts'] || currentService.errorProps['no_tcp_udp_ports'] ? 'has-error' : '']"
+              >
+                <label class="col-sm-3 control-label">
+                  {{$t('services.udpPorts')}}
+                  <doc-info :placement="'top'" :chapter="'list_of_ports'" :inline="true"></doc-info>
+                </label>
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    v-model="currentService.udpPorts"
+                    class="form-control"
+                    :disabled="!currentService.custom"
+                  />
+                  <span
+                    v-if="currentService.errorProps['udpPorts']"
+                    class="help-block"
+                  >{{$t('validation.' + currentService.errorProps['udpPorts'])}}</span>
+                </div>
+              </div>
+              <!-- access -->
+              <div :class="['form-group', currentService.errorProps['access'] ? 'has-error' : '']">
+                <label class="col-sm-3 control-label">{{$t('services.access')}}</label>
+                <div class="col-sm-9">
+                  <select
+                    @change="addZoneToCurrentService(currentService.selectedZone)"
+                    v-model="currentService.selectedZone"
+                    class="combobox form-control"
+                  >
+                    <option v-for="(zone, i) in accessZones" v-bind:key="i">{{ zone }}</option>
+                  </select>
+                  <span
+                    v-if="currentService.errorProps['access']"
+                    class="help-block"
+                  >{{$t('validation.' + currentService.errorProps['access'])}}</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label"></label>
+                <div class="col-sm-9">
+                  <ul class="list-inline compact">
+                    <li v-for="(zone, i) in currentService.access" v-bind:key="i">
+                      <span
+                        :class="['label', 'label-info', defaultZones.includes(zone) ? 'bg-' + zone : 'bg-missing']"
+                      >
+                        {{ zone }}
+                        <a
+                          @click="removeZoneFromcurrentService(i)"
+                          class="remove-item-inline"
+                        >
+                          <span class="fa fa-times"></span>
+                        </a>
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer submit">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button
+                class="btn btn-primary"
+                type="submit"
+              >{{ currentService.isEdit ? $t('edit') : $t('add') }}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -246,6 +492,7 @@ export default {
   mounted() {
     this.initGraphics();
     this.getServices();
+    this.getAccessZones();
     this.getHints();
   },
   watch: {
@@ -287,6 +534,18 @@ export default {
           type: "number"
         },
         {
+          label: this.$i18n.t("services.access"),
+          field: "",
+          filterable: true,
+          sortable: false
+        },
+        {
+          label: this.$i18n.t("services.ports"),
+          field: "",
+          filterable: true,
+          sortable: false
+        },
+        {
           label: this.$i18n.t("details"),
           field: "name",
           filterable: true,
@@ -300,6 +559,7 @@ export default {
         }
       ],
       rows: [],
+      filteredRows: [],
       currentDetails: {
         props: {},
         ports: {},
@@ -312,7 +572,14 @@ export default {
         servicesEnabledCount: 0,
         servicesRunningCount: 0
       },
-      hints: {}
+      hints: {},
+      showNetworkServicesOnly: localStorage.getItem("showNetworkServicesOnly") === "true" || false,
+      currentService: this.initService(),
+      serviceToRemove: {
+        name: null
+      },
+      defaultZones: ["green", "red", "blue", "orange"],
+      accessZones: []
     };
   },
   methods: {
@@ -345,6 +612,48 @@ export default {
         return Object.keys(obj).lenght === 0;
       } else return true;
     },
+    getAccessZones() {
+      var context = this;
+
+      nethserver.exec(
+        ["nethserver-firewall-base/rules/read"],
+        {
+          action: "roles"
+        },
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+          var roles = success.roles;
+
+          nethserver.exec(
+            ["nethserver-firewall-base/objects/read"],
+            {
+              action: "zones"
+            },
+            null,
+            function(success) {
+              try {
+                success = JSON.parse(success);
+              } catch (e) {
+                console.error(e);
+              }
+              var zones = success.zones.map(zone => zone.name);
+              context.accessZones = roles.concat(zones);
+            },
+            function(error) {
+              console.error(error);
+            }
+          );
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
     getServices() {
       var context = this;
       context.exec(
@@ -371,6 +680,7 @@ export default {
             }
           }
           context.rows = success.configuration;
+          context.filterServices();
 
           context.stats.servicesCount = success.status.length;
           context.stats.servicesEnabledCount = success.status.filter(function(
@@ -572,10 +882,301 @@ export default {
     openDetails(obj) {
       this.currentDetails = obj;
       $("#detailsModal").modal("show");
+    },
+
+    toggleShowNetworkServicesOnly() {
+      this.showNetworkServicesOnly = !this.showNetworkServicesOnly;
+      localStorage.setItem("showNetworkServicesOnly", this.showNetworkServicesOnly)
+      this.filterServices();
+    },
+
+    filterServices() {
+      if (this.showNetworkServicesOnly) {
+        this.filteredRows = this.rows.filter(function(service) {
+          return (
+            service.ports.access ||
+            service.ports.TCP.length > 0 ||
+            service.ports.UDP.length > 0
+          );
+        });
+      } else {
+        // show all services
+        this.filteredRows = this.rows;
+      }
+    },
+
+    openAddCustomServiceModal() {
+      this.currentService = this.initService();
+      $("#edit-service-modal").modal("show");
+    },
+
+    removeZoneFromcurrentService(index) {
+      this.currentService.access.splice(index, 1);
+    },
+
+    zoneAlreadyAdded(zone) {
+      return this.currentService.access.indexOf(zone) > -1;
+    },
+
+    addZoneToCurrentService(zone) {
+      if (zone.length > 0 && zone != "-") {
+        if (!this.zoneAlreadyAdded(zone)) {
+          this.currentService.access.push(zone);
+        }
+      }
+    },
+
+    initService() {
+      return {
+        name: "",
+        access: [],
+        tcpPorts: "",
+        udpPorts: "",
+        custom: 1,
+        selectedZone: null,
+        errorProps: [],
+        isEdit: false
+      };
+    },
+
+    mapService(service) {
+      return {
+        name: service.name,
+        access:
+          service.ports.access === "" ? [] : service.ports.access.split(","),
+        tcpPorts: service.ports.TCP.join(", "),
+        udpPorts: service.ports.UDP.join(", "),
+        custom: service.custom,
+        selectedZone: null,
+        errorProps: [],
+        isEdit: false
+      };
+    },
+
+    openRemoveCustomService(service) {
+      this.serviceToRemove = service;
+      $("#removeCustomServiceModal").modal("show");
+    },
+
+    removeCustomService() {
+      var context = this;
+      $("#removeCustomServiceModal").modal("hide");
+
+      var deleteServiceObj = {
+        action: "serviceDelete",
+        serviceName: context.serviceToRemove.name
+      };
+
+      nethserver.notifications.success = context.$i18n.t(
+        "services.service_removed_successfully"
+      );
+      nethserver.notifications.error = context.$i18n.t(
+        "services.service_removed_error"
+      );
+
+      context.exec(
+        ["system-services/delete"],
+        deleteServiceObj,
+        function(stream) {
+          console.info("serviceDelete", stream);
+        },
+        function(success) {
+          context.getServices();
+        },
+        function(error, data) {
+          console.error(error);
+        }
+      );
+    },
+
+    openEditService(service) {
+      this.currentService = this.mapService(service);
+      this.currentService.isEdit = true;
+      $("#edit-service-modal").modal("show");
+    },
+
+    editService() {
+      var context = this;
+      var tcpPorts = [];
+      var udpPorts = [];
+      context.currentService.errorProps = [];
+
+      if (context.currentService.tcpPorts) {
+        // remove spaces and convert to array
+        tcpPorts = context.currentService.tcpPorts
+          .replace(/\s/g, "")
+          .split(",");
+      }
+
+      if (context.currentService.udpPorts) {
+        // remove spaces and convert to array
+        udpPorts = context.currentService.udpPorts
+          .replace(/\s/g, "")
+          .split(",");
+      }
+
+      var editServiceObj = {
+        action: "edit",
+        serviceName: context.currentService.name.trim(),
+        access: context.currentService.access,
+        tcpPorts: tcpPorts,
+        udpPorts: udpPorts,
+        custom: context.currentService.custom
+      };
+
+      context.exec(
+        ["system-services/validate"],
+        editServiceObj,
+        null,
+        function(success) {
+          $("#edit-service-modal").modal("hide");
+
+          nethserver.notifications.success = context.$i18n.t(
+            "services.service_edited_successfully"
+          );
+          nethserver.notifications.error = context.$i18n.t(
+            "services.service_edited_error"
+          );
+
+          context.exec(
+            ["system-services/update"],
+            editServiceObj,
+            function(stream) {
+              console.info("serviceEdit", stream);
+            },
+            function(success) {
+              context.currentService = context.initService();
+              context.getServices();
+            },
+            function(error, data) {
+              console.error(error);
+            }
+          );
+        },
+        function(error, data) {
+          var errorData = {};
+
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.currentService.errorProps[attr.parameter] = attr.error;
+            }
+            context.$forceUpdate();
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      );
+    },
+
+    addCustomService() {
+      var context = this;
+      var tcpPorts = [];
+      var udpPorts = [];
+      context.currentService.errorProps = [];
+
+      if (context.currentService.tcpPorts) {
+        tcpPorts = context.currentService.tcpPorts
+          .replace(/\s/g, "")
+          .split(",");
+      }
+
+      if (context.currentService.udpPorts) {
+        udpPorts = context.currentService.udpPorts
+          .replace(/\s/g, "")
+          .split(",");
+      }
+
+      var addServiceObj = {
+        action: "serviceCreate",
+        serviceName: context.currentService.name.trim(),
+        access: context.currentService.access,
+        tcpPorts: tcpPorts,
+        udpPorts: udpPorts
+      };
+
+      context.exec(
+        ["system-services/validate"],
+        addServiceObj,
+        null,
+        function(success) {
+          $("#edit-service-modal").modal("hide");
+
+          nethserver.notifications.success = context.$i18n.t(
+            "services.service_added_successfully"
+          );
+          nethserver.notifications.error = context.$i18n.t(
+            "services.service_added_error"
+          );
+
+          context.exec(
+            ["system-services/create"],
+            addServiceObj,
+            function(stream) {
+              console.info("serviceCreate", stream);
+            },
+            function(success) {
+              context.currentService = context.initService();
+              context.getServices();
+            },
+            function(error, data) {
+              console.error(error);
+            }
+          );
+        },
+        function(error, data) {
+          var errorData = {};
+
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.currentService.errorProps[attr.parameter] = attr.error;
+            }
+            context.$forceUpdate();
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      );
     }
   }
 };
 </script>
 
 <style>
+.show-all-services {
+  padding-left: 0;
+  width: auto;
+}
+
+.mg-top-20 {
+  margin-top: 20px !important;
+}
+
+.mg-bottom-10 {
+  margin-bottom: 10px;
+}
+
+.mg-bottom-30 {
+  margin-bottom: 30px;
+}
+
+.mg-top-minus-2 {
+  margin-top: -2px !important;
+}
+
+.mg-left-5 {
+  margin-left: 5px;
+}
+
+.remove-item-inline {
+  color: white !important;
+}
+
+.pad-left-right-sm {
+  padding-left: 0.4em;
+  padding-right: 0.4em;
+}
 </style>

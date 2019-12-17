@@ -46,6 +46,20 @@ function error {
 }
 
 #
+# Check exit status of last command and possibly exit with error
+# Optionally takes 2 arguments:
+#   - the error type (default: EventFailed)
+#   - a message (default "Action failed")
+#
+function check_exit_status {
+    if [ $? -gt 0 ]; then
+        type=${1:-"EventFailed"}
+        message=${2-"Action failed"}
+        error "$type" "$message"
+    fi
+}
+
+#
 # Print a success JSON object and exit 0
 #
 function success {

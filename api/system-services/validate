@@ -1,0 +1,159 @@
+#!/usr/bin/python
+
+#
+# Copyright (C) 2019 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+import sys
+import fileinput
+import simplejson
+import subprocess
+import re
+
+
+def invalid_attribute(parameter, error):
+    return {"parameter": parameter, "error": error, "value": ""}
+
+
+def check_port_list(port_list_p):
+    invalid_attributes = []
+
+    if port_list_p not in input_json:
+        invalid_attributes.append(invalid_attribute(port_list_p, "port_list_empty"))
+    else:
+        if input_json[port_list_p]:
+            ports = input_json[port_list_p]
+
+            for port in ports:
+                try:
+                    port_int = int(port)
+
+                    if port_int < 1 or port_int > 65535:
+                        invalid_attributes.append(
+                            invalid_attribute(port_list_p, "port_list_invalid"))
+                except ValueError:
+                    invalid_attributes.append(
+                        invalid_attribute(port_list_p, "port_list_invalid"))
+
+    return invalid_attributes
+
+
+def validate_service(input_json, check_service_name):
+    invalid_attributes = []
+
+    service_name_p = 'serviceName'
+    access_p = 'access'
+    tcp_ports_p = 'tcpPorts'
+    udp_ports_p = 'udpPorts'
+
+    # service name
+
+    if (service_name_p not in input_json) or (not input_json[service_name_p]):
+        invalid_attributes.append(invalid_attribute(
+            service_name_p, "service_name_empty"))
+    else:
+        service_name = input_json[service_name_p]
+
+        if check_service_name:
+            # check service name syntax
+            if not re.search("^[a-zA-Z][-_\.a-zA-Z0-9]*$", service_name):
+                invalid_attributes.append(invalid_attribute(
+                    service_name_p, "service_name_invalid"))
+
+            # check if a service with this name already exists
+            try:
+                cmd1 = subprocess.Popen(
+                    ['echo', '{"action":"list"}'], stdout=subprocess.PIPE)
+                cmd2 = subprocess.Popen(
+                    ['/usr/bin/sudo', '/usr/libexec/nethserver/api/system-services/read'], stdin=cmd1.stdout, stdout=subprocess.PIPE)
+                cmd1.stdout.close()
+                output = cmd2.communicate()[0]
+                return_code = cmd2.returncode
+
+                if return_code != 0:
+                    print simplejson.dumps(
+                        {'error': "command returned exit code %d" % return_code})
+                    sys.exit(1)
+
+                output = output.rstrip()
+                services = simplejson.loads(output)['configuration']
+
+                for service in services:
+                    if service['name'] == service_name:
+                        invalid_attributes.append(invalid_attribute(
+                            service_name_p, "service_already_exists"))
+
+            except Exception, e:
+                print simplejson.dumps({'error': "%s" % e})
+                sys.exit(1)
+
+    # access zones
+
+    if access_p not in input_json:
+        invalid_attributes.append(invalid_attribute(access_p, "access_empty"))
+
+    # ports
+
+    tcp_ports_invalid_attributes = check_port_list(tcp_ports_p)
+    udp_ports_invalid_attributes = check_port_list(udp_ports_p)
+    invalid_attributes = invalid_attributes + \
+        tcp_ports_invalid_attributes + udp_ports_invalid_attributes
+
+    if (len(tcp_ports_invalid_attributes) == 0) and (len(udp_ports_invalid_attributes) == 0):
+        # check that at list one port is specified
+        if (len(input_json[tcp_ports_p]) == 0) and (len(input_json[udp_ports_p]) == 0):
+            invalid_attributes.append(
+                invalid_attribute(tcp_ports_p, "tcp_ports_and_udp_ports_empty"))
+            invalid_attributes.append(
+                invalid_attribute(udp_ports_p, "tcp_ports_and_udp_ports_empty"))
+
+    return invalid_attributes
+
+
+try:
+    line = fileinput.input()[0].rstrip()
+    input_json = simplejson.loads(line)
+    action = input_json["action"]
+
+    if action == 'serviceCreate':
+        invalid_attributes = validate_service(input_json, True)
+    elif action == 'edit':
+        invalid_attributes = validate_service(input_json, False)
+    else:
+        print simplejson.dumps({'error': "action not recognized: %s" % action})
+        sys.exit(1)
+
+    # output
+    success = len(invalid_attributes) == 0
+
+    if success:
+        output = {"state": "success"}
+    else:
+        output = {"type": "NotValid", "message": "validation_failed",
+                  "attributes": invalid_attributes}
+
+    output_json = simplejson.dumps(output)
+    print(output_json)
+
+    if not success:
+        sys.exit(1)
+
+except Exception, e:
+    print simplejson.dumps({'error': "%s" % e})
+    sys.exit(1)

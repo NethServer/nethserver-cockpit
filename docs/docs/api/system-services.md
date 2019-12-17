@@ -39,6 +39,7 @@ Example:
 
 Current service status and preset is inside the `status` field.
 The `configuration` field contains all properties for each service.
+Users can create non-systemd network services; the `custom` field specify if the service is one of this kind
 
 Example:
 ```json
@@ -80,6 +81,7 @@ Example:
         "TCP": []
       },
       "props": {},
+      "custom": 0,
       "name": "cockpit.socket",
       "description": "Cockpit Web Service Socket"
     },
@@ -102,6 +104,63 @@ Example
 ```
 
 
+## validate
+
+Validate a custom network service.
+
+Available actions:
+
+- serviceCreate: validate a new custom network service
+- edit: validate an existing custom network service
+
+### Input
+
+A JSON object with these fields:
+
+- action: action to execute
+- serviceName: name of the service
+- access: allowed access zones
+- tcpPorts: list of TCP ports
+- udpPorts: list of UDP ports
+
+Example:
+```json
+{
+  "action": "serviceCreate",
+  "serviceName": "myCustomService",
+  "access": [
+    "green",
+    "red"
+  ],
+  "tcpPorts": [
+    "9696"
+  ],
+  "udpPorts": [
+    "8765",
+    "8766"
+  ]
+}
+```
+
+Invocation example:
+```bash
+echo '{"action":"serviceCreate","serviceName":"myCustomService","access":["green","red"],"tcpPorts":["9696"],"udpPorts":["8765","8766"]}' | ./validate
+```
+
+
+## create
+
+Create a custom network service.
+
+Available actions:
+
+- serviceCreate: create a custom network service
+
+### Input
+
+The same as `validate`
+
+
 ## update
 
 Execute actions on selected service.
@@ -113,8 +172,11 @@ Available actions:
 - restart: restart the service
 - enable: enable and start the service
 - disable: disable and start the service
+- edit: edit access zones and TCP/UDP ports of the service
 
 ### Input
+
+#### stop, start, restart, enable, disable
 
 A JSON object with two fields:
 
@@ -132,4 +194,65 @@ Example:
 Invocation example:
 ```bash
 echo '{"action":"restart","name":"httpd"}' | ./update
+```
+
+#### edit
+
+A JSON object with these fields:
+
+- action: `edit`
+- serviceName: name of the service
+- access: allowed access zones
+- tcpPorts: list of TCP ports
+- udpPorts: list of UDP ports
+
+Example:
+```json
+{
+  "action": "edit",
+  "serviceName": "myCustomService",
+  "access": [
+    "red"
+  ],
+  "tcpPorts": [
+    "9696"
+  ],
+  "udpPorts": [
+    "7878",
+    "5454"
+  ]
+}
+```
+
+Invocation example:
+```bash
+echo '{"action":"edit","serviceName":"myCustomService","access":["red"],"tcpPorts":["9696"],"udpPorts":["7878","5454"]}' | ./update
+```
+
+## delete
+
+Delete a custom network service.
+
+Available actions:
+
+- serviceDelete: delete a custom network service
+
+### Input
+
+A JSON object with two fields:
+
+- action: the action to execute
+- serviceName: the service name
+
+Example:
+```json
+{
+  "action": "serviceDelete",
+  "serviceName": "myCustomService"
+}
+```
+
+Invocation example:
+```bash
+echo '{"action":"serviceDelete","serviceName":"myCustomService"}' | ./delete
 ```
