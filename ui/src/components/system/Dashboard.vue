@@ -223,7 +223,7 @@
               <div class="text-right">
                 {{$t('dashboard.size')}}:
                 <b>
-                  <span class>{{system.memory.system.available_bytes * 1024 | byteFormat}}</span>
+                  <span class>{{system.memory.system.total_bytes * 1024 | byteFormat}}</span>
                 </b>
               </div>
             </div>
@@ -244,7 +244,7 @@
               <div class="text-right">
                 {{$t('dashboard.size')}}:
                 <b>
-                  <span class>{{system.memory.swap.available_bytes * 1024 | byteFormat}}</span>
+                  <span class>{{system.memory.swap.total_bytes * 1024 | byteFormat}}</span>
                 </b>
               </div>
             </div>
@@ -753,11 +753,13 @@ export default {
         memory: {
           system: {
             used_bytes: 0,
-            available_bytes: 0
+            available_bytes: 0,
+            total_bytes: 0
           },
           swap: {
             used_bytes: 0,
-            available_bytes: 0
+            available_bytes: 0,
+            total_bytes: 0
           }
         },
         systimeTypes: {
@@ -898,13 +900,15 @@ export default {
               used_bytes:
                 success.status.memory.MemTotal -
                 success.status.memory.MemAvailable,
-              available_bytes: success.status.memory.MemTotal
+              available_bytes: success.status.memory.MemAvailable,
+              total_bytes: success.status.memory.MemTotal
             },
             swap: {
               used_bytes:
                 success.status.memory.SwapTotal -
                 success.status.memory.SwapFree,
-              available_bytes: success.status.memory.SwapTotal
+              available_bytes: success.status.memory.SwapFree,
+              total_bytes: success.status.memory.SwapTotal
             }
           };
 
