@@ -62,7 +62,7 @@
             </div>
           </div>
           <div class="form-group compact">
-            <label class="col-sm-3 control-label">{{$t('dashboard.hostname')}}</label>
+            <label class="col-sm-3 control-label">{{$t('dashboard.hostname')}} / {{$t('dashboard.alias')}}</label>
             <div class="col-sm-9 adjust-li">
               <div v-if="loaders.hostname" class="spinner spinner-xs list-spinner-loader"></div>
               <p>
