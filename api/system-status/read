@@ -67,7 +67,7 @@ function readRaid()
         $ret['status'] = 'error';
       }
     } else {
-      $ret['status'] = false;
+      $ret['status'] = null;
     }
     return $ret;
 }

@@ -806,7 +806,7 @@ export default {
           }
         },
         raid: {
-          status: false
+          status: null
         },
         systimeTypes: {
           manual: this.$i18n.t("dashboard.manual"),
