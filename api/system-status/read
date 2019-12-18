@@ -54,17 +54,20 @@ function readDisk()
 
 function readRaid()
 {
-    $out = array();
     $ret = array();
-    $out = json_decode(exec('/usr/libexec/nethserver/raid-status'), true);
-    $mds = $out['results'];
-    $ret['status'] = false;
-    for ($i=0; $i<count($mds) && $ret['status'] != 'error'; $i++) {
-      if ($mds[$i]['failed_devs'] == 'none') {
+    $out = array();
+    exec('/usr/libexec/nethserver/raid-status', $out, $exit_code);
+    $out = json_decode($out[0], true);
+    $records = count($out["results"]);
+    
+    if ($records > 0) {
+      if ($exit_code == 0) {
         $ret['status'] = 'ok';
       } else {
         $ret['status'] = 'error';
       }
+    } else {
+      $ret['status'] = false;
     }
     return $ret;
 }
