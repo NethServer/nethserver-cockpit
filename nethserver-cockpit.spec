@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.3.11
+Version: 1.3.12
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Thu Dec 19 2019 Davide Principi <davide.principi@nethesis.it> - 1.3.12-1
+- Cockpit: improve main dashboard view - NethServer/dev#5990
+
 * Fri Dec 13 2019 Davide Principi <davide.principi@nethesis.it> - 1.3.11-1
 - Bad user password change validation in Cockpit - Bug NethServer/dev#5984
 
