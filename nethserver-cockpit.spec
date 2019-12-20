@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.3.12
+Version: 1.3.13
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Fri Dec 20 2019 Davide Principi <davide.principi@nethesis.it> - 1.3.13-1
+- Cockpit disconnection breaks yum transactions - Bug NethServer/dev#6002
+
 * Thu Dec 19 2019 Davide Principi <davide.principi@nethesis.it> - 1.3.12-1
 - Cockpit: improve main dashboard view - NethServer/dev#5990
 
