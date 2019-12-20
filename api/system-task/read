@@ -27,7 +27,10 @@ watchdog=0
 while [[ ! -z $active_event ]]; do
     pid=$(echo $active_event | cut -d' ' -f1)
     name=$(echo $active_event | cut -d' ' -f5)
-    if [ "$name" == "-j" ]; then # skip -j option
+    if [[ "$active_event" == *pkgaction* ]]; then
+        name="YUM transaction"
+        args=""
+    elif [[ "$name" == "-j" || "$name" == "--json" ]]; then # skip -j/--json option
         name=$(echo $active_event | cut -d' ' -f6)
         args=$(echo $active_event | cut -d' ' -f7-)
     else
