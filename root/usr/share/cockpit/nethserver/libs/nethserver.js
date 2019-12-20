@@ -21,6 +21,12 @@ nethserver = {
             args[0] = "/usr/libexec/nethserver/api/" + api
         }
 
+        if(stream) {
+            // prepend setsid to spawn a new process group and survive if
+            // the user session is terminated
+            args.unshift('/usr/bin/setsid');
+        }
+
         var process = cockpit.spawn(args);
 
         if (input) {
