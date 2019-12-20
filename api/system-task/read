@@ -22,6 +22,7 @@
 
 pattern='(signal-event|pkgaction)'
 active_event=$(pgrep  -n -a -f "${pattern}")
+watchdog=0
 
 while [[ ! -z $active_event ]]; do
     pid=$(echo $active_event | cut -d' ' -f1)
@@ -34,6 +35,9 @@ while [[ ! -z $active_event ]]; do
     fi
     printf '{"steps":-1,"pid":%d,"args":"%s","event":"%s"}\n' "$pid" "$args" "$name"
     sleep 1
+    if ((++watchdog > 3600)); then
+        exit 1
+    fi
     active_event=$(pgrep  -n -a -f "${pattern}")
 done
 
