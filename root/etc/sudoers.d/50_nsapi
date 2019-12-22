@@ -17,6 +17,7 @@ Cmnd_Alias NSAPI_PUBLIC = \
     /usr/libexec/nethserver/api/system-task/read, \
     /usr/libexec/nethserver/api/system-authorization/read, \
     /usr/libexec/nethserver/api/system-settings/read, \
+    /usr/libexec/nethserver/api/system-subscription/read, \
     /usr/libexec/nethserver/api/system-apps/read, \
     /usr/libexec/nethserver/api/system-docs/read, \
     /usr/libexec/nethserver/api/system-backup/hints, \

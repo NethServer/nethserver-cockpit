@@ -151,7 +151,7 @@
                 class="btn btn-default"
                 type="button"
                 data-dismiss="modal"
-              >{{$t('cancel')}}</button>
+              >{{$t('close')}}</button>
             </div>
           </form>
         </div>
@@ -200,7 +200,7 @@
               </div>
             </div>
             <div class="modal-footer submit">
-              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
             </div>
           </form>
         </div>

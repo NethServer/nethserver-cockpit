@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#
 # Copyright (C) 2019 Nethesis S.r.l.
 # http://www.nethesis.it - nethserver@nethesis.it
 #
@@ -20,4 +19,26 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-systemctl enable --now cockpit.socket
+
+. /usr/libexec/nethserver/api/lib/helper_functions
+
+data=$(cat /dev/stdin)
+action=$(echo $data | jq -r '.action')
+email=$(echo $data | jq -r '.email')
+
+if [[ -z "$email" || "$email" == "null" ]]; then
+    error "InvalidMail" "invalid_mail_address"
+fi
+
+from=$(/sbin/e-smith/config getprop root SenderAddress)
+if [ -z "$from" ];then
+    from="root@"$(hostname -d)
+fi
+case $action in
+
+    "test-mail")
+        hostname=$(hostname)
+        text="Subject: Test mail from $hostname\n\nThis is a test mail from your NethServer $hostname.\n\nHappy hacking!\n"
+        echo -e $text | /usr/lib/sendmail -F $hostname -f $from $email 2>&1
+        ;;
+esac

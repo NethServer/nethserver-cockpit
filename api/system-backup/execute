@@ -59,8 +59,10 @@ function _restore
     echo "{\"progress\":\"1.00\",\"time\":\"\",\"exit\":$ret,\"event\":\"restore-config\",\"state\":\"done\",\"step\":2,\"pid\":\"\",\"action\":\"Restoring configuration\"}"
     if [ $ret -gt 0 ]; then
         echo '{"pid":"","status":"failed","event":"restore-config"}'
+        exit 1
     else
         echo '{"pid":"","status":"success","event":"restore-config"}'
+        exit 0
     fi
 }
 
@@ -102,42 +104,7 @@ case $action in
         ;;
 
     "restore-backup-config")
-
-        case "$(_get mode)" in
-            "file")
-                tmp_file=$(mktemp)
-                echo "$(_get data)" | base64 -d > $tmp_file
-                /usr/libexec/nethserver/backup-config-history push -t upload -f $tmp_file -d "Upload from UI"
-                rm -f $tmp_file
-                # retrieve uploaded id
-                id=$(/usr/libexec/nethserver/backup-config-history list | jq ".[0].id" -r)
-
-                _restore $id "$(_get remap)" $(_get InstallPackages)
-                ;;
-            "url")
-                tmp_file=$(mktemp)
-                description=$(echo "$(_get data)" | sed -e 's|^[^/]*//||' -e 's|/.*$||') # extract host name
-                wget --quiet "$(_get data)" -O $tmp_file
-                /usr/libexec/nethserver/backup-config-history push -t upload -f $tmp_file -d "Downloaded from $description"
-                rm -f $tmp_file
-                # retrieve uploaded id
-                id=$(/usr/libexec/nethserver/backup-config-history list | jq ".[0].id" -r)
-
-                _restore $id "$(_get remap)" $(_get InstallPackages)
-                ;;
-            "backup")
-                _restore "$(_get data)" "$(_get remap)" $(_get InstallPackages)
-                ;;
-        esac
-
-        # Skip double execution
-        systemctl is-active $unit >/dev/null
-        if [ $? -eq 0 ]; then
-            exit 0
-        else
-            systemctl reset-failed $name >/dev/null
-        fi
-
+        _restore "$(_get data)" "$(_get remap)" $(_get InstallPackages)
         ;;
 
     "restore-backup-data")

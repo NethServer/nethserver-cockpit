@@ -21,10 +21,20 @@ nethserver = {
             args[0] = "/usr/libexec/nethserver/api/" + api
         }
 
+        if(stream) {
+            // prepend setsid to spawn a new process group and survive if
+            // the user session is terminated
+            args.unshift('/usr/bin/setsid');
+        }
+
         var process = cockpit.spawn(args);
 
         if (input) {
-            process.input(JSON.stringify(input))
+            var data = JSON.stringify(input)
+            for (var i = 0; i < data.length; i += 65536) {
+                process.input(data.substr(i, 65536), true);
+            }
+            process.input() // send EOF
         }
 
         var command = (input ? " echo '" + JSON.stringify(input) + "' | " : "") + args.join(' ') + " | jq"

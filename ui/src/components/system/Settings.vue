@@ -269,13 +269,18 @@
             {{i == 0 ?
             $t('settings.notify_to') : ''}}
           </label>
-          <div class="col-sm-5">
-            <input required type="email" v-model="a.email" class="form-control">
-            <span v-if="errors.EmailAddress.hasError" class="help-block">
-              {{$t('validation.validation_failed')}}:
-              {{$t('validation.'+errors.EmailAddress.message)}}
-            </span>
-          </div>
+          <form v-on:submit.prevent="testMail(a)">
+            <div class="col-sm-3">
+              <input type="email" v-model="a.email" class="form-control" />
+              <span v-if="errors.EmailAddress.hasError" class="help-block">
+                {{$t('validation.validation_failed')}}:
+                {{$t('validation.'+errors.EmailAddress.message)}}
+              </span>
+            </div>
+            <div class="col-sm-2">
+              <button class="btn btn-default" type="submit">{{$t('settings.test_mail')}}</button>
+            </div>
+          </form>
           <div v-if="i > 0" class="col-sm-2">
             <button @click="removeEmail(a, i)" class="btn btn-default" type="button">
               <span class="fa fa-minus card-icon-def"></span>
@@ -621,6 +626,31 @@ export default {
     },
     removeEmail(alias, index) {
       this.settings.root.EmailAddress.splice(index, 1);
+    },
+    testMail(alias) {
+      var context = this;
+      context.exec(
+        ["system-settings/execute"],
+        {
+          action: "test-mail",
+          email: alias.email
+        },
+        function(stream) {
+          console.info("settings-test-mail", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "settings.mail_sent_ok"
+          );
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "settings.mail_sent_error"
+          );
+        }
+      );
     },
     getHints(callback) {
       var context = this;

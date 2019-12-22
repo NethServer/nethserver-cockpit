@@ -295,15 +295,14 @@
                     :class="[u.locked == 1 ? 'disabled' : !users.providerInfo.IsLocal ? 'not-local-user' : '']"
                   >{{u.gecos}}</span>
                 </div>
-                <div class="list-group-item-text">
-                  <span :class="[u.expired ? 'fa fa-clock-o red' : 'fa fa-clock-o']"></span>
-                  <span :class="[u.expired ? 'red' : '']">
-                    {{u.expired ? $t('users_groups.expired') :
-                    $t('users_groups.not_expired')}}
-                  </span>
-                </div>
               </div>
-              <div class="list-view-pf-additional-info"></div>
+              <div class="list-view-pf-additional-info">
+                <span :class="[u.expired ? 'fa fa-clock-o red mg-right-5' : 'fa fa-clock-o mg-right-5']"></span>
+                <span :class="[u.expired ? 'red' : '']">
+                  {{u.expired ? $t('users_groups.expired') :
+                  $t('users_groups.not_expired')}}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -562,7 +561,7 @@
               <div v-if="newUser.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button
-                :disabled="!newUser.isEdit && (!newUser.passwordStrength && passwordPolicy.Users == 'yes')"
+                :disabled="(!newUser.isEdit || newUser.isPassEdit) && (!newUser.passwordStrength && passwordPolicy.Users == 'yes')"
                 class="btn btn-primary"
                 type="submit"
               >
@@ -1752,7 +1751,7 @@ export default {
           vm.view.isAuth = true;
           vm.view.isRoot = success.status.isRoot == 1;
           Array.prototype.push.apply(appList, success.applications);
-          Array.prototype.push.apply(sysList, success.system);
+          Array.prototype.push.apply(sysList, success.system.filter(x => x != 'terminal'));
         },
         function(error) {
           console.error(error);
@@ -2398,7 +2397,7 @@ export default {
         null,
         function(success) {
           try {
-            success = JSON.parse(success);
+            success = context.sortList(JSON.parse(success));
           } catch (e) {
             console.error(e);
           }
@@ -2423,7 +2422,7 @@ export default {
         null,
         function(success) {
           try {
-            success = JSON.parse(success);
+            success = context.sortList(JSON.parse(success));
           } catch (e) {
             console.error(e);
           }
@@ -2435,6 +2434,14 @@ export default {
           console.error(error);
         }
       );
+    },
+    
+    sortList(obj) {
+      var sorted = {};
+      Object.keys(obj).sort().forEach(function(key) {
+        sorted[key] = obj[key];
+      });
+      return sorted;
     },
 
     addGroupToUser(group) {
@@ -2672,33 +2679,57 @@ export default {
     changePassword(user) {
       var context = this;
 
-      $("#createUserModal").modal("hide");
-
+      var pwChangeObj = {
+        action: "change-password",
+        name: user.name,
+        newPassword: user.newPassword,
+        confirmNewPassword: user.confirmNewPassword
+      };
+      context.newUser.isLoading = true
       context.exec(
-        ["system-users/update"],
-        {
-          action: "change-password",
-          name: user.name,
-          newPassword: user.newPassword,
-          confirmNewPassword: user.confirmNewPassword
-        },
-        function(stream) {
-          console.info("user-change-password", stream);
-        },
+        ["system-users/validate"],
+        pwChangeObj,
+        null,
         function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "users_groups.user_pass_change_ok"
-          );
+          context.newUser.isLoading = false
+          $("#createUserModal").modal("hide");
+          context.exec(
+            ["system-users/update"],
+            pwChangeObj,
+            function(stream) {
+              console.info("user-change-password", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "users_groups.user_pass_change_ok"
+              );
 
-          // get users
-          context.getUsers();
-        },
-        function(error, data) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "users_groups.user_pass_change_error"
+              // get users
+              context.getUsers();
+              context.$emit('password-modify', {});
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "users_groups.user_pass_change_error"
+              );
+            }
           );
+        },
+        function (error, data) {
+          var errorData = {};
+          context.newUser.isLoading = false;
+
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.newUser.errorProps[attr.parameter] = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
+          }
         }
       );
     },
@@ -3323,6 +3354,7 @@ export default {
           function(success) {
             context.newProvider.isChecking = false;
             context.newProvider.isValid = true;
+            context.newProvider.joinError = false;
             context.$forceUpdate();
           },
           function(error, data) {
@@ -3576,6 +3608,9 @@ export default {
 <style>
 .mg-top-20 {
   margin-top: 20px;
+}
+.mg-right-5 {
+  margin-right: 5px;
 }
 .adjust-index {
   z-index: 1;

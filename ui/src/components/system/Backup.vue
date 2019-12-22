@@ -36,7 +36,6 @@
             class="btn btn-default right"
           >{{$t('backup.configure')}}</button>
           <button
-            :disabled="backupConfigurations.length == 0"
             @click="openRestoreConfig()"
             class="btn btn-default right panel-icon"
           >{{$t('backup.restore')}}</button>
@@ -351,7 +350,6 @@
               </div>
               <div class="form-group">
                 <input
-                  required
                   class="col-xs-2 col-sm-4 control-label"
                   type="radio"
                   id="restoreURL-1"
@@ -364,7 +362,7 @@
                 >{{$t('backup.from_url')}}</label>
                 <div class="col-sm-6">
                   <input
-                    :required="currentConfigBackup.restoreMode == 'url'"
+                    :required="currentConfigBackup.restoreMode == 'url' ? 'true' : 'false'"
                     :disabled="currentConfigBackup.restoreMode != 'url'"
                     type="url"
                     v-model="currentConfigBackup.restoreURL"
@@ -379,7 +377,6 @@
               </div>
               <div class="form-group">
                 <input
-                  required
                   class="col-xs-2 col-sm-4 control-label"
                   type="radio"
                   id="restoreFile-1"
@@ -399,7 +396,7 @@
                     {{$t('backup.choose_file')}}
                   </label>
                   <input
-                    :required="currentConfigBackup.restoreMode == 'file'"
+                    :required="currentConfigBackup.restoreMode == 'file' ? 'true' : 'false'"
                     :disabled="currentConfigBackup.restoreMode != 'file'"
                     class="inputfile"
                     @change="onChangeInput($event)"
@@ -416,7 +413,6 @@
               </div>
               <div class="form-group">
                 <input
-                  required
                   class="col-xs-2 col-sm-4 control-label"
                   type="radio"
                   id="restoreBackup-1"
@@ -429,7 +425,7 @@
                 >{{$t('backup.from_backup')}}</label>
                 <div class="col-sm-6">
                   <select
-                    :required="currentConfigBackup.restoreMode == 'backup'"
+                    :required="currentConfigBackup.restoreMode == 'backup' ? 'true' : 'false'"
                     :disabled="currentConfigBackup.restoreMode != 'backup'"
                     v-model="currentConfigBackup.restoreBackup"
                     class="combobox form-control"
@@ -456,11 +452,12 @@
                   />
                 </div>
               </div>
+              <p class="divider"></p>
               <div class="form-group">
                 <label
                   class="col-sm-4 control-label"
                   for="textInput-modal-markup"
-                >{{$t('backup.interface_remap')}}</label>
+                >{{$t('backup.check_configuration')}}</label>
                 <div class="col-sm-4">
                   <button
                     :disabled="(currentConfigBackup.restoreURL.length == 0 && currentConfigBackup.restoreFile.length == 0 && currentConfigBackup.restoreBackup.length == 0) || currentConfigBackup.isChecking"
@@ -473,18 +470,63 @@
                   <div class="spinner"></div>
                 </div>
               </div>
-              <div v-if="currentConfigBackup.remap" class="advanced">
+              <div
+                v-if="currentConfigBackup.errorMessage"
+                class="alert alert-danger alert-dismissable"
+              >
+                <span class="pficon pficon-error-circle-o"></span>
+                <strong>{{$t('error')}}:</strong>
+                {{$t('backup.'+currentConfigBackup.errorMessage)}}.
+              </div>
+              <div v-if="!currentConfigBackup.isValid" class="advanced">
+                <span>{{$t('backup.register_system')}}</span>
+                <div class="divider divider-advanced"></div>
+              </div>
+              <div v-if="!currentConfigBackup.isValid" class="alert alert-danger alert-dismissable">
+                <span class="pficon pficon-error-circle-o"></span>
+                <strong>{{$t('error')}}:</strong>
+                {{$t('backup.register_before_restore')}}.
+                <a
+                  href="#/subscription"
+                >{{$t('backup.register_now')}}</a>
+              </div>
+              <div v-if="currentConfigBackup.remap && currentConfigBackup.isValid" class="advanced">
                 <span>{{$t('backup.remap_interface_config')}}</span>
                 <div class="divider divider-advanced"></div>
               </div>
-              <div v-if="currentConfigBackup.remap" class="alert alert-warning alert-dismissable">
+              <div
+                v-if="currentConfigBackup.remap && currentConfigBackup.isValid"
+                class="alert alert-warning alert-dismissable"
+              >
                 <span class="pficon pficon-warning-triangle-o"></span>
                 <strong>{{$t('warning')}}:</strong>
                 {{$t('backup.during_remap_warning')}}.
               </div>
               <div
-                v-if="currentConfigBackup.remap"
-                v-for="(o, ok) in currentConfigBackup.remapInterfaces.old"
+                v-if="currentConfigBackup.errorMessageValidate"
+                class="alert alert-danger alert-dismissable"
+              >
+                <span class="pficon pficon-error-circle-o"></span>
+                <strong>{{$t('error')}}:</strong>
+                {{$t('backup.'+currentConfigBackup.errorMessageValidate)}}.
+              </div>
+              <div
+                v-if="currentConfigBackup.remap && currentConfigBackup.isValid"
+                class="form-group"
+              >
+                <div class="col-sm-4">
+                  <label class="control-label display-block">{{$t('backup.from_backup')}}</label>
+                </div>
+                <div class="col-sm-1">
+                  <label class="control-label display-block"></label>
+                </div>
+                <div class="col-sm-4">
+                  <label class="control-label display-block">{{$t('backup.current_int')}}</label>
+                </div>
+              </div>
+              <div
+                v-for="(o, ok) in currentConfigBackup.remapInterfaces.new"
+                v-if="currentConfigBackup.remap && currentConfigBackup.isValid && o.role && o.role.length > 0"
                 v-bind:key="ok"
                 class="form-group"
               >
@@ -494,10 +536,9 @@
                       {{o.name}}
                       <span v-if="o.nslabel">({{o.nslabel}})</span>
                     </span>
+                    {{o.ipaddr ? ' - '+o.ipaddr : '-'}}
                     <br />
-                    {{o.ipaddr}}
-                    <br />
-                    {{o.role == 'pppoe' ? 'PPPoE' : o.role | capitalize}}
+                    {{o.role == 'pppoe' ? 'PPPoE' : o.role | uppercase}}
                   </label>
                 </div>
                 <div class="col-sm-1">
@@ -511,18 +552,18 @@
                     v-model="o.newInt"
                     class="combobox form-control"
                   >
+                    <option value>{{$t('backup.assign_later')}}</option>
                     <option
-                      v-for="(n, nk) in currentConfigBackup.remapInterfaces.new"
+                      v-for="(n, nk) in currentConfigBackup.remapInterfaces.old"
                       v-bind:key="nk"
-                      v-if="n.role && n.role.length > 0"
                       :value="n.name"
+                      :disabled="currentConfigBackup.remapNew[n.name]"
                     >
                       {{n.name}}
                       <span v-if="n.nslabel && n.nslabel.length > 0">({{n.nslabel}})</span>
-                      - {{n.role}}
-                      <span
-                        v-if="n.ipaddr && n.ipaddr.length > 0"
-                      >| {{n.ipaddr || '-'}}</span>
+                      <span v-if="n.ipaddr && n.ipaddr.length > 0">{{' - '+n.ipaddr || '-'}}</span>
+                      <span v-if="n.link">{{' - '+ (n.link == 1 ? 'UP' : 'DOWN') + ' - '}}</span>
+                      {{n.role | uppercase}}
                     </option>
                   </select>
                 </div>
@@ -535,7 +576,7 @@
               ></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button
-                :disabled="currentConfigBackup.isChecking || !currentConfigBackup.remapCalled"
+                :disabled="currentConfigBackup.isChecking"
                 class="btn btn-primary"
                 type="submit"
               >{{$t('backup.restore')}}</button>
@@ -708,7 +749,7 @@
                 class="btn btn-default"
                 type="button"
                 data-dismiss="modal"
-              >{{$t('cancel')}}</button>
+              >{{$t('close')}}</button>
             </div>
           </form>
         </div>
@@ -2176,16 +2217,66 @@ export default {
         }
       );
     },
-    editCronTab() {
-      this.wizard.when = {
-        every: "day",
-        minute: 5,
-        hour: 1,
-        hour_minute: "1:05",
-        week_day: 0,
-        day: 0,
-        crontab: ""
+    reverseCrontab(backupTime) {
+      var every = null;
+      var minute = null;
+      var hour = null;
+      var hour_minute = null;
+      var week_day = null;
+      var day = null;
+
+      // check every
+      if (backupTime.split("*").length - 1 == 4) {
+        every = "hour";
+      }
+      if (backupTime.split("*").length - 1 == 3) {
+        every = "day";
+      }
+      if (
+        backupTime.split("*").length - 1 == 2 &&
+        backupTime.split(" ")[4] != "*"
+      ) {
+        every = "week";
+      }
+      if (
+        backupTime.split("*").length - 1 == 2 &&
+        backupTime.split(" ")[4] == "*"
+      ) {
+        every = "month";
+      }
+
+      // check minute
+      if (every == "hour" || every == "day") {
+        minute = backupTime.split(" ")[0];
+      }
+
+      // check hour
+      if (every == "day") {
+        hour = backupTime.split(" ")[1];
+      }
+
+      // check week_day and hour_minute
+      if (every == "week") {
+        week_day = backupTime.split(" ")[4];
+        hour_minute = backupTime.split(" ")[1] + ":" + backupTime.split(" ")[0];
+      }
+
+      // check day and hour_minute
+      if (every == "month") {
+        day = backupTime.split(" ")[2];
+        hour_minute = backupTime.split(" ")[1] + ":" + backupTime.split(" ")[0];
+      }
+
+      return {
+        every: every ? every : "day",
+        minute: minute ? minute : 5,
+        hour: hour ? hour : 1,
+        hour_minute: hour_minute ? hour_minute : "1:05",
+        week_day: week_day ? week_day : 0,
+        day: day ? day : 0
       };
+    },
+    editCronTab() {
       this.wizard.isEditCron = false;
     },
     editUSBDevice() {
@@ -2209,12 +2300,30 @@ export default {
         isLoading: false,
         currentStep: 1,
         when: {
-          every: "day",
-          minute: 5,
-          hour: 1,
-          hour_minute: "1:05",
-          week_day: 0,
-          day: 0,
+          every:
+            b && b.props.BackupTime
+              ? this.reverseCrontab(b.props.BackupTime).every
+              : "day",
+          minute:
+            b && b.props.BackupTime
+              ? this.reverseCrontab(b.props.BackupTime).minute
+              : 5,
+          hour:
+            b && b.props.BackupTime
+              ? this.reverseCrontab(b.props.BackupTime).hour
+              : 1,
+          hour_minute:
+            b && b.props.BackupTime
+              ? this.reverseCrontab(b.props.BackupTime).hour_minute
+              : "1:05",
+          week_day:
+            b && b.props.BackupTime
+              ? this.reverseCrontab(b.props.BackupTime).week_day
+              : 0,
+          day:
+            b && b.props.BackupTime
+              ? this.reverseCrontab(b.props.BackupTime).day
+              : 0,
           crontab: b && b.props.BackupTime ? b.props.BackupTime : ""
         },
         where: {
@@ -2402,6 +2511,10 @@ export default {
         case "usb":
           this.wizard.how.choice = "rsync";
           break;
+        case "b2":
+        case "s3":
+          this.wizard.how.choice = "restic";
+          break;
       }
       this.getUSBDevices();
     },
@@ -2544,7 +2657,8 @@ export default {
       var duplicity =
         this.wizard.where.choice == "nfs" ||
         this.wizard.where.choice == "cifs" ||
-        this.wizard.where.choice == "usb";
+        this.wizard.where.choice == "usb" ||
+        this.wizard.where.choice == "webdav";
 
       var restic =
         this.wizard.where.choice == "nfs" ||
@@ -2552,12 +2666,14 @@ export default {
         this.wizard.where.choice == "usb" ||
         this.wizard.where.choice == "sftp" ||
         this.wizard.where.choice == "b2" ||
-        this.wizard.where.choice == "s3";
+        this.wizard.where.choice == "s3" ||
+        this.wizard.where.choice == "webdav";
 
       var rsync =
         this.wizard.where.choice == "sftp" ||
         this.wizard.where.choice == "usb" ||
-        this.wizard.where.choice == "nfs";
+        this.wizard.where.choice == "nfs" ||
+        this.wizard.where.choice == "webdav";
 
       num += duplicity ? 1 : 0;
       num += restic ? 1 : 0;
@@ -2575,8 +2691,10 @@ export default {
     },
     initBackupConfiguration() {
       return {
+        name: "",
         restoreURL: "",
         restoreFile: "",
+        restoreFileName: "",
         restoreBackup: "",
         HistoryLength: 0,
         Description: "",
@@ -2584,8 +2702,10 @@ export default {
         isChecking: false,
         restoreMode: "url",
         restoreInstallPackages: true,
-        remapCalled: false,
         remap: false,
+        isValid: true,
+        errorMessage: false,
+        errorMessageValidate: false,
         remapInterfaces: {
           old: [],
           new: []
@@ -2605,6 +2725,8 @@ export default {
       var context = this;
       this.getBase64(event.target.files[0], function(resp) {
         context.currentConfigBackup.restoreFile = resp.split(",")[1];
+        context.currentConfigBackup.restoreFileName =
+          event.target.files[0].name;
       });
     },
     getBackupStatus() {
@@ -2819,14 +2941,18 @@ export default {
           data = context.currentConfigBackup.restoreBackup;
           break;
       }
-
+      context.currentConfigBackup.errorMessageValidate = null;
       context.currentConfigBackup.isChecking = true;
       context.exec(
         ["system-backup/read"],
         {
-          action: "remapping-backup-config",
+          action: "check-backup-config",
           mode: context.currentConfigBackup.restoreMode,
-          data: data
+          data: data,
+          filename:
+            context.currentConfigBackup.restoreFileName.length > 0
+              ? context.currentConfigBackup.restoreFileName
+              : null
         },
         null,
         function(success) {
@@ -2835,77 +2961,138 @@ export default {
           } catch (e) {
             console.error(e);
           }
+          context.currentConfigBackup.name = success.name;
           context.currentConfigBackup.isChecking = false;
-          context.currentConfigBackup.remapCalled = true;
           context.currentConfigBackup.remap = success.remap;
           context.currentConfigBackup.remapInterfaces.old =
-            success.current || [];
+            success.current.sort((a, b) =>
+              a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+            ) || [];
           context.currentConfigBackup.remapInterfaces.new =
             success.restore || [];
+          context.currentConfigBackup.errorMessage = false;
+          context.currentConfigBackup.errorMessageValidate = false;
+
+          context.currentConfigBackup.remapNew = {};
+          context.currentConfigBackup.remapInterfaces.new.filter(function(
+            newI
+          ) {
+            var newInt = context.currentConfigBackup.remapInterfaces.old.filter(
+              function(i) {
+                if (
+                  i.name == newI.name &&
+                  (newI.role && newI.role.length > 0)
+                ) {
+                  context.currentConfigBackup.remapNew[i.name] = newI.name;
+                  return true;
+                }
+              }
+            )[0];
+            newI.newInt = (newInt && newInt.name) || "";
+          });
         },
-        function(error) {
+        function(error, data) {
           console.error(error);
+          try {
+            data = JSON.parse(data);
+          } catch (e) {
+            console.error(e);
+          }
           context.currentConfigBackup.isChecking = false;
-          context.currentConfigBackup.remapCalled = true;
           context.currentConfigBackup.remap = false;
+          context.currentConfigBackup.errorMessage = data.message;
         }
       );
+    },
+    swap(json) {
+      var ret = {};
+      for (var key in json) {
+        ret[json[key]] = key;
+      }
+      return ret;
     },
     restoreConfigBackup() {
       var context = this;
 
-      var data = "";
-      switch (context.currentConfigBackup.restoreMode) {
-        case "url":
-          data = context.currentConfigBackup.restoreURL;
-          break;
+      var backupObj = {
+        action: "restore-backup-config",
+        data: context.currentConfigBackup.name,
+        InstallPackages: context.currentConfigBackup.restoreInstallPackages
+          ? "enabled"
+          : "disabled",
+        remap: context.swap(context.currentConfigBackup.remapNew)
+      };
 
-        case "file":
-          data = context.currentConfigBackup.restoreFile;
-          break;
-
-        case "backup":
-          data = context.currentConfigBackup.restoreBackup;
-          break;
-      }
-
-      $("#restoreConfigModal").modal("hide");
+      context.currentConfigBackup.errorMessageValidate = null;
+      context.currentConfigBackup.isChecking = true;
       context.exec(
-        ["system-backup/execute"],
-        {
-          action: "restore-backup-config",
-          mode: context.currentConfigBackup.restoreMode,
-          data: data,
-          InstallPackages: context.currentConfigBackup.restoreInstallPackages
-            ? "enabled"
-            : "disabled",
-          remap: context.currentConfigBackup.remapNew
-        },
-        function(stream) {
-          console.info("backup-config-restore", stream);
-        },
+        ["system-backup/validate"],
+        backupObj,
+        null,
         function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "backup.restore_config_backup_ok"
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+
+          context.currentConfigBackup.isValid = success.valid == 1;
+          context.currentConfigBackup.isChecking = false;
+          $("#restoreConfigModal").modal("hide");
+          context.exec(
+            ["system-backup/execute"],
+            backupObj,
+            function(stream) {
+              console.info("backup-config-restore", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "backup.restore_config_backup_ok"
+              );
+
+              // refresh interface
+              context.refresh();
+
+              // get backup info
+              context.getBackupInfo();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "backup.restore_config_backup_error"
+              );
+            }
           );
-
-          // refresh interface
-          context.refresh();
-
-          // get backup info
-          context.getBackupInfo();
         },
         function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "backup.restore_config_backup_error"
-          );
+          var errorData = {};
+          context.currentConfigBackup.isChecking = false;
+
+          try {
+            errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.currentConfigBackup.errorMessageValidate = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
+          }
         }
       );
     },
     setRemapping(oldInt) {
-      this.currentConfigBackup.remapNew[oldInt.newInt] = oldInt.name;
+      if (oldInt.newInt && oldInt.newInt.length > 0) {
+        this.currentConfigBackup.remapNew[oldInt.newInt] = oldInt.name;
+      } else {
+        for (var i in this.currentConfigBackup.remapNew) {
+          var int = this.currentConfigBackup.remapNew[i];
+          if (int == oldInt.name) {
+            delete this.currentConfigBackup.remapNew[i];
+          }
+        }
+      }
+      this.$forceUpdate();
     },
     configureConfigBackup() {
       var context = this;

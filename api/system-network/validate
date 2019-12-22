@@ -22,6 +22,64 @@
 
 require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
 
+function addValidationError($parameterName, $message) {
+    global $v;
+
+    // add a validation error only if it's not already set
+    if (!isset($v->invalidParameters[$parameterName])) {
+        $v->addValidationError($parameterName, $message);
+    }
+}
+
+// return the number of bits of a CIDR netmask
+function mask2cidr($mask) {
+    $long = ip2long($mask);
+    $base = ip2long('255.255.255.255');
+    return 32-log(($long ^ $base) + 1, 2);
+}
+
+// return the first and last address of a CIDR network
+function ip_range($ipaddr, $netmask) {
+    $cidr = $ipaddr . '/' . mask2cidr($netmask);
+    $range = array();
+    $cidr = explode('/', $cidr);
+    $range[0] = long2ip((ip2long($cidr[0])) & ((-1 << (32 - (int)$cidr[1]))));
+    $range[1] = long2ip((ip2long($range[0])) + pow(2, (32 - (int)$cidr[1])) - 1);
+    return $range;
+}
+
+function check_overlapping_networks($ipaddr, $netmask, $exclude) {
+    $ip_range = ip_range($ipaddr, $netmask);
+    $first_ip = $ip_range[0];
+    $last_ip = $ip_range[1];
+
+    // IP address can't be the network address or the broadcast address
+    if (ip2long($ipaddr) == ip2long($first_ip) || ip2long($ipaddr) == ip2long($last_ip)) {
+        addValidationError('ipaddr', 'ip_address_network_or_broadcast');
+    }
+
+    $ndb = new EsmithDatabase('networks');
+
+    // network IP ranges can't overlap
+    foreach ($ndb->getAll() as $i => $n) {
+        // skip current interface
+        if ($i == $exclude) {
+            continue;
+        }
+
+        if (isset($n['ipaddr']) && trim($n['ipaddr']) && isset($n['netmask']) && trim($n['netmask']) && isset($n['role']) && trim($n['role'])) {
+            $ip_range_other = ip_range($n['ipaddr'], $n['netmask']);
+            $first_ip_other = $ip_range_other[0];
+            $last_ip_other = $ip_range_other[1];
+
+            if ((ip2long($first_ip) >= ip2long($first_ip_other) && ip2long($first_ip) <= ip2long($last_ip_other)) ||
+                    (ip2long($last_ip) >= ip2long($first_ip_other) && ip2long($last_ip) <= ip2long($last_ip_other))) {
+                addValidationError('ipaddr', 'this_network_overlaps_with_another_one');
+            }
+        }
+    }
+}
+
 function used_ip($ip, $exclude) {
     global $v;
     $ndb = new EsmithDatabase('networks');
@@ -83,6 +141,22 @@ function check_network_config($data, $exclude = "") {
         $v->declareParameter('netmask', Validate::IPv4_NETMASK);
         $v->declareParameter('gateway', Validate::IPv4_OR_EMPTY);
         used_ip($data['ipaddr'], $exclude);
+        check_overlapping_networks($data['ipaddr'], $data['netmask'], $exclude);
+    }
+
+    check_nslabel($data);
+}
+
+function check_nslabel($data) {
+    global $v;
+
+    if (isset($data['nslabel'])) {
+        # Spaces not allowed, maximum 20 characters
+        $pos = strpos($data['nslabel'], " ");
+
+        if ($pos !== false || strlen($data['nslabel']) > 20) {
+            $v->addValidationError('nslabel', 'invalid_nslabel');
+        }
     }
 }
 
@@ -119,7 +193,7 @@ function list_current_devices($virtual) {
 
 $data = readInput();
 $action = $data['action'];
-$host = $data['host'];
+$host = @$data['host'];
 
 $v = new LegacyValidator($data);
 $db = new EsmithDatabase('networks');
@@ -171,14 +245,6 @@ if ($action == 'create-alias') {
     $exclude = $data['devices'][0];
     check_network_config($data, $exclude);
 
-    if (isset($data['nslabel'])) {
-        # Spaces not allowed, maximum 20 characters
-        $pos = strpos($data['nslabel'], " ");
-
-        if ($pos !== false || strlen($data['nslabel']) > 20) {
-            $v->addValidationError('nslabel', 'invalid_nslabel');
-        }
-    }
 
 } else if ($action == 'create-vlan') {
 
@@ -197,15 +263,6 @@ if ($action == 'create-alias') {
     }
     check_network_config($data);
 
-    if (isset($data['nslabel'])) {
-        # Spaces not allowed, maximum 20 characters
-        $pos = strpos($data['nslabel'], " ");
-
-        if ($pos !== false || strlen($data['nslabel']) > 20) {
-            $v->addValidationError('nslabel', 'invalid_nslabel');
-        }
-    }
-
 } else if ($action == 'create-bond') {
 
     if ($data['BondOptMode'] < 0 || $data['BondOptMode'] > 6) {
@@ -213,15 +270,6 @@ if ($action == 'create-alias') {
     }
     check_devices($data['devices']);
     check_network_config($data);
-
-    if (isset($data['nslabel'])) {
-        # Spaces not allowed, maximum 20 characters
-        $pos = strpos($data['nslabel'], " ");
-
-        if ($pos !== false || strlen($data['nslabel']) > 20) {
-            $v->addValidationError('nslabel', 'invalid_nslabel');
-        }
-    }
 
 } else if ($action == 'change-properties') {
 

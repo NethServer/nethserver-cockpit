@@ -51,6 +51,9 @@ switch ($data['action']) {
         $v->declareParameter('SenderAddress', Validate::EMAIL);
         $v->declareParameter('KeepMessageCopy', $v->createValidator()->memberOf(array('yes','no')));
         foreach ($data['EmailAddress'] as $el) {
+            if (!$el) {
+                continue;
+            }
             if (!$emailValidator->evaluate($el)) {
                 $v->addValidationError('EmailAddress', 'valid_mail_address');
             }

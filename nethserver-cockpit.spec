@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.1.2
+Version: 1.3.13
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,76 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Fri Dec 20 2019 Davide Principi <davide.principi@nethesis.it> - 1.3.13-1
+- Cockpit disconnection breaks yum transactions - Bug NethServer/dev#6002
+
+* Thu Dec 19 2019 Davide Principi <davide.principi@nethesis.it> - 1.3.12-1
+- Cockpit: improve main dashboard view - NethServer/dev#5990
+
+* Fri Dec 13 2019 Davide Principi <davide.principi@nethesis.it> - 1.3.11-1
+- Bad user password change validation in Cockpit - Bug NethServer/dev#5984
+
+* Wed Dec 11 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.10-1
+- Delegation regression in Cockpit pinned apps - Bug NethServer/dev#5976
+- SOGo: URL of webmail in the application cockpit list - NethServer/dev#5982
+- More intuitive behaviour in case of conflit among access rules to cockpit interface(only with firewall installed) - Bug NethServer/dev#5983
+- Certificate update event cut off by Cockpit UI - Bug NethServer/dev#5977
+- Backup: missing engine choice for WebDAV storage engine - Bug NethServer/dev#5981
+
+* Wed Dec 04 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.9-1
+- Cockpit: sort users and groups - NethServer/dev#5969
+
+* Tue Dec 03 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.8-1
+- IP and netmask validation in Network page - NethServer/dev#5974
+
+* Tue Dec 03 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.7-1
+- Cockpit: show DHCP lease expiration date - NethServer/dev#5972
+
+* Mon Dec 02 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.6-1
+- Cockpit: open group created in NethGUI generates error - Bug NethServer/dev#5970
+
+* Mon Dec 02 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.5-1
+- Cockpit: improve modal view - NethServer/dev#5965
+
+* Thu Nov 28 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.4-1
+- Cockpit: improve Software Center view - NethServer/dev#5959
+
+* Wed Nov 27 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.3-1
+- Cockpit: page title is not updated on page change - Bug Nethserver/dev#5946
+- Cockpit: overlay remains active after page change - Bug NethServer/dev#5961
+
+* Tue Nov 26 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.2-1
+- Improve configuration restore - NethServer/dev#5907
+- Cockpit: Software Center updates duplicates - Bug NethServer/dev#5950
+
+* Thu Nov 21 2019 Davide Principi <davide.principi@nethesis.it> - 1.3.1-1
+- Network recovery console tool - NethServer/dev#5874
+
+* Thu Nov 21 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.0-1
+- Improve configuration restore - Nethserver/dev#5907
+- Cockpit: validate host deletion - Bug NethServer/dev#5909
+- Cannot upload config backup file as first element - Bug Nethserver/dev#5906
+- Cockpit: validate host deletion - Bug Nethserver/dev#5909
+- Password change: handle backslash - Bug NethServer/dev#5927
+- Improve configuration restore - NethServer/dev#5907
+- Multiple UI cosmetic fixes
+
+* Tue Nov 12 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.2.2-1
+- Cockpit: vlan parameters without a role are not displayed - Bug Nethserver/dev#5895
+- Cockpit: network label can't contain spaces - Bug NethServer/dev#5893
+
+* Thu Oct 31 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.2.1-1
+- Cockpit backup: remove record from db if failed - Bug NethServer/dev#5882
+
+* Mon Oct 28 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.2.0-1
+- Cockpit: add missing validation labels - Bug Nethserver/dev#5884
+- Cockpit: add missing validation labels - Bug NethServer/dev#5884
+- backup-data: view last log grayed out - Bug Nethserver/dev#5877
+- Cockpit: invalid IP address allowed for DC - Bug NethServer/dev#5871
+- Cockpit: cannot edit the self-signed certificate - Bug NethServer/dev#5872
+- Cockpit dashboard: wrong path loaded in applications - Bug Nethserver/dev#5869
+- Cockpit: invalid IP address allowed for DC - Bug Nethserver/dev#5871
+
 * Fri Oct 11 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.1.2-1
 - Cockpit: can't configure upstream proxy without user and password - Bug NethServer/dev#5863
 

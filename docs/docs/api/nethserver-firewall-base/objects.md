@@ -129,7 +129,8 @@ Output example:
     {
       "IpAddress": "192.168.1.1",
       "name": "a123",
-      "Description": "123"
+      "Description": "123",
+      "type": "local"
     },
     ...
   ]

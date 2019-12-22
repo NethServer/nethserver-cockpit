@@ -51,6 +51,20 @@
           class="btn btn-primary btn-lg"
         >{{$t('about.subscription')}}</a>
       </div>
+      <p class="div-section"></p>
+      <p>{{$t('about.phonehome')}}</p>
+      <div class="blank-slate-pf-secondary-action">
+        <a
+          target="_blank"
+          href="http://docs.nethserver.org/en/v7/phone_home.html"
+          class="btn btn-default"
+        >{{$t('about.documentation')}}</a>
+        <a
+          target="_blank"
+          href="https://www.nethserver.org/phone-home/widget_map.html"
+          class="btn btn-default"
+        >{{$t('about.map')}}</a>
+      </div>
     </div>
   </div>
 </template>

@@ -24,12 +24,17 @@ read -r old_password
 read -r new_password
 
 if klist -s; then
-    echo -en "${old_password}\n${new_password}\n${new_password}" | kpasswd
+    kpasswd <<EOF
+${old_password}
+${new_password}
+${new_password}
+EOF
+    rc=$?
 else
     # Parse ldappasswd.conf as a multi line key-val file in ldapconf hashmap:
     declare -A ldapconf
     exec </etc/nethserver/ldappasswd.conf
-    while read pkey pval; do
+    while read -r pkey pval; do
         if [[ ${pkey} != [A-Z]* ]]; then
             continue # skip comments, empty lines and other garbage
         fi
@@ -41,6 +46,7 @@ else
     export LDAPURI="${LDAPURI:-${ldapconf[URI]}}"
 
     ldappasswd -x ${ldapconf[STARTTLS]:+-ZZ} -y <(echo -n "${old_password}") -t <(echo -n "${old_password}") -T <(echo -n "${new_password}")
+    rc=$?
 fi
 
-exit $?
+exit ${rc}

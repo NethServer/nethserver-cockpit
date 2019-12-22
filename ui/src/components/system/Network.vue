@@ -195,10 +195,10 @@
                       </div>
                       <div class="list-group-item-text details-ip">
                         <span class="pficon pficon-screen starred-marging"></span>
-                        <span class>CIDR</span>
+                        <span class>{{i.cidr ? 'CIDR' : 'IP'}}</span>
                         <strong>
                           {{i.cidr || interfaceStatus[i.name] &&
-                          interfaceStatus[i.name].ipaddr || '-'}}
+                          interfaceStatus[i.name].ipaddr || i.ipaddr || '-'}}
                         </strong>
                         <span
                           v-if="i.bootproto == 'dhcp' && (i.cidr || interfaceStatus[i.name] &&
@@ -211,7 +211,7 @@
                           <span class="icon-net-margin">GW</span>
                           <strong>
                             {{i.gateway || interfaceStatus[i.name] &&
-                            interfaceStatus[i.name].gateway}}
+                            interfaceStatus[i.name].gateway || '-'}}
                           </strong>
                         </span>
                         <br>
@@ -402,7 +402,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
             </div>
           </form>
         </div>

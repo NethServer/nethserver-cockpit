@@ -46,92 +46,92 @@ Vue.use(Router)
 export default new Router({
   routes: [{
       path: '/',
-      name: 'Dashboard',
+      name: 'dashboard',
       component: Dashboard
     },
 
     {
       path: '/backup',
-      name: 'Backup',
+      name: 'backup',
       component: Backup
     },
     {
       path: '/storage',
-      name: 'Storage',
+      name: 'storage',
       component: Storage
     },
     {
       path: '/disk-usage',
-      name: 'DiskUsage',
+      name: 'disk_usage',
       component: DiskUsage
     },
 
     {
       path: '/certificates',
-      name: 'Certificates',
+      name: 'certificates',
       component: Certificates
     },
     {
       path: '/dns',
-      name: 'DNS',
+      name: 'dns',
       component: DNS
     },
     {
       path: '/dhcp',
-      name: 'DHCP',
+      name: 'dhcp',
       component: DHCP
     },
     {
       path: '/services',
-      name: 'Services',
+      name: 'services',
       component: Services
     },
     {
       path: '/users-groups',
-      name: 'UsersGroups',
+      name: 'users_groups',
       component: UsersGroups
     },
 
     {
       path: '/network',
-      name: 'Network',
+      name: 'network',
       component: Network
     },
     {
       path: '/ssh',
-      name: 'SSH',
+      name: 'ssh',
       component: SSH
     },
     {
       path: '/tls-policy',
-      name: 'TLSPolicy',
+      name: 'tls_policy',
       component: TLSPolicy
     },
     {
       path: '/trusted-networks',
-      name: 'TrustedNetworks',
+      name: 'trusted_networks',
       component: TrustedNetworks
     },
 
     {
       path: '/settings',
-      name: 'Settings',
+      name: 'settings',
       component: Settings
     },
     {
       path: '/logs',
-      name: 'Logs',
+      name: 'logs',
       component: Logs
     },
     {
       path: '/about',
-      name: 'About',
+      name: 'about',
       component: About
     },
 
     {
       path: '/applications',
-      name: 'Applications',
+      name: 'applications',
       component: Applications
     },
     {
@@ -142,19 +142,19 @@ export default new Router({
 
     {
       path: '/software-center',
-      name: 'SoftwareCenter',
+      name: 'software_center',
       component: SoftwareCenter
     },
 
     {
       path: '/subscription',
-      name: 'Subscription',
+      name: 'subscription',
       component: Subscription
     },
 
     {
       path: '/terminal',
-      name: 'Terminal',
+      name: 'terminal',
       component: Terminal
     }
   ]

@@ -57,6 +57,7 @@ if ($cmd eq 'role') {
             $counter++;
             my $group = shift(@props);
             foreach (@props) {
+                next if ($_ eq 'terminal');
                 push @system, $_ if ($_ !~ /^nethserver-/ );
                 push @applications, $_ if ($_ =~ /^nethserver-/);
             }
@@ -66,7 +67,7 @@ if ($cmd eq 'role') {
 
     }
     if ($counter == 0) { #we have no match, this role is not known
-        print encode_json({"system" => [],"applications" => []});
+        print encode_json({"system" => [], "status" => {"editable" => 1}, "applications" => []});
     }
 } else {
     NethServer::ApiTools::error();

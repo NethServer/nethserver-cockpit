@@ -79,7 +79,33 @@
     "software_center": "Software Center",
     "software-center": "Software Center",
     "subscription": "Subscription",
-    "terminal": "Terminal"
+    "terminal": "Terminal",
+    "nethserver-register": "Custom alerts",
+    "nethserver-antivirus": "Antivirus",
+    "nethserver-dante": "Report",
+    "nethserver-dedalo": "Hotspot unit",
+    "nethserver-ejabberd": "Ejabberd",
+    "nethserver-fail2ban": "Fail2Ban",
+    "nethserver-firewall-base": "Firewall",
+    "nethserver-freepbx": "FreePBX",
+    "nethserver-httpd": "Web server",
+    "nethserver-hylafax": "HylaFax",
+    "nethserver-iaxmodem": "IAXModem",
+    "nethserver-mail": "Email",
+    "nethserver-mattermost": "Mattermost",
+    "nethserver-nextcloud": "Nextcloud",
+    "nethserver-nut": "UPS",
+    "nethserver-ntopng": "nTopNG",
+    "nethserver-restore-data": "Restore data",
+    "nethserver-roundcubemail": "Webmail",
+    "nethserver-samba": "File server",
+    "nethserver-squid": "Web Proxy & Filter",
+    "nethserver-suricata": "IPS",
+    "nethserver-vpn-ui": "VPN",
+    "nethserver-webtop5": "WebTop",
+    "nethserver-cgp": "Collectd Charts",
+    "nethserver-sogo": "SOGo",
+    "nethserver-hotsync": "HotSync"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -142,7 +168,12 @@
     "shutdown_ok": "The system is shutting down...",
     "shutdown_error": "Shutting down error occured.",
     "hostname_change": "After hostname change you have to login again",
-    "hostname_invalid_warn": "The server FQDN must not contain 'localhost' or 'localdomain'. You have to change your machine hostname before proceeding with other configurations"
+    "hostname_invalid_warn": "The server FQDN must not contain 'localhost' or 'localdomain'. You have to change your machine hostname before proceeding with other configurations",
+    "disk": "Disk",
+    "root_partition": "ROOT PARTITION",
+    "raid": "RAID",
+    "ok": "OK",
+    "error": "ERROR"
   },
   "backup": {
     "title": "Backup",
@@ -175,7 +206,7 @@
     "data_list": "Data list",
     "last_backup_status": "Last backup status",
     "backup_configured": "Backups configured",
-    "choose_file": "Choose file (*.tar.gz)",
+    "choose_file": "Choose file (*.tar.xz)",
     "automatic_backups_keep": "Automatic backups to keep (number)",
     "enable": "Enable",
     "disable": "Disable",
@@ -245,7 +276,7 @@
     "refresh": "Refresh",
     "execute_config_backup_ok": "Config backup executed successfully!",
     "execute_config_backup_error": "Config backup not executed.",
-    "execute_data_backup_ok": "Data backup executed successfully!",
+    "execute_data_backup_ok": "Data backup started successfully!",
     "execute_data_backup_error": "Data backup not executed.",
     "delete_config_backup_ok": "Config backup deleted successfully!",
     "delete_config_backup_error": "Config backup not deleted.",
@@ -277,8 +308,15 @@
     "storage_usage": "Destination storage usage",
     "overwrite_all_data": "the restore will overwrite all data",
     "nfs_rsync_info": "Make sure the NFS server supports hard links, otherwise the backup will fail",
-    "during_remap_warning": "During interface remapping, if one or more interface change its IP address, you have to login again in the new IP address",
-    "interface_remap": "Interface remapping"
+    "during_remap_warning": "During interface remapping, if one or more interfaces change its IP address, you have to login again in the new IP address",
+    "check_configuration": "Check configuration",
+    "register_system": "Register system",
+    "register_before_restore": "You are trying to restore a backup with a subscription. Please register the machine before restoring this backup",
+    "register_now": "Register now",
+    "invalid_backup_format": "Backup not found or invalid",
+    "remap_at_least_one_green": "You have to select at least one green to remap",
+    "assign_later": "Assign later",
+    "current_int": "System interfaces"
   },
   "disk_usage": {
     "title": "Disk usage",
@@ -328,6 +366,10 @@
     "add_domain": "Add domain",
     "renew_days": "Renew days",
     "request": "Request",
+    "cockpit_reload_warning_title": "Notice.",
+    "cockpit_reload_warning_message": "The new certificate is applied to the Cockpit Server Manager 90 seconds after the last user disconnects.",
+    "set_default_modal_title": "Set the default certificate",
+    "set_default_modal_message": "Do you want to set {0} as default certificate?",
     "view_certificate": "View certificate",
     "alternative_name": "Comma-separated list of FQDNs",
     "cert_default_ok": "Certificate set as default successfully!",
@@ -399,7 +441,8 @@
     "range_update_ok": "Range updated successfully!",
     "range_update_error": "Range not updated.",
     "scan_network": "Scan network",
-    "Scanned_Network": "Scanning of the network interface"
+    "Scanned_Network": "Scanning of the network interface",
+    "lease_expiration": "Lease expiration"
   },
   "services": {
     "title": "Services",
@@ -475,10 +518,10 @@
     "port": "Port",
     "hostname_or_ip": "Hostname or IP",
     "join_existing_dc": "Join existing Domain Controller",
-    "create_new_domain_became_dc": "Create domain and became DC",
+    "create_new_domain_became_dc": "Create domain and become DC",
     "join_active_directory": "Join Active Directory",
     "domain_name": "Domain name",
-    "became_dc": "Became DC",
+    "became_dc": "Become DC",
     "netbios_domain_name": "NetBIOS domain name",
     "dc_ip_address": "DC IP address",
     "configuration_invalid": "Invalid configuration",
@@ -760,7 +803,10 @@
     "rotation_daily": "Daily",
     "rotation_weekly": "Weekly",
     "rotation_monthly": "Monthly",
-    "log_rotate": "Rotate logs"
+    "log_rotate": "Rotate logs",
+    "test_mail": "Test mail",
+    "mail_sent_ok": "Mail sent successfully!",
+    "mail_sent_error": "Mail not sent."
   },
   "logs": {
     "title": "Logs"
@@ -778,7 +824,9 @@
     "helpdesk": "Helpdesk",
     "documentation": "Documentation",
     "wiki": "Wiki",
-    "subscription": "Subscription"
+    "subscription": "Subscription",
+    "phonehome": "Phone home is used to track all NethServer installations around the world.",
+    "map": "Map"
   },
   "wizard": {
     "title": "Wizard"
@@ -866,7 +914,11 @@
     "there_is_upgrade_from": "There is an upgrade from",
     "to": "to",
     "upgrade_now": "Upgrade now",
-    "no_more_details": "No more details"
+    "no_more_details": "No more details",
+    "installed_packages": "Installed packages",
+    "full_version": "Full version",
+    "current_full_version": "Current",
+    "installed_low": "installed packages"
   },
   "terminal": {
     "title": "Terminal"
@@ -938,14 +990,15 @@
     "LimitAccess": "Server Manager",
     "backup": "Backup",
     "centos_upgrade": "A new upstream distribution release is available as update. To avoid installing it, switch the software updates origin to \"Locked\"",
-    "dhcp_on_green_can_cause_unexpected_behavior": "Using DHCP on green interfaces leads to unexpected behavior. Please, change the interface to static if possible.",
-    "interface_must_be_static": "A green interface must have a static IP address",
+    "interface_must_be_static": "A green interface must have a static IP address. Using DHCP on green interfaces leads to unexpected behavior. Please, change the interface to static if possible.",
     "hostname": "Hostname",
     "hostname_should_not_contain_localhost": "Hostname should not contain localhost",
     "subscription": "Subscription",
     "support_active": "A remote support session is active",
     "hostname_should_not_contain_localdomain": "The hostname should not contain 'localdomain'",
-    "first_hostname_part_maximum_length_15": "First hostname part must be maximum 15 characters lenght"
+    "first_hostname_part_maximum_length_15": "First hostname part must be maximum 15 characters lenght",
+    "unmapped_interface_from_restore": "This interface has not been activated after the restore. Assign the role to a new interface or remove it",
+    "network_recovery_mode": "The system is configured with a temporary IP address by the network-recovery tool: any change to this page will restore the network configuration as set below."
   },
   "validation": {
     "weak_password": "Password too weak, it could be inside a dictionary or too similar to the previous one",
@@ -1007,11 +1060,14 @@
     "valid_positive": "Must be a positive integer",
     "valid_lessThan_65536": "A valid TCP/UDP port is a number between 1 and 65536",
     "ip_address_or_cidr": "The value must be a valid IP like '10.0.0.1' or CIDR like '10.0.0.1/24'",
+    "ip_address_network_or_broadcast": "IP address can't be the network or broadcast address",
+    "this_network_overlaps_with_another_one": "This network overlaps with an existing one",
     "valid_date_YYYY-mm-dd": "The date format must be YYYY-mm-dd",
     "valid_time": "The time must be in the form HH:mm",
     "network_key_exists": "This network already exists",
     "already_used_network": "Network already in use",
     "invalid_network": "Invalid network address",
+    "user_exists": "A user with the same name already exists",
     "group_exists": "A group with the same name already exists",
     "non_existing_user": "The user doesn't exist",
     "not_removable": "This object can't be removed",
@@ -1059,7 +1115,8 @@
     "traceroute_validator_valid_ipV4Address": "Invalid IPv4 address or hostname, it must be something like '10.0.0.1' or 'nethserver.org'",
     "ping_validator_valid_ipV4Address": "Invalid IPv4 address or hostname, it must be something like '10.0.0.1' or 'nethserver.org'",
     "nslookup_validator_valid_ipV4Address": "Invalid IPv4 address, it must be something like '10.0.0.1'",
-    "nslookup_validator_valid_hostname_fqdn_1_9223372036854775807": "Invalid fully qualified domain name, it must be something like 'domain.org'"
+    "nslookup_validator_valid_hostname_fqdn_1_9223372036854775807": "Invalid fully qualified domain name, it must be something like 'domain.org'",
+    "host_not_removable": "This host can't be removed because it is in use"
   },
   "docs": {
     "more_info_about": "More info about",
@@ -1069,12 +1126,12 @@
     "network": "Network",
     "tls_policy": "TLS Policy",
     "trusted_networks": "Trusted Networks",
-
+    "certificates": "Certificates",
     "sftp_password": "The password will not be saved. SSH connection will use a RSA key.",
     "smb_login": "If the target server is joined to a domain, use extended syntax like 'MyBindUser,domain=mydomain.com'.",
     "vol_size": "Size of backup chunks, keep small if the backup destination is a remote server. Default is 200MB.",
     "dns_wildcard": "If enabled, match also all sub-domains.",
-    "limit_access": "Restict access to port 9090 only to given IP addresses",
+    "limit_access": "Restrict access to port 9090 only to given IP addresses. For a more granular access control, use the firewall rules.",
     "dhcp_comma_separated_field": "Insert an IP address or a comma-separated list of IP addesses",
     "dhcp_servers": "Servers",
     "remote_shell": "Enable this option to grant access to the Terminal and the Server Manager."

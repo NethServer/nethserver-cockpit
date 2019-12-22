@@ -84,6 +84,7 @@ textarea {
     margin-left: 55px !important;
     margin-top: 0px !important;
     margin-bottom: 20px !important;
+    overflow: auto;
 }
 
 .container-cards-pf-apps {
@@ -397,4 +398,12 @@ li.active>a>span {
 .provider-details:hover {
     text-decoration: underline;
     cursor: pointer;
+}
+
+.responsive {
+    overflow-x: initial !important;
+}
+
+.table.responsive {
+    overflow-x: initial !important;
 }

@@ -57,6 +57,11 @@ if ($type eq 'bond') {
 # populate heir props
 if ($input->{'heir'}) {
     my $heir = $ndb->get($input->{'heir'});
+    # create interface if not exists, this should happen only in case of partial remap after restore
+    if(!$heir) {
+         $ndb->new_record($input->{'heir'}, { type =>'ethernet', role => ''});
+         $heir = $ndb->get($input->{'heir'});
+    }
     $heir->delete_prop('bridge');
     $heir->delete_prop('master');
     $heir->delete_prop('slave');

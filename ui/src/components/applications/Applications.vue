@@ -432,8 +432,18 @@ export default {
         .call("/packages", "cockpit.Packages", "Reload", []);
 
       var context = this;
+
+      var parts = window.top.document.title.split("-");
+      parts.shift();
+      var hostname = parts.join("-").trim();
+      var name =
+        this.$route.name == "ApplicationsDetails"
+          ? this.$i18n.t("menu." + this.$route.params.name)
+          : this.$i18n.t("menu." + this.$route.name);
+
       setTimeout(function() {
         context.initGraphics();
+        window.top.document.title = name + " - " + hostname;
       }, 2000);
     },
     getHideUninstall() {

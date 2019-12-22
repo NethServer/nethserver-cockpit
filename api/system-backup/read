@@ -26,6 +26,7 @@ use esmith::ConfigDB;
 use NethServer::BackupData;
 use JSON;
 use File::stat;
+use URI;
 
 require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
 
@@ -270,22 +271,67 @@ if($cmd eq 'backup-info') {
         close $fh;
     }
     print encode_json($ret);
-} elsif ($cmd eq 'remapping-backup-config') {
+} elsif ($cmd eq 'check-backup-config') {
 
     my $tmp_file = "/tmp/cockpit-temp-backup-config.tar.xz";
+    my $tmp_file_64 = "$tmp_file.b64";
     my $data = $input->{'data'};
     my $mode = $input->{'mode'};
+    my $filename = $input->{'filename'};
+    my $name = undef;
+    my $desc = "";
 
     if ($mode eq 'url') {
+        my $url = URI->new( $data );
+        $desc = $url->host || substr($data, 0, 20);
+
+        # downlad from remote
         system("wget --quiet '$data' -O $tmp_file");
-    } elsif ($mode eq 'backup') {
-        system("/bin/cp /var/lib/nethserver/backup/history/$data.tar.xz $tmp_file");
     } elsif ($mode eq 'file') {
-        system("echo $data | base64 -d > $tmp_file");
+        $desc = $filename;
+        # upload from UI
+        open(FH, '>', $tmp_file_64) or exit 1;
+        print FH $data;
+        close FH;
+
+        system("base64 -d $tmp_file_64 > $tmp_file");
+    } elsif ($mode eq 'backup') {
+        # pull existing backup
+
+        # create empty file otherwise backup-config-history will fail
+        open my $th, '>', $tmp_file;
+        close $th;
+        system("/usr/libexec/nethserver/backup-config-history pull -f $tmp_file -i $data");
+        $name = $data;
+    } else {
+        error();
     }
 
-    system("/usr/libexec/nethserver/api/system-backup/need-remap $tmp_file");
-    unlink($tmp_file);
+    my $out = `/usr/libexec/nethserver/api/system-backup/need-remap $tmp_file`;
+    if ($? > 0) {
+        # invalid backup: cleanup and erturn error
+        unlink($tmp_file, $tmp_file_64);
+        error("InvalidBackup", "invalid_backup_format");
+    } else {
+        # valid backup: add to history download or uploaded file
+        if ($mode eq 'file' || $mode eq 'url') {
+            system("/usr/libexec/nethserver/backup-config-history push -t upload -f $tmp_file -d '$desc'");
+            # retrieve last upload backup id
+            my $maxts = 0;
+            my $backups = decode_json(`/usr/libexec/nethserver/backup-config-history list`);
+            foreach (@$backups) {
+                if ($_->{'push_ts'} > $maxts) {
+                    $maxts = $_->{'push_ts'};
+                    $name = $_->{'id'};
+                }
+            }
+        }
+    }
+    my $ret = decode_json($out);
+    unlink($tmp_file, $tmp_file_64);
+    $ret->{'name'} = $name;
+
+    print encode_json($ret);
 
 } else {
     error();

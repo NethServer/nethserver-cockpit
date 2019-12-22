@@ -22,7 +22,10 @@
     <h3>{{$t('dhcp.interfaces')}}</h3>
     <div v-for="i in ranges" v-bind:key="i.name">
       <div class="row">
-        <h4 class="dhcp-int col-sm-2">{{i.name}} <span v-if="i.nslabel" class="gray">{{i.nslabel? ' - '+i.nslabel : ''}}</span></h4>
+        <h4 class="dhcp-int col-sm-2">
+          {{i.name}}
+          <span v-if="i.nslabel" class="gray">{{i.nslabel? ' - '+i.nslabel : ''}}</span>
+        </h4>
         <button
           @click="scanNetwork(i.name)"
           class="btn btn-primary span-right-margin-lg dhcp-mod-btn"
@@ -89,12 +92,16 @@
         </td>
         <td class="fancy">{{ props.row.props.Description}}</td>
         <td class="fancy">
-          <span class="fa fa-desktop"></span>
+          <span class="fa fa-desktop margin"></span>
           {{props.row.props.IpAddress}}
         </td>
         <td class="fancy">
-          <span class="pficon pficon-plugged"></span>
+          <span class="pficon pficon-plugged margin"></span>
           {{props.row.props.MacAddress}}
+        </td>
+        <td class="fancy">
+          <span class="fa fa-hourglass-end margin"></span>
+          {{props.row.props.LeaseExpiration | dateFormat}}
         </td>
         <td>
           <button
@@ -159,7 +166,7 @@
                     type="text"
                     v-model="newReservation.name"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="newReservation.errors.name.hasError"
                     class="help-block"
@@ -179,7 +186,7 @@
                     type="text"
                     v-model="newReservation.props.IpAddress"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="newReservation.errors.IpAddress.hasError"
                     class="help-block"
@@ -200,7 +207,7 @@
                     type="text"
                     v-model="newReservation.props.MacAddress"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="newReservation.errors.MacAddress.hasError"
                     class="help-block"
@@ -219,7 +226,7 @@
                     type="text"
                     v-model="newReservation.props.Description"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="newReservation.errors.Description.hasError"
                     class="help-block"
@@ -230,8 +237,18 @@
 
             <div class="modal-footer">
               <div v-if="newReservation.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
-              <button v-if="!view.isScanned" class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
-              <button v-if="view.isScanned" class="btn btn-default" type="button" @click="back2scanNetworkModal()">{{$t('cancel')}}</button>
+              <button
+                v-if="!view.isScanned"
+                class="btn btn-default"
+                type="button"
+                data-dismiss="modal"
+              >{{$t('cancel')}}</button>
+              <button
+                v-if="view.isScanned"
+                class="btn btn-default"
+                type="button"
+                @click="back2scanNetworkModal()"
+              >{{$t('cancel')}}</button>
               <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
             </div>
           </form>
@@ -243,58 +260,50 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">
-              {{$t('dhcp.Scanned_Network') + ' : '+ nic}}
-            </h4>
+            <h4 class="modal-title">{{$t('dhcp.Scanned_Network') + ' : '+ nic}}</h4>
             <div v-if="view.isScanning" class="spinner spinner-lg"></div>
           </div>
-            <div class="modal-body">
-              <vue-good-table
-                v-if="!view.isScanning"
-                :customRowsPerPageDropdown="[10,25,50,100]"
-                :perPage="10"
-                :columns="columnsScan"
-                :rows="rowsScan"
-                :lineNumbers="false"
-                :defaultSortBy="{field: 'ip', type: 'asc'}"
-                :globalSearch="true"
-                :paginate="true"
-                styleClass="table"
-                :nextText="tableLangsTexts.nextText"
-                :prevText="tableLangsTexts.prevText"
-                :rowsPerPageText="tableLangsTexts.rowsPerPageText"
-                :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
-                :ofText="tableLangsTexts.ofText"
-              >
-                <template slot="table-row" slot-scope="props">
-                  <td class="fancy">
-                      <strong>{{ props.row.ip}}</strong>
-                  </td>
-                  <td class="fancy">
-                    {{ props.row.mac}}
-                  </td>
-                  <td class="fancy">
-                    {{props.row.name}}
-                  </td>
-                  <td class="fancy">
-                    {{props.row.host}}
-                  </td>
-                  <td>
-                    <button
-                      :disabled="props.row.reserved"
-                      @click="addMacReservation(props.row)"
-                      class="btn btn-default btn-primary"
-                      >
-                      <span class="pficon pficon-network span-right-margin"></span>
-                      {{$t('dhcp.ip_reservation')}}
-                    </button>
-                  </td>
-                </template>
-              </vue-good-table>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
-            </div>
+          <div class="modal-body">
+            <vue-good-table
+              v-if="!view.isScanning"
+              :customRowsPerPageDropdown="[10,25,50,100]"
+              :perPage="10"
+              :columns="columnsScan"
+              :rows="rowsScan"
+              :lineNumbers="false"
+              :defaultSortBy="{field: 'ip', type: 'asc'}"
+              :globalSearch="true"
+              :paginate="true"
+              styleClass="table"
+              :nextText="tableLangsTexts.nextText"
+              :prevText="tableLangsTexts.prevText"
+              :rowsPerPageText="tableLangsTexts.rowsPerPageText"
+              :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
+              :ofText="tableLangsTexts.ofText"
+            >
+              <template slot="table-row" slot-scope="props">
+                <td class="fancy">
+                  <strong>{{ props.row.ip}}</strong>
+                </td>
+                <td class="fancy">{{ props.row.mac}}</td>
+                <td class="fancy">{{props.row.name}}</td>
+                <td class="fancy">{{props.row.host}}</td>
+                <td>
+                  <button
+                    :disabled="props.row.reserved"
+                    @click="addMacReservation(props.row)"
+                    class="btn btn-default btn-primary"
+                  >
+                    <span class="pficon pficon-network span-right-margin"></span>
+                    {{$t('dhcp.ip_reservation')}}
+                  </button>
+                </td>
+              </template>
+            </vue-good-table>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('close')}}</button>
+          </div>
         </div>
       </div>
     </div>
@@ -313,6 +322,14 @@
           </div>
           <form class="form-horizontal" v-on:submit.prevent="deleteReservation(currentReservation)">
             <div class="modal-body">
+              <div
+                v-show="currentReservation.isError"
+                class="alert alert-warning alert-dismissable"
+              >
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>{{$t('warning')}}.</strong>
+                {{$t('validation.'+currentReservation.isError)}}.
+              </div>
               <div class="form-group">
                 <label
                   class="col-sm-3 control-label"
@@ -359,7 +376,7 @@
                     type="text"
                     v-model="currentRange.DhcpRangeStart"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="currentRange.errors.DhcpRangeStart.hasError"
                     class="help-block"
@@ -379,7 +396,7 @@
                     type="text"
                     v-model="currentRange.DhcpRangeEnd"
                     class="form-control"
-                  >
+                  />
                   <span
                     v-if="currentRange.errors.DhcpRangeEnd.hasError"
                     class="help-block"
@@ -406,7 +423,7 @@
                   for="textInput-modal-markup"
                 >{{$t('dhcp.gateway_ip')}}</label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="currentRange.DhcpGatewayIP" class="form-control">
+                  <input type="text" v-model="currentRange.DhcpGatewayIP" class="form-control" />
                   <span
                     v-if="currentRange.errors.DhcpGatewayIP.hasError"
                     class="help-block"
@@ -422,7 +439,7 @@
                   for="textInput-modal-markup"
                 >{{$t('dhcp.lease_time')}}</label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="currentRange.DhcpLeaseTime" class="form-control">
+                  <input type="text" v-model="currentRange.DhcpLeaseTime" class="form-control" />
                   <span
                     v-if="currentRange.errors.DhcpLeaseTime.hasError"
                     class="help-block"
@@ -438,7 +455,7 @@
                   for="textInput-modal-markup"
                 >{{$t('dhcp.domain')}}</label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="currentRange.DhcpDomain" class="form-control">
+                  <input type="text" v-model="currentRange.DhcpDomain" class="form-control" />
                   <span
                     v-if="currentRange.errors.DhcpDomain.hasError"
                     class="help-block"
@@ -460,7 +477,7 @@
                   ></doc-info>
                 </label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="currentRange.DhcpDNS" class="form-control">
+                  <input type="text" v-model="currentRange.DhcpDNS" class="form-control" />
                   <span
                     v-if="currentRange.errors.DhcpDNS.hasError"
                     class="help-block"
@@ -482,7 +499,7 @@
                   ></doc-info>
                 </label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="currentRange.DhcpWINS" class="form-control">
+                  <input type="text" v-model="currentRange.DhcpWINS" class="form-control" />
                   <span
                     v-if="currentRange.errors.DhcpWINS.hasError"
                     class="help-block"
@@ -504,7 +521,7 @@
                   ></doc-info>
                 </label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="currentRange.DhcpNTP" class="form-control">
+                  <input type="text" v-model="currentRange.DhcpNTP" class="form-control" />
                   <span
                     v-if="currentRange.errors.DhcpNTP.hasError"
                     class="help-block"
@@ -526,7 +543,7 @@
                   ></doc-info>
                 </label>
                 <div class="col-sm-9">
-                  <input type="text" v-model="currentRange.DhcpTFTP" class="form-control">
+                  <input type="text" v-model="currentRange.DhcpTFTP" class="form-control" />
                   <span
                     v-if="currentRange.errors.DhcpTFTP.hasError"
                     class="help-block"
@@ -670,6 +687,12 @@ export default {
           filterable: true
         },
         {
+          label: this.$i18n.t("dhcp.lease_expiration"),
+          field: "props.LeaseExpiration",
+          filterable: true,
+          type: "number"
+        },
+        {
           label: this.$i18n.t("action"),
           field: "",
           filterable: true,
@@ -678,7 +701,7 @@ export default {
       ],
       nic: "",
       rows: [],
-      rowsScan:[],
+      rowsScan: [],
       ranges: [],
       currentRange: this.initRange(),
       currentReservation: {},
@@ -975,7 +998,8 @@ export default {
                 props: {
                   Description: "",
                   IpAddress: lease.ip,
-                  MacAddress: lease.mac
+                  MacAddress: lease.mac,
+                  LeaseExpiration: lease.expire
                 },
                 type: "disabled"
               });
@@ -1056,18 +1080,18 @@ export default {
                 );
 
                 if (!context.view.isScanned) {
-                    // get reservations
-                    context.getReservations();
+                  // get reservations
+                  context.getReservations();
                 } else {
                   context.getReservations();
                   //update the new modal values to the reservation we made
-                  for(var i=0; i <context.rowsScan.length; i++) {
-                      if ( ipres.props.MacAddress == context.rowsScan[i].mac) {
-                            context.rowsScan[i].name = ipres.props.Description;
-                            context.rowsScan[i].reserved = true;
-                            context.rowsScan[i].host = ipres.name;
-                            context.rowsScan[i].ip = ipres.props.IpAddress;
-                      }
+                  for (var i = 0; i < context.rowsScan.length; i++) {
+                    if (ipres.props.MacAddress == context.rowsScan[i].mac) {
+                      context.rowsScan[i].name = ipres.props.Description;
+                      context.rowsScan[i].reserved = true;
+                      context.rowsScan[i].host = ipres.name;
+                      context.rowsScan[i].ip = ipres.props.IpAddress;
+                    }
                   }
                   $("#scanNetworkModal").modal("show");
                 }
@@ -1153,7 +1177,6 @@ export default {
           context.view.isScanning = false;
           context.view.isScanned = true;
           context.rowsScan = success;
-
         },
         function(error) {
           console.error(error);
@@ -1191,35 +1214,56 @@ export default {
     },
     openDeleteReservation(ipres) {
       this.currentReservation = Object.assign({}, ipres);
+      this.currentReservation.isError = null;
       $("#deleteReservationModal").modal("show");
     },
     deleteReservation(ipres) {
       var context = this;
 
-      $("#deleteReservationModal").modal("hide");
-      context.exec(
-        ["system-dhcp/delete"],
+      nethserver.exec(
+        ["nethserver-firewall-base/objects/validate"],
         {
           name: ipres.name,
-          action: "delete-reservation"
+          action: "delete-host"
         },
-        function(stream) {
-          console.info("ip-reservation-delete", stream);
-        },
+        null,
         function(success) {
-          // notification
-          context.$parent.notifications.success.message = context.$i18n.t(
-            "dhcp.ip_reservation_delete_ok"
-          );
+          $("#deleteReservationModal").modal("hide");
+          context.exec(
+            ["system-dhcp/delete"],
+            {
+              name: ipres.name,
+              action: "delete-reservation"
+            },
+            function(stream) {
+              console.info("ip-reservation-delete", stream);
+            },
+            function(success) {
+              // notification
+              context.$parent.notifications.success.message = context.$i18n.t(
+                "dhcp.ip_reservation_delete_ok"
+              );
 
-          // get reservations
-          context.getReservations();
+              // get reservations
+              context.getReservations();
+            },
+            function(error, data) {
+              // notification
+              context.$parent.notifications.error.message = context.$i18n.t(
+                "dhcp.ip_reservation_delete_error"
+              );
+            }
+          );
         },
         function(error, data) {
-          // notification
-          context.$parent.notifications.error.message = context.$i18n.t(
-            "dhcp.ip_reservation_delete_error"
-          );
+          console.error(error, data);
+          try {
+            var errorData = JSON.parse(data);
+            context.currentReservation.isError = errorData.attributes[0].error;
+            context.$forceUpdate();
+          } catch (e) {
+            console.error(e);
+          }
         }
       );
     }
@@ -1228,4 +1272,7 @@ export default {
 </script>
 
 <style>
+.margin {
+  margin-right: 5px;
+}
 </style>

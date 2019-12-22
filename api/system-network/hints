@@ -26,6 +26,7 @@ use strict;
 use warnings;
 
 use esmith::NetworksDB;
+use JSON;
 
 my $db = esmith::NetworksDB->open_ro();
 my $details;
@@ -37,8 +38,21 @@ foreach ($db->green()) {
     }
 }
 
+my $out = `/usr/libexec/nethserver/eth-unmapped`;
+if ($out && -f '/var/run/.nethserver-fixnetwork') {
+    my $unmapped = decode_json($out);
+    foreach (@$unmapped) {
+        $details->{$_->{'name'}} = 'unmapped_interface_from_restore';
+    }
+}
+
+my $ret = system('ip link show brtmp &>/dev/null');
+if ($ret == 0) {
+    $details->{'network-recovery'} = 'network_recovery_mode';
+}
+
 if ($details) {
-    hints("dhcp_on_green_can_cause_unexpected_behavior",$details);
+    hints(undef,$details);
 } else {
     hints();
 }
