@@ -86,9 +86,7 @@ if ($isSlave) {
         "logs"
     ));
     %appRoutes = (%appRoutes, map { $_ => 1 } "nethserver-hotsync");
-    $isRoot = 0;
-    $isAdmin = 0;
-} elsif ($isRoot || $isAdmin) {
+} elsif (($isRoot || $isAdmin) && !$isSlave) {
     # Grant access to all known sys modules and apps to root and admins users
     %sysRoutes = (%sysRoutes, map { $_ => 1 } (
         "storage",

@@ -26,7 +26,7 @@ app=$(jq -r .name)
 
 # Check if the current user is either root or an admin, or is delegated to use $app
 /usr/libexec/nethserver/api/system-authorization/read  | \
-    jq -e --arg app "${app}" 'if (.status.isRoot == 1 or .status.isAdmin == 1 or (.applications | index($app)) >= 0) then 1 else null end' >/dev/null
+    jq -e --arg app "${app}" 'if (((.status.isRoot == 1 or .status.isAdmin == 1) and .status.isSlave == 0) or (.applications | index($app)) >= 0) then 1 else null end' >/dev/null
 
 if [[ $? == 0 ]]; then
     success
