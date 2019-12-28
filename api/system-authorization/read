@@ -23,6 +23,20 @@
 use strict;
 use JSON;
 use NethServer::ApiTools;
+use esmith::ConfigDB;
+
+my $conf = esmith::ConfigDB->open || die("Could not open config db\n");
+my $hotsync = $conf->get('hotsync') || 0;
+my $isSlave = 0;
+
+if ($hotsync != 0) {
+    my $hsRole = $hotsync->prop('role')  || "";
+    my $hsStatus = $hotsync->prop('status')  || "disabled";
+    
+    if ($hsRole eq "slave" && $hsStatus eq "enabled") {
+      $isSlave = 1;
+    }
+}
 
 my %appRoutes = ();
 my %sysRoutes = ();
@@ -63,8 +77,19 @@ foreach my $line (split "\n", NethServer::ApiTools::exec_slurp('/usr/bin/sudo', 
     }
 }
 
-# Grant access to all known sys modules and apps to root and admins users
-if($isRoot || $isAdmin) {
+if ($isSlave) {
+    %sysRoutes = (%sysRoutes, map { $_ => 1 } (
+        "storage",
+        "disk-usage",
+        "network",
+        "ssh",
+        "logs"
+    ));
+    %appRoutes = (%appRoutes, map { $_ => 1 } "nethserver-hotsync");
+    $isRoot = 0;
+    $isAdmin = 0;
+} elsif ($isRoot || $isAdmin) {
+    # Grant access to all known sys modules and apps to root and admins users
     %sysRoutes = (%sysRoutes, map { $_ => 1 } (
         "storage",
         "disk-usage",
@@ -97,5 +122,6 @@ print encode_json({
     "status" => {
         "isRoot" => $isRoot,
         "isAdmin" => $isAdmin,
+        "isSlave" => $isSlave,
     }
 });
