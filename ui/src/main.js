@@ -31,6 +31,9 @@ Vue.directive('focus', {
     el.focus()
   }
 })
+import "v-suggestions/dist/v-suggestions.css"
+import VueSuggestions from 'v-suggestions'
+Vue.component('suggestions', VueSuggestions)
 
 import NethServer from "./services/nethserver"
 import UtilService from "./services/util"
