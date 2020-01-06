@@ -26,10 +26,18 @@
 
 use JSON;
 use esmith::db;
+use NethServer::ApiTools;
+
 my $db = esmith::db->open("configuration");
 my $port = $db->get_prop('sshd', 'TCPPort');
 my @connections;
 
+sub listGroups {
+  my $groups = `/usr/libexec/nethserver/list-groups -s`;
+  my %groups =  %{ NethServer::ApiTools::safe_decode_json(($groups), {}) };
+  delete ($groups{'domain admins'});
+  return [ keys %groups];
+}
 open(H, "ss -Hn state established '( dport = $port or sport = $port )'|");
 
 while (<H>) {
@@ -37,9 +45,27 @@ while (<H>) {
   push(@connections, {'local' => $local, 'peer' => $peer});
 }
 close(H);
-
 my %out = (
     'status' => { 'connections' => \@connections },
-    'configuration' => $db->prepare_json('sshd')
+    'configuration' => $db->prepare_json('sshd'),
+    'groups' => [@{listGroups()}],
+    'ShellOverrideStatus' => ($db->get_prop('sssd','ShellOverrideStatus') 
+            || 'disabled') eq 'enabled' ? JSON::true : JSON::false
 );
+
+my %allow = ();
+foreach my $g (split(',',$out{configuration}{props}{AllowGroups})) {
+  my ($group,$sftp) = split (':',$g);
+  if (!$group) {
+    next;
+  }
+  if ($sftp eq 'sftp') {
+    $allow{$group} = 'sftp';
+  } else {
+    $allow{$group} = 'ssh';
+  }
+}
+$out{configuration}{props}{AllowGroups} = \%allow;
+
+
 print to_json(\%out, {utf8 => 1, pretty => 0, allow_nonref => 1});
