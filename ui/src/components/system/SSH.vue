@@ -51,7 +51,20 @@
             <span v-if="SSHConfig.errors.PasswordAuthentication.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+SSHConfig.errors.PasswordAuthentication.message)}}</span>
           </div>
         </div>
-
+        <div class="form-group">
+          <label class="col-sm-2 control-label" >{{$t('ssh.Allow_Groups')}}
+          </label>
+          <div class="col-sm-5">
+            <select
+              v-model="SSHConfig.AllowGroups" multiple
+              class="combobox form-control"
+            >
+              <option v-for="(t,i) in Groups" v-bind:key="i">{{t}}</option>
+            </select>
+            <br>
+            <span>{{$t('ssh.Allowed_Groups')}} : {{ AllowGroups }}</span>
+          </div>
+        </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
             <div v-if="SSHConfig.isLoading" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
@@ -106,7 +119,9 @@ export default {
         isLoaded: false,
         isAuth: false
       },
+      Groups: [],
       SSHConfig: {
+        AllowGroups:[],
         isLoading: false,
         errors: {
           TCPPort: {
@@ -164,7 +179,9 @@ export default {
             console.error(e);
           }
           context.view.isLoaded = true;
+          context.Groups = success.groups;
           context.SSHConfig.TCPPort = success.configuration.props.TCPPort;
+          context.SSHConfig.AllowGroups = success.configuration.props.AllowGroups.split(',');
           context.SSHConfig.PasswordAuthentication =
             success.configuration.props.PasswordAuthentication == "yes"
               ? true
@@ -199,7 +216,8 @@ export default {
         props: {
           PasswordAuthentication: obj.PasswordAuthentication ? "yes" : "0",
           PermitRootLogin: obj.PermitRootLogin ? "yes" : "0",
-          TCPPort: obj.TCPPort
+          TCPPort: obj.TCPPort,
+          AllowGroups: obj.AllowGroups.join()
         },
         type: "service"
       };
