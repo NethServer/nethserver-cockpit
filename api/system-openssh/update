@@ -31,7 +31,7 @@ function _get
 }
 
 # Read JSON from stdin and set the record
-/sbin/e-smith/config setprop sshd PasswordAuthentication "$(_get PasswordAuthentication)" PermitRootLogin "$(_get PermitRootLogin)" TCPPort "$(_get TCPPort)"
+/sbin/e-smith/config setprop sshd PasswordAuthentication "$(_get PasswordAuthentication)" PermitRootLogin "$(_get PermitRootLogin)" TCPPort "$(_get TCPPort)" AllowGroups "$(_get AllowGroups)"
 
 if [ $? -gt 0 ]; then
     invalid_error
