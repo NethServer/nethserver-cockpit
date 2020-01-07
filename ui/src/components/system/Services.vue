@@ -119,9 +119,9 @@
           >localhost</span>
         </td>
         <td class="fancy">
-          <span v-if="props.row.ports.TCP.length">
+          <span v-if="props.row.ports.TCP.length" class="mg-right-5">
             <b>TCP:</b>
-            {{ props.row.ports.TCP.join(', ') }}&nbsp;&nbsp;
+            {{ props.row.ports.TCP.join(', ') }}
           </span>
           <span v-if="props.row.ports.UDP.length">
             <b>UDP:</b>
@@ -963,7 +963,7 @@ export default {
       $("#removeCustomServiceModal").modal("hide");
 
       var deleteServiceObj = {
-        action: "serviceDelete",
+        action: "service-delete",
         serviceName: context.serviceToRemove.name
       };
 
@@ -978,7 +978,7 @@ export default {
         ["system-services/delete"],
         deleteServiceObj,
         function(stream) {
-          console.info("serviceDelete", stream);
+          console.info("service-delete", stream);
         },
         function(success) {
           context.getServices();
@@ -1089,7 +1089,7 @@ export default {
       }
 
       var addServiceObj = {
-        action: "serviceCreate",
+        action: "service-create",
         serviceName: context.currentService.name.trim(),
         access: context.currentService.access,
         tcpPorts: tcpPorts,
@@ -1114,7 +1114,7 @@ export default {
             ["system-services/create"],
             addServiceObj,
             function(stream) {
-              console.info("serviceCreate", stream);
+              console.info("service-create", stream);
             },
             function(success) {
               context.currentService = context.initService();
@@ -1178,5 +1178,9 @@ export default {
 .pad-left-right-sm {
   padding-left: 0.4em;
   padding-right: 0.4em;
+}
+
+.mg-right-5 {
+  margin-right: 5px;
 }
 </style>

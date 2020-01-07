@@ -110,7 +110,7 @@ Validate a custom network service.
 
 Available actions:
 
-- serviceCreate: validate a new custom network service
+- service-create: validate a new custom network service
 - edit: validate an existing custom network service
 
 ### Input
@@ -126,7 +126,7 @@ A JSON object with these fields:
 Example:
 ```json
 {
-  "action": "serviceCreate",
+  "action": "service-create",
   "serviceName": "myCustomService",
   "access": [
     "green",
@@ -144,7 +144,7 @@ Example:
 
 Invocation example:
 ```bash
-echo '{"action":"serviceCreate","serviceName":"myCustomService","access":["green","red"],"tcpPorts":["9696"],"udpPorts":["8765","8766"]}' | ./validate
+echo '{"action":"service-create","serviceName":"myCustomService","access":["green","red"],"tcpPorts":["9696"],"udpPorts":["8765","8766"]}' | ./validate
 ```
 
 
@@ -154,7 +154,7 @@ Create a custom network service.
 
 Available actions:
 
-- serviceCreate: create a custom network service
+- service-create: create a custom network service
 
 ### Input
 
@@ -235,7 +235,7 @@ Delete a custom network service.
 
 Available actions:
 
-- serviceDelete: delete a custom network service
+- service-delete: delete a custom network service
 
 ### Input
 
@@ -247,12 +247,12 @@ A JSON object with two fields:
 Example:
 ```json
 {
-  "action": "serviceDelete",
+  "action": "service-delete",
   "serviceName": "myCustomService"
 }
 ```
 
 Invocation example:
 ```bash
-echo '{"action":"serviceDelete","serviceName":"myCustomService"}' | ./delete
+echo '{"action":"service-delete","serviceName":"myCustomService"}' | ./delete
 ```

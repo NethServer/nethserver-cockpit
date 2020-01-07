@@ -116,7 +116,7 @@ def validate_service(input_json, check_service_name):
         tcp_ports_invalid_attributes + udp_ports_invalid_attributes
 
     if (len(tcp_ports_invalid_attributes) == 0) and (len(udp_ports_invalid_attributes) == 0):
-        # check that at list one port is specified
+        # check that at least one port is specified
         if (len(input_json[tcp_ports_p]) == 0) and (len(input_json[udp_ports_p]) == 0):
             invalid_attributes.append(
                 invalid_attribute(tcp_ports_p, "tcp_ports_and_udp_ports_empty"))
@@ -131,7 +131,7 @@ try:
     input_json = simplejson.loads(line)
     action = input_json["action"]
 
-    if action == 'serviceCreate':
+    if action == 'service-create':
         invalid_attributes = validate_service(input_json, True)
     elif action == 'edit':
         invalid_attributes = validate_service(input_json, False)

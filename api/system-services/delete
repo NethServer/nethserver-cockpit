@@ -26,7 +26,7 @@ data=$(cat /dev/stdin)
 action=$(echo $data | jq -r '.action')
 
 case $action in
-"serviceDelete")
+"service-delete")
     service=$(echo $data | jq -r '.serviceName')
 
     /sbin/e-smith/config delete $service
