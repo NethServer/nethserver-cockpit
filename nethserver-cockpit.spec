@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.3.13
+Version: 1.3.14
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Wed Jan 08 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.14-1
+- Cockpit: custom network services - NethServer/dev#6006
+
 * Fri Dec 20 2019 Davide Principi <davide.principi@nethesis.it> - 1.3.13-1
 - Cockpit disconnection breaks yum transactions - Bug NethServer/dev#6002
 
