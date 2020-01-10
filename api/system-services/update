@@ -48,6 +48,48 @@ case $action in
         /sbin/e-smith/config setprop $service status disabled
         /sbin/e-smith/signal-event -j runlevel-adjust
         ;;
+
+    "edit")
+        service=$(echo $data | jq -r '.serviceName')
+        access=$(echo $data | jq -r '.access | join(",")')
+        custom=$(echo $data | jq -r '.custom')
+
+        if [ "$custom" = "1" ]; then
+            # tcp/udp ports can be changed for custom services only
+
+            tcpPorts=$(echo $data | jq -r '.tcpPorts | join(",")')
+            udpPorts=$(echo $data | jq -r '.udpPorts | join(",")')
+
+            if [ -n "$tcpPorts" ]; then
+                /sbin/e-smith/config setprop $service TCPPorts $tcpPorts
+                check_exit_status
+            else
+                /sbin/e-smith/config delprop $service TCPPort TCPPorts
+                check_exit_status
+            fi
+
+            if [ -n "$udpPorts" ]; then
+                /sbin/e-smith/config setprop $service UDPPorts $udpPorts
+                check_exit_status
+            else
+                /sbin/e-smith/config delprop $service UDPPort UDPPorts
+                check_exit_status
+            fi
+        fi
+
+        if [ -n "$access" ]; then
+            /sbin/e-smith/config setprop $service access $access
+            check_exit_status
+        else
+            /sbin/e-smith/config delprop $service access
+            check_exit_status
+        fi
+
+        /sbin/e-smith/signal-event -j firewall-adjust
+        check_exit_status
+
+        success
+        ;;
 esac
 
 if [ $? -gt 0 ]; then

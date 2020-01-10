@@ -1,0 +1,60 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2019 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+. /usr/libexec/nethserver/api/lib/helper_functions
+
+data=$(cat /dev/stdin)
+action=$(echo $data | jq -r '.action')
+
+case $action in
+"service-create")
+    service=$(echo $data | jq -r '.serviceName')
+    access=$(echo $data | jq -r '.access | join(",")')
+    tcpPorts=$(echo $data | jq -r '.tcpPorts | join(",")')
+    udpPorts=$(echo $data | jq -r '.udpPorts | join(",")')
+
+    accessCmd=""
+    if [ -n "$access" ]; then
+        accessCmd="access $access"
+    fi
+
+    tcpPortsCmd=""
+    if [ -n "$tcpPorts" ]; then
+        tcpPortsCmd="TCPPorts $tcpPorts"
+    fi
+
+    udpPortsCmd=""
+    if [ -n "$udpPorts" ]; then
+        udpPortsCmd="UDPPorts $udpPorts"
+    fi
+
+    /sbin/e-smith/config set $service service status enabled $accessCmd $tcpPortsCmd $udpPortsCmd
+    check_exit_status
+
+    /sbin/e-smith/signal-event -j firewall-adjust
+    check_exit_status
+
+    success
+    ;;
+esac
+
+error "EventFailed" "Action failed"
