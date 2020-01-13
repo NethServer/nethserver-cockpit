@@ -29,7 +29,7 @@ function readMemory()
         $tmp2 = explode(' ', trim($tmp[1]));
         $fields[trim($tmp[0])] = $tmp2[0];
     }
-    return $fields; 
+    return $fields;
 }
 
 function readDisk()
@@ -85,7 +85,7 @@ function readUptime()
     return $uptime;
 }
 
-function readCPU() 
+function readCPU()
 {
     $ret = 0;
     $f = file('/proc/cpuinfo');
@@ -94,7 +94,14 @@ function readCPU()
             $ret++;
         }
     }
-    $tmp = explode(':',$f[4]);
+    # find cpu model name (x86_64 4th, arm 2th line)
+    foreach ($f as $linenumber => $line) {
+        if (strpos($line, 'model name') !== false) {
+            $linenumber++;
+        break;
+        }
+    }
+    $tmp = explode(':',$f[$linenumber-1]);
     return array('model' => trim($tmp[1]), 'n' => $ret);
 }
 
@@ -105,7 +112,14 @@ function readLoad()
 
 function readDMI()
 {
+    if (file_exists("/sys/devices/virtual/dmi/id/")) {
     return trim(@file_get_contents("/sys/devices/virtual/dmi/id/sys_vendor"))." ".@trim(@file_get_contents("/sys/devices/virtual/dmi/id/product_name"));
+    // also try to fetch info for devicetree based (arm)devices
+    } elseif (file_exists("/sys/firmware/devicetree/base/model")) {
+    return trim(@file_get_contents("/sys/firmware/devicetree/base/model"));
+    } else {
+        return "-";
+    }
 }
 
 function readRelease()
