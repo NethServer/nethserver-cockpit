@@ -978,6 +978,9 @@ export default {
         function(success) {
           try {
             success = JSON.parse(success);
+            for (var i in success.configuration.reservations) {
+              success.configuration.reservations[i].name = success.configuration.reservations[i].name.toString();
+            }
           } catch (e) {
             console.error(e);
           }
