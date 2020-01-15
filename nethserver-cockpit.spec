@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.3.14
+Version: 1.3.15
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,10 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Wed Jan 15 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.15-1
+- Cockpit: DHCP not loaded if there is an only-number host - Bug NethServer/dev#6021
+- Cockpit Dashboard empty hardware/info - Bug NethServer/arm-dev#34
+
 * Wed Jan 08 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.14-1
 - Cockpit: custom network services - NethServer/dev#6006
 
