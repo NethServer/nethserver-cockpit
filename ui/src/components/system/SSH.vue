@@ -56,15 +56,39 @@
           </label>
           <div class="col-sm-5">
             <select
-              v-model="SSHConfig.AllowGroups" multiple
+              @change="addGroupsToSSH(SSHConfig.SelectedGroups)"
+              v-model="SSHConfig.SelectedGroups"
               class="combobox form-control"
             >
-              <option v-for="(t,i) in Groups" v-bind:key="i">{{t}}</option>
+              <option>-</option>
+              <option 
+                :value="g"
+                v-for="(g,i) in Groups" 
+                v-bind:key="i"
+                >{{g}}
+              </option>
             </select>
-            <br>
-            <span>{{$t('ssh.Allowed_Groups')}} : {{ AllowGroups }}</span>
           </div>
         </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="textInput-modal-markup"></label>
+          <div class="col-sm-5">
+            <ul  class="list-inline compact">
+              <li v-for="(g,i) in SSHConfig.AllowGroups" v-bind:key="i">
+                <span class="label label-info">
+                  {{g}}
+                  <a
+                    @click="removeGroupsFromSSH(i)"
+                    class="remove-item-inline"
+                  >
+                    <span class="fa fa-times"></span>
+                  </a>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
             <div v-if="SSHConfig.isLoading" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
@@ -121,6 +145,7 @@ export default {
       },
       Groups: [],
       SSHConfig: {
+        SelectedGroups: null,
         AllowGroups:[],
         isLoading: false,
         errors: {
@@ -166,6 +191,19 @@ export default {
         }
       );
     },
+    addGroupsToSSH(index) {
+      if (index.length > 0 && index != "-") {
+        if (!this.groupAlreadyAdded(index)) {
+          this.SSHConfig.AllowGroups.push(index);
+        }
+      }
+    },
+    removeGroupsFromSSH(index) {
+      this.SSHConfig.AllowGroups.splice(index, 1);
+    },
+    groupAlreadyAdded(index) {
+      return this.SSHConfig.AllowGroups.indexOf(index) > -1;
+    },
     getSSHConfig() {
       var context = this;
       context.exec(
@@ -182,6 +220,9 @@ export default {
           context.Groups = success.groups;
           context.SSHConfig.TCPPort = success.configuration.props.TCPPort;
           context.SSHConfig.AllowGroups = success.configuration.props.AllowGroups.split(',');
+          if (context.SSHConfig.AllowGroups[0] === "") {
+            context.SSHConfig.AllowGroups = [];
+          }
           context.SSHConfig.PasswordAuthentication =
             success.configuration.props.PasswordAuthentication == "yes"
               ? true
@@ -217,7 +258,7 @@ export default {
           PasswordAuthentication: obj.PasswordAuthentication ? "yes" : "0",
           PermitRootLogin: obj.PermitRootLogin ? "yes" : "0",
           TCPPort: obj.TCPPort,
-          AllowGroups: obj.AllowGroups.join()
+          AllowGroups: obj.AllowGroups.join(',')
         },
         type: "service"
       };
