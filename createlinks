@@ -38,6 +38,13 @@ event_templates('nethserver-cockpit-update', qw(
     /etc/nethserver/ldappasswd.conf
     /etc/sudoers.d/30_nethserver_cockpit_roles
     /etc/sudoers.d/55_nsapi_perms
+    /etc/nethserver/cockpit.allow
+    /etc/pam.d/cockpit
+));
+
+# delegate cockpit access via PAM
+event_templates('delegation-save', qw(
+    /etc/nethserver/cockpit.allow
 ));
 
 #
