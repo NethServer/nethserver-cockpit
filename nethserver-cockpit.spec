@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.3.15
+Version: 1.3.16
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Fri Jan 17 2020 Davide Principi <davide.principi@nethesis.it> - 1.3.16-1
+- Cockpit: not able to change backup-config HistoryLength - Bug NethServer/dev#6031
+
 * Wed Jan 15 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.15-1
 - Cockpit: DHCP not loaded if there is an only-number host - Bug NethServer/dev#6021
 - Cockpit Dashboard empty hardware/info - Bug NethServer/arm-dev#34
