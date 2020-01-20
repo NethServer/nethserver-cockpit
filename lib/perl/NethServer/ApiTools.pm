@@ -200,6 +200,32 @@ sub list_applications
 }
 
 #
+# Return all systems routes that members of domain admins can use
+#
+sub list_systems_admins
+{
+    my @systems= (
+        "storage",
+        "disk-usage",
+        "certificates",
+        "dns",
+        "dhcp",
+        "backup",
+        "services",
+        "users-groups",
+        "network",
+        "ssh",
+        "tls-policy",
+        "trusted-networks",
+        "software-center",
+        "subscription",
+        "terminal"
+    );
+
+    return @systems;
+}
+
+#
 # Retrieve information about a Cockpit application
 #
 sub invoke_info_api

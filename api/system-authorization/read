@@ -64,7 +64,7 @@ foreach my $line (split "\n", NethServer::ApiTools::exec_slurp('/usr/bin/sudo', 
 }
 
 # Grant access to all known sys modules and apps to root and admins users
-if($isRoot || $isAdmin) {
+if($isRoot) {
     %sysRoutes = (%sysRoutes, map { $_ => 1 } (
         "storage",
         "disk-usage",
@@ -83,6 +83,9 @@ if($isRoot || $isAdmin) {
         "subscription"
     ));
     %appRoutes = (%appRoutes, map { $_ => 1 } NethServer::ApiTools::list_applications());
+} elsif(!$isRoot && $isAdmin) {
+  %sysRoutes = (%sysRoutes, map { $_ => 1 } NethServer::ApiTools::list_systems_admins());
+  %appRoutes = (%appRoutes, map { $_ => 1 } NethServer::ApiTools::list_applications());
 }
 
 # Terminal access is granted if a *sh shell is set for the user

@@ -39,8 +39,17 @@ if ($cmd eq 'role') {
     my @applications =();
 
     if($role eq $groupAdmins) {
-        # Forward call to obtain the complete module list
-        exec('/usr/libexec/nethserver/api/system-authorization/read');
+      # this api use sudo (to retrieve the name of group domain admins)
+      # we need to retrieve a static list of system & applications
+      @system = NethServer::ApiTools::list_systems_admins();
+      @applications = NethServer::ApiTools::list_applications();
+      my $ret = {
+        'system' => \@system,
+        'applications'=> \@applications,
+        'status' => {'editable' => 0},
+      };
+      print encode_json ($ret);
+      exit (0);
     }
 
     my $ret = {
