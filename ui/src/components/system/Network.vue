@@ -2571,7 +2571,7 @@ export default {
             console.error(e);
           }
           context.wizard.type.bond.modes = success;
-          context.wizard.type.bond.mode = success[0];
+          context.wizard.type.bond.mode = context.wizard.type.bond.mode.length > 0 ? context.wizard.type.bond.mode : success[0];
         },
         function(error) {
           console.error(error);
@@ -3201,7 +3201,7 @@ export default {
         devices: context.wizard.type[context.wizard.type.choice].devices,
         BondOptMode:
           context.wizard.type.choice == "bond"
-            ? context.wizard.type.bond.mode.value
+            ? context.wizard.type.bond.mode
             : null,
         tag:
           context.wizard.type.choice == "vlan"
