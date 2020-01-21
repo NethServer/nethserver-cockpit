@@ -1198,7 +1198,7 @@
                             <select v-model="wizard.type.bond.mode" class="form-control combobox">
                               <option
                                 v-for="(m, mi) in wizard.type.bond.modes"
-                                :value="mi"
+                                :value="m.value"
                                 v-bind:key="mi"
                               >
                                 {{m.name |
