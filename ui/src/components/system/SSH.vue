@@ -81,7 +81,7 @@
                     </select>
                   </span>
                   <a v-on:click="removeSubject(subject)" class="remove-item-inline remove-group">
-                    <span v-bind:aria-label="$t('ssh.Group_remove_message')" class="fa fa-times"></span>
+                    <span v-bind:aria-label="$t('ssh.Group_remove_message')" class="fa fa-times black"></span>
                   </a>
                 </span>
               </li>
@@ -391,5 +391,8 @@ select {
 }
 .remove-group {
   color: #363636;
+}
+.black {
+  color: #000000;
 }
 </style>
