@@ -30,6 +30,7 @@ use NethServer::ApiTools;
 
 my $db = esmith::db->open("configuration");
 my $port = $db->get_prop('sshd', 'TCPPort');
+my $provider = $db->get_prop('sssd', 'Provider') || 'none';
 my @connections;
 
 sub listGroups {
@@ -50,7 +51,8 @@ my %out = (
     'configuration' => $db->prepare_json('sshd'),
     'groups' => [@{listGroups()}],
     'ShellOverrideStatus' => ($db->get_prop('sssd','ShellOverrideStatus') 
-            || 'disabled') eq 'enabled' ? JSON::true : JSON::false
+            || 'disabled') eq 'enabled' ? JSON::true : JSON::false,
+    'Provider' => $provider
 );
 
 my %allow = ();
