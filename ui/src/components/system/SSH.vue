@@ -51,7 +51,7 @@
             <span v-if="SSHConfig.errors.PasswordAuthentication.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+SSHConfig.errors.PasswordAuthentication.message)}}</span>
           </div>
         </div>
-        <div v-if="ShellOverrideStatus"v-bind:class="['form-group', SSHConfig.errors.AllowGroups.hasError ? 'has-error' : '']">
+        <div v-if="ShellOverrideStatus && Provider !== 'none'"v-bind:class="['form-group', SSHConfig.errors.AllowGroups.hasError ? 'has-error' : '']">
           <label
               class="col-sm-2 control-label"
               >
@@ -158,6 +158,7 @@ export default {
       },
       Groups: [],
       ShellOverrideStatus: false,
+      Provider: "none",
       SSHConfig: {
         SelectedGroups: null,
         AllowGroups:{},
@@ -261,6 +262,7 @@ export default {
           }
           context.view.isLoaded = true;
           context.Groups = success.groups;
+          context.Provider = success.Provider;
           context.ShellOverrideStatus = success.ShellOverrideStatus;
           context.SSHConfig.TCPPort = success.configuration.props.TCPPort;
           context.SSHConfig.AllowGroups = success.configuration.props.AllowGroups;
