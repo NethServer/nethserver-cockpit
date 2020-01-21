@@ -42,6 +42,12 @@ event_templates('nethserver-cockpit-update', qw(
     /etc/pam.d/cockpit
 ));
 
+# expand cockpit PAM following `ShellOverrideStatus`
+event_templates('nethserver-sssd-save', qw(
+    /etc/pam.d/cockpit
+    /etc/nethserver/cockpit.allow
+));
+
 # delegate cockpit access via PAM
 event_templates('delegation-save', qw(
     /etc/nethserver/cockpit.allow
