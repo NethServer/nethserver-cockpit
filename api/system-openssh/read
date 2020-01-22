@@ -56,7 +56,7 @@ my %out = (
 );
 
 my %allow = ();
-foreach my $g (split(',',$out{configuration}{props}{AllowGroups})) {
+foreach my $g (split(',',$out{'configuration'}{'props'}{'AllowGroups'})) {
   my ($group,$sftp) = split (':',$g);
   if (!$group) {
     next;
@@ -67,7 +67,7 @@ foreach my $g (split(',',$out{configuration}{props}{AllowGroups})) {
     $allow{$group} = 'ssh';
   }
 }
-$out{configuration}{props}{AllowGroups} = \%allow;
+$out{'configuration'}{'props'}{'AllowGroups'} = \%allow;
 
 
 print to_json(\%out, {utf8 => 1, pretty => 0, allow_nonref => 1});

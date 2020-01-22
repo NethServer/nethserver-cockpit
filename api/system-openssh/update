@@ -26,7 +26,7 @@ use esmith::event;
 use JSON;
 use NethServer::ApiTools;
 my $data = NethServer::ApiTools::readInput();
-my $cdb = esmith::ConfigDB->open() || die("Could not open ConfigDB");
+my $cdb = esmith::ConfigDB->open()|| NethServer::ApiTools::error("EventError", "Cannot_open_esmith_configuration");
 my $action = $data->{'action'};
 
 foreach my $prop (qw(
@@ -34,14 +34,14 @@ foreach my $prop (qw(
     PermitRootLogin
     TCPPort
     )) {
-        $cdb->set_prop('sshd', $prop, $data->{props}{$prop});
+        $cdb->set_prop('sshd', $prop, $data->{'props'}{$prop});
     }
 
 my $AllowGroups = '';
-foreach my $g (keys $data->{props}{AllowGroups} ) {
-    if ($data->{props}{AllowGroups}{$g} eq 'ssh') {
+foreach my $g (keys $data->{'props'}{'AllowGroups'} ) {
+    if ($data->{'props'}{'AllowGroups'}{$g} eq 'ssh') {
         $AllowGroups .= "$g,";
-    } elsif ($data->{props}{AllowGroups}{$g} eq 'sftp') {
+    } elsif ($data->{'props'}{'AllowGroups'}{$g} eq 'sftp') {
         $AllowGroups .= "$g:sftp,";
     }
 } 
