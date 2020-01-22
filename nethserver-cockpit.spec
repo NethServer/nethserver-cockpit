@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.3.16
+Version: 1.3.17
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Wed Jan 22 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.17-1
+- Selected bond mode ignored in Cockpit - Bug Nethserver/dev#6032
+
 * Fri Jan 17 2020 Davide Principi <davide.principi@nethesis.it> - 1.3.16-1
 - Cockpit: not able to change backup-config HistoryLength - Bug NethServer/dev#6031
 
