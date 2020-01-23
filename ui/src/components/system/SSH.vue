@@ -395,4 +395,7 @@ select {
 .black {
   color: #000000;
 }
+.suggestions {
+  position: initial !important;
+}
 </style>
