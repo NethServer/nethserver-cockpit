@@ -542,7 +542,7 @@
                   />
                 </div>
               </div>
-              <div v-if="!newUser.isPassEdit && newUser.advanced" class="form-group">
+              <div v-if="!newUser.isPassEdit && newUser.advanced && !ShellOverride" class="form-group">
                 <label class="col-sm-3 control-label" for="shell">
                   {{$t('users_groups.remote_shell')}}
                   <doc-info
@@ -1796,6 +1796,7 @@ export default {
   },
   data() {
     return {
+      ShellOverride: false,
       view: {
         isLoaded: false,
         isAuth: false,
@@ -2270,6 +2271,7 @@ export default {
           }
 
           if (context.users.provider) {
+            context.ShellOverride =  success.ShellOverride;
             context.getUsers();
             context.getGroups();
           } else {
