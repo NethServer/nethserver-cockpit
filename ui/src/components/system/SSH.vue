@@ -51,7 +51,46 @@
             <span v-if="SSHConfig.errors.PasswordAuthentication.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+SSHConfig.errors.PasswordAuthentication.message)}}</span>
           </div>
         </div>
+        <div v-if="ShellOverrideStatus && Provider !== 'none'"v-bind:class="['form-group', SSHConfig.errors.AllowGroups.hasError ? 'has-error' : '']">
+          <label
+              class="col-sm-2 control-label"
+              >
+                <span v-if="vGroupSpinner" class="spinner spinner-xs spinner-inline form-spinner-vSpinner"></span>&#x20;
+                {{$t('ssh.AllowGroups')}}
+          </label>
+          <div class="col-sm-5">
+            <suggestions 
+              v-model="vSearchText"
+              v-bind:options="{debounce: 400, inputClass: 'form-control', placeholder: $t('ssh.Group_placeholder')}"
+              v-bind:onInputChange="searchSubjects"
+              v-bind:onItemSelected="addSubject"
+            >
+            </suggestions>
 
+            <ul class="list-inline compact">
+              <li v-for="(perm, subject) in SSHConfig.AllowGroups" v-bind:key="subject" class="mg-bottom-5" >
+                <span class="label label-info label-select label-group">
+                  {{ subject | shorten }}
+                  <span class="inline-select">
+                    <select
+                      class="form-control"
+                      v-model="SSHConfig.AllowGroups[subject]"
+                    >
+                      <option value="ssh" selected>{{$t('ssh.SSH_AND_SFTP')}}</option>
+                      <option value="sftp">{{$t('ssh.SFTP_RESTRICTED')}}</option>
+                    </select>
+                  </span>
+                  <a v-on:click="removeSubject(subject)" class="remove-item-inline remove-group">
+                    <span v-bind:aria-label="$t('ssh.Group_remove_message')" class="fa fa-times black"></span>
+                  </a>
+                </span>
+              </li>
+            </ul>
+            <span v-if="SSHConfig.errors.AllowGroups.hasError" class="help-block">
+              {{ SSHConfig.errors.AllowGroups.message }}
+            </span>
+          </div>
+        </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
             <div v-if="SSHConfig.isLoading" class="spinner spinner-sm form-spinner-loader adjust-top-loader"></div>
@@ -66,8 +105,18 @@
 </template>
 
 <script>
+import execp from '@/execp'
+
+const subjectsStore = {
+    loaded: false,
+    items: [],
+}
+
 export default {
   name: "SSH",
+  props:{
+    'groupsList': Array,
+  },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.exec(
@@ -102,11 +151,17 @@ export default {
   },
   data() {
     return {
+      vGroupSpinner: false,
       view: {
         isLoaded: false,
         isAuth: false
       },
+      Groups: [],
+      ShellOverrideStatus: false,
+      Provider: "none",
       SSHConfig: {
+        SelectedGroups: null,
+        AllowGroups:{},
         isLoading: false,
         errors: {
           TCPPort: {
@@ -118,6 +173,10 @@ export default {
             message: ""
           },
           PasswordAuthentication: {
+            hasError: false,
+            message: ""
+          },
+          AllowGroups: {
             hasError: false,
             message: ""
           }
@@ -134,6 +193,31 @@ export default {
     };
   },
   methods: {
+    searchSubjects(query) {
+        query = query.toLowerCase();
+        if(subjectsStore.loaded) {
+            return Promise.resolve(subjectsStore.items.filter(subj => subj.toLowerCase().includes(query)))
+        } else {
+            this.vGroupSpinner = true
+            return execp("system-openssh/read")
+                .then(response => {
+                    this.vGroupSpinner = false
+                    subjectsStore.loaded = true
+                    subjectsStore.items = [].concat(this.Groups).sort()
+                    return subjectsStore.items.filter(subj => subj.toLowerCase().includes(query))
+                })
+        }
+    },
+    addSubject(subject) {
+        if( ! this.SSHConfig.AllowGroups[subject]) {
+            this.$set(this.SSHConfig.AllowGroups, subject, 'ssh') // see Vuejs "reactivity in depth"
+        }
+    },
+    removeSubject(subject) {
+        if(this.SSHConfig.AllowGroups[subject]) {
+            this.$delete(this.SSHConfig.AllowGroups, subject)
+        }
+    },
     initGraphics() {
       $("#app").css("background", "");
       $("#app").css("color", "");
@@ -151,6 +235,19 @@ export default {
         }
       );
     },
+    addGroupsToSSH(index) {
+      if (index.length > 0 && index != "-") {
+        if (!this.groupAlreadyAdded(index)) {
+          this.SSHConfig.AllowGroups.push(index);
+        }
+      }
+    },
+    removeGroupsFromSSH(index) {
+      this.SSHConfig.AllowGroups.splice(index, 1);
+    },
+    groupAlreadyAdded(index) {
+      return this.SSHConfig.AllowGroups.indexOf(index) > -1;
+    },
     getSSHConfig() {
       var context = this;
       context.exec(
@@ -164,7 +261,11 @@ export default {
             console.error(e);
           }
           context.view.isLoaded = true;
+          context.Groups = success.groups;
+          context.Provider = success.Provider;
+          context.ShellOverrideStatus = success.ShellOverrideStatus;
           context.SSHConfig.TCPPort = success.configuration.props.TCPPort;
+          context.SSHConfig.AllowGroups = success.configuration.props.AllowGroups;
           context.SSHConfig.PasswordAuthentication =
             success.configuration.props.PasswordAuthentication == "yes"
               ? true
@@ -199,7 +300,8 @@ export default {
         props: {
           PasswordAuthentication: obj.PasswordAuthentication ? "yes" : "0",
           PermitRootLogin: obj.PermitRootLogin ? "yes" : "0",
-          TCPPort: obj.TCPPort
+          TCPPort: obj.TCPPort,
+          AllowGroups: obj.AllowGroups
         },
         type: "service"
       };
@@ -260,9 +362,40 @@ export default {
         }
       );
     }
-  }
+  },
+    filters: {
+        shorten(subject) {
+            return subject.replace(/@.*$/, '');
+        }
+    }
 };
 </script>
 
-<style>
+<style scoped>
+.pd-indent {
+    margin-left: 8px;
+}
+select {
+    padding: 0;
+}
+.inline-select {
+  display: inline-block !important;
+  margin: 5px;
+}
+.label-select {
+  padding: 8px;
+}
+.label-group {
+  color: #363636;
+  background: #f5f5f5;
+}
+.remove-group {
+  color: #363636;
+}
+.black {
+  color: #000000;
+}
+.suggestions {
+  position: initial !important;
+}
 </style>

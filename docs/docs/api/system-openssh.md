@@ -28,7 +28,8 @@ Output example:
             "TCPPort": "22",
             "UsePAM": "yes",
             "access": "green,red",
-            "status": "enabled"
+            "status": "enabled",
+            "AllowGroups":"group1,group2:sftp"
         },
         "type": "service"
     },
@@ -50,6 +51,7 @@ Output example:
 - PasswordAuthentication: boolean
 - PermitRootLogin: boolean
 - TCPPort: port number
+- AllowGroups: a comma separated list to allow groups to the sshd service, an option to restrict the group to sftp can be added (group1,group2:sftp,group3).
 
 ### Input
 

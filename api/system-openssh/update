@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/usr/bin/perl
 
 #
-# Copyright (C) 2018 Nethesis S.r.l.
+# Copyright (C) 2020 Nethesis S.r.l.
 # http://www.nethesis.it - nethserver@nethesis.it
 #
 # This script is part of NethServer.
@@ -20,26 +20,38 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-. /usr/libexec/nethserver/api/lib/helper_functions
+use strict;
+use esmith::ConfigDB;
+use esmith::event;
+use JSON;
+use NethServer::ApiTools;
+my $data = NethServer::ApiTools::readInput();
+my $cdb = esmith::ConfigDB->open()|| NethServer::ApiTools::error("EventError", "Cannot_open_esmith_configuration");
+my $action = $data->{'action'};
 
-data=$(cat /dev/stdin)
+foreach my $prop (qw(
+    PasswordAuthentication
+    PermitRootLogin
+    TCPPort
+    )) {
+        $cdb->set_prop('sshd', $prop, $data->{'props'}{$prop});
+    }
 
-function _get
-{
-    field=$1
-    echo $data | jq -r ".props.$field"
+my $AllowGroups = '';
+foreach my $g (keys $data->{'props'}{'AllowGroups'} ) {
+    if ($data->{'props'}{'AllowGroups'}{$g} eq 'ssh') {
+        $AllowGroups .= "$g,";
+    } elsif ($data->{'props'}{'AllowGroups'}{$g} eq 'sftp') {
+        $AllowGroups .= "$g:sftp,";
+    }
+} 
+chop $AllowGroups;
+$cdb->set_prop('sshd', 'AllowGroups', $AllowGroups);
+
+esmith::event::set_json_log(1);
+my $success = esmith::event::event_signal('nethserver-openssh-save');
+if($success) {
+    NethServer::ApiTools::success();
+} else {
+   NethServer::ApiTools::error("EventError", "update_action_failed", 15507635545762);
 }
-
-# Read JSON from stdin and set the record
-/sbin/e-smith/config setprop sshd PasswordAuthentication "$(_get PasswordAuthentication)" PermitRootLogin "$(_get PermitRootLogin)" TCPPort "$(_get TCPPort)"
-
-if [ $? -gt 0 ]; then
-    invalid_error
-fi
-
-/sbin/e-smith/signal-event -j nethserver-openssh-save
-if [ $? -gt 0 ]; then
-    error "EventFailed" "See /var/log/messages"
-else
-    success
-fi
