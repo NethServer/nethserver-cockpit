@@ -1,0 +1,18 @@
+{
+    #
+    # Remove the `logs` delegation to users  
+    #
+    use esmith::ConfigDB;
+    
+    my $db = esmith::ConfigDB->open();
+    my $newProp = '';
+    my @Keys = split(',', $db->get_prop('cockpit.socket','delegation')|| '');
+
+    foreach (@Keys) {
+        my @props = split(':',$_);
+        my @props = grep { !/logs/ } @props;
+        $newProp .= join(':',@props).',';
+    }
+    chop $newProp;
+    $db->set_prop('cockpit.socket','delegation',$newProp);
+}
