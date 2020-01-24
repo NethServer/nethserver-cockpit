@@ -202,7 +202,7 @@
         </li>
 
         <li
-          v-if="checkAuth('logs')"
+          v-if="status.isRoot"
           v-bind:class="[getCurrentPath('logs') ? 'active' : '', 'list-group-item']"
         >
           <a href="#/logs">
@@ -211,7 +211,7 @@
           </a>
         </li>
 
-        <li v-if="checkAuth('logs')" class="li-empty"></li>
+        <li v-if="status.isRoot" class="li-empty"></li>
 
         <li v-bind:class="[getCurrentPath('about') ? 'active' : '', 'list-group-item']">
           <a href="#/about">
