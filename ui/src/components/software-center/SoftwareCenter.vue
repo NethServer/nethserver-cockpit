@@ -184,7 +184,15 @@
 
       <h3>{{$t('software_center.applications')}} ({{filteredAppsList.length}} {{$t('found')}})</h3>
       <div class="right">
-	    <button
+        <button
+          @click="clearYumCache()"
+          :disabled="view.isInstalling || view.isUpdating"
+          class="btn btn-primary panel-icon"
+        >
+          <span class="fa fa-refresh starred-marging"></span>
+          {{$t('software_center.update')}}
+        </button>
+	      <button
           @click="viewPackage('installed')"
           :disabled="view.isInstalling || view.isUpdating"
           class="btn btn-default panel-icon"
@@ -829,6 +837,36 @@ export default {
           bus: "internal"
         })
         .call("/packages", "cockpit.Packages", "Reload", []);
+    },
+    clearYumCache() {
+      // open details for packages
+      var context = this;
+
+      context.view.updatesLoaded = false;
+      context.view.appsLoaded = false;
+      context.exec(
+        ["system-packages/update"],
+        {
+          action: "clean"
+        },
+        function(stream) {
+          console.info("clean-cache", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t("software_center.update_ok");
+
+          // get updates
+          context.getApplications();
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t("software_center.update_error");
+
+          // get updates
+          context.getApplications();
+        }
+      );
     },
     viewPackage(pack) {
       if (pack == "changelog") {

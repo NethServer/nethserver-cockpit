@@ -35,6 +35,9 @@ function _get
 
 
 case $action in
+    "clean")
+        /usr/bin/yum --enablerepo=* clean all
+        ;;
     "upgrade")
         /sbin/e-smith/signal-event -j software-repos-upgrade
         ;;
