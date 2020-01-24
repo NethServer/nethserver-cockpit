@@ -1,5 +1,5 @@
 <template>
-<div v-show="view.isAuth">
+  <div v-show="view.isAuth">
     <h2>{{$t('software_center.title')}}</h2>
     <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
       <span class="pficon pficon-warning-triangle-o"></span>
@@ -93,7 +93,7 @@
           <div class="list-group-item" v-for="(u,uk) in updates.nethserver" v-bind:key="uk">
             <div class="list-group-item-header">
               <div class="list-view-pf-actions compact-list-actions">
-	            <a @click="toggleOpen(u)" class="panel-icon">{{$t('details')}}</a>
+                <a @click="toggleOpen(u)" class="panel-icon">{{$t('details')}}</a>
                 <button
                   :disabled="view.isUpdating || view.isInstalling"
                   @click="openUpdateSingle(u)"
@@ -105,7 +105,7 @@
               </div>
               <div class="list-view-pf-main-info compact-list-info">
                 <div class="list-view-pf-left">
-                  <img class="logo-app" src="assets/icon.png">
+                  <img class="logo-app" src="assets/icon.png" />
                 </div>
                 <div class="list-view-pf-body">
                   <div class="list-view-pf-description">
@@ -149,12 +149,19 @@
                     <h5 class="col-xs-4 text-align-right">{{l.name}}</h5>
                     <div class="version-details col-xs-8 text-align-left">
                       <strong>{{l.version}}</strong>
-                      <small style='margin-left: 15px'>{{$t('software_center.full_version')}}: {{l.version}}-{{l.release}}</small>
-                      <small style='margin-left: 15px; color: gray'>{{$t('software_center.current_full_version')}}: {{l.installed_version}}-{{l.installed_release}}</small>
+                      <small
+                        style="margin-left: 15px"
+                      >{{$t('software_center.full_version')}}: {{l.version}}-{{l.release}}</small>
+                      <small
+                        style="margin-left: 15px; color: gray"
+                      >{{$t('software_center.current_full_version')}}: {{l.installed_version}}-{{l.installed_release}}</small>
                     </div>
                   </div>
                 </div>
-                <div v-if="!u.updates || (u.updates && u.updates.length == 0)" class="alert alert-info compact">
+                <div
+                  v-if="!u.updates || (u.updates && u.updates.length == 0)"
+                  class="alert alert-info compact"
+                >
                   <span class="pficon pficon-info"></span>
                   {{$t('software_center.no_more_details')}}.
                 </div>
@@ -192,7 +199,7 @@
           <span class="fa fa-refresh starred-marging"></span>
           {{$t('software_center.update')}}
         </button>
-	      <button
+        <button
           @click="viewPackage('installed')"
           :disabled="view.isInstalling || view.isUpdating"
           class="btn btn-default panel-icon"
@@ -221,12 +228,16 @@
               class="form-control input-lg"
               id="filter"
               :placeholder="$t('search')+' '+$t('software_center.applications_low')"
-            >
+            />
           </div>
         </div>
       </form>
       <div v-if="view.appsLoaded" class="row row-cards-pf adjust-top">
-        <div v-for="(c,ck) in categories" v-bind:key="ck" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+        <div
+          v-for="(c,ck) in categories"
+          v-bind:key="ck"
+          class="col-xs-12 col-sm-4 col-md-3 col-lg-2"
+        >
           <div
             @click="selectCategory(c)"
             :class="['card-pf card-pf-accented selectable-cat', c.selected ? 'selected' : '']"
@@ -236,9 +247,9 @@
               <h2 class="card-pf-title title-category">
                 {{c.name}}
                 <span class="right">
-                  <input type="checkbox" v-model="c.selected">
+                  <input type="checkbox" v-model="c.selected" />
                 </span>
-                <img :src="c.icon" class="right filter-app panel-icon">
+                <img :src="c.icon" class="right filter-app panel-icon" />
               </h2>
             </div>
           </div>
@@ -274,7 +285,7 @@
               <h2 @click="view.isInstalling ? undefined : selectApp(a)" class="card-pf-title">
                 {{a.name}}
                 <span class="right">
-                  <input type="checkbox" v-model="a.selected">
+                  <input type="checkbox" v-model="a.selected" />
                 </span>
               </h2>
               <div
@@ -390,9 +401,7 @@
                 <span class="pficon pficon-warning-triangle-o"></span>
                 <strong>{{$t('warning')}}.</strong>
                 {{$t('software_center.this_action_will_install')}}
-                <b>
-                  {{updates.nspackages.length + updates.basepackages.length}}
-                </b>
+                <b>{{updates.nspackages.length + updates.basepackages.length}}</b>
                 {{updates.other.length == 1 ? $t('software_center.update_low') : $t('software_center.updates_low')}}.
               </div>
               <div class="form-group">
@@ -495,7 +504,7 @@
                   id="install-1"
                   value="download"
                   v-model="updatesConfig.install"
-                >
+                />
                 <label
                   for="install-1"
                   class="control-label col-sm-6 text-align-left"
@@ -508,7 +517,7 @@
                   id="install-2"
                   value="install"
                   v-model="updatesConfig.install"
-                >
+                />
                 <label
                   for="install-2"
                   class="control-label col-sm-6 text-align-left"
@@ -526,7 +535,7 @@
                     id="sendEmail"
                     v-model="updatesConfig.sendEmail"
                     class="form-control"
-                  >
+                  />
                 </div>
               </div>
             </div>
@@ -752,16 +761,26 @@ export default {
 
             if (update.nethserver) {
               context.updates.nethserver.push(update);
-              for(var x = 0; x < update.updates.length; x++){
-                if(context.updates.nspackages.indexOf(update.updates[x].name.toString()) == -1){
-                    context.updates.nspackages.push(update.updates[x].name.toString());
+              for (var x = 0; x < update.updates.length; x++) {
+                if (
+                  context.updates.nspackages.indexOf(
+                    update.updates[x].name.toString()
+                  ) == -1
+                ) {
+                  context.updates.nspackages.push(
+                    update.updates[x].name.toString()
+                  );
                 }
               }
             } else {
               context.updates.other.push(update);
-              for(var x = 0; x < update.updates.length; x++){
-                if(context.updates.basepackages.indexOf(update.updates[x].name) == -1){
-                    context.updates.basepackages.push(update.updates[x].name);
+              for (var x = 0; x < update.updates.length; x++) {
+                if (
+                  context.updates.basepackages.indexOf(
+                    update.updates[x].name
+                  ) == -1
+                ) {
+                  context.updates.basepackages.push(update.updates[x].name);
                 }
               }
             }
@@ -854,14 +873,18 @@ export default {
         },
         function(success) {
           // notification
-          context.$parent.notifications.success.message = context.$i18n.t("software_center.update_ok");
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "software_center.update_ok"
+          );
 
           // get updates
           context.getApplications();
         },
         function(error, data) {
           // notification
-          context.$parent.notifications.error.message = context.$i18n.t("software_center.update_error");
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "software_center.update_error"
+          );
 
           // get updates
           context.getApplications();
@@ -896,7 +919,9 @@ export default {
           }
         );
       } else if (pack == "installed") {
-	    this.currentPackage.title = this.$i18n.t("software_center.installed_low");
+        this.currentPackage.title = this.$i18n.t(
+          "software_center.installed_low"
+        );
         this.currentPackage.type = "installed";
         // open details for packages
         var context = this;
