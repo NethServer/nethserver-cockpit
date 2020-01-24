@@ -36,7 +36,7 @@ function _get
 
 case $action in
     "clean")
-        /usr/bin/yum --enablerepo=* clean all
+        /usr/bin/yum --setopt=exit_on_lock=1 --enablerepo=* clean all >/dev/null
         ;;
     "upgrade")
         /sbin/e-smith/signal-event -j software-repos-upgrade
