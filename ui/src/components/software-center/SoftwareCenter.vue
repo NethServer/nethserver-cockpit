@@ -197,7 +197,7 @@
           class="btn btn-primary panel-icon"
         >
           <span class="fa fa-refresh starred-marging"></span>
-          {{$t('software_center.update')}}
+          {{$t('software_center.clear_yum_cache')}}
         </button>
         <button
           @click="viewPackage('installed')"

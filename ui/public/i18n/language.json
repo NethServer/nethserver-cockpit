@@ -936,7 +936,8 @@
     "installed_packages": "Installed packages",
     "full_version": "Full version",
     "current_full_version": "Current",
-    "installed_low": "installed packages"
+    "installed_low": "installed packages",
+    "clear_yum_cache": "Reload"
   },
   "terminal": {
     "title": "Terminal"
