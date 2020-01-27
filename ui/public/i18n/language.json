@@ -921,6 +921,8 @@
     "install_error": "Applications not installed.",
     "install_ok_s": "Application installed successfully! Go to Applications page to configure it.",
     "install_error_s": "Application not installed.",
+    "update_ok": "Cache cleaned successfully!",
+    "update_error": "Cache not cleaned.",
     "config_ok": "Configuration saved successfully!",
     "config_error": "Configuration not saved.",
     "upgrade_ok": "System upgraded successfully!",
@@ -938,7 +940,8 @@
     "installed_packages": "Installed packages",
     "full_version": "Full version",
     "current_full_version": "Current",
-    "installed_low": "installed packages"
+    "installed_low": "installed packages",
+    "clear_yum_cache": "Reload"
   },
   "terminal": {
     "title": "Terminal"

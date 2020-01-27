@@ -35,6 +35,9 @@ function _get
 
 
 case $action in
+    "clean")
+        /usr/bin/yum --setopt=exit_on_lock=1 --enablerepo=* clean all >/dev/null
+        ;;
     "upgrade")
         /sbin/e-smith/signal-event -j software-repos-upgrade
         ;;
@@ -49,7 +52,7 @@ case $action in
     "install")
         action="--install"
         if [ -z "$packages" ]; then
-            error "EventFailed" "no_packages_given" 
+            error "EventFailed" "no_packages_given"
         fi
         /usr/libexec/nethserver/pkgaction --json $action $packages
         ;;
@@ -57,7 +60,7 @@ case $action in
     "remove")
         action="--remove"
         if [ -z "$packages" ]; then
-            error "EventFailed" "no_packages_given" 
+            error "EventFailed" "no_packages_given"
         fi
         /usr/libexec/nethserver/pkgaction --json $action $packages
         ;;
