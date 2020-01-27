@@ -763,10 +763,10 @@
     "connection": "Connection",
     "peers": "Peers",
     "peer": "Peer",
-    "AllowGroups": "Allow group to SSH/SFTP",
-    "SFTP_RESTRICTED": "SFTP restricted",
+    "AllowGroups": "Allow SSH/SFTP access",
+    "SFTP_RESTRICTED": "SFTP only",
     "SSH_AND_SFTP": "SSH and SFTP",
-    "Group_placeholder": "Write the name of the group you search"
+    "Group_placeholder": "Type a group name"
   },
   "tls_policy": {
     "title": "TLS Policy",
