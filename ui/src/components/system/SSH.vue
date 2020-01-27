@@ -57,6 +57,12 @@
               >
                 <span v-if="vGroupSpinner" class="spinner spinner-xs spinner-inline form-spinner-vSpinner"></span>&#x20;
                 {{$t('ssh.AllowGroups')}}
+                <doc-info
+                  :placement="'top'"
+                  :title="$t('ssh.AllowGroups')"
+                  :chapter="'AllowGroupsToSSH_SFTP'"
+                  :inline="true"
+                ></doc-info>
           </label>
           <div class="col-sm-5">
             <suggestions 
