@@ -763,10 +763,10 @@
     "connection": "Connection",
     "peers": "Peers",
     "peer": "Peer",
-    "AllowGroups": "Allow group to SSH/SFTP",
-    "SFTP_RESTRICTED": "SFTP restricted",
+    "AllowGroups": "Allow SSH/SFTP access",
+    "SFTP_RESTRICTED": "SFTP only",
     "SSH_AND_SFTP": "SSH and SFTP",
-    "Group_placeholder": "Write the name of the group you search"
+    "Group_placeholder": "Type a group name"
   },
   "tls_policy": {
     "title": "TLS Policy",
@@ -1166,6 +1166,7 @@
     "dhcp_comma_separated_field": "Insert an IP address or a comma-separated list of IP addesses",
     "dhcp_servers": "Servers",
     "remote_shell": "Enable this option to grant access to the Terminal and the Server Manager.",
-    "list_of_ports": "Enter one or more port numbers separated by a comma, e.g.: '8081, 9292'"
+    "list_of_ports": "Enter one or more port numbers separated by a comma, e.g.: '8081, 9292'",
+    "AllowGroupsToSSH_SFTP":"Select one or more groups to grant SSH and/or SFTP access. Administrators are always granted SSH and SFTP access."
   }
 }
