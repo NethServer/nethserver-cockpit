@@ -78,7 +78,6 @@ if($isRoot || $isAdmin) {
         "ssh",
         "tls-policy",
         "trusted-networks",
-        "logs",
         "software-center",
         "subscription"
     ));

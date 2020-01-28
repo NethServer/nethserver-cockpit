@@ -1,0 +1,13 @@
+{
+    #
+    # Remove the `logs` delegation to users
+    #
+    my @Keys = split(',', $DB->get_prop('cockpit.socket','delegation')|| '');
+
+    foreach (@Keys) {
+        my ($group_name, @props) = split(':',$_);
+        @props = grep {  $_ ne 'logs' } @props;
+        $_ = join(':', $group_name, @props);
+    }
+    $DB->set_prop('cockpit.socket','delegation', join(',', @Keys));
+}
