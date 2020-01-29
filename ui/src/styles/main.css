@@ -457,7 +457,7 @@ circle {
 }
 
 .bg-missing {
-background-color: #703fec;
+    background-color: #703fec;
 }
 
 .gray-list {
@@ -1038,4 +1038,8 @@ background-color: #703fec;
 
 .table.responsive {
     overflow-x: initial !important;
+}
+
+.suggestions {
+    position: initial !important;
 }

@@ -65,7 +65,7 @@
                 ></doc-info>
           </label>
           <div class="col-sm-5">
-            <suggestions 
+            <suggestions
               v-model="vSearchText"
               v-bind:options="{debounce: 400, inputClass: 'form-control', placeholder: $t('ssh.Group_placeholder')}"
               v-bind:onInputChange="searchSubjects"
@@ -400,8 +400,5 @@ select {
 }
 .black {
   color: #000000;
-}
-.suggestions {
-  position: initial !important;
 }
 </style>
