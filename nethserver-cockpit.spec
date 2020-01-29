@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.3.17
+Version: 1.4.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,12 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Wed Jan 29 2020 Davide Principi <davide.principi@nethesis.it> - 1.4.0-1
+- Group-based access restriction for Cockpit and SSH  - Nethserver/dev#6029
+- Delegation of logs page doesn't have any effect - Bug NethServer/dev#6033
+- Group-based access restriction for Cockpit and SSH  - NethServer/dev#6029
+- Selected bond mode ignored in Cockpit - Bug Nethserver/dev#6032
+
 * Wed Jan 22 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.17-1
 - Selected bond mode ignored in Cockpit - Bug Nethserver/dev#6032
 
