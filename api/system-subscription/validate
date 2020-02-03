@@ -29,7 +29,7 @@ $v = new LegacyValidator($data);
 $v->declareParameter('Secret', Validate::NOTEMPTY);
 
 if ($data['Secret']) {
-    $json = json_decode(shell_exec("/usr/libexec/nethserver/subscription-info ".$data['Secret']),true);
+    $json = json_decode(shell_exec(escapeshellcmd("/usr/libexec/nethserver/subscription-info ".escapeshellarg($data['Secret']))),true);
     if (!isset($json['uuid']) || !$json['uuid']) {
          $v->addValidationError('secret', 'invalid_secret', $data['Secret']);
     }

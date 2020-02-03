@@ -25,19 +25,19 @@ require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
 
 /* Return the groups of a user */
 function user_membership($user) {
-    $output = shell_exec("/usr/libexec/nethserver/list-user-membership -s '$user'");
+    $output = shell_exec(escapeshellcmd("/usr/libexec/nethserver/list-user-membership -s ".escapeshellarg($user)));
     return json_decode($output,TRUE);
 }
 
 /* Return the list of users inside a group */
 function group_members($group) {
-    $output = shell_exec("/usr/libexec/nethserver/list-group-members -s '$group'");
+    $output = shell_exec(escapeshellcmd("/usr/libexec/nethserver/list-group-members -s ".escapeshellarg($group)));
     return json_decode($output,TRUE);
 }
 
 /* Return user information */
 function user_info($user) {
-    $output = shell_exec("/usr/libexec/nethserver/list-users -s '$user'");
+    $output = shell_exec(escapeshellcmd("/usr/libexec/nethserver/list-users -s ".escapeshellarg($user)));
     $tmp = json_decode($output,TRUE);
     return @$tmp[$user];
 }
@@ -65,7 +65,7 @@ function cleanup_group($group, $user) {
         foreach ($members as $m) {
             $cmd .= " ".escapeshellarg($m);
         }
-        passthru($cmd, $tmp_ret);
+        passthru(escapeshellcmd($cmd), $tmp_ret);
         $ret += $tmp_ret;
     }
 
