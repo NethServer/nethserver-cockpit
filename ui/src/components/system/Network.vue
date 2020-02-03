@@ -2571,7 +2571,7 @@ export default {
             console.error(e);
           }
           context.wizard.type.bond.modes = success;
-          context.wizard.type.bond.mode = context.wizard.type.bond.mode.length > 0 ? context.wizard.type.bond.mode : success[0];
+          context.wizard.type.bond.mode = context.wizard.type.bond.mode && context.wizard.type.bond.mode.length > 0 ? context.wizard.type.bond.mode : success[0];
         },
         function(error) {
           console.error(error);
