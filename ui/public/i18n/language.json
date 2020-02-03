@@ -6,6 +6,7 @@
   "remove": "Remove",
   "modify": "Modify",
   "edit": "Edit",
+  "edit_roles": "Delegations",
   "advanced": "Advanced",
   "advanced_mode": "Advanced options",
   "change": "Change",
@@ -635,7 +636,8 @@
     "NsdcIp": "Active Directory IP",
     "UserDN": "User DN",
     "GroupDN": "Group DN",
-    "StartTls": "Start TLS"
+    "StartTls": "Start TLS",
+    "edit_delegation": "Edit delegations of"
   },
   "network": {
     "title": "Network",

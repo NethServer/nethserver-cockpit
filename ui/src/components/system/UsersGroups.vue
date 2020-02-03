@@ -313,12 +313,16 @@
           v-bind:key="kg"
           class="list-group-item"
         >
-          <div v-if="users.providerInfo.IsLocal" class="list-view-pf-actions">
-            <button @click="openEditGroup(kg, g)" class="btn btn-default">
+          <div  class="list-view-pf-actions">
+            <button v-if="view.isRoot" @click="openEditRole(kg, g)" class="btn btn-default">
+              <span class="pficon pficon-edit span-right-margin"></span>
+              {{$t('edit_roles')}}
+            </button>
+            <button v-if="users.providerInfo.IsLocal" @click="openEditGroup(kg, g)" class="btn btn-default">
               <span class="pficon pficon-edit span-right-margin"></span>
               {{$t('edit')}}
             </button>
-            <div class="dropup pull-right dropdown-kebab-pf">
+            <div v-if="users.providerInfo.IsLocal" class="dropup pull-right dropdown-kebab-pf">
               <button
                 class="btn btn-link dropdown-toggle"
                 type="button"
@@ -579,11 +583,17 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">
+            <h4 v-if="newGroup.EditGroup" class="modal-title">
               {{newGroup.isEdit ? $t('edit') : $t('users_groups.create_group')}}
               <span
                 v-if="newGroup.isEdit"
               >{{newGroup.name}}</span>
+            </h4>
+            <h4 v-else class="modal-title">
+              {{$t('users_groups.edit_delegation')}}
+              <span>
+                {{newGroup.name}}
+              </span>
             </h4>
           </div>
           <form
@@ -610,7 +620,7 @@
                   >{{$t('validation.validation_failed')}}: {{$t('validation.'+newGroup.errorProps['name'])}}</span>
                 </div>
               </div>
-              <div :class="['form-group', newGroup.errorProps['members'] ? 'has-error' : '']">
+              <div v-if="newGroup.EditGroup" :class="['form-group', newGroup.errorProps['members'] ? 'has-error' : '']">
                 <label
                   class="col-sm-3 control-label"
                   for="textInput-modal-markup"
@@ -634,12 +644,12 @@
                   >{{$t('validation.validation_failed')}}: {{$t('validation.'+newGroup.errorProps['members'])}}</span>
                 </div>
               </div>
-              <div v-if="newGroup.loadMembers" class="form-group">
+              <div v-if="newGroup.loadMembers && newGroup.EditGroup" class="form-group">
                 <div class="col-sm-12">
                   <div class="spinner"></div>
                 </div>
               </div>
-              <div class="form-group">
+              <div v-if="newGroup.EditGroup" class="form-group">
                 <label class="col-sm-3 control-label" for="textInput-modal-markup"></label>
                 <div class="col-sm-9">
                   <ul class="list-inline compact">
@@ -654,11 +664,11 @@
                   </ul>
                 </div>
               </div>
-              <div v-if="view.isRoot" class="advanced">
+              <div v-if="view.isRoot && newGroup.EditRole" class="advanced">
                 <span>{{$t('users_groups.role_delegation')}}</span>
                 <div class="divider divider-advanced"></div>
               </div>
-              <div v-if="view.isRoot">
+              <div v-if="view.isRoot && newGroup.EditRole">
                 <div class="alert alert-info alert-dismissable">
                   <span class="pficon pficon-info"></span>
                   <strong>{{$t('users_groups.define_authorization')}}.</strong>
@@ -2182,7 +2192,9 @@ export default {
           name: "",
           members: ""
         },
-        isLoading: false
+        isLoading: false,
+        EditRole: false,
+        EditGroup: false
       };
     },
 
@@ -2806,6 +2818,7 @@ export default {
 
     openCreateGroup() {
       this.newGroup = this.initGroup();
+      this.newGroup.EditGroup = true;
       $("#createGroupModal").modal("show");
     },
 
@@ -2894,35 +2907,45 @@ export default {
         }
       );
     },
-
-    openEditGroup(kg, group) {
+    openEditRole (kg, group) {
       this.newGroup = this.initGroup();
+      this.newGroup.EditRole = true;
+      this.openGroupModal(kg, group);
+    },
+    openEditGroup (kg, group) {
+      this.newGroup = this.initGroup();
+      this.newGroup.EditGroup = true;
+      this.openGroupModal(kg, group);
+    },
+    openGroupModal(kg, group) {
       this.newGroup.name = kg;
       this.newGroup.isEdit = true;
       this.newGroup.loadMembers = true;
 
       var context = this;
-      context.exec(
-        ["system-users/read"],
-        {
-          action: "group-members",
-          group: kg
-        },
-        null,
-        function(success) {
-          try {
-            success = JSON.parse(success);
-          } catch (e) {
-            console.error(e);
+      if (this.users.providerInfo.IsLocal) {
+        context.exec(
+          ["system-users/read"],
+          {
+            action: "group-members",
+            group: kg
+          },
+          null,
+          function(success) {
+            try {
+              success = JSON.parse(success);
+            } catch (e) {
+              console.error(e);
+            }
+            context.newGroup.members = success;
+            context.newGroup.loadMembers = false;
+          },
+          function(error) {
+            console.error(error);
+            context.newGroup.loadMembers = false;
           }
-          context.newGroup.members = success;
-          context.newGroup.loadMembers = false;
-        },
-        function(error) {
-          console.error(error);
-          context.newGroup.loadMembers = false;
-        }
-      );
+        );
+      }
 
       context.exec(
         ["system-roles/read"],
@@ -2954,11 +2977,7 @@ export default {
     editGroup(group) {
       var context = this;
 
-      var groupObj = {
-        action: "group-update",
-        name: group.name,
-        members: group.members
-      };
+      context.newGroup.isLoading = true;
 
       var roleObj = {
         role: group.name,
@@ -2966,75 +2985,92 @@ export default {
         applications: group.applications
       };
 
-      // validate object
-      context.newGroup.isLoading = true;
-      context.exec(
-        ["system-users/validate"],
-        groupObj,
-        null,
-        function(success) {
-          context.newGroup.isLoading = false;
-          $("#createGroupModal").modal("hide");
-
-          // update role
-          context.exec(
-            ["system-roles/update"],
-            roleObj,
-            null,
-            function(success) {
-              // notification
-              context.$parent.notifications.success.message = context.$i18n.t(
-                "users_groups.role_updated_ok"
-              );
-            },
-            function(error, data) {
-              // notification
-              context.$parent.notifications.error.message = context.$i18n.t(
-                "users_groups.role_updated_error"
-              );
-            }
-          );
-
-          context.exec(
-            ["system-users/update"],
-            groupObj,
-            function(stream) {
-              console.info("group-update", stream);
-            },
-            function(success) {
-              // notification
-              context.$parent.notifications.success.message = context.$i18n.t(
-                "users_groups.group_updated_ok"
-              );
-
-              context.newGroup = context.initGroup();
-
+      if (this.newGroup.EditRole) {
+        // update role
+        context.exec(
+          ["system-roles/update"],
+          roleObj,
+          function(stream) {
+            console.info("role", stream);
+          },
+          function(success) {
+            // notification
+            context.$parent.notifications.success.message = context.$i18n.t(
+              "users_groups.role_updated_ok"
+            );
+              context.newGroup.isLoading = false;
               // get groups
+              $("#createGroupModal").modal("hide");
+              context.newGroup = context.initGroup();
               context.getGroups();
-            },
-            function(error, data) {
-              // notification
-              context.$parent.notifications.error.message = context.$i18n.t(
-                "users_groups.group_updated_error"
-              );
-            }
-          );
-        },
-        function(error, data) {
-          var errorData = {};
-          context.newGroup.isLoading = false;
-
-          try {
-            errorData = JSON.parse(data);
-            for (var e in errorData.attributes) {
-              var attr = errorData.attributes[e];
-              context.newGroup.errorProps[attr.parameter] = attr.error;
-            }
-          } catch (e) {
-            console.error(e);
+          },
+          function(error, data) {
+            // notification
+            context.$parent.notifications.error.message = context.$i18n.t(
+              "users_groups.role_updated_error"
+            );
           }
-        }
-      );
+        );
+      }
+
+      else if (this.newGroup.EditGroup) {
+
+        var groupObj = {
+          action: "group-update",
+          name: group.name,
+          members: group.members
+        };
+
+        context.exec(
+          // validate object
+          ["system-users/validate"],
+          groupObj,
+          null,
+          function(success) {
+            context.newGroup.isLoading = false;
+            $("#createGroupModal").modal("hide");
+
+            context.exec(
+              ["system-users/update"],
+              groupObj,
+              function(stream) {
+                console.info("group-update", stream);
+              },
+              function(success) {
+                // notification
+                context.$parent.notifications.success.message = context.$i18n.t(
+                  "users_groups.group_updated_ok"
+                );
+
+                context.newGroup = context.initGroup();
+
+                // get groups
+                context.getGroups();
+              },
+              function(error, data) {
+                // notification
+                context.$parent.notifications.error.message = context.$i18n.t(
+                  "users_groups.group_updated_error"
+                );
+              }
+            );
+          },
+          function(error, data) {
+            var errorData = {};
+            context.newGroup.isLoading = false;
+
+            try {
+              errorData = JSON.parse(data);
+              for (var e in errorData.attributes) {
+                var attr = errorData.attributes[e];
+                context.newGroup.errorProps[attr.parameter] = attr.error;
+              }
+            } catch (e) {
+              console.error(e);
+            }
+          }
+        );
+      }
     },
 
     openDeleteGroup(kg, toDelete) {
