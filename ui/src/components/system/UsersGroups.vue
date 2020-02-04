@@ -314,7 +314,7 @@
           class="list-group-item"
         >
           <div  class="list-view-pf-actions">
-            <button v-if="view.isRoot" @click="openEditRole(kg, g)" class="btn btn-default">
+            <button v-if="view.isRoot && !users.providerInfo.IsLocal" @click="openEditRole(kg, g)" class="btn btn-default">
               <span class="pficon pficon-edit span-right-margin"></span>
               {{$t('edit_roles')}}
             </button>
@@ -333,6 +333,12 @@
                 <span class="fa fa-ellipsis-v"></span>
               </button>
               <ul class="dropdown-menu dropdown-menu-right">
+                <li v-if="view.isRoot">
+                  <a @click="openEditRole(kg, g)">
+                    <span class="pficon pficon-edit span-right-margin"></span>
+                    {{$t('edit_roles')}}
+                  </a>
+                </li>
                 <li>
                   <a @click="openDeleteGroup(kg, g)">
                     <span class="fa fa-times span-right-margin"></span>
