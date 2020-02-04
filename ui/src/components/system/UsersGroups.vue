@@ -607,7 +607,7 @@
             v-on:submit.prevent="newGroup.isEdit ? editGroup(newGroup) : createGroup(newGroup)"
           >
             <div class="modal-body">
-              <div :class="['form-group', newGroup.errorProps['name'] ? 'has-error' : '']">
+              <div v-if="newGroup.EditGroup" :class="['form-group', newGroup.errorProps['name'] ? 'has-error' : '']">
                 <label
                   class="col-sm-3 control-label"
                   for="textInput-modal-markup"
