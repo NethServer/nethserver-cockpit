@@ -601,7 +601,6 @@
     "hostname_save_error": "Hostname not changed.",
     "enabled": "Enabled",
     "disabled": "Disabled",
-    "role_delegation": "Role delegations",
     "system_roles": "System views",
     "applications_roles": "Applications",
     "role_updated_ok": "Role update OK",

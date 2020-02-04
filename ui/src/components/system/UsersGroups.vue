@@ -664,10 +664,6 @@
                   </ul>
                 </div>
               </div>
-              <div v-if="view.isRoot && newGroup.EditRole" class="advanced">
-                <span>{{$t('users_groups.role_delegation')}}</span>
-                <div class="divider divider-advanced"></div>
-              </div>
               <div v-if="view.isRoot && newGroup.EditRole">
                 <div class="alert alert-info alert-dismissable">
                   <span class="pficon pficon-info"></span>
