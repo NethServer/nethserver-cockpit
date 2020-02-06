@@ -596,10 +596,7 @@
               >{{newGroup.name}}</span>
             </h4>
             <h4 v-else class="modal-title">
-              {{$t('users_groups.edit_delegation')}}
-              <span>
-                {{newGroup.name}}
-              </span>
+              {{$t('users_groups.edit_delegation', {name: newGroup.name})}}
             </h4>
           </div>
           <form

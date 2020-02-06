@@ -636,7 +636,7 @@
     "UserDN": "User DN",
     "GroupDN": "Group DN",
     "StartTls": "Start TLS",
-    "edit_delegation": "Edit delegations of"
+    "edit_delegation": "Edit delegations of {name}"
   },
   "network": {
     "title": "Network",
