@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.4.0
+Version: 1.4.1
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Thu Feb 06 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.4.1-1
+- No input sanitization in nethserver-cockpit/api/lib/users_functions.php  - Bug NethServer/dev#6042
+
 * Wed Jan 29 2020 Davide Principi <davide.principi@nethesis.it> - 1.4.0-1
 - Group-based access restriction for Cockpit and SSH  - Nethserver/dev#6029
 - Delegation of logs page doesn't have any effect - Bug NethServer/dev#6033
