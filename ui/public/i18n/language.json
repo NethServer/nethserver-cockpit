@@ -608,7 +608,7 @@
     "role_deleted_ok": "Role deleted OK",
     "role_deleted_error": "Role deleted errors",
     "define_authorization": "Define authorizations for this group",
-    "define_authorization_description": "Select views and applications that members of this group can view. Make sure delegated users have the \"Shell\" option enabled",
+    "define_authorization_description": "Select views and applications that members of this group can view.",
     "binddn_empty": "BindDN is empty",
     "bindpassword_empty": "BindPassword is empty",
     "binddn_bindpass_empty": "BindDN and BindPassword are empty",
