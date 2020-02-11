@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.4.1
+Version: 1.4.2
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Feb 11 2020 Davide Principi <davide.principi@nethesis.it> - 1.4.2-1
+- Missing delegation UI with remote account provider - Bug NethServer/dev#6023
+
 * Thu Feb 06 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.4.1-1
 - No input sanitization in nethserver-cockpit/api/lib/users_functions.php  - Bug NethServer/dev#6042
 
