@@ -670,8 +670,8 @@
               <div v-if="view.isRoot && newGroup.EditRole">
                 <div class="alert alert-info alert-dismissable">
                   <span class="pficon pficon-info"></span>
-                  <strong>{{$t('users_groups.define_authorization')}}.</strong>
-                  {{$t('users_groups.define_authorization_description')}}.
+                  <strong>{{$t('users_groups.define_authorization')}}</strong>&#32;
+                  {{$t('users_groups.define_authorization_description')}}
                 </div>
                 <div :class="['form-group', newGroup.errorProps['members'] ? 'has-error' : '']">
                   <label
