@@ -37,12 +37,8 @@ sub listGroups {
   my $groups = `/usr/libexec/nethserver/list-groups -s`;
   my %groups =  %{ NethServer::ApiTools::safe_decode_json(($groups), {}) };
   delete ($groups{'domain admins'});
+  $groups{'Everyone'} = 1;
 
-  if ($provider eq 'ldap') {
-    $groups{'locals'} = 1;
-  } elsif ($provider eq 'ad') {
-    $groups{'domain users'} = 1;
-  }
   return [ keys %groups];
 }
 open(H, "ss -Hn state established '( dport = $port or sport = $port )'|");
