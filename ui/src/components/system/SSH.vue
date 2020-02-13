@@ -91,9 +91,32 @@
                   </a>
                 </span>
               </li>
+              <li>
+                <span :class="['label','label-info','label-select','label-group', SSHConfig.errors.AllowEveryone.hasError ? 'has-error' : '']">
+                    {{ $t('ssh.everyone_label') }}
+                    <doc-info
+                      v-bind:placement="'top'"
+                      v-bind:title="$t('ssh.everyone_label')"
+                      v-bind:chapter="'ssh_everyone_info'"
+                      v-bind:inline="true"
+                    ></doc-info>
+                    <span class="inline-select">
+                        <select v-model="SSHConfig.AllowEveryone" class="form-control">
+                          <option value="none" selected>{{$t('ssh.Everyone_no_access')}}</option>
+                          <option value="sftp+ssh">{{$t('ssh.SSH_AND_SFTP')}}</option>
+                          <option value="sftp">{{$t('ssh.SFTP_RESTRICTED')}}</option>
+                        </select>
+                    </span>
+                    <span class="remove-item-inline" href="#">
+                      <span class="fa fa-lock black"></span>
+                    </span>
+              </li>
             </ul>
             <span v-if="SSHConfig.errors.AllowGroups.hasError" class="help-block">
               {{ SSHConfig.errors.AllowGroups.message }}
+            </span>
+            <span v-if="SSHConfig.errors.AllowEveryone.hasError" class="help-block">
+              {{ SSHConfig.errors.AllowEveryone.message }}
             </span>
           </div>
         </div>
@@ -168,6 +191,7 @@ export default {
       SSHConfig: {
         SelectedGroups: null,
         AllowGroups:{},
+        AllowEveryone:"none",
         isLoading: false,
         errors: {
           TCPPort: {
@@ -183,6 +207,10 @@ export default {
             message: ""
           },
           AllowGroups: {
+            hasError: false,
+            message: ""
+          },
+          AllowEveryone: {
             hasError: false,
             message: ""
           }
@@ -272,6 +300,7 @@ export default {
           context.ShellOverrideStatus = success.ShellOverrideStatus;
           context.SSHConfig.TCPPort = success.configuration.props.TCPPort;
           context.SSHConfig.AllowGroups = success.configuration.props.AllowGroups;
+          context.SSHConfig.AllowEveryone = success.configuration.props.AllowEveryone;
           context.SSHConfig.PasswordAuthentication =
             success.configuration.props.PasswordAuthentication == "yes"
               ? true
@@ -307,7 +336,8 @@ export default {
           PasswordAuthentication: obj.PasswordAuthentication ? "yes" : "0",
           PermitRootLogin: obj.PermitRootLogin ? "yes" : "0",
           TCPPort: obj.TCPPort,
-          AllowGroups: obj.AllowGroups
+          AllowGroups: obj.AllowGroups,
+          AllowEveryone: obj.AllowEveryone
         },
         type: "service"
       };
