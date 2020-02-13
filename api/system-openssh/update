@@ -33,6 +33,7 @@ foreach my $prop (qw(
     PasswordAuthentication
     PermitRootLogin
     TCPPort
+    AllowEveryone
     )) {
         $cdb->set_prop('sshd', $prop, $data->{'props'}{$prop});
     }
