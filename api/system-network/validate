@@ -63,7 +63,7 @@ function check_overlapping_networks($ipaddr, $netmask, $exclude) {
     // network IP ranges can't overlap
     foreach ($ndb->getAll() as $i => $n) {
         // skip current interface
-        if ($i == $exclude) {
+        if ($i == $exclude || $n['type'] == 'alias') {
             continue;
         }
 
