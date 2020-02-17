@@ -3323,8 +3323,8 @@ export default {
             errorData = JSON.parse(data);
             for (var e in errorData.attributes) {
               var attr = errorData.attributes[e];
-              context.currentProxy.errors[attr.parameter].hasError = true;
-              context.currentProxy.errors[attr.parameter].message = attr.error;
+              context.newInterface.errors[attr.parameter].hasError = true;
+              context.newInterface.errors[attr.parameter].message = attr.error;
             }
           } catch (e) {
             console.error(e);
