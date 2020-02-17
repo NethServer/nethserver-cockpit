@@ -53,10 +53,13 @@ def check_port_list(port_list_p):
                     if ":" in port:
                         # port range
                         port_range = port.split(":")
-                        port_start_ok = check_port(int(port_range[0]))
-                        port_end_ok = check_port(int(port_range[1]))
+                        port_start = int(port_range[0])
+                        port_end = int(port_range[1])
+                        port_start_ok = check_port(port_start)
+                        port_end_ok = check_port(port_end)
+                        range_ok = port_start < port_end
 
-                        if (not port_start_ok) or (not port_end_ok):
+                        if not (port_start_ok and port_end_ok and range_ok):
                             invalid_attributes.append(invalid_attribute(
                                 port_list_p, "port_list_invalid"))
                     else:
