@@ -31,22 +31,43 @@ def invalid_attribute(parameter, error):
     return {"parameter": parameter, "error": error, "value": ""}
 
 
+def check_port(port):
+    if port < 1 or port > 65535:
+        return False
+    else:
+        return True
+
+
 def check_port_list(port_list_p):
     invalid_attributes = []
 
     if port_list_p not in input_json:
-        invalid_attributes.append(invalid_attribute(port_list_p, "port_list_empty"))
+        invalid_attributes.append(
+            invalid_attribute(port_list_p, "port_list_empty"))
     else:
         if input_json[port_list_p]:
             ports = input_json[port_list_p]
 
             for port in ports:
                 try:
-                    port_int = int(port)
+                    if ":" in port:
+                        # port range
+                        port_range = port.split(":")
+                        port_start = int(port_range[0])
+                        port_end = int(port_range[1])
+                        port_start_ok = check_port(port_start)
+                        port_end_ok = check_port(port_end)
+                        range_ok = port_start < port_end
 
-                    if port_int < 1 or port_int > 65535:
-                        invalid_attributes.append(
-                            invalid_attribute(port_list_p, "port_list_invalid"))
+                        if not (port_start_ok and port_end_ok and range_ok):
+                            invalid_attributes.append(invalid_attribute(
+                                port_list_p, "port_list_invalid"))
+                    else:
+                        port_int = int(port)
+
+                        if not check_port(port_int):
+                            invalid_attributes.append(
+                                invalid_attribute(port_list_p, "port_list_invalid"))
                 except ValueError:
                     invalid_attributes.append(
                         invalid_attribute(port_list_p, "port_list_invalid"))
