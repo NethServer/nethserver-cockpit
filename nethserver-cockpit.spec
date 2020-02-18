@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.4.2
+Version: 1.4.3
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,10 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Feb 18 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.4.3-1
+- Cockpit & Firewall: allow port ranges in system services - Bug NethServer/dev#6063
+- Cockpit: interface ip validation fails if there are ip aliases configured on the interface - Bug NethServer/dev#6061
+
 * Tue Feb 11 2020 Davide Principi <davide.principi@nethesis.it> - 1.4.2-1
 - Missing delegation UI with remote account provider - Bug NethServer/dev#6023
 
