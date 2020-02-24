@@ -768,7 +768,7 @@
     "SFTP_RESTRICTED": "SFTP only",
     "SSH_AND_SFTP": "SSH and SFTP",
     "Group_placeholder": "Type a group name",
-    "everyone_label": "Everyone",
+    "everyone_label": "Normal users",
     "Everyone_no_access": "No access"
   },
   "tls_policy": {
