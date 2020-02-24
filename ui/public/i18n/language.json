@@ -1172,6 +1172,6 @@
     "remote_shell": "Enable this option to grant access to the Terminal and the Server Manager.",
     "list_of_ports": "Enter one or more port numbers separated by a comma, e.g.: '8081, 9292'",
     "AllowGroupsToSSH_SFTP":"Select one or more groups to grant SSH and/or SFTP access. Administrators are always granted SSH and SFTP access.",
-    "ssh_everyone_info": "Allow every group to use SSH and/or SFTP "
+    "ssh_everyone_info": "Set the basic permission for non administrative accounts."
   }
 }
