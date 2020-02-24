@@ -111,6 +111,24 @@
                       <span class="fa fa-lock black"></span>
                     </span>
               </li>
+              <li>
+                <span :class="['label','label-info','label-select','label-group']">
+                    {{ $t('ssh.administrators_label') }}
+                    <doc-info
+                      v-bind:placement="'top'"
+                      v-bind:title="$t('ssh.administrators_label')"
+                      v-bind:chapter="'ssh_administrators_info'"
+                      v-bind:inline="true"
+                    ></doc-info>
+                    <span class="inline-select">
+                        <select  disabled class="form-control">
+                          <option selected value="sftp+ssh">{{$t('ssh.SSH_AND_SFTP')}}</option>
+                        </select>
+                    </span>
+                    <span class="remove-item-inline" href="#">
+                      <span class="fa fa-lock black"></span>
+                    </span>
+              </li>
             </ul>
             <span v-if="SSHConfig.errors.AllowGroups.hasError" class="help-block">
               {{ SSHConfig.errors.AllowGroups.message }}

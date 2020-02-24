@@ -769,6 +769,7 @@
     "SSH_AND_SFTP": "SSH and SFTP",
     "Group_placeholder": "Type a group name",
     "everyone_label": "Normal users",
+    "administrators_label": "Administrator users",
     "Everyone_no_access": "No access"
   },
   "tls_policy": {
@@ -1172,6 +1173,7 @@
     "remote_shell": "Enable this option to grant access to the Terminal and the Server Manager.",
     "list_of_ports": "Enter one or more port numbers separated by a comma, e.g.: '8081, 9292'",
     "AllowGroupsToSSH_SFTP":"Select one or more groups to grant SSH and/or SFTP access. Administrators are always granted SSH and SFTP access.",
-    "ssh_everyone_info": "Set the basic permission for non administrative accounts."
+    "ssh_everyone_info": "Set the basic permission for non administrative accounts.",
+    "ssh_administrators_info": "No restricted permissions for administrative accounts."
   }
 }
