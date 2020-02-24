@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.4.3
+Version: 1.4.4
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,9 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon Feb 24 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.4.4-1
+- Failed to unset TFTP in DHCP advanced options - Bug NethServer/dev#6068
+
 * Tue Feb 18 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.4.3-1
 - Cockpit & Firewall: allow port ranges in system services - Bug NethServer/dev#6063
 - Cockpit: interface ip validation fails if there are ip aliases configured on the interface - Bug NethServer/dev#6061
