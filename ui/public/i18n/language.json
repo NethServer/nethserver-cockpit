@@ -1172,8 +1172,8 @@
     "dhcp_servers": "Servers",
     "remote_shell": "Enable this option to grant access to the Terminal and the Server Manager.",
     "list_of_ports": "Enter one or more port numbers separated by a comma, e.g.: '8081, 9292'",
-    "AllowGroupsToSSH_SFTP":"Select one or more groups to grant SSH and/or SFTP access. Administrators are always granted SSH and SFTP access.",
+    "AllowGroupsToSSH_SFTP":"Select one or more groups to grant SSH and/or SFTP access. Administrators are always granted SSH and SFTP access. The root account is still subject to the \"Allow root login\" checkbox setting.",
     "ssh_everyone_info": "Set the basic permission for non administrative accounts.",
-    "ssh_administrators_info": "No restricted permissions for administrative accounts."
+    "ssh_administrators_info": "Administrators are always granted SSH and SFTP access."
   }
 }
