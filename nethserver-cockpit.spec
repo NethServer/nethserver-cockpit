@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.4.4
+Version: 1.4.5
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -69,6 +69,10 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Thu Feb 27 2020 Davide Principi <davide.principi@nethesis.it> - 1.4.5-1
+- Allow everyone to use SFTP and restrict SSH port forwarding - NethServer/dev#6059
+- Failed to unset TFTP in DHCP advanced options - Bug NethServer/dev#6068
+
 * Mon Feb 24 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.4.4-1
 - Failed to unset TFTP in DHCP advanced options - Bug NethServer/dev#6068
 
