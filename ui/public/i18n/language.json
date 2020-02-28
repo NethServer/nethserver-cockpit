@@ -830,7 +830,9 @@
     "log_rotate": "Rotate logs",
     "test_mail": "Test mail",
     "mail_sent_ok": "Mail sent successfully!",
-    "mail_sent_error": "Mail not sent."
+    "mail_sent_error": "Mail not sent.",
+    "shellPolicy": "Shell policy",
+    "force_the_shell": "Override the shell of users"
   },
   "logs": {
     "title": "Logs"
@@ -1174,6 +1176,7 @@
     "list_of_ports": "Enter one or more port numbers separated by a comma, e.g.: '8081, 9292'",
     "AllowGroupsToSSH_SFTP":"Select one or more groups to grant SSH and/or SFTP access. Administrators are always granted SSH and SFTP access. The root account is still subject to the \"Allow root login\" checkbox setting.",
     "ssh_everyone_info": "Set the basic permission for non administrative accounts.",
-    "ssh_administrators_info": "Administrators are always granted SSH and SFTP access."
+    "ssh_administrators_info": "Administrators are always granted SSH and SFTP access.",
+    "shell_bash_needed": "The shell Bash is needed to use the cockpit server manager and the SSH service, you can override the shell of all users if this option is enabled"
   }
 }
