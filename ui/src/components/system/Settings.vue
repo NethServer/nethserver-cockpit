@@ -481,6 +481,51 @@
           </div>
         </div>
       </form>
+
+      <div v-if="view.isAdmin" class="divider"></div>
+      <h3 v-if="view.isAdmin">{{$t('settings.shellPolicy')}}</h3>
+      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('shellPolicy')">
+        <div :class="['form-group', errors.shellPolicy.hasError ? 'has-error' : '']">
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >
+          {{$t('settings.force_the_shell')}}
+          <doc-info
+            :placement="'top'"
+            :title="$t('settings.force_the_shell')"
+            :chapter="'shell_bash_needed'"
+            :inline="true"
+          ></doc-info>
+          </label>
+          <div class="col-sm-5">
+            <toggle-button
+              class="min-toggle"
+              :width="40"
+              :height="20"
+              :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+              :value="settings.shellPolicy"
+              :sync="true"
+              @change="toggleSettingsShellPolicy()"
+            />
+            <span v-if="errors.shellPolicy.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.shellPolicy.message)}}
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">
+            <div
+              v-if="loaders.shellPolicy"
+              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
+            ></div>
+          </label>
+          <div class="col-sm-5">
+            <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -529,7 +574,8 @@ export default {
           Times: 4,
           Rotate: "weekly",
           Compression: "disabled"
-        }
+        },
+        shellPolicy: false
       },
       loaders: {
         password: false,
@@ -537,7 +583,8 @@ export default {
         root: false,
         cockpit: false,
         hints: false,
-        logrotate: false
+        logrotate: false,
+        shellPolicy: false
       },
       errors: this.initErrors(),
       newUser: {
@@ -614,6 +661,10 @@ export default {
           message: ""
         },
         Rotate: {
+          hasError: false,
+          message: ""
+        },
+        shellPolicy: {
           hasError: false,
           message: ""
         }
@@ -741,17 +792,23 @@ export default {
             ).join("\n");
             context.settings.cockpit.ShowHints =
               context.settings.cockpit.ShowHints == "enabled";
+            //shellPolicy
+            context.settings.shellPolicy = context.settings.shellPolicy == "enabled";
           }
 
           context.getHints(function() {
             context.$parent.hints.settings.count = context.hints.count;
           });
+
           context.view.isLoaded = true;
         },
         function(error) {
           console.error(error);
         }
       );
+    },
+    toggleSettingsShellPolicy() {
+      this.settings.shellPolicy = !this.settings.shellPolicy;
     },
     toggleSettingsHints() {
       this.settings.cockpit.ShowHints = !this.settings.cockpit.ShowHints;
@@ -840,6 +897,16 @@ export default {
           settingsObj = {
             action: "hints",
             ShowHints: context.settings.cockpit.ShowHints
+              ? "enabled"
+              : "disabled"
+          };
+          sudo = true;
+          break;
+
+        case "shellPolicy":
+          settingsObj = {
+            action: "shellPolicy",
+            shellPolicy: context.settings.shellPolicy
               ? "enabled"
               : "disabled"
           };
