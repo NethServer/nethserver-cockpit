@@ -106,7 +106,8 @@
     "nethserver-webtop5": "WebTop",
     "nethserver-cgp": "Collectd Charts",
     "nethserver-sogo": "SOGo",
-    "nethserver-hotsync": "HotSync"
+    "nethserver-hotsync": "HotSync",
+    "nethserver-mssql": "Microsoft SQL Server"
   },
   "dashboard": {
     "title": "Dashboard",
