@@ -1,0 +1,20 @@
+
+#
+# Allow groups to use cockpit 
+#
+
+root
+{ $admins{'group'} || 'domain admins'}
+
+{
+    foreach my $rule (split(',', ${'cockpit.socket'}{'delegation'} || '')) {
+
+        my ($group, @modules) = split(':', $rule);
+
+        if(!$group || !@modules) {
+            next;
+        }
+        
+        $OUT .= "$group\n";
+    }
+}

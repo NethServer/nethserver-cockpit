@@ -255,6 +255,8 @@ if ($action == 'create-backup-data' || $action == 'update-backup-data') {
     unlink($tmp);
     exec("rm -rf $tmp_dir");
 
+} else if ($action == 'update-backup-config') {
+    $v->declareParameter('HistoryLength', Validate::POSITIVE_INTEGER);
 } else {
     error();
 }

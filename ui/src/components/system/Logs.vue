@@ -23,7 +23,7 @@ export default {
             console.error(e);
           }
 
-          if (success.system.indexOf(to.path.substring(1)) == -1) {
+          if (!success.status.isRoot) {
             window.location.hash = "#/";
             vm.$router.push("/");
           }

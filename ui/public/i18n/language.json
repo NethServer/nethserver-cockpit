@@ -6,6 +6,7 @@
   "remove": "Remove",
   "modify": "Modify",
   "edit": "Edit",
+  "edit_roles": "Delegations",
   "advanced": "Advanced",
   "advanced_mode": "Advanced options",
   "change": "Change",
@@ -104,7 +105,8 @@
     "nethserver-vpn-ui": "VPN",
     "nethserver-webtop5": "WebTop",
     "nethserver-cgp": "Collectd Charts",
-    "nethserver-sogo": "SOGo"
+    "nethserver-sogo": "SOGo",
+    "nethserver-hotsync": "HotSync"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -167,7 +169,12 @@
     "shutdown_ok": "The system is shutting down...",
     "shutdown_error": "Shutting down error occured.",
     "hostname_change": "After hostname change you have to login again",
-    "hostname_invalid_warn": "The server FQDN must not contain 'localhost' or 'localdomain'. You have to change your machine hostname before proceeding with other configurations"
+    "hostname_invalid_warn": "The server FQDN must not contain 'localhost' or 'localdomain'. You have to change your machine hostname before proceeding with other configurations",
+    "disk": "Disk",
+    "root_partition": "ROOT PARTITION",
+    "raid": "RAID",
+    "ok": "OK",
+    "error": "ERROR"
   },
   "backup": {
     "title": "Backup",
@@ -456,7 +463,23 @@
     "details_of": "Details of",
     "service_action_ok": "Action completed successfully!",
     "service_action_error": "Action not completed.",
-    "status_of": "Status of"
+    "status_of": "Status of",
+    "access": "Access",
+    "ports": "Ports",
+    "network_services_only": "Network services only",
+    "service_type": "Service type",
+    "add_custom_service": "Add network service",
+    "tcpPorts": "TCP ports",
+    "udpPorts": "UDP ports",
+    "service_added_successfully": "Service added successfully",
+    "service_added_error": "Service not added",
+    "service_removed_successfully": "Service removed successfully",
+    "service_removed_error": "Service not removed",
+    "service_edited_successfully": "Service edited successfully",
+    "service_edited_error": "Service not edited",
+    "remove_custom_service": "Remove network service",
+    "edit_service": "Edit service",
+    "custom": "Custom"
   },
   "users_groups": {
     "title": "Users & Groups",
@@ -578,15 +601,14 @@
     "hostname_save_error": "Hostname not changed.",
     "enabled": "Enabled",
     "disabled": "Disabled",
-    "role_delegation": "Role delegations",
     "system_roles": "System views",
     "applications_roles": "Applications",
     "role_updated_ok": "Role update OK",
     "role_updated_error": "Role update errors",
     "role_deleted_ok": "Role deleted OK",
     "role_deleted_error": "Role deleted errors",
-    "define_authorization": "Define authorizations for this group",
-    "define_authorization_description": "Select views and applications that members of this group can view. Make sure delegated users have the \"Shell\" option enabled",
+    "define_authorization": "Define the authorizations for this group.",
+    "define_authorization_description": "Select the System views and Applications that members of this group can manage.",
     "binddn_empty": "BindDN is empty",
     "bindpassword_empty": "BindPassword is empty",
     "binddn_bindpass_empty": "BindDN and BindPassword are empty",
@@ -613,7 +635,8 @@
     "NsdcIp": "Active Directory IP",
     "UserDN": "User DN",
     "GroupDN": "Group DN",
-    "StartTls": "Start TLS"
+    "StartTls": "Start TLS",
+    "edit_delegation": "Edit delegations of {name}"
   },
   "network": {
     "title": "Network",
@@ -740,7 +763,14 @@
     "connections": "Connections",
     "connection": "Connection",
     "peers": "Peers",
-    "peer": "Peer"
+    "peer": "Peer",
+    "AllowGroups": "Allow SSH/SFTP access",
+    "SFTP_RESTRICTED": "SFTP only",
+    "SSH_AND_SFTP": "SSH and SFTP",
+    "Group_placeholder": "Type a group name",
+    "everyone_label": "Normal users",
+    "administrators_label": "Administrator users",
+    "Everyone_no_access": "No access"
   },
   "tls_policy": {
     "title": "TLS Policy",
@@ -895,6 +925,8 @@
     "install_error": "Applications not installed.",
     "install_ok_s": "Application installed successfully! Go to Applications page to configure it.",
     "install_error_s": "Application not installed.",
+    "update_ok": "Cache cleaned successfully!",
+    "update_error": "Cache not cleaned.",
     "config_ok": "Configuration saved successfully!",
     "config_error": "Configuration not saved.",
     "upgrade_ok": "System upgraded successfully!",
@@ -912,7 +944,8 @@
     "installed_packages": "Installed packages",
     "full_version": "Full version",
     "current_full_version": "Current",
-    "installed_low": "installed packages"
+    "installed_low": "installed packages",
+    "clear_yum_cache": "Reload"
   },
   "terminal": {
     "title": "Terminal"
@@ -1110,7 +1143,16 @@
     "ping_validator_valid_ipV4Address": "Invalid IPv4 address or hostname, it must be something like '10.0.0.1' or 'nethserver.org'",
     "nslookup_validator_valid_ipV4Address": "Invalid IPv4 address, it must be something like '10.0.0.1'",
     "nslookup_validator_valid_hostname_fqdn_1_9223372036854775807": "Invalid fully qualified domain name, it must be something like 'domain.org'",
-    "host_not_removable": "This host can't be removed because it is in use"
+    "host_not_removable": "This host can't be removed because it is in use",
+    "service_name_empty": "Service name is mandatory",
+    "service_name_invalid": "Invalid service name",
+    "service_already_exists": "A service with this name already exists",
+    "access_empty": "Access attribute is mandatory",
+    "access_invalid": "Invalid access attribute",
+    "port_list_empty": "This attribute is mandatory",
+    "port_list_invalid": "Invalid list of ports",
+    "tcp_ports_and_udp_ports_empty": "At least one TCP or UDP port must be specified",
+    "Not_the_expected_values": "These values are not expected" 
   },
   "docs": {
     "more_info_about": "More info about",
@@ -1128,6 +1170,10 @@
     "limit_access": "Restrict access to port 9090 only to given IP addresses. For a more granular access control, use the firewall rules.",
     "dhcp_comma_separated_field": "Insert an IP address or a comma-separated list of IP addesses",
     "dhcp_servers": "Servers",
-    "remote_shell": "Enable this option to grant access to the Terminal and the Server Manager."
+    "remote_shell": "Enable this option to grant access to the Terminal and the Server Manager.",
+    "list_of_ports": "Enter one or more port numbers separated by a comma, e.g.: '8081, 9292'",
+    "AllowGroupsToSSH_SFTP":"Select one or more groups to grant SSH and/or SFTP access. Administrators are always granted SSH and SFTP access. The root account is still subject to the \"Allow root login\" checkbox setting.",
+    "ssh_everyone_info": "Set the basic permission for non administrative accounts.",
+    "ssh_administrators_info": "Administrators are always granted SSH and SFTP access."
   }
 }

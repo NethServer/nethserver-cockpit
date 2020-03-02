@@ -20,12 +20,17 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-active_event=$(pgrep  -n -a -f signal-event)
+pattern='(signal-event|pkgaction)'
+active_event=$(pgrep  -n -a -f "${pattern}")
+watchdog=0
 
 while [[ ! -z $active_event ]]; do
     pid=$(echo $active_event | cut -d' ' -f1)
     name=$(echo $active_event | cut -d' ' -f5)
-    if [ "$name" == "-j" ]; then # skip -j option
+    if [[ "$active_event" == *pkgaction* ]]; then
+        name="YUM transaction"
+        args=""
+    elif [[ "$name" == "-j" || "$name" == "--json" ]]; then # skip -j/--json option
         name=$(echo $active_event | cut -d' ' -f6)
         args=$(echo $active_event | cut -d' ' -f7-)
     else
@@ -33,7 +38,10 @@ while [[ ! -z $active_event ]]; do
     fi
     printf '{"steps":-1,"pid":%d,"args":"%s","event":"%s"}\n' "$pid" "$args" "$name"
     sleep 1
-    active_event=$(pgrep  -n -a -f signal-event)
+    if ((++watchdog > 3600)); then
+        exit 1
+    fi
+    active_event=$(pgrep  -n -a -f "${pattern}")
 done
 
 printf '{"steps":-1,"event":null,"message":"no running tasks"}'

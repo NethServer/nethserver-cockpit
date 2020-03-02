@@ -436,6 +436,30 @@ circle {
     color: #703fec;
 }
 
+.bg-green {
+    background-color: #3f9c35;
+}
+
+.bg-red {
+    background-color: #cc0000;
+}
+
+.bg-orange {
+    background-color: #ec7a08;
+}
+
+.bg-blue {
+    background-color: #0088ce;
+}
+
+.bg-gray {
+    background-color: #72767b;
+}
+
+.bg-missing {
+    background-color: #703fec;
+}
+
 .gray-list {
     border-left: 3px solid #72767b !important;
 }
@@ -1014,4 +1038,8 @@ circle {
 
 .table.responsive {
     overflow-x: initial !important;
+}
+
+.suggestions {
+    position: initial !important;
 }

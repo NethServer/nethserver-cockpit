@@ -57,8 +57,7 @@ if($cmd eq 'list') {
     my $confDb = esmith::ConfigDB->open_ro();
     foreach ($confDb->get_all_by_prop('type' => 'service')) {
         my $key = $_->key;
-        next if ( ! -e "/etc/e-smith/db/configuration/defaults/$key/status" );
-
+        my $custom = ( -e "/etc/e-smith/db/configuration/defaults/$key/status" ) ? 0 : 1;
         my $s = NethServer::Service->new($key, $confDb);
         my %props = $_->props();
         my %ports;
@@ -88,7 +87,8 @@ if($cmd eq 'list') {
             'name' => $key,
             'description' => $desc,
             'ports' => \%ports,
-            'props' => \%props
+            'props' => \%props,
+            'custom' => $custom
         };
 
         push(@status,$service_status);

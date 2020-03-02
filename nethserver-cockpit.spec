@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.3.10
+Version: 1.4.6
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -70,6 +70,54 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon Mar 02 2020 Davide Principi <davide.principi@nethesis.it> - 1.4.6-1
+- SSH Save button stuck after update - Bug NethServer/dev#6075
+
+* Thu Feb 27 2020 Davide Principi <davide.principi@nethesis.it> - 1.4.5-1
+- Allow everyone to use SFTP and restrict SSH port forwarding - NethServer/dev#6059
+- Failed to unset TFTP in DHCP advanced options - Bug NethServer/dev#6068
+
+* Mon Feb 24 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.4.4-1
+- Failed to unset TFTP in DHCP advanced options - Bug NethServer/dev#6068
+
+* Tue Feb 18 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.4.3-1
+- Cockpit & Firewall: allow port ranges in system services - Bug NethServer/dev#6063
+- Cockpit: interface ip validation fails if there are ip aliases configured on the interface - Bug NethServer/dev#6061
+
+* Tue Feb 11 2020 Davide Principi <davide.principi@nethesis.it> - 1.4.2-1
+- Missing delegation UI with remote account provider - Bug NethServer/dev#6023
+
+* Thu Feb 06 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.4.1-1
+- No input sanitization in nethserver-cockpit/api/lib/users_functions.php  - Bug NethServer/dev#6042
+
+* Wed Jan 29 2020 Davide Principi <davide.principi@nethesis.it> - 1.4.0-1
+- Group-based access restriction for Cockpit and SSH  - Nethserver/dev#6029
+- Delegation of logs page doesn't have any effect - Bug NethServer/dev#6033
+- Group-based access restriction for Cockpit and SSH  - NethServer/dev#6029
+- Selected bond mode ignored in Cockpit - Bug Nethserver/dev#6032
+
+* Wed Jan 22 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.17-1
+- Selected bond mode ignored in Cockpit - Bug Nethserver/dev#6032
+
+* Fri Jan 17 2020 Davide Principi <davide.principi@nethesis.it> - 1.3.16-1
+- Cockpit: not able to change backup-config HistoryLength - Bug NethServer/dev#6031
+
+* Wed Jan 15 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.15-1
+- Cockpit: DHCP not loaded if there is an only-number host - Bug NethServer/dev#6021
+- Cockpit Dashboard empty hardware/info - Bug NethServer/arm-dev#34
+
+* Wed Jan 08 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.14-1
+- Cockpit: custom network services - NethServer/dev#6006
+
+* Fri Dec 20 2019 Davide Principi <davide.principi@nethesis.it> - 1.3.13-1
+- Cockpit disconnection breaks yum transactions - Bug NethServer/dev#6002
+
+* Thu Dec 19 2019 Davide Principi <davide.principi@nethesis.it> - 1.3.12-1
+- Cockpit: improve main dashboard view - NethServer/dev#5990
+
+* Fri Dec 13 2019 Davide Principi <davide.principi@nethesis.it> - 1.3.11-1
+- Bad user password change validation in Cockpit - Bug NethServer/dev#5984
+
 * Wed Dec 11 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.3.10-1
 - Delegation regression in Cockpit pinned apps - Bug NethServer/dev#5976
 - SOGo: URL of webmail in the application cockpit list - NethServer/dev#5982

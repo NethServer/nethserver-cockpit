@@ -80,7 +80,7 @@ if ($action == 'create-reservation') {
     foreach (array('DhcpDNS', 'DhcpWINS', 'DhcpNTP', 'DhcpTFTP') as $prop) {
         if (isset($data[$prop]) && $data[$prop] && is_array($data[$prop])) {
             foreach ($data[$prop] as $ip) {
-                if (!$ipValidator->evaluate($ip)) {
+                if (!$ipValidator->evaluate($ip) && !$emptyValidator->evaluate($ip)) {
                     $v->addValidationError($prop, 'valid_ipV4Address');
                 }
             }

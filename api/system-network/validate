@@ -63,11 +63,11 @@ function check_overlapping_networks($ipaddr, $netmask, $exclude) {
     // network IP ranges can't overlap
     foreach ($ndb->getAll() as $i => $n) {
         // skip current interface
-        if ($i == $exclude) {
+        if ($i == $exclude || $n['type'] == 'alias') {
             continue;
         }
 
-        if (isset($n['ipaddr']) && isset($n['netmask'])) {
+        if (isset($n['ipaddr']) && trim($n['ipaddr']) && isset($n['netmask']) && trim($n['netmask']) && isset($n['role']) && trim($n['role'])) {
             $ip_range_other = ip_range($n['ipaddr'], $n['netmask']);
             $first_ip_other = $ip_range_other[0];
             $last_ip_other = $ip_range_other[1];

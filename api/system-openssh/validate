@@ -55,6 +55,14 @@ $v->declareParameter('PasswordAuthentication', Validate::BOOLEAN);
 $v->declareParameter('PermitRootLogin', Validate::BOOLEAN);
 $v->declareParameter('TCPPort', Validate::PORTNUMBER);
 $v->declareParameter('status', Validate::SERVICESTATUS);
+$v->declareParameter('AllowEveryone', $v->createValidator()->memberOf('none','sftp','sftp+ssh'));
+
+$sftp= $v->createValidator()->memberOf('sftp','ssh');
+foreach ($data['props']['AllowGroups'] as $name => $values) {
+    if (!$sftp->evaluate($values)) {
+        $v->addValidationError('AllowGroups','Not_the_expected_values');
+    }
+}
 
 /** Validate the input
 

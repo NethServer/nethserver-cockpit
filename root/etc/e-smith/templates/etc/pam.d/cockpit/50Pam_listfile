@@ -1,0 +1,9 @@
+{
+  if (($sssd{'ShellOverrideStatus'} || 'disabled') eq 'enabled') {
+  $OUT .= q(
+# select group allowed to login to cockpit (root & domain admins alway OK)
+auth    required       pam_listfile.so \
+        onerr=fail  item=group  sense=allow  file=/etc/nethserver/cockpit.allow
+);
+  }
+}

@@ -29,10 +29,51 @@ function readMemory()
         $tmp2 = explode(' ', trim($tmp[1]));
         $fields[trim($tmp[0])] = $tmp2[0];
     }
-    return $fields; 
+    return $fields;
 }
 
-function readUptime() {
+function readDisk()
+{
+    $out = array();
+    $ret = array();
+    exec('/bin/df -P /', $out);
+    # Filesystem Size  Used Avail Use% Mount
+    for ($i=0; $i<count($out); $i++) {
+        if ($i == 0) {
+            continue;
+        }
+        $tmp = explode(" ", preg_replace('/\s+/', ' ', $out[$i]));
+        // skip fs ($tmp[0]) and perc_used ($tmp[4])
+        if ($tmp[5] == "/") {
+          $tmp[5] = "root";
+        }
+        $ret[$tmp[5]] = array('total' => intval($tmp[1]), 'used' => intval($tmp[2]), 'free' => intval($tmp[3]));
+    }
+    return $ret; 
+}
+
+function readRaid()
+{
+    $ret = array();
+    $out = array();
+    exec('/usr/libexec/nethserver/raid-status', $out, $exit_code);
+    $out = json_decode($out[0], true);
+    $records = count($out["results"]);
+    
+    if ($records > 0) {
+      if ($exit_code == 0) {
+        $ret['status'] = 'ok';
+      } else {
+        $ret['status'] = 'error';
+      }
+    } else {
+      $ret['status'] = null;
+    }
+    return $ret;
+}
+
+function readUptime() 
+{
     $data = file_get_contents('/proc/uptime');
     $upsecs = (int)substr($data, 0, strpos($data, ' '));
     $uptime = array (
@@ -44,7 +85,7 @@ function readUptime() {
     return $uptime;
 }
 
-function readCPU() 
+function readCPU()
 {
     $ret = 0;
     $f = file('/proc/cpuinfo');
@@ -53,7 +94,14 @@ function readCPU()
             $ret++;
         }
     }
-    $tmp = explode(':',$f[4]);
+    # find cpu model name (x86_64 4th, arm 2th line)
+    foreach ($f as $linenumber => $line) {
+        if (strpos($line, 'model name') !== false) {
+            $linenumber++;
+        break;
+        }
+    }
+    $tmp = explode(':',$f[$linenumber-1]);
     return array('model' => trim($tmp[1]), 'n' => $ret);
 }
 
@@ -64,7 +112,14 @@ function readLoad()
 
 function readDMI()
 {
+    if (file_exists("/sys/devices/virtual/dmi/id/")) {
     return trim(@file_get_contents("/sys/devices/virtual/dmi/id/sys_vendor"))." ".@trim(@file_get_contents("/sys/devices/virtual/dmi/id/product_name"));
+    // also try to fetch info for devicetree based (arm)devices
+    } elseif (file_exists("/sys/firmware/devicetree/base/model")) {
+    return trim(@file_get_contents("/sys/firmware/devicetree/base/model"));
+    } else {
+        return "-";
+    }
 }
 
 function readRelease()
@@ -87,7 +142,9 @@ print json_encode(array(
         "kernel" => readKernel(),
         "hardware" => readDMI(),
         "release" => readRelease(),
-        "load" => readLoad()
+        "load" => readLoad(),
+        "disk" => readDisk(),
+        "raid" => readRaid()
     ),
     "configuration" => ''
 ));
