@@ -35,8 +35,11 @@ foreach my $prop (qw(
     TCPPort
     AllowEveryone
     )) {
-        $cdb->set_prop('sshd', $prop, $data->{'props'}{$prop});
+    my $value = $data->{'props'}{$prop};
+    if(defined $value && $value ne '') {
+        $cdb->set_prop('sshd', $prop, $value);
     }
+}
 
 my $AllowGroups = '';
 foreach my $g (keys $data->{'props'}{'AllowGroups'} ) {
