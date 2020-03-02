@@ -35,8 +35,8 @@ foreach my $prop (qw(
     TCPPort
     AllowEveryone
     )) {
-    my $value = $data->{'props'}{$prop};
-    if($value) {
+    my $value = $data->{'props'}{$prop} || '';
+    if($value ne '') {
         $cdb->set_prop('sshd', $prop, $value);
     }
 }
