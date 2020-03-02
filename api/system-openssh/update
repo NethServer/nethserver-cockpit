@@ -42,15 +42,16 @@ foreach my $prop (qw(
 }
 
 my $AllowGroups = '';
-foreach my $g (keys $data->{'props'}{'AllowGroups'} ) {
-    if ($data->{'props'}{'AllowGroups'}{$g} eq 'ssh') {
+my $obj = $data->{'props'}{'AllowGroups'} || {};
+foreach my $g (keys $obj) {
+    if ($obj->{$g} eq 'ssh') {
         $AllowGroups .= "$g,";
-    } elsif ($data->{'props'}{'AllowGroups'}{$g} eq 'sftp') {
+    } elsif ($obj->{$g} eq 'sftp') {
         $AllowGroups .= "$g:sftp,";
     }
-} 
+}
 chop $AllowGroups;
-$cdb->set_prop('sshd', 'AllowGroups', $AllowGroups);
+$cdb->set_prop('sshd', 'AllowGroups', $AllowGroups) if(ref($data->{'props'}{'AllowGroups'}) eq 'HASH');
 
 esmith::event::set_json_log(1);
 my $success = esmith::event::event_signal('nethserver-openssh-save');
