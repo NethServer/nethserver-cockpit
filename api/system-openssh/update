@@ -51,7 +51,7 @@ foreach my $g (keys $obj) {
     }
 }
 chop $AllowGroups;
-$cdb->set_prop('sshd', 'AllowGroups', $AllowGroups) if(ref($data->{'props'}{'AllowGroups'}) eq 'HASH');
+$cdb->set_prop('sshd', 'AllowGroups', $AllowGroups) if(ref($obj) eq 'HASH');
 
 esmith::event::set_json_log(1);
 my $success = esmith::event::event_signal('nethserver-openssh-save');
