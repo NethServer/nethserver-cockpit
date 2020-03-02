@@ -1,0 +1,41 @@
+{
+  use strict;
+  use warnings;
+  use esmith::AccountsDB;
+  use esmith::ConfigDB;
+  use NethServer::Password;
+
+  my $accountsDb = esmith::AccountsDB->open_ro();
+  my $db = esmith::ConfigDB->open_ro();
+  my $DomainName = $db->get_value('DomainName');
+  my $rootOtp = $db->get_prop('root','OtpStatus') || 'disabled';
+
+  if ($rootOtp eq 'enabled') {
+    if ( ! -f "/var/lib/nethserver/secrets/root") {
+        my $root =`/usr/bin/openssl rand -hex 20 > /var/lib/nethserver/secrets/root` || 'FIXME';
+    }
+    my $root = NethServer::Password::store('root');
+
+    $OUT .= "# HOTP for  root \n";
+    $OUT .= "HOTP/T30 root - ".$root."\n";
+    $OUT .= "HOTP root - ".$root."\n";
+  }
+
+  foreach my $account ($accountsDb->get_all_by_prop('type' => 'user')) {
+      if(($account->prop('OtpStatus') || '') eq 'enabled') {
+          my $name =  $account->key;
+          if ( ! -f "/var/lib/nethserver/secrets/$name") {
+              my $password =`/usr/bin/openssl rand -hex 20 > /var/lib/nethserver/secrets/$name` || 'FIXME';
+          }
+          my $password = NethServer::Password::store($name);
+
+          # we need to display user and user@domain.org
+          $OUT .= "# HOTP for $name\n";
+          $OUT .= "HOTP/T30 ".$name." - $password"."\n";
+          $OUT .= "HOTP ".$name." - $password"."\n";
+          $name =~ s/\@$DomainName$//;
+          $OUT .= "HOTP/T30 ".$name." - $password"."\n";
+          $OUT .= "HOTP ".$name." - $password"."\n";
+      }
+  }
+}
