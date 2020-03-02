@@ -38,9 +38,9 @@ event_templates('nethserver-cockpit-update', qw(
     /etc/nethserver/ldappasswd.conf
     /etc/sudoers.d/30_nethserver_cockpit_roles
     /etc/sudoers.d/55_nsapi_perms
-    /etc/liboath/users.oath
-    /etc/pam.d/cockpit
     /etc/nethserver/cockpit.allow
+    /etc/nethserver/otp.force
+    /etc/nethserver/otp.secret
     /etc/pam.d/cockpit
 ));
 
@@ -104,12 +104,3 @@ safe_symlink('/bin/true', 'root/etc/e-smith/events/test-success/S20true');
 safe_symlink('/bin/false', 'root/etc/e-smith/events/test-failure/S20false');
 safe_symlink('/bin/true', 'root/etc/e-smith/validators/test-success/S20true');
 safe_symlink('/bin/false', 'root/etc/e-smith/validators/test-failure/S20false');
-
-# oath time based passwordPolicy
-
-for my $event (qw( user-modify user-delete  user-create))
-{
-    event_templates ($event, qw(
-        /etc/liboath/users.oath
-    ));
-}
