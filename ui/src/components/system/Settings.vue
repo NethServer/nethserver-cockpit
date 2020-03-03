@@ -98,6 +98,46 @@
           </div>
         </div>
       </form>
+      
+      <div  class="divider"></div>
+      <h3 >{{$t('settings.otp')}}</h3>
+      <form class="form-horizontal" v-on:submit.prevent="saveSettings('otp')">
+        <div :class="['form-group', errors.otp.hasError ? 'has-error' : '']">
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.otp_enable')}}</label>
+          <div class="col-sm-5">
+            <toggle-button
+              class="min-toggle"
+              :width="40"
+              :height="20"
+              :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+              :value="otp.OtpStatus"
+              :sync="true"
+              @change="toggleSettingsOtp()"
+            />
+            <span v-if="errors.otp.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.otp.message)}}
+            </span>
+          </div>
+        </div>
+        <div v-if="view.otpIsLoaded && otp.OtpStatus">
+          <qrcode-vue :value="otp.Token" :size="otp.size" level="H"></qrcode-vue>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">
+            <div
+              v-if="loaders.otp"
+              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
+            ></div>
+          </label>
+          <div class="col-sm-2">
+            <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+          </div>
+        </div>
+      </form>
 
       <div v-if="view.isAdmin" class="divider"></div>
       <h3 v-if="view.isAdmin">{{$t('settings.smart_host')}}</h3>
@@ -487,11 +527,12 @@
 
 <script>
 import PasswordMeter from "../../directives/PasswordMeter.vue";
-
+ import QrcodeVue from 'qrcode.vue'
 export default {
   name: "Settings",
   components: {
-    PasswordMeter
+    PasswordMeter,
+    QrcodeVue
   },
   mounted() {
     this.initGraphics();
@@ -504,7 +545,14 @@ export default {
       view: {
         isLoaded: false,
         isRoot: false,
-        isAdmin: false
+        isAdmin: false,
+        otpIsLoaded: false
+      },
+      otp:{
+        username: "",
+        Token: "",
+        size: 200,
+        OtpStatus: false
       },
       hints: {},
       settings: {
@@ -537,7 +585,8 @@ export default {
         root: false,
         cockpit: false,
         hints: false,
-        logrotate: false
+        logrotate: false,
+        otp: false
       },
       errors: this.initErrors(),
       newUser: {
@@ -616,6 +665,10 @@ export default {
         Rotate: {
           hasError: false,
           message: ""
+        },
+        otp: {
+          hasError: false,
+          message: ""
         }
       };
     },
@@ -681,11 +734,40 @@ export default {
           }
           context.view.isAdmin = success.status.isAdmin == 1;
           context.view.isRoot = success.status.isRoot == 1;
+          context.otp.username = success.status.username;
+          context.getOtpToken(context.otp.username);
         },
         function(error) {
           console.error(error);
         },
         false
+      );
+    },
+    getOtpToken(username) {
+      var context = this;
+
+      context.view.otpIsLoaded = false;
+      context.exec(
+        ["system-settings/getOtpToken"],
+        {
+          username: username
+        },
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+          context.otp.OtpStatus = success.OtpStatus == "enabled";
+          context.otp.Token = success.Token;
+          context.view.otpIsLoaded = true;
+
+        },
+        function(error) {
+          console.error(error);
+        },
+        true
       );
     },
     getSettings() {
@@ -755,6 +837,9 @@ export default {
     },
     toggleSettingsHints() {
       this.settings.cockpit.ShowHints = !this.settings.cockpit.ShowHints;
+    },
+    toggleSettingsOtp() {
+      this.otp.OtpStatus = !this.otp.OtpStatus;
     },
     toggleSettingsSmartHost() {
       this.settings.smarthost.SmartHostStatus = !this.settings.smarthost
@@ -842,6 +927,17 @@ export default {
             ShowHints: context.settings.cockpit.ShowHints
               ? "enabled"
               : "disabled"
+          };
+          sudo = true;
+          break;
+
+        case "otp":
+          settingsObj = {
+            action: "otp",
+            OtpStatus: context.otp.OtpStatus
+              ? "enabled"
+              : "disabled",
+            username: context.otp.username
           };
           sudo = true;
           break;
