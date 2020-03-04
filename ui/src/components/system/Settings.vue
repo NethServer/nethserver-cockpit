@@ -968,6 +968,7 @@ export default {
               // get settings
               context.$parent.checkHints(function() {
                 context.getSettings();
+                context.getOtpToken(context.otp.username);
               });
 
               // reset passwords

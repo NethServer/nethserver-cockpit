@@ -24,9 +24,6 @@
   foreach my $account ($accountsDb->get_all_by_prop('type' => 'user')) {
       if(($account->prop('OtpStatus') || '') eq 'enabled') {
           my $name =  $account->key;
-          if ( ! -f "/var/lib/nethserver/secrets/$name") {
-              my $password =`/usr/bin/openssl rand -hex 20 > /var/lib/nethserver/secrets/$name` || 'FIXME';
-          }
           my $password = NethServer::Password::store($name);
 
           # we need to display user and user@domain.org
