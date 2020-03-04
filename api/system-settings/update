@@ -62,6 +62,22 @@ case $action in
         /sbin/e-smith/signal-event -j nethserver-base-update
         ;;
 
+    "otp")
+        OtpStatus=$(_get OtpStatus)
+        username=$(_get username)
+        if [[ $username = 'root' ]];then
+            /sbin/e-smith/config setprop root OtpStatus "$(_get OtpStatus)"
+        else
+            /sbin/e-smith/db accounts set "$(_get username)" user OtpStatus "$(_get OtpStatus)"
+        fi
+
+        if [[ $OtpStatus = 'disabled' ]]; then
+            /bin/rm /var/lib/nethserver/secrets/$username
+        fi
+
+        /sbin/e-smith/signal-event -j nethserver-cockpit-update
+        ;;
+
 esac
 
 if [ $? -gt 0 ]; then

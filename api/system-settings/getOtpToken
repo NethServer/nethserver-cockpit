@@ -1,0 +1,63 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2020 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+
+use warnings;
+use strict;
+use JSON;
+use esmith::AccountsDB;
+use esmith::ConfigDB;
+use NethServer::ApiTools;
+use Convert::Base32;
+
+my $dba = esmith::AccountsDB->open_ro;
+my $db = esmith::ConfigDB->open_ro;
+my $input = NethServer::ApiTools::readInput();
+my $username = $input->{'username'} || '';
+my $OtpStatus;
+
+if ($username ne 'root'){
+  $OtpStatus = $dba->get_prop($username,'OtpStatus') || 'disabled';
+} else {
+  $OtpStatus = $db->get_prop($username,'OtpStatus') || 'disabled';
+}
+my $file = '/var/lib/nethserver/secrets/'.$username;
+
+if(! $file || ! -f $file ) {
+    my $file = `/usr/bin/openssl rand -hex 20 > /var/lib/nethserver/secrets/$username`;
+}
+
+# Perlish way to slurp a text file:
+ my $token = do {
+           local $/ = undef;
+           open my $fh, "<", $file
+           or warn "[WARNING] could not open token file $file: $!\n";
+           <$fh>;
+         };
+# clean up
+$token  =~ s/\R//g;
+
+# we need to convert the hex token to binary base32
+my $secret = uc encode_base32( pack("H*", $token) );
+
+print encode_json ({"OtpStatus" => $OtpStatus,"Token" => "otpauth://totp/$username?secret=$secret"});
+exit(0);
