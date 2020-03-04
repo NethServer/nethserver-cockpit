@@ -107,7 +107,7 @@
     "nethserver-cgp": "Collectd Charts",
     "nethserver-sogo": "SOGo",
     "nethserver-hotsync": "HotSync",
-    "nethserver-blacklist": "Blacklist",
+    "nethserver-blacklist": "Threat shield",
     "nethserver-mssql": "Microsoft SQL Server"
   },
   "dashboard": {
