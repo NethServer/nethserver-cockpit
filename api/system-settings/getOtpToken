@@ -61,5 +61,14 @@ $token  =~ s/\R//g;
 # we need to convert the hex token to binary base32
 my $secret = uc encode_base32( pack("H*", $token) );
 
-print encode_json ({"OtpStatus" => $OtpStatus,"Token" => "otpauth://totp/$username\@$systemName.$domainName?secret=$secret"});
+# we need to find the PIN for single use (recovery)
+open(FH, "/usr/bin/oathtool  -w 4 \$(cat /var/lib/nethserver/secrets/$username)|");
+my @ret;
+while (<FH>) {
+    chomp;
+    my ($code) = split('\n');
+    push(@ret, $code);
+}
+
+print encode_json ({"Code"=> \@ret,"OtpStatus" => $OtpStatus,"Token" => "otpauth://totp/$username\@$systemName.$domainName?secret=$secret"});
 exit(0);
