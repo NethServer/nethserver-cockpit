@@ -101,6 +101,7 @@
       
       <div  class="divider"></div>
       <h3 >{{$t('settings.otp')}}</h3>
+      <h4>{{$t('settings.otp_general_informations')}}</h4>
       <form class="form-horizontal" v-on:submit.prevent="saveSettings('otp')">
         <div :class="['form-group', errors.otp.hasError ? 'has-error' : '']">
           <label
@@ -123,8 +124,38 @@
             </span>
           </div>
         </div>
-        <div v-if="view.otpIsLoaded && otp.OtpStatus">
-          <qrcode-vue :value="otp.Token" :size="otp.size" level="H"></qrcode-vue>
+        <legend  v-if="view.otpIsLoaded && otp.OtpStatus" class="fields-section-header-pf" aria-expanded="true">
+          <span
+            :class="['fa fa-angle-right field-section-toggle-pf', otp.secrety ? 'fa-angle-down' : '']"
+          ></span>
+          <a
+            class="field-section-toggle-pf"
+            @click="toggleOtpSecretyMode()"
+            >{{$t('settings.otp_toggle_secrety_mode')}}
+          </a>
+        </legend>
+        <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety" class="form-group" >
+            <label
+              class="col-sm-2 control-label"
+              for="textInput-modal-markup"
+              >{{$t('settings.otp_Flash_QRcode')}}
+            </label>
+            <div class="col-sm-5" >
+              <qrcode-vue :value="otp.Token" :size="otp.size" level="H"></qrcode-vue>
+            </div>
+        </div>
+        <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety" class="form-group">
+            <label
+              class="col-sm-2 control-label"
+              for="textInput-modal-markup"
+              >{{$t('settings.otp_code_for_single_use')}}
+            </label>
+            <div class="col-sm-5">
+              <div v-for="c in otp.Code">
+                <span  >{{ c }}</span>
+                <br />
+              </div>
+            </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
@@ -551,8 +582,10 @@ export default {
       otp:{
         username: "",
         Token: "",
+        Code: [],
         size: 200,
-        OtpStatus: false
+        OtpStatus: false,
+        secrety: false
       },
       hints: {},
       settings: {
@@ -603,6 +636,10 @@ export default {
     initGraphics() {
       $("#app").css("background", "");
       $("#app").css("color", "");
+    },
+    toggleOtpSecretyMode() {
+      this.otp.secrety = !this.otp.secrety;
+      this.$forceUpdate();
     },
     initErrors() {
       return {
@@ -761,6 +798,7 @@ export default {
           }
           context.otp.OtpStatus = success.OtpStatus == "enabled";
           context.otp.Token = success.Token;
+          context.otp.Code = success.Code;
           context.view.otpIsLoaded = true;
 
         },
