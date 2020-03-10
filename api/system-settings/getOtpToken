@@ -70,5 +70,5 @@ while (<FH>) {
     push(@ret, $code);
 }
 
-print encode_json ({"Code"=> \@ret,"OtpStatus" => $OtpStatus,"Token" => "otpauth://totp/$username\@$systemName.$domainName?secret=$secret"});
+print encode_json ({"Secret"=> $secret,"Code"=> \@ret,"OtpStatus" => $OtpStatus,"Token" => "otpauth://totp/$username\@$systemName.$domainName?secret=$secret"});
 exit(0);
