@@ -157,6 +157,32 @@
               </div>
             </div>
         </div>
+        <div  v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety"
+          :class="['form-group', otp.TokenValidationError ? 'has-error' : '']"
+        >
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">
+            {{$t('settings.validate_the_QRcode_token')}}
+          </label>
+          <form v-on:submit.prevent="testToken(otp.TokenValidation)">
+            <div class="col-sm-3">
+              <input 
+                type="number" min="0" max="999999" placeholder="000000" 
+                v-model="otp.TokenValidation" class="form-control" 
+              />
+              <span v-if="otp.TokenValidationError" class="help-block">
+                {{$t('validation.validation_failed')}}:
+                {{$t('validation.TokenValidationError')}}
+              </span>
+              <span v-if="otp.TokenIsValid" >
+                {{$t('validation.TokenValidationOK')}}
+                <span class="fa fa-check green copy-ok"></span>
+              </span>
+            </div>
+            <div class="col-sm-2">
+              <button class="btn btn-default" type="submit">{{$t('settings.test_token')}}</button>
+            </div>
+          </form>
+        </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
             <div
@@ -165,7 +191,7 @@
             ></div>
           </label>
           <div class="col-sm-2">
-            <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+            <button :disabled="!otp.TokenIsValid && otp.OtpStatus" class="btn btn-primary" type="submit">{{$t('save')}}</button>
           </div>
         </div>
       </form>
@@ -558,7 +584,10 @@
 
 <script>
 import PasswordMeter from "../../directives/PasswordMeter.vue";
- import QrcodeVue from 'qrcode.vue'
+import QrcodeVue from 'qrcode.vue'
+import { authenticator } from 'otplib';
+
+
 export default {
   name: "Settings",
   components: {
@@ -585,7 +614,11 @@ export default {
         Code: [],
         size: 200,
         OtpStatus: false,
-        secrety: false
+        secrety: false,
+        TokenIsValid: false,
+        TokenValidationError: false,
+        TokenValidation: "",
+        Secret: ""
       },
       hints: {},
       settings: {
@@ -742,6 +775,19 @@ export default {
         }
       );
     },
+    testToken(token) {
+      var context = this;
+      var secret = context.otp.Secret;
+      
+      context.otp.TokenIsValid = authenticator.verify({ token, secret });
+      
+      if (context.otp.TokenIsValid) {
+        context.otp.TokenValidationError = false;
+      }
+      else if (!context.otp.TokenIsValid) {
+        context.otp.TokenValidationError = true;
+      }
+    },
     getHints(callback) {
       var context = this;
       context.execHints(
@@ -798,6 +844,7 @@ export default {
           }
           context.otp.OtpStatus = success.OtpStatus == "enabled";
           context.otp.Token = success.Token;
+          context.otp.Secret = success.Secret;
           context.otp.Code = success.Code;
           context.view.otpIsLoaded = true;
 
@@ -1008,6 +1055,11 @@ export default {
                 context.getSettings();
                 context.getOtpToken(context.otp.username);
               });
+
+              // reset otp 
+              context.otp.TokenIsValid = false;
+              context.otp.TokenValidationError = false;
+              context.otp.TokenValidation = "";
 
               // reset passwords
               context.newUser.newPassword = "";
