@@ -1,26 +1,17 @@
 {
   use strict;
   use warnings;
-  use esmith::AccountsDB;
   use esmith::ConfigDB;
-  use NethServer::Password;
 
-  my $accountsDb = esmith::AccountsDB->open_ro();
   my $db = esmith::ConfigDB->open_ro();
-  my $DomainName = $db->get_value('DomainName');
-  my $rootOtp = $db->get_prop('root','OtpStatus') || 'disabled';
+  my $domain = $db->get_value('DomainName');
 
-  if ($rootOtp eq 'enabled') {
-      $OUT .= "root\n";
-  }
-
-  foreach my $account ($accountsDb->get_all_by_prop('type' => 'user')) {
-      if(($account->prop('OtpStatus') || '') eq 'enabled') {
-          my $name =  $account->key;
-          # we need to display user and user@domain.org
-          $OUT .= "$name\n";
-          $name =~ s/\@$DomainName$//;
-          $OUT .= "$name\n";
-      }
+  foreach my $name (glob('/var/lib/nethserver/2fa/*')) {
+      $name =~ s|/var/lib/nethserver/2fa/||g;
+      $OUT .= "$name\n";
+      # we need to display user and user@domain.org
+      next if ($name eq 'root');
+      $name =~ s/\@$domain$//;
+      $OUT .= "$name\n";
   }
 }
