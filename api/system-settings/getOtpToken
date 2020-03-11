@@ -20,49 +20,39 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-
 use warnings;
 use strict;
 use JSON;
-use esmith::AccountsDB;
 use esmith::ConfigDB;
 use NethServer::ApiTools;
 use Convert::Base32;
+use NethServer::Password;
 
-my $dba = esmith::AccountsDB->open_ro;
 my $db = esmith::ConfigDB->open_ro;
 my $input = NethServer::ApiTools::readInput();
 my $username = $input->{'username'} || '';
 my $OtpStatus;
+my $key;
 my $domainName = $db->get_value('DomainName');
 my $systemName = $db->get_value('SystemName');
 
-if ($username ne 'root'){
-  $OtpStatus = $dba->get_prop($username,'OtpStatus') || 'disabled';
+my $file = '/var/lib/nethserver/2fa/'.$username;
+if (! $file || ! -f $file ) {
+    $key = `/usr/bin/openssl rand -hex 20`;
+    $OtpStatus = 'disabled';
 } else {
-  $OtpStatus = $db->get_prop($username,'OtpStatus') || 'disabled';
-}
-my $file = '/var/lib/nethserver/secrets/'.$username;
-
-if(! $file || ! -f $file ) {
-    my $file = `/usr/bin/openssl rand -hex 20 > /var/lib/nethserver/secrets/$username`;
+    $key = NethServer::Password->new($username,{'defaultDir' => '/var/lib/nethserver/2fa/'})->getAscii();
+    $OtpStatus = 'enabled';
 }
 
-# Perlish way to slurp a text file:
- my $token = do {
-           local $/ = undef;
-           open my $fh, "<", $file
-           or warn "[WARNING] could not open token file $file: $!\n";
-           <$fh>;
-         };
-# clean up
-$token  =~ s/\R//g;
+## clean up
+$key  =~ s/\R//g;
 
-# we need to convert the hex token to binary base32
-my $secret = uc encode_base32( pack("H*", $token) );
+# we need to convert the hex token to binary base32 
+my $secret = uc encode_base32( pack("H*", $key) );
 
 # we need to find the PIN for single use (recovery)
-open(FH, "/usr/bin/oathtool  -w 4 \$(cat /var/lib/nethserver/secrets/$username)|");
+open(FH, "/usr/bin/oathtool  -w 4 $key|");
 my @ret;
 while (<FH>) {
     chomp;
@@ -70,5 +60,6 @@ while (<FH>) {
     push(@ret, $code);
 }
 
-print encode_json ({"Secret"=> $secret,"Code"=> \@ret,"OtpStatus" => $OtpStatus,"Token" => "otpauth://totp/$username\@$systemName.$domainName?secret=$secret"});
+print encode_json ({"Key" => $key,"Secret"=> $secret,"Code"=> \@ret,"OtpStatus" => $OtpStatus,
+    "Token" => "otpauth://totp/$username\@$systemName.$domainName?secret=$secret"});
 exit(0);
