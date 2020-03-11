@@ -618,7 +618,8 @@ export default {
         TokenIsValid: false,
         TokenValidationError: false,
         TokenValidation: "",
-        Secret: ""
+        Secret: "",
+        Key: ""
       },
       hints: {},
       settings: {
@@ -845,6 +846,7 @@ export default {
           context.otp.OtpStatus = success.OtpStatus == "enabled";
           context.otp.Token = success.Token;
           context.otp.Secret = success.Secret;
+          context.otp.Key = success.Key;
           context.otp.Code = success.Code;
           context.view.otpIsLoaded = true;
 
@@ -1022,7 +1024,8 @@ export default {
             OtpStatus: context.otp.OtpStatus
               ? "enabled"
               : "disabled",
-            username: context.otp.username
+            username: context.otp.username,
+            Key: context.otp.Key
           };
           sudo = true;
           break;
