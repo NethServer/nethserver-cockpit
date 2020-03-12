@@ -830,7 +830,15 @@
     "log_rotate": "Rotate logs",
     "test_mail": "Test mail",
     "mail_sent_ok": "Mail sent successfully!",
-    "mail_sent_error": "Mail not sent."
+    "mail_sent_error": "Mail not sent.",
+    "otp": "Two-factor authentication",
+    "otp_general_informations": "Add a second factor of authentication based on time",
+    "otp_enable": "Enable 2FA",
+    "otp_toggle_secrety_mode": "Secrety mode",
+    "otp_Flash_QRcode": "Flash the QRcode",
+    "otp_code_for_single_use": "One time password for recovery",
+    "validate_the_QRcode_token": "Validate the time based token",
+    "test_token": "Test the token"
   },
   "logs": {
     "title": "Logs"
@@ -1152,7 +1160,9 @@
     "port_list_empty": "This attribute is mandatory",
     "port_list_invalid": "Invalid list of ports",
     "tcp_ports_and_udp_ports_empty": "At least one TCP or UDP port must be specified",
-    "Not_the_expected_values": "These values are not expected" 
+    "Not_the_expected_values": "These values are not expected",
+    "TokenValidationError": "The token is not good",
+    "TokenValidationOK": "The token is good"
   },
   "docs": {
     "more_info_about": "More info about",
