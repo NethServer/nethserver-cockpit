@@ -37,7 +37,7 @@ my $domainName = $db->get_value('DomainName');
 my $systemName = $db->get_value('SystemName');
 
 my $file = '/var/lib/nethserver/2fa/'.$username;
-if (! $file || ! -f $file ) {
+if (! -f $file) {
     $key = `/usr/bin/openssl rand -hex 20`;
     $OtpStatus = 'disabled';
 } else {

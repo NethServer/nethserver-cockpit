@@ -1,11 +1,5 @@
 {
-  use strict;
-  use warnings;
-  use esmith::ConfigDB;
   use NethServer::Password;
-
-  my $db = esmith::ConfigDB->open_ro();
-  my $DomainName = $db->get_value('DomainName');
 
   foreach my $name (glob('/var/lib/nethserver/2fa/*')) {
       $name =~ s|/var/lib/nethserver/2fa/||g;
