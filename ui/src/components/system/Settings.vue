@@ -849,6 +849,11 @@ export default {
           context.otp.Key = success.Key;
           context.otp.Code = success.Code;
           context.view.otpIsLoaded = true;
+          // if otp is disabled, the key is generated each time the page is Loaded
+          // we can display the key it doesn't matter
+          if (context.otp.OtpStatus === false) {
+            context.otp.secrety = true;
+          }
 
         },
         function(error) {
