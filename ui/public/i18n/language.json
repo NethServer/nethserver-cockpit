@@ -834,11 +834,11 @@
     "otp": "Two-factor authentication",
     "otp_general_informations": "Add a second factor of authentication based on time",
     "otp_enable": "Enable 2FA",
-    "otp_toggle_secrety_mode": "Secrety mode",
-    "otp_Flash_QRcode": "Flash the QRcode",
-    "otp_code_for_single_use": "One time password for recovery",
-    "validate_the_QRcode_token": "Validate the time based token",
-    "test_token": "Test the token"
+    "otp_toggle_secrety_mode": "Sensible information",
+    "otp_Flash_QRcode": "Scan the QRcode",
+    "otp_code_for_single_use": "Recovery codes",
+    "validate_the_QRcode_token": "Verification code",
+    "test_token": "Check code"
   },
   "logs": {
     "title": "Logs"
