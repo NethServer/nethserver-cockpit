@@ -833,12 +833,15 @@
     "mail_sent_error": "Mail not sent.",
     "otp": "Two-factor authentication",
     "otp_general_informations": "Add a second factor of authentication based on time",
-    "otp_enable": "Enable 2FA",
+    "otp_enable": "Enable 2FA for user {name}",
     "otp_toggle_secrety_mode": "Sensible information",
-    "otp_Flash_QRcode": "Scan the QRcode",
+    "otp_Scan_QRcode": "Scan the QRcode",
     "otp_code_for_single_use": "Recovery codes",
     "validate_the_QRcode_token": "Verification code",
-    "test_token": "Check code"
+    "test_token": "Check code",
+    "otp_Step1_Download_FreeOTP":"1. Download your preferred application to your phone. If you do not have a prefered application, we recommend using FreeOTP",
+    "otp_Step2_scan_with_FreeOTP": "2. Use your application to take a photo of the QR code",
+    "otp_Step3_Validate_the_X-digit_code": "3. Enter the x-digit code provided by your application and click on 'Check code' button"
   },
   "logs": {
     "title": "Logs"
@@ -1184,6 +1187,9 @@
     "list_of_ports": "Enter one or more port numbers separated by a comma, e.g.: '8081, 9292'",
     "AllowGroupsToSSH_SFTP":"Select one or more groups to grant SSH and/or SFTP access. Administrators are always granted SSH and SFTP access. The root account is still subject to the \"Allow root login\" checkbox setting.",
     "ssh_everyone_info": "Set the basic permission for non administrative accounts.",
-    "ssh_administrators_info": "Administrators are always granted SSH and SFTP access."
+    "ssh_administrators_info": "Administrators are always granted SSH and SFTP access.",
+    "otp_enable": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin venenatis lorem ac mauris tempus viverra. Integer quis porta velit. Vivamus.",
+    "otp_Scan_QRcode": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin venenatis lorem ac mauris tempus viverra. Integer quis porta velit. Vivamus.",
+    "otp_code_for_single_use": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin venenatis lorem ac mauris tempus viverra. Integer quis porta velit. Vivamus."
   }
 }

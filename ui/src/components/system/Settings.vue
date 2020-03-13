@@ -98,16 +98,21 @@
           </div>
         </div>
       </form>
-      
       <div  class="divider"></div>
       <h3 >{{$t('settings.otp')}}</h3>
-      <h4>{{$t('settings.otp_general_informations')}}</h4>
       <form class="form-horizontal" v-on:submit.prevent="saveSettings('otp')">
         <div :class="['form-group', errors.otp.hasError ? 'has-error' : '']">
           <label
             class="col-sm-2 control-label"
             for="textInput-modal-markup"
-          >{{$t('settings.otp_enable')}}</label>
+          >{{$t('settings.otp_enable',{name: this.otp.username})}}
+          <doc-info
+            :placement="'top'"
+            :title="$t('settings.otp_enable',{name: this.otp.username})"
+            :chapter="'otp_enable'"
+            :inline="true"
+          ></doc-info>
+          </label>
           <div class="col-sm-5">
             <toggle-button
               class="min-toggle"
@@ -124,6 +129,18 @@
             </span>
           </div>
         </div>
+        <div  v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety">
+          <div >
+            <label
+              >{{$t('settings.otp_Step1_Download_FreeOTP')}}
+            </label>
+          </div>
+          <div >
+              <label
+                >{{$t('settings.otp_Step2_scan_with_FreeOTP')}}
+              </label>
+          </div>
+        </div>
         <legend  v-if="view.otpIsLoaded && otp.OtpStatus" class="fields-section-header-pf" aria-expanded="true">
           <span
             :class="['fa fa-angle-right field-section-toggle-pf', otp.secrety ? 'fa-angle-down' : '']"
@@ -138,24 +155,24 @@
             <label
               class="col-sm-2 control-label"
               for="textInput-modal-markup"
-              >{{$t('settings.otp_Flash_QRcode')}}
+              >{{$t('settings.otp_Scan_QRcode')}}
+              <doc-info
+                :placement="'top'"
+                :title="$t('settings.otp_Scan_QRcode')"
+                :chapter="'otp_Scan_QRcode'"
+                :inline="true"
+              ></doc-info>
             </label>
             <div class="col-sm-5" >
               <qrcode-vue :value="otp.Token" :size="otp.size" level="H"></qrcode-vue>
             </div>
         </div>
-        <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety" class="form-group">
+        <div  v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety">
+          <div >
             <label
-              class="col-sm-2 control-label"
-              for="textInput-modal-markup"
-              >{{$t('settings.otp_code_for_single_use')}}
+              >{{$t('settings.otp_Step3_Validate_the_X-digit_code')}}
             </label>
-            <div class="col-sm-5">
-              <div v-for="c in otp.Code">
-                <span  >{{ c }}</span>
-                <br />
-              </div>
-            </div>
+          </div>
         </div>
         <div  v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety"
           :class="['form-group', otp.TokenValidationError ? 'has-error' : '']"
@@ -193,6 +210,25 @@
           <div class="col-sm-2">
             <button :disabled="!otp.TokenIsValid && otp.OtpStatus" class="btn btn-primary" type="submit">{{$t('save')}}</button>
           </div>
+        </div>
+        <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety" class="form-group">
+            <label
+              class="col-sm-2 control-label"
+              for="textInput-modal-markup"
+              >{{$t('settings.otp_code_for_single_use')}}
+              <doc-info
+                :placement="'top'"
+                :title="$t('settings.otp_code_for_single_use')"
+                :chapter="'otp_code_for_single_use'"
+                :inline="true"
+              ></doc-info>
+            </label>
+            <div class="col-sm-5">
+              <div v-for="c in otp.Code">
+                <span  >{{ c }}</span>
+                <br />
+              </div>
+            </div>
         </div>
       </form>
 
