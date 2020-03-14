@@ -148,10 +148,11 @@ Cmnd_Alias NSAPI_SYSTEM_SUBSCRIPTION = \
     /usr/libexec/nethserver/api/system-subscription/validate
 
 
-Cmnd_Alias NSAPI_SYSTEM_SETTINGS = \
-    /usr/libexec/nethserver/api/system-settings/check-default-password, \
-    /usr/libexec/nethserver/api/system-settings/update, \
-    /usr/libexec/nethserver/api/system-settings/validate
+    Cmnd_Alias NSAPI_SYSTEM_SETTINGS = \
+        /usr/libexec/nethserver/api/system-settings/check-default-password, \
+        /usr/libexec/nethserver/api/system-settings/update, \
+        /usr/libexec/nethserver/api/system-settings/validate, \
+        /usr/libexec/nethserver/api/system-settings/getOtpToken
 
 
 Cmnd_Alias NSAPI_SYSTEM_HOSTNAME = \
