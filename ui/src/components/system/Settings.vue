@@ -184,7 +184,7 @@
             <div class="col-sm-3">
               <input 
                 type="number" min="0" max="999999" placeholder="000000" 
-                v-model="otp.TokenValidation" class="form-control" 
+                v-model="otp.TokenValidation" class="form-control noArrows" 
               />
               <span v-if="otp.TokenValidationError" class="help-block">
                 {{$t('validation.validation_failed')}}:
@@ -1151,5 +1151,17 @@ export default {
 }
 .adjust-index {
   z-index: 1;
+}
+/* Chrome, Safari, Edge, Opera */
+
+input[type=number].noArrows::-webkit-outer-spin-button,
+input[type=number].noArrows::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number].noArrows {
+  -moz-appearance: textfield;
 }
 </style>
