@@ -16,7 +16,8 @@ Requires:       cockpit, cockpit-storaged
 Requires:       jq, openldap-clients, expect, python-pwquality
 Requires:       nethserver-subscription
 Requires:       arp-scan
-Requires:       nethserver-lang-cockpit
+Requires:       nethserver-lang-cockpit 
+Requires:       pam_oath liboath perl-Convert-Base32 oathtool
 Obsoletes:      cockpit-packagekit, PackageKit, PackageKit-yum
 
 %description
@@ -46,6 +47,7 @@ gzip -v %{buildroot}/usr/share/cockpit/nethserver/js/*
 gzip -v %{buildroot}/usr/share/cockpit/nethserver/css/*
 mkdir -p %{buildroot}/usr/libexec/nethserver/
 mv api/ %{buildroot}/usr/libexec/nethserver/
+mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{genfilelist}  %{buildroot} | \
     grep -v \
     -e '^/usr/libexec/nethserver/api/lib' \
@@ -60,6 +62,7 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %config /usr/share/cockpit/nethserver/categories/categories.json
 %attr(0440,root,root) /etc/sudoers.d/50_nsapi
 %attr(0440,root,root) %ghost /etc/sudoers.d/55_nsapi_perms
+%attr(0440,root,root) %dir %{_localstatedir}/lib/nethserver/2fa
 %dir %{_nseventsdir}/%{name}-update
 %dir /usr/libexec/nethserver/api/
 

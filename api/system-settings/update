@@ -62,6 +62,22 @@ case $action in
         /sbin/e-smith/signal-event -j nethserver-base-update
         ;;
 
+    "otp")
+        OtpStatus=$(_get OtpStatus)
+        username=$(_get username)
+        Key=$(_get Key)
+
+        if [[ $OtpStatus = 'enabled' ]];then
+            echo $Key > /var/lib/nethserver/2fa/$username
+            chmod 600 /var/lib/nethserver/2fa/$username
+        elif [[ $OtpStatus = 'disabled' ]]; then
+            /bin/rm -rf /var/lib/nethserver/2fa/$username
+        fi
+
+        /sbin/e-smith/signal-event -j nethserver-cockpit-update
+        ;;
+
+
 esac
 
 if [ $? -gt 0 ]; then

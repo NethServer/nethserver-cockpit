@@ -96,5 +96,6 @@ print encode_json({
     "status" => {
         "isRoot" => $isRoot,
         "isAdmin" => $isAdmin,
+        "username" => scalar getpwuid $<
     }
 });

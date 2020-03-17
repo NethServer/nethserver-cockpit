@@ -1,0 +1,19 @@
+{
+  use NethServer::Password;
+
+  foreach my $name (glob('/var/lib/nethserver/2fa/*')) {
+      $name =~ s|/var/lib/nethserver/2fa/||g;
+      my $password = NethServer::Password->new($name,{'defaultDir' => '/var/lib/nethserver/2fa/'})->getAscii();
+      
+      # we need to display user and user@domain.org
+      $OUT .= "# HOTP for $name\n";
+      $OUT .= "HOTP/T30 ".$name." - $password"."\n";
+      $OUT .= "HOTP ".$name." - $password"."\n";
+
+      next if ($name eq 'root');
+
+      $name =~ s/\@$DomainName$//;
+      $OUT .= "HOTP/T30 ".$name." - $password"."\n";
+      $OUT .= "HOTP ".$name." - $password"."\n";
+  }
+}

@@ -1,0 +1,10 @@
+{
+  foreach my $name (glob('/var/lib/nethserver/2fa/*')) {
+      $name =~ s|/var/lib/nethserver/2fa/||g;
+      $OUT .= "$name\n";
+      # we need to display user and user@domain.org
+      next if ($name eq 'root');
+      $name =~ s/\@$DomainName//;
+      $OUT .= "$name\n";
+  }
+}
