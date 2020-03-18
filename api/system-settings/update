@@ -71,13 +71,8 @@ if [[ $username = 'root' ]];then
     secret_path=/root/.2fa.secret
 fi
         if [[ $OtpStatus = 'enabled' ]];then
-            if [[ $username = 'root' ]];then
-                echo $Key > /root/.2fa.secret
-                chmod 600 /root/.2fa.secret
-            else 
-                echo $Key > /var/lib/nethserver/home/$username/.2fa.secret
-                chmod 600 /var/lib/nethserver/home/$username/.2fa.secret
-            fi
+            echo $Key > $secret_path
+            chmod 600 $secret_path
         elif [[ $OtpStatus = 'disabled' ]]; then
             if [[ $username = 'root' ]];then
                 /bin/rm -rf /root/.2fa.secret
