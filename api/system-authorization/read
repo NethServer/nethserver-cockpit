@@ -38,6 +38,8 @@ my %pathMap = (
 );
 my $isAdmin = 0;
 my $isRoot = $> eq 0 ? 1 : 0;
+my $username = scalar getpwuid $<;
+$username =~ s/@.*//;
 
 $ENV{'LANG'} = 'C';
 my $skip = 1;
@@ -96,6 +98,6 @@ print encode_json({
     "status" => {
         "isRoot" => $isRoot,
         "isAdmin" => $isAdmin,
-        "username" => scalar getpwuid $<
+        "username" => $username
     }
 });

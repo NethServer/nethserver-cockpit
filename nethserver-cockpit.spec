@@ -62,7 +62,6 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %config /usr/share/cockpit/nethserver/categories/categories.json
 %attr(0440,root,root) /etc/sudoers.d/50_nsapi
 %attr(0440,root,root) %ghost /etc/sudoers.d/55_nsapi_perms
-%attr(0440,root,root) %dir %{_localstatedir}/lib/nethserver/2fa
 %dir %{_nseventsdir}/%{name}-update
 %dir /usr/libexec/nethserver/api/
 

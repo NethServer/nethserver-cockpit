@@ -895,7 +895,7 @@ export default {
         function(error) {
           console.error(error);
         },
-        true
+        false //no sudo
       );
     },
     getSettings() {
@@ -1068,7 +1068,7 @@ export default {
             username: context.otp.username,
             Key: context.otp.Key
           };
-          sudo = true;
+          sudo = false;
           break;
       }
 

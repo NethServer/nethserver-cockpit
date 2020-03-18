@@ -28,7 +28,8 @@ Cmnd_Alias NSAPI_PUBLIC = \
     /usr/libexec/nethserver/api/system-services/hints, \
     /usr/libexec/nethserver/api/system-settings/hints, \
     /usr/libexec/nethserver/api/system-subscription/hints, \
-    /usr/libexec/nethserver/api/system-tls-policy/hints
+    /usr/libexec/nethserver/api/system-tls-policy/hints, \
+    /sbin/e-smith/signal-event -j otp-save
 
 
 Cmnd_Alias NSAPI_SYSTEM_DISK_USAGE = \
@@ -151,8 +152,7 @@ Cmnd_Alias NSAPI_SYSTEM_SUBSCRIPTION = \
     Cmnd_Alias NSAPI_SYSTEM_SETTINGS = \
         /usr/libexec/nethserver/api/system-settings/check-default-password, \
         /usr/libexec/nethserver/api/system-settings/update, \
-        /usr/libexec/nethserver/api/system-settings/validate, \
-        /usr/libexec/nethserver/api/system-settings/getOtpToken
+        /usr/libexec/nethserver/api/system-settings/validate
 
 
 Cmnd_Alias NSAPI_SYSTEM_HOSTNAME = \
