@@ -66,7 +66,10 @@ case $action in
         OtpStatus=$(_get OtpStatus)
         username=$(_get username)
         Key=$(_get Key)
-
+secret_path=/var/lib/nethserver/2fa/$username
+if [[ $username = 'root' ]];then
+    secret_path=/root/.2fa.secret
+fi
         if [[ $OtpStatus = 'enabled' ]];then
             if [[ $username = 'root' ]];then
                 echo $Key > /root/.2fa.secret
