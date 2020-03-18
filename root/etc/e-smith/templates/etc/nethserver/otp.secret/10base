@@ -1,19 +1,23 @@
 {
   use NethServer::Password;
 
-  foreach my $name (glob('/var/lib/nethserver/2fa/*')) {
-      $name =~ s|/var/lib/nethserver/2fa/||g;
-      my $password = NethServer::Password->new($name,{'defaultDir' => '/var/lib/nethserver/2fa/'})->getAscii();
-      
+  if (  -f '/root/.2fa.secret' ) {
+      my $pwd = NethServer::Password->new('.2fa.secret',{'defaultDir' => '/root'})->getAscii();
+      $OUT .= "# HOTP for root\n";
+      $OUT .= "HOTP/T30 root - $pwd\n";
+      $OUT .= "HOTP root - $pwd\n";
+  }
+
+  foreach my $name (glob('/var/lib/nethserver/home/*')) {
+      $name =~ s|/var/lib/nethserver/home/||g;
+      next if ( ! -f "/var/lib/nethserver/home/$name/.2fa.secret");
+      my $password = NethServer::Password->new('.2fa.secret',{'defaultDir' => "/var/lib/nethserver/home/$name"})->getAscii();
+
       # we need to display user and user@domain.org
       $OUT .= "# HOTP for $name\n";
-      $OUT .= "HOTP/T30 ".$name." - $password"."\n";
-      $OUT .= "HOTP ".$name." - $password"."\n";
-
-      next if ($name eq 'root');
-
-      $name =~ s/\@$DomainName$//;
-      $OUT .= "HOTP/T30 ".$name." - $password"."\n";
-      $OUT .= "HOTP ".$name." - $password"."\n";
+      $OUT .= "HOTP/T30 $name - $password\n";
+      $OUT .= "HOTP $name - $password\n";
+      $OUT .= "HOTP/T30 $name\@$DomainName - $password\n";
+      $OUT .= "HOTP $name\@$DomainName - $password\n";
   }
 }

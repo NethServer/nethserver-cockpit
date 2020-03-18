@@ -23,25 +23,34 @@
 use warnings;
 use strict;
 use JSON;
-use esmith::ConfigDB;
 use NethServer::ApiTools;
 use Convert::Base32;
 use NethServer::Password;
+use Sys::Hostname;
 
 my $db = esmith::ConfigDB->open_ro;
 my $input = NethServer::ApiTools::readInput();
 my $username = $input->{'username'} || '';
 my $OtpStatus;
 my $key;
-my $domainName = $db->get_value('DomainName');
-my $systemName = $db->get_value('SystemName');
+my $hostname = Sys::Hostname::hostname();
+my $file;
 
-my $file = '/var/lib/nethserver/2fa/'.$username;
+if ( $username eq 'root') {
+    $file = '/root/.2fa.secret';
+} else {
+    $file = "/var/lib/nethserver/home/$username/.2fa.secret";
+}
+
 if (! -f $file) {
     $key = `/usr/bin/openssl rand -hex 20`;
     $OtpStatus = 'disabled';
 } else {
-    $key = NethServer::Password->new($username,{'defaultDir' => '/var/lib/nethserver/2fa/'})->getAscii();
+    if ( $username eq 'root') {
+        $key = NethServer::Password->new('.2fa.secret',{'defaultDir' => '/root'})->getAscii();
+    } else {
+        $key = NethServer::Password->new('.2fa.secret',{'defaultDir' => '/var/lib/nethserver/home/$username'})->getAscii();
+    }
     $OtpStatus = 'enabled';
 }
 
@@ -61,5 +70,5 @@ while (<FH>) {
 }
 
 print encode_json ({"Key" => $key,"Secret"=> $secret,"Code"=> \@ret,"OtpStatus" => $OtpStatus,
-    "Token" => "otpauth://totp/$username\@$systemName.$domainName?secret=$secret"});
+    "Token" => "otpauth://totp/$username\@$hostname?secret=$secret"});
 exit(0);
