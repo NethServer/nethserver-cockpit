@@ -154,14 +154,17 @@ nethserver = {
             error(errorResp, errorData)
         });
     },
-    readLogs(input, stream, success, error, superuser = true) {
+    readLogs(input, stream, success, error, superuser = true, customApi = false) {
         var args = []
+
+        var api = customApi ? customApi : "system-logs/execute"
+        var apiPath = "/usr/libexec/nethserver/api/" + api
 
         if (superuser) {
             args[0] = "/usr/bin/sudo"
-            args[1] = "/usr/libexec/nethserver/api/system-logs/execute"
+            args[1] = apiPath
         } else {
-            args[0] = "/usr/libexec/nethserver/api/system-logs/execute"
+            args[0] = apiPath
         }
 
         var process = cockpit.spawn(args);
@@ -170,7 +173,7 @@ nethserver = {
             process.input(JSON.stringify(input))
         }
 
-        console.info("%cAPI logs: system-logs/execute\n%c$ " + (input ? " echo '" + JSON.stringify(input) + "' | " : "") + args.join(' ') + " | jq", "background: #1f2123; color: yellow;", "background: #1f2123; color: white; font-size: large, font-family: 'monospace';")
+        console.info("%cAPI logs: " + api + "\n%c$ " + (input ? " echo '" + JSON.stringify(input) + "' | " : "") + args.join(' ') + " | jq", "background: #1f2123; color: yellow;", "background: #1f2123; color: white; font-size: large, font-family: 'monospace';")
 
         if (stream) {
             process.stream(stream)
