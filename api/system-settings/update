@@ -66,15 +66,20 @@ case $action in
         OtpStatus=$(_get OtpStatus)
         username=$(_get username)
         Key=$(_get Key)
+        secret_path=/var/lib/nethserver/home/$username/.2fa.secret
 
-        if [[ $OtpStatus = 'enabled' ]];then
-            echo $Key > /var/lib/nethserver/2fa/$username
-            chmod 600 /var/lib/nethserver/2fa/$username
-        elif [[ $OtpStatus = 'disabled' ]]; then
-            /bin/rm -rf /var/lib/nethserver/2fa/$username
+        if [[ $username = 'root' ]];then
+            secret_path=/root/.2fa.secret
         fi
 
-        /sbin/e-smith/signal-event -j nethserver-cockpit-update
+        if [[ $OtpStatus = 'enabled' ]];then
+            echo $Key > $secret_path
+            chmod 600 $secret_path
+        elif [[ $OtpStatus = 'disabled' ]]; then
+            /bin/rm -f $secret_path
+        fi
+
+        /usr/bin/sudo /sbin/e-smith/signal-event -j otp-save
         ;;
 
 

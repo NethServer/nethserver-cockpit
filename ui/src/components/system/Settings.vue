@@ -129,6 +129,16 @@
             </span>
           </div>
         </div>
+        <legend  v-if="view.otpIsLoaded && otp.OtpStatus" class="fields-section-header-pf" aria-expanded="true">
+          <span
+            :class="['fa fa-angle-right field-section-toggle-pf', otp.secrety ? 'fa-angle-down' : '']"
+          ></span>
+          <a
+            class="field-section-toggle-pf"
+            @click="toggleOtpSecretyMode()"
+            >{{$t('settings.otp_toggle_secrety_mode')}}
+          </a>
+        </legend>
         <div  v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety">
           <div >
             <label
@@ -141,16 +151,6 @@
               </label>
           </div>
         </div>
-        <legend  v-if="view.otpIsLoaded && otp.OtpStatus" class="fields-section-header-pf" aria-expanded="true">
-          <span
-            :class="['fa fa-angle-right field-section-toggle-pf', otp.secrety ? 'fa-angle-down' : '']"
-          ></span>
-          <a
-            class="field-section-toggle-pf"
-            @click="toggleOtpSecretyMode()"
-            >{{$t('settings.otp_toggle_secrety_mode')}}
-          </a>
-        </legend>
         <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety" class="form-group" >
             <label
               class="col-sm-2 control-label"
@@ -200,17 +200,6 @@
             </div>
           </form>
         </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="textInput-modal-markup">
-            <div
-              v-if="loaders.otp"
-              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
-            ></div>
-          </label>
-          <div class="col-sm-2">
-            <button :disabled="!otp.TokenIsValid && otp.OtpStatus" class="btn btn-primary" type="submit">{{$t('save')}}</button>
-          </div>
-        </div>
         <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety" class="form-group">
             <label
               class="col-sm-2 control-label"
@@ -229,6 +218,17 @@
                 <br />
               </div>
             </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">
+            <div
+              v-if="loaders.otp"
+              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
+            ></div>
+          </label>
+          <div class="col-sm-2">
+            <button :disabled="!otp.TokenIsValid && otp.OtpStatus" class="btn btn-primary" type="submit">{{$t('save')}}</button>
+          </div>
         </div>
       </form>
 
@@ -842,6 +842,8 @@ export default {
       var context = this;
 
       context.view.isLoaded = false;
+      context.view.otpIsLoaded = false;
+
       context.exec(
         ["system-authorization/read"],
         null,
@@ -855,47 +857,22 @@ export default {
           context.view.isAdmin = success.status.isAdmin == 1;
           context.view.isRoot = success.status.isRoot == 1;
           context.otp.username = success.status.username;
-          context.getOtpToken(context.otp.username);
-        },
-        function(error) {
-          console.error(error);
-        },
-        false
-      );
-    },
-    getOtpToken(username) {
-      var context = this;
-
-      context.view.otpIsLoaded = false;
-      context.exec(
-        ["system-settings/getOtpToken"],
-        {
-          username: username
-        },
-        null,
-        function(success) {
-          try {
-            success = JSON.parse(success);
-          } catch (e) {
-            console.error(e);
-          }
           context.otp.OtpStatus = success.OtpStatus == "enabled";
           context.otp.Token = success.Token;
           context.otp.Secret = success.Secret;
           context.otp.Key = success.Key;
           context.otp.Code = success.Code;
-          context.view.otpIsLoaded = true;
           // if otp is disabled, the key is generated each time the page is Loaded
           // we can display the key it doesn't matter
           if (context.otp.OtpStatus === false) {
             context.otp.secrety = true;
           }
-
+          context.view.otpIsLoaded = true;
         },
         function(error) {
           console.error(error);
         },
-        true
+        false
       );
     },
     getSettings() {
@@ -1068,7 +1045,7 @@ export default {
             username: context.otp.username,
             Key: context.otp.Key
           };
-          sudo = true;
+          sudo = false;
           break;
       }
 
@@ -1097,7 +1074,7 @@ export default {
               // get settings
               context.$parent.checkHints(function() {
                 context.getSettings();
-                context.getOtpToken(context.otp.username);
+                context.getAuthorizations();
               });
 
               // reset otp 
