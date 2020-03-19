@@ -76,7 +76,7 @@ case $action in
             echo $Key > $secret_path
             chmod 600 $secret_path
         elif [[ $OtpStatus = 'disabled' ]]; then
-            /bin/rm -rf $secret_path
+            /bin/rm -f $secret_path
         fi
 
         /usr/bin/sudo /sbin/e-smith/signal-event -j otp-save

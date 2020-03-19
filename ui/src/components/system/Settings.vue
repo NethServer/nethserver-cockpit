@@ -842,6 +842,8 @@ export default {
       var context = this;
 
       context.view.isLoaded = false;
+      context.view.otpIsLoaded = false;
+
       context.exec(
         ["system-authorization/read"],
         null,
@@ -855,47 +857,22 @@ export default {
           context.view.isAdmin = success.status.isAdmin == 1;
           context.view.isRoot = success.status.isRoot == 1;
           context.otp.username = success.status.username;
-          context.getOtpToken(context.otp.username);
-        },
-        function(error) {
-          console.error(error);
-        },
-        false
-      );
-    },
-    getOtpToken(username) {
-      var context = this;
-
-      context.view.otpIsLoaded = false;
-      context.exec(
-        ["system-settings/getOtpToken"],
-        {
-          username: username
-        },
-        null,
-        function(success) {
-          try {
-            success = JSON.parse(success);
-          } catch (e) {
-            console.error(e);
-          }
           context.otp.OtpStatus = success.OtpStatus == "enabled";
           context.otp.Token = success.Token;
           context.otp.Secret = success.Secret;
           context.otp.Key = success.Key;
           context.otp.Code = success.Code;
-          context.view.otpIsLoaded = true;
           // if otp is disabled, the key is generated each time the page is Loaded
           // we can display the key it doesn't matter
           if (context.otp.OtpStatus === false) {
             context.otp.secrety = true;
           }
-
+          context.view.otpIsLoaded = true;
         },
         function(error) {
           console.error(error);
         },
-        false //no sudo
+        false
       );
     },
     getSettings() {
@@ -1097,7 +1074,7 @@ export default {
               // get settings
               context.$parent.checkHints(function() {
                 context.getSettings();
-                context.getOtpToken(context.otp.username);
+                context.getAuthorizations();
               });
 
               // reset otp 

@@ -20,12 +20,23 @@
 # along with NethServer.  If not, see COPYING.
 #
 
+use warnings;
 use strict;
 use JSON;
 use NethServer::ApiTools;
+use Convert::Base32;
+use NethServer::Password;
+use Sys::Hostname;
 
 my %appRoutes = ();
 my %sysRoutes = ();
+my $hostname = Sys::Hostname::hostname();
+
+# User Authentication
+my $isAdmin = 0;
+my $isRoot = $> eq 0 ? 1 : 0;
+my ($username, $passwd, $uid, $gid, $quota, $comment, $gcos, $dir, $shell) = getpwuid($<);
+$username =~ s/@.*//;
 
 # Map of system modules that have a name different from their API path
 # The key is the directory name suffix, the value is the corresponding UI route
@@ -36,10 +47,6 @@ my %pathMap = (
     "openssh" => "ssh",
     "packages" => "software-center",
 );
-my $isAdmin = 0;
-my $isRoot = $> eq 0 ? 1 : 0;
-my $username = scalar getpwuid $<;
-$username =~ s/@.*//;
 
 $ENV{'LANG'} = 'C';
 my $skip = 1;
@@ -87,11 +94,36 @@ if($isRoot || $isAdmin) {
 }
 
 # Terminal access is granted if a *sh shell is set for the user
-my $userShell = (getpwuid($>))[8];
-if($userShell =~ m/sh$/) {
+if($shell =~ m/sh$/) {
     $sysRoutes{'terminal'} = 1;
 }
 
+# One time password for a two-factor authentication
+my ($OtpStatus,$key);
+if (! -f "$dir/.2fa.secret") {
+    $key = `/usr/bin/openssl rand -hex 20`;
+    $OtpStatus = 'disabled';
+} else {
+    $key = NethServer::Password->new('.2fa.secret',{'defaultDir' => $dir})->getAscii();
+    $OtpStatus = 'enabled';
+}
+
+## clean up
+$key  =~ s/\R//g;
+
+# we need to convert the hex token to binary base32 
+my $secret = uc encode_base32( pack("H*", $key) );
+
+# we need to find the PIN for single use (recovery)
+open(FH, "/usr/bin/oathtool  -w 4 $key|");
+my @ret;
+while (<FH>) {
+    chomp;
+    my ($code) = split('\n');
+    push(@ret, $code);
+}
+
+# Output JSON
 print encode_json({
     "system" => [sort keys %sysRoutes],
     "applications" => [sort keys %appRoutes],
@@ -99,5 +131,10 @@ print encode_json({
         "isRoot" => $isRoot,
         "isAdmin" => $isAdmin,
         "username" => $username
-    }
+    },
+    "Key" => $key,
+    "Secret"=> $secret,
+    "Code"=> \@ret,
+    "OtpStatus" => $OtpStatus,
+    "Token" => "otpauth://totp/$username\@$hostname?secret=$secret"
 });
