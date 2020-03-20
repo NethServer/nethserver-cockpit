@@ -200,6 +200,37 @@
             </div>
           </form>
         </div>
+        <div  v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety">
+          <div >
+              <label
+                >{{$t('settings.otp_Step4_Choose_which_otp_service_to_enable')}}
+              </label>
+          </div>
+        </div>
+        <div
+          v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety"
+          :class="['form-group', errors.OtpCockpit.hasError ? 'has-error' : '']"
+        >
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.OtpCockpit_status')}}</label>
+          <div class="col-sm-5">
+            <input
+              :disabled="!otp.TokenIsValid"
+              type="checkbox"
+              true-value="enabled"
+              false-value="disabled"
+              id="OtpCockpit"
+              v-model="otp.OtpCockpit"
+              class="form-control"
+            >
+            <span
+              v-if="errors.OtpCockpit.hasError"
+              class="help-block"
+            >{{errors.OtpCockpit.message}}</span>
+          </div>
+        </div>
         <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety" class="form-group">
             <label
               class="col-sm-2 control-label"
@@ -655,7 +686,8 @@ export default {
         TokenValidationError: false,
         TokenValidation: "",
         Secret: "",
-        Key: ""
+        Key: "",
+        OtpCockpit: false
       },
       hints: {},
       settings: {
@@ -776,7 +808,11 @@ export default {
         otp: {
           hasError: false,
           message: ""
-        }
+        },
+        OtpCockpit: {
+          hasError: false,
+          message: ""
+        },
       };
     },
     addEmail() {
@@ -858,6 +894,7 @@ export default {
           context.view.isRoot = success.status.isRoot == 1;
           context.otp.username = success.status.username;
           context.otp.OtpStatus = success.OtpStatus == "enabled";
+          context.otp.OtpCockpit = success.OtpCockpit;
           context.otp.Token = success.Token;
           context.otp.Secret = success.Secret;
           context.otp.Key = success.Key;
@@ -1042,6 +1079,7 @@ export default {
             OtpStatus: context.otp.OtpStatus
               ? "enabled"
               : "disabled",
+            OtpCockpit: context.otp.OtpCockpit,
             username: context.otp.username,
             Key: context.otp.Key
           };
