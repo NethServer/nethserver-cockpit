@@ -1,7 +1,11 @@
+#
+# Key for the user forced to use otp for cockpit
+#
+
 {
   use NethServer::Password;
 
-  if (  -f '/root/.2fa.secret' ) {
+  if (  -e '/root/.2fa.secret' ) {
       my $pwd = NethServer::Password->new('.2fa.secret',{'defaultDir' => '/root'})->getAscii();
       $OUT .= "# HOTP for root\n";
       $OUT .= "HOTP/T30 root - $pwd\n";
@@ -10,7 +14,7 @@
 
   foreach my $name (glob('/var/lib/nethserver/home/*')) {
       $name =~ s|/var/lib/nethserver/home/||g;
-      next if ( ! -f "/var/lib/nethserver/home/$name/.2fa.secret");
+      next if ( ! -e "/var/lib/nethserver/home/$name/.2fa.secret");
       my $password = NethServer::Password->new('.2fa.secret',{'defaultDir' => "/var/lib/nethserver/home/$name"})->getAscii();
 
       # we need to display user and user@domain.org

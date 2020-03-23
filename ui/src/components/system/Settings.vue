@@ -151,21 +151,40 @@
               </label>
           </div>
         </div>
-        <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety" class="form-group" >
-            <label
-              class="col-sm-2 control-label"
-              for="textInput-modal-markup"
-              >{{$t('settings.otp_Scan_QRcode')}}
-              <doc-info
-                :placement="'top'"
-                :title="$t('settings.otp_Scan_QRcode')"
-                :chapter="'otp_Scan_QRcode'"
-                :inline="true"
-              ></doc-info>
-            </label>
-            <div class="col-sm-5" >
-              <qrcode-vue :value="otp.Token" :size="otp.size" level="H"></qrcode-vue>
-            </div>
+        <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety" class="form-group row" >
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+            >{{$t('settings.otp_Scan_QRcode')}}
+            <doc-info
+              :placement="'top'"
+              :title="$t('settings.otp_Scan_QRcode')"
+              :chapter="'otp_Scan_QRcode'"
+              :inline="true"
+            ></doc-info>
+          </label>
+          <div class="col-sm-2" >
+            <qrcode-vue :value="otp.Token" :size="otp.size" level="H"></qrcode-vue>
+          </div>
+          <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety">
+              <label
+                class="col-sm-2 control-label"
+                for="textInput-modal-markup"
+                >{{$t('settings.otp_code_for_single_use')}}
+                <doc-info
+                  :placement="'top'"
+                  :title="$t('settings.otp_code_for_single_use')"
+                  :chapter="'otp_code_for_single_use'"
+                  :inline="true"
+                ></doc-info>
+              </label>
+              <div class="col-sm-2">
+                <div v-for="c in otp.Code">
+                  <span  >{{ c }}</span>
+                  <br />
+                </div>
+              </div>
+          </div>
         </div>
         <div  v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety">
           <div >
@@ -186,11 +205,11 @@
                 type="number" min="0" max="999999" placeholder="000000" 
                 v-model="otp.TokenValidation" class="form-control noArrows" 
               />
-              <span v-if="otp.TokenValidationError" class="help-block">
+              <span v-if="otp.TokenValidationError && otp.testTokenDone" class="help-block">
                 {{$t('validation.validation_failed')}}:
                 {{$t('validation.TokenValidationError')}}
               </span>
-              <span v-if="otp.TokenIsValid" >
+              <span v-if="otp.TokenIsValid && otp.testTokenDone" >
                 {{$t('validation.TokenValidationOK')}}
                 <span class="fa fa-check green copy-ok"></span>
               </span>
@@ -200,24 +219,29 @@
             </div>
           </form>
         </div>
-        <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety" class="form-group">
-            <label
-              class="col-sm-2 control-label"
-              for="textInput-modal-markup"
-              >{{$t('settings.otp_code_for_single_use')}}
-              <doc-info
-                :placement="'top'"
-                :title="$t('settings.otp_code_for_single_use')"
-                :chapter="'otp_code_for_single_use'"
-                :inline="true"
-              ></doc-info>
-            </label>
-            <div class="col-sm-5">
-              <div v-for="c in otp.Code">
-                <span  >{{ c }}</span>
-                <br />
-              </div>
-            </div>
+        <h4 v-if="view.otpIsLoaded && otp.OtpStatus" >{{$t('settings.Applications')}}</h4>
+        <div
+          v-if="view.otpIsLoaded && otp.OtpStatus"
+          :class="['form-group', errors.OtpCockpit.hasError ? 'has-error' : '']"
+        >
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.OtpCockpit_status')}}</label>
+          <div class="col-sm-5">
+            <input
+              type="checkbox"
+              true-value="enabled"
+              false-value="disabled"
+              id="OtpCockpit"
+              v-model="otp.OtpCockpit"
+              class="form-control"
+            >
+            <span
+              v-if="errors.OtpCockpit.hasError"
+              class="help-block"
+            >{{errors.OtpCockpit.message}}</span>
+          </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
@@ -653,9 +677,11 @@ export default {
         secrety: false,
         TokenIsValid: false,
         TokenValidationError: false,
+        testTokenDone: false,
         TokenValidation: "",
         Secret: "",
-        Key: ""
+        Key: "",
+        OtpCockpit: false
       },
       hints: {},
       settings: {
@@ -776,7 +802,11 @@ export default {
         otp: {
           hasError: false,
           message: ""
-        }
+        },
+        OtpCockpit: {
+          hasError: false,
+          message: ""
+        },
       };
     },
     addEmail() {
@@ -815,14 +845,17 @@ export default {
     testToken(token) {
       var context = this;
       var secret = context.otp.Secret;
+      context.otp.testTokenDone = false;
       
       context.otp.TokenIsValid = authenticator.verify({ token, secret });
       
       if (context.otp.TokenIsValid) {
         context.otp.TokenValidationError = false;
+        context.otp.testTokenDone = true;
       }
       else if (!context.otp.TokenIsValid) {
         context.otp.TokenValidationError = true;
+        context.otp.testTokenDone = true;
       }
     },
     getHints(callback) {
@@ -858,6 +891,10 @@ export default {
           context.view.isRoot = success.status.isRoot == 1;
           context.otp.username = success.status.username;
           context.otp.OtpStatus = success.OtpStatus == "enabled";
+          if ( success.OtpStatus == "enabled") {
+              context.otp.TokenIsValid = true;
+          }
+          context.otp.OtpCockpit = success.OtpCockpit;
           context.otp.Token = success.Token;
           context.otp.Secret = success.Secret;
           context.otp.Key = success.Key;
@@ -1042,6 +1079,7 @@ export default {
             OtpStatus: context.otp.OtpStatus
               ? "enabled"
               : "disabled",
+            OtpCockpit: context.otp.OtpCockpit,
             username: context.otp.username,
             Key: context.otp.Key
           };
@@ -1081,6 +1119,8 @@ export default {
               context.otp.TokenIsValid = false;
               context.otp.TokenValidationError = false;
               context.otp.TokenValidation = "";
+              context.otp.testTokenDone = false;
+
 
               // reset passwords
               context.newUser.newPassword = "";

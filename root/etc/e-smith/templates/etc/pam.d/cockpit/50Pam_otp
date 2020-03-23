@@ -1,4 +1,4 @@
 # one time password authentication
 auth    [default=1 success=ignore]       pam_listfile.so \
-        onerr=fail  item=user  sense=allow  file=/etc/nethserver/otp.force
+        onerr=fail  item=user  sense=allow  file=/etc/nethserver/cockpit.otp.force
 auth    required    pam_oath.so usersfile=/etc/nethserver/otp.secret window=10 digits=6
