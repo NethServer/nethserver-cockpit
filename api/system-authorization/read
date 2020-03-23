@@ -103,7 +103,7 @@ my ($OtpStatus,$key,$OtpCockpit);
 if (! -f "$dir/.2fa.secret") {
     $key = `/usr/bin/openssl rand -hex 20`;
     $OtpStatus = 'disabled';
-    $OtpCockpit = 'disabled';
+    $OtpCockpit = 'enabled';
 } else {
     $key = NethServer::Password->new('.2fa.secret',{'defaultDir' => $dir})->getAscii();
     $OtpStatus = 'enabled';
