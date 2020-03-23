@@ -1,3 +1,7 @@
+#
+# The user listed here are forced to use otp for cockpit
+#
+
 {
   if ( -e '/root/.2fa_cockpit.secret') {
       $OUT .= "root\n";

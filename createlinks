@@ -43,7 +43,7 @@ event_templates('nethserver-cockpit-update', qw(
 
 # expand all file related to 2FA
 event_templates('otp-save', qw(
-    /etc/nethserver/otp.force
+    /etc/nethserver/cockpit.otp.force
     /etc/nethserver/otp.secret
     /etc/pam.d/cockpit
 ));
