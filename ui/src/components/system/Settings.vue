@@ -151,21 +151,40 @@
               </label>
           </div>
         </div>
-        <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety" class="form-group" >
-            <label
-              class="col-sm-2 control-label"
-              for="textInput-modal-markup"
-              >{{$t('settings.otp_Scan_QRcode')}}
-              <doc-info
-                :placement="'top'"
-                :title="$t('settings.otp_Scan_QRcode')"
-                :chapter="'otp_Scan_QRcode'"
-                :inline="true"
-              ></doc-info>
-            </label>
-            <div class="col-sm-5" >
-              <qrcode-vue :value="otp.Token" :size="otp.size" level="H"></qrcode-vue>
-            </div>
+        <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety" class="form-group row" >
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+            >{{$t('settings.otp_Scan_QRcode')}}
+            <doc-info
+              :placement="'top'"
+              :title="$t('settings.otp_Scan_QRcode')"
+              :chapter="'otp_Scan_QRcode'"
+              :inline="true"
+            ></doc-info>
+          </label>
+          <div class="col-sm-2" >
+            <qrcode-vue :value="otp.Token" :size="otp.size" level="H"></qrcode-vue>
+          </div>
+          <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety">
+              <label
+                class="col-sm-2 control-label"
+                for="textInput-modal-markup"
+                >{{$t('settings.otp_code_for_single_use')}}
+                <doc-info
+                  :placement="'top'"
+                  :title="$t('settings.otp_code_for_single_use')"
+                  :chapter="'otp_code_for_single_use'"
+                  :inline="true"
+                ></doc-info>
+              </label>
+              <div class="col-sm-2">
+                <div v-for="c in otp.Code">
+                  <span  >{{ c }}</span>
+                  <br />
+                </div>
+              </div>
+          </div>
         </div>
         <div  v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety">
           <div >
@@ -200,15 +219,9 @@
             </div>
           </form>
         </div>
-        <div  v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety">
-          <div >
-              <label
-                >{{$t('settings.otp_Step4_Choose_which_otp_service_to_enable')}}
-              </label>
-          </div>
-        </div>
+        <h4 v-if="view.otpIsLoaded && otp.OtpStatus" >{{$t('settings.Applications')}}</h4>
         <div
-          v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety"
+          v-if="view.otpIsLoaded && otp.OtpStatus"
           :class="['form-group', errors.OtpCockpit.hasError ? 'has-error' : '']"
         >
           <label
@@ -230,25 +243,6 @@
               class="help-block"
             >{{errors.OtpCockpit.message}}</span>
           </div>
-        </div>
-        <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety" class="form-group">
-            <label
-              class="col-sm-2 control-label"
-              for="textInput-modal-markup"
-              >{{$t('settings.otp_code_for_single_use')}}
-              <doc-info
-                :placement="'top'"
-                :title="$t('settings.otp_code_for_single_use')"
-                :chapter="'otp_code_for_single_use'"
-                :inline="true"
-              ></doc-info>
-            </label>
-            <div class="col-sm-5">
-              <div v-for="c in otp.Code">
-                <span  >{{ c }}</span>
-                <br />
-              </div>
-            </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
