@@ -205,11 +205,11 @@
                 type="number" min="0" max="999999" placeholder="000000" 
                 v-model="otp.TokenValidation" class="form-control noArrows" 
               />
-              <span v-if="otp.TokenValidationError" class="help-block">
+              <span v-if="otp.TokenValidationError && otp.testTokenDone" class="help-block">
                 {{$t('validation.validation_failed')}}:
                 {{$t('validation.TokenValidationError')}}
               </span>
-              <span v-if="otp.TokenIsValid" >
+              <span v-if="otp.TokenIsValid && otp.testTokenDone" >
                 {{$t('validation.TokenValidationOK')}}
                 <span class="fa fa-check green copy-ok"></span>
               </span>
@@ -230,7 +230,6 @@
           >{{$t('settings.OtpCockpit_status')}}</label>
           <div class="col-sm-5">
             <input
-              :disabled="!otp.TokenIsValid"
               type="checkbox"
               true-value="enabled"
               false-value="disabled"
@@ -678,6 +677,7 @@ export default {
         secrety: false,
         TokenIsValid: false,
         TokenValidationError: false,
+        testTokenDone: false,
         TokenValidation: "",
         Secret: "",
         Key: "",
@@ -845,14 +845,17 @@ export default {
     testToken(token) {
       var context = this;
       var secret = context.otp.Secret;
+      context.otp.testTokenDone = false;
       
       context.otp.TokenIsValid = authenticator.verify({ token, secret });
       
       if (context.otp.TokenIsValid) {
         context.otp.TokenValidationError = false;
+        context.otp.testTokenDone = true;
       }
       else if (!context.otp.TokenIsValid) {
         context.otp.TokenValidationError = true;
+        context.otp.testTokenDone = true;
       }
     },
     getHints(callback) {
@@ -888,6 +891,9 @@ export default {
           context.view.isRoot = success.status.isRoot == 1;
           context.otp.username = success.status.username;
           context.otp.OtpStatus = success.OtpStatus == "enabled";
+          if ( success.OtpStatus == "enabled") {
+              context.otp.TokenIsValid = true;
+          }
           context.otp.OtpCockpit = success.OtpCockpit;
           context.otp.Token = success.Token;
           context.otp.Secret = success.Secret;
@@ -1113,6 +1119,8 @@ export default {
               context.otp.TokenIsValid = false;
               context.otp.TokenValidationError = false;
               context.otp.TokenValidation = "";
+              context.otp.testTokenDone = false;
+
 
               // reset passwords
               context.newUser.newPassword = "";
