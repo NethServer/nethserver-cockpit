@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.4.6
+Version: 1.5.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,10 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Mar 24 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.5.0-1
+- Cockpit: protect the server-manager with one time password (2FA) - NethServer/dev#6085
+- Blacklist support (threat shield) - NethServer/dev#6072
+
 * Mon Mar 02 2020 Davide Principi <davide.principi@nethesis.it> - 1.4.6-1
 - SSH Save button stuck after update - Bug NethServer/dev#6075
 
