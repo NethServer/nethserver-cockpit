@@ -65,27 +65,38 @@ case $action in
     "otp")
         OtpStatus=$(_get OtpStatus)
         OtpCockpit=$(_get OtpCockpit)
+        OtpSshd=$(_get OtpSshd)
         username=$(_get username)
         Key=$(_get Key)
         secret_path=/var/lib/nethserver/home/$username/.2fa.secret
         secret_cockpit=/var/lib/nethserver/home/$username/.2fa_cockpit.secret
+        secret_sshd=/var/lib/nethserver/home/$username/.2fa_sshd.secret
 
         if [[ $username = 'root' ]];then
             secret_path=/root/.2fa.secret
             secret_cockpit=/root/.2fa_cockpit.secret
+            secret_sshd=/root/.2fa_sshd.secret
         fi
 
         if [[ $OtpStatus = 'enabled' ]];then
             /usr/bin/echo $Key > $secret_path
             /usr/bin/chmod 600 $secret_path
+
             if [[ $OtpCockpit = 'enabled' ]]; then 
                 /usr/bin/ln -s $secret_path $secret_cockpit
             elif [[ $OtpCockpit = 'disabled' ]]; then 
                 /usr/bin/rm -f $secret_cockpit
             fi
+
+            if [[ $OtpSshd = 'enabled' ]]; then 
+                /usr/bin/ln -s $secret_path $secret_sshd
+            elif [[ $OtpSshd = 'disabled' ]]; then 
+                /usr/bin/rm -f $secret_sshd
+            fi
         elif [[ $OtpStatus = 'disabled' ]]; then
             /usr/bin/rm -f $secret_path
             /usr/bin/rm -f $secret_cockpit
+            /usr/bin/rm -f $secret_sshd
         fi
 
         /usr/bin/sudo /sbin/e-smith/signal-event -j otp-save
