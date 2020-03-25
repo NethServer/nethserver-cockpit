@@ -99,15 +99,17 @@ if($shell =~ m/sh$/) {
 }
 
 # One time password for a two-factor authentication
-my ($OtpStatus,$key,$OtpCockpit);
+my ($OtpStatus,$key,$OtpCockpit,$OtpSshd);
 if (! -f "$dir/.2fa.secret") {
     $key = `/usr/bin/openssl rand -hex 20`;
     $OtpStatus = 'disabled';
     $OtpCockpit = 'enabled';
+    $OtpSshd = 'disabled';
 } else {
     $key = NethServer::Password->new('.2fa.secret',{'defaultDir' => $dir})->getAscii();
     $OtpStatus = 'enabled';
     $OtpCockpit = (-l "$dir/.2fa_cockpit.secret") ? "enabled":"disabled";
+    $OtpSshd = (-l "$dir/.2fa_sshd.secret") ? "enabled":"disabled";
 }
 
 ## clean up
@@ -139,5 +141,6 @@ print encode_json({
     "Code"=> \@ret,
     "OtpStatus" => $OtpStatus,
     "OtpCockpit" => $OtpCockpit,
+    "OtpSshd" => $OtpSshd,
     "Token" => "otpauth://totp/$username\@$hostname?secret=$secret"
 });

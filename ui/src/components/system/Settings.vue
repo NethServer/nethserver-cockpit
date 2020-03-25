@@ -243,6 +243,36 @@
             >{{errors.OtpCockpit.message}}</span>
           </div>
         </div>
+        <div
+          v-if="view.otpIsLoaded && otp.OtpStatus"
+          :class="['form-group', errors.OtpSshd.hasError ? 'has-error' : '']"
+        >
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.OtpSshd_status')}}
+          <doc-info
+            :placement="'top'"
+            :title="$t('settings.OtpSshd_status')"
+            :chapter="'OtpSshd_Only_Password_Auth'"
+            :inline="true"
+          ></doc-info>
+          </label>
+          <div class="col-sm-5">
+            <input
+              type="checkbox"
+              true-value="enabled"
+              false-value="disabled"
+              id="OtpSshd"
+              v-model="otp.OtpSshd"
+              class="form-control"
+            >
+            <span
+              v-if="errors.OtpSshd.hasError"
+              class="help-block"
+            >{{errors.OtpSshd.message}}</span>
+          </div>
+        </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
             <div
@@ -681,7 +711,8 @@ export default {
         TokenValidation: "",
         Secret: "",
         Key: "",
-        OtpCockpit: false
+        OtpCockpit: false,
+        OtpSshd: false
       },
       hints: {},
       settings: {
@@ -807,6 +838,10 @@ export default {
           hasError: false,
           message: ""
         },
+        OtpSshd: {
+          hasError: false,
+          message: ""
+        }
       };
     },
     addEmail() {
@@ -895,6 +930,7 @@ export default {
               context.otp.TokenIsValid = true;
           }
           context.otp.OtpCockpit = success.OtpCockpit;
+          context.otp.OtpSshd = success.OtpSshd;
           context.otp.Token = success.Token;
           context.otp.Secret = success.Secret;
           context.otp.Key = success.Key;
@@ -1080,6 +1116,7 @@ export default {
               ? "enabled"
               : "disabled",
             OtpCockpit: context.otp.OtpCockpit,
+            OtpSshd: context.otp.OtpSshd,
             username: context.otp.username,
             Key: context.otp.Key
           };
