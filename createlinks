@@ -39,6 +39,7 @@ event_templates('nethserver-cockpit-update', qw(
     /etc/sudoers.d/30_nethserver_cockpit_roles
     /etc/sudoers.d/55_nsapi_perms
     /etc/nethserver/cockpit.allow
+    /etc/httpd/conf.d/default-virtualhost.inc
 ));
 
 # expand all file related to 2FA
