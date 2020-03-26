@@ -1,9 +1,18 @@
 <template>
   <div>
-    <h2>{{$t('settings.title')}}</h2>
+    <div v-show="accessUserSettings && loggedUser">
+      <h3 class="logged-user right">{{ loggedUser.full_name }}</h3>
+      <button
+        tabindex="-1"
+        @click="logout()"
+        type="button"
+        class="btn btn-danger logout-button"
+      >{{$t('settings.logout')}}</button>
+    </div>
+    <h2>{{ $t('settings.title') }}</h2>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <div v-if="view.isLoaded">
-      <div v-if="hints.count > 0 && view.isAdmin" class="alert alert-warning alert-dismissable">
+      <div v-if="hints.count > 0 && view.isAdmin" class="alert alert-warning alert-dismissable clear">
         <span class="pficon pficon-warning-triangle-o"></span>
         <strong>{{$t('hints_suggested')}}:</strong>
         <li v-for="(m,t) in hints.details" v-bind:key="t">
@@ -15,6 +24,7 @@
         >{{hints.message && $t('hints.'+hints.message)}}</span>
       </div>
 
+      <div  class="divider clear"></div>
       <h3>{{$t('settings.password')}}</h3>
       <div v-if="!newUser.canChangePassword" class="alert alert-info alert-dismissable">
         <span class="pficon pficon-info"></span>
@@ -686,6 +696,7 @@ export default {
   },
   mounted() {
     this.initGraphics();
+    this.getLoggedUser();
     this.getSettings();
     this.getHints();
     this.getAuthorizations();
@@ -756,7 +767,9 @@ export default {
         passwordStrength: false,
         togglePass: false,
         canChangePassword: false
-      }
+      },
+      accessUserSettings: window.location.port !== "9090",
+      loggedUser: {}
     };
   },
   methods: {
@@ -1029,6 +1042,16 @@ export default {
     togglePass() {
       this.newUser.togglePass = !this.newUser.togglePass;
     },
+    getLoggedUser() {
+      const context = this;
+      let userPromise = cockpit.user();
+      userPromise.done(function(user) {
+        context.loggedUser = user;
+      });
+    },
+    logout() {
+      cockpit.logout();
+    },
     saveSettings(type) {
       var context = this;
       var settingsObj = {};
@@ -1205,6 +1228,18 @@ export default {
 }
 .adjust-index {
   z-index: 1;
+}
+.logged-user {
+  margin-top: 0;
+  text-align: right;
+}
+.clear {
+  clear: both;
+}
+.logout-button {
+  float: right;
+  clear: both;
+  margin-bottom: 10px;
 }
 /* Chrome, Safari, Edge, Opera */
 
