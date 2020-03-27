@@ -47,7 +47,7 @@ Origins = http://127.0.0.1:9090 {
 
     # print results
     foreach my $alias (@aliases) {
-        $OUT .= "https://$alias https://$alias:9090";
+        $OUT .= "https://$alias https://$alias:9090 ";
     }
 
     $OUT .= " ";
