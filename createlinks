@@ -43,6 +43,10 @@ event_templates('nethserver-cockpit-update', qw(
     /etc/httpd/conf.d/default-virtualhost.inc
 ));
 
+event_services(nethserver-cockpit-update, qw(
+    httpd reload
+));
+
 # expand all file related to 2FA
 event_templates('otp-save', qw(
     /etc/nethserver/cockpit.otp.force
