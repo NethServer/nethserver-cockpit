@@ -633,8 +633,8 @@ export default {
     checkAccessUserSettings() {
       if (this.accessUserSettings) {
         if (this.status) {
-          if (this.status.isAdmin || this.status.isRoot) {
-            // root and admins should use Cockpit to access user settings
+          if (this.status.isRoot) {
+            // root should use Cockpit to access user settings
             const url = window.location.protocol + '//' + window.location.hostname + ':9090/nethserver#/settings';
             window.location.replace(url);
           } else {

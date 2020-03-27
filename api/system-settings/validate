@@ -46,6 +46,16 @@ switch ($data['action']) {
         }
         break;
 
+    case "user_settings_page":
+        $ipValidator = $v->createValidator()->ipV4Address();
+        $cidrValidator = $v->createValidator(Validate::CIDR_BLOCK);
+        foreach ($data['UserSettingsGrantIPs'] as $el) {
+            if (!$ipValidator->evaluate($el) && !$cidrValidator->evaluate($el)) {
+                $v->addValidationError('userSettingsPageGrantIPs', 'ip_address_or_cidr');
+            }
+        }
+        break;
+
     case "root":
         $emailValidator = $v->createValidator(Validate::EMAIL);
         $v->declareParameter('SenderAddress', Validate::EMAIL);

@@ -678,6 +678,98 @@
           </div>
         </div>
       </form>
+
+      <!-- user settings page on port 443 -->
+      <div v-if="view.isAdmin" class="divider"></div>
+      <h3 v-if="view.isAdmin">{{$t('settings.user_settings_page')}}</h3>
+      <form
+        v-if="view.isAdmin"
+        class="form-horizontal"
+        v-on:submit.prevent="saveSettings('user_settings_page')"
+      >
+        <!-- user settings page access -->
+        <div :class="['form-group', errors.userSettingsPageAccess.hasError ? 'has-error' : '']">
+          <label class="col-sm-2 control-label">
+            {{$t('settings.enable_user_settings_page')}}
+            <doc-info
+              :placement="'top'"
+              :chapter="'user_settings_page'"
+              :inline="true"
+            ></doc-info>
+          </label>
+          <div class="col-sm-5">
+            <toggle-button
+              class="min-toggle"
+              :width="40"
+              :height="20"
+              :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+              :value="settings.userSettingsPage.access"
+              :sync="true"
+              @change="toggleUserSettingsPageAccess()"
+            />
+            <span v-if="errors.userSettingsPageAccess.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.userSettingsPageAccess.message)}}
+            </span>
+          </div>
+        </div>
+        <!-- user settings page WAN access -->
+        <div
+          v-if="settings.userSettingsPage.access"
+          :class="['form-group', errors.userSettingsPageWanAccess.hasError ? 'has-error' : '']">
+          <label class="col-sm-2 control-label">
+            {{$t('settings.limit_access')}}
+            <doc-info
+              :placement="'top'"
+              :chapter="'limit_access_user_settings_page'"
+              :inline="true"
+            ></doc-info>
+          </label>
+          <div class="col-sm-5">
+            <toggle-button
+              class="min-toggle"
+              :width="40"
+              :height="20"
+              :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+              :value="settings.userSettingsPage.wanAccess"
+              :sync="true"
+              @change="toggleUserSettingsPageWanAccess()"
+            />
+            <span v-if="errors.userSettingsPageWanAccess.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.userSettingsPageWanAccess.message)}}
+            </span>
+          </div>
+        </div>
+        <!-- user settings page grant WAN IPs -->
+        <div
+          v-if="settings.userSettingsPage.access && settings.userSettingsPage.wanAccess"
+          :class="['form-group', errors.userSettingsPageGrantIPs.hasError ? 'has-error' : '']"
+        >
+          <label
+            class="col-sm-2 control-label"
+          >{{$t('settings.allow_only')}}</label>
+          <div class="col-sm-5">
+            <textarea v-model="settings.userSettingsPage.grantIPs" class="form-control"></textarea>
+            <span v-if="errors.userSettingsPageGrantIPs.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.userSettingsPageGrantIPs.message)}}
+            </span>
+          </div>
+        </div>
+        <!-- user settings page save -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">
+            <div
+              v-if="loaders.userSettingsPage"
+              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
+            ></div>
+          </label>
+          <div class="col-sm-5">
+            <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -748,6 +840,11 @@ export default {
           Times: 4,
           Rotate: "weekly",
           Compression: "disabled"
+        },
+        userSettingsPage: {
+          access: false,
+          wanAccess: false,
+          grantIPs: ""
         }
       },
       loaders: {
@@ -757,7 +854,8 @@ export default {
         cockpit: false,
         hints: false,
         logrotate: false,
-        otp: false
+        otp: false,
+        userSettingsPage: false
       },
       errors: this.initErrors(),
       newUser: {
@@ -852,6 +950,18 @@ export default {
           message: ""
         },
         OtpSshd: {
+          hasError: false,
+          message: ""
+        },
+        userSettingsPageAccess: {
+          hasError: false,
+          message: ""
+        },
+        userSettingsPageWanAccess: {
+          hasError: false,
+          message: ""
+        },
+        userSettingsPageGrantIPs: {
           hasError: false,
           message: ""
         }
@@ -977,44 +1087,56 @@ export default {
           } catch (e) {
             console.error(e);
           }
-          context.settings = success.configuration;
+          let settings = success.configuration;
           context.newUser.canChangePassword =
             success.status.canChangePassword == 1;
 
           if (context.view.isAdmin) {
             // root or members of domain admins group
             var emails = [{}];
-            for (var s in context.settings) {
+            for (var s in settings) {
               if (s == "root") {
-                emails = context.settings[s].EmailAddress.map(function(i) {
+                emails = settings[s].EmailAddress.map(function(i) {
                   return {
                     email: i
                   };
                 });
               }
             }
-            context.settings.root.EmailAddress =
+            settings.root.EmailAddress =
               emails.length == 0 ? [{}] : emails;
 
             //smarthost
-            context.settings.smarthost.SmartHostStatus =
-              context.settings.smarthost.SmartHostStatus == "enabled";
-            context.settings.smarthost.SmartHostTlsStatus =
-              context.settings.smarthost.SmartHostTlsStatus == "enabled";
+            settings.smarthost.SmartHostStatus =
+              settings.smarthost.SmartHostStatus == "enabled";
+            settings.smarthost.SmartHostTlsStatus =
+              settings.smarthost.SmartHostTlsStatus == "enabled";
 
             //logrotate
-            context.settings.logrotate.Compression =
-              context.settings.logrotate.Compression == "enabled";
+            settings.logrotate.Compression =
+              settings.logrotate.Compression == "enabled";
 
             // cockpit
-            context.settings.cockpit.access =
-              context.settings.cockpit.access.indexOf("red") != -1;
-            context.settings.cockpit.LimitAccess = context.settings.cockpit.LimitAccess.split(
+            settings.cockpit.access =
+              settings.cockpit.access.indexOf("red") != -1;
+            settings.cockpit.LimitAccess = settings.cockpit.LimitAccess.split(
               ","
             ).join("\n");
-            context.settings.cockpit.ShowHints =
-              context.settings.cockpit.ShowHints == "enabled";
+            settings.cockpit.ShowHints =
+              settings.cockpit.ShowHints == "enabled";
+
+            // user settings page
+            settings.userSettingsPage.access =
+              settings.userSettingsPage.UserSettingsPage == "enabled";
+            settings.userSettingsPage.wanAccess =
+              settings.userSettingsPage.UserSettingsGrantAccess == "enabled";
+            settings.userSettingsPage.grantIPs = settings.userSettingsPage.UserSettingsGrantIPs.split(
+              ","
+            ).join("\n");
+            settings.cockpit.ShowHints =
+              settings.cockpit.ShowHints == "enabled";
           }
+          context.settings = settings;
 
           context.getHints(function() {
             context.$parent.hints.settings.count = context.hints.count;
@@ -1038,6 +1160,12 @@ export default {
     },
     toggleSettingsLimitAccess() {
       this.settings.cockpit.access = !this.settings.cockpit.access;
+    },
+    toggleUserSettingsPageAccess() {
+      this.settings.userSettingsPage.access = !this.settings.userSettingsPage.access;
+    },
+    toggleUserSettingsPageWanAccess() {
+      this.settings.userSettingsPage.wanAccess = !this.settings.userSettingsPage.wanAccess;
     },
     togglePass() {
       this.newUser.togglePass = !this.newUser.togglePass;
@@ -1144,6 +1272,19 @@ export default {
             Key: context.otp.Key
           };
           sudo = false;
+          break;
+
+        case "user_settings_page":
+          settingsObj = {
+            action: "user_settings_page",
+            UserSettingsPage: context.settings.userSettingsPage.access ? "enabled" : "disabled",
+            UserSettingsGrantAccess: context.settings.userSettingsPage.wanAccess ? "enabled" : "disabled",
+            UserSettingsGrantIPs:
+              context.settings.userSettingsPage.grantIPs.length > 0
+                ? context.settings.userSettingsPage.grantIPs.split("\n")
+                : []
+          };
+          sudo = true;
           break;
       }
 
