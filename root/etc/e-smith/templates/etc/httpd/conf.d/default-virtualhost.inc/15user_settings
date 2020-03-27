@@ -1,15 +1,21 @@
 #
-# 50 user_settings
+# 15 user_settings
 #
-
+{
+    # check if user settings is enabled and redirect url is set
+    if (
+        (${'cockpit.socket'}{'UserSettingsPage'} || 'disabled') eq 'enabled' &&
+        (${'cockpit.socket'}{'UserSettingsPageAlias'} || '') ne ''
+    ) {
+        $ProxyConf = qq(
 ProxyPreserveHost On
 ProxyRequests Off
 
 RewriteEngine On
 RewriteCond %{HTTP:Upgrade} =websocket [NC]
-RewriteRule /(.*)           ws://127.0.0.1:9090/$1 [P,L]
+RewriteRule /(.*)           ws://127.0.0.1:9090/\$1 [P,L]
 RewriteCond %{HTTP:Upgrade} !=websocket [NC]
-RewriteRule /(.*)           http://127.0.0.1:9090/$1 [P,L]
+RewriteRule /(.*)           http://127.0.0.1:9090/\$1 [P,L]
 
 # enable proxypass for ws and http
 ProxyPass /cockpit/socket ws://127.0.0.1:9090/cockpit/socket
@@ -17,5 +23,39 @@ ProxyPassReverse /cockpit/socket ws://127.0.0.1:9090/socket
 ProxyPass /cockpit http://127.0.0.1:9090/cockpit
 ProxyPassReverse /cockpit http://127.0.0.1:9090
 
-# create redirect path to user settings
-Redirect "/user-settings" "/cockpit/@localhost/nethserver/index.html#/settings"
+);
+        $RedirectConf = qq(
+    # create redirect path to user settings
+    Redirect ${'cockpit.socket'}{'UserSettingsPageAlias'} /cockpit/\@localhost/nethserver/index.html#/settings
+);
+        $OUT .= $ProxyConf;
+
+        # restrict access if necessary
+        $OUT .= "# enable location to restric access if necessary\n";
+        $OUT .= "<Location />\n";
+
+        # check if external access is enabled
+        if ((${'cockpit.socket'}{'UserSettingsGrantAccess'} || 'disabled') eq 'enabled') {
+
+            # check if external ips are set
+            if ((${'cockpit.socket'}{'UserSettingsGrantIPs'} || '') ne '') {
+                # split ips
+                my @ips = split(',', ${'cockpit.socket'}{'UserSettingsGrantIPs'});
+
+                # create require ip directive
+                foreach my $ip (@ips) {
+                    $OUT .= "    Require ip $ip\n";
+                }
+
+                $OUT .= $RedirectConf;
+            } else {
+                $OUT .= $RedirectConf;
+            }
+        } else {
+            $OUT .= "    Require local";
+            $OUT .= $RedirectConf;
+        }
+
+        $OUT .= "</Location>\n";
+    }
+}
