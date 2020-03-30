@@ -20,17 +20,23 @@
         (${'cockpit.socket'}{'UserSettingsPageAlias'} || '') ne ''
     ) {
         $ProxyConf = qq(
+# enable proxypass for ws and http
 ProxyPreserveHost On
 ProxyRequests Off
 
-# enable proxypass for ws and http
 ProxyPass /cockpit/socket ws://127.0.0.1:9090/cockpit/socket
 ProxyPassReverse /cockpit/socket ws://127.0.0.1:9090/socket
 ProxyPass /cockpit http://127.0.0.1:9090/cockpit
 ProxyPassReverse /cockpit http://127.0.0.1:9090
 
+# handle https redirect
+RewriteEngine On
+RewriteCond %{HTTPS} !=on
+RewriteRule ^${'cockpit.socket'}{'UserSettingsPageAlias'} https://%{HTTP_HOST}${'cockpit.socket'}{'UserSettingsPageAlias'} [L,R=301]
+
 );
         $RedirectConf = qq(
+
     # create redirect path to user settings
     Redirect ${'cockpit.socket'}{'UserSettingsPageAlias'} /cockpit/\@localhost/nethserver/index.html#/settings
 );
@@ -38,14 +44,14 @@ ProxyPassReverse /cockpit http://127.0.0.1:9090
 
         # restrict access if necessary
         $OUT .= "# enable location to restric access if necessary\n";
-        $OUT .= "<Location />\n";
+        $OUT .= "<Location ${'cockpit.socket'}{'UserSettingsPageAlias'} >\n";
 
         # check if external access is enabled
         if ((${'cockpit.socket'}{'UserSettingsGrantAccess'} || 'disabled') eq 'enabled') {
+            $OUT .= "    # limit access to below ips\n";
             $OUT .= "    Require ip $localAccess";
             $OUT .= $RedirectConf;
         } else {
-            $OUT .= "    Require local";
             $OUT .= $RedirectConf;
         }
 
