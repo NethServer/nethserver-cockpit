@@ -56,8 +56,8 @@ case $action in
         grant_ips=$(echo $data | jq -rc '.UserSettingsGrantIPs | map(tostring) | join(",")')
         /sbin/e-smith/config setprop cockpit.socket UserSettingsGrantIPs "$grant_ips" UserSettingsPage "$(_get UserSettingsPage)" UserSettingsGrantAccess "$(_get UserSettingsGrantAccess)"
         /sbin/e-smith/expand-template /etc/httpd/conf.d/default-virtualhost.inc
-        /usr/sbin/httpd -t
-        /usr/bin/systemctl reload httpd
+        /sbin/e-smith/expand-template /etc/cockpit/cockpit.conf
+        /usr/sbin/httpd -t && /usr/bin/systemctl reload httpd
         ;;
 
     "smarthost")
