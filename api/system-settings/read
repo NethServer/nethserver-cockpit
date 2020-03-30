@@ -86,7 +86,6 @@ if($cmd eq 'hints') {
     my %user_settings_page = (
         UserSettingsPage => $db->get_prop('cockpit.socket', 'UserSettingsPage'),
         UserSettingsGrantAccess => $db->get_prop('cockpit.socket', 'UserSettingsGrantAccess'),
-        UserSettingsGrantIPs => $db->get_prop('cockpit.socket', 'UserSettingsGrantIPs'),
         UserSettingPageAlias => $db->get_prop('cockpit.socket', 'UserSettingPageAlias')
     );
 

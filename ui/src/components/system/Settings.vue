@@ -713,17 +713,12 @@
             </span>
           </div>
         </div>
-        <!-- user settings page WAN access -->
+        <!-- user settings page trusted networks access -->
         <div
           v-if="settings.userSettingsPage.access"
-          :class="['form-group', errors.userSettingsPageWanAccess.hasError ? 'has-error' : '']">
+          :class="['form-group', errors.userSettingsPageTrustedNetworksAccess.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label">
-            {{$t('settings.limit_access')}}
-            <doc-info
-              :placement="'top'"
-              :chapter="'limit_access_user_settings_page'"
-              :inline="true"
-            ></doc-info>
+            {{$t('settings.grant_access_from_trusted_networks')}}
           </label>
           <div class="col-sm-5">
             <toggle-button
@@ -731,29 +726,13 @@
               :width="40"
               :height="20"
               :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
-              :value="settings.userSettingsPage.wanAccess"
+              :value="settings.userSettingsPage.trustedNetworksAccess"
               :sync="true"
-              @change="toggleUserSettingsPageWanAccess()"
+              @change="toggleUserSettingsPageTrustedNetworksAccess()"
             />
-            <span v-if="errors.userSettingsPageWanAccess.hasError" class="help-block">
+            <span v-if="errors.userSettingsPageTrustedNetworksAccess.hasError" class="help-block">
               {{$t('validation.validation_failed')}}:
-              {{$t('validation.'+errors.userSettingsPageWanAccess.message)}}
-            </span>
-          </div>
-        </div>
-        <!-- user settings page grant WAN IPs -->
-        <div
-          v-if="settings.userSettingsPage.access && settings.userSettingsPage.wanAccess"
-          :class="['form-group', errors.userSettingsPageGrantIPs.hasError ? 'has-error' : '']"
-        >
-          <label
-            class="col-sm-2 control-label"
-          >{{$t('settings.allow_only')}}</label>
-          <div class="col-sm-5">
-            <textarea v-model="settings.userSettingsPage.grantIPs" class="form-control"></textarea>
-            <span v-if="errors.userSettingsPageGrantIPs.hasError" class="help-block">
-              {{$t('validation.validation_failed')}}:
-              {{$t('validation.'+errors.userSettingsPageGrantIPs.message)}}
+              {{$t('validation.'+errors.userSettingsPageTrustedNetworksAccess.message)}}
             </span>
           </div>
         </div>
@@ -843,8 +822,7 @@ export default {
         },
         userSettingsPage: {
           access: false,
-          wanAccess: false,
-          grantIPs: ""
+          trustedNetworksAccess: false
         }
       },
       loaders: {
@@ -957,11 +935,7 @@ export default {
           hasError: false,
           message: ""
         },
-        userSettingsPageWanAccess: {
-          hasError: false,
-          message: ""
-        },
-        userSettingsPageGrantIPs: {
+        userSettingsPageTrustedNetworksAccess: {
           hasError: false,
           message: ""
         }
@@ -1128,11 +1102,8 @@ export default {
             // user settings page
             settings.userSettingsPage.access =
               settings.userSettingsPage.UserSettingsPage == "enabled";
-            settings.userSettingsPage.wanAccess =
+            settings.userSettingsPage.trustedNetworksAccess =
               settings.userSettingsPage.UserSettingsGrantAccess == "enabled";
-            settings.userSettingsPage.grantIPs = settings.userSettingsPage.UserSettingsGrantIPs.split(
-              ","
-            ).join("\n");
             settings.cockpit.ShowHints =
               settings.cockpit.ShowHints == "enabled";
           }
@@ -1164,8 +1135,8 @@ export default {
     toggleUserSettingsPageAccess() {
       this.settings.userSettingsPage.access = !this.settings.userSettingsPage.access;
     },
-    toggleUserSettingsPageWanAccess() {
-      this.settings.userSettingsPage.wanAccess = !this.settings.userSettingsPage.wanAccess;
+    toggleUserSettingsPageTrustedNetworksAccess() {
+      this.settings.userSettingsPage.trustedNetworksAccess = !this.settings.userSettingsPage.trustedNetworksAccess;
     },
     togglePass() {
       this.newUser.togglePass = !this.newUser.togglePass;
@@ -1278,11 +1249,7 @@ export default {
           settingsObj = {
             action: "user_settings_page",
             UserSettingsPage: context.settings.userSettingsPage.access ? "enabled" : "disabled",
-            UserSettingsGrantAccess: context.settings.userSettingsPage.wanAccess ? "enabled" : "disabled",
-            UserSettingsGrantIPs:
-              context.settings.userSettingsPage.grantIPs.length > 0
-                ? context.settings.userSettingsPage.grantIPs.split("\n")
-                : []
+            UserSettingsGrantAccess: context.settings.userSettingsPage.trustedNetworksAccess ? "enabled" : "disabled"
           };
           sudo = true;
           break;

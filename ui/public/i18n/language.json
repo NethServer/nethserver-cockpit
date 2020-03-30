@@ -848,7 +848,8 @@
     "Applications": "Applications",
     "logout": "Logout",
     "user_settings_page": "User settings page",
-    "enable_user_settings_page": "Enable user settings page"
+    "enable_user_settings_page": "Enable user settings page",
+    "grant_access_from_trusted_networks": "Grant access from Trusted Networks"
   },
   "logs": {
     "title": "Logs"
@@ -1199,7 +1200,6 @@
     "otp_Scan_QRcode": "The QR code contains a secret URL used to generate valid tokens.",
     "otp_code_for_single_use": "If you lose your phone, you can use backup codes to sign in. Every backup code can be used only once.",
     "OtpSshd_Only_Password_Auth":"2FA is available only for password authentication. Authentication with public keys will not be affected by 2FA.",
-    "limit_access_user_settings_page": "Restrict access to user settings page only to given IP addresses.",
     "user_settings_page": "Allow users to change their password and other settings on a web page outside Cockpit (on port 443)"
   }
 }
