@@ -2,6 +2,18 @@
 # 15 user_settings
 #
 {
+    # import networks db
+    use esmith::NetworksDB;
+
+    # init db connection
+    my $ndb = esmith::NetworksDB->open_ro();
+
+    # get granted local access
+    my @localAccess = $ndb->local_access_spec();
+    $localAccess .= join ' ',
+	map { s:/255.255.255.255::; $_ }
+	    @localAccess;
+
     # check if user settings is enabled and redirect url is set
     if (
         (${'cockpit.socket'}{'UserSettingsPage'} || 'disabled') eq 'enabled' &&
@@ -30,21 +42,8 @@ ProxyPassReverse /cockpit http://127.0.0.1:9090
 
         # check if external access is enabled
         if ((${'cockpit.socket'}{'UserSettingsGrantAccess'} || 'disabled') eq 'enabled') {
-
-            # check if external ips are set
-            if ((${'cockpit.socket'}{'UserSettingsGrantIPs'} || '') ne '') {
-                # split ips
-                my @ips = split(',', ${'cockpit.socket'}{'UserSettingsGrantIPs'});
-
-                # create require ip directive
-                foreach my $ip (@ips) {
-                    $OUT .= "    Require ip $ip\n";
-                }
-
-                $OUT .= $RedirectConf;
-            } else {
-                $OUT .= $RedirectConf;
-            }
+            $OUT .= "    Require ip $localAccess";
+            $OUT .= $RedirectConf;
         } else {
             $OUT .= "    Require local";
             $OUT .= $RedirectConf;

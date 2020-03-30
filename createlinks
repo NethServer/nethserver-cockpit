@@ -47,6 +47,14 @@ event_services(nethserver-cockpit-update, qw(
     httpd reload
 ));
 
+#
+# trusted-networks-modify event
+#
+
+event_templates('trusted-networks-modify', qw(
+    /etc/httpd/conf.d/default-virtualhost.inc
+));
+
 # expand all file related to 2FA
 event_templates('otp-save', qw(
     /etc/nethserver/cockpit.otp.force
