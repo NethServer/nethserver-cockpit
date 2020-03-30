@@ -11,12 +11,6 @@
 ProxyPreserveHost On
 ProxyRequests Off
 
-RewriteEngine On
-RewriteCond %{HTTP:Upgrade} =websocket [NC]
-RewriteRule /(.*)           ws://127.0.0.1:9090/\$1 [P,L]
-RewriteCond %{HTTP:Upgrade} !=websocket [NC]
-RewriteRule /(.*)           http://127.0.0.1:9090/\$1 [P,L]
-
 # enable proxypass for ws and http
 ProxyPass /cockpit/socket ws://127.0.0.1:9090/cockpit/socket
 ProxyPassReverse /cockpit/socket ws://127.0.0.1:9090/socket
