@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.4.5
+Version: 1.5.1
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -16,7 +16,8 @@ Requires:       cockpit, cockpit-storaged
 Requires:       jq, openldap-clients, expect, python-pwquality
 Requires:       nethserver-subscription
 Requires:       arp-scan
-Requires:       nethserver-lang-cockpit
+Requires:       nethserver-lang-cockpit 
+Requires:       pam_oath liboath perl-Convert-Base32 oathtool
 Obsoletes:      cockpit-packagekit, PackageKit, PackageKit-yum
 
 %description
@@ -46,6 +47,7 @@ gzip -v %{buildroot}/usr/share/cockpit/nethserver/js/*
 gzip -v %{buildroot}/usr/share/cockpit/nethserver/css/*
 mkdir -p %{buildroot}/usr/libexec/nethserver/
 mv api/ %{buildroot}/usr/libexec/nethserver/
+mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{genfilelist}  %{buildroot} | \
     grep -v \
     -e '^/usr/libexec/nethserver/api/lib' \
@@ -69,6 +71,16 @@ mv api/ %{buildroot}/usr/libexec/nethserver/
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Wed Mar 25 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.5.1-1
+- Openssh: Protect password login with 2FA - NethServer/dev#6088
+
+* Tue Mar 24 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.5.0-1
+- Cockpit: protect the server-manager with one time password (2FA) - NethServer/dev#6085
+- Blacklist support (threat shield) - NethServer/dev#6072
+
+* Mon Mar 02 2020 Davide Principi <davide.principi@nethesis.it> - 1.4.6-1
+- SSH Save button stuck after update - Bug NethServer/dev#6075
+
 * Thu Feb 27 2020 Davide Principi <davide.principi@nethesis.it> - 1.4.5-1
 - Allow everyone to use SFTP and restrict SSH port forwarding - NethServer/dev#6059
 - Failed to unset TFTP in DHCP advanced options - Bug NethServer/dev#6068

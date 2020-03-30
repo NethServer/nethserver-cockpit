@@ -98,6 +98,193 @@
           </div>
         </div>
       </form>
+      <div  class="divider"></div>
+      <h3 >{{$t('settings.otp')}}</h3>
+      <form class="form-horizontal" v-on:submit.prevent="saveSettings('otp')">
+        <div :class="['form-group', errors.otp.hasError ? 'has-error' : '']">
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.otp_enable',{name: this.otp.username})}}
+          <doc-info
+            :placement="'top'"
+            :title="$t('settings.otp_enable',{name: this.otp.username})"
+            :chapter="'otp_enable'"
+            :inline="true"
+          ></doc-info>
+          </label>
+          <div class="col-sm-5">
+            <toggle-button
+              class="min-toggle"
+              :width="40"
+              :height="20"
+              :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+              :value="otp.OtpStatus"
+              :sync="true"
+              @change="toggleSettingsOtp()"
+            />
+            <span v-if="errors.otp.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.otp.message)}}
+            </span>
+          </div>
+        </div>
+        <legend  v-if="view.otpIsLoaded && otp.OtpStatus" class="fields-section-header-pf" aria-expanded="true">
+          <span
+            :class="['fa fa-angle-right field-section-toggle-pf', otp.secrety ? 'fa-angle-down' : '']"
+          ></span>
+          <a
+            class="field-section-toggle-pf"
+            @click="toggleOtpSecretyMode()"
+            >{{$t('settings.otp_toggle_secrety_mode')}}
+          </a>
+        </legend>
+        <div  v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety">
+          <div >
+            <label
+              >{{$t('settings.otp_Step1_Download_FreeOTP')}}
+            </label>
+          </div>
+          <div >
+              <label
+                >{{$t('settings.otp_Step2_scan_with_FreeOTP')}}
+              </label>
+          </div>
+        </div>
+        <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety" class="form-group row" >
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+            >{{$t('settings.otp_Scan_QRcode')}}
+            <doc-info
+              :placement="'top'"
+              :title="$t('settings.otp_Scan_QRcode')"
+              :chapter="'otp_Scan_QRcode'"
+              :inline="true"
+            ></doc-info>
+          </label>
+          <div class="col-sm-2" >
+            <qrcode-vue :value="otp.Token" :size="otp.size" level="H"></qrcode-vue>
+          </div>
+          <div v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety">
+              <label
+                class="col-sm-2 control-label"
+                for="textInput-modal-markup"
+                >{{$t('settings.otp_code_for_single_use')}}
+                <doc-info
+                  :placement="'top'"
+                  :title="$t('settings.otp_code_for_single_use')"
+                  :chapter="'otp_code_for_single_use'"
+                  :inline="true"
+                ></doc-info>
+              </label>
+              <div class="col-sm-2">
+                <div v-for="c in otp.Code">
+                  <span  >{{ c }}</span>
+                  <br />
+                </div>
+              </div>
+          </div>
+        </div>
+        <div  v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety">
+          <div >
+            <label
+              >{{$t('settings.otp_Step3_Validate_the_X-digit_code')}}
+            </label>
+          </div>
+        </div>
+        <div  v-if="view.otpIsLoaded && otp.OtpStatus && otp.secrety"
+          :class="['form-group', otp.TokenValidationError ? 'has-error' : '']"
+        >
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">
+            {{$t('settings.validate_the_QRcode_token')}}
+          </label>
+          <form v-on:submit.prevent="testToken(otp.TokenValidation)">
+            <div class="col-sm-3">
+              <input 
+                type="number" min="0" max="999999" placeholder="000000" 
+                v-model="otp.TokenValidation" class="form-control noArrows" 
+              />
+              <span v-if="otp.TokenValidationError && otp.testTokenDone" class="help-block">
+                {{$t('validation.validation_failed')}}:
+                {{$t('validation.TokenValidationError')}}
+              </span>
+              <span v-if="otp.TokenIsValid && otp.testTokenDone" >
+                {{$t('validation.TokenValidationOK')}}
+                <span class="fa fa-check green copy-ok"></span>
+              </span>
+            </div>
+            <div class="col-sm-2">
+              <button class="btn btn-default" type="submit">{{$t('settings.test_token')}}</button>
+            </div>
+          </form>
+        </div>
+        <h4 v-if="view.otpIsLoaded && otp.OtpStatus" >{{$t('settings.Applications')}}</h4>
+        <div
+          v-if="view.otpIsLoaded && otp.OtpStatus"
+          :class="['form-group', errors.OtpCockpit.hasError ? 'has-error' : '']"
+        >
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.OtpCockpit_status')}}</label>
+          <div class="col-sm-5">
+            <input
+              type="checkbox"
+              true-value="enabled"
+              false-value="disabled"
+              id="OtpCockpit"
+              v-model="otp.OtpCockpit"
+              class="form-control"
+            >
+            <span
+              v-if="errors.OtpCockpit.hasError"
+              class="help-block"
+            >{{errors.OtpCockpit.message}}</span>
+          </div>
+        </div>
+        <div
+          v-if="view.otpIsLoaded && otp.OtpStatus"
+          :class="['form-group', errors.OtpSshd.hasError ? 'has-error' : '']"
+        >
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.OtpSshd_status')}}
+          <doc-info
+            :placement="'top'"
+            :title="$t('settings.OtpSshd_status')"
+            :chapter="'OtpSshd_Only_Password_Auth'"
+            :inline="true"
+          ></doc-info>
+          </label>
+          <div class="col-sm-5">
+            <input
+              type="checkbox"
+              true-value="enabled"
+              false-value="disabled"
+              id="OtpSshd"
+              v-model="otp.OtpSshd"
+              class="form-control"
+            >
+            <span
+              v-if="errors.OtpSshd.hasError"
+              class="help-block"
+            >{{errors.OtpSshd.message}}</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">
+            <div
+              v-if="loaders.otp"
+              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
+            ></div>
+          </label>
+          <div class="col-sm-2">
+            <button :disabled="!otp.TokenIsValid && otp.OtpStatus" class="btn btn-primary" type="submit">{{$t('save')}}</button>
+          </div>
+        </div>
+      </form>
 
       <div v-if="view.isAdmin" class="divider"></div>
       <h3 v-if="view.isAdmin">{{$t('settings.smart_host')}}</h3>
@@ -532,11 +719,15 @@
 
 <script>
 import PasswordMeter from "../../directives/PasswordMeter.vue";
+import QrcodeVue from 'qrcode.vue'
+import { authenticator } from 'otplib';
+
 
 export default {
   name: "Settings",
   components: {
-    PasswordMeter
+    PasswordMeter,
+    QrcodeVue
   },
   mounted() {
     this.initGraphics();
@@ -549,7 +740,24 @@ export default {
       view: {
         isLoaded: false,
         isRoot: false,
-        isAdmin: false
+        isAdmin: false,
+        otpIsLoaded: false
+      },
+      otp:{
+        username: "",
+        Token: "",
+        Code: [],
+        size: 200,
+        OtpStatus: false,
+        secrety: false,
+        TokenIsValid: false,
+        TokenValidationError: false,
+        testTokenDone: false,
+        TokenValidation: "",
+        Secret: "",
+        Key: "",
+        OtpCockpit: false,
+        OtpSshd: false
       },
       hints: {},
       settings: {
@@ -584,7 +792,8 @@ export default {
         cockpit: false,
         hints: false,
         logrotate: false,
-        shellPolicy: false
+        shellPolicy: false,
+        otp: false
       },
       errors: this.initErrors(),
       newUser: {
@@ -601,6 +810,10 @@ export default {
     initGraphics() {
       $("#app").css("background", "");
       $("#app").css("color", "");
+    },
+    toggleOtpSecretyMode() {
+      this.otp.secrety = !this.otp.secrety;
+      this.$forceUpdate();
     },
     initErrors() {
       return {
@@ -667,6 +880,18 @@ export default {
         shellPolicy: {
           hasError: false,
           message: ""
+        },
+        otp: {
+          hasError: false,
+          message: ""
+        },
+        OtpCockpit: {
+          hasError: false,
+          message: ""
+        },
+        OtpSshd: {
+          hasError: false,
+          message: ""
         }
       };
     },
@@ -703,6 +928,22 @@ export default {
         }
       );
     },
+    testToken(token) {
+      var context = this;
+      var secret = context.otp.Secret;
+      context.otp.testTokenDone = false;
+      
+      context.otp.TokenIsValid = authenticator.verify({ token, secret });
+      
+      if (context.otp.TokenIsValid) {
+        context.otp.TokenValidationError = false;
+        context.otp.testTokenDone = true;
+      }
+      else if (!context.otp.TokenIsValid) {
+        context.otp.TokenValidationError = true;
+        context.otp.testTokenDone = true;
+      }
+    },
     getHints(callback) {
       var context = this;
       context.execHints(
@@ -720,6 +961,8 @@ export default {
       var context = this;
 
       context.view.isLoaded = false;
+      context.view.otpIsLoaded = false;
+
       context.exec(
         ["system-authorization/read"],
         null,
@@ -732,6 +975,23 @@ export default {
           }
           context.view.isAdmin = success.status.isAdmin == 1;
           context.view.isRoot = success.status.isRoot == 1;
+          context.otp.username = success.status.username;
+          context.otp.OtpStatus = success.OtpStatus == "enabled";
+          if ( success.OtpStatus == "enabled") {
+              context.otp.TokenIsValid = true;
+          }
+          context.otp.OtpCockpit = success.OtpCockpit;
+          context.otp.OtpSshd = success.OtpSshd;
+          context.otp.Token = success.Token;
+          context.otp.Secret = success.Secret;
+          context.otp.Key = success.Key;
+          context.otp.Code = success.Code;
+          // if otp is disabled, the key is generated each time the page is Loaded
+          // we can display the key it doesn't matter
+          if (context.otp.OtpStatus === false) {
+            context.otp.secrety = true;
+          }
+          context.view.otpIsLoaded = true;
         },
         function(error) {
           console.error(error);
@@ -812,6 +1072,9 @@ export default {
     },
     toggleSettingsHints() {
       this.settings.cockpit.ShowHints = !this.settings.cockpit.ShowHints;
+    },
+    toggleSettingsOtp() {
+      this.otp.OtpStatus = !this.otp.OtpStatus;
     },
     toggleSettingsSmartHost() {
       this.settings.smarthost.SmartHostStatus = !this.settings.smarthost
@@ -912,6 +1175,20 @@ export default {
           };
           sudo = true;
           break;
+
+        case "otp":
+          settingsObj = {
+            action: "otp",
+            OtpStatus: context.otp.OtpStatus
+              ? "enabled"
+              : "disabled",
+            OtpCockpit: context.otp.OtpCockpit,
+            OtpSshd: context.otp.OtpSshd,
+            username: context.otp.username,
+            Key: context.otp.Key
+          };
+          sudo = false;
+          break;
       }
 
       context.loaders[type] = true;
@@ -939,7 +1216,15 @@ export default {
               // get settings
               context.$parent.checkHints(function() {
                 context.getSettings();
+                context.getAuthorizations();
               });
+
+              // reset otp 
+              context.otp.TokenIsValid = false;
+              context.otp.TokenValidationError = false;
+              context.otp.TokenValidation = "";
+              context.otp.testTokenDone = false;
+
 
               // reset passwords
               context.newUser.newPassword = "";
@@ -987,5 +1272,17 @@ export default {
 }
 .adjust-index {
   z-index: 1;
+}
+/* Chrome, Safari, Edge, Opera */
+
+input[type=number].noArrows::-webkit-outer-spin-button,
+input[type=number].noArrows::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number].noArrows {
+  -moz-appearance: textfield;
 }
 </style>

@@ -39,6 +39,12 @@ event_templates('nethserver-cockpit-update', qw(
     /etc/sudoers.d/30_nethserver_cockpit_roles
     /etc/sudoers.d/55_nsapi_perms
     /etc/nethserver/cockpit.allow
+));
+
+# expand all file related to 2FA
+event_templates('otp-save', qw(
+    /etc/nethserver/cockpit.otp.force
+    /etc/nethserver/otp.secret
     /etc/pam.d/cockpit
 ));
 

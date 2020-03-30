@@ -6,6 +6,7 @@ General module to manage multiple system settings:
 - mail forward
 - cockpit configuration
 - log rotation configuration
+- OTP Two-factor authentication
 
 This API returns different output based on the running user.
 Do not invoke the helpers using `sudo`.
@@ -102,6 +103,7 @@ Valid actions are:
 - `smarthost`
 - `hints`
 - `logrotate`
+- `otp`
 
 ### Constraints
 
@@ -132,6 +134,14 @@ Constraints for `logrotate` action:
 - Compression: can be "enabled" or "disabled"
 - Rotate: can be "daily", "weekly" or "monthly"
 - Times: must be a positive integer number
+
+Constraints for `otp` action:
+
+- OtpStatus: can be "enabled" or "disabled"
+- OtpCockpit: can be "enabled" or "disabled"
+- OtpSshd: can be "enabled" or "disabled"
+- username: must be a valid username
+
 
 ### Input
 
@@ -199,6 +209,20 @@ Input example:
   "Compression": "disabled",
   "Rotate": "weekly",
   "Times": "52"
+}
+```
+
+#### otp
+
+Input example:
+```json
+{
+"action":"otp",
+"OtpStatus":"enabled",
+"OtpCockpit":"enabled",
+"OtpSshd":"enabled",
+"username":"root",
+"Key":"6f7946d70c54ade5861ef438622731498de5424b"
 }
 ```
 

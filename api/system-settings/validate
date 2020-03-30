@@ -75,6 +75,12 @@ switch ($data['action']) {
         $v->declareParameter('ShellOverrideStatus', Validate::SERVICESTATUS);
         break;
 
+    case "otp":
+        $v->declareParameter('OtpCockpit', Validate::SERVICESTATUS);
+        $v->declareParameter('OtpSshd', Validate::SERVICESTATUS);
+        $v->declareParameter('OtpStatus', Validate::SERVICESTATUS);
+        $v->declareParameter('username', Validate::USERNAME);
+        break;
 }
 
 # Validate the input

@@ -1,0 +1,16 @@
+#
+# The user listed here are forced to use otp for cockpit
+#
+
+{
+  if ( -e '/root/.2fa_cockpit.secret') {
+      $OUT .= "root\n";
+  }
+  foreach my $name (glob('/var/lib/nethserver/home/*')) {
+      $name =~ s|/var/lib/nethserver/home/||g;
+      next if ( ! -e "/var/lib/nethserver/home/$name/.2fa_cockpit.secret");
+      # we need to display user and user@domain.org
+      $OUT .= "$name\n";
+      $OUT .= "$name\@$DomainName\n";
+  }
+}
