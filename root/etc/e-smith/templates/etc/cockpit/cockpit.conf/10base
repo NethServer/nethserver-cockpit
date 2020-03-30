@@ -4,6 +4,7 @@
 {
     # check if user settings is enabled and redirect url is set
     if (
+        ${'sssd'}{'ShellOverrideStatus'} eq 'enabled' &&
         (${'cockpit.socket'}{'UserSettingsPage'} || 'disabled') eq 'enabled' &&
         (${'cockpit.socket'}{'UserSettingsPageAlias'} || '') ne ''
     ) {
