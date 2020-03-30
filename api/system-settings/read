@@ -83,6 +83,12 @@ if($cmd eq 'hints') {
         ShowHints => $db->get_prop('cockpit.socket', 'ShowHints')
     );
 
+    my %user_settings_page = (
+        UserSettingsPage => $db->get_prop('cockpit.socket', 'UserSettingsPage'),
+        UserSettingsGrantAccess => $db->get_prop('cockpit.socket', 'UserSettingsGrantAccess'),
+        UserSettingPageAlias => $db->get_prop('cockpit.socket', 'UserSettingPageAlias')
+    );
+
     my $logrotate = $db->get('logrotate') ||
     $db->new_record('logrotate', { type => "configuration" });
 
@@ -99,6 +105,7 @@ if($cmd eq 'hints') {
     $ret{'configuration'}{'root'} = \%root;
     $ret{'configuration'}{'logrotate'} = \%logrotate;
     $ret{'configuration'}{'shellPolicy'} = $shellPolicy;
+    $ret{'configuration'}{'userSettingsPage'} = \%user_settings_page;
 
     print encode_json(\%ret);
 } else {

@@ -51,6 +51,13 @@ case $action in
         /sbin/e-smith/signal-event -j firewall-adjust
         ;;
 
+    "user_settings_page")
+        /sbin/e-smith/config setprop cockpit.socket UserSettingsPage "$(_get UserSettingsPage)" UserSettingsGrantAccess "$(_get UserSettingsGrantAccess)"
+        /sbin/e-smith/expand-template /etc/httpd/conf.d/default-virtualhost.inc
+        /sbin/e-smith/expand-template /etc/cockpit/cockpit.conf
+        /usr/sbin/httpd -t && /usr/bin/systemctl reload httpd
+        ;;
+
     "smarthost")
         /sbin/e-smith/config setprop postfix SmartHostPassword "$(_get SmartHostPassword)" SmartHostPort "$(_get SmartHostPort)" \
             SmartHostTlsStatus "$(_get SmartHostTlsStatus)" SmartHostUsername "$(_get SmartHostUsername)" SmartHostName "$(_get SmartHostName)" SmartHostStatus "$(_get SmartHostStatus)"

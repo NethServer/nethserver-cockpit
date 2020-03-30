@@ -1,9 +1,18 @@
 <template>
   <div>
-    <h2>{{$t('settings.title')}}</h2>
+    <div v-show="accessUserSettings && loggedUser">
+      <h3 class="logged-user right">{{ loggedUser.full_name }}</h3>
+      <button
+        tabindex="-1"
+        @click="logout()"
+        type="button"
+        class="btn btn-danger logout-button"
+      >{{$t('settings.logout')}}</button>
+    </div>
+    <h2>{{ $t('settings.title') }}</h2>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <div v-if="view.isLoaded">
-      <div v-if="hints.count > 0 && view.isAdmin" class="alert alert-warning alert-dismissable">
+      <div v-if="hints.count > 0 && view.isAdmin" class="alert alert-warning alert-dismissable clear">
         <span class="pficon pficon-warning-triangle-o"></span>
         <strong>{{$t('hints_suggested')}}:</strong>
         <li v-for="(m,t) in hints.details" v-bind:key="t">
@@ -15,6 +24,7 @@
         >{{hints.message && $t('hints.'+hints.message)}}</span>
       </div>
 
+      <div  class="divider clear"></div>
       <h3>{{$t('settings.password')}}</h3>
       <div v-if="!newUser.canChangePassword" class="alert alert-info alert-dismissable">
         <span class="pficon pficon-info"></span>
@@ -713,6 +723,77 @@
           </div>
         </div>
       </form>
+
+      <!-- user settings page on port 443 -->
+      <div v-if="view.isAdmin" class="divider"></div>
+      <h3 v-if="view.isAdmin">{{$t('settings.user_settings_page')}}</h3>
+      <form
+        v-if="view.isAdmin"
+        class="form-horizontal"
+        v-on:submit.prevent="saveSettings('user_settings_page')"
+      >
+        <!-- user settings page access -->
+        <div :class="['form-group', errors.userSettingsPageAccess.hasError ? 'has-error' : '']">
+          <label class="col-sm-2 control-label">
+            {{$t('settings.enable_user_settings_page')}}
+            <doc-info
+              :placement="'top'"
+              :chapter="'user_settings_page'"
+              :inline="true"
+            ></doc-info>
+          </label>
+          <div class="col-sm-5">
+            <toggle-button
+              class="min-toggle"
+              :width="40"
+              :height="20"
+              :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+              :value="settings.userSettingsPage.access"
+              :sync="true"
+              @change="toggleUserSettingsPageAccess()"
+            />
+            <span v-if="errors.userSettingsPageAccess.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.userSettingsPageAccess.message)}}
+            </span>
+          </div>
+        </div>
+        <!-- user settings page trusted networks access -->
+        <div
+          v-if="settings.userSettingsPage.access"
+          :class="['form-group', errors.userSettingsPageTrustedNetworksAccess.hasError ? 'has-error' : '']">
+          <label class="col-sm-2 control-label">
+            {{$t('settings.grant_access_from_trusted_networks')}}
+          </label>
+          <div class="col-sm-5">
+            <toggle-button
+              class="min-toggle"
+              :width="40"
+              :height="20"
+              :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+              :value="settings.userSettingsPage.trustedNetworksAccess"
+              :sync="true"
+              @change="toggleUserSettingsPageTrustedNetworksAccess()"
+            />
+            <span v-if="errors.userSettingsPageTrustedNetworksAccess.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.userSettingsPageTrustedNetworksAccess.message)}}
+            </span>
+          </div>
+        </div>
+        <!-- user settings page save -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">
+            <div
+              v-if="loaders.userSettingsPage"
+              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
+            ></div>
+          </label>
+          <div class="col-sm-5">
+            <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -731,6 +812,7 @@ export default {
   },
   mounted() {
     this.initGraphics();
+    this.getLoggedUser();
     this.getSettings();
     this.getHints();
     this.getAuthorizations();
@@ -783,7 +865,11 @@ export default {
           Rotate: "weekly",
           Compression: "disabled"
         },
-        shellPolicy: false
+        shellPolicy: false,
+        userSettingsPage: {
+          access: false,
+          trustedNetworksAccess: false
+        }
       },
       loaders: {
         password: false,
@@ -793,7 +879,8 @@ export default {
         hints: false,
         logrotate: false,
         shellPolicy: false,
-        otp: false
+        otp: false,
+        userSettingsPage: false
       },
       errors: this.initErrors(),
       newUser: {
@@ -803,7 +890,9 @@ export default {
         passwordStrength: false,
         togglePass: false,
         canChangePassword: false
-      }
+      },
+      accessUserSettings: window.location.port !== "9090",
+      loggedUser: {}
     };
   },
   methods: {
@@ -890,6 +979,14 @@ export default {
           message: ""
         },
         OtpSshd: {
+          hasError: false,
+          message: ""
+        },
+        userSettingsPageAccess: {
+          hasError: false,
+          message: ""
+        },
+        userSettingsPageTrustedNetworksAccess: {
           hasError: false,
           message: ""
         }
@@ -1015,46 +1112,55 @@ export default {
           } catch (e) {
             console.error(e);
           }
-          context.settings = success.configuration;
+          let settings = success.configuration;
           context.newUser.canChangePassword =
             success.status.canChangePassword == 1;
 
           if (context.view.isAdmin) {
             // root or members of domain admins group
             var emails = [{}];
-            for (var s in context.settings) {
+            for (var s in settings) {
               if (s == "root") {
-                emails = context.settings[s].EmailAddress.map(function(i) {
+                emails = settings[s].EmailAddress.map(function(i) {
                   return {
                     email: i
                   };
                 });
               }
             }
-            context.settings.root.EmailAddress =
+            settings.root.EmailAddress =
               emails.length == 0 ? [{}] : emails;
 
             //smarthost
-            context.settings.smarthost.SmartHostStatus =
-              context.settings.smarthost.SmartHostStatus == "enabled";
-            context.settings.smarthost.SmartHostTlsStatus =
-              context.settings.smarthost.SmartHostTlsStatus == "enabled";
+            settings.smarthost.SmartHostStatus =
+              settings.smarthost.SmartHostStatus == "enabled";
+            settings.smarthost.SmartHostTlsStatus =
+              settings.smarthost.SmartHostTlsStatus == "enabled";
 
             //logrotate
-            context.settings.logrotate.Compression =
-              context.settings.logrotate.Compression == "enabled";
+            settings.logrotate.Compression =
+              settings.logrotate.Compression == "enabled";
 
             // cockpit
-            context.settings.cockpit.access =
-              context.settings.cockpit.access.indexOf("red") != -1;
-            context.settings.cockpit.LimitAccess = context.settings.cockpit.LimitAccess.split(
+            settings.cockpit.access =
+              settings.cockpit.access.indexOf("red") != -1;
+            settings.cockpit.LimitAccess = settings.cockpit.LimitAccess.split(
               ","
             ).join("\n");
-            context.settings.cockpit.ShowHints =
-              context.settings.cockpit.ShowHints == "enabled";
+
+            // user settings page
+            settings.userSettingsPage.access =
+              settings.userSettingsPage.UserSettingsPage == "enabled";
+            settings.userSettingsPage.trustedNetworksAccess =
+              settings.userSettingsPage.UserSettingsGrantAccess == "enabled";
+            settings.cockpit.ShowHints =
+              settings.cockpit.ShowHints == "enabled";
+
             //shellPolicy
-            context.settings.shellPolicy = context.settings.shellPolicy == "enabled";
+            context.settings.shellPolicy = settings.shellPolicy == "enabled";
           }
+          context.settings = settings;
+          context.settings.cockpit.ShowHints == "enabled";
 
           context.getHints(function() {
             context.$parent.hints.settings.count = context.hints.count;
@@ -1083,8 +1189,24 @@ export default {
     toggleSettingsLimitAccess() {
       this.settings.cockpit.access = !this.settings.cockpit.access;
     },
+    toggleUserSettingsPageAccess() {
+      this.settings.userSettingsPage.access = !this.settings.userSettingsPage.access;
+    },
+    toggleUserSettingsPageTrustedNetworksAccess() {
+      this.settings.userSettingsPage.trustedNetworksAccess = !this.settings.userSettingsPage.trustedNetworksAccess;
+    },
     togglePass() {
       this.newUser.togglePass = !this.newUser.togglePass;
+    },
+    getLoggedUser() {
+      const context = this;
+      let userPromise = cockpit.user();
+      userPromise.done(function(user) {
+        context.loggedUser = user;
+      });
+    },
+    logout() {
+      cockpit.logout();
     },
     saveSettings(type) {
       var context = this;
@@ -1189,6 +1311,15 @@ export default {
           };
           sudo = false;
           break;
+
+        case "user_settings_page":
+          settingsObj = {
+            action: "user_settings_page",
+            UserSettingsPage: context.settings.userSettingsPage.access ? "enabled" : "disabled",
+            UserSettingsGrantAccess: context.settings.userSettingsPage.trustedNetworksAccess ? "enabled" : "disabled"
+          };
+          sudo = true;
+          break;
       }
 
       context.loaders[type] = true;
@@ -1272,6 +1403,18 @@ export default {
 }
 .adjust-index {
   z-index: 1;
+}
+.logged-user {
+  margin-top: 0;
+  text-align: right;
+}
+.clear {
+  clear: both;
+}
+.logout-button {
+  float: right;
+  clear: both;
+  margin-bottom: 10px;
 }
 /* Chrome, Safari, Edge, Opera */
 
