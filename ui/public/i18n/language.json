@@ -321,7 +321,7 @@
     "assign_later": "Assign later",
     "current_int": "System interfaces",
     "restore_network": "Restore network configuration",
-    "skip_network_info": "Current network configuration will per preserved, but some applications may be disabled at the end of the process. After restore, review the system configuration to re-enable all required applications."
+    "skip_network_info": "Current network configuration will be preserved, but some applications may be disabled at the end of the process. After restore, review the system configuration to re-enable all required applications."
   },
   "disk_usage": {
     "title": "Disk usage",
