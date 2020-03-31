@@ -46,6 +46,14 @@ function _restore
         reinstall="--noreinstall"
     fi
 
+    # check skip-network option
+    skipnetwork=""
+    if [ "$4" == "enabled" ]; then
+        skipnetwork="--skip-network"
+        remap=""
+    fi
+
+
     # Simulate json event output
     echo '{"steps":2,"pid":"","args":"","event":"restore-config"}'
     echo '{"step":1,"pid":"","action":"Pulling from history","event":"restore-config","state":"running"}'
@@ -54,7 +62,7 @@ function _restore
     echo '{"progress":"0.50","time":"2.00","exit":0,"event":"restore-config","state":"done","step":1,"pid":"","action":"Pulling from history"}';
 
     echo '{"step":2,"pid":"","action":"Restoring configuration","event":"restore-config","state":"running"}'
-    /sbin/e-smith/restore-config $remap $reinstall &>/dev/null
+    /sbin/e-smith/restore-config $skipnetwork $remap $reinstall &>/dev/null
     ret=$?
     echo "{\"progress\":\"1.00\",\"time\":\"\",\"exit\":$ret,\"event\":\"restore-config\",\"state\":\"done\",\"step\":2,\"pid\":\"\",\"action\":\"Restoring configuration\"}"
     if [ $ret -gt 0 ]; then
@@ -104,7 +112,7 @@ case $action in
         ;;
 
     "restore-backup-config")
-        _restore "$(_get data)" "$(_get remap)" $(_get InstallPackages)
+        _restore "$(_get data)" "$(_get remap)" $(_get InstallPackages) $(_get SkipNetwork)
         ;;
 
     "restore-backup-data")
