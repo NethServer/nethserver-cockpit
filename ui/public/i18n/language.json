@@ -853,7 +853,9 @@
     "enable_user_settings_page": "Enable user settings page",
     "grant_only_trusted_networks": "Grant access only from Trusted Networks",
     "save_user_settings_page_configuration": "Save user settings page configuration",
-    "cockpit_will_be_restared": "Cockpit Server Manager will be restarted"
+    "cockpit_will_be_restared": "Cockpit Server Manager will be restarted",
+    "activate": "Activate",
+    "to_enable": "to enable"
   },
   "logs": {
     "title": "Logs"

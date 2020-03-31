@@ -751,16 +751,22 @@
             ></doc-info>
           </label>
           <div class="col-sm-5">
-            <toggle-button
-              class="min-toggle"
-              :width="40"
-              :height="20"
-              :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
-              :value="settings.userSettingsPage.access"
-              :sync="true"
-              :disabled="!settings.shellPolicy"
-              @change="toggleUserSettingsPageAccess()"
-            />
+            <span
+              data-toggle="tooltip"
+              data-placement="right"
+              :title="$t('settings.activate') + ' \'' + $t('settings.force_the_shell') + '\' ' + $t('settings.to_enable')"
+            >
+              <toggle-button
+                class="min-toggle"
+                :width="40"
+                :height="20"
+                :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+                :value="settings.userSettingsPage.access"
+                :sync="true"
+                :disabled="!settings.shellPolicy"
+                @change="toggleUserSettingsPageAccess()"
+              />
+            </span>
             <span v-if="errors.userSettingsPageAccess.hasError" class="help-block">
               {{$t('validation.validation_failed')}}:
               {{$t('validation.'+errors.userSettingsPageAccess.message)}}
@@ -775,16 +781,22 @@
             {{$t('settings.grant_only_trusted_networks')}}
           </label>
           <div class="col-sm-5">
-            <toggle-button
-              class="min-toggle"
-              :width="40"
-              :height="20"
-              :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
-              :value="settings.userSettingsPage.trustedNetworksAccess"
-              :sync="true"
-              :disabled="!settings.shellPolicy"
-              @change="toggleUserSettingsPageTrustedNetworksAccess()"
-            />
+            <span
+              data-toggle="tooltip"
+              data-placement="right"
+              :title="$t('settings.activate') + ' \'' + $t('settings.force_the_shell') + '\' ' + $t('settings.to_enable')"
+            >
+              <toggle-button
+                class="min-toggle"
+                :width="40"
+                :height="20"
+                :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+                :value="settings.userSettingsPage.trustedNetworksAccess"
+                :sync="true"
+                :disabled="!settings.shellPolicy"
+                @change="toggleUserSettingsPageTrustedNetworksAccess()"
+              />
+            </span>
             <span v-if="errors.userSettingsPageTrustedNetworksAccess.hasError" class="help-block">
               {{$t('validation.validation_failed')}}:
               {{$t('validation.'+errors.userSettingsPageTrustedNetworksAccess.message)}}
@@ -800,7 +812,11 @@
             ></div>
           </label>
           <div class="col-sm-5">
-            <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+            <button
+              class="btn btn-primary"
+              type="submit"
+              :disabled="!settings.shellPolicy"
+            >{{$t('save')}}</button>
           </div>
         </div>
       </form>
@@ -822,10 +838,13 @@
             </div>
             <form class="form-horizontal" v-on:submit.prevent="confirmSaveUserSettingsPageModal()">
               <div class="modal-body">
-                <label>
-                  {{$t('are_you_sure')}}?
-                  {{$t('settings.cockpit_will_be_restared')}}
-                </label>
+                <div class="alert alert-warning">
+                  <span class="pficon pficon-warning-triangle-o"></span>
+                  <span>
+                    {{$t('are_you_sure')}}?
+                    {{$t('settings.cockpit_will_be_restared')}}
+                  </span>
+                </div>
               </div>
               <div class="modal-footer">
                 <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
@@ -1206,16 +1225,28 @@ export default {
           context.getHints(function() {
             context.$parent.hints.settings.count = context.hints.count;
           });
-
           context.view.isLoaded = true;
+          context.updateShellPolicyTooltips();
         },
         function(error) {
           console.error(error);
         }
       );
     },
+    updateShellPolicyTooltips() {
+      const context = this;
+
+      setTimeout(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+
+        if (context.settings.shellPolicy) {
+          $('[data-toggle="tooltip"]').tooltip('destroy');
+        }
+      }, 300);
+    },
     toggleSettingsShellPolicy() {
       this.settings.shellPolicy = !this.settings.shellPolicy;
+      this.updateShellPolicyTooltips();
     },
     toggleSettingsHints() {
       this.settings.cockpit.ShowHints = !this.settings.cockpit.ShowHints;
