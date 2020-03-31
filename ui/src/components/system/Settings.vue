@@ -12,7 +12,7 @@
     <h2>{{ $t('settings.title') }}</h2>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <div v-if="view.isLoaded">
-      <div v-if="hints.count > 0 && view.isAdmin" class="alert alert-warning alert-dismissable clear">
+      <div v-if="hints.count > 0 && view.isAdmin && !accessUserSettings" class="alert alert-warning alert-dismissable clear">
         <span class="pficon pficon-warning-triangle-o"></span>
         <strong>{{$t('hints_suggested')}}:</strong>
         <li v-for="(m,t) in hints.details" v-bind:key="t">
@@ -296,10 +296,10 @@
         </div>
       </form>
 
-      <div v-if="view.isAdmin" class="divider"></div>
-      <h3 v-if="view.isAdmin">{{$t('settings.smart_host')}}</h3>
+      <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
+      <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.smart_host')}}</h3>
       <form
-        v-if="view.isAdmin"
+        v-if="view.isAdmin && !accessUserSettings"
         class="form-horizontal"
         v-on:submit.prevent="saveSettings('smarthost')"
       >
@@ -441,9 +441,13 @@
         </div>
       </form>
 
-      <div v-if="view.isAdmin" class="divider"></div>
-      <h3 v-if="view.isAdmin">{{$t('settings.notifications')}}</h3>
-      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('root')">
+      <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
+      <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.notifications')}}</h3>
+      <form
+        v-if="view.isAdmin && !accessUserSettings"
+        class="form-horizontal"
+        v-on:submit.prevent="saveSettings('root')"
+      >
         <div :class="['form-group', errors.SenderAddress.hasError ? 'has-error' : '']">
           <label
             class="col-sm-2 control-label"
@@ -506,10 +510,10 @@
         </div>
       </form>
 
-      <div v-if="view.isAdmin" class="divider"></div>
-      <h3 v-if="view.isAdmin">{{$t('settings.web_shell')}}</h3>
+      <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
+      <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.web_shell')}}</h3>
       <form
-        v-if="view.isAdmin"
+        v-if="view.isAdmin && !accessUserSettings"
         class="form-horizontal"
         v-on:submit.prevent="saveSettings('cockpit')"
       >
@@ -568,10 +572,10 @@
         </div>
       </form>
 
-      <div v-if="view.isAdmin" class="divider"></div>
-      <h3 v-if="view.isAdmin">{{$t('settings.logrotate')}}</h3>
+      <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
+      <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.logrotate')}}</h3>
       <form
-        v-if="view.isAdmin"
+        v-if="view.isAdmin && !accessUserSettings"
         class="form-horizontal"
         v-on:submit.prevent="saveSettings('logrotate')"
       >
@@ -642,9 +646,9 @@
         </div>
       </form>
 
-      <div v-if="view.isAdmin" class="divider"></div>
-      <h3 v-if="view.isAdmin">{{$t('settings.hints')}}</h3>
-      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('hints')">
+      <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
+      <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.hints')}}</h3>
+      <form v-if="view.isAdmin && !accessUserSettings" class="form-horizontal" v-on:submit.prevent="saveSettings('hints')">
         <div :class="['form-group', errors.ShowHints.hasError ? 'has-error' : '']">
           <label
             class="col-sm-2 control-label"
@@ -679,9 +683,13 @@
         </div>
       </form>
 
-      <div v-if="view.isAdmin" class="divider"></div>
-      <h3 v-if="view.isAdmin">{{$t('settings.shellPolicy')}}</h3>
-      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('shellPolicy')">
+      <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
+      <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.shellPolicy')}}</h3>
+      <form
+        v-if="view.isAdmin && !accessUserSettings"
+        class="form-horizontal"
+        v-on:submit.prevent="saveSettings('shellPolicy')"
+      >
         <div :class="['form-group', errors.shellPolicy.hasError ? 'has-error' : '']">
           <label
             class="col-sm-2 control-label"
@@ -725,12 +733,12 @@
       </form>
 
       <!-- user settings page on port 443 -->
-      <div v-if="view.isAdmin" class="divider"></div>
-      <h3 v-if="view.isAdmin">{{$t('settings.user_settings_page')}}</h3>
+      <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
+      <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.user_settings_page')}}</h3>
       <form
-        v-if="view.isAdmin"
+        v-if="view.isAdmin && !accessUserSettings"
         class="form-horizontal"
-        v-on:submit.prevent="saveSettings('user_settings_page')"
+        v-on:submit.prevent="openSaveUserSettingsPageModal()"
       >
         <!-- user settings page access -->
         <div :class="['form-group', errors.userSettingsPageAccess.hasError ? 'has-error' : '']">
@@ -750,6 +758,7 @@
               :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
               :value="settings.userSettingsPage.access"
               :sync="true"
+              :disabled="!settings.shellPolicy"
               @change="toggleUserSettingsPageAccess()"
             />
             <span v-if="errors.userSettingsPageAccess.hasError" class="help-block">
@@ -763,7 +772,7 @@
           v-if="settings.userSettingsPage.access"
           :class="['form-group', errors.userSettingsPageTrustedNetworksAccess.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label">
-            {{$t('settings.grant_access_from_trusted_networks')}}
+            {{$t('settings.grant_only_trusted_networks')}}
           </label>
           <div class="col-sm-5">
             <toggle-button
@@ -773,6 +782,7 @@
               :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
               :value="settings.userSettingsPage.trustedNetworksAccess"
               :sync="true"
+              :disabled="!settings.shellPolicy"
               @change="toggleUserSettingsPageTrustedNetworksAccess()"
             />
             <span v-if="errors.userSettingsPageTrustedNetworksAccess.hasError" class="help-block">
@@ -794,6 +804,37 @@
           </div>
         </div>
       </form>
+
+      <!-- save user settings page modal -->
+      <div
+        class="modal"
+        id="saveUserSettingsPageModal"
+        tabindex="-1"
+        role="dialog"
+        data-backdrop="static"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4
+                class="modal-title"
+              >{{$t('settings.save_user_settings_page_configuration')}}</h4>
+            </div>
+            <form class="form-horizontal" v-on:submit.prevent="confirmSaveUserSettingsPageModal()">
+              <div class="modal-body">
+                <label>
+                  {{$t('are_you_sure')}}?
+                  {{$t('settings.cockpit_will_be_restared')}}
+                </label>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+                <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -1157,7 +1198,7 @@ export default {
               settings.cockpit.ShowHints == "enabled";
 
             //shellPolicy
-            context.settings.shellPolicy = settings.shellPolicy == "enabled";
+            settings.shellPolicy = settings.shellPolicy == "enabled";
           }
           context.settings = settings;
           context.settings.cockpit.ShowHints == "enabled";
@@ -1207,6 +1248,13 @@ export default {
     },
     logout() {
       cockpit.logout();
+    },
+    openSaveUserSettingsPageModal() {
+      $("#saveUserSettingsPageModal").modal("show");
+    },
+    confirmSaveUserSettingsPageModal() {
+      $("#saveUserSettingsPageModal").modal("hide");
+      this.saveSettings('user_settings_page');
     },
     saveSettings(type) {
       var context = this;
