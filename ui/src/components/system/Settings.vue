@@ -841,10 +841,11 @@
                 <div class="alert alert-warning">
                   <span class="pficon pficon-warning-triangle-o"></span>
                   <span>
-                    {{$t('are_you_sure')}}?
+                    <strong>{{$t('warning')}}:</strong>
                     {{$t('settings.cockpit_will_be_restared')}}
                   </span>
                 </div>
+                <label>{{$t('are_you_sure')}}?</label>
               </div>
               <div class="modal-footer">
                 <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
