@@ -855,7 +855,8 @@
     "save_user_settings_page_configuration": "Save user settings page configuration",
     "cockpit_will_be_restared": "Cockpit Server Manager will be restarted",
     "activate": "Activate",
-    "to_enable": "to enable"
+    "to_enable": "to enable",
+    "user_settings_page_url": "URL"
   },
   "logs": {
     "title": "Logs"

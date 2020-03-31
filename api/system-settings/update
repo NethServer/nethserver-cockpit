@@ -52,6 +52,12 @@ case $action in
         ;;
 
     "user_settings_page")
+        shell_override_status=$(/sbin/e-smith/config getprop sssd ShellOverrideStatus)
+        if [[ $shell_override_status = 'disabled' ]]; then
+            /sbin/e-smith/config setprop sssd ShellOverrideStatus enabled
+            /sbin/e-smith/signal-event -j nethserver-sssd-save
+        fi
+
         /sbin/e-smith/config setprop cockpit.socket UserSettingsPage "$(_get UserSettingsPage)" UserSettingsGrantAccess "$(_get UserSettingsGrantAccess)"
         /sbin/e-smith/expand-template /etc/httpd/conf.d/default-virtualhost.inc
         /sbin/e-smith/expand-template /etc/cockpit/cockpit.conf
