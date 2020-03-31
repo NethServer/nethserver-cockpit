@@ -51,7 +51,7 @@
             <span v-if="SSHConfig.errors.PasswordAuthentication.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+SSHConfig.errors.PasswordAuthentication.message)}}</span>
           </div>
         </div>
-        <div v-if="ShellOverrideStatus && Provider !== 'none'"v-bind:class="['form-group', SSHConfig.errors.AllowGroups.hasError ? 'has-error' : '']">
+        <div v-if="ShellOverrideStatus && Provider !== 'none'" v-bind:class="['form-group', SSHConfig.errors.AllowGroups.hasError ? 'has-error' : '']">
           <label
               class="col-sm-2 control-label"
               >
@@ -110,6 +110,7 @@
                     <span class="remove-item-inline" href="#">
                       <span class="fa fa-lock black"></span>
                     </span>
+                </span>
               </li>
               <li>
                 <span :class="['label','label-info','label-select','label-group']">
@@ -128,6 +129,7 @@
                     <span class="remove-item-inline" href="#">
                       <span class="fa fa-lock black"></span>
                     </span>
+                </span>
               </li>
             </ul>
             <span v-if="SSHConfig.errors.AllowGroups.hasError" class="help-block">
