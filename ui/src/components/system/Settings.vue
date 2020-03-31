@@ -679,6 +679,51 @@
         </div>
       </form>
 
+      <div v-if="view.isAdmin" class="divider"></div>
+      <h3 v-if="view.isAdmin">{{$t('settings.shellPolicy')}}</h3>
+      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('shellPolicy')">
+        <div :class="['form-group', errors.shellPolicy.hasError ? 'has-error' : '']">
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >
+          {{$t('settings.force_the_shell')}}
+          <doc-info
+            :placement="'top'"
+            :title="$t('settings.force_the_shell')"
+            :chapter="'shell_bash_needed'"
+            :inline="true"
+          ></doc-info>
+          </label>
+          <div class="col-sm-5">
+            <toggle-button
+              class="min-toggle"
+              :width="40"
+              :height="20"
+              :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+              :value="settings.shellPolicy"
+              :sync="true"
+              @change="toggleSettingsShellPolicy()"
+            />
+            <span v-if="errors.shellPolicy.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.shellPolicy.message)}}
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">
+            <div
+              v-if="loaders.shellPolicy"
+              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
+            ></div>
+          </label>
+          <div class="col-sm-5">
+            <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+          </div>
+        </div>
+      </form>
+
       <!-- user settings page on port 443 -->
       <div v-if="view.isAdmin" class="divider"></div>
       <h3 v-if="view.isAdmin">{{$t('settings.user_settings_page')}}</h3>
@@ -820,6 +865,7 @@ export default {
           Rotate: "weekly",
           Compression: "disabled"
         },
+        shellPolicy: false,
         userSettingsPage: {
           access: false,
           trustedNetworksAccess: false
@@ -832,6 +878,7 @@ export default {
         cockpit: false,
         hints: false,
         logrotate: false,
+        shellPolicy: false,
         otp: false,
         userSettingsPage: false
       },
@@ -916,6 +963,10 @@ export default {
           message: ""
         },
         Rotate: {
+          hasError: false,
+          message: ""
+        },
+        shellPolicy: {
           hasError: false,
           message: ""
         },
@@ -1096,8 +1147,6 @@ export default {
             settings.cockpit.LimitAccess = settings.cockpit.LimitAccess.split(
               ","
             ).join("\n");
-            settings.cockpit.ShowHints =
-              settings.cockpit.ShowHints == "enabled";
 
             // user settings page
             settings.userSettingsPage.access =
@@ -1106,18 +1155,26 @@ export default {
               settings.userSettingsPage.UserSettingsGrantAccess == "enabled";
             settings.cockpit.ShowHints =
               settings.cockpit.ShowHints == "enabled";
+
+            //shellPolicy
+            context.settings.shellPolicy = settings.shellPolicy == "enabled";
           }
           context.settings = settings;
+          context.settings.cockpit.ShowHints == "enabled";
 
           context.getHints(function() {
             context.$parent.hints.settings.count = context.hints.count;
           });
+
           context.view.isLoaded = true;
         },
         function(error) {
           console.error(error);
         }
       );
+    },
+    toggleSettingsShellPolicy() {
+      this.settings.shellPolicy = !this.settings.shellPolicy;
     },
     toggleSettingsHints() {
       this.settings.cockpit.ShowHints = !this.settings.cockpit.ShowHints;
@@ -1225,6 +1282,16 @@ export default {
           settingsObj = {
             action: "hints",
             ShowHints: context.settings.cockpit.ShowHints
+              ? "enabled"
+              : "disabled"
+          };
+          sudo = true;
+          break;
+
+        case "shellPolicy":
+          settingsObj = {
+            action: "shellPolicy",
+            shellPolicy: context.settings.shellPolicy
               ? "enabled"
               : "disabled"
           };

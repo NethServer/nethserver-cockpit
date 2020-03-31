@@ -69,6 +69,11 @@ case $action in
         /sbin/e-smith/signal-event -j nethserver-base-update
         ;;
 
+    "shellPolicy")
+        /sbin/e-smith/config setprop sssd ShellOverrideStatus "$(_get shellPolicy)"
+        /sbin/e-smith/signal-event -j nethserver-sssd-save
+        ;;
+
     "otp")
         OtpStatus=$(_get OtpStatus)
         OtpCockpit=$(_get OtpCockpit)

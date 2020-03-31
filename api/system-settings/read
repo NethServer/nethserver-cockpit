@@ -98,10 +98,13 @@ if($cmd eq 'hints') {
         Times => $logrotate->prop('Times')
     );
 
+    my $shellPolicy = $db->get_prop('sssd', 'ShellOverrideStatus');
+    
     $ret{'configuration'}{'smarthost'} = \%smarthost;
     $ret{'configuration'}{'cockpit'} = \%cockpit;
     $ret{'configuration'}{'root'} = \%root;
     $ret{'configuration'}{'logrotate'} = \%logrotate;
+    $ret{'configuration'}{'shellPolicy'} = $shellPolicy;
     $ret{'configuration'}{'userSettingsPage'} = \%user_settings_page;
 
     print encode_json(\%ret);

@@ -74,6 +74,10 @@ switch ($data['action']) {
         $v->declareParameter('Rotate', $v->createValidator()->memberOf('daily', 'weekly', 'monthly'));
         break;
 
+    case "shellPolicy":
+        $v->declareParameter('ShellOverrideStatus', Validate::SERVICESTATUS);
+        break;
+
     case "otp":
         $v->declareParameter('OtpCockpit', Validate::SERVICESTATUS);
         $v->declareParameter('OtpSshd', Validate::SERVICESTATUS);
