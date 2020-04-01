@@ -1043,3 +1043,7 @@ circle {
 .suggestions {
     position: initial !important;
 }
+
+.no-mg-left {
+    margin-left: 0 !important;
+}

@@ -46,6 +46,9 @@ switch ($data['action']) {
         }
         break;
 
+    case "user_settings_page":
+        break;
+
     case "root":
         $emailValidator = $v->createValidator(Validate::EMAIL);
         $v->declareParameter('SenderAddress', Validate::EMAIL);
@@ -69,6 +72,10 @@ switch ($data['action']) {
         $v->declareParameter('Compression', Validate::SERVICESTATUS);
         $v->declareParameter('Times', Validate::POSITIVE_INTEGER);
         $v->declareParameter('Rotate', $v->createValidator()->memberOf('daily', 'weekly', 'monthly'));
+        break;
+
+    case "shellPolicy":
+        $v->declareParameter('ShellOverrideStatus', Validate::SERVICESTATUS);
         break;
 
     case "otp":

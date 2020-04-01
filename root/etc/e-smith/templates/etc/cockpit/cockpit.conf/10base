@@ -1,0 +1,69 @@
+#
+# 10base allow additional Origins
+#
+{
+    # check if user settings is enabled and redirect url is set
+    if (
+        ${'sssd'}{'ShellOverrideStatus'} eq 'enabled' &&
+        (${'cockpit.socket'}{'UserSettingsPage'} || 'disabled') eq 'enabled' &&
+        (${'cockpit.socket'}{'UserSettingsPageAlias'} || '') ne ''
+    ) {
+        # include libs
+        use esmith::HostsDB;
+        use esmith::NetworksDB;
+
+        # init databases
+        my $hdb = esmith::HostsDB->open_ro();
+        my $ndb = esmith::NetworksDB->open_ro();
+
+        # define arrays
+        my @aliases = ($SystemName . "." . $DomainName);
+        my @ips;
+
+        # search all aliases
+        foreach ($hdb->get_all_by_prop('type', 'alias')) {
+            push(@aliases, $_->key);
+        }
+
+        # search all ips green
+        foreach ($ndb->get_all_by_prop('role', 'green')) {
+            # skip if bootproto is dhcp
+            my $bootproto = $_->prop('bootproto');
+            if ($bootproto && $bootproto eq 'dhcp') { next };
+
+            # skip if ipaddr is empty
+            my $ipaddr = $_->prop('ipaddr') || next;
+
+            push(@ips, $ipaddr);
+        }
+
+        # search all ips red
+        foreach ($ndb->get_all_by_prop('role', 'red')) {
+            # skip if bootproto is dhcp
+            my $bootproto = $_->prop('bootproto');
+            if ($bootproto && $bootproto eq 'dhcp') { next };
+
+            # skip if ipaddr is empty
+            my $ipaddr = $_->prop('ipaddr') || next;
+
+            push(@ips, $ipaddr);
+        }
+
+        $OUT .= q(
+[WebService]
+ProtocolHeader = X-Forwarded-Proto
+Origins = http://127.0.0.1:9090 );
+
+        # print results
+        foreach my $alias (@aliases) {
+            $OUT .= "https://$alias https://$alias:9090 ";
+        }
+
+
+        foreach my $ip (@ips) {
+            $OUT .= "https://$ip https://$ip:9090 ";
+        }
+
+        $OUT .= "\n";
+    }
+}
