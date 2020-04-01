@@ -667,6 +667,7 @@ Example:
 {
   "action": "restore-backup-config",
   "InstallPackages": "enabled",
+  "SkipNetwork": "enabled",
   "mode": "backup",
   "remap": { "eth0" : "enp0s1" }
   "data": "c00"
