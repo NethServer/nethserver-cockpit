@@ -54,14 +54,16 @@
 ProtocolHeader = X-Forwarded-Proto
 Origins = http://127.0.0.1:9090 );
 
-        # print results
-        foreach my $alias (@aliases) {
-            $OUT .= "https://$alias https://$alias:9090 ";
-        }
+        foreach my $port (@listPorts) {
+            $OUT .= "https://localhost:$port ";
 
+            foreach my $alias (@aliases) {
+                $OUT .= "https://$alias https://$alias:$port ";
+            }
 
-        foreach my $ip (@ips) {
-            $OUT .= "https://$ip https://$ip:9090 ";
+            foreach my $ip (@ips) {
+                $OUT .= "https://$ip https://$ip:$port ";
+            }
         }
 
         $OUT .= "\n";
