@@ -493,9 +493,40 @@
               <div v-if="currentConfigBackup.remap && currentConfigBackup.isValid" class="advanced">
                 <span>{{$t('backup.remap_interface_config')}}</span>
                 <div class="divider divider-advanced"></div>
+
+                <div class="form-group">
+                  <label
+                    class="col-sm-4 control-label"
+                    for="restoreNetwork"
+                  >{{$t('backup.restore_network')}}</label>
+                  <div class="col-sm-8">
+                    <input
+                      id="restoreNetwork"
+                      type="checkbox"
+                      v-model="currentConfigBackup.restoreNetwork"
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+
               </div>
               <div
-                v-if="currentConfigBackup.remap && currentConfigBackup.isValid"
+                v-if="currentConfigBackup.isValid && ! currentConfigBackup.restoreNetwork"
+                class="alert  alert-info"
+              >
+                <span class="pficon pficon-info"></span>
+                <strong>{{$t('info')}}:</strong>
+                {{$t('backup.skip_network_info')}}.
+                <doc-info
+                  :placement="'top'"
+                  :title="$t('docs.disaster_recovery')"
+                  :chapter="'disaster_recovery'"
+                  :section="'skip-network-restore'"
+                  :inline="false"
+                ></doc-info>
+              </div>
+              <div
+                v-if="currentConfigBackup.remap && currentConfigBackup.isValid && currentConfigBackup.restoreNetwork"
                 class="alert alert-warning alert-dismissable"
               >
                 <span class="pficon pficon-warning-triangle-o"></span>
@@ -503,7 +534,7 @@
                 {{$t('backup.during_remap_warning')}}.
               </div>
               <div
-                v-if="currentConfigBackup.errorMessageValidate"
+                v-if="currentConfigBackup.errorMessageValidate && currentConfigBackup.restoreNetwork"
                 class="alert alert-danger alert-dismissable"
               >
                 <span class="pficon pficon-error-circle-o"></span>
@@ -511,7 +542,7 @@
                 {{$t('backup.'+currentConfigBackup.errorMessageValidate)}}.
               </div>
               <div
-                v-if="currentConfigBackup.remap && currentConfigBackup.isValid"
+                v-if="currentConfigBackup.remap && currentConfigBackup.isValid && currentConfigBackup.restoreNetwork"
                 class="form-group"
               >
                 <div class="col-sm-4">
@@ -526,7 +557,7 @@
               </div>
               <div
                 v-for="(o, ok) in currentConfigBackup.remapInterfaces.new"
-                v-if="currentConfigBackup.remap && currentConfigBackup.isValid && o.role && o.role.length > 0"
+                v-if="currentConfigBackup.remap && currentConfigBackup.isValid && o.role && o.role.length > 0 && currentConfigBackup.restoreNetwork"
                 v-bind:key="ok"
                 class="form-group"
               >
@@ -2710,7 +2741,8 @@ export default {
           old: [],
           new: []
         },
-        remapNew: {}
+        remapNew: {},
+        restoreNetwork: true
       };
     },
     initBackupData() {
@@ -3020,6 +3052,9 @@ export default {
         InstallPackages: context.currentConfigBackup.restoreInstallPackages
           ? "enabled"
           : "disabled",
+        SkipNetwork: context.currentConfigBackup.restoreNetwork
+            ? "disabled"
+            : "enabled",
         remap: context.swap(context.currentConfigBackup.remapNew)
       };
 

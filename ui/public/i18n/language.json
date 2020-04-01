@@ -319,7 +319,9 @@
     "invalid_backup_format": "Backup not found or invalid",
     "remap_at_least_one_green": "You have to select at least one green to remap",
     "assign_later": "Assign later",
-    "current_int": "System interfaces"
+    "current_int": "System interfaces",
+    "restore_network": "Restore network configuration",
+    "skip_network_info": "Current network configuration will be preserved, but some applications may be disabled at the end of the process. After restoring, review the system configuration to re-enable all required applications."
   },
   "disk_usage": {
     "title": "Disk usage",
@@ -1208,6 +1210,7 @@
     "otp_Scan_QRcode": "The QR code contains a secret URL used to generate valid tokens.",
     "otp_code_for_single_use": "If you lose your phone, you can use backup codes to sign in. Every backup code can be used only once.",
     "OtpSshd_Only_Password_Auth":"2FA is available only for password authentication. Authentication with public keys will not be affected by 2FA.",
+    "disaster_recovery": "Disaster recovery",
     "user_settings_page": "Allow users to change their password and other settings on a web page outside Cockpit (on port 443). This feature can be enabled only if 'Override the shell of users' is enabled as well."
   }
 }
