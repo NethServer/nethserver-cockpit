@@ -965,7 +965,7 @@ export default {
         togglePass: false,
         canChangePassword: false
       },
-      accessUserSettings: window.location.port !== "9090",
+      accessUserSettings: window.location.port === "",
       loggedUser: {}
     };
   },
