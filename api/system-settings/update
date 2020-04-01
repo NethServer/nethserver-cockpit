@@ -59,8 +59,7 @@ case $action in
         fi
 
         /sbin/e-smith/config setprop cockpit.socket UserSettingsPage "$(_get UserSettingsPage)" UserSettingsGrantAccess "$(_get UserSettingsGrantAccess)"
-        /sbin/e-smith/expand-template /etc/httpd/conf.d/default-virtualhost.inc
-        /sbin/e-smith/expand-template /etc/cockpit/cockpit.conf
+        /sbin/e-smith/signal-event -j nethserver-cockpit-update
         /usr/sbin/httpd -t && /usr/bin/systemctl reload httpd && /usr/bin/systemctl restart cockpit
         ;;
 

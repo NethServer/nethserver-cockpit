@@ -41,6 +41,8 @@ event_templates('nethserver-cockpit-update', qw(
     /etc/nethserver/cockpit.allow
     /etc/cockpit/cockpit.conf
     /etc/httpd/conf.d/default-virtualhost.inc
+    /etc/pam.d/cockpit
+    /etc/nethserver/cockpit.otp.force
 ));
 
 event_services(nethserver-cockpit-update, qw(
