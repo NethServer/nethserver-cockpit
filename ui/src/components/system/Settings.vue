@@ -1,9 +1,18 @@
 <template>
   <div>
-    <h2>{{$t('settings.title')}}</h2>
+    <div v-show="accessUserSettings && loggedUser">
+      <h3 class="logged-user right">{{ loggedUser.full_name }}</h3>
+      <button
+        tabindex="-1"
+        @click="logout()"
+        type="button"
+        class="btn btn-danger logout-button"
+      >{{$t('settings.logout')}}</button>
+    </div>
+    <h2>{{ $t('settings.title') }}</h2>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <div v-if="view.isLoaded">
-      <div v-if="hints.count > 0 && view.isAdmin" class="alert alert-warning alert-dismissable">
+      <div v-if="hints.count > 0 && view.isAdmin && !accessUserSettings" class="alert alert-warning alert-dismissable clear">
         <span class="pficon pficon-warning-triangle-o"></span>
         <strong>{{$t('hints_suggested')}}:</strong>
         <li v-for="(m,t) in hints.details" v-bind:key="t">
@@ -15,6 +24,7 @@
         >{{hints.message && $t('hints.'+hints.message)}}</span>
       </div>
 
+      <div  class="divider clear"></div>
       <h3>{{$t('settings.password')}}</h3>
       <div v-if="!newUser.canChangePassword" class="alert alert-info alert-dismissable">
         <span class="pficon pficon-info"></span>
@@ -286,10 +296,10 @@
         </div>
       </form>
 
-      <div v-if="view.isAdmin" class="divider"></div>
-      <h3 v-if="view.isAdmin">{{$t('settings.smart_host')}}</h3>
+      <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
+      <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.smart_host')}}</h3>
       <form
-        v-if="view.isAdmin"
+        v-if="view.isAdmin && !accessUserSettings"
         class="form-horizontal"
         v-on:submit.prevent="saveSettings('smarthost')"
       >
@@ -431,9 +441,13 @@
         </div>
       </form>
 
-      <div v-if="view.isAdmin" class="divider"></div>
-      <h3 v-if="view.isAdmin">{{$t('settings.notifications')}}</h3>
-      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('root')">
+      <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
+      <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.notifications')}}</h3>
+      <form
+        v-if="view.isAdmin && !accessUserSettings"
+        class="form-horizontal"
+        v-on:submit.prevent="saveSettings('root')"
+      >
         <div :class="['form-group', errors.SenderAddress.hasError ? 'has-error' : '']">
           <label
             class="col-sm-2 control-label"
@@ -496,10 +510,10 @@
         </div>
       </form>
 
-      <div v-if="view.isAdmin" class="divider"></div>
-      <h3 v-if="view.isAdmin">{{$t('settings.web_shell')}}</h3>
+      <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
+      <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.web_shell')}}</h3>
       <form
-        v-if="view.isAdmin"
+        v-if="view.isAdmin && !accessUserSettings"
         class="form-horizontal"
         v-on:submit.prevent="saveSettings('cockpit')"
       >
@@ -558,10 +572,10 @@
         </div>
       </form>
 
-      <div v-if="view.isAdmin" class="divider"></div>
-      <h3 v-if="view.isAdmin">{{$t('settings.logrotate')}}</h3>
+      <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
+      <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.logrotate')}}</h3>
       <form
-        v-if="view.isAdmin"
+        v-if="view.isAdmin && !accessUserSettings"
         class="form-horizontal"
         v-on:submit.prevent="saveSettings('logrotate')"
       >
@@ -632,9 +646,9 @@
         </div>
       </form>
 
-      <div v-if="view.isAdmin" class="divider"></div>
-      <h3 v-if="view.isAdmin">{{$t('settings.hints')}}</h3>
-      <form v-if="view.isAdmin" class="form-horizontal" v-on:submit.prevent="saveSettings('hints')">
+      <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
+      <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.hints')}}</h3>
+      <form v-if="view.isAdmin && !accessUserSettings" class="form-horizontal" v-on:submit.prevent="saveSettings('hints')">
         <div :class="['form-group', errors.ShowHints.hasError ? 'has-error' : '']">
           <label
             class="col-sm-2 control-label"
@@ -668,6 +682,191 @@
           </div>
         </div>
       </form>
+
+      <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
+      <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.shellPolicy')}}</h3>
+      <form
+        v-if="view.isAdmin && !accessUserSettings"
+        class="form-horizontal"
+        v-on:submit.prevent="saveSettings('shellPolicy')"
+      >
+        <div :class="['form-group', errors.shellPolicy.hasError ? 'has-error' : '']">
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >
+          {{$t('settings.force_the_shell')}}
+          <doc-info
+            :placement="'top'"
+            :title="$t('settings.force_the_shell')"
+            :chapter="'shell_bash_needed'"
+            :inline="true"
+          ></doc-info>
+          </label>
+          <div class="col-sm-5">
+            <toggle-button
+              class="min-toggle"
+              :width="40"
+              :height="20"
+              :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+              :value="settings.shellPolicy"
+              :sync="true"
+              @change="toggleSettingsShellPolicy()"
+            />
+            <span v-if="errors.shellPolicy.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.shellPolicy.message)}}
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="textInput-modal-markup">
+            <div
+              v-if="loaders.shellPolicy"
+              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
+            ></div>
+          </label>
+          <div class="col-sm-5">
+            <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+          </div>
+        </div>
+      </form>
+
+      <!-- user settings page on port 443 -->
+      <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
+      <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.user_settings_page')}}</h3>
+      <form
+        v-if="view.isAdmin && !accessUserSettings"
+        class="form-horizontal"
+        v-on:submit.prevent="openSaveUserSettingsPageModal()"
+      >
+        <!-- user settings page access -->
+        <div :class="['form-group', errors.userSettingsPageAccess.hasError ? 'has-error' : '']">
+          <label class="col-sm-2 control-label">
+            {{$t('settings.enable_user_settings_page')}}
+            <doc-info
+              :placement="'top'"
+              :chapter="'user_settings_page'"
+              :inline="true"
+            ></doc-info>
+          </label>
+          <div class="col-sm-5">
+            <span
+              data-toggle="tooltip"
+              data-placement="right"
+              :title="$t('settings.activate') + ' \'' + $t('settings.force_the_shell') + '\' ' + $t('settings.to_enable')"
+            >
+              <toggle-button
+                class="min-toggle"
+                :width="40"
+                :height="20"
+                :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+                :value="settings.userSettingsPage.access"
+                :sync="true"
+                :disabled="!settings.shellPolicy"
+                @change="toggleUserSettingsPageAccess()"
+              />
+            </span>
+            <span v-if="errors.userSettingsPageAccess.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.userSettingsPageAccess.message)}}
+            </span>
+          </div>
+        </div>
+        <!-- user settings page trusted networks access -->
+        <div
+          v-if="settings.userSettingsPage.access"
+          :class="['form-group', errors.userSettingsPageTrustedNetworksAccess.hasError ? 'has-error' : '']">
+          <label class="col-sm-2 control-label">
+            {{$t('settings.grant_only_trusted_networks')}}
+          </label>
+          <div class="col-sm-5">
+            <span
+              data-toggle="tooltip"
+              data-placement="right"
+              :title="$t('settings.activate') + ' \'' + $t('settings.force_the_shell') + '\' ' + $t('settings.to_enable')"
+            >
+              <toggle-button
+                class="min-toggle"
+                :width="40"
+                :height="20"
+                :color="{checked: '#0088ce', unchecked: '#bbbbbb'}"
+                :value="settings.userSettingsPage.trustedNetworksAccess"
+                :sync="true"
+                :disabled="!settings.shellPolicy"
+                @change="toggleUserSettingsPageTrustedNetworksAccess()"
+              />
+            </span>
+            <span v-if="errors.userSettingsPageTrustedNetworksAccess.hasError" class="help-block">
+              {{$t('validation.validation_failed')}}:
+              {{$t('validation.'+errors.userSettingsPageTrustedNetworksAccess.message)}}
+            </span>
+          </div>
+        </div>
+        <!-- user settings page URL -->
+        <div
+          v-if="settings.userSettingsPage.access"
+          class="form-group"
+        >
+          <label class="col-sm-2 control-label">
+            {{$t('settings.user_settings_page_url')}}
+          </label>
+          <div class="col-sm-5">
+            <a :href="settings.userSettingsPage.url" target="_blank">{{ settings.userSettingsPage.url }}</a>
+          </div>
+        </div>
+        <!-- user settings page save -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">
+            <div
+              v-if="loaders.userSettingsPage"
+              class="spinner spinner-sm form-spinner-loader adjust-top-loader"
+            ></div>
+          </label>
+          <div class="col-sm-5">
+            <button
+              class="btn btn-primary"
+              type="submit"
+              :disabled="!settings.shellPolicy"
+            >{{$t('save')}}</button>
+          </div>
+        </div>
+      </form>
+
+      <!-- save user settings page modal -->
+      <div
+        class="modal"
+        id="saveUserSettingsPageModal"
+        tabindex="-1"
+        role="dialog"
+        data-backdrop="static"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4
+                class="modal-title"
+              >{{$t('settings.save_user_settings_page_configuration')}}</h4>
+            </div>
+            <form class="form-horizontal" v-on:submit.prevent="confirmSaveUserSettingsPageModal()">
+              <div class="modal-body">
+                <div class="alert alert-warning">
+                  <span class="pficon pficon-warning-triangle-o"></span>
+                  <span>
+                    <strong>{{$t('warning')}}:</strong>
+                    {{$t('settings.cockpit_will_be_restared')}}
+                  </span>
+                </div>
+                <label>{{$t('are_you_sure')}}?</label>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+                <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -686,6 +885,7 @@ export default {
   },
   mounted() {
     this.initGraphics();
+    this.getLoggedUser();
     this.getSettings();
     this.getHints();
     this.getAuthorizations();
@@ -737,6 +937,12 @@ export default {
           Times: 4,
           Rotate: "weekly",
           Compression: "disabled"
+        },
+        shellPolicy: false,
+        userSettingsPage: {
+          access: false,
+          trustedNetworksAccess: false,
+          url: ""
         }
       },
       loaders: {
@@ -746,7 +952,9 @@ export default {
         cockpit: false,
         hints: false,
         logrotate: false,
-        otp: false
+        shellPolicy: false,
+        otp: false,
+        userSettingsPage: false
       },
       errors: this.initErrors(),
       newUser: {
@@ -756,7 +964,9 @@ export default {
         passwordStrength: false,
         togglePass: false,
         canChangePassword: false
-      }
+      },
+      accessUserSettings: window.location.port !== "9090",
+      loggedUser: {}
     };
   },
   methods: {
@@ -830,6 +1040,10 @@ export default {
           hasError: false,
           message: ""
         },
+        shellPolicy: {
+          hasError: false,
+          message: ""
+        },
         otp: {
           hasError: false,
           message: ""
@@ -839,6 +1053,14 @@ export default {
           message: ""
         },
         OtpSshd: {
+          hasError: false,
+          message: ""
+        },
+        userSettingsPageAccess: {
+          hasError: false,
+          message: ""
+        },
+        userSettingsPageTrustedNetworksAccess: {
           hasError: false,
           message: ""
         }
@@ -964,54 +1186,84 @@ export default {
           } catch (e) {
             console.error(e);
           }
-          context.settings = success.configuration;
+          let settings = success.configuration;
           context.newUser.canChangePassword =
             success.status.canChangePassword == 1;
 
           if (context.view.isAdmin) {
             // root or members of domain admins group
             var emails = [{}];
-            for (var s in context.settings) {
+            for (var s in settings) {
               if (s == "root") {
-                emails = context.settings[s].EmailAddress.map(function(i) {
+                emails = settings[s].EmailAddress.map(function(i) {
                   return {
                     email: i
                   };
                 });
               }
             }
-            context.settings.root.EmailAddress =
+            settings.root.EmailAddress =
               emails.length == 0 ? [{}] : emails;
 
             //smarthost
-            context.settings.smarthost.SmartHostStatus =
-              context.settings.smarthost.SmartHostStatus == "enabled";
-            context.settings.smarthost.SmartHostTlsStatus =
-              context.settings.smarthost.SmartHostTlsStatus == "enabled";
+            settings.smarthost.SmartHostStatus =
+              settings.smarthost.SmartHostStatus == "enabled";
+            settings.smarthost.SmartHostTlsStatus =
+              settings.smarthost.SmartHostTlsStatus == "enabled";
 
             //logrotate
-            context.settings.logrotate.Compression =
-              context.settings.logrotate.Compression == "enabled";
+            settings.logrotate.Compression =
+              settings.logrotate.Compression == "enabled";
 
             // cockpit
-            context.settings.cockpit.access =
-              context.settings.cockpit.access.indexOf("red") != -1;
-            context.settings.cockpit.LimitAccess = context.settings.cockpit.LimitAccess.split(
+            settings.cockpit.access =
+              settings.cockpit.access.indexOf("red") != -1;
+            settings.cockpit.LimitAccess = settings.cockpit.LimitAccess.split(
               ","
             ).join("\n");
-            context.settings.cockpit.ShowHints =
-              context.settings.cockpit.ShowHints == "enabled";
+
+            // user settings page
+            settings.userSettingsPage.access =
+              settings.userSettingsPage.UserSettingsPage == "enabled";
+            settings.userSettingsPage.trustedNetworksAccess =
+              settings.userSettingsPage.UserSettingsGrantAccess == "enabled";
+            settings.userSettingsPage.url =
+              window.location.protocol + '//' + window.location.hostname + settings.userSettingsPage.UserSettingsPageAlias;
+
+            settings.cockpit.ShowHints =
+              settings.cockpit.ShowHints == "enabled";
+
+            //shellPolicy
+            settings.shellPolicy = settings.shellPolicy == "enabled";
           }
+          context.settings = settings;
+          context.settings.cockpit.ShowHints == "enabled";
 
           context.getHints(function() {
             context.$parent.hints.settings.count = context.hints.count;
           });
           context.view.isLoaded = true;
+          context.updateShellPolicyTooltips();
         },
         function(error) {
           console.error(error);
         }
       );
+    },
+    updateShellPolicyTooltips() {
+      const context = this;
+
+      setTimeout(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+
+        if (context.settings.shellPolicy) {
+          $('[data-toggle="tooltip"]').tooltip('destroy');
+        }
+      }, 300);
+    },
+    toggleSettingsShellPolicy() {
+      this.settings.shellPolicy = !this.settings.shellPolicy;
+      this.updateShellPolicyTooltips();
     },
     toggleSettingsHints() {
       this.settings.cockpit.ShowHints = !this.settings.cockpit.ShowHints;
@@ -1026,8 +1278,31 @@ export default {
     toggleSettingsLimitAccess() {
       this.settings.cockpit.access = !this.settings.cockpit.access;
     },
+    toggleUserSettingsPageAccess() {
+      this.settings.userSettingsPage.access = !this.settings.userSettingsPage.access;
+    },
+    toggleUserSettingsPageTrustedNetworksAccess() {
+      this.settings.userSettingsPage.trustedNetworksAccess = !this.settings.userSettingsPage.trustedNetworksAccess;
+    },
     togglePass() {
       this.newUser.togglePass = !this.newUser.togglePass;
+    },
+    getLoggedUser() {
+      const context = this;
+      let userPromise = cockpit.user();
+      userPromise.done(function(user) {
+        context.loggedUser = user;
+      });
+    },
+    logout() {
+      cockpit.logout();
+    },
+    openSaveUserSettingsPageModal() {
+      $("#saveUserSettingsPageModal").modal("show");
+    },
+    confirmSaveUserSettingsPageModal() {
+      $("#saveUserSettingsPageModal").modal("hide");
+      this.saveSettings('user_settings_page');
     },
     saveSettings(type) {
       var context = this;
@@ -1109,6 +1384,16 @@ export default {
           sudo = true;
           break;
 
+        case "shellPolicy":
+          settingsObj = {
+            action: "shellPolicy",
+            shellPolicy: context.settings.shellPolicy
+              ? "enabled"
+              : "disabled"
+          };
+          sudo = true;
+          break;
+
         case "otp":
           settingsObj = {
             action: "otp",
@@ -1121,6 +1406,15 @@ export default {
             Key: context.otp.Key
           };
           sudo = false;
+          break;
+
+        case "user_settings_page":
+          settingsObj = {
+            action: "user_settings_page",
+            UserSettingsPage: context.settings.userSettingsPage.access ? "enabled" : "disabled",
+            UserSettingsGrantAccess: context.settings.userSettingsPage.trustedNetworksAccess ? "enabled" : "disabled"
+          };
+          sudo = true;
           break;
       }
 
@@ -1205,6 +1499,18 @@ export default {
 }
 .adjust-index {
   z-index: 1;
+}
+.logged-user {
+  margin-top: 0;
+  text-align: right;
+}
+.clear {
+  clear: both;
+}
+.logout-button {
+  float: right;
+  clear: both;
+  margin-bottom: 10px;
 }
 /* Chrome, Safari, Edge, Opera */
 

@@ -51,6 +51,19 @@ case $action in
         /sbin/e-smith/signal-event -j firewall-adjust
         ;;
 
+    "user_settings_page")
+        shell_override_status=$(/sbin/e-smith/config getprop sssd ShellOverrideStatus)
+        if [[ $shell_override_status = 'disabled' ]]; then
+            /sbin/e-smith/config setprop sssd ShellOverrideStatus enabled
+            /sbin/e-smith/signal-event -j nethserver-sssd-save
+        fi
+
+        /sbin/e-smith/config setprop cockpit.socket UserSettingsPage "$(_get UserSettingsPage)" UserSettingsGrantAccess "$(_get UserSettingsGrantAccess)"
+        /sbin/e-smith/expand-template /etc/httpd/conf.d/default-virtualhost.inc
+        /sbin/e-smith/expand-template /etc/cockpit/cockpit.conf
+        /usr/sbin/httpd -t && /usr/bin/systemctl reload httpd && /usr/bin/systemctl restart cockpit
+        ;;
+
     "smarthost")
         /sbin/e-smith/config setprop postfix SmartHostPassword "$(_get SmartHostPassword)" SmartHostPort "$(_get SmartHostPort)" \
             SmartHostTlsStatus "$(_get SmartHostTlsStatus)" SmartHostUsername "$(_get SmartHostUsername)" SmartHostName "$(_get SmartHostName)" SmartHostStatus "$(_get SmartHostStatus)"
@@ -60,6 +73,11 @@ case $action in
     "logrotate")
         /sbin/e-smith/config setprop logrotate Compression "$(_get Compression)" Rotate "$(_get Rotate)" Times "$(_get Times)"
         /sbin/e-smith/signal-event -j nethserver-base-update
+        ;;
+
+    "shellPolicy")
+        /sbin/e-smith/config setprop sssd ShellOverrideStatus "$(_get shellPolicy)"
+        /sbin/e-smith/signal-event -j nethserver-sssd-save
         ;;
 
     "otp")

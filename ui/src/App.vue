@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <nav
-      v-if="routesAvailable()"
+      v-if="routesAvailable() && !accessUserSettings"
       id="navbar-left"
       class="nav-pf-vertical nav-pf-vertical-with-sub-menus nav-pf-persistent-secondary"
     >
@@ -222,7 +222,7 @@
       </ul>
     </nav>
     <div
-      :class="['container-fluid', 'container-cards-pf'+ ( !routesAvailable() ? '-apps' : ''), 'handle-overflow']"
+      :class="['container-fluid', 'container-cards-pf'+ ( !routesAvailable() ? '-apps' : ''), 'handle-overflow', (accessUserSettings ? 'no-mg-left' : '')]"
     >
       <router-view></router-view>
     </div>
@@ -322,16 +322,21 @@ export default {
     this.checkHints();
 
     // set document title
-    var parts = window.top.document.title.split("-");
-    parts.shift();
-    var hostname = parts.join("-").trim();
-    var name =
-      this.$route.name == "ApplicationsDetails"
-        ? this.$i18n.t("menu." + this.$route.params.name)
-        : this.$i18n.t("menu." + this.$route.name);
-    setTimeout(function() {
-      window.top.document.title = name + " - " + hostname;
-    }, 250);
+    if (this.accessUserSettings) {
+      window.top.document.title = this.$i18n.t("settings.title");
+    } else {
+      // standard Cockpit title
+      var parts = window.top.document.title.split("-");
+      parts.shift();
+      var hostname = parts.join("-").trim();
+      var name =
+        this.$route.name == "ApplicationsDetails"
+          ? this.$i18n.t("menu." + this.$route.params.name)
+          : this.$i18n.t("menu." + this.$route.name);
+      setTimeout(function() {
+        window.top.document.title = name + " - " + hostname;
+      }, 250);
+    }
   },
   watch: {
     $route(to, from) {
@@ -340,19 +345,25 @@ export default {
       this.notifications.event.show = false;
       this.notifications.addMargin = false;
 
+      this.checkAccessUserSettings();
       this.checkSystemTasks();
 
       // change title
-      var parts = window.top.document.title.split("-");
-      parts.shift();
-      var hostname = parts.join("-").trim();
-      var name =
-        to.name == "ApplicationsDetails"
-          ? this.$i18n.t("menu." + to.params.name)
-          : this.$i18n.t("menu." + to.name);
-      setTimeout(function() {
-        window.top.document.title = name + " - " + hostname;
-      }, 250);
+      if (this.accessUserSettings) {
+        window.top.document.title = this.$i18n.t("settings.title");
+      } else {
+        // standard Cockpit title
+        var parts = window.top.document.title.split("-");
+        parts.shift();
+        var hostname = parts.join("-").trim();
+        var name =
+          to.name == "ApplicationsDetails"
+            ? this.$i18n.t("menu." + to.params.name)
+            : this.$i18n.t("menu." + to.name);
+        setTimeout(function() {
+          window.top.document.title = name + " - " + hostname;
+        }, 250);
+      }
     }
   },
   data() {
@@ -408,7 +419,9 @@ export default {
         "/logs",
         "/about",
         "/settings"
-      ]
+      ],
+      accessUserSettings: window.location.port !== "9090",
+      status: {}
     };
   },
   methods: {
@@ -473,6 +486,7 @@ export default {
           }
           context.auths = success.system || [];
           context.status = success.status || { isAdmin: 0 };
+          context.checkAccessUserSettings();
         },
         function(error) {
           console.error(error);
@@ -615,7 +629,27 @@ export default {
       this.getHints("system-tls-policy", "tls_policy");
       this.getHints("system-settings", "settings");
       this.getHints("system-subscription", "subscription");
-    }
+    },
+    checkAccessUserSettings() {
+      if (this.accessUserSettings) {
+        if (this.status) {
+          if (this.status.isRoot) {
+            // root should use Cockpit to access user settings
+            const url = window.location.protocol + '//' + window.location.hostname + ':9090/nethserver#/settings';
+            window.location.replace(url);
+          } else {
+            if (this.$route.path !== "/settings") {
+              // redirect to settings page
+              const url = window.location.protocol + '//' + window.location.hostname + '/user-settings';
+              window.location.replace(url);
+            }
+          }
+        } else {
+          // need to retrieve this.status
+          this.getAuths();
+        }
+      }
+    },
   }
 };
 </script>
