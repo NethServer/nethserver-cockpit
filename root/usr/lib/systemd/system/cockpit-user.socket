@@ -1,0 +1,10 @@
+[Unit]
+Description=Cockpit Web Service Socket for Users
+Documentation=man:cockpit-ws(8)
+Wants=cockpit-motd.service
+
+[Socket]
+ListenStream=9191
+
+[Install]
+WantedBy=sockets.target

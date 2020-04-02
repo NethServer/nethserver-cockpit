@@ -20,9 +20,13 @@
         my @aliases = ($SystemName . "." . $DomainName);
         my @ips;
 
-        # search all aliases
-        foreach ($hdb->get_all_by_prop('type', 'alias')) {
+        # search all aliases (both hosts and networks db)
+        foreach ($hdb->get_all_by_prop('type', 'self')) {
             push(@aliases, $_->key);
+        }
+        foreach ($ndb->get_all_by_prop('type', 'alias')) {
+            my $ipaddr = $_->prop('ipaddr') || next;
+            push(@aliases, $ipaddr);
         }
 
         # search all ips green
@@ -52,7 +56,7 @@
         $OUT .= q(
 [WebService]
 ProtocolHeader = X-Forwarded-Proto
-Origins = http://127.0.0.1:9090 );
+Origins = http://127.0.0.1:9191 );
 
         foreach my $port (@listPorts) {
             $OUT .= "https://localhost:$port ";

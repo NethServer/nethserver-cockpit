@@ -29,7 +29,60 @@ use NethServer::ApiTools qw(readInput error);
 
 use JSON;
 use esmith::ConfigDB;
+use esmith::HostsDB;
+use esmith::NetworksDB;
 my %ret;
+
+sub getUserSettingsPageHosts
+{
+    # init databases
+    my $hdb = esmith::HostsDB->open_ro();
+    my $ndb = esmith::NetworksDB->open_ro();
+    my $cdb = esmith::ConfigDB->open_ro();
+    my $SystemName = $cdb->get_value('SystemName');
+    my $DomainName = $cdb->get_value('DomainName');
+
+    # define arrays
+    my @aliases = ($SystemName . "." . $DomainName);
+    my @ips;
+    my @hosts;
+
+    # search all aliases (both hosts and networks db)
+    foreach ($hdb->get_all_by_prop('type', 'self')) {
+        push(@aliases, $_->key);
+    }
+    foreach ($ndb->get_all_by_prop('type', 'alias')) {
+        my $ipaddr = $_->prop('ipaddr') || next;
+        push(@aliases, $ipaddr);
+    }
+
+    # search all ips green
+    foreach ($ndb->get_all_by_prop('role', 'green')) {
+        # skip if bootproto is dhcp
+        my $bootproto = $_->prop('bootproto');
+        if ($bootproto && $bootproto eq 'dhcp') { next };
+
+        # skip if ipaddr is empty
+        my $ipaddr = $_->prop('ipaddr') || next;
+
+        push(@ips, $ipaddr);
+    }
+
+    # search all ips red
+    foreach ($ndb->get_all_by_prop('role', 'red')) {
+        # skip if bootproto is dhcp
+        my $bootproto = $_->prop('bootproto');
+        if ($bootproto && $bootproto eq 'dhcp') { next };
+
+        # skip if ipaddr is empty
+        my $ipaddr = $_->prop('ipaddr') || next;
+
+        push(@ips, $ipaddr);
+    }
+
+    @hosts = (@aliases, @ips);
+    return \@hosts;
+}
 
 my $input = readInput();
 my $cmd = $input->{'action'};
@@ -86,7 +139,8 @@ if($cmd eq 'hints') {
     my %user_settings_page = (
         UserSettingsPage => $db->get_prop('cockpit.socket', 'UserSettingsPage'),
         UserSettingsGrantAccess => $db->get_prop('cockpit.socket', 'UserSettingsGrantAccess'),
-        UserSettingsPageAlias => $db->get_prop('cockpit.socket', 'UserSettingsPageAlias')
+        UserSettingsPageAlias => $db->get_prop('cockpit.socket', 'UserSettingsPageAlias'),
+        UserSettingsHosts => getUserSettingsPageHosts()
     );
 
     my $logrotate = $db->get('logrotate') ||

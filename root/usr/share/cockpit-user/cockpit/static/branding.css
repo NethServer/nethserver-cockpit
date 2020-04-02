@@ -1,0 +1,247 @@
+body.login-pf {
+    background: url("bg-plain.jpg") no-repeat 50% 0;
+    background-color: #212121 !important;
+}
+
+.container {
+    background: #0c0c0ccf !important;
+}
+
+.disable_a_href {
+    color: #363636;
+    cursor: not-allowed;
+    text-decoration: none;
+    pointer-events: none;
+}
+
+#authorized-input {
+    display: none !important;
+}
+
+[for="authorized-input"] {
+    display: none !important;
+}
+
+#main-navbar a {
+    text-decoration: none;
+}
+
+#badge {
+    width: 75px;
+    height: 75px;
+    display: none !important;
+    background-image: url("logo.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+#brand {
+    font-size: 18pt;
+    display: none !important;
+    content: "${NAME} ${VERSION}";
+}
+
+#brand::before {
+    content: "${NAME} ${VERSION}";
+}
+
+#index-brand {
+    content: "${NAME} ${VERSION}";
+    text-transform: none;
+}
+
+#index-brand::before {
+    content: "${NAME} ${VERSION}";
+}
+
+.area-ct-content {
+    margin-left: -1px !important;
+}
+
+#content-user-name {
+    margin-left: 8px;
+}
+
+.credential-lock.credential-locked>*:first-child {
+    height: 58px;
+    line-height: 40px;
+    font-size: 15px;
+}
+
+#navbar-oops>*:first-child {
+    height: 58px;
+    line-height: 40px;
+    font-size: 15px;
+}
+
+li.credential-lock span {
+    padding-left: 10px;
+}
+
+li.credential-lock>a:first-child {
+    height: 58px;
+    line-height: 40px;
+    font-size: 15px;
+}
+
+.credential-lock.credential-unlocked>*:last-child {
+    height: 58px;
+    line-height: 40px;
+    font-size: 15px;
+}
+
+#navbar-dropdown {
+    height: 58px;
+    line-height: 40px;
+    font-size: 15px;
+}
+
+#navbar-dropdown>span {
+    line-height: 55px !important;
+}
+
+.navbar-brand {
+    line-height: 30px;
+    font-size: 20px;
+    margin-left: 20px !important;
+}
+
+.navbar-pf .navbar-toggle {
+    padding: 18px 22px;
+}
+
+.navbar-pf .navbar-header {
+    height: 58px !important;
+    background: #171717;
+}
+
+.nav-sidebar {
+    background-color: #282828;
+}
+
+.nav-sidebar .list-group .list-group-item {
+    border-color: #191919;
+    background: #282828;
+}
+
+.nav-pf-vertical>.list-group>.list-group-item:hover>a {
+    background-color: #4d5257;
+}
+
+.navbar-pf-vertical .navbar-brand {
+    height: 35px !important;
+}
+
+.login-pf #badge {
+    margin-bottom: 100px;
+    display: block;
+    margin: 20px auto 70px;
+    position: relative;
+    text-align: center;
+}
+
+.nav-sidebar .list-group+.list-group {
+    margin-top: 15px !important;
+    border-top: 1px solid #191919 !important;
+    padding-top: 0px !important;
+}
+
+@media (min-width: 768px) {
+    .machine-color {
+        border-left-width: 0px;
+    }
+
+    .nav-sidebar {
+        width: 185px;
+        background: #393f43;
+        border-right: 1px solid #282e34;
+    }
+
+    #host-nav {
+        width: 200px !important;
+    }
+
+    .nav-sidebar a {
+        width: 185px !important;
+    }
+
+    .login-pf #badge {
+        float: right;
+        margin-right: 64px;
+        margin-top: 50px;
+    }
+
+    .login-pf .container {
+        bottom: 13%;
+        padding-left: 80px;
+        position: absolute;
+        width: 100%;
+    }
+}
+
+.list-group-item.active>a>span {
+    margin-left: -3px;
+}
+
+.area-ct-subnav .list-group-item.active {
+    border-left: 3px solid #39a5dd;
+}
+
+#go-account>a {
+    display: none;
+}
+
+#credentials-item {
+    display: none;
+}
+
+.modal-backdrop {
+    opacity: 0.5 !important;
+}
+
+.nav-sidebar .list-group .list-group-item {
+    background: #393f43;
+    border-color: #4d5257;
+}
+
+.nav-pf-vertical .list-group-item.active:hover {
+    border-color: #4d5257;
+}
+
+.nav-pf-vertical .list-group-item.active>a,
+.nav-pf-vertical .list-group-item:hover>a {
+    background-color: #4d5258;
+}
+
+input[type="checkbox"].form-control {
+    width: 6% !important;
+}
+
+@media screen and (max-width: 767px) {
+    .area-ct-navbar {
+        grid-row: 3/4 !important;
+    }
+}
+
+#option-group {
+    display: none !important;
+}
+
+@media (min-width: 768px) {
+    .login-pf .container .login-area {
+        border-right: none;
+    }
+
+    .col-sm-7 {
+        width: 100%;
+    }
+
+    .login-pf .container {
+        padding-left: 25% !important;
+        padding-right: 25% !important;
+    }
+
+    #login-details {
+        padding-left: 20px !important;
+    }
+}
