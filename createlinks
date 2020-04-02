@@ -45,7 +45,7 @@ event_templates('nethserver-cockpit-update', qw(
     /etc/nethserver/cockpit.otp.force
 ));
 
-event_services(nethserver-cockpit-update, qw(
+event_services('nethserver-cockpit-update', qw(
     httpd reload
 ));
 
@@ -55,6 +55,43 @@ event_services(nethserver-cockpit-update, qw(
 
 event_templates('trusted-networks-modify', qw(
     /etc/httpd/conf.d/default-virtualhost.inc
+    /etc/cockpit/cockpit.conf
+));
+
+#
+# host-create event
+#
+
+event_templates('host-create', qw(
+    /etc/httpd/conf.d/default-virtualhost.inc
+    /etc/cockpit/cockpit.conf
+));
+
+#
+# host-modify event
+#
+
+event_templates('host-modify', qw(
+    /etc/httpd/conf.d/default-virtualhost.inc
+    /etc/cockpit/cockpit.conf
+));
+
+#
+# host-delete event
+#
+
+event_templates('host-delete', qw(
+    /etc/httpd/conf.d/default-virtualhost.inc
+    /etc/cockpit/cockpit.conf
+));
+
+#
+# hostname-modify event
+#
+
+event_templates('hostname-modify', qw(
+    /etc/httpd/conf.d/default-virtualhost.inc
+    /etc/cockpit/cockpit.conf
 ));
 
 # expand all file related to 2FA
