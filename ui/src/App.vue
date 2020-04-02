@@ -420,7 +420,7 @@ export default {
         "/about",
         "/settings"
       ],
-      accessUserSettings: window.location.port !== "9090",
+      accessUserSettings: window.location.port === "",
       status: {}
     };
   },
