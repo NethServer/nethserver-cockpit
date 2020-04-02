@@ -5,6 +5,7 @@ Requires=cockpit-user.socket
 
 [Service]
 Environment=XDG_CONFIG_DIRS=/etc/cockpit-user
+Environment=XDG_DATA_DIRS=/usr/share/cockpit-user
 ExecStartPre=/usr/sbin/remotectl certificate --ensure --user=root --group=cockpit-ws --selinux-type=etc_t
 ExecStart=/usr/libexec/cockpit-ws
 PermissionsStartOnly=true
