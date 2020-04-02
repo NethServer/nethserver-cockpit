@@ -39,7 +39,7 @@ event_templates('nethserver-cockpit-update', qw(
     /etc/sudoers.d/30_nethserver_cockpit_roles
     /etc/sudoers.d/55_nsapi_perms
     /etc/nethserver/cockpit.allow
-    /etc/cockpit/cockpit.conf
+    /etc/cockpit-user/cockpit/cockpit.conf
     /etc/httpd/conf.d/default-virtualhost.inc
     /etc/pam.d/cockpit
     /etc/nethserver/cockpit.otp.force
@@ -55,7 +55,7 @@ event_services('nethserver-cockpit-update', qw(
 
 event_templates('trusted-networks-modify', qw(
     /etc/httpd/conf.d/default-virtualhost.inc
-    /etc/cockpit/cockpit.conf
+    /etc/cockpit-user/cockpit/cockpit.conf
 ));
 
 #
@@ -64,7 +64,7 @@ event_templates('trusted-networks-modify', qw(
 
 event_templates('host-create', qw(
     /etc/httpd/conf.d/default-virtualhost.inc
-    /etc/cockpit/cockpit.conf
+    /etc/cockpit-user/cockpit/cockpit.conf
 ));
 
 #
@@ -73,7 +73,7 @@ event_templates('host-create', qw(
 
 event_templates('host-modify', qw(
     /etc/httpd/conf.d/default-virtualhost.inc
-    /etc/cockpit/cockpit.conf
+    /etc/cockpit-user/cockpit/cockpit.conf
 ));
 
 #
@@ -82,7 +82,7 @@ event_templates('host-modify', qw(
 
 event_templates('host-delete', qw(
     /etc/httpd/conf.d/default-virtualhost.inc
-    /etc/cockpit/cockpit.conf
+    /etc/cockpit-user/cockpit/cockpit.conf
 ));
 
 #
@@ -91,7 +91,7 @@ event_templates('host-delete', qw(
 
 event_templates('hostname-modify', qw(
     /etc/httpd/conf.d/default-virtualhost.inc
-    /etc/cockpit/cockpit.conf
+    /etc/cockpit-user/cockpit/cockpit.conf
 ));
 
 # expand all file related to 2FA
