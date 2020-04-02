@@ -21,3 +21,4 @@
 #
 
 systemctl enable --now cockpit.socket
+systemctl enable --now cockpit-user.socket

@@ -1,0 +1,12 @@
+[Unit]
+Description=Cockpit Web Service for Users
+Documentation=man:cockpit-ws(8)
+Requires=cockpit-user.socket
+
+[Service]
+Environment=XDG_CONFIG_DIRS=/etc/cockpit-user
+ExecStartPre=/usr/sbin/remotectl certificate --ensure --user=root --group=cockpit-ws --selinux-type=etc_t
+ExecStart=/usr/libexec/cockpit-ws
+PermissionsStartOnly=true
+User=cockpit-ws
+Group=cockpit-ws
