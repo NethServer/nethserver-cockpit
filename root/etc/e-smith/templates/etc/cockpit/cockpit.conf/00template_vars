@@ -1,0 +1,8 @@
+{
+    #
+    # 00template_vars
+    #
+    @listPorts = ('9090');
+
+    '';
+}
