@@ -735,6 +735,15 @@
       <!-- user settings page on port 443 -->
       <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
       <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.user_settings_page')}}</h3>
+      <!-- user settings page URLs -->
+      <div class="alert alert-info">
+        <span class="pficon pficon-info"></span>
+        <span>{{ $t('settings.user_settings_can_be_accessed_by_these_urls') }}:</span>
+        <li v-for="url in settings.userSettingsPage.urls">
+          <a :href="url" target="_blank">{{ url }}</a>
+        </li>
+        <span>{{ $t('settings.user_settings_page_urls_explain') }}</span>
+      </div>
       <form
         v-if="view.isAdmin && !accessUserSettings"
         class="form-horizontal"
@@ -801,18 +810,6 @@
               {{$t('validation.validation_failed')}}:
               {{$t('validation.'+errors.userSettingsPageTrustedNetworksAccess.message)}}
             </span>
-          </div>
-        </div>
-        <!-- user settings page URL -->
-        <div
-          v-if="settings.userSettingsPage.access"
-          class="form-group"
-        >
-          <label class="col-sm-2 control-label">
-            {{$t('settings.user_settings_page_url')}}
-          </label>
-          <div class="col-sm-5">
-            <a :href="settings.userSettingsPage.url" target="_blank">{{ settings.userSettingsPage.url }}</a>
           </div>
         </div>
         <!-- user settings page save -->
@@ -942,7 +939,7 @@ export default {
         userSettingsPage: {
           access: false,
           trustedNetworksAccess: false,
-          url: ""
+          urls: []
         }
       },
       loaders: {
@@ -1227,8 +1224,11 @@ export default {
               settings.userSettingsPage.UserSettingsPage == "enabled";
             settings.userSettingsPage.trustedNetworksAccess =
               settings.userSettingsPage.UserSettingsGrantAccess == "enabled";
-            settings.userSettingsPage.url =
-              window.location.protocol + '//' + window.location.hostname + settings.userSettingsPage.UserSettingsPageAlias;
+
+            settings.userSettingsPage.urls = [];
+            settings.userSettingsPage.UserSettingsHosts.forEach( host => {
+              settings.userSettingsPage.urls.push("https://" + host + settings.userSettingsPage.UserSettingsPageAlias);
+            });
 
             settings.cockpit.ShowHints =
               settings.cockpit.ShowHints == "enabled";
