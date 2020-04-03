@@ -736,7 +736,7 @@
       <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
       <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.user_settings_page')}}</h3>
       <!-- user settings page URLs -->
-      <div class="alert alert-info">
+      <div v-if="view.isAdmin && !accessUserSettings" class="alert alert-info">
         <span class="pficon pficon-info"></span>
         <span>{{ $t('settings.user_settings_can_be_accessed_by_these_urls') }}:</span>
         <li v-for="url in settings.userSettingsPage.urls">
