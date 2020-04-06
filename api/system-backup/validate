@@ -236,15 +236,17 @@ if ($action == 'create-backup-data' || $action == 'update-backup-data') {
     exec("/usr/libexec/nethserver/backup-config-history pull -f $tmp -i ".$data['data']);
     exec("tar xf $tmp -C $tmp_dir var/lib/nethserver/db/networks");
 
-    $green_found = false;
-    $ndb = new EsmithDatabase($tmp_db);
-    foreach ($data['remap'] as $dest=>$cur) {
-        if (find_role($ndb, $dest) == 'green') {
-            $green_found = true;
+    if ($data['SkipNetwork'] == 'disabled') {
+        $green_found = false;
+        $ndb = new EsmithDatabase($tmp_db);
+        foreach ($data['remap'] as $dest=>$cur) {
+            if (find_role($ndb, $dest) == 'green') {
+                $green_found = true;
+            }
         }
-    }
-    if (!$green_found) {
-        $v->addValidationError('remap','remap_at_least_one_green');
+        if (!$green_found) {
+            $v->addValidationError('remap','remap_at_least_one_green');
+        }
     }
 
     exec("/usr/libexec/nethserver/restore-config-check-registration $tmp", $out, $ret);
