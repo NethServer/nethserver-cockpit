@@ -1819,8 +1819,8 @@
                             {{$t('backup.vol_size')}}
                             <doc-info
                               :placement="'top'"
-                              :title="$t('docs.vol_size')"
-                              :chapter="'backup_volsize'"
+                              :title="$t('backup.vol_size')"
+                              :chapter="'vol_size'"
                               :inline="true"
                             ></doc-info>
                           </label>
@@ -2420,7 +2420,7 @@ export default {
             types: ["full", "incremental"],
             FullDay: b && b.props.FullDay ? parseInt(b.props.FullDay) : 0,
             days: this.weekdays(),
-            VolSize: b && b.props.VolSize ? b.props.VolSize : 2,
+            VolSize: b && b.props.VolSize ? b.props.VolSize : 200,
             CleanupOlderThan:
               b && b.props.CleanupOlderThan
                 ? b.props.CleanupOlderThan
