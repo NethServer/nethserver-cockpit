@@ -101,6 +101,13 @@ event_templates('otp-save', qw(
     /etc/pam.d/cockpit
 ));
 
+# Expand all files related to restore OTP
+event_templates('post-restore-data', qw(
+    /etc/nethserver/cockpit.otp.force
+    /etc/nethserver/otp.secret
+    /etc/pam.d/cockpit
+));
+
 # expand cockpit PAM following `ShellOverrideStatus`
 event_templates('nethserver-sssd-save', qw(
     /etc/pam.d/cockpit
