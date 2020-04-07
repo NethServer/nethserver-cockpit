@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.5.1
+Version: 1.6.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,11 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Apr 07 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.6.0-1
+- Backup-data Duplicity - 'volsize' parameter is set to 2Mb - Bug Nethserver/dev#6110
+- Cockpit: user settings in a separate page - Nethserver/dev#6100
+- Restore configuration without network override - NethServer/dev#6099
+
 * Wed Mar 25 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.5.1-1
 - Openssh: Protect password login with 2FA - NethServer/dev#6088
 
