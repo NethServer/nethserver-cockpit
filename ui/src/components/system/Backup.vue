@@ -1367,6 +1367,18 @@
                             <button @click="editUSBDevice()" class="btn btn-primary">{{$t('edit')}}</button>
                           </div>
                         </div>
+                        <div class="form-group">
+                          <label
+                            class="col-sm-3 control-label"
+                          >{{$t('backup.eject_label')}}</label>
+                          <div class="col-sm-9">
+                            <input
+                              type="checkbox"
+                              v-model="wizard.where.usb.EjectDisk"
+                              class="form-control"
+                            >
+                          </div>
+                        </div>
                       </div>
                       <!-- -->
                       <!-- WEBDAV -->
@@ -2314,6 +2326,7 @@ export default {
       this.wizard.where.usb = {
         USBLabel: null,
         USBDevice: null,
+        EjectDisk: false,
         devices: [],
         partitions: [],
         formatOutput: "",
@@ -2376,6 +2389,7 @@ export default {
           usb: {
             USBLabel: b && b.props.USBLabel ? b.props.USBLabel : null,
             USBDevice: null,
+            EjectDisk: b && b.props.EjectDisk ? b.props.EjectDisk : false,
             devices: [],
             partitions: [],
             formatOutput: "",
@@ -2572,6 +2586,7 @@ export default {
               ? context.wizard.where.usb.USBDevice.name
               : null;
 
+          context.wizard.where.usb.EjectDisk = context.wizard.where.usb.EjectDisk == 'enabled' ? true : false;
           context.wizard.where.usb.isRefreshingUSB = false;
           context.wizard.where.usb.isFormatting = false;
           context.wizard.where.usb.USBLabel = "";
@@ -3463,6 +3478,7 @@ export default {
         NFSHost: context.wizard.where.nfs.NFSHost,
         NFSShare: context.wizard.where.nfs.NFSShare,
         USBLabel: context.wizard.where.usb.USBLabel,
+        EjectDisk: context.wizard.where.usb.EjectDisk ? 'enabled' : 'disabled',
         Type: context.wizard.how.duplicity.Type,
         FullDay: context.wizard.how.duplicity.FullDay,
         VolSize: context.wizard.how.duplicity.VolSize,

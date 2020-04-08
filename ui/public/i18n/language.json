@@ -235,6 +235,7 @@
     "usb_list": "Disk",
     "usb_partitions": "Select disk partition:",
     "usb_label": "Disk label",
+    "eject_label": "Eject disk after backup",
     "format": "Format",
     "format_usb": "Format disk",
     "type": "Type",
