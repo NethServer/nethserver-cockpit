@@ -330,7 +330,7 @@ if($cmd eq 'list') {
     my @bridge;
     foreach my $n ($ndb->get_all()) {
         next if ($n->prop('type') eq 'ethernet' && !interface_exists($n->key));
-        if(is_valid_interface($n->prop('type')) && $n->prop('type') !~ m/bridge|alias/) {
+        if(is_valid_interface($n->prop('type')) && $n->prop('type') !~ m/bridge|alias/ && $n->prop('role') !~ m/bridged/) {
             push(@bridge, $n->key);
         }
     }
@@ -339,11 +339,11 @@ if($cmd eq 'list') {
     my @bond;
     foreach my $n ($ndb->get_all()) {
         next if ($n->prop('type') ne 'ethernet');
-        if (interface_exists($n->key)) {
+        if (interface_exists($n->key) && $n->prop('role') !~ m/slave/) {
             push(@bond, $n->key);
         }
     }
-    $ret->{'bond'} = \@bridge;
+    $ret->{'bond'} = \@bond;
 
 } elsif ($cmd eq 'bond-types') {
 

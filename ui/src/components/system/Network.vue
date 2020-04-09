@@ -2145,10 +2145,35 @@ export default {
         }
       };
     },
+    checkAndPrefillFields() {
+      // prefill network interface fields when creating a bridge or a bond on a single device
+      if (this.wizard.currentStep == 2 && !this.wizard.isEdit) {
+        let parentInterfaceName;
+
+        if (this.wizard.type.choice === "bridge" && this.wizard.type.bridge.devices.length == 1) {
+          parentInterfaceName = this.wizard.type.bridge.devices[0];
+        } else if (this.wizard.type.choice === "bond" && this.wizard.type.bond.devices.length == 1) {
+          parentInterfaceName = this.wizard.type.bond.devices[0];
+        }
+
+        if (parentInterfaceName) {
+          for (let role of Object.values(this.interfaces)) {
+            role.forEach((iface) => {
+              if (iface.name === parentInterfaceName) {
+                this.wizard.review.ipaddr = iface.ipaddr;
+                this.wizard.review.netmask = iface.netmask ? iface.netmask : this.wizard.review.netmask;
+                this.wizard.review.gateway = iface.gateway;
+              }
+            });
+          }
+        }
+      }
+    },
     nextStep() {
       if (this.wizard.currentStep == 3) {
         this.saveLogicInterface();
       } else {
+        this.checkAndPrefillFields();
         this.wizard.currentStep++;
       }
     },
@@ -2189,8 +2214,8 @@ export default {
         case 3:
           if (this.wizard.review.bootproto == "none") {
             disabled =
-              this.wizard.review.ipaddr.length == 0 ||
-              this.wizard.review.netmask.length == 0;
+              !this.wizard.review.ipaddr || this.wizard.review.ipaddr.length == 0 ||
+              !this.wizard.review.netmask || this.wizard.review.netmask.length == 0;
 
             if (this.wizard.role.choice == "red") {
               disabled = disabled || this.wizard.review.gateway.length == 0;
@@ -2539,12 +2564,10 @@ export default {
             console.error(e);
           }
 
-          context.wizard.type.bond.devicesList = context.wizard.type.bond.devicesList
-            .concat(success.bond)
-            .sort();
-          context.wizard.type.bridge.devicesList = context.wizard.type.bridge.devicesList
-            .concat(success.bridge)
-            .sort();
+          context.wizard.type.bond.devicesList = [...new Set(context.wizard.type.bond.devicesList
+            .concat(success.bond))].sort();
+          context.wizard.type.bridge.devicesList = [...new Set(context.wizard.type.bridge.devicesList
+            .concat(success.bridge))].sort();
 
           context.wizard.type.vlan.devicesList = success.vlan;
           context.wizard.type.vlan.device = context.wizard.type.vlan.device
