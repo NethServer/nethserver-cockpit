@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.6.1
+Version: 1.6.2
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Thu Apr 09 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.6.2-1
+- Cockpit: prefill interface fields when creating bridge or bond verified - NethServer/dev#6122
+
 * Wed Apr 08 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.6.1-1
 - 2FA not completely restored after disaster recovery - Bug NethServer/dev#6109
 
