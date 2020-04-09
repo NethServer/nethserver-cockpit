@@ -22,6 +22,11 @@
 
 . /usr/libexec/nethserver/api/lib/helper_functions
 
+function invalid_credentials {
+    printf '{"id":"%s","type":"AuthError","message":"invalid_credentials"}' "$(date +%s)"
+    exit 99
+}
+
 data=$(cat /dev/stdin)
 
 new_password="$(jq -r '.newPassword' <<<"${data}")"
@@ -57,7 +62,7 @@ if [[ $exit_code == 0 ]]; then
 elif [[ $exit_code == 1 ]]; then
     error
 elif [[ $exit_code == 49 ]]; then
-    error "AuthError" "invalid_credentials"
+    invalid_credentials
 else
     error "UnknownError" "exit_code $exit_code"
 fi
