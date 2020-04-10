@@ -1,5 +1,23 @@
 <template>
   <div>
+    <!-- password change notification error -->
+    <div
+      v-if="showChangePasswordError"
+      :style="{ top: 10+'px', minWidth: 390+'px', right: 10+'px', zIndex: 5, position: 'fixed' }"
+      class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-danger alert-dismissable"
+    >
+      <button type="button" class="close" @click="closeChangePasswordError()" aria-hidden="true">
+        <span class="fa fa-times"></span>
+      </button>
+      <span style="padding-top: 20px;" class="pficon fa fa-times"></span>
+      <strong>{{$t('error')}}</strong>
+      <p>
+        {{$t('settings.password_updated_error_1')}}
+        <strong>{{$t('settings.password_updated_error_2')}}</strong>
+        {{$t('settings.password_updated_error_3')}}
+      </p>
+    </div>
+
     <div v-show="accessUserSettings && loggedUser">
       <h3 class="logged-user right">{{ loggedUser.full_name }}</h3>
       <button
@@ -963,7 +981,8 @@ export default {
         canChangePassword: false
       },
       accessUserSettings: window.location.port === "",
-      loggedUser: {}
+      loggedUser: {},
+      showChangePasswordError: false,
     };
   },
   methods: {
@@ -1304,6 +1323,9 @@ export default {
       $("#saveUserSettingsPageModal").modal("hide");
       this.saveSettings('user_settings_page');
     },
+    closeChangePasswordError() {
+      this.showChangePasswordError = false;
+    },
     saveSettings(type) {
       var context = this;
       var settingsObj = {};
@@ -1312,6 +1334,7 @@ export default {
 
       switch (type) {
         case "password":
+          context.showChangePasswordError = false;
           settingsObj = {
             action: "password",
             confirmNewPassword: this.newUser.confirmNewPassword,
@@ -1463,9 +1486,14 @@ export default {
             },
             function(error, data) {
               // notification
-              context.$parent.notifications.error.message = context.$i18n.t(
-                "settings.settings_updated_error"
-              );
+              if (type === "password" && error.exit_status == 99) {
+                context.$parent.notifications.error.show = false;
+                context.showChangePasswordError = true;
+              } else {
+                context.$parent.notifications.error.message = context.$i18n.t(
+                  "settings.settings_updated_error"
+                );
+              }
             },
             sudo
           );
