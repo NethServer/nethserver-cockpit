@@ -846,6 +846,7 @@
     "test_token": "Check code",
     "OtpCockpit_status": "Enable 2FA for the Server Manager",
     "OtpSshd_status": "Enable 2FA for SSH",
+    "OtpR2WOath_status": "Enable 2FA for openvpn R2W",
     "otp_Step1_Download_FreeOTP": "1. Download your preferred 2FA application to your phone. If you do not have one, FreeOTP is the recommended one",
     "otp_Step2_scan_with_FreeOTP": "2. Scan the QR code with your phone using the 2FA application",
     "otp_Step3_Validate_the_X-digit_code": "3. Enter the 6-digit code provided by your application and click on 'Check code' button. If the verification code is valid, choose the services to protect.",
@@ -1215,6 +1216,7 @@
     "otp_code_for_single_use": "If you lose your phone, you can use backup codes to sign in. Every backup code can be used only once.",
     "OtpSshd_Only_Password_Auth": "2FA is available only for password authentication. Authentication with public keys will not be affected by 2FA.",
     "disaster_recovery": "Disaster recovery",
-    "user_settings_page": "Allow users to change their password and other settings on a web page outside Cockpit (on port 443). This feature can be enabled only if 'Override the shell of users' is enabled as well."
+    "user_settings_page": "Allow users to change their password and other settings on a web page outside Cockpit (on port 443). This feature can be enabled only if 'Override the shell of users' is enabled as well.",
+    "OtpR2WOath_Auth":"The VPN policy requires the usage of OTP to access the network."
   }
 }

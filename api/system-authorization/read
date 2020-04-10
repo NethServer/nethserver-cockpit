@@ -142,5 +142,6 @@ print encode_json({
     "OtpStatus" => $OtpStatus,
     "OtpCockpit" => $OtpCockpit,
     "OtpSshd" => $OtpSshd,
+    "OtpR2WOath" => (-f "/var/lib/nethserver/openvpn-certificate-otp/".getpwuid($<)) ? "enabled":"disabled",
     "Token" => "otpauth://totp/$username\@$hostname?secret=$secret"
 });

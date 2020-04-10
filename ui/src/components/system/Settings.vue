@@ -301,6 +301,31 @@
             >{{errors.OtpSshd.message}}</span>
           </div>
         </div>
+        <div
+          v-if="view.otpIsLoaded && otp.OtpStatus && otp.OtpR2WOath"
+          class="form-group"
+        >
+          <label
+            class="col-sm-2 control-label"
+            for="textInput-modal-markup"
+          >{{$t('settings.OtpR2WOath_status')}}
+          <doc-info
+            :placement="'top'"
+            :title="$t('settings.OtpR2WOath_status')"
+            :chapter="'OtpR2WOath_Auth'"
+            :inline="true"
+          ></doc-info>
+          </label>
+          <div class="col-sm-5">
+            <input
+              type="checkbox"
+              id="OtpR2WOath"
+              v-model="otp.OtpR2WOath"
+              class="form-control"
+              disabled
+            >
+          </div>
+        </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
             <div
@@ -927,7 +952,8 @@ export default {
         Secret: "",
         Key: "",
         OtpCockpit: false,
-        OtpSshd: false
+        OtpSshd: false,
+        OtpR2WOath: false
       },
       hints: {},
       settings: {
@@ -1168,6 +1194,7 @@ export default {
               context.otp.TokenIsValid = true;
           }
           context.otp.OtpCockpit = success.OtpCockpit;
+          context.otp.OtpR2WOath = success.OtpR2WOath == "enabled";
           context.otp.OtpSshd = success.OtpSshd;
           context.otp.Token = success.Token;
           context.otp.Secret = success.Secret;
