@@ -846,7 +846,7 @@
     "test_token": "Check code",
     "OtpCockpit_status": "Enable 2FA for the Server Manager",
     "OtpSshd_status": "Enable 2FA for SSH",
-    "OtpR2WOath_status": "Enable 2FA for openvpn R2W",
+    "OtpR2WOath_status": "Enable 2FA for OpenVPN",
     "otp_Step1_Download_FreeOTP": "1. Download your preferred 2FA application to your phone. If you do not have one, FreeOTP is the recommended one",
     "otp_Step2_scan_with_FreeOTP": "2. Scan the QR code with your phone using the 2FA application",
     "otp_Step3_Validate_the_X-digit_code": "3. Enter the 6-digit code provided by your application and click on 'Check code' button. If the verification code is valid, choose the services to protect.",
