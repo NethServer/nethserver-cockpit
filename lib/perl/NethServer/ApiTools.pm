@@ -21,7 +21,7 @@
 use strict;
 package NethServer::ApiTools;
 use Exporter 'import';
-our @EXPORT_OK = qw(hints success error readInput safe_decode_json invoke_info_api);
+our @EXPORT_OK = qw(hints success error readInput safe_decode_json invoke_info_api printJson);
 
 #
 # Basic helper functions for cockpit
@@ -99,7 +99,12 @@ sub error
 #
 sub readInput
 {
-    my $str = do { local $/; <STDIN> };
+
+    my $tmp = do { local $/; <STDIN> };
+
+    # Make sure everything is UTF-8 encoded
+    use Encode qw(encode);
+    my $str = encode("UTF-8", $tmp);
 
     eval {
         # check if input is a valid JSON
@@ -109,6 +114,17 @@ sub readInput
         error('InvalidInput', 'no_json_data_available');
     };
 
+}
+
+#
+# Print a JSON object, eventually using UTF8 encoding
+# Usually, the data is already in UTF8 and should not be encoded again.
+#
+sub printJson
+{
+    my $data = shift;
+    my $utf8 = shift || 0;
+    print JSON->new->utf8($utf8)->encode($data);
 }
 
 #
