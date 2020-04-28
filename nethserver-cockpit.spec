@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.6.3
+Version: 1.6.4
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Apr 28 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.6.4-1
+- OpenVPN: New policy certificate-otp for RW - NethServer/dev#6112
+
 * Fri Apr 10 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.6.3-1
 - Cockpit: generic error on password change - NethServer/dev#6125
 
