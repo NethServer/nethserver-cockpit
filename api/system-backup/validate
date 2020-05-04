@@ -131,7 +131,7 @@ if ($action == 'create-backup-data' || $action == 'update-backup-data') {
         $v->declareParameter('S3AccessKey', Validate::NOTEMPTY);
         $v->declareParameter('S3Bucket', Validate::NOTEMPTY);
         $v->declareParameter('S3SecretKey', Validate::NOTEMPTY);
-        $v->declareParameter('S3Host', Validate::HOSTADDRESS);
+        $v->declareParameter('S3Host', Validate::NOTEMPTY);
         break;
     case 'b2':
         $v->declareParameter('B2AccountId', Validate::NOTEMPTY);
