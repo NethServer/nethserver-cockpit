@@ -320,7 +320,9 @@
     "assign_later": "Assign later",
     "current_int": "System interfaces",
     "restore_network": "Restore network configuration",
-    "skip_network_info": "Current network configuration will be preserved, but some applications may be disabled at the end of the process. After restoring, review the system configuration to re-enable all required applications."
+    "skip_network_info": "Current network configuration will be preserved, but some applications may be disabled at the end of the process. After restoring, review the system configuration to re-enable all required applications.",
+    "format_disk": "Format disk",
+    "format_disk_message": "Formatting will erase all data on this disk"
   },
   "disk_usage": {
     "title": "Disk usage",
