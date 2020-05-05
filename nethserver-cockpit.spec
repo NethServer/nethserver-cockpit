@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.6.4
+Version: 1.6.5
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,10 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue May 05 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.6.5-1
+- ui. remove useless change hostname message (#255)
+- api: relax S3Host validator (#253)
+
 * Tue Apr 28 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.6.4-1
 - OpenVPN: New policy certificate-otp for RW - NethServer/dev#6112
 
