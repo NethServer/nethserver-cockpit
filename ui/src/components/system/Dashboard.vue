@@ -308,11 +308,6 @@
                 {{$t('dashboard.hostname_invalid_warn')}}.
               </div>
 
-              <div v-if="system.summary.hostnameIsEdit" class="alert alert-info">
-                <span class="pficon pficon-info"></span>
-                <strong>{{$t('info')}}:</strong>
-                {{$t('dashboard.hostname_change')}}.
-              </div>
               <div :class="['form-group', system.errors.hostname.hasError ? 'has-error' : '']">
                 <label
                   class="col-sm-3 control-label"
