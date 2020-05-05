@@ -1641,6 +1641,22 @@
                         </div>
                       </div>
                       <!-- -->
+                      <!-- FORMAT WARNING -->
+                      <div
+                        v-show="wizard.where.choice == 'usb' && wizard.where.usb.USBDevice &&
+                            !wizard.where.usb.USBDevice.formatted && !wizard.where.usb.isRefreshingUSB"
+                        class="form-group"
+                      >
+                        <label class="col-sm-3 control-label" for="textInput-modal-markup"></label>
+                        <div class="col-sm-9">
+                          <div class="alert alert-warning alert-dismissable compact">
+                            <span class="pficon pficon-warning-triangle-o"></span>
+                            <strong>{{$t("warning")}}:</strong>
+                            {{$t("backup.format_disk_message")}} [{{wizard.where.usb && wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.name}} {{wizard.where.usb && wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.model}}]
+                          </div>
+                        </div>
+                      </div>
+                      <!-- -->
                       <div
                         v-if="wizard.where.choice != 'usb' || (wizard.where.choice == 'usb' && wizard.where.usb.USBDevice)"
                         class="form-group"
@@ -1651,7 +1667,8 @@
                             v-if="!wizard.where.usb.isRefreshingUSB"
                             :disabled="wizard.where.isChecking || (wizard.where.choice == 'usb' && (wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.formatted == 1) && wizard.where.usb.USBLabel.length == 0)"
                             type="submit"
-                            class="btn btn-primary"
+                            :class="['btn', wizard.where.choice == 'usb' && wizard.where.usb.USBDevice &&
+                            !wizard.where.usb.USBDevice.formatted ? 'btn-danger' : 'btn-primary']"
                           >
                             {{wizard.where.choice == 'usb' && wizard.where.usb.USBDevice &&
                             !wizard.where.usb.USBDevice.formatted ? $t('backup.format') : $t('backup.check')}}
@@ -2680,6 +2697,7 @@ export default {
           context.wizard.where.isChecking = false;
           context.wizard.where.isValid = false;
           context.wizard.where.configError = true;
+          context.wizard.where.usb.USBDevice.formatted = 0;
         }
       );
     },
