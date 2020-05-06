@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.6.5
+Version: 1.6.6
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Wed May 06 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.6.6-1
+- Cockpit UI: Backup format warning - Nethserver/dev#6151
+
 * Tue May 05 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.6.5-1
 - ui. remove useless change hostname message (#255)
 - api: relax S3Host validator (#253)
