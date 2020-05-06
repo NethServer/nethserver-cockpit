@@ -63,7 +63,7 @@
             {{props.row.external ? $t('applications.open') : $t('applications.settings')}}
           </a>
           <div
-            v-if="props.row.editable == 1 && !props.row.legacy && view.isRoot"
+            v-if="props.row.editable == 1 && !props.row.legacy && hideUninstall === 'disabled' && (view.isRoot || ( view.isAdmin && props.row.id !== 'nethserver-httpd'))"
             class="dropup pull-right dropdown-kebab-pf"
           >
             <button
@@ -76,7 +76,7 @@
               <span class="fa fa-ellipsis-v"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li v-if="props.row.editable == 1 && !props.row.external" role="presentation">
+              <li v-if="props.row.editable == 1 && !props.row.external && view.isRoot" role="presentation">
                 <a
                   @click="props.row.shortcut == 1 ? removeShortcut(props.row.id) : addShortcut(props.row.id)"
                 >
@@ -87,7 +87,7 @@
                   ? $t('remove_shortcut') : $t('add_shortcut')}}
                 </a>
               </li>
-              <li>
+              <li v-if="props.row.editable == 1 && !props.row.external && view.isRoot">
                 <a @click="props.row.pin == 1 ? removePin(props.row.id) : addPin(props.row.id)">
                   <span :class="['fa', 'fa-map-pin', 'action-icon-menu']"></span>
                   {{props.row.pin == 1
@@ -95,11 +95,11 @@
                 </a>
               </li>
               <li
-                v-if="props.row.editable == 1 && !props.row.external && hideUninstall === 'disabled'"
+                v-if="props.row.editable == 1 && !props.row.external && view.isRoot"
                 role="presentation"
                 class="divider"
               ></li>
-              <li v-if="hideUninstall === 'disabled'">
+              <li v-if="view.isRoot || view.isAdmin">
                 <a @click="openRemoveApp(props.row)">
                   <span class="fa fa-times action-icon-menu"></span>
                   {{$t('applications.remove')}}
@@ -221,6 +221,7 @@ export default {
           }
 
           vm.view.isRoot = success.status.isRoot;
+          vm.view.isAdmin = success.status.isAdmin;
         },
         function(error) {
           console.error(error);
