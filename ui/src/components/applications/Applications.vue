@@ -99,7 +99,7 @@
                 role="presentation"
                 class="divider"
               ></li>
-              <li v-if="view.isRoot || view.isAdmin">
+              <li v-if="((view.isRoot && hideUninstall === 'disabled') || (view.isAdmin && hideUninstall === 'disabled'))">
                 <a @click="openRemoveApp(props.row)">
                   <span class="fa fa-times action-icon-menu"></span>
                   {{$t('applications.remove')}}
@@ -467,7 +467,7 @@ export default {
         function(error) {
           console.error(error);
         },
-        false
+        true
       );
     }
   }

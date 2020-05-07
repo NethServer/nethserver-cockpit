@@ -153,15 +153,9 @@ if($cmd eq 'list') {
     print encode_json(app_info($input->{'name'}));
 
 } elsif ($cmd eq 'hide-uninstall') {
-
-    my $hide_uninstall = 'enabled';
-    if ($< == 0) { # non-root users can't access the config db
-        my $db = esmith::ConfigDB->open_ro();
-        $hide_uninstall = $db->get_prop('cockpit.socket', 'HideUninstall') || 'disabled';
-    }
-
+    my $db = esmith::ConfigDB->open_ro();
+    my $hide_uninstall = $db->get_prop('cockpit.socket', 'HideUninstall') || 'disabled';
     print encode_json({ 'HideUninstall' => $hide_uninstall });
-    
 } else {
     error();
 }
