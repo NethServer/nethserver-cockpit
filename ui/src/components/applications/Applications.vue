@@ -99,7 +99,7 @@
                 role="presentation"
                 class="divider"
               ></li>
-              <li v-if="(view.isRoot || view.isAdmin && hideUninstall === 'disabled') && hideUninstall === 'disabled'">
+              <li v-if="(view.isRoot || view.isAdmin) && hideUninstall === 'disabled'">
                 <a @click="openRemoveApp(props.row)">
                   <span class="fa fa-times action-icon-menu"></span>
                   {{$t('applications.remove')}}
@@ -163,7 +163,8 @@ export default {
     return {
       view: {
         isLoaded: false,
-        isRoot: false
+        isRoot: false,
+        isAdmin: false
       },
       tableLangsTexts: this.tableLangs(),
       columns: [
