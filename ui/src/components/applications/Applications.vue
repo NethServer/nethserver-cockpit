@@ -340,6 +340,12 @@ export default {
             "applications.remove_ok"
           );
 
+          context.currentApp.listRemove.forEach((Pin) => {
+            context.removePin(Pin);
+          });
+          context.currentApp.listRemove.forEach((Shortcut) => {
+            context.removeShortcut(Shortcut);
+          });
           context.getApps();
         },
         function(error) {
