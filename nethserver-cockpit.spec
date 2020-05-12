@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.6.6
+Version: 1.6.7
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue May 12 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.6.7-1
+- Cockpit: admin cannot uninstall applications - NethServer/dev#6153
+
 * Wed May 06 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.6.6-1
 - Cockpit UI: Backup format warning - Nethserver/dev#6151
 
