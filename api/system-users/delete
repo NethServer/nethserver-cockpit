@@ -31,6 +31,13 @@ function user_delete($data) {
     # if list-group-members is executed after user removal, the user is not listed inside
     # the group, even if is present inside the LDAP tree (it's filtered out)
     cleanup_groups($data['name']);
+
+    # cleanup accounts database
+    $configDb = new EsmithDatabase('configuration');
+    $userMail = $data['name']."@".$configDb->getType('DomainName');
+    $accountsDb = new EsmithDatabase('accounts');
+    $accountsDb->deleteKey($userMail);
+
     passthru("/sbin/e-smith/signal-event -j user-delete '{$data['name']}'", $ret);
     exit($ret);
 }
