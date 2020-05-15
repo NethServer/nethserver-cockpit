@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.6.7
+Version: 1.6.8
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,11 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Fri May 15 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.6.8-1
+- Cockpit: can't validate AD credentials - Bug NethServer/dev#6166
+- User settings page link in Nethesis launcher - nethesis/dev#5802
+- Shortcut and Pin are not removed when the application is uninstalled - Bug NethServer/dev#6162
+
 * Tue May 12 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.6.7-1
 - Cockpit: admin cannot uninstall applications - NethServer/dev#6153
 
