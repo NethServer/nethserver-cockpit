@@ -2908,6 +2908,7 @@ export default {
               : false;
 
           // visualize storage info
+          $.fn.popover.Constructor.DEFAULTS.whiteList["*"].push('style');
 
           setTimeout(function() {
             $("[data-toggle=popover]")
