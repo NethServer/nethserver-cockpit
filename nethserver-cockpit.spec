@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.6.8
+Version: 1.6.9
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue May 19 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.6.9-1
+- Cockpit: backup destination disk space bar is not working - Bug NethServer/dev#6168
+
 * Fri May 15 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.6.8-1
 - Cockpit: can't validate AD credentials - Bug NethServer/dev#6166
 - User settings page link in Nethesis launcher - nethesis/dev#5802
