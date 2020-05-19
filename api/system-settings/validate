@@ -34,6 +34,12 @@ switch ($data['action']) {
         $v->declareParameter('SmartHostUsername', Validate::ANYTHING);
         $v->declareParameter('SmartHostPassword', Validate::ANYTHING);
         $v->declareParameter('SmartHostTlsStatus', Validate::SERVICESTATUS);
+        $db = new EsmithDatabase('smarthosts');
+        foreach ($db->getAll() as $i => $n) {
+            if (isset($n['Host']) && ($n['Host'] === $data['SmartHostName']) && ($data['SmartHostStatus'] === 'enabled')) {
+                $v->addValidationError('SmartHostName', 'Host_already_in_use_by_another_smarthost_relay');
+            }
+        }
         break;
 
     case "cockpit":

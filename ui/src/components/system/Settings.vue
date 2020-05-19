@@ -385,7 +385,7 @@
             <span
               v-if="errors.SmartHostName.hasError"
               class="help-block"
-            >{{errors.SmartHostName.message}}</span>
+            >{{$t('validation.validation_failed')}}: {{$t('validation.'+errors.SmartHostName.message)}}</span>
           </div>
         </div>
         <div
