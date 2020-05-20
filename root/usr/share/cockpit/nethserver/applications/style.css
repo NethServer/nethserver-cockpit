@@ -288,7 +288,7 @@ li.active>a>span {
     font-size: 14px !important;
 }
 
-.table>thead th.sorting:hover {
+.table>thead th.sorting:hover, .table>thead th.sortable:hover {
     cursor: pointer;
 }
 
@@ -407,3 +407,244 @@ li.active>a>span {
 .table.responsive {
     overflow-x: initial !important;
 }
+
+/* vue-good-table-2 - Table specific styles
+************************************************/
+
+table.vgt2{
+    border-collapse: collapse;
+    background-color: transparent;
+    margin-bottom:  0px;
+}
+.table.vgt2{
+    width: 100%;
+    max-width: 100%;
+    table-layout: auto;
+}
+
+.table.vgt2.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(35,41,53,.05);
+}
+
+.table.vgt2.table-bordered td, .vgt2 .table-bordered th {
+    border: 1px solid #DDD;
+}
+
+.table.vgt2 td, .table.vgt2 th:not(.line-numbers) {
+    padding: .75rem 1.5rem .75rem .75rem;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}
+
+.rtl .table.vgt2 td, .rtl .table.vgt2 th:not(.line-numbers) {
+    padding: .75rem .75rem .75rem 1.5rem;
+}
+
+.table.vgt2.condensed td, .table.vgt2.condensed th {
+    padding: .4rem .4rem .4rem .4rem;
+}
+
+.table.vgt2 thead th, .table.vgt2.condensed thead th {
+    vertical-align: bottom;
+    border-bottom:  2px solid #ddd;
+    padding-right: 1.5rem;
+    background-color: rgba(35,41,53,0.03);
+}
+.rtl .table.vgt2 thead th, .rtl .table.vgt2.condensed thead th {
+    padding-left:  1.5rem;
+    padding-right:  .75rem;
+}
+
+.vgt2 tr.clickable {
+    cursor: pointer;
+}
+
+.table.vgt2 input[type="text"], .table.vgt2 select{
+    box-sizing: border-box;
+    display: block;
+    width: calc(100%);
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(35,41,53,.075);
+    box-shadow: inset 0 1px 1px rgba(35,41,53,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+table.vgt2 th.sorting-asc,
+table.vgt2 th.sorting-desc {
+    color: rgba(0, 0, 0, 0.66);
+}
+
+table.vgt2 th.sorting:after,
+table.vgt2 th.sorting-asc:after  {
+    font-family: 'Material Icons';
+    position:  absolute;
+    height:  0px;
+    width:  0px;
+    content: '';
+    display: none;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid rgba(0, 0, 0, 0.66);
+    margin-top:  6px;
+    margin-left:  5px;
+}
+
+.rtl table.vgt2 th.sorting:after,
+.rtl table.vgt2 th.sorting-asc:after{
+    margin-right:  5px;
+    margin-left:  0px;
+}
+
+table.vgt2 th.sorting:hover:after{
+    display: inline-block;
+    border-bottom-color: rgba(35,41,53,0.25);
+}
+
+table.vgt2 th.sorting-asc:after,
+table.vgt2 th.sorting-desc:after {
+    display: inline-block;
+}
+
+table.vgt2 th.sorting-desc:after {
+    border-top:  6px solid rgba(0, 0, 0, 0.66);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: none;
+    margin-top:  8px;
+}
+
+.vgt2.responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.vgt-inner-wrap {
+    clear: both;
+}
+
+input.vgt-input {
+    border-spacing: 0;border-collapse: collapse;
+    margin: 0;
+    background-image: none !important;
+    border-radius: 1px !important;
+    width: calc(50%) !important;
+    box-sizing: border-box;
+    display: block;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 1px rgba(35,41,53,.075);
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.vgt-input::placeholder, .vgt-select::placeholder {
+    color: #999 !important;
+    font-style: italic !important;
+    opacity: 1 !important;
+}
+
+.vgt-input:focus, .vgt-select:focus {
+    border-color: #0088ce;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(0,136,206,.6);
+}
+
+.vgt-global-search__input {
+    padding-left: 0 !important;
+}
+
+.vgt-global-search__input>span.input__icon {
+    display: none;
+}
+
+.vgt-global-search {
+    background: none !important;
+    border: none !important;
+}
+
+.vgt-wrap__footer {
+    line-height: 1.66666667;
+    box-sizing: border-box;
+    background-color: rgba(35,41,53,0.05) !important;
+    border: 1px solid #DDD !important;
+    margin: 0;
+    padding: 1rem;
+}
+
+.vgt-wrap__footer .footer__row-count__label {
+    color: rgba(0, 0, 0, 0.44) !important;
+    font-size: 13px !important;
+    line-height: 26px;
+    font-weight: 600;
+}
+
+.vgt-wrap__footer .footer__row-count__select {
+    margin: 0;
+    text-transform: none;
+    font-size: 13px !important;
+    display: inline-block;
+    background-color: transparent;
+    width: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    height: auto;
+    margin-left: 8px;
+    color: rgba(0, 0, 0, 0.55) !important;
+    font-weight: bold;
+}
+
+.vgt-wrap__footer .footer__navigation {
+    font-size: 13px !important;
+    color: rgba(0, 0, 0, 0.44) !important;
+    float: right !important;
+}
+
+.vgt-wrap__footer .footer__navigation__info, .vgt-wrap__footer .footer__navigation__page-info {
+    margin: 0px 15px;
+    font-size: 13px !important;
+    font-weight: bold !important;
+    color: rgba(0, 0, 0, 0.40) !important;
+}
+
+.vgt-wrap__footer .footer__navigation__page-btn .chevron {
+    color: rgba(0, 0, 0, 0.66) !important;
+    font-size: 14px !important;
+    font-weight: 600;
+    vertical-align: middle;
+    width: auto !important;
+    height: 24px;
+    border-radius: 15%;
+    position: relative;
+    margin: 0 8px;
+}
+
+.vgt-wrap__footer .footer__navigation__page-btn .chevron.right::after {
+    border-left-color: rgba(0, 0, 0, 0.66) !important;
+}
+
+.vgt-wrap__footer .footer__navigation__page-btn .chevron.left::after {
+    border-right-color: rgba(0, 0, 0, 0.66) !important;
+}
+
+.vgt-wrap__footer .footer__navigation__page-btn>span {
+    margin-top: 1px;
+    display: inline-block;
+}
+
+/* END vue-good-table-2
+************************************************/
