@@ -27,7 +27,7 @@ $data = readInput();
 
 $v = new LegacyValidator($data['props']);
 
-$v->declareParameter('policy', $v->createValidator()->memberOf(0, '20180330', '20180621', '20181001'));
+$v->declareParameter('policy', $v->createValidator()->memberOf(0, '20180330', '20180621', '20181001', '20200510'));
 $db = new EsmithDatabase('configuration');
 $policy = $db->getProp('tls', 'policy');
 $key = $db->getProp('pki', 'KeyFile');
