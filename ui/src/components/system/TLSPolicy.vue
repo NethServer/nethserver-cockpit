@@ -32,7 +32,7 @@
           <div class="col-sm-5">
             <select required type="text" v-model="TLSPolicy.policy" class="form-control">
               <option :value="p.length > 0 ? p : 0" v-for="p in TLSPolicy.policies" v-bind:key="p">
-                {{p.length > 0 ? p :
+                {{p.length > 0 ? $t('tls_policy.'+p) :
                 $t('tls_policy.default_policy')}}
               </option>
             </select>
