@@ -783,10 +783,10 @@
     "default_policy": "Default upstream policy",
     "tls_policy_edit_ok": "TLS policy updated successfully!",
     "tls_policy_edit_error": "TLS policy not updated.",
-    "20200510": "20200510 only TLS 1.2",
-    "20180621": "20180621",
-    "20180330": "20180330",
-    "20181001": "20181001"
+    "20200510": "2020-05-10 only TLS 1.2",
+    "20180621": "2018-06-21",
+    "20180330": "2018-03-30",
+    "20181001": "2018-10-01"
   },
   "trusted_networks": {
     "title": "Trusted networks",
