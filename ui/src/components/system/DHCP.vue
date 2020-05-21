@@ -66,44 +66,52 @@
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <vue-good-table
       v-if="view.isLoaded"
-      :customRowsPerPageDropdown="[25,50,100]"
-      :perPage="25"
       :columns="columns"
       :rows="rows"
-      :lineNumbers="false"
-      :defaultSortBy="{field: 'name', type: 'asc'}"
-      :globalSearch="true"
-      :paginate="true"
-      styleClass="table"
-      :nextText="tableLangsTexts.nextText"
-      :prevText="tableLangsTexts.prevText"
-      :rowsPerPageText="tableLangsTexts.rowsPerPageText"
-      :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
-      :ofText="tableLangsTexts.ofText"
+      :pagination-options="{
+        enabled: true,
+        perPageDropdown: [25, 50, 100],
+        perPage: 25,
+        nextLabel: tableLangsTexts.nextText,
+        prevLabel: tableLangsTexts.prevText,
+        ofLabel: tableLangsTexts.ofText,
+        rowsPerPageLabel: tableLangsTexts.rowsPerPageText,
+      }"
+      :sort-options="{
+        enabled: true,
+        initialSortBy: {field: 'name', type: 'asc'},
+      }"
+      :search-options="{
+        enabled: true,
+        placeholder: tableLangsTexts.globalSearchPlaceholder,
+      }"
+      styleClass="table vgt2"
     >
       <template slot="table-row" slot-scope="props">
-        <td class="fancy">
+        <span v-if="props.column.field == 'name'">
           <a
             :class="[props.row.type == 'disabled' ? 'disabled' : '']"
             @click="props.row.type == 'disabled' ? null : editReservation(props.row)"
           >
             <strong>{{ props.row.name}}</strong>
           </a>
-        </td>
-        <td class="fancy">{{ props.row.props.Description}}</td>
-        <td class="fancy">
+        </span>
+        <span v-if="props.column.field == 'props.Description'">
+          {{ props.row.props.Description}}
+        </span>
+        <span v-if="props.column.field == 'props.IpAddress'">
           <span class="fa fa-desktop margin"></span>
           {{props.row.props.IpAddress}}
-        </td>
-        <td class="fancy">
+        </span>
+        <span v-if="props.column.field == 'props.MacAddress'">
           <span class="pficon pficon-plugged margin"></span>
           {{props.row.props.MacAddress}}
-        </td>
-        <td class="fancy">
+        </span>
+        <span v-if="props.column.field == 'props.LeaseExpiration'">
           <span class="fa fa-hourglass-end margin"></span>
           {{props.row.props.LeaseExpiration | dateFormat}}
-        </td>
-        <td>
+        </span>
+        <span v-if="props.column.field == 'action'">
           <button
             v-if="props.row.type == 'disabled'"
             @click="addReservation(props.row)"
@@ -139,7 +147,7 @@
               </li>
             </ul>
           </div>
-        </td>
+        </span>
       </template>
     </vue-good-table>
 
@@ -266,29 +274,41 @@
           <div class="modal-body">
             <vue-good-table
               v-if="!view.isScanning"
-              :customRowsPerPageDropdown="[10,25,50,100]"
-              :perPage="10"
+              :pagination-options="{
+                enabled: true,
+                perPageDropdown: [10,25,50,100],
+                perPage: 10,
+                nextLabel: tableLangsTexts.nextText,
+                prevLabel: tableLangsTexts.prevText,
+                ofLabel: tableLangsTexts.ofText,
+                rowsPerPageLabel: tableLangsTexts.rowsPerPageText,
+              }"
               :columns="columnsScan"
               :rows="rowsScan"
-              :lineNumbers="false"
-              :defaultSortBy="{field: 'ip', type: 'asc'}"
-              :globalSearch="true"
-              :paginate="true"
-              styleClass="table"
-              :nextText="tableLangsTexts.nextText"
-              :prevText="tableLangsTexts.prevText"
-              :rowsPerPageText="tableLangsTexts.rowsPerPageText"
-              :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
-              :ofText="tableLangsTexts.ofText"
+              :sort-options="{
+                enabled: true,
+                initialSortBy: {field: 'ip', type: 'asc'},
+              }"
+              :search-options="{
+                enabled: true,
+                placeholder: tableLangsTexts.globalSearchPlaceholder,
+              }"
+              styleClass="table vgt2"
             >
               <template slot="table-row" slot-scope="props">
-                <td class="fancy">
+                <span v-if="props.column.field == 'ip'">
                   <strong>{{ props.row.ip}}</strong>
-                </td>
-                <td class="fancy">{{ props.row.mac}}</td>
-                <td class="fancy">{{props.row.name}}</td>
-                <td class="fancy">{{props.row.host}}</td>
-                <td>
+                </span>
+                <span v-if="props.column.field == 'mac'">
+                  {{ props.row.mac}}
+                </span>
+                <span v-if="props.column.field == 'name'">
+                  {{props.row.name}}
+                </span>
+                <span v-if="props.column.field == 'host'">
+                  {{props.row.host}}
+                </span>
+                <span v-if="props.column.field == 'action'">
                   <button
                     :disabled="props.row.reserved"
                     @click="addMacReservation(props.row)"
@@ -297,7 +317,7 @@
                     <span class="pficon pficon-network span-right-margin"></span>
                     {{$t('dhcp.ip_reservation')}}
                   </button>
-                </td>
+                </span>
               </template>
             </vue-good-table>
           </div>
@@ -651,7 +671,7 @@ export default {
         },
         {
           label: this.$i18n.t("action"),
-          field: "",
+          field: "action",
           filterable: true,
           sortable: false
         }
@@ -694,7 +714,7 @@ export default {
         },
         {
           label: this.$i18n.t("action"),
-          field: "",
+          field: "action",
           filterable: true,
           sortable: false
         }

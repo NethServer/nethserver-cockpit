@@ -528,6 +528,10 @@ table.vgt2 th.sorting-desc:after {
     overflow-x: auto;
 }
 
+.vgt-responsive {
+    overflow-x: initial !important;
+}
+
 .vgt-inner-wrap {
     clear: both;
 }
