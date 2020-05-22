@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.6.9
+Version: 1.7.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,10 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Fri May 22 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.0-1
+- Cockpit: update vue-good-table to v2.19.3 - NethServer/dev#6174
+- Create smart host relay to send email with another smtp - NethServer/dev#6169
+
 * Tue May 19 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.6.9-1
 - Cockpit: backup destination disk space bar is not working - Bug NethServer/dev#6168
 
