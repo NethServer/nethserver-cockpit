@@ -17,19 +17,40 @@
 
     <h3>{{$t('list')}}</h3>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
-    <vue-good-table v-if="view.isLoaded" :customRowsPerPageDropdown="[25,50,100]" :perPage="25" :columns="columns"
-      :rows="rows" :lineNumbers="false" :defaultSortBy="{field: 'name', type: 'asc'}" :globalSearch="true" :paginate="true"
-      styleClass="table" :nextText="tableLangsTexts.nextText" :prevText="tableLangsTexts.prevText" :rowsPerPageText="tableLangsTexts.rowsPerPageText"
-      :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder" :ofText="tableLangsTexts.ofText">
+    <vue-good-table
+      v-if="view.isLoaded"
+      :columns="columns"
+      :rows="rows"
+      :pagination-options="{
+        enabled: true,
+        perPageDropdown: [25, 50, 100],
+        perPage: 25,
+        nextLabel: tableLangsTexts.nextText,
+        prevLabel: tableLangsTexts.prevText,
+        ofLabel: tableLangsTexts.ofText,
+        rowsPerPageLabel: tableLangsTexts.rowsPerPageText,
+      }"
+      :sort-options="{
+        enabled: true,
+        initialSortBy: {field: 'name', type: 'asc'},
+      }"
+      :search-options="{
+        enabled: true,
+        placeholder: tableLangsTexts.globalSearchPlaceholder,
+      }"
+      styleClass="table vgt2"
+    >
       <template slot="table-row" slot-scope="props">
-        <td class="fancy">
+        <span v-if="props.column.field == 'name'">
           <strong>{{ props.row.name}}</strong>
-        </td>
-        <td class="fancy">{{ props.row.props.Mask}}</td>
-        <td class="fancy">
+        </span>
+        <span v-if="props.column.field == 'props.Mask'">
+          {{ props.row.props.Mask}}
+        </span>
+        <span v-if="props.column.field == 'props.Description'">
           {{ props.row.props.Description }}
-        </td>
-        <td>
+        </span>
+        <span v-if="props.column.field == 'action'">
           <!-- allow edit and delete only for custom trusted networks -->
           <div v-if="props.row.custom">
             <button @click="editNetwork(props.row)" class="btn btn-default">
@@ -50,7 +71,7 @@
               </ul>
             </div>
           </div>
-        </td>
+        </span>
       </template>
     </vue-good-table>
 
@@ -173,17 +194,17 @@ export default {
         },
         {
           label: this.$i18n.t("trusted_networks.network_mask"),
-          field: "name",
+          field: "props.Mask",
           filterable: true
         },
         {
           label: this.$i18n.t("trusted_networks.description"),
-          field: "name",
+          field: "props.Description",
           filterable: true
         },
         {
           label: this.$i18n.t("action"),
-          field: "",
+          field: "action",
           filterable: true,
           sortable: false
         }

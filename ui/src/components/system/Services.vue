@@ -55,8 +55,8 @@
     </div>
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <!-- show all / network services only -->
-    <form class="mg-top-20" v-if="view.isLoaded">
-      <div class="form-group">
+    <form class="form-horizontal mg-top-20" v-if="view.isLoaded">
+      <div class="form-group no-mg-bottom">
         <label
           class="col-sm-3 control-label show-all-services"
           for="show-all-services"
@@ -74,38 +74,46 @@
     </form>
     <vue-good-table
       v-if="view.isLoaded"
-      :customRowsPerPageDropdown="[25,50,100]"
-      :perPage="25"
+      :pagination-options="{
+        enabled: true,
+        perPageDropdown: [25, 50, 100],
+        perPage: 25,
+        nextLabel: tableLangsTexts.nextText,
+        prevLabel: tableLangsTexts.prevText,
+        ofLabel: tableLangsTexts.ofText,
+        rowsPerPageLabel: tableLangsTexts.rowsPerPageText,
+      }"
       :columns="columns"
       :rows="filteredRows"
-      :lineNumbers="false"
-      :defaultSortBy="{field: 'name', type: 'asc'}"
-      :globalSearch="true"
-      :paginate="true"
-      styleClass="table"
-      :nextText="tableLangsTexts.nextText"
-      :prevText="tableLangsTexts.prevText"
-      :rowsPerPageText="tableLangsTexts.rowsPerPageText"
-      :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
-      :ofText="tableLangsTexts.ofText"
+      :sort-options="{
+        enabled: true,
+        initialSortBy: {field: 'name', type: 'asc'},
+      }"
+      :search-options="{
+        enabled: true,
+        placeholder: tableLangsTexts.globalSearchPlaceholder,
+      }"
+      styleClass="table vgt2"
     >
       <template slot="table-row" slot-scope="props">
-        <td class="fancy">
+        <span v-if="props.column.field == 'name'">
           <span
             v-if="checkHints(props.row.name)"
             class="pficon pficon-warning-triangle-o panel-icon"
           ></span>
           <strong>{{ props.row.name}}</strong>
           <span v-if="props.row.custom" class="gray mg-left-5">(custom)</span>
-        </td>
-        <td class="fancy">{{ props.row.description}}</td>
-        <td class="fancy">
+        </span>
+        <span v-if="props.column.field == 'description'">
+          {{ props.row.description}}
+        </span>
+        <span v-if="props.column.field == 'enabled'">
           <span :class="['fa', props.row.enabled ? 'fa-check green' : 'fa-times red']"></span>
-        </td>
-        <td class="fancy">
+        </span>
+        <span v-if="props.column.field == 'running'">
           <span :class="['fa', props.row.running ? 'fa-check green' : 'fa-times red']"></span>
-        </td>
-        <td class="fancy">
+        </span>
+        <span v-if="props.column.field == 'access'">
           <span
             v-for="(zone, i) in props.row.ports.access.split(',')"
             v-bind:key="i"
@@ -117,8 +125,8 @@
             props.row.ports.UDP.length > 0)"
             class="label label-info bg-gray pad-left-right-sm"
           >localhost</span>
-        </td>
-        <td class="fancy">
+        </span>
+        <span v-if="props.column.field == 'ports'">
           <span v-if="props.row.ports.TCP.length" class="mg-right-5">
             <b>TCP:</b>
             {{ props.row.ports.TCP.join(', ') }}
@@ -127,92 +135,94 @@
             <b>UDP:</b>
             {{ props.row.ports.UDP.join(', ') }}
           </span>
-        </td>
-        <td class="fancy">
+        </span>
+        <span v-if="props.column.field == 'details'">
           <a @click="openDetails(props.row)">
             <span>{{$t('view')}}</span>
           </a>
-        </td>
-        <!-- actions for systemd services -->
-        <td v-if="!props.row.custom">
-          <button
-            @click="props.row.running ? restartService(props.row.name) : startService(props.row.name)"
-            class="btn btn-default button-minimum"
-          >
-            <span
-              :class="['fa', props.row.running ? 'fa-refresh' : 'fa-play', 'span-right-margin']"
-            ></span>
-            {{props.row.running ? $t('services.restart') : $t('services.start') }}
-          </button>
-          <div class="dropup pull-right dropdown-kebab-pf">
+        </span>
+        <span v-if="props.column.field == 'action'">
+          <!-- actions for systemd services -->
+          <span v-if="!props.row.custom">
             <button
-              class="btn btn-link dropdown-toggle"
-              type="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="true"
+              @click="props.row.running ? restartService(props.row.name) : startService(props.row.name)"
+              class="btn btn-default button-minimum"
             >
-              <span class="fa fa-ellipsis-v"></span>
+              <span
+                :class="['fa', props.row.running ? 'fa-refresh' : 'fa-play', 'span-right-margin']"
+              ></span>
+              {{props.row.running ? $t('services.restart') : $t('services.start') }}
             </button>
-            <ul class="dropdown-menu dropdown-menu-right">
-              <li>
-                <a @click="statusService(props.row.name)">
-                  <span class="fa fa-search action-icon-menu"></span>
-                  {{$t('services.status')}}
-                </a>
-              </li>
-              <li role="separator" class="divider"></li>
-              <li>
-                <a
-                  @click="props.row.enabled ? disableService(props.row.name) : enableService(props.row.name)"
-                >
-                  <span
-                    :class="['fa', props.row.enabled ? 'fa-times' : 'fa-check', 'action-icon-menu']"
-                  ></span>
-                  {{props.row.enabled ? $t('services.disable') : $t('services.enable') }}
-                </a>
-              </li>
-              <li v-if="props.row.running">
-                <a @click="stopService(props.row.name)">
-                  <span class="fa fa-power-off action-icon-menu"></span>
-                  {{$t('services.stop')}}
-                </a>
-              </li>
-              <li>
-                <a @click="openEditService(props.row)">
-                  <span class="fa fa-edit span-right-margin action-icon-menu"></span>
-                  {{$t('edit')}}
-                </a>
-              </li>
-            </ul>
-          </div>
-        </td>
-        <!-- actions for custom services -->
-        <td v-if="props.row.custom">
-          <button @click="openEditService(props.row)" class="btn btn-default button-minimum">
-            <span class="fa fa-edit span-right-margin"></span>
-            {{ $t('edit') }}
-          </button>
-          <div class="dropup pull-right dropdown-kebab-pf">
-            <button
-              class="btn btn-link dropdown-toggle"
-              type="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="true"
-            >
-              <span class="fa fa-ellipsis-v"></span>
+            <div class="dropup pull-right dropdown-kebab-pf">
+              <button
+                class="btn btn-link dropdown-toggle"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="true"
+              >
+                <span class="fa fa-ellipsis-v"></span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li>
+                  <a @click="statusService(props.row.name)">
+                    <span class="fa fa-search action-icon-menu"></span>
+                    {{$t('services.status')}}
+                  </a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li>
+                  <a
+                    @click="props.row.enabled ? disableService(props.row.name) : enableService(props.row.name)"
+                  >
+                    <span
+                      :class="['fa', props.row.enabled ? 'fa-times' : 'fa-check', 'action-icon-menu']"
+                    ></span>
+                    {{props.row.enabled ? $t('services.disable') : $t('services.enable') }}
+                  </a>
+                </li>
+                <li v-if="props.row.running">
+                  <a @click="stopService(props.row.name)">
+                    <span class="fa fa-power-off action-icon-menu"></span>
+                    {{$t('services.stop')}}
+                  </a>
+                </li>
+                <li>
+                  <a @click="openEditService(props.row)">
+                    <span class="fa fa-edit span-right-margin action-icon-menu"></span>
+                    {{$t('edit')}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </span>
+          <!-- actions for custom services -->
+          <span v-if="props.row.custom">
+            <button @click="openEditService(props.row)" class="btn btn-default button-minimum">
+              <span class="fa fa-edit span-right-margin"></span>
+              {{ $t('edit') }}
             </button>
-            <ul class="dropdown-menu dropdown-menu-right">
-              <li>
-                <a @click="openRemoveCustomService(props.row)">
-                  <span class="fa fa-times action-icon-menu"></span>
-                  {{$t('remove')}}
-                </a>
-              </li>
-            </ul>
-          </div>
-        </td>
+            <div class="dropup pull-right dropdown-kebab-pf">
+              <button
+                class="btn btn-link dropdown-toggle"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="true"
+              >
+                <span class="fa fa-ellipsis-v"></span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li>
+                  <a @click="openRemoveCustomService(props.row)">
+                    <span class="fa fa-times action-icon-menu"></span>
+                    {{$t('remove')}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </span>
+        </span>
       </template>
     </vue-good-table>
 
@@ -535,25 +545,25 @@ export default {
         },
         {
           label: this.$i18n.t("services.access"),
-          field: "",
+          field: "access",
           filterable: true,
           sortable: false
         },
         {
           label: this.$i18n.t("services.ports"),
-          field: "",
+          field: "ports",
           filterable: true,
           sortable: false
         },
         {
           label: this.$i18n.t("details"),
-          field: "name",
-          filterable: true,
+          field: "details",
+          filterable: false,
           sortable: false
         },
         {
           label: this.$i18n.t("action"),
-          field: "",
+          field: "action",
           filterable: true,
           sortable: false
         }
@@ -1149,6 +1159,7 @@ export default {
 .show-all-services {
   padding-left: 0;
   width: auto;
+  margin-left: 20px;
 }
 
 .mg-top-20 {
@@ -1182,5 +1193,9 @@ export default {
 
 .mg-right-5 {
   margin-right: 5px;
+}
+
+.no-mg-bottom {
+  margin-bottom: 0;
 }
 </style>

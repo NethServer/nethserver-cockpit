@@ -13,36 +13,44 @@
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <vue-good-table
       v-if="view.isLoaded"
-      :customRowsPerPageDropdown="[25,50,100]"
-      :perPage="25"
+      :pagination-options="{
+        enabled: true,
+        perPageDropdown: [25, 50, 100],
+        perPage: 25,
+        nextLabel: tableLangsTexts.nextText,
+        prevLabel: tableLangsTexts.prevText,
+        ofLabel: tableLangsTexts.ofText,
+        rowsPerPageLabel: tableLangsTexts.rowsPerPageText,
+      }"
       :columns="columns"
       :rows="rows"
-      :lineNumbers="false"
-      :defaultSortBy="{field: 'name', type: 'asc'}"
-      :globalSearch="true"
-      :paginate="true"
-      styleClass="table"
-      :nextText="tableLangsTexts.nextText"
-      :prevText="tableLangsTexts.prevText"
-      :rowsPerPageText="tableLangsTexts.rowsPerPageText"
-      :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
-      :ofText="tableLangsTexts.ofText"
+      :sort-options="{
+        enabled: true,
+        initialSortBy: {field: 'name', type: 'asc'},
+      }"
+      :search-options="{
+        enabled: true,
+        placeholder: tableLangsTexts.globalSearchPlaceholder,
+      }"
+      styleClass="table vgt2"
     >
       <template slot="table-row" slot-scope="props">
-        <td class="fancy">
+        <span v-if="props.column.field == 'name'">
           <a @click="editDNS(props.row)">
             <strong>{{ props.row.name}}</strong>
           </a>
-        </td>
-        <td class="fancy">{{ props.row.props.Description}}</td>
-        <td class="fancy">
+        </span>
+        <span v-if="props.column.field == 'props.Description'">
+          {{ props.row.props.Description}}
+        </span>
+        <span v-if="props.column.field == 'props.IpAddress'">
           <span class="fa fa-desktop"></span>
           {{props.row.props.IpAddress}}
-        </td>
-        <td class="fancy">
+        </span>
+        <span v-if="props.column.field == 'props.WildcardMode'">
           <span :class="['fa', props.row.props.WildcardMode ? 'fa-check green' : 'fa-remove red']"></span>
-        </td>
-        <td>
+        </span>
+        <span v-if="props.column.field == 'action'">
           <button @click="editDNS(props.row)" class="btn btn-default">
             <span class="fa fa-pencil span-right-margin"></span>
             {{$t('edit')}}
@@ -66,7 +74,7 @@
               </li>
             </ul>
           </div>
-        </td>
+        </span>
       </template>
     </vue-good-table>
 
@@ -259,7 +267,7 @@ export default {
         },
         {
           label: this.$i18n.t("action"),
-          field: "",
+          field: "action",
           filterable: true,
           sortable: false
         }

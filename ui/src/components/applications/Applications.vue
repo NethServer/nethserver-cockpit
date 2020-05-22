@@ -11,23 +11,29 @@
 
     <vue-good-table
       v-if="view.isLoaded"
-      :customRowsPerPageDropdown="[25,50,100]"
-      :perPage="25"
+      :pagination-options="{
+        enabled: true,
+        perPageDropdown: [25, 50, 100],
+        perPage: 25,
+        nextLabel: tableLangsTexts.nextText,
+        prevLabel: tableLangsTexts.prevText,
+        ofLabel: tableLangsTexts.ofText,
+        rowsPerPageLabel: tableLangsTexts.rowsPerPageText,
+      }"
       :columns="columns"
       :rows="rows"
-      :lineNumbers="false"
-      :defaultSortBy="{field: 'name', type: 'asc'}"
-      :globalSearch="true"
-      :paginate="true"
-      styleClass="table"
-      :nextText="tableLangsTexts.nextText"
-      :prevText="tableLangsTexts.prevText"
-      :rowsPerPageText="tableLangsTexts.rowsPerPageText"
-      :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
-      :ofText="tableLangsTexts.ofText"
+      :sort-options="{
+        enabled: true,
+        initialSortBy: {field: 'name', type: 'asc'},
+      }"
+      :search-options="{
+        enabled: true,
+        placeholder: tableLangsTexts.globalSearchPlaceholder,
+      }"
+      styleClass="table vgt2"
     >
       <template slot="table-row" slot-scope="props">
-        <td class="fancy">
+        <span v-if="props.column.field == 'icon'">
           <a
             v-if="(props.row.url || props.row.url.length > 0 )"
             target="_blank"
@@ -38,8 +44,8 @@
           <span v-if="!props.row.url || props.row.url.length == 0">
             <img class="apps-icon" :src="'../'+props.row.id+'/'+(props.row.icon || 'logo.png')" />
           </span>
-        </td>
-        <td class="fancy">
+        </span>
+        <span v-if="props.column.field == 'name'">
           <strong>
             <a
               v-if="(props.row.url || props.row.url.length > 0 )"
@@ -48,12 +54,14 @@
             >{{props.row.name}}</a>
             <span v-if="!props.row.url || props.row.url.length == 0">{{props.row.name}}</span>
           </strong>
-        </td>
-        <td class="fancy">{{ props.row.description}}</td>
-        <td class="fancy">
+        </span>
+        <span v-if="props.column.field == 'description'">
+          {{ props.row.description}}
+        </span>
+        <span v-if="props.column.field == 'release.version'">
           <strong>{{props.row.release.version | capitalize}}</strong>
-        </td>
-        <td>
+        </span>
+        <span v-if="props.column.field == 'action'">
           <a
             :target="props.row.external ? '_blank' : ''"
             :href="props.row.external ? (props.row.legacy ? legacyUrl : '' )+props.row.url : '#/applications/'+props.row.id"
@@ -107,7 +115,7 @@
               </li>
             </ul>
           </div>
-        </td>
+        </span>
       </template>
     </vue-good-table>
 
@@ -180,7 +188,7 @@ export default {
         },
         {
           label: this.$i18n.t("applications.description"),
-          field: "name",
+          field: "description",
           filterable: true
         },
         {
@@ -190,7 +198,7 @@ export default {
         },
         {
           label: this.$i18n.t("action"),
-          field: "",
+          field: "action",
           filterable: true,
           sortable: false
         }

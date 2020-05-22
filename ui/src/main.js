@@ -12,6 +12,7 @@ import DocInfo from "./directives/DocInfo.vue";
 import App from "./App.vue";
 import router from "./router/index";
 import "./filters/filters";
+import 'vue-good-table/dist/vue-good-table.css'
 
 
 window.c3 = require('c3');

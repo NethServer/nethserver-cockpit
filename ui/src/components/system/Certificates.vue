@@ -51,39 +51,47 @@
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <vue-good-table
       v-if="view.isLoaded"
-      :customRowsPerPageDropdown="[25,50,100]"
-      :perPage="25"
+      :pagination-options="{
+        enabled: true,
+        perPageDropdown: [25, 50, 100],
+        perPage: 25,
+        nextLabel: tableLangsTexts.nextText,
+        prevLabel: tableLangsTexts.prevText,
+        ofLabel: tableLangsTexts.ofText,
+        rowsPerPageLabel: tableLangsTexts.rowsPerPageText,
+      }"
       :columns="columns"
       :rows="rows"
-      :lineNumbers="false"
-      :defaultSortBy="{field: 'file', type: 'asc'}"
-      :globalSearch="true"
-      :paginate="true"
-      styleClass="table"
-      :nextText="tableLangsTexts.nextText"
-      :prevText="tableLangsTexts.prevText"
-      :rowsPerPageText="tableLangsTexts.rowsPerPageText"
-      :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
-      :ofText="tableLangsTexts.ofText"
+      :sort-options="{
+        enabled: true,
+        initialSortBy: {field: 'file', type: 'asc'},
+      }"
+      :search-options="{
+        enabled: true,
+        placeholder: tableLangsTexts.globalSearchPlaceholder,
+      }"
+      styleClass="table vgt2"
     >
       <template slot="table-row" slot-scope="props">
-        <td class="fancy">
+        <span v-if="props.column.field == 'file'">
           <a @click="showCertificate(props.row.file)">
             <strong>{{ props.row.file}}</strong>
           </a>
-        </td>
-        <td class="fancy">{{ props.row.issuer}}</td>
-        <td class="fancy">
+        </span>
+        <span v-if="props.column.field == 'issuer'">
+          {{ props.row.issuer}}
+        </span>
+        <span v-if="props.column.field == 'expires'">
           <span :class="['fa', props.row.expired ? 'fa-clock-o red' : '']"></span>
           <span :class="[props.row.expired ? 'red' : '', 'margin-top-small']">
             {{props.row.expiration_t * 1000 |
             dateFormat}}
           </span>
-        </td>
-        <td class="fancy">
+        </span>
+        <span v-if="props.column.field == 'default'">
           <span :class="['fa', props.row.default ? 'fa-check green' : 'fa-times red']"></span>
-        </td>
-        <td>
+        </span>
+        <span v-if="props.column.field == 'action'">
           <button @click="showCertificate(props.row.file)" class="btn btn-default">
             <span class="fa fa-search span-right-margin"></span>
             {{$t('certificates.show')}}
@@ -107,7 +115,7 @@
               </li>
             </ul>
           </div>
-        </td>
+        </span>
       </template>
     </vue-good-table>
 
@@ -697,7 +705,7 @@ export default {
         },
         {
           label: this.$i18n.t("action"),
-          field: "",
+          field: "action",
           filterable: true,
           sortable: false
         }
