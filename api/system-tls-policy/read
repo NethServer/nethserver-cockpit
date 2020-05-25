@@ -28,4 +28,4 @@ if [ -z $policy ]; then
 else
     policy="\"$policy\""
 fi
-printf '{"status":{"available": ["20180621","20180330","20181001","20200510"]},"configuration":{"props":{"policy":%s},"name":"tls","type":"configuration"}}' "$policy"
+printf '{"status":{"available": ["20180330","20180621","20181001","20200510"]},"configuration":{"props":{"policy":%s},"name":"tls","type":"configuration"}}' "$policy"
