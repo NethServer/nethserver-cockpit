@@ -43,6 +43,7 @@ event_templates('nethserver-cockpit-update', qw(
     /etc/httpd/conf.d/default-virtualhost.inc
     /etc/pam.d/cockpit
     /etc/nethserver/cockpit.otp.force
+    /etc/sysconfig/cockpit
 ));
 
 event_services('nethserver-cockpit-update', qw(
@@ -168,3 +169,11 @@ safe_symlink('/bin/true', 'root/etc/e-smith/events/test-success/S20true');
 safe_symlink('/bin/false', 'root/etc/e-smith/events/test-failure/S20false');
 safe_symlink('/bin/true', 'root/etc/e-smith/validators/test-success/S20true');
 safe_symlink('/bin/false', 'root/etc/e-smith/validators/test-failure/S20false');
+
+#
+# tls-policy-save event
+#
+
+event_templates('tls-policy-save', qw(
+    /etc/sysconfig/cockpit
+));
