@@ -217,10 +217,10 @@
                     {{b.props.status == 'disabled' ? $t('backup.enable') : $t('backup.disable')}}
                   </a>
                 </li>
-                <li :class="b.status.result == 'unknown' ? 'disabled' : ''">
-                  <a @click="b.status.result == 'unknown' ? undefined : openLastLogData(b)">
+                <li>
+                  <a @click="openViewLogsData(b)">
                     <span class="fa fa-list span-right-margin"></span>
-                    {{$t('backup.view_last_log')}}
+                    {{$t('backup.view_logs')}}
                   </a>
                 </li>
                 <li role="presentation" class="divider"></li>
@@ -759,18 +759,39 @@
         </div>
       </div>
     </div>
-    <div class="modal" id="lastLogDataModal" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal" id="logsDataModal" tabindex="-1" role="dialog" data-backdrop="static">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{$t('backup.last_log_for')}} {{currentDataBackup.name}}</h4>
+            <h4 class="modal-title">{{$t('backup.logs_for')}} {{currentDataBackup.name}}</h4>
           </div>
           <form class="form-horizontal">
             <div class="modal-body">
               <div class="form-group">
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('backup.log_date')}}</label>
+                <div class="col-sm-9">
+                  <div v-if="!currentDataBackup.logs" class="spinner spinner-sm"></div>
+                  <select
+                    v-if="currentDataBackup.logs"
+                    class="form-control"
+                    v-model="currentDataBackup.currentLogDate"
+                    @change="readLog()"
+                  >
+                    <option
+                      v-for="(d,dk) in Object.keys(currentDataBackup.logs).reverse()"
+                      :key="dk"
+                      :value="d"
+                    >{{d}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
                 <div class="col-sm-12">
-                  <div v-if="!currentDataBackup.lastLog" class="spinner spinner-sm"></div>
-                  <pre v-if="currentDataBackup.lastLog" class="prettyprint">{{currentDataBackup.lastLog}}</pre>
+                  <div v-if="!currentDataBackup.logs" class="spinner spinner-sm"></div>
+                  <pre v-if="currentDataBackup.logs" class="prettyprint">{{currentDataBackup.currentLogDump}}</pre>
                 </div>
               </div>
             </div>
@@ -2768,7 +2789,9 @@ export default {
         restoreBackup: "",
         isLoading: false,
         name: "",
-        lastLog: null
+        logs: null,
+        currentLogDate: null,
+        currentLogDump: null
       };
     },
     onChangeInput(event) {
@@ -3275,18 +3298,18 @@ export default {
       this.wizard = this.initWizard(b);
       $("#createDataModal").modal("show");
     },
-    openLastLogData(b) {
+    openViewLogsData(b) {
       var context = this;
 
       context.currentDataBackup = context.initBackupData();
       context.currentDataBackup.name = b.name;
-      context.currentDataBackup.lastLog = null;
+      context.currentDataBackup.logs = null;
 
-      $("#lastLogDataModal").modal("show");
+      $("#logsDataModal").modal("show");
       context.exec(
         ["system-backup/read"],
         {
-          action: "last-log",
+          action: "all-logs",
           name: b.name
         },
         null,
@@ -3296,16 +3319,60 @@ export default {
           } catch (e) {
             console.error(e);
           }
-          context.currentDataBackup.lastLog = success.data;
+
+          var logs = {};
+          for (var a in success) {
+            logs[success[a].date] = success[a].path;
+          }
+
+          var sortedLogs = {};
+          Object.keys(logs)
+            .sort()
+            .forEach(function(key) {
+              sortedLogs[key] = logs[key];
+            });
+
+          context.currentDataBackup.logs = sortedLogs;
+
+          // get last log
+          var lastDate = Object.keys(sortedLogs)[
+            Object.keys(sortedLogs).length - 1
+          ];
+          context.currentDataBackup.currentLogDate = lastDate;
+          context.readLog();
         },
         function(error) {
           console.error(error);
-          context.currentDataBackup.lastLog = "-";
+          context.currentDataBackup.logs = "-";
         }
       );
     },
+    readLog() {
+      var context = this;
+      nethserver.readLogs(
+        {
+          action: "dump",
+          lines: 5000,
+          mode: "file",
+          filter: null,
+          paths: [
+            this.currentDataBackup.logs[this.currentDataBackup.currentLogDate]
+          ]
+        },
+        null,
+        function(success) {
+          context.currentDataBackup.currentLogDump = success;
+        },
+        function(error) {
+          context.currentDataBackup.currentLogDump = context.$i18n.t(
+            "backup.no_log_found"
+          );
+        },
+        true
+      );
+    },
     cleanLastLog() {
-      this.currentDataBackup.lastLog = null;
+      this.currentDataBackup.logs = null;
     },
     openDeleteData(b) {
       this.currentDataBackup = this.initBackupData();

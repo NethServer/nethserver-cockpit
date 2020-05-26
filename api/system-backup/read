@@ -88,20 +88,24 @@ sub get_default_custom_excludes
     return \@tmp;
 }
 
-sub find_latest_log
+sub find_all_logs
 {
     my $name = shift;
-    my $n = "[0123456789]";
-    my $latest_filename = "";
-    my $latest_ts = 0;
+    my $n = "[0-9]";
+    my @logs = ();
     foreach my $file (glob("/var/log/backup/backup-$name-$n$n$n$n$n$n$n$n$n$n$n$n.log")) {
         my $stat = stat($file);
-        if ($stat->mtime > $latest_ts) {
-            $latest_ts = $stat->mtime;
-            $latest_filename = $file
+        if ( -f $file ) {
+
+            my $path = $file;
+            $file =~ s/[^0-9]//g;
+            my ($y,$M,$d,$h,$m) = $file =~ /^([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})\z/ or error();
+
+            push(@logs, {"date" => "$y-$M-$d $h:$m", "path" => $path, "ts" => $stat->mtime});
         }
     }
-    return ($latest_filename, $latest_ts);
+
+    return reverse sort { $a->{ts} <=> $b->{ts} } @logs;;
 }
 
 sub get_latest_stats
@@ -109,15 +113,15 @@ sub get_latest_stats
     my $name = shift;
     my %status = ('id' => $name, 'log' => '', 'last-run' => 0, 'result' => 'unknown', 'destination' => undef);
 
-    my @log_stats = find_latest_log($name);
-    if ($log_stats[0] eq '') {
+    my @log_stats = find_all_logs($name);
+    if ($log_stats[0]{'path'} eq '') {
         return %status;
     } else {
-        $status{'log'} = $log_stats[0];
-        $status{'last-run'} = $log_stats[1];
+        $status{'log'} = $log_stats[0]{'path'};
+        $status{'last-run'} = $log_stats[0]{'ts'};
     }
 
-    open my $fh, '<:encoding(UTF-8)', $log_stats[0] or return %status;
+    open my $fh, '<:encoding(UTF-8)', $log_stats[0]{'path'} or return %status;
     while (my $line = <$fh>) {
         if ($line =~ /^Backup status: (.*)/) {
             if ($1 eq 'SUCCESS') {
@@ -127,6 +131,7 @@ sub get_latest_stats
             }
         }
     }
+
 
     my $du_file = "/var/spool/backup/disk_usage-$name";
     if (-f $du_file) {
@@ -165,7 +170,7 @@ sub list_disks
             $disk{lc($k)} = $v;
         }
 
-        # skip read-only 
+        # skip read-only
         if ($disk{'ro'} eq '1' || $disk{'type'} eq 'rom') {
             next;
         }
@@ -260,12 +265,15 @@ if($cmd eq 'backup-info') {
     list_disks();
 } elsif ($cmd eq 'running-info') {
     running_info();
+} elsif ($cmd eq 'all-logs') {
+    my @logs = find_all_logs($input->{'name'});
+    print encode_json(\@logs);
 } elsif ($cmd eq 'last-log') {
     my $ret;
     $ret->{'data'} = '';
-    my @log_stats = find_latest_log($input->{'name'});
-    if ( -f $log_stats[0] ) {
-        open my $fh, '<', $log_stats[0];
+    my @log_stats = find_all_logs($input->{'name'});
+    if ( -f $log_stats[0]{'path'} ) {
+        open my $fh, '<', $log_stats[0]{'path'};
         $/ = undef;
         $ret->{'data'} = <$fh>;
         close $fh;
