@@ -31,7 +31,7 @@ my $input = readInput();
 my $cmd = $input->{'action'};
 my $lines = $input->{'lines'} || '50';
 my $filter = $input->{'filter'} || '';
-my $format_time = $input->{'format_time'} eq 'true' || 0;
+my $format_time = exists $input->{'format_time'} ? $input->{'format_time'} eq 'true' : 0;
 
 sub dump_logs
 {
