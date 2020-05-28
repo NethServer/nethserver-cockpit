@@ -2481,7 +2481,8 @@ export default {
 
         case "orange":
           return "fa fa-shield";
-
+        case "hotspot":
+          return "fa fa-wifi";
         case "free":
           return "fa fa-unlock";
 
@@ -2908,6 +2909,7 @@ export default {
             red: success.configuration.red,
             blue: success.configuration.blue,
             orange: success.configuration.orange,
+            hotspot: success.configuration.hotspot,
             other: success.configuration.other,
             free: success.configuration.free,
             missing: success.configuration.missing
