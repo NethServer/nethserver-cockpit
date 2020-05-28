@@ -160,12 +160,7 @@ if($cmd eq 'list') {
         }
 
         # read address in cidr format
-        my $iname_for_cidr = $iname;
-
-        if ($props{'role'} eq 'hotspot') {
-            $iname_for_cidr = 'tun-dedalo';
-        }
-        my $cidr = `/sbin/ip -o -4 address show $iname_for_cidr primary 2>/dev/null| head -1 | awk '{print \$4}'`;
+        my $cidr = `/sbin/ip -o -4 address show $iname primary 2>/dev/null| head -1 | awk '{print \$4}'`;
         chomp $cidr;
         $props{'cidr'} = $cidr;
 
