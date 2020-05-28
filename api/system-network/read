@@ -27,7 +27,7 @@ use strict;
 use esmith::NetworksDB;
 use JSON;
 
-my $ret = {"status" => undef, "configuration" => {'green' => [], 'red' => [] , 'orange' => [], 'blue' => [], 'free' => [], 'other' => [], 'missing' => [] }};
+my $ret = {"status" => undef, "configuration" => {'green' => [], 'red' => [] , 'orange' => [], 'blue' => [], 'hotspot' => [], 'free' => [], 'other' => [], 'missing' => [] }};
 our $ndb = esmith::NetworksDB->open_ro();
 
 sub is_valid_interface

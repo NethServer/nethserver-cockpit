@@ -704,6 +704,7 @@
     "red": "WAN (red)",
     "blue": "Guests (blue)",
     "orange": "DMZ (orange)",
+    "hotspot": "Hotspot",
     "empty": "Empty (no role)",
     "free": "Unassigned",
     "missing": "Missing",
