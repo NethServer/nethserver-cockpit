@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.7.1
+Version: 1.7.2
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,11 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Thu Jun 04 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.2-1
+- Cockpit & Firewall: Hotspot interface shown as not recognized - Bug NethServer/dev#6186
+- Cockpit: backup page display an empty list - Bug NethServer/dev#6184
+- Remove TLS 1.0 and TLS 1.1 - NethServer/dev#6170
+
 * Tue May 26 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.1-1
 - Cockpit: Backup view all logs - Nethserver/dev#6175
 
