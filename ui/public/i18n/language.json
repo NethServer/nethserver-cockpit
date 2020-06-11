@@ -96,7 +96,7 @@
     "nethserver-mattermost": "Mattermost",
     "nethserver-nextcloud": "Nextcloud",
     "nethserver-nut": "UPS",
-    "nethserver-ntopng": "nTopNG",
+    "nethserver-ntopng": "Bandwidth monitor",
     "nethserver-restore-data": "Restore data",
     "nethserver-roundcubemail": "Webmail",
     "nethserver-samba": "File server",
