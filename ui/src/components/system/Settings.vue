@@ -1541,7 +1541,7 @@ export default {
             console.error(e);
           }
         },
-        false
+        sudo
       );
     }
   }
