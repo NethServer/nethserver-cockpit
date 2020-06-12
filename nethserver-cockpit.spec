@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.7.2
+Version: 1.7.3
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,10 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Fri Jun 12 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.3-1
+- Cockpit: user other than root cannot change Smart host settings - NethServer/dev#6198
+- Add ntopng 4 - NethServer/dev#6199
+
 * Thu Jun 04 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.2-1
 - Cockpit & Firewall: Hotspot interface shown as not recognized - Bug NethServer/dev#6186
 - Cockpit: backup page display an empty list - Bug NethServer/dev#6184
