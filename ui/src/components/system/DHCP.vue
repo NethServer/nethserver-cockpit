@@ -5,7 +5,9 @@
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <div v-if="view.isLoaded">
       <div class="stats-container card-pf-utilization-details">
-        <span class="card-pf-utilization-card-details-count">{{stats.reservations}}</span>
+        <span class="card-pf-utilization-card-details-count" :title="stats.reservations">
+          {{stats.reservations | humanFormat}}
+        </span>
         <span class="card-pf-utilization-card-details-description">
           <span
             class="card-pf-utilization-card-details-line-2 stats-text"
@@ -13,7 +15,9 @@
         </span>
       </div>
       <div class="stats-container card-pf-utilization-details">
-        <span class="card-pf-utilization-card-details-count">{{stats.leases}}</span>
+        <span class="card-pf-utilization-card-details-count" :title="stats.leases">
+          {{stats.leases | humanFormat}}
+        </span>
         <span class="card-pf-utilization-card-details-description">
           <span class="card-pf-utilization-card-details-line-2 stats-text">{{$t('dhcp.leases')}}</span>
         </span>

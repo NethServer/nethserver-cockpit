@@ -1618,12 +1618,12 @@ export default {
         order: null
       };
       ramConfig.size = {
-        width: 180,
-        height: 180
+        width: 220,
+        height: 220
       };
       swapConfig.size = {
-        width: 180,
-        height: 180
+        width: 220,
+        height: 220
       };
 
       ramConfig.tooltip = {
@@ -1666,8 +1666,8 @@ export default {
         order: null
       };
       rootConfig.size = {
-        width: 180,
-        height: 180
+        width: 220,
+        height: 220
       };
       
       rootConfig.tooltip = {

@@ -5,14 +5,18 @@
     <div v-if="view.isLoaded">
       <h3>{{$t('stats')}}</h3>
       <div class="stats-container card-pf-utilization-details">
-        <span class="card-pf-utilization-card-details-count">{{stats.connections}}</span>
+        <span class="card-pf-utilization-card-details-count" :title="stats.connections">
+          {{stats.connections | humanFormat}}
+        </span>
         <span class="card-pf-utilization-card-details-description">
           <span class="card-pf-utilization-card-details-line-2 stats-text">{{stats.connections == 1 ?
             $t('ssh.connection') : $t('ssh.connections')}}</span>
         </span>
       </div>
       <div class="stats-container card-pf-utilization-details">
-        <span class="card-pf-utilization-card-details-count">{{stats.peers}}</span>
+        <span class="card-pf-utilization-card-details-count" :title="stats.peers">
+          {{stats.peers | humanFormat}}
+        </span>
         <span class="card-pf-utilization-card-details-description">
           <span class="card-pf-utilization-card-details-line-2 stats-text">{{stats.peers == 1 ? $t('ssh.peer') :
             $t('ssh.peers')}}</span>
