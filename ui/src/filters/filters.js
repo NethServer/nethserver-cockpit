@@ -15,21 +15,66 @@ var Filters = {
         break;
 
       case size >= 1024 && size < Math.pow(1024, 2):
-        result = Math.round(size / 1024 * 100) / 100 + " K";
+        result = Math.round(size / 1024 * 100) / 100 + " KB";
         break;
 
       case size >= Math.pow(1024, 2) && size < Math.pow(1024, 3):
-        result = Math.round(size / Math.pow(1024, 2) * 100) / 100 + " M";
+        result = Math.round(size / Math.pow(1024, 2) * 100) / 100 + " MB";
         break;
 
       case size >= Math.pow(1024, 3) && size < Math.pow(1024, 4):
-        result = Math.round(size / Math.pow(1024, 3) * 100) / 100 + " G";
+        result = Math.round(size / Math.pow(1024, 3) * 100) / 100 + " GB";
         break;
 
       default:
-        result = Math.round(size / Math.pow(1024, 4) * 100) / 100 + " T";
+        result = Math.round(size / Math.pow(1024, 4) * 100) / 100 + " TB";
     }
 
+    return result;
+  },
+  humanFormat: function (number, decimals = false) {
+    var result;
+
+    switch (true) {
+      case number === null || number === "" || isNaN(number):
+        result = "-";
+        break;
+
+      case number >= 0 && number < 1000:
+        result = number;
+        break;
+
+      case number >= 1000 && number < Math.pow(1000, 2):
+        if (decimals) {
+          result = Math.round(number / 1000 * 10) / 10 + " K";
+        } else {
+          result = Math.round(number / 1000) + " K";
+        }
+        break;
+
+      case number >= Math.pow(1000, 2) && number < Math.pow(1000, 3):
+        if (decimals) {
+          result = Math.round(number / Math.pow(1000, 2) * 10) / 10 + " M";
+        } else {
+          result = Math.round(number / Math.pow(1000, 2)) + " M";
+        }
+        break;
+
+      case number >= Math.pow(1000, 3) && number < Math.pow(1000, 4):
+        if (decimals) {
+          result = Math.round(number / Math.pow(1000, 3) * 10) / 10 + " B";
+        } else {
+          result = Math.round(number / Math.pow(1000, 3)) + " B";
+        }
+        break;
+
+      default:
+        if (decimals) {
+          result = Math.round(number / Math.pow(1000, 4) * 10) / 10 + " T";
+        } else {
+          result = Math.round(number / Math.pow(1000, 4)) + " T";
+        }
+    }
     return result;
   },
   secondsInHour: function (value) {

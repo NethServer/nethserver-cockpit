@@ -5,7 +5,9 @@
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
     <div v-if="view.isLoaded">
       <div class="stats-container card-pf-utilization-details">
-        <span class="card-pf-utilization-card-details-count">{{stats.servicesCount}}</span>
+        <span class="card-pf-utilization-card-details-count" :title="stats.servicesCount">
+          {{stats.servicesCount | humanFormat}}
+        </span>
         <span class="card-pf-utilization-card-details-description">
           <span
             class="card-pf-utilization-card-details-line-2 stats-text"
@@ -13,7 +15,9 @@
         </span>
       </div>
       <div class="stats-container card-pf-utilization-details">
-        <span class="card-pf-utilization-card-details-count">{{stats.servicesEnabledCount}}</span>
+        <span class="card-pf-utilization-card-details-count" :title="stats.servicesEnabledCount">
+          {{stats.servicesEnabledCount | humanFormat}}
+        </span>
         <span class="card-pf-utilization-card-details-description">
           <span
             class="card-pf-utilization-card-details-line-2 stats-text"
@@ -21,7 +25,9 @@
         </span>
       </div>
       <div class="stats-container card-pf-utilization-details">
-        <span class="card-pf-utilization-card-details-count">{{stats.servicesRunningCount}}</span>
+        <span class="card-pf-utilization-card-details-count" :title="stats.servicesRunningCount">
+          {{stats.servicesRunningCount | humanFormat}}
+        </span>
         <span class="card-pf-utilization-card-details-description">
           <span
             class="card-pf-utilization-card-details-line-2 stats-text"
