@@ -218,7 +218,7 @@
           : $t('software_center.applications_low')}}
         </button>
       </div>
-      <form class="search-pf has-button">
+      <form class="search-pf has-button" v-on:submit.prevent="">
         <div class="form-group has-clear toolbar-pf-filter">
           <div class="input-group full-width">
             <input
