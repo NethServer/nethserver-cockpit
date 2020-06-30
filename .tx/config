@@ -6,3 +6,8 @@ source_file = ui/public/i18n/language.json
 source_lang = en
 type = KEYVALUEJSON
 
+[nethserver.CockpitCommon]
+source_file = ui/public/i18n/common.json
+source_lang = en
+type = KEYVALUEJSON
+

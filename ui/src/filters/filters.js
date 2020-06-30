@@ -46,33 +46,33 @@ var Filters = {
 
       case number >= 1000 && number < Math.pow(1000, 2):
         if (decimals) {
-          result = Math.round(number / 1000 * 10) / 10 + " K";
+          result = Math.round(number / 1000 * 10) / 10 + " " + ns._i18n.t('common.thousands');
         } else {
-          result = Math.round(number / 1000) + " K";
+          result = Math.round(number / 1000) + " " + ns._i18n.t('common.thousands');
         }
         break;
 
       case number >= Math.pow(1000, 2) && number < Math.pow(1000, 3):
         if (decimals) {
-          result = Math.round(number / Math.pow(1000, 2) * 10) / 10 + " M";
+          result = Math.round(number / Math.pow(1000, 2) * 10) / 10 + " " + ns._i18n.t('common.millions');
         } else {
-          result = Math.round(number / Math.pow(1000, 2)) + " M";
+          result = Math.round(number / Math.pow(1000, 2)) + " " + ns._i18n.t('common.millions');
         }
         break;
 
       case number >= Math.pow(1000, 3) && number < Math.pow(1000, 4):
         if (decimals) {
-          result = Math.round(number / Math.pow(1000, 3) * 10) / 10 + " B";
+          result = Math.round(number / Math.pow(1000, 3) * 10) / 10 + " " + ns._i18n.t('common.billions');
         } else {
-          result = Math.round(number / Math.pow(1000, 3)) + " B";
+          result = Math.round(number / Math.pow(1000, 3)) + " " + ns._i18n.t('common.billions');
         }
         break;
 
       default:
         if (decimals) {
-          result = Math.round(number / Math.pow(1000, 4) * 10) / 10 + " T";
+          result = Math.round(number / Math.pow(1000, 4) * 10) / 10 + " " + ns._i18n.t('common.trillions');
         } else {
-          result = Math.round(number / Math.pow(1000, 4)) + " T";
+          result = Math.round(number / Math.pow(1000, 4)) + " " + ns._i18n.t('common.trillions');
         }
     }
     return result;

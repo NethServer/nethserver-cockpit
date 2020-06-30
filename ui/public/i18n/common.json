@@ -1,0 +1,8 @@
+{
+  "common": {
+    "thousands": "K",
+    "millions": "M",
+    "billions": "B",
+    "trillions": "T"
+  }
+}

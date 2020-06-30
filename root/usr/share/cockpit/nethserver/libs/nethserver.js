@@ -187,13 +187,18 @@ nethserver = {
     },
     fetchTranslatedStrings(callback = null) {
         var context = this;
-        return jQuery.getJSON('./i18n/language.json', {}, function(data) {
-            if(callback) {
-                cockpit.spawn(['/usr/bin/printenv', 'LANG'])
-                .done(function(lang) {
-                    callback.call(context, data, lang.trim());
-                })
-            }
+        return jQuery.getJSON('../nethserver/i18n/common.json', {}, function(commonStrings) {
+            return jQuery.getJSON('./i18n/language.json', {}, function(moduleStrings) {
+                // merge common and module strings
+                let i18nStrings = Object.assign(commonStrings, moduleStrings);
+
+                if(callback) {
+                    cockpit.spawn(['/usr/bin/printenv', 'LANG'])
+                    .done(function(lang) {
+                        callback.call(context, i18nStrings, lang.trim());
+                    })
+                }
+            });
         });
     },
     notifications: {
