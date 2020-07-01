@@ -1,0 +1,6 @@
+#
+# 60negotiate - add negotiate section to surpress prompt in some browsers
+#
+
+[negotiate]
+action = none
