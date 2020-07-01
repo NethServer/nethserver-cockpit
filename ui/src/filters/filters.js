@@ -62,9 +62,9 @@ var Filters = {
 
       case number >= Math.pow(1000, 3) && number < Math.pow(1000, 4):
         if (decimals) {
-          result = Math.round(number / Math.pow(1000, 3) * 10) / 10 + " B";
+          result = Math.round(number / Math.pow(1000, 3) * 10) / 10 + " G";
         } else {
-          result = Math.round(number / Math.pow(1000, 3)) + " B";
+          result = Math.round(number / Math.pow(1000, 3)) + " G";
         }
         break;
 
