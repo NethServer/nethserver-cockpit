@@ -763,6 +763,7 @@
     "title": "SSH",
     "tcp_port": "TCP Port",
     "allow_root_login": "Allow root login",
+    "require_strong_encryption": "Enforce the encryption",
     "allow_password_auth": "Allow password authentication",
     "ssh_edit_ok": "SSH configuration saved successfully!",
     "ssh_edit_error": "SSH configuration not saved.",
@@ -1049,6 +1050,8 @@
     "change_default_company": "Change the default company",
     "one_or_more_dns_not_working": "One or more DNS servers are not responding",
     "TCPPort": "TCP port",
+    "StrongEncryption": "Enforce the encryption",
+    "change_default_ssh_encryption": "You can enforce the encryption by the usage of stong ciphers",
     "service_is_enabled_but_is_not_running": "The service is either not running or not enabled",
     "must_configure_backup_data": "You should configure at least one data backup",
     "change_default_ssh_port": "Change the default SSH port to lower brute force attack rates",
@@ -1225,6 +1228,7 @@
     "OtpSshd_Only_Password_Auth": "2FA is available only for password authentication. Authentication with public keys will not be affected by 2FA.",
     "disaster_recovery": "Disaster recovery",
     "user_settings_page": "Allow users to change their password and other settings on a web page outside Cockpit (on port 443). This feature can be enabled only if 'Override the shell of users' is enabled as well.",
-    "OtpR2WOath_Auth":"The VPN policy requires the usage of OTP to access the network."
+    "OtpR2WOath_Auth": "The VPN policy requires the usage of OTP to access the network.",
+    "older_ssh_client_might_not_connect": "The hardening of the SSH encryption could block old SSH clients to connect to the server."
   }
 }
