@@ -55,6 +55,7 @@ $v->declareParameter('PasswordAuthentication', Validate::BOOLEAN);
 $v->declareParameter('PermitRootLogin', Validate::BOOLEAN);
 $v->declareParameter('TCPPort', Validate::PORTNUMBER);
 $v->declareParameter('status', Validate::SERVICESTATUS);
+$v->declareParameter('StrongEncryption', Validate::SERVICESTATUS);
 $v->declareParameter('AllowEveryone', $v->createValidator()->memberOf('none','sftp','sftp+ssh'));
 
 $sftp= $v->createValidator()->memberOf('sftp','ssh');
