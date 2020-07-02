@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.7.3
+Version: 1.7.4
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,11 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Thu Jul 02 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.4-1
+- Human readable numbers in Cockpit dashboards - NethServer/dev#6206
+- An unnecessary login window is shown in chromium at cockpit login page - Bug NethServer/dev#6215
+- Software Center: page reloads if enter key is pressed while searching - NethServer/dev#6209
+
 * Fri Jun 12 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.3-1
 - Cockpit: user other than root cannot change Smart host settings - NethServer/dev#6198
 - Add ntopng 4 - NethServer/dev#6199
