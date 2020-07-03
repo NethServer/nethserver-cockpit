@@ -1229,6 +1229,6 @@
     "disaster_recovery": "Disaster recovery",
     "user_settings_page": "Allow users to change their password and other settings on a web page outside Cockpit (on port 443). This feature can be enabled only if 'Override the shell of users' is enabled as well.",
     "OtpR2WOath_Auth": "The VPN policy requires the usage of OTP to access the network.",
-    "older_ssh_client_might_not_connect": "The hardening of the SSH encryption could block old SSH clients to connect to the server."
+    "older_ssh_client_might_not_connect": "Hardening SSH could prevent old clients to connect to the server. Big files transfer can be slower with strong ciphers."
   }
 }
