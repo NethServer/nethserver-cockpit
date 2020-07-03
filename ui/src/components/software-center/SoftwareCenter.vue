@@ -4,14 +4,6 @@
     <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
       <span class="pficon pficon-warning-triangle-o"></span>
       <strong>{{$t('hints_suggested')}}:</strong>
-      <li v-if="hints.details && hints.details.centos">
-        <strong>{{$t('software_center.centos_upgrade')}}</strong>
-        . {{$t('hints.centos_upgrade')}}.
-        <a
-          data-toggle="modal"
-          data-target="#configureUpdatesModal"
-        >{{$t('software_center.configure')}}</a>
-      </li>
       <li v-if="hints.details && hints.details.nethserver">
         <strong>{{$t('software_center.nethserver_upgrade')}}</strong>
         : {{$t('software_center.there_is_upgrade_from')}}
