@@ -1050,7 +1050,7 @@
     "change_default_company": "Change the default company",
     "one_or_more_dns_not_working": "One or more DNS servers are not responding",
     "TCPPort": "TCP port",
-    "StrongEncryption": "Enforce the encryption",
+    "StrongEncryption": "Disable weak ciphers",
     "change_default_ssh_encryption": "You can enforce the encryption by the usage of stong ciphers",
     "service_is_enabled_but_is_not_running": "The service is either not running or not enabled",
     "must_configure_backup_data": "You should configure at least one data backup",
