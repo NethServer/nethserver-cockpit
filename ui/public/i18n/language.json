@@ -763,7 +763,7 @@
     "title": "SSH",
     "tcp_port": "TCP Port",
     "allow_root_login": "Allow root login",
-    "require_strong_encryption": "Enforce the encryption",
+    "require_strong_encryption": "Disable weak ciphers",
     "allow_password_auth": "Allow password authentication",
     "ssh_edit_ok": "SSH configuration saved successfully!",
     "ssh_edit_error": "SSH configuration not saved.",
