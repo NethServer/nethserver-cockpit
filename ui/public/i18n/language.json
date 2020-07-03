@@ -1055,7 +1055,7 @@
     "limit_red_access_by_ip": "Limit access to server manager specifying the allowed IP addresses",
     "LimitAccess": "Server Manager",
     "backup": "Backup",
-    "centos_upgrade": "A new upstream distribution release is available as update. To avoid installing it, switch the software updates origin to \"Locked\"",
+    "centos_upgrade": "A new upstream distribution release is available as update.",
     "interface_must_be_static": "A green interface must have a static IP address. Using DHCP on green interfaces leads to unexpected behavior. Please, change the interface to static if possible.",
     "hostname": "Hostname",
     "hostname_should_not_contain_localhost": "Hostname should not contain localhost",
