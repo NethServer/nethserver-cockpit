@@ -39,6 +39,22 @@
             <span v-if="SSHConfig.errors.TCPPort.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+SSHConfig.errors.TCPPort.message)}}</span>
           </div>
         </div>
+        <div :class="['form-group', SSHConfig.errors.StrongEncryption.hasError ? 'has-error' : '']">
+          <label class="col-sm-2 control-label" for="StrongEncryption">
+            {{$t('ssh.require_strong_encryption')}}
+            <doc-info
+              :placement="'top'"
+              :title="$t('ssh.require_strong_encryption')"
+              :chapter="'older_ssh_client_might_not_connect'"
+              :inline="true"
+            ></doc-info>
+          </label>
+          <div class="col-sm-5">
+            <input type="checkbox" id="StrongEncryption" :value="SSHConfig.StrongEncryption == 'yes'" v-model="SSHConfig.StrongEncryption"
+              class="form-control">
+            <span v-if="SSHConfig.errors.StrongEncryption.hasError" class="help-block">{{$t('validation.validation_failed')}}: {{$t('validation.'+SSHConfig.errors.StrongEncryption.message)}}</span>
+          </div>
+        </div>
         <div :class="['form-group', SSHConfig.errors.PermitRootLogin.hasError ? 'has-error' : '']">
           <label class="col-sm-2 control-label" for="PermitRootLogin">{{$t('ssh.allow_root_login')}}</label>
           <div class="col-sm-5">
@@ -222,6 +238,10 @@ export default {
             hasError: false,
             message: ""
           },
+          StrongEncryption: {
+            hasError: false,
+            message: ""
+          },
           PermitRootLogin: {
             hasError: false,
             message: ""
@@ -240,6 +260,7 @@ export default {
           }
         },
         TCPPort: 0,
+        PermitRootLogin: false,
         PermitRootLogin: false,
         PasswordAuthentication: false
       },
@@ -329,6 +350,8 @@ export default {
             success.configuration.props.PasswordAuthentication == "yes"
               ? true
               : false;
+          context.SSHConfig.StrongEncryption =
+            success.configuration.props.StrongEncryption == "enabled" ? true : false;
           context.SSHConfig.PermitRootLogin =
             success.configuration.props.PermitRootLogin == "yes" ? true : false;
 
@@ -359,6 +382,7 @@ export default {
         props: {
           PasswordAuthentication: obj.PasswordAuthentication ? "yes" : "0",
           PermitRootLogin: obj.PermitRootLogin ? "yes" : "0",
+          StrongEncryption: obj.StrongEncryption ? "enabled" : "disabled",
           TCPPort: obj.TCPPort,
           AllowGroups: obj.AllowGroups,
           AllowEveryone: obj.AllowEveryone
@@ -369,6 +393,7 @@ export default {
       context.SSHConfig.isLoading = true;
       context.SSHConfig.errors.TCPPort.hasError = false;
       context.SSHConfig.errors.PermitRootLogin.hasError = false;
+      context.SSHConfig.errors.StrongEncryption.hasError = false;
       context.SSHConfig.errors.PasswordAuthentication.hasError = false;
 
       context.exec(
@@ -407,6 +432,7 @@ export default {
           context.SSHConfig.isLoading = false;
           context.SSHConfig.errors.TCPPort.hasError = false;
           context.SSHConfig.errors.PermitRootLogin.hasError = false;
+          context.SSHConfig.errors.StrongEncryption.hasError = false;
           context.SSHConfig.errors.PasswordAuthentication.hasError = false;
 
           try {
