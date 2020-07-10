@@ -5,36 +5,46 @@
     <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
 
     <div v-if="view.isLoaded" class="blank-slate-pf white-background" id>
-      <h1 class="logo">
+      <h1 v-if="!(enterprise && branded)" class="logo">
         <img
-          :class="['img', enterprise ? 'adjust-img' : '']"
-          :src="enterprise ? 'assets/logo_ent.png' : 'assets/logo.svg'"
+          v-if="!enterprise"
+          class="img"
+          src="assets/logo.svg"
+        />
+        <img
+          v-if="enterprise && !branded"
+          class="img adjust-img"
+          src="assets/logo_ent.png"
         />
       </h1>
-      <h2>{{$t('about.description_1')}}</h2>
-      <p>{{$t('about.description_2')}}</p>
+      <span v-if="enterprise && branded" id="badge"></span>
+      <h2>{{branded ? productName : $t('about.description_1')}}</h2>
+      <p v-if="!branded">{{$t('about.description_2')}}</p>
       <p>
         {{$t('about.visit_the')}}
         <a
           target="_blank"
-          :href="enterprise ? 'https://nethesis.it' : 'https://www.nethserver.org'"
+          :href="subscription.SiteUrl"
         >{{$t('about.official_site')}}</a>.
       </p>
       <p class="div-section"></p>
-      <p>{{enterprise ? $t('about.description_3_2') : $t('about.description_3_1')}}</p>
-      <div class="blank-slate-pf-main-action">
-        <a
-          target="_blank"
-          :href="enterprise ? 'http://helpdesk.nethesis.it' : 'https://community.nethserver.org/'"
-          class="btn btn-primary btn-lg"
-        >{{enterprise ? $t('about.helpdesk') : $t('about.community')}}</a>
+      <div v-if="subscription.HelpdeskUrl">
+        <p>{{enterprise ? $t('about.description_3_2') : $t('about.description_3_1')}}</p>
+        <div class="blank-slate-pf-main-action">
+          <a
+            target="_blank"
+            :href="subscription.HelpdeskUrl"
+            class="btn btn-primary btn-lg"
+          >{{enterprise? $t('about.helpdesk') : $t('about.community')}}</a>
+        </div>
       </div>
       <div class="blank-slate-pf-secondary-action">
         <a
           target="_blank"
-          :href="enterprise ? 'https://docs.nethesis.it' : 'http://docs.nethserver.org'"
+          :href="subscription.DocsUrl"
           class="btn btn-default"
         >{{$t('about.documentation')}}</a>
+        <!-- wiki -->
         <a
           v-if="!enterprise"
           target="_blank"
@@ -51,19 +61,21 @@
           class="btn btn-primary btn-lg"
         >{{$t('about.subscription')}}</a>
       </div>
-      <p class="div-section"></p>
-      <p>{{$t('about.phonehome')}}</p>
-      <div class="blank-slate-pf-secondary-action">
-        <a
-          target="_blank"
-          href="http://docs.nethserver.org/en/v7/phone_home.html"
-          class="btn btn-default"
-        >{{$t('about.documentation')}}</a>
-        <a
-          target="_blank"
-          href="https://www.nethserver.org/phone-home/widget_map.html"
-          class="btn btn-default"
-        >{{$t('about.map')}}</a>
+      <div v-if="!enterprise">
+        <p class="div-section"></p>
+        <p>{{$t('about.phonehome')}}</p>
+        <div class="blank-slate-pf-secondary-action">
+          <a
+            target="_blank"
+            href="http://docs.nethserver.org/en/v7/phone_home.html"
+            class="btn btn-default"
+          >{{$t('about.documentation')}}</a>
+          <a
+            target="_blank"
+            href="https://www.nethserver.org/phone-home/widget_map.html"
+            class="btn btn-default"
+          >{{$t('about.map')}}</a>
+        </div>
       </div>
     </div>
   </div>
@@ -82,7 +94,10 @@ export default {
       view: {
         isLoaded: false
       },
-      enterprise: false
+      subscription: {},
+      branded: false,
+      enterprise: false,
+      productName: ""
     };
   },
   methods: {
@@ -96,8 +111,11 @@ export default {
           try {
             success = JSON.parse(success);
             context.view.isLoaded = true;
+            context.subscription = success.configuration;
             context.enterprise =
               success.configuration.PortalURL.indexOf("nethesis") > -1;
+            context.productName = success.product_name;
+            context.branded = context.enterprise && context.productName != "NethServer Enterprise";
           } catch (e) {
             console.error(e);
             context.view.isLoaded = true;
@@ -132,5 +150,10 @@ export default {
   border-top: 1px solid #d1d1d1;
   margin-top: 3%;
   margin-bottom: 3%;
+}
+
+#badge {
+  display: block;
+  margin: auto;
 }
 </style>
