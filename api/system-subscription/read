@@ -52,7 +52,14 @@ if (defined($ret->{'status'}{'id'})) {
     }
 }
 
-$ret->{'configuration'} = { 'PortalURL' => $url, 'PricingUrl' => $pricing, 'SystemId' => $id, 'enterprise' => $enterprise };
+my $site_url = $db->get_prop('subscription','SiteUrl');
+my $docs_url = $db->get_prop('subscription','DocsUrl');
+my $helpdesk_url = $db->get_prop('subscription','HelpdeskUrl');
+
+$ret->{'configuration'} = { 'PortalURL' => $url, 'PricingUrl' => $pricing, 'SystemId' => $id, 'enterprise' => $enterprise, 'SiteUrl' => $site_url, 'DocsUrl' => $docs_url, 'HelpdeskUrl' => $helpdesk_url };
+
+my $product_name = $db->get_prop('sysconfig','ProductName');
+$ret->{'product_name'} = $product_name;
 
 $ret->{'support'} = undef;
 if (-f "/usr/bin/don") {
