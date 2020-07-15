@@ -25,12 +25,11 @@ body.login-pf {
 }
 
 #badge {
-    width: 25%;
+    width: 75px;
     height: 75px;
     background-image: url("logo.png");
     background-size: contain;
     background-repeat: no-repeat;
-    background-position: right;
 }
 
 #brand {
