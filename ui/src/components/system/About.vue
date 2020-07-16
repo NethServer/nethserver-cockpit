@@ -155,5 +155,7 @@ export default {
 #badge {
   display: block;
   margin: auto;
+  width: 100%;
+  background-position: center;
 }
 </style>
