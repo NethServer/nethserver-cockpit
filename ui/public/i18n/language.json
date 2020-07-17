@@ -641,7 +641,8 @@
     "UserDN": "User DN",
     "GroupDN": "Group DN",
     "StartTls": "Start TLS",
-    "edit_delegation": "Edit delegations of {name}"
+    "edit_delegation": "Edit delegations of {name}",
+    "ShellOverride": "Shell override"
   },
   "network": {
     "title": "Network",
