@@ -54,10 +54,10 @@
               v-bind:key="k"
             >
               <dt
-                v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal' && k != 'NsdcIp' && k != 'ValidHostname' && k != 'AuthRequired' && k != 'errors'"
+                v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal' && k != 'NsdcIp' && k != 'ValidHostname' && k != 'AuthRequired' && k != 'errors' && k != 'ShellOverride'"
               >{{$t('users_groups.'+k)}}</dt>
               <dd
-                v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal' && k != 'NsdcIp' && k != 'ValidHostname' && k != 'AuthRequired' && k != 'errors' && k != 'BindDN'  && k != 'BindPassword'"
+                v-if="k != 'oldIp' && k != 'newIp' && k != 'IsLocal' && k != 'NsdcIp' && k != 'ValidHostname' && k != 'AuthRequired' && k != 'errors' && k != 'ShellOverride' && k != 'BindDN'  && k != 'BindPassword'"
               >{{v | normalize(k)}}</dd>
               <dt
                 v-if="k == 'NsdcIp' && users.provider == 'ad' && users.providerInfo.IsLocal"
