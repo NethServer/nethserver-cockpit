@@ -1700,7 +1700,7 @@
                           </div>
                         </div>
                         <div 
-                          :class="['form-group', wizard.review.errors.nslabel.hasError ? 'has-error' : '']"
+                          :class="['form-group', wizardPhysical.review.errors.nslabel.hasError ? 'has-error' : '']"
                         >
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">
                             {{$t('network.label')}}
@@ -1713,9 +1713,9 @@
                               class="form-control"
                               type="text"
                             >
-                            <span v-if="wizard.review.errors.nslabel.hasError" class="help-block">
+                            <span v-if="wizardPhysical.review.errors.nslabel.hasError" class="help-block">
                               {{$t('validation.validation_failed')}}:
-                              {{$t('validation.'+wizard.review.errors.nslabel.message)}}
+                              {{$t('validation.'+wizardPhysical.review.errors.nslabel.message)}}
                             </span>
                           </div>
                         </div>
