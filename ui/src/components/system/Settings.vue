@@ -175,7 +175,7 @@
           </div>
           <div >
               <label
-                >{{$t('settings.otp_Step2_scan_with_FreeOTP')}}
+                >{{$t('settings.otp_Step2_scan_with_FreeOTP_or_use_secret_manually')}} : {{otp.Secret}}
               </label>
           </div>
         </div>
