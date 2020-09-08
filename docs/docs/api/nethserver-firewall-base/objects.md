@@ -18,6 +18,7 @@ Valid actions:
 - `interfaces`
 - `applications`
 - `local-services`
+- `macs`
 
 #### hosts
 
@@ -115,6 +116,17 @@ Example:
 ```json
 {
   "action": "local-services"
+}
+```
+
+#### macs
+
+Return the list of mac addresses objects from `macs` db.
+
+Example:
+```json
+{
+  "action": "macs"
 }
 ```
 
@@ -287,6 +299,27 @@ Example:
 }
 ```
 
+#### macs
+
+Return the list of mac address objects.
+services running on the firewall itself.
+
+Example:
+```json
+{
+  "macs": [
+    {
+      "Address": "52:54:00:05:2d:c3",
+      "name": "m1",
+      "type": "mac",
+      "Zone": "green",
+      "Description": "test"
+    },
+    ...
+  ]
+}
+```
+
 
 
 ## validate
@@ -316,6 +349,9 @@ The request must contain an `action` field. Valid actions are:
 - `create-host-group`
 - `update-host-group`
 - `delete-host-group`
+- `create-mac`
+- `update-mac`
+- `delete-mac`
 
 Constraints for `create-host`:
 
@@ -443,6 +479,25 @@ Constraints for `update-host-group`:
 Constraints for `delete-host-group`:
 
 - name: must be an existing host group
+
+Constraints for `create-mac`:
+
+- name: must be a non-existing mac
+- Address: a valid MAC address
+- Zone: a role or a custom zone
+- Description: optional description
+
+Constraints for `update-mac`:
+
+- name: must be a existing host mac
+- Address: a valid MAC address
+- Zone: a role or a custom zone
+- Description: optional description
+
+Constraints for `delete-mac`:
+
+- name: must be an existing mac
+
 
 ### Input
 
@@ -710,6 +765,43 @@ Example:
   "name": "g1"
 }
 ```
+
+#### create-mac
+
+Example:
+```json
+{
+  "action": "create-mac",
+  "name": "mac1",
+  "Zone": "green",
+  "Address": "52:54:00:05:2d:c2",
+  "Description": ""
+}
+```
+
+#### update-mac
+
+Example:
+```json
+{
+  "action": "update-mac",
+  "name": "mac1",
+  "Zone": "green",
+  "Address": "52:54:00:05:2d:c2",
+  "Description": ""
+}
+```
+
+#### delete-mac
+
+Example:
+```json
+{
+  "action": "delete-mac",
+  "name": "mac1"
+}
+```
+
 ## update
 
 Same input format from validate action.
