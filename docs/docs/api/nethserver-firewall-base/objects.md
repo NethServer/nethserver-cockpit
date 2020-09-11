@@ -302,7 +302,6 @@ Example:
 #### macs
 
 Return the list of mac address objects.
-services running on the firewall itself.
 
 Example:
 ```json
