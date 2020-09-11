@@ -102,6 +102,7 @@ Example with `expand` set to `true`:
         "type": "host"
       },
       "type": "rule",
+      "State": "new",
       "Description": "desc1"
     },
     ...
@@ -137,6 +138,7 @@ Example with `expand` set to `false`:
         "type": "host"
       },
       "type": "rule",
+      "State": "new",
       "Description": "desc1"
     },
     ...
@@ -232,8 +234,9 @@ Constraints for `create-rule` and `update-rule`:
 - Position: a positive integer
 - Service: a service object from fwservices database or 'any'
 - status: can be `enabled` or `disabled`
-- Log: `none` or `info`. If value is `info`, all matched packets will be logged in `/var/log/firewall.log`. Defaults to none
+- Log: `none` or `info`. If value is `info`, all matched packets will be logged in `/var/log/firewall.log`. Default is `none`
 - Description: optional description
+- State: can be `all` or `new`. If set to `all` the rule will be applied to existing connections. Default is `new`
 - id: must exists on update
 
 
@@ -262,6 +265,7 @@ Example with Src using a firewall object:
     "type": "host"
   },
   "type": "rule",
+  "State": "new",
   "action": "create-rule"
 }
 ```
@@ -288,6 +292,7 @@ Example with Src using a raw value:
     "type": "raw"
   },
   "type": "rule",
+  "State": "new",
   "action": "create-rule"
 }
 ```
@@ -315,6 +320,7 @@ Example with Src using a firewall object:
     "type": "host"
   },
   "type": "rule",
+  "State": "all",
   "id" : 10,
   "action": "create-rule"
 }
