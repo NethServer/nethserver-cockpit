@@ -1,40 +1,19 @@
 
 
 
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
-      <meta http-equiv="x-ua-compatible" content="ie=edge">
       
       
         <link rel="canonical" href="https://nethserver.github.io/nethserver-cockpit/api/system-accounts-provider/">
       
       
-      
-        <meta name="lang:clipboard.copy" content="Copy to clipboard">
-      
-        <meta name="lang:clipboard.copied" content="Copied to clipboard">
-      
-        <meta name="lang:search.language" content="en">
-      
-        <meta name="lang:search.pipeline.stopwords" content="True">
-      
-        <meta name="lang:search.pipeline.trimmer" content="True">
-      
-        <meta name="lang:search.result.none" content="No matching documents">
-      
-        <meta name="lang:search.result.one" content="1 matching document">
-      
-        <meta name="lang:search.result.other" content="# matching documents">
-      
-        <meta name="lang:search.tokenizer" content="[\s\-]+">
-      
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.3, mkdocs-material-3.0.4">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.12">
     
     
       
@@ -42,116 +21,102 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.4dd2dd8d.min.css">
       
-        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.6a5ad368.min.css">
       
       
         
         
-        <meta name="theme-color" content="#546e7a">
+        <meta name="theme-color" content="#546d78">
       
     
-    
-      <script src="../../assets/javascripts/modernizr.1aa3b519.js"></script>
     
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
-        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
       
     
-    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+    
+    
+      
     
     
   </head>
   
-    
-    
-    <body dir="ltr" data-md-color-primary="blue-grey" data-md-color-accent="indigo">
   
-    <svg class="md-svg">
-      <defs>
-        
-        
-          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
-    viewBox="0 0 416 448" id="__github">
-  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
-        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
-        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
-        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
-        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
-        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
-        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
-        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
-        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
-        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
-        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
-        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
-        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
-        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
-        99.5z" />
-</svg>
-        
-      </defs>
-    </svg>
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="blue-grey" data-md-color-accent="indigo">
+  
+    
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
-    
-      <a href="../../#system-accounts-provider" tabindex="1" class="md-skip">
-        Skip to content
-      </a>
-    
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#system-accounts-provider" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
     
       <header class="md-header" data-md-component="header">
-  <nav class="md-header-nav md-grid">
-    <div class="md-flex">
-      <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://nethserver.github.io/nethserver-cockpit" title="NethServer Cockpit" class="md-header-nav__button md-logo">
-          
-            <i class="md-icon">build</i>
-          
-        </a>
-      </div>
-      <div class="md-flex__cell md-flex__cell--shrink">
-        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
-      </div>
-      <div class="md-flex__cell md-flex__cell--stretch">
-        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
-          
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="https://nethserver.github.io/nethserver-cockpit" title="NethServer Cockpit" class="md-header-nav__button md-logo" aria-label="NethServer Cockpit">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            NethServer Cockpit
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
             
-              <span class="md-header-nav__topic">
-                NethServer Cockpit
-              </span>
-              <span class="md-header-nav__topic">
-                system-accounts-provider
-              </span>
+              system-accounts-provider
             
-          
+          </span>
         </div>
-      </div>
-      <div class="md-flex__cell md-flex__cell--shrink">
-        
-          
-            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
-            
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
 <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
-      <label class="md-icon md-search__icon" for="__search"></label>
-      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
-        &#xE5CD;
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
       </button>
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result">
+        <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            Type to start searching
+            Initializing search
           </div>
           <ol class="md-search-result__list"></ol>
         </div>
@@ -159,80 +124,60 @@
     </div>
   </div>
 </div>
-          
+    
+    
+      <div class="md-header-nav__source">
         
-      </div>
-      
-        <div class="md-flex__cell md-flex__cell--shrink">
-          <div class="md-header-nav__source">
-            
-
-
-  
-
-
-  <a href="https://github.com/NethServer/nethserver-cockpit/" title="Go to repository" class="md-source" data-md-source="github">
+<a href="https://github.com/NethServer/nethserver-cockpit/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
     
-      <div class="md-source__icon">
-        <svg viewBox="0 0 24 24" width="24" height="24">
-          <use xlink:href="#__github" width="24" height="24"></use>
-        </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
       </div>
     
-    <div class="md-source__repository">
-      GitHub
-    </div>
-  </a>
-
-          </div>
-        </div>
-      
-    </div>
   </nav>
 </header>
     
-    <div class="md-container">
+    <div class="md-container" data-md-component="container">
       
         
       
       
-      <main class="md-main">
-        <div class="md-main__inner md-grid" data-md-component="container">
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
           
             
               <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
-                    <nav class="md-nav md-nav--primary" data-md-level="0">
-  <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://nethserver.github.io/nethserver-cockpit" title="NethServer Cockpit" class="md-nav__button md-logo">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://nethserver.github.io/nethserver-cockpit" title="NethServer Cockpit" class="md-nav__button md-logo" aria-label="NethServer Cockpit">
       
-        <i class="md-icon">build</i>
-      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
     </a>
     NethServer Cockpit
   </label>
   
     <div class="md-nav__source">
       
-
-
-  
-
-
-  <a href="https://github.com/NethServer/nethserver-cockpit/" title="Go to repository" class="md-source" data-md-source="github">
+<a href="https://github.com/NethServer/nethserver-cockpit/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
     
-      <div class="md-source__icon">
-        <svg viewBox="0 0 24 24" width="24" height="24">
-          <use xlink:href="#__github" width="24" height="24"></use>
-        </svg>
-      </div>
-    
-    <div class="md-source__repository">
-      GitHub
-    </div>
-  </a>
-
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
     </div>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -258,13 +203,15 @@
 
   <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
     
     <label class="md-nav__link" for="nav-2">
       API
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+    <nav class="md-nav" aria-label="API" data-md-level="1">
       <label class="md-nav__title" for="nav-2">
+        <span class="md-nav__icon md-icon"></span>
         API
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -277,13 +224,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-1" type="checkbox" id="nav-2-1">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-1" type="checkbox" id="nav-2-1">
     
     <label class="md-nav__link" for="nav-2-1">
       General
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="General" data-md-level="2">
       <label class="md-nav__title" for="nav-2-1">
+        <span class="md-nav__icon md-icon"></span>
         General
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -339,13 +288,15 @@
 
   <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2" checked>
     
     <label class="md-nav__link" for="nav-2-2">
       System helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="System helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-2">
+        <span class="md-nav__icon md-icon"></span>
         System helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -360,13 +311,14 @@
 
   <li class="md-nav__item md-nav__item--active">
     
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     
       
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
         system-accounts-provider
+        <span class="md-nav__icon md-icon"></span>
       </label>
     
     <a href="./" title="system-accounts-provider" class="md-nav__link md-nav__link--active">
@@ -374,53 +326,56 @@
     </a>
     
       
-<nav class="md-nav md-nav--secondary">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
     
   
   
-    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#read" title="read" class="md-nav__link">
+  <a href="#read" class="md-nav__link">
     read
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="read">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#dump" title="dump" class="md-nav__link">
+  <a href="#dump" class="md-nav__link">
     dump
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#probel-dap" title="probel-dap" class="md-nav__link">
+  <a href="#probel-dap" class="md-nav__link">
     probel-dap
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#probe-ad" title="probe-ad" class="md-nav__link">
+  <a href="#probe-ad" class="md-nav__link">
     probe-ad
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#probe-workgroup" title="probe-workgroup" class="md-nav__link">
+  <a href="#probe-workgroup" class="md-nav__link">
     probe-workgroup
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#default-ad" title="default-ad" class="md-nav__link">
+  <a href="#default-ad" class="md-nav__link">
     default-ad
   </a>
   
@@ -432,58 +387,58 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validate" title="validate" class="md-nav__link">
+  <a href="#validate" class="md-nav__link">
     validate
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="validate">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#constraints" title="Constraints" class="md-nav__link">
+  <a href="#constraints" class="md-nav__link">
     Constraints
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#input" title="Input" class="md-nav__link">
+  <a href="#input" class="md-nav__link">
     Input
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Input">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#remote-ldap" title="remote-ldap" class="md-nav__link">
+  <a href="#remote-ldap" class="md-nav__link">
     remote-ldap
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#local-ad" title="local-ad" class="md-nav__link">
+  <a href="#local-ad" class="md-nav__link">
     local-ad
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#change-ad-ip" title="change-ad-ip" class="md-nav__link">
+  <a href="#change-ad-ip" class="md-nav__link">
     change-ad-ip
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#remote-ad" title="remote-ad" class="md-nav__link">
+  <a href="#remote-ad" class="md-nav__link">
     remote-ad
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#bind-credentials" title="bind-credentials" class="md-nav__link">
+  <a href="#bind-credentials" class="md-nav__link">
     bind-credentials
   </a>
   
@@ -500,57 +455,57 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#update" title="update" class="md-nav__link">
+  <a href="#update" class="md-nav__link">
     update
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="update">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#local-ldap" title="local-ldap" class="md-nav__link">
+  <a href="#local-ldap" class="md-nav__link">
     local-ldap
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#remote-ldap_1" title="remote-ldap" class="md-nav__link">
+  <a href="#remote-ldap_1" class="md-nav__link">
     remote-ldap
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#remove-provider" title="remove-provider" class="md-nav__link">
+  <a href="#remove-provider" class="md-nav__link">
     remove-provider
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#local-ad_1" title="local-ad" class="md-nav__link">
+  <a href="#local-ad_1" class="md-nav__link">
     local-ad
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#change-ad-ip_1" title="change-ad-ip" class="md-nav__link">
+  <a href="#change-ad-ip_1" class="md-nav__link">
     change-ad-ip
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#remote-ad_1" title="remote-ad" class="md-nav__link">
+  <a href="#remote-ad_1" class="md-nav__link">
     remote-ad
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#bind-credentials_1" title="bind-credentials" class="md-nav__link">
+  <a href="#bind-credentials_1" class="md-nav__link">
     bind-credentials
   </a>
   
@@ -560,10 +515,6 @@
     </nav>
   
 </li>
-      
-      
-      
-      
       
     </ul>
   
@@ -956,13 +907,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-3" type="checkbox" id="nav-2-3">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-3" type="checkbox" id="nav-2-3">
     
     <label class="md-nav__link" for="nav-2-3">
       Firewall helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="Firewall helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-3">
+        <span class="md-nav__icon md-icon"></span>
         Firewall helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1100,13 +1053,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-4" type="checkbox" id="nav-2-4">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-4" type="checkbox" id="nav-2-4">
     
     <label class="md-nav__link" for="nav-2-4">
       Mail helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="Mail helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-4">
+        <span class="md-nav__icon md-icon"></span>
         Mail helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1244,13 +1199,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-5" type="checkbox" id="nav-2-5">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-5" type="checkbox" id="nav-2-5">
     
     <label class="md-nav__link" for="nav-2-5">
       Samba helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="Samba helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-5">
+        <span class="md-nav__icon md-icon"></span>
         Samba helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1316,13 +1273,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-6" type="checkbox" id="nav-2-6">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-6" type="checkbox" id="nav-2-6">
     
     <label class="md-nav__link" for="nav-2-6">
       Web proxy helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="Web proxy helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-6">
+        <span class="md-nav__icon md-icon"></span>
         Web proxy helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1412,13 +1371,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-7" type="checkbox" id="nav-2-7">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-7" type="checkbox" id="nav-2-7">
     
     <label class="md-nav__link" for="nav-2-7">
       IPS helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="IPS helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-7">
+        <span class="md-nav__icon md-icon"></span>
         IPS helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1472,13 +1433,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-8" type="checkbox" id="nav-2-8">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-8" type="checkbox" id="nav-2-8">
     
     <label class="md-nav__link" for="nav-2-8">
       UPS helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="UPS helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-8">
+        <span class="md-nav__icon md-icon"></span>
         UPS helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1520,13 +1483,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-9" type="checkbox" id="nav-2-9">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-9" type="checkbox" id="nav-2-9">
     
     <label class="md-nav__link" for="nav-2-9">
       VPN helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="VPN helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-9">
+        <span class="md-nav__icon md-icon"></span>
         VPN helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1616,13 +1581,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-10" type="checkbox" id="nav-2-10">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-10" type="checkbox" id="nav-2-10">
     
     <label class="md-nav__link" for="nav-2-10">
       HTTP helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="HTTP helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-10">
+        <span class="md-nav__icon md-icon"></span>
         HTTP helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1705,13 +1672,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
     
     <label class="md-nav__link" for="nav-3">
       UI
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+    <nav class="md-nav" aria-label="UI" data-md-level="1">
       <label class="md-nav__title" for="nav-3">
+        <span class="md-nav__icon md-icon"></span>
         UI
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1801,13 +1770,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
     
     <label class="md-nav__link" for="nav-8">
       Build
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+    <nav class="md-nav" aria-label="Build" data-md-level="1">
       <label class="md-nav__title" for="nav-8">
+        <span class="md-nav__icon md-icon"></span>
         Build
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1849,13 +1820,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9" type="checkbox" id="nav-9">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-9" type="checkbox" id="nav-9">
     
     <label class="md-nav__link" for="nav-9">
       Manuals
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+    <nav class="md-nav" aria-label="Manuals" data-md-level="1">
       <label class="md-nav__title" for="nav-9">
+        <span class="md-nav__icon md-icon"></span>
         Manuals
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1913,53 +1886,56 @@
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
-<nav class="md-nav md-nav--secondary">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
     
   
   
-    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#read" title="read" class="md-nav__link">
+  <a href="#read" class="md-nav__link">
     read
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="read">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#dump" title="dump" class="md-nav__link">
+  <a href="#dump" class="md-nav__link">
     dump
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#probel-dap" title="probel-dap" class="md-nav__link">
+  <a href="#probel-dap" class="md-nav__link">
     probel-dap
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#probe-ad" title="probe-ad" class="md-nav__link">
+  <a href="#probe-ad" class="md-nav__link">
     probe-ad
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#probe-workgroup" title="probe-workgroup" class="md-nav__link">
+  <a href="#probe-workgroup" class="md-nav__link">
     probe-workgroup
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#default-ad" title="default-ad" class="md-nav__link">
+  <a href="#default-ad" class="md-nav__link">
     default-ad
   </a>
   
@@ -1971,58 +1947,58 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validate" title="validate" class="md-nav__link">
+  <a href="#validate" class="md-nav__link">
     validate
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="validate">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#constraints" title="Constraints" class="md-nav__link">
+  <a href="#constraints" class="md-nav__link">
     Constraints
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#input" title="Input" class="md-nav__link">
+  <a href="#input" class="md-nav__link">
     Input
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Input">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#remote-ldap" title="remote-ldap" class="md-nav__link">
+  <a href="#remote-ldap" class="md-nav__link">
     remote-ldap
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#local-ad" title="local-ad" class="md-nav__link">
+  <a href="#local-ad" class="md-nav__link">
     local-ad
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#change-ad-ip" title="change-ad-ip" class="md-nav__link">
+  <a href="#change-ad-ip" class="md-nav__link">
     change-ad-ip
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#remote-ad" title="remote-ad" class="md-nav__link">
+  <a href="#remote-ad" class="md-nav__link">
     remote-ad
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#bind-credentials" title="bind-credentials" class="md-nav__link">
+  <a href="#bind-credentials" class="md-nav__link">
     bind-credentials
   </a>
   
@@ -2039,57 +2015,57 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#update" title="update" class="md-nav__link">
+  <a href="#update" class="md-nav__link">
     update
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="update">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#local-ldap" title="local-ldap" class="md-nav__link">
+  <a href="#local-ldap" class="md-nav__link">
     local-ldap
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#remote-ldap_1" title="remote-ldap" class="md-nav__link">
+  <a href="#remote-ldap_1" class="md-nav__link">
     remote-ldap
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#remove-provider" title="remove-provider" class="md-nav__link">
+  <a href="#remove-provider" class="md-nav__link">
     remove-provider
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#local-ad_1" title="local-ad" class="md-nav__link">
+  <a href="#local-ad_1" class="md-nav__link">
     local-ad
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#change-ad-ip_1" title="change-ad-ip" class="md-nav__link">
+  <a href="#change-ad-ip_1" class="md-nav__link">
     change-ad-ip
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#remote-ad_1" title="remote-ad" class="md-nav__link">
+  <a href="#remote-ad_1" class="md-nav__link">
     remote-ad
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#bind-credentials_1" title="bind-credentials" class="md-nav__link">
+  <a href="#bind-credentials_1" class="md-nav__link">
     bind-credentials
   </a>
   
@@ -2099,10 +2075,6 @@
     </nav>
   
 </li>
-      
-      
-      
-      
       
     </ul>
   
@@ -2116,7 +2088,12 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/docs/api/system-accounts-provider.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/docs/api/system-accounts-provider.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                  
                 
                 
                 <h1 id="system-accounts-provider">system-accounts-provider<a class="headerlink" href="#system-accounts-provider" title="Permanent link">&para;</a></h1>
@@ -2133,23 +2110,23 @@
 <li>Gives back the current system configuration</li>
 </ul>
 <p>A JSON input object is mandatory with this schema:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
     <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="err">&lt;action&gt;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>The allowed <code>action</code> values are described below.</p>
 <h3 id="dump">dump<a class="headerlink" href="#dump" title="Permanent link">&para;</a></h3>
 <p>Input:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
     <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;dump&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>Output:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
    <span class="nt">&quot;ValidHostname&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
    <span class="nt">&quot;BindDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
    <span class="nt">&quot;LdapURI&quot;</span> <span class="p">:</span> <span class="s2">&quot;ldap://127.0.0.1&quot;</span><span class="p">,</span>
@@ -2165,7 +2142,7 @@
    <span class="nt">&quot;IsLocal&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
    <span class="nt">&quot;AuthRequired&quot;</span><span class="p">:</span> <span class="kc">false</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>See <code>perldoc NethServer::SSSD</code> for attributes description.
@@ -2178,19 +2155,19 @@ it should not contain the <code>localhost</code> keywork and should be at least 
 <p>Tries to contact a remote LDAP server and retrieve as much information as
 possible with a root DSE query.</p>
 <p>Input:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
     <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;probe-ldap&quot;</span><span class="p">,</span>
     <span class="nt">&quot;port&quot;</span><span class="p">:</span> <span class="mi">389</span><span class="p">,</span>
     <span class="nt">&quot;server&quot;</span><span class="p">:</span> <span class="s2">&quot;remote.ldap.org&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <ul>
 <li>The <code>port</code> attribute is optional, can be entirely omitted or set to NULL</li>
 </ul>
 <p>Output:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
    <span class="nt">&quot;BindDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
    <span class="nt">&quot;LdapURI&quot;</span> <span class="p">:</span> <span class="s2">&quot;ldap://192.168.5.59&quot;</span><span class="p">,</span>
    <span class="nt">&quot;DiscoverDcType&quot;</span> <span class="p">:</span> <span class="s2">&quot;dns&quot;</span><span class="p">,</span>
@@ -2206,7 +2183,7 @@ possible with a root DSE query.</p>
    <span class="nt">&quot;LdapUriDn&quot;</span> <span class="p">:</span> <span class="s2">&quot;ldap:///dc%3Dedo%2Cdc%3Dnethesis%2Cdc%3Dit&quot;</span><span class="p">,</span>
    <span class="nt">&quot;BaseDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;dc=directory,dc=nh&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <ul>
@@ -2215,12 +2192,12 @@ possible with a root DSE query.</p>
 </ul>
 <h3 id="probe-ad">probe-ad<a class="headerlink" href="#probe-ad" title="Permanent link">&para;</a></h3>
 <p>Input:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;probe-ad&quot;</span><span class="p">,</span>
   <span class="nt">&quot;realm&quot;</span><span class="p">:</span> <span class="s2">&quot;adnethesis.it&quot;</span><span class="p">,</span>
   <span class="nt">&quot;server&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.5.59&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <ul>
@@ -2229,7 +2206,7 @@ possible with a root DSE query.</p>
 <li>Ignore warnings and error messages sent to standard error, check the exit code only</li>
 </ul>
 <p>Output:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
    <span class="nt">&quot;BindDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;user@adnethesis.it&quot;</span><span class="p">,</span>
    <span class="nt">&quot;LdapURI&quot;</span> <span class="p">:</span> <span class="s2">&quot;ldap://w2k12.adnethesis.it&quot;</span><span class="p">,</span>
    <span class="nt">&quot;DiscoverDcType&quot;</span> <span class="p">:</span> <span class="s2">&quot;dns&quot;</span><span class="p">,</span>
@@ -2246,7 +2223,7 @@ possible with a root DSE query.</p>
    <span class="nt">&quot;BaseDN&quot;</span> <span class="p">:</span> <span class="s2">&quot;DC=adnethesis,DC=it&quot;</span><span class="p">,</span>
    <span class="nt">&quot;BindPassword&quot;</span> <span class="p">:</span> <span class="s2">&quot;*****&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <ul>
@@ -2255,46 +2232,46 @@ possible with a root DSE query.</p>
 <h3 id="probe-workgroup">probe-workgroup<a class="headerlink" href="#probe-workgroup" title="Permanent link">&para;</a></h3>
 <p>Suggest the best workgroup based on realm name.</p>
 <p>Input:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;probeworkgroup&quot;</span><span class="p">,</span>
   <span class="nt">&quot;realm&quot;</span><span class="p">:</span> <span class="s2">&quot;adnethesis.it&quot;</span><span class="p">,</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>Output:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;Workgroup&quot;</span><span class="p">:</span> <span class="s2">&quot;AD&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="default-ad">default-ad<a class="headerlink" href="#default-ad" title="Permanent link">&para;</a></h3>
 <p>Suggest Realm and NetBIOS name based on machine name.</p>
 <p>Input:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;default-ad&quot;</span><span class="p">,</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>Output:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;Workgroup&quot;</span><span class="p">:</span> <span class="s2">&quot;ADNETHSERVER&quot;</span><span class="p">,</span>
   <span class="nt">&quot;Realm&quot;</span><span class="p">:</span> <span class="s2">&quot;ad.adnethserver.org&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h2>
 <h3 id="constraints">Constraints<a class="headerlink" href="#constraints" title="Permanent link">&para;</a></h3>
 <p>The action must be specified inside the JSON <code>action</code> field.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;remote-ldap&quot;</span><span class="p">,</span>
   <span class="err">...</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>Valid actions:</p>
@@ -2334,7 +2311,7 @@ possible with a root DSE query.</p>
 <h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
 <h4 id="remote-ldap">remote-ldap<a class="headerlink" href="#remote-ldap" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;BindDN&quot;</span><span class="p">:</span> <span class="s2">&quot;cn=ldapservice,dc=directory,dc=nh&quot;</span><span class="p">,</span>
   <span class="nt">&quot;LdapURI&quot;</span><span class="p">:</span> <span class="s2">&quot;ldaps://192.168.1.1&quot;</span><span class="p">,</span>
   <span class="nt">&quot;DiscoverDcType&quot;</span><span class="p">:</span> <span class="s2">&quot;dns&quot;</span><span class="p">,</span>
@@ -2346,45 +2323,45 @@ possible with a root DSE query.</p>
   <span class="nt">&quot;BaseDN&quot;</span><span class="p">:</span> <span class="s2">&quot;dc=directory,dc=nh&quot;</span><span class="p">,</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;remoteldap&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <p><code>BindDN</code> and <code>BindPassword</code> password can be left empty if the bind is anonymous.</p>
 <h4 id="local-ad">local-ad<a class="headerlink" href="#local-ad" title="Permanent link">&para;</a></h4>
 <p>Input example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;local-ad&quot;</span><span class="p">,</span>
   <span class="nt">&quot;Realm&quot;</span><span class="p">:</span> <span class="s2">&quot;ad.local.neth.eu&quot;</span><span class="p">,</span>
   <span class="nt">&quot;Workgroup&quot;</span><span class="p">:</span> <span class="s2">&quot;LOCAL&quot;</span><span class="p">,</span>
   <span class="nt">&quot;IpAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.35&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="change-ad-ip">change-ad-ip<a class="headerlink" href="#change-ad-ip" title="Permanent link">&para;</a></h4>
 <p>Input example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;change-ad-ip&quot;</span><span class="p">,</span>
   <span class="nt">&quot;IpAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.35&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="remote-ad">remote-ad<a class="headerlink" href="#remote-ad" title="Permanent link">&para;</a></h4>
 <p>Input example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;remote-ad&quot;</span><span class="p">,</span>
   <span class="nt">&quot;AdRealm&quot;</span><span class="p">:</span> <span class="s2">&quot;adnethserver.org&quot;</span><span class="p">,</span>
   <span class="nt">&quot;AdDns&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
   <span class="nt">&quot;AdUsername&quot;</span><span class="p">:</span> <span class="s2">&quot;administrator@adnethserver.org&quot;</span><span class="p">,</span>
   <span class="nt">&quot;AdPassword&quot;</span><span class="p">:</span> <span class="s2">&quot;mypassword&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="bind-credentials">bind-credentials<a class="headerlink" href="#bind-credentials" title="Permanent link">&para;</a></h4>
 <p>Input example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;StartTls&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
   <span class="nt">&quot;BindPassword&quot;</span><span class="p">:</span> <span class="s2">&quot;Nethesis,1234&quot;</span><span class="p">,</span>
   <span class="nt">&quot;BaseDN&quot;</span><span class="p">:</span> <span class="s2">&quot;DC=adnethesis,DC=it&quot;</span><span class="p">,</span>
@@ -2394,7 +2371,7 @@ possible with a root DSE query.</p>
   <span class="nt">&quot;GroupDN&quot;</span><span class="p">:</span> <span class="s2">&quot;DC=adnethesis,DC=it&quot;</span><span class="p">,</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;bind-credentials&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
@@ -2404,17 +2381,17 @@ possible with a root DSE query.</p>
 <li><code>local-ldap</code></li>
 </ul>
 <p>Input example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;remove-provider&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="local-ldap">local-ldap<a class="headerlink" href="#local-ldap" title="Permanent link">&para;</a></h3>
 <p>Install local LDAP server.</p>
 <p>Return the output of <code>pkgaction</code> in json format.
 Output example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Initialization&quot;</span><span class="p">}</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Initialization&quot;</span><span class="p">}</span>
 <span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Resolving RPM dependencies&quot;</span><span class="p">}</span>
 <span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Downloading Packages&quot;</span><span class="p">}</span>
 <span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Downloading - lm_sensors-libs-3.4.0-4.20160601gitf9185e5.el7.x86_64.rpm&quot;</span><span class="p">}</span>
@@ -2422,15 +2399,15 @@ Output example:</p>
 <span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Check Package Signatures&quot;</span><span class="p">}</span>
 <span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Running Test Transaction&quot;</span><span class="p">}</span>
 <span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Running Transaction&quot;</span><span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>Error example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Resolving RPM dependencies&quot;</span><span class="p">}</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Resolving RPM dependencies&quot;</span><span class="p">}</span>
 <span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Downloading Packages&quot;</span><span class="p">}</span>
 <span class="err">...</span>
 <span class="p">{</span><span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span> <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;[InstallError] No package(s) available to install&quot;</span><span class="p">,</span> <span class="nt">&quot;steps&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="remote-ldap_1">remote-ldap<a class="headerlink" href="#remote-ldap_1" title="Permanent link">&para;</a></h3>
@@ -2448,8 +2425,6 @@ Return the output of <code>pkgaction</code> in json format.</p>
 <h3 id="bind-credentials_1">bind-credentials<a class="headerlink" href="#bind-credentials_1" title="Permanent link">&para;</a></h3>
 <p>Set credentials for applications which need LDAP bind.</p>
                 
-                  
-                
               
               
                 
@@ -2465,34 +2440,34 @@ Return the output of <code>pkgaction</code> in json format.</p>
 <footer class="md-footer">
   
     <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../../api_libraries/" title="Helper libraries" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+          <a href="../../api_libraries/" title="Helper libraries" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
                 Helper libraries
-              </span>
+              </div>
             </div>
           </a>
         
         
-          <a href="../system-aliases/" title="system-alias" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
+          <a href="../system-aliases/" title="system-alias" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
                 system-alias
-              </span>
+              </div>
             </div>
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
             </div>
           </a>
         
@@ -2503,14 +2478,11 @@ Return the output of <code>pkgaction</code> in json format.</p>
     <div class="md-footer-meta__inner md-grid">
       <div class="md-footer-copyright">
         
-        powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
-        and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
-          Material for MkDocs</a>
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
       </div>
-      
-        
       
     </div>
   </div>
@@ -2518,12 +2490,18 @@ Return the output of <code>pkgaction</code> in json format.</p>
       
     </div>
     
-      <script src="../../assets/javascripts/application.583bbe55.js"></script>
+      <script src="../../assets/javascripts/vendor.3636a4ec.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e9fe3281.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
       
-      <script>app.initialize({version:"1.0.3",url:{base:"../.."}})</script>
-      
-    
-    
+      <script>
+        app = initialize({
+          base: "../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.5eca75d3.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
       
     
   </body>

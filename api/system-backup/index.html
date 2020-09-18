@@ -1,40 +1,19 @@
 
 
 
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
-      <meta http-equiv="x-ua-compatible" content="ie=edge">
       
       
         <link rel="canonical" href="https://nethserver.github.io/nethserver-cockpit/api/system-backup/">
       
       
-      
-        <meta name="lang:clipboard.copy" content="Copy to clipboard">
-      
-        <meta name="lang:clipboard.copied" content="Copied to clipboard">
-      
-        <meta name="lang:search.language" content="en">
-      
-        <meta name="lang:search.pipeline.stopwords" content="True">
-      
-        <meta name="lang:search.pipeline.trimmer" content="True">
-      
-        <meta name="lang:search.result.none" content="No matching documents">
-      
-        <meta name="lang:search.result.one" content="1 matching document">
-      
-        <meta name="lang:search.result.other" content="# matching documents">
-      
-        <meta name="lang:search.tokenizer" content="[\s\-]+">
-      
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.3, mkdocs-material-3.0.4">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.12">
     
     
       
@@ -42,116 +21,102 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.4dd2dd8d.min.css">
       
-        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.6a5ad368.min.css">
       
       
         
         
-        <meta name="theme-color" content="#546e7a">
+        <meta name="theme-color" content="#546d78">
       
     
-    
-      <script src="../../assets/javascripts/modernizr.1aa3b519.js"></script>
     
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
-        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
       
     
-    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+    
+    
+      
     
     
   </head>
   
-    
-    
-    <body dir="ltr" data-md-color-primary="blue-grey" data-md-color-accent="indigo">
   
-    <svg class="md-svg">
-      <defs>
-        
-        
-          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
-    viewBox="0 0 416 448" id="__github">
-  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
-        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
-        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
-        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
-        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
-        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
-        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
-        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
-        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
-        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
-        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
-        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
-        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
-        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
-        99.5z" />
-</svg>
-        
-      </defs>
-    </svg>
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="blue-grey" data-md-color-accent="indigo">
+  
+    
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
-    
-      <a href="../../#system-backup" tabindex="1" class="md-skip">
-        Skip to content
-      </a>
-    
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#system-backup" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
     
       <header class="md-header" data-md-component="header">
-  <nav class="md-header-nav md-grid">
-    <div class="md-flex">
-      <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://nethserver.github.io/nethserver-cockpit" title="NethServer Cockpit" class="md-header-nav__button md-logo">
-          
-            <i class="md-icon">build</i>
-          
-        </a>
-      </div>
-      <div class="md-flex__cell md-flex__cell--shrink">
-        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
-      </div>
-      <div class="md-flex__cell md-flex__cell--stretch">
-        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
-          
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="https://nethserver.github.io/nethserver-cockpit" title="NethServer Cockpit" class="md-header-nav__button md-logo" aria-label="NethServer Cockpit">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            NethServer Cockpit
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
             
-              <span class="md-header-nav__topic">
-                NethServer Cockpit
-              </span>
-              <span class="md-header-nav__topic">
-                system-backup
-              </span>
+              system-backup
             
-          
+          </span>
         </div>
-      </div>
-      <div class="md-flex__cell md-flex__cell--shrink">
-        
-          
-            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
-            
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
 <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
-      <label class="md-icon md-search__icon" for="__search"></label>
-      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
-        &#xE5CD;
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
       </button>
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result">
+        <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            Type to start searching
+            Initializing search
           </div>
           <ol class="md-search-result__list"></ol>
         </div>
@@ -159,80 +124,60 @@
     </div>
   </div>
 </div>
-          
+    
+    
+      <div class="md-header-nav__source">
         
-      </div>
-      
-        <div class="md-flex__cell md-flex__cell--shrink">
-          <div class="md-header-nav__source">
-            
-
-
-  
-
-
-  <a href="https://github.com/NethServer/nethserver-cockpit/" title="Go to repository" class="md-source" data-md-source="github">
+<a href="https://github.com/NethServer/nethserver-cockpit/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
     
-      <div class="md-source__icon">
-        <svg viewBox="0 0 24 24" width="24" height="24">
-          <use xlink:href="#__github" width="24" height="24"></use>
-        </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
       </div>
     
-    <div class="md-source__repository">
-      GitHub
-    </div>
-  </a>
-
-          </div>
-        </div>
-      
-    </div>
   </nav>
 </header>
     
-    <div class="md-container">
+    <div class="md-container" data-md-component="container">
       
         
       
       
-      <main class="md-main">
-        <div class="md-main__inner md-grid" data-md-component="container">
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
           
             
               <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
-                    <nav class="md-nav md-nav--primary" data-md-level="0">
-  <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://nethserver.github.io/nethserver-cockpit" title="NethServer Cockpit" class="md-nav__button md-logo">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://nethserver.github.io/nethserver-cockpit" title="NethServer Cockpit" class="md-nav__button md-logo" aria-label="NethServer Cockpit">
       
-        <i class="md-icon">build</i>
-      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
     </a>
     NethServer Cockpit
   </label>
   
     <div class="md-nav__source">
       
-
-
-  
-
-
-  <a href="https://github.com/NethServer/nethserver-cockpit/" title="Go to repository" class="md-source" data-md-source="github">
+<a href="https://github.com/NethServer/nethserver-cockpit/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
     
-      <div class="md-source__icon">
-        <svg viewBox="0 0 24 24" width="24" height="24">
-          <use xlink:href="#__github" width="24" height="24"></use>
-        </svg>
-      </div>
-    
-    <div class="md-source__repository">
-      GitHub
-    </div>
-  </a>
-
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
     </div>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -258,13 +203,15 @@
 
   <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
     
     <label class="md-nav__link" for="nav-2">
       API
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+    <nav class="md-nav" aria-label="API" data-md-level="1">
       <label class="md-nav__title" for="nav-2">
+        <span class="md-nav__icon md-icon"></span>
         API
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -277,13 +224,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-1" type="checkbox" id="nav-2-1">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-1" type="checkbox" id="nav-2-1">
     
     <label class="md-nav__link" for="nav-2-1">
       General
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="General" data-md-level="2">
       <label class="md-nav__title" for="nav-2-1">
+        <span class="md-nav__icon md-icon"></span>
         General
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -339,13 +288,15 @@
 
   <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2" checked>
     
     <label class="md-nav__link" for="nav-2-2">
       System helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="System helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-2">
+        <span class="md-nav__icon md-icon"></span>
         System helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -408,13 +359,14 @@
 
   <li class="md-nav__item md-nav__item--active">
     
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     
       
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
         system-backup
+        <span class="md-nav__icon md-icon"></span>
       </label>
     
     <a href="./" title="system-backup" class="md-nav__link md-nav__link--active">
@@ -422,61 +374,64 @@
     </a>
     
       
-<nav class="md-nav md-nav--secondary">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
     
   
   
-    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#read" title="read" class="md-nav__link">
+  <a href="#read" class="md-nav__link">
     read
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="read">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#input" title="Input" class="md-nav__link">
+  <a href="#input" class="md-nav__link">
     Input
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Input">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#backup-info" title="backup-info" class="md-nav__link">
+  <a href="#backup-info" class="md-nav__link">
     backup-info
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#list-disks" title="list-disks" class="md-nav__link">
+  <a href="#list-disks" class="md-nav__link">
     list-disks
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#last-log" title="last-log" class="md-nav__link">
+  <a href="#last-log" class="md-nav__link">
     last-log
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#running-info" title="running-info" class="md-nav__link">
+  <a href="#running-info" class="md-nav__link">
     running-info
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#check-backup-config" title="check-backup-config" class="md-nav__link">
+  <a href="#check-backup-config" class="md-nav__link">
     check-backup-config
   </a>
   
@@ -488,43 +443,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#output" title="Output" class="md-nav__link">
+  <a href="#output" class="md-nav__link">
     Output
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Output">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#backup-info_1" title="backup-info" class="md-nav__link">
+  <a href="#backup-info_1" class="md-nav__link">
     backup-info
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#list-disks_1" title="list-disks" class="md-nav__link">
+  <a href="#list-disks_1" class="md-nav__link">
     list-disks
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#last-log_1" title="last-log" class="md-nav__link">
+  <a href="#last-log_1" class="md-nav__link">
     last-log
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#running-info_1" title="running-info" class="md-nav__link">
+  <a href="#running-info_1" class="md-nav__link">
     running-info
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#check-backup-config_1" title="check-backup-config" class="md-nav__link">
+  <a href="#check-backup-config_1" class="md-nav__link">
     check-backup-config
   </a>
   
@@ -541,93 +496,93 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validate" title="validate" class="md-nav__link">
+  <a href="#validate" class="md-nav__link">
     validate
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="validate">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#constraints" title="Constraints" class="md-nav__link">
+  <a href="#constraints" class="md-nav__link">
     Constraints
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#input_1" title="Input" class="md-nav__link">
+  <a href="#input_1" class="md-nav__link">
     Input
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Input">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#create-backup-data" title="create-backup-data" class="md-nav__link">
+  <a href="#create-backup-data" class="md-nav__link">
     create-backup-data
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#update-backup-data" title="update-backup-data" class="md-nav__link">
+  <a href="#update-backup-data" class="md-nav__link">
     update-backup-data
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#update-backup-config" title="update-backup-config" class="md-nav__link">
+  <a href="#update-backup-config" class="md-nav__link">
     update-backup-config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sftp-credentials" title="sftp-credentials" class="md-nav__link">
+  <a href="#sftp-credentials" class="md-nav__link">
     sftp-credentials
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#b2-credentials" title="b2-credentials" class="md-nav__link">
+  <a href="#b2-credentials" class="md-nav__link">
     b2-credentials
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#s3-credentials" title="s3-credentials" class="md-nav__link">
+  <a href="#s3-credentials" class="md-nav__link">
     s3-credentials
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#nfs-credentials" title="nfs-credentials" class="md-nav__link">
+  <a href="#nfs-credentials" class="md-nav__link">
     nfs-credentials
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#cifs-credentials" title="cifs-credentials" class="md-nav__link">
+  <a href="#cifs-credentials" class="md-nav__link">
     cifs-credentials
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#webdav-credentials" title="webdav-credentials" class="md-nav__link">
+  <a href="#webdav-credentials" class="md-nav__link">
     webdav-credentials
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#disk-access" title="disk-access" class="md-nav__link">
+  <a href="#disk-access" class="md-nav__link">
     disk-access
   </a>
   
@@ -644,29 +599,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#update" title="update" class="md-nav__link">
+  <a href="#update" class="md-nav__link">
     update
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="update">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#update-backup-data_1" title="update-backup-data" class="md-nav__link">
+  <a href="#update-backup-data_1" class="md-nav__link">
     update-backup-data
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#update-backup-config_1" title="update-backup-config" class="md-nav__link">
+  <a href="#update-backup-config_1" class="md-nav__link">
     update-backup-config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#backup-data-contents" title="backup-data-contents" class="md-nav__link">
+  <a href="#backup-data-contents" class="md-nav__link">
     backup-data-contents
   </a>
   
@@ -678,15 +633,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#create" title="create" class="md-nav__link">
+  <a href="#create" class="md-nav__link">
     create
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="create">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#create-backup-data_1" title="create-backup-data" class="md-nav__link">
+  <a href="#create-backup-data_1" class="md-nav__link">
     create-backup-data
   </a>
   
@@ -698,22 +653,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#delete" title="delete" class="md-nav__link">
+  <a href="#delete" class="md-nav__link">
     delete
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="delete">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#backup-config" title="backup-config" class="md-nav__link">
+  <a href="#backup-config" class="md-nav__link">
     backup-config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#backup-data" title="backup-data" class="md-nav__link">
+  <a href="#backup-data" class="md-nav__link">
     backup-data
   </a>
   
@@ -725,58 +680,58 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#execute" title="execute" class="md-nav__link">
+  <a href="#execute" class="md-nav__link">
     execute
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="execute">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#input_2" title="Input" class="md-nav__link">
+  <a href="#input_2" class="md-nav__link">
     Input
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Input">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#format-disk" title="format-disk" class="md-nav__link">
+  <a href="#format-disk" class="md-nav__link">
     format-disk
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#run-backup-data" title="run-backup-data" class="md-nav__link">
+  <a href="#run-backup-data" class="md-nav__link">
     run-backup-data
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#run-backup-config" title="run-backup-config" class="md-nav__link">
+  <a href="#run-backup-config" class="md-nav__link">
     run-backup-config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#download-backup-config" title="download-backup-config" class="md-nav__link">
+  <a href="#download-backup-config" class="md-nav__link">
     download-backup-config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#restore-backup-config" title="restore-backup-config" class="md-nav__link">
+  <a href="#restore-backup-config" class="md-nav__link">
     restore-backup-config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#restore-backup-data" title="restore-backup-data" class="md-nav__link">
+  <a href="#restore-backup-data" class="md-nav__link">
     restore-backup-data
   </a>
   
@@ -788,43 +743,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#output_1" title="Output" class="md-nav__link">
+  <a href="#output_1" class="md-nav__link">
     Output
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Output">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#format-disk_1" title="format-disk" class="md-nav__link">
+  <a href="#format-disk_1" class="md-nav__link">
     format-disk
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#run-backup-data_1" title="run-backup-data" class="md-nav__link">
+  <a href="#run-backup-data_1" class="md-nav__link">
     run-backup-data
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#run-backup-config_1" title="run-backup-config" class="md-nav__link">
+  <a href="#run-backup-config_1" class="md-nav__link">
     run-backup-config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#restore-backup-config_1" title="restore-backup-config" class="md-nav__link">
+  <a href="#restore-backup-config_1" class="md-nav__link">
     restore-backup-config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#restore-backup-data_1" title="restore-backup-data" class="md-nav__link">
+  <a href="#restore-backup-data_1" class="md-nav__link">
     restore-backup-data
   </a>
   
@@ -839,10 +794,6 @@
     </nav>
   
 </li>
-      
-      
-      
-      
       
     </ul>
   
@@ -1187,13 +1138,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-3" type="checkbox" id="nav-2-3">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-3" type="checkbox" id="nav-2-3">
     
     <label class="md-nav__link" for="nav-2-3">
       Firewall helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="Firewall helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-3">
+        <span class="md-nav__icon md-icon"></span>
         Firewall helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1331,13 +1284,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-4" type="checkbox" id="nav-2-4">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-4" type="checkbox" id="nav-2-4">
     
     <label class="md-nav__link" for="nav-2-4">
       Mail helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="Mail helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-4">
+        <span class="md-nav__icon md-icon"></span>
         Mail helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1475,13 +1430,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-5" type="checkbox" id="nav-2-5">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-5" type="checkbox" id="nav-2-5">
     
     <label class="md-nav__link" for="nav-2-5">
       Samba helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="Samba helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-5">
+        <span class="md-nav__icon md-icon"></span>
         Samba helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1547,13 +1504,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-6" type="checkbox" id="nav-2-6">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-6" type="checkbox" id="nav-2-6">
     
     <label class="md-nav__link" for="nav-2-6">
       Web proxy helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="Web proxy helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-6">
+        <span class="md-nav__icon md-icon"></span>
         Web proxy helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1643,13 +1602,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-7" type="checkbox" id="nav-2-7">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-7" type="checkbox" id="nav-2-7">
     
     <label class="md-nav__link" for="nav-2-7">
       IPS helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="IPS helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-7">
+        <span class="md-nav__icon md-icon"></span>
         IPS helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1703,13 +1664,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-8" type="checkbox" id="nav-2-8">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-8" type="checkbox" id="nav-2-8">
     
     <label class="md-nav__link" for="nav-2-8">
       UPS helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="UPS helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-8">
+        <span class="md-nav__icon md-icon"></span>
         UPS helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1751,13 +1714,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-9" type="checkbox" id="nav-2-9">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-9" type="checkbox" id="nav-2-9">
     
     <label class="md-nav__link" for="nav-2-9">
       VPN helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="VPN helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-9">
+        <span class="md-nav__icon md-icon"></span>
         VPN helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1847,13 +1812,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-10" type="checkbox" id="nav-2-10">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-10" type="checkbox" id="nav-2-10">
     
     <label class="md-nav__link" for="nav-2-10">
       HTTP helpers
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+    <nav class="md-nav" aria-label="HTTP helpers" data-md-level="2">
       <label class="md-nav__title" for="nav-2-10">
+        <span class="md-nav__icon md-icon"></span>
         HTTP helpers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1936,13 +1903,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
     
     <label class="md-nav__link" for="nav-3">
       UI
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+    <nav class="md-nav" aria-label="UI" data-md-level="1">
       <label class="md-nav__title" for="nav-3">
+        <span class="md-nav__icon md-icon"></span>
         UI
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -2032,13 +2001,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
     
     <label class="md-nav__link" for="nav-8">
       Build
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+    <nav class="md-nav" aria-label="Build" data-md-level="1">
       <label class="md-nav__title" for="nav-8">
+        <span class="md-nav__icon md-icon"></span>
         Build
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -2080,13 +2051,15 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9" type="checkbox" id="nav-9">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-9" type="checkbox" id="nav-9">
     
     <label class="md-nav__link" for="nav-9">
       Manuals
+      <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+    <nav class="md-nav" aria-label="Manuals" data-md-level="1">
       <label class="md-nav__title" for="nav-9">
+        <span class="md-nav__icon md-icon"></span>
         Manuals
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -2144,61 +2117,64 @@
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
-<nav class="md-nav md-nav--secondary">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
     
   
   
-    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#read" title="read" class="md-nav__link">
+  <a href="#read" class="md-nav__link">
     read
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="read">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#input" title="Input" class="md-nav__link">
+  <a href="#input" class="md-nav__link">
     Input
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Input">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#backup-info" title="backup-info" class="md-nav__link">
+  <a href="#backup-info" class="md-nav__link">
     backup-info
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#list-disks" title="list-disks" class="md-nav__link">
+  <a href="#list-disks" class="md-nav__link">
     list-disks
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#last-log" title="last-log" class="md-nav__link">
+  <a href="#last-log" class="md-nav__link">
     last-log
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#running-info" title="running-info" class="md-nav__link">
+  <a href="#running-info" class="md-nav__link">
     running-info
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#check-backup-config" title="check-backup-config" class="md-nav__link">
+  <a href="#check-backup-config" class="md-nav__link">
     check-backup-config
   </a>
   
@@ -2210,43 +2186,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#output" title="Output" class="md-nav__link">
+  <a href="#output" class="md-nav__link">
     Output
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Output">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#backup-info_1" title="backup-info" class="md-nav__link">
+  <a href="#backup-info_1" class="md-nav__link">
     backup-info
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#list-disks_1" title="list-disks" class="md-nav__link">
+  <a href="#list-disks_1" class="md-nav__link">
     list-disks
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#last-log_1" title="last-log" class="md-nav__link">
+  <a href="#last-log_1" class="md-nav__link">
     last-log
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#running-info_1" title="running-info" class="md-nav__link">
+  <a href="#running-info_1" class="md-nav__link">
     running-info
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#check-backup-config_1" title="check-backup-config" class="md-nav__link">
+  <a href="#check-backup-config_1" class="md-nav__link">
     check-backup-config
   </a>
   
@@ -2263,93 +2239,93 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validate" title="validate" class="md-nav__link">
+  <a href="#validate" class="md-nav__link">
     validate
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="validate">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#constraints" title="Constraints" class="md-nav__link">
+  <a href="#constraints" class="md-nav__link">
     Constraints
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#input_1" title="Input" class="md-nav__link">
+  <a href="#input_1" class="md-nav__link">
     Input
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Input">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#create-backup-data" title="create-backup-data" class="md-nav__link">
+  <a href="#create-backup-data" class="md-nav__link">
     create-backup-data
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#update-backup-data" title="update-backup-data" class="md-nav__link">
+  <a href="#update-backup-data" class="md-nav__link">
     update-backup-data
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#update-backup-config" title="update-backup-config" class="md-nav__link">
+  <a href="#update-backup-config" class="md-nav__link">
     update-backup-config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#sftp-credentials" title="sftp-credentials" class="md-nav__link">
+  <a href="#sftp-credentials" class="md-nav__link">
     sftp-credentials
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#b2-credentials" title="b2-credentials" class="md-nav__link">
+  <a href="#b2-credentials" class="md-nav__link">
     b2-credentials
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#s3-credentials" title="s3-credentials" class="md-nav__link">
+  <a href="#s3-credentials" class="md-nav__link">
     s3-credentials
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#nfs-credentials" title="nfs-credentials" class="md-nav__link">
+  <a href="#nfs-credentials" class="md-nav__link">
     nfs-credentials
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#cifs-credentials" title="cifs-credentials" class="md-nav__link">
+  <a href="#cifs-credentials" class="md-nav__link">
     cifs-credentials
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#webdav-credentials" title="webdav-credentials" class="md-nav__link">
+  <a href="#webdav-credentials" class="md-nav__link">
     webdav-credentials
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#disk-access" title="disk-access" class="md-nav__link">
+  <a href="#disk-access" class="md-nav__link">
     disk-access
   </a>
   
@@ -2366,29 +2342,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#update" title="update" class="md-nav__link">
+  <a href="#update" class="md-nav__link">
     update
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="update">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#update-backup-data_1" title="update-backup-data" class="md-nav__link">
+  <a href="#update-backup-data_1" class="md-nav__link">
     update-backup-data
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#update-backup-config_1" title="update-backup-config" class="md-nav__link">
+  <a href="#update-backup-config_1" class="md-nav__link">
     update-backup-config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#backup-data-contents" title="backup-data-contents" class="md-nav__link">
+  <a href="#backup-data-contents" class="md-nav__link">
     backup-data-contents
   </a>
   
@@ -2400,15 +2376,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#create" title="create" class="md-nav__link">
+  <a href="#create" class="md-nav__link">
     create
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="create">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#create-backup-data_1" title="create-backup-data" class="md-nav__link">
+  <a href="#create-backup-data_1" class="md-nav__link">
     create-backup-data
   </a>
   
@@ -2420,22 +2396,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#delete" title="delete" class="md-nav__link">
+  <a href="#delete" class="md-nav__link">
     delete
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="delete">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#backup-config" title="backup-config" class="md-nav__link">
+  <a href="#backup-config" class="md-nav__link">
     backup-config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#backup-data" title="backup-data" class="md-nav__link">
+  <a href="#backup-data" class="md-nav__link">
     backup-data
   </a>
   
@@ -2447,58 +2423,58 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#execute" title="execute" class="md-nav__link">
+  <a href="#execute" class="md-nav__link">
     execute
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="execute">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#input_2" title="Input" class="md-nav__link">
+  <a href="#input_2" class="md-nav__link">
     Input
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Input">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#format-disk" title="format-disk" class="md-nav__link">
+  <a href="#format-disk" class="md-nav__link">
     format-disk
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#run-backup-data" title="run-backup-data" class="md-nav__link">
+  <a href="#run-backup-data" class="md-nav__link">
     run-backup-data
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#run-backup-config" title="run-backup-config" class="md-nav__link">
+  <a href="#run-backup-config" class="md-nav__link">
     run-backup-config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#download-backup-config" title="download-backup-config" class="md-nav__link">
+  <a href="#download-backup-config" class="md-nav__link">
     download-backup-config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#restore-backup-config" title="restore-backup-config" class="md-nav__link">
+  <a href="#restore-backup-config" class="md-nav__link">
     restore-backup-config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#restore-backup-data" title="restore-backup-data" class="md-nav__link">
+  <a href="#restore-backup-data" class="md-nav__link">
     restore-backup-data
   </a>
   
@@ -2510,43 +2486,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#output_1" title="Output" class="md-nav__link">
+  <a href="#output_1" class="md-nav__link">
     Output
   </a>
   
-    <nav class="md-nav">
+    <nav class="md-nav" aria-label="Output">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#format-disk_1" title="format-disk" class="md-nav__link">
+  <a href="#format-disk_1" class="md-nav__link">
     format-disk
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#run-backup-data_1" title="run-backup-data" class="md-nav__link">
+  <a href="#run-backup-data_1" class="md-nav__link">
     run-backup-data
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#run-backup-config_1" title="run-backup-config" class="md-nav__link">
+  <a href="#run-backup-config_1" class="md-nav__link">
     run-backup-config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#restore-backup-config_1" title="restore-backup-config" class="md-nav__link">
+  <a href="#restore-backup-config_1" class="md-nav__link">
     restore-backup-config
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#restore-backup-data_1" title="restore-backup-data" class="md-nav__link">
+  <a href="#restore-backup-data_1" class="md-nav__link">
     restore-backup-data
   </a>
   
@@ -2561,10 +2537,6 @@
     </nav>
   
 </li>
-      
-      
-      
-      
       
     </ul>
   
@@ -2578,7 +2550,12 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/docs/api/system-backup.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/NethServer/nethserver-cockpit/edit/master/docs/docs/api/system-backup.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                  
                 
                 
                 <h1 id="system-backup">system-backup<a class="headerlink" href="#system-backup" title="Permanent link">&para;</a></h1>
@@ -2595,48 +2572,48 @@ Valid actions:</p>
 <li><code>check-backup-config</code></li>
 </ul>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;list-disks&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="backup-info">backup-info<a class="headerlink" href="#backup-info" title="Permanent link">&para;</a></h4>
 <p>Return status and configuration of all backups.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;backup-info&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="list-disks">list-disks<a class="headerlink" href="#list-disks" title="Permanent link">&para;</a></h4>
 <p>List attached disks which can be used for the backup.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;list-disks&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="last-log">last-log<a class="headerlink" href="#last-log" title="Permanent link">&para;</a></h4>
 <p>Return the content of most recent log of the given log.
 The <code>name</code> field must contain the backup name.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;last-log&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;local119&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="running-info">running-info<a class="headerlink" href="#running-info" title="Permanent link">&para;</a></h4>
 <p>Check if there are backups running in background.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;running-info&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="check-backup-config">check-backup-config<a class="headerlink" href="#check-backup-config" title="Permanent link">&para;</a></h4>
@@ -2653,12 +2630,12 @@ The <code>mode</code> field can be:</p>
    The <code>data</code> field contains the name of the backup, like <code>c00</code>.</li>
 </ul>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;restore-backup-config&quot;</span><span class="p">,</span>
   <span class="nt">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;backup&quot;</span><span class="p">,</span>
   <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;c00&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
@@ -2667,7 +2644,7 @@ The <code>mode</code> field can be:</p>
 Both fields contain <code>backup-data</code> and <code>backup-config</code> fields.</p>
 <p>The <code>ready</code> field is set to 1 if the backup is configured and ready to be executed.</p>
 <p>Output example</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="nt">&quot;backup-config&quot;</span><span class="p">:</span> <span class="p">[</span>
       <span class="err">...</span>
@@ -2755,7 +2732,7 @@ Both fields contain <code>backup-data</code> and <code>backup-config</code> fiel
     <span class="p">}</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>Fields explanation for <code>status</code> section:</p>
@@ -2783,7 +2760,7 @@ Both fields contain <code>backup-data</code> and <code>backup-config</code> fiel
 <p>List all disks without a mounted partition.
 If the disk alredy has a formatted partition, the <code>formatted</code> flag is set to 1, othwerise is set to 0.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">[</span>
+<div class="codehilite"><pre><span></span><code><span class="p">[</span>
   <span class="p">{</span>
     <span class="nt">&quot;formatted&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
     <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;Flash Disk&quot;</span><span class="p">,</span>
@@ -2799,25 +2776,25 @@ If the disk alredy has a formatted partition, the <code>formatted</code> flag is
     <span class="nt">&quot;vendor&quot;</span><span class="p">:</span> <span class="s2">&quot;Generic&quot;</span>
   <span class="p">}</span>
 <span class="p">]</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="last-log_1">last-log<a class="headerlink" href="#last-log_1" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;Backup: local119\nBackup started at ....&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="running-info_1">running-info<a class="headerlink" href="#running-info_1" title="Permanent link">&para;</a></h4>
 <p>It indicates if there are background jobs (restore-data or backup-data) started by the UI.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;restore-data&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
   <span class="nt">&quot;backup-data&quot;</span><span class="p">:</span> <span class="mi">1</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="check-backup-config_1">check-backup-config<a class="headerlink" href="#check-backup-config_1" title="Permanent link">&para;</a></h4>
@@ -2826,7 +2803,7 @@ The <code>current</code> field contains the list of ethernet interfaces present 
 while <code>restore</code> field contains the list of ethernet interfaces from the backup.
 The <code>valid</code> field is set to <code>1</code> if the machine doesn't require registration, <code>0</code> otherwise.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;remap&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
   <span class="nt">&quot;current&quot;</span><span class="p">:</span> <span class="p">[</span>
     <span class="p">{</span>
@@ -2846,7 +2823,7 @@ The <code>valid</code> field is set to <code>1</code> if the machine doesn't req
   <span class="p">],</span>
   <span class="err">valid:</span> <span class="err">1</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h2>
@@ -2932,7 +2909,7 @@ The <code>valid</code> field is set to <code>1</code> if the machine doesn't req
 <h3 id="input_1">Input<a class="headerlink" href="#input_1" title="Permanent link">&para;</a></h3>
 <h4 id="create-backup-data">create-backup-data<a class="headerlink" href="#create-backup-data" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;create-backup&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
   <span class="nt">&quot;engine&quot;</span><span class="p">:</span> <span class="s2">&quot;duplicity&quot;</span><span class="p">,</span>
@@ -2950,28 +2927,28 @@ The <code>valid</code> field is set to <code>1</code> if the machine doesn't req
   <span class="nt">&quot;VolSize&quot;</span><span class="p">:</span> <span class="mi">250</span><span class="p">,</span>
   <span class="nt">&quot;CleanupOlderThan&quot;</span><span class="p">:</span> <span class="s2">&quot;28D&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>Invocation example with sftp and rsync:</p>
-<div class="codehilite"><pre><span></span>echo &#39;{&quot;action&quot;:&quot;create-backup-data&quot;,&quot;name&quot;:&quot;test3&quot;,&quot;engine&quot;:&quot;rsync&quot;,&quot;status&quot;:&quot;enabled&quot;,&quot;Notify&quot;:&quot;error&quot;,&quot;IncludeLogs&quot;:&quot;disabled&quot;,&quot;BackupTime&quot;:&quot;5 0 * 8 *&quot;,&quot;VFSType&quot;:&quot;sftp&quot;,&quot;SftpHost&quot;:&quot;192.168.5.229&quot;,&quot;SftpUser&quot;:&quot;root&quot;,&quot;SftpPassword&quot;:&quot;Nethesis,1234&quot;,&quot;SftpDirectory&quot;:&quot;/tmp/test&quot;,&quot;SftpPort&quot;:22}&#39; | /usr/libexec/nethserver/api/system-backup/create
-</pre></div>
+<div class="codehilite"><pre><span></span><code><span class="n">echo</span> <span class="s1">&#39;{&quot;action&quot;:&quot;create-backup-data&quot;,&quot;name&quot;:&quot;test3&quot;,&quot;engine&quot;:&quot;rsync&quot;,&quot;status&quot;:&quot;enabled&quot;,&quot;Notify&quot;:&quot;error&quot;,&quot;IncludeLogs&quot;:&quot;disabled&quot;,&quot;BackupTime&quot;:&quot;5 0 * 8 *&quot;,&quot;VFSType&quot;:&quot;sftp&quot;,&quot;SftpHost&quot;:&quot;192.168.5.229&quot;,&quot;SftpUser&quot;:&quot;root&quot;,&quot;SftpPassword&quot;:&quot;Nethesis,1234&quot;,&quot;SftpDirectory&quot;:&quot;/tmp/test&quot;,&quot;SftpPort&quot;:22}&#39;</span> <span class="o">|</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">nethserver</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="k">system</span><span class="o">-</span><span class="n">backup</span><span class="o">/</span><span class="k">create</span>
+</code></pre></div>
 
 
 <h4 id="update-backup-data">update-backup-data<a class="headerlink" href="#update-backup-data" title="Permanent link">&para;</a></h4>
 <p>Same as create-backup-data</p>
 <h4 id="update-backup-config">update-backup-config<a class="headerlink" href="#update-backup-config" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;update-backup-config&quot;</span><span class="p">,</span>
   <span class="nt">&quot;HistoryLength&quot;</span><span class="p">:</span> <span class="mi">4</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="sftp-credentials">sftp-credentials<a class="headerlink" href="#sftp-credentials" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;sftp-credentials&quot;</span><span class="p">,</span>
   <span class="nt">&quot;SftpHost&quot;</span><span class="p">:</span> <span class="s2">&quot;my.remote.host&quot;</span><span class="p">,</span>
   <span class="nt">&quot;SftpPort&quot;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span>
@@ -2979,72 +2956,72 @@ The <code>valid</code> field is set to <code>1</code> if the machine doesn't req
   <span class="nt">&quot;SftpPassword&quot;</span><span class="p">:</span> <span class="s2">&quot;MyPassw0rd&quot;</span><span class="p">,</span>
   <span class="nt">&quot;SftpDirectory&quot;</span><span class="p">:</span> <span class="s2">&quot;/srv/backup&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="b2-credentials">b2-credentials<a class="headerlink" href="#b2-credentials" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;b2-credentials&quot;</span><span class="p">,</span>
   <span class="nt">&quot;B2AccountId&quot;</span><span class="p">:</span> <span class="s2">&quot;xxxxxxxxxxxxxxxxxxxxxxxxx&quot;</span><span class="p">,</span>
   <span class="nt">&quot;B2AccountKey&quot;</span><span class="p">:</span> <span class="s2">&quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;</span><span class="p">,</span>
   <span class="nt">&quot;B2Bucket&quot;</span><span class="p">:</span> <span class="s2">&quot;mybackup&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="s3-credentials">s3-credentials<a class="headerlink" href="#s3-credentials" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;s3-credentials&quot;</span><span class="p">,</span>
   <span class="nt">&quot;S3AccessKey&quot;</span><span class="p">:</span> <span class="s2">&quot;xxxxxxxxxxxxxxxxxxxx&quot;</span><span class="p">,</span>
   <span class="nt">&quot;S3Bucket&quot;</span><span class="p">:</span> <span class="s2">&quot;mybackup&quot;</span><span class="p">,</span>
   <span class="nt">&quot;S3SecretKey&quot;</span><span class="p">:</span> <span class="s2">&quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;</span><span class="p">,</span>
   <span class="nt">&quot;S3Host&quot;</span><span class="p">:</span> <span class="s2">&quot;s3.amazonaws.com&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="nfs-credentials">nfs-credentials<a class="headerlink" href="#nfs-credentials" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;nfs-credentials&quot;</span><span class="p">,</span>
   <span class="nt">&quot;NFSHost&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
   <span class="nt">&quot;NFSShare&quot;</span><span class="p">:</span> <span class="s2">&quot;/mybackup&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="cifs-credentials">cifs-credentials<a class="headerlink" href="#cifs-credentials" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;cifs-credentials&quot;</span><span class="p">,</span>
   <span class="nt">&quot;SMBHost&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
   <span class="nt">&quot;SMBShare&quot;</span><span class="p">:</span> <span class="s2">&quot;mybackup&quot;</span><span class="p">,</span>
   <span class="nt">&quot;SMBLogin&quot;</span><span class="p">:</span> <span class="s2">&quot;myuser&quot;</span><span class="p">,</span>
   <span class="nt">&quot;SMBPassword&quot;</span><span class="p">:</span> <span class="s2">&quot;mypass&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="webdav-credentials">webdav-credentials<a class="headerlink" href="#webdav-credentials" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;webdav-credentials&quot;</span><span class="p">,</span>
   <span class="nt">&quot;WebDAVLogin&quot;</span><span class="p">:</span> <span class="s2">&quot;myuser&quot;</span><span class="p">,</span>
   <span class="nt">&quot;WebDAVPassword&quot;</span><span class="p">:</span> <span class="s2">&quot;mypass&quot;</span><span class="p">,</span>
   <span class="nt">&quot;WebDAVUrl&quot;</span><span class="p">:</span> <span class="s2">&quot;https//nextcloud.nethserver.org/nextcloud/remote.php/webdav/&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="disk-access">disk-access<a class="headerlink" href="#disk-access" title="Permanent link">&para;</a></h4>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;disk-access&quot;</span><span class="p">,</span>
   <span class="nt">&quot;USBLabel&quot;</span><span class="p">:</span> <span class="s2">&quot;backup&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
@@ -3055,7 +3032,7 @@ The <code>valid</code> field is set to <code>1</code> if the machine doesn't req
 <h3 id="backup-data-contents">backup-data-contents<a class="headerlink" href="#backup-data-contents" title="Permanent link">&para;</a></h3>
 <p>Change include and execludes of all data backups.</p>
 <p>Input example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;backup-data-contents&quot;</span><span class="p">,</span>
   <span class="nt">&quot;custom-includes&quot;</span><span class="p">:</span> <span class="p">[</span>
     <span class="s2">&quot;file1&quot;</span><span class="p">,</span>
@@ -3067,7 +3044,7 @@ The <code>valid</code> field is set to <code>1</code> if the machine doesn't req
   <span class="p">],</span>
   <span class="nt">&quot;IncludeLogs&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2 id="create">create<a class="headerlink" href="#create" title="Permanent link">&para;</a></h2>
@@ -3083,22 +3060,22 @@ The <code>valid</code> field is set to <code>1</code> if the machine doesn't req
 <p>Delete the archive of given configuration backup.
 The <code>name</code> field must contain the backup id.</p>
 <p>Input example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
     <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;backup-config&quot;</span><span class="p">,</span>
     <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;c00&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="backup-data">backup-data<a class="headerlink" href="#backup-data" title="Permanent link">&para;</a></h3>
 <p>Delete the configuration of given backup data.
 The <code>name</code> field must contain the backup name.</p>
 <p>Input example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
     <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;backup-data&quot;</span><span class="p">,</span>
     <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;mybackup&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2 id="execute">execute<a class="headerlink" href="#execute" title="Permanent link">&para;</a></h2>
@@ -3117,49 +3094,49 @@ The <code>name</code> field must contain the backup name.</p>
 <p>Format the given disk.
 The <code>name</code> field must contain the disk name.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;format-disk&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;sdb&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>Invocation example:</p>
-<div class="codehilite"><pre><span></span>echo &#39;{&quot;action&quot;:&quot;format-disk&quot;,&quot;name&quot;:&quot;sdb&quot;}&#39; | /usr/libexec/nethserver/api/system-backup/execute
-</pre></div>
+<div class="codehilite"><pre><span></span><code><span class="n">echo</span> <span class="s1">&#39;{&quot;action&quot;:&quot;format-disk&quot;,&quot;name&quot;:&quot;sdb&quot;}&#39;</span> <span class="o">|</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">nethserver</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="k">system</span><span class="o">-</span><span class="n">backup</span><span class="o">/</span><span class="k">execute</span>
+</code></pre></div>
 
 
 <h4 id="run-backup-data">run-backup-data<a class="headerlink" href="#run-backup-data" title="Permanent link">&para;</a></h4>
 <p>Execute the given backup.
 The <code>name</code> field must contain the backup name.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;run-backup-data&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;mybackup&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="run-backup-config">run-backup-config<a class="headerlink" href="#run-backup-config" title="Permanent link">&para;</a></h4>
 <p>Execute a configuration backup.
 The <code>name</code> field should contain a description for the backup; the field is mandatory but can be empty.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;run-backup-config&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;mybackup&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="download-backup-config">download-backup-config<a class="headerlink" href="#download-backup-config" title="Permanent link">&para;</a></h4>
 <p>Download the selected configuration backup from local history.
 The <code>name</code> field should contain the name of the backup.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;download-backup-config&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;c00&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="restore-backup-config">restore-backup-config<a class="headerlink" href="#restore-backup-config" title="Permanent link">&para;</a></h4>
@@ -3177,25 +3154,26 @@ The <code>mode</code> field can be:</p>
 </ul>
 <p>The <code>remap</code> field can contain a map of network interfaces to remap at the end of the restore.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;restore-backup-config&quot;</span><span class="p">,</span>
   <span class="nt">&quot;InstallPackages&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;SkipNetwork&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
   <span class="nt">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;backup&quot;</span><span class="p">,</span>
   <span class="nt">&quot;remap&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&quot;eth0&quot;</span> <span class="p">:</span> <span class="s2">&quot;enp0s1&quot;</span> <span class="p">}</span>
   <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;c00&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h4 id="restore-backup-data">restore-backup-data<a class="headerlink" href="#restore-backup-data" title="Permanent link">&para;</a></h4>
 <p>Execute a data restore in background using a systemd unit.
 The <code>name</code> field should contain the name of data backup to restore.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;restore-backup-data&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;mybackup&quot;</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <h3 id="output_1">Output<a class="headerlink" href="#output_1" title="Permanent link">&para;</a></h3>
@@ -3209,8 +3187,6 @@ The <code>name</code> field should contain the name of data backup to restore.</
 <p>Mimic event output. </p>
 <h4 id="restore-backup-data_1">restore-backup-data<a class="headerlink" href="#restore-backup-data_1" title="Permanent link">&para;</a></h4>
 <p>No output. </p>
-                
-                  
                 
               
               
@@ -3227,34 +3203,34 @@ The <code>name</code> field should contain the name of data backup to restore.</
 <footer class="md-footer">
   
     <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../system-authorization/" title="system-authorization" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+          <a href="../system-authorization/" title="system-authorization" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
                 system-authorization
-              </span>
+              </div>
             </div>
           </a>
         
         
-          <a href="../system-certificate/" title="system-certificate" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
+          <a href="../system-certificate/" title="system-certificate" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
                 system-certificate
-              </span>
+              </div>
             </div>
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
             </div>
           </a>
         
@@ -3265,14 +3241,11 @@ The <code>name</code> field should contain the name of data backup to restore.</
     <div class="md-footer-meta__inner md-grid">
       <div class="md-footer-copyright">
         
-        powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
-        and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
-          Material for MkDocs</a>
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
       </div>
-      
-        
       
     </div>
   </div>
@@ -3280,12 +3253,18 @@ The <code>name</code> field should contain the name of data backup to restore.</
       
     </div>
     
-      <script src="../../assets/javascripts/application.583bbe55.js"></script>
+      <script src="../../assets/javascripts/vendor.3636a4ec.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e9fe3281.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
       
-      <script>app.initialize({version:"1.0.3",url:{base:"../.."}})</script>
-      
-    
-    
+      <script>
+        app = initialize({
+          base: "../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.5eca75d3.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
       
     
   </body>
