@@ -204,7 +204,7 @@ if ($action == 'create-alias') {
     if (!$parent) {
         $v->addValidationError('parent', 'non_existing_interface');
     }
-    used_ip($data['ipaddr']);
+    used_ip($data['ipaddr'], '');
     $v->declareParameter('ipaddr', Validate::IPv4);
     $v->declareParameter('netmask', Validate::IPv4_NETMASK);
 
