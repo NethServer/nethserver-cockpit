@@ -4,8 +4,6 @@ theme:
     palette:
         primary: blue grey
         accent: indigo
-    logo:
-        icon: 'build'
 site_url: https://nethserver.github.io/nethserver-cockpit
 repo_url: https://github.com/NethServer/nethserver-cockpit
 edit_uri: edit/master/docs/docs/
