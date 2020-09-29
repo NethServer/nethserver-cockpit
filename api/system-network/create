@@ -34,13 +34,20 @@ my $cmd = $input->{'action'};
 sub find_next_alias
 {
     my $parent = shift;
-    my $k = -1;
+    my $ret = "";
+    my $k = 0;
     foreach my $i ($ndb->get_all()) {
         if ($i->key =~ /^$parent/) {
-            $k++;
+            $ret = "$parent:$k";
+            # search for next free id
+            while (defined($ndb->get($ret))) {
+                $k++;
+                $ret = "$parent:$k";
+            }
+            last;
         }
     }
-    return "$parent:$k";
+    return $ret;
 }
 
 sub find_next_bridge
