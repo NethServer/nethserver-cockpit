@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.7.7
+Version: 1.7.8
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Sep 29 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.8-1
+- Cockpit: network alias creation failed - Bug NethServer/dev#6288
+
 * Wed Jul 22 2020 Edoardo Spadoni <edoardo.spadoni@nethesis.it> - 1.7.7-1
 - Network: no feedback if invalid interface label is entered - Bug NethServer/dev#6237
 
