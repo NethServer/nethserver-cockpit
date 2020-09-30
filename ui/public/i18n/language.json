@@ -488,6 +488,9 @@
   },
   "users_groups": {
     "title": "Users & Groups",
+    "ns6_ad_upgrade_messagetext": "The local LDAP accounts provider can be upgraded to Samba Active Directory",
+    "ns6_ad_upgrade_title": "Account provider",
+    "ns6_ad_upgrade_buttontext": "Upgrade to Active Directory",
     "filter_by": "Filter by",
     "local_ad": "Local Active Directory",
     "local_ldap": "Local LDAP",

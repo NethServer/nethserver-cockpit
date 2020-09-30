@@ -20,11 +20,12 @@
 # along with NethServer.  If not, see COPYING.
 #
 
+
 . /usr/libexec/nethserver/api/lib/helper_functions
 
-ldapsearch -LLL -H ldapi:/// -x -w '' -D '' -b dc=directory,dc=nh objectClass=sambaDomain 2>/dev/null | grep -q '^sambaDomainName: '
-if [[ $? -eq 0 && ! -f /var/run/.nethserver-fixnetwork ]]; then
-    hints '' '{}' 1
+if [[ -f /etc/e-smith/db/configuration/defaults/slapd/type && ! -f /var/run/.nethserver-fixnetwork ]] \
+    && ldapsearch -LLL -H ldapi:/// -x -w '' -D '' -b dc=directory,dc=nh objectClass=sambaDomain 2>/dev/null | grep -q '^sambaDomainName: ' ; then
+    hints '' '{"ns6_ad_upgrade":"ad_upgrade_ready"}' 1
 else
     hints
 fi

@@ -8,6 +8,20 @@
       :section="''"
       :inline="false"
     ></doc-info>
+    <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
+      <span class="pficon pficon-warning-triangle-o"></span>
+      <strong>{{$t('hints_suggested')}}:</strong>
+      <li v-if="hints.details && hints.details.ns6_ad_upgrade">
+        <strong>{{$t('users_groups.ns6_ad_upgrade_title')}}</strong>
+        : {{$t('users_groups.ns6_ad_upgrade_messagetext')}}
+        <button
+          :disabled="!view.isLoaded"
+          data-toggle="modal"
+          data-target="#ns6upgradeModal"
+          class="btn btn-default right"
+        >{{$t('users_groups.ns6_ad_upgrade_buttontext')}}</button>
+      </li>
+    </div>
 
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
 
@@ -1780,6 +1794,7 @@ export default {
     this.initGraphics();
     this.getInfo();
     this.getPasswordPolicy();
+    this.getHints();
   },
   computed: {
     filteredUserList() {
@@ -1805,6 +1820,7 @@ export default {
   },
   data() {
     return {
+      hints: {"count":0, "message": null, "details": {}, "link": null},
       ShellOverride: false,
       view: {
         isLoaded: false,
@@ -1861,6 +1877,19 @@ export default {
     };
   },
   methods: {
+    getHints(callback) {
+      var context = this;
+      context.execHints(
+        "system-users",
+        function(success) {
+          context.hints = success;
+          callback ? callback() : null;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
     initProvidersErrors() {
       return {
         IpAddress: {
