@@ -629,6 +629,7 @@ export default {
       this.getHints("system-tls-policy", "tls_policy");
       this.getHints("system-settings", "settings");
       this.getHints("system-subscription", "subscription");
+      this.getHints("system-users", "users_groups");
     },
     checkAccessUserSettings() {
       if (this.accessUserSettings) {
