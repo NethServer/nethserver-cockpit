@@ -16,8 +16,7 @@
         : {{$t('users_groups.ns6_ad_upgrade_messagetext')}}
         <button
           :disabled="!view.isLoaded"
-          data-toggle="modal"
-          data-target="#ns6upgradeModal"
+          @click="openNs6upgradeModal"
           class="btn btn-primary right"
         >{{$t('users_groups.ns6_ad_upgrade_buttontext')}}</button>
       </li>
@@ -935,7 +934,7 @@
                 <p>{{ $t('users_groups.LocalLdapUpgrade_PDC_message2') }}</p>
               </div>
               <div
-                :class="['form-group', users.providerInfo.errors.LdapURI.hasError ? 'has-error' : '']"
+                :class="['form-group', newProvider.errors.Realm.hasError ? 'has-error' : '']"
               >
                 <label
                   class="col-sm-6 control-label"
@@ -945,17 +944,19 @@
                   <input
                     type="text"
                     id="ns6upgrade_dns_domain"
+                    :disabled="ns6upgradeModalValidating"
                     v-model="realm"
                     class="form-control"
+                    required
                   />
                   <span
-                    v-if="users.providerInfo.errors.LdapURI.hasError"
+                    v-if="newProvider.errors.Realm.hasError"
                     class="help-block"
-                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+users.providerInfo.errors.LdapURI.message)}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.' + newProvider.errors.Realm.message)}}</span>
                 </div>
               </div>
               <div
-                :class="['form-group', users.providerInfo.errors.LdapURI.hasError ? 'has-error' : '']"
+                :class="['form-group', newProvider.errors.Workgroup.hasError ? 'has-error' : '']"
               >
                 <label
                   class="col-sm-6 control-label"
@@ -965,14 +966,15 @@
                   <input
                     type="text"
                     id="ns6upgrade_netbios_domain"
-                    :disabled="!canChangeWorkgroup"
+                    :disabled="!canChangeWorkgroup || ns6upgradeModalValidating"
                     v-model="workgroup"
                     class="form-control"
+                    required
                   />
                   <span
-                    v-if="users.providerInfo.errors.LdapURI.hasError"
+                    v-if="newProvider.errors.Workgroup.hasError"
                     class="help-block"
-                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+users.providerInfo.errors.LdapURI.message)}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.' + newProvider.errors.Workgroup.message)}}</span>
                 </div>
               </div>
               <div class="alert alert-warning alert-dismissable">
@@ -984,7 +986,7 @@
                 </ul>
               </div>
               <div
-                :class="['form-group', users.providerInfo.errors.BaseDN.hasError ? 'has-error' : '']"
+                :class="['form-group', newProvider.errors.IpAddress.hasError ? 'has-error' : '']"
               >
                 <label
                   class="col-sm-6 control-label"
@@ -994,19 +996,22 @@
                   <input
                     type="text"
                     id="ns6upgrade_dc_ipaddress"
+                    :disabled="ns6upgradeModalValidating"
                     v-model="dcIpAddress"
                     class="form-control"
+                    required
                   />
                   <span
-                    v-if="users.providerInfo.errors.BaseDN.hasError"
+                    v-if="newProvider.errors.IpAddress.hasError"
                     class="help-block"
-                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+users.providerInfo.errors.BaseDN.message)}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.' + newProvider.errors.IpAddress.message)}}</span>
                 </div>
               </div>
             </div>
             <div class="modal-footer">
-              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
-              <button class="btn btn-danger" type="submit">{{$t('users_groups.ns6upgradeModal_submit_label')}}</button>
+              <div v-if="ns6upgradeModalValidating" class="spinner spinner-sm form-spinner-loader"></div>
+              <button class="btn btn-default" type="button" data-dismiss="modal" :disabled="ns6upgradeModalValidating">{{$t('cancel')}}</button>
+              <button class="btn btn-danger" type="submit" :disabled="ns6upgradeModalValidating">{{$t('users_groups.ns6upgradeModal_submit_label')}}</button>
             </div>
           </form>
         </div>
@@ -1893,11 +1898,8 @@ export default {
     this.initGraphics();
     this.getInfo();
     this.getPasswordPolicy();
-    var context = this;
-    this.getHints(function(hint) {
-      if(hint.count > 0 && hint.details.ns6_ad_upgrade == "ad_upgrade_ready") {
-        context.getNs6UpgradeInfo();
-      }
+    this.getHints(hints => {
+      this.$parent.hints.users_groups.count = hints.count
     });
   },
   computed: {
@@ -1924,6 +1926,7 @@ export default {
   },
   data() {
     return {
+      ns6upgradeModalValidating: false,
       canChangeWorkgroup: false,
       realm: "",
       workgroup: "",
@@ -1985,10 +1988,75 @@ export default {
     };
   },
   methods: {
-    ns6upgradeProvider() {
-      $("#ns6upgradeModal").modal("hide");
+    openNs6upgradeModal() {
+      var context = this;
+      context.newProvider.errors.Workgroup.hasError = false;
+      context.newProvider.errors.Realm.hasError = false;
+      context.newProvider.errors.IpAddress.hasError = false;
+      context.getNs6UpgradeInfo(() => {
+        $("#ns6upgradeModal").modal("show");
+      });
     },
-    getNs6UpgradeInfo() {
+    ns6upgradeProvider() {
+      var context = this;
+      var vobj = {
+          action: "local-ad",
+          Workgroup: context.workgroup,
+          Realm: context.realm,
+          IpAddress: context.dcIpAddress,
+      };
+    
+      context.ns6upgradeModalValidating = true;
+
+      context.exec(
+        ["system-accounts-provider/validate"],
+        vobj,
+        null,
+        function(success) {
+            $("#ns6upgradeModal").modal("hide");
+            context.ns6upgradeModalValidating = false;
+
+            var uobj = {
+               action: "ns6upgrade",
+               Workgroup: context.workgroup,
+               Realm: context.realm,
+               IpAddress: context.dcIpAddress,
+            };
+            context.exec(
+              ["system-accounts-provider/update"],
+              uobj,
+              function(stream) {
+                console.info("ns6upgrade", stream);
+              },
+              function(success) {
+                context.$parent.notifications.success.message = context.$i18n.t("users_groups.ns6upgrade_event_ok");
+                context.getInfo();
+                context.getHints(hints => {
+                  context.$parent.hints.users_groups.count = hints.count
+                });
+              },
+              function(error, data) {
+                context.$parent.notifications.error.message = context.$i18n.t("users_groups.ns6upgrade_event_error");
+              }
+            );
+        },
+        function(error, data) {
+          context.ns6upgradeModalValidating = false;
+          try {
+            var errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.newProvider.errors[attr.parameter].hasError = true;
+              context.newProvider.errors[attr.parameter].message = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
+          }
+          context.$forceUpdate();
+        }
+      );
+    },
+    getNs6UpgradeInfo(callback) {
       var context = this;
       context.loadGreenIpAddress();
       context.exec(
@@ -1999,11 +2067,14 @@ export default {
         null,
         function(success) {
           try {
-            success = JSON.parse(success);
-            context.canChangeWorkgroup = success.canChangeWorkgroup;
-            context.realm = success.realm;
-            context.workgroup = success.workgroup;
+            var data = JSON.parse(success);
+            context.canChangeWorkgroup = data.canChangeWorkgroup;
+            context.realm = data.realm;
+            context.workgroup = data.workgroup;
             context.dcIpAddress = "";
+            if(callback) { 
+              callback.apply(context, [data]);
+            }
           } catch (e) {
             console.error(e);
           }
@@ -2018,7 +2089,6 @@ export default {
       context.execHints(
         "system-users",
         function(success) {
-          console.log(callback, success, Object.assign({}, success));
           context.hints = success;
           callback ? callback(Object.assign({}, success)) : null;
         },

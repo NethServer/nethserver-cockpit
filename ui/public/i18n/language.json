@@ -500,6 +500,8 @@
     "LocalLdapUpgrade_PDC_message1": "Users, passwords, groups and computer accounts are preserved. Shared folder connections may require different credentials!",
     "LocalLdapUpgrade_WS_message1": "Users, passwords and groups are preserved; however shared folder connections require different credentials!",
     "LocalLdapUpgrade_PDC_message2": "When connecting to a shared folder, the NetBIOS domain name must be either prefixed to the user name (i.e. \"MYDOMAIN\\username\"), or inserted in the specific form field.",
+    "ns6upgrade_event_ok": "The account provider is now Active Directory.",
+    "ns6upgrade_event_error": "An unexpected error has occurred. See the logs for details.",
     "filter_by": "Filter by",
     "local_ad": "Local Active Directory",
     "local_ldap": "Local LDAP",

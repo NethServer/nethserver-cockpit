@@ -166,6 +166,20 @@ if ($cmd eq 'local-ldap') {
     system("/sbin/e-smith/signal-event -j nethserver-sssd-save");
     exit($?>>8);
 
+} elsif ($cmd eq 'ns6upgrade') {
+
+    my $db = esmith::ConfigDB->open();
+    $db->set_prop('sssd', 'Realm', uc($input->{'Realm'}));
+    $db->set_prop('sssd', 'Workgroup', uc($input->{'Workgroup'}));
+    my $nsdc = $db->get('nsdc') || undef;
+    if (!$nsdc) {
+        $db->set_value('nsdc','service');
+    }
+    $db->set_prop('nsdc', 'IpAddress', $input->{'IpAddress'});
+
+    system("/sbin/e-smith/signal-event -j nethserver-directory-ns6upgrade");
+    exit($?>>8);
+
 } else {
     error();
 }
