@@ -17,7 +17,7 @@
         <button
           :disabled="!view.isLoaded"
           @click="openNs6upgradeModal"
-          class="btn btn-primary right"
+          class="btn btn-primary right align-normal"
         >{{$t('users_groups.ns6_ad_upgrade_buttontext')}}</button>
       </li>
     </div>
@@ -3890,5 +3890,9 @@ export default {
 }
 .adjust-warning {
   font-size: 16px !important;
+}
+.align-normal {
+    margin-top: -3px;
+    margin-right: -15px;
 }
 </style>
