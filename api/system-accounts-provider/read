@@ -273,7 +273,14 @@ if($cmd eq 'probe-ldap') {
     }
     print JSON->new()->encode($dump);
     exit(0);
-
+} elsif($cmd eq 'ns6upgrade') {
+    my $db = esmith::ConfigDB->open_ro();
+    print JSON->new()->encode({
+        'canChangeWorkgroup' => ($db->get_prop('smb', 'ServerRole') || 'WS') eq 'PDC' ? JSON::false : JSON::true,
+        'workgroup' => uc($db->get_prop('sssd', 'Workgroup')),
+        'realm' => lc($db->get_prop('sssd', 'Realm') || 'ad.' . $db->get_value('DomainName')),
+    });
+    exit(0);
 } else {
     error("InvalidInput","Action not supported");
 }

@@ -8,6 +8,19 @@
       :section="''"
       :inline="false"
     ></doc-info>
+    <div v-if="hints.count > 0" class="alert alert-warning alert-dismissable">
+      <span class="pficon pficon-warning-triangle-o"></span>
+      <strong>{{$t('hints_suggested')}}:</strong>
+      <li v-if="hints.details && hints.details.ns6_ad_upgrade">
+        <strong>{{$t('users_groups.ns6_ad_upgrade_title')}}</strong>
+        : {{$t('users_groups.ns6_ad_upgrade_messagetext')}}
+        <button
+          :disabled="!view.isLoaded"
+          @click="openNs6upgradeModal"
+          class="btn btn-primary right align-normal"
+        >{{$t('users_groups.ns6_ad_upgrade_buttontext')}}</button>
+      </li>
+    </div>
 
     <div v-if="!view.isLoaded" class="spinner spinner-lg"></div>
 
@@ -899,6 +912,111 @@
         </div>
       </div>
     </div>
+    <div class="modal" id="ns6upgradeModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button 
+              type="button"
+              data-dismiss="modal"
+              aria-hidden="true"
+              aria-label="Close" class="close"
+            ><span class="pficon pficon-close"></span></button>
+            <h4 class="modal-title">{{$t('users_groups.ns6upgradeModal_title')}}</h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="ns6upgradeProvider()">
+            <div class="modal-body">
+              <div
+                 class="alert alert-info alert-dismissable"
+              ><span class="pficon pficon-info"></span>
+                <p>{{ $t('users_groups.LocalLdapUpgrade_message1') }}</p>
+                <p>{{ canChangeWorkgroup ? $t('users_groups.LocalLdapUpgrade_WS_message1') : $t('users_groups.LocalLdapUpgrade_PDC_message1') }}</p>
+                <p>{{ $t('users_groups.LocalLdapUpgrade_PDC_message2') }}</p>
+              </div>
+              <div
+                :class="['form-group', newProvider.errors.Realm.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-6 control-label"
+                  for="ns6upgrade_dns_domain"
+                >{{$t('users_groups.ns6upgrade_dns_domain_label')}}</label>
+                <div class="col-sm-6">
+                  <input
+                    type="text"
+                    id="ns6upgrade_dns_domain"
+                    :disabled="ns6upgradeModalValidating"
+                    v-model="realm"
+                    class="form-control"
+                    required
+                  />
+                  <span
+                    v-if="newProvider.errors.Realm.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.' + newProvider.errors.Realm.message)}}</span>
+                </div>
+              </div>
+              <div
+                :class="['form-group', newProvider.errors.Workgroup.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-6 control-label"
+                  for="ns6upgrade_netbios_domain"
+                >{{$t('users_groups.ns6upgrade_netbios_domain_label')}}</label>
+                <div class="col-sm-6">
+                  <input
+                    type="text"
+                    id="ns6upgrade_netbios_domain"
+                    :disabled="!canChangeWorkgroup || ns6upgradeModalValidating"
+                    v-model="workgroup"
+                    class="form-control"
+                    required
+                  />
+                  <span
+                    v-if="newProvider.errors.Workgroup.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.' + newProvider.errors.Workgroup.message)}}</span>
+                </div>
+              </div>
+              <div class="alert alert-warning alert-dismissable">
+                <span class="pficon pficon-warning-triangle-o"></span>
+                <strong>{{$t('users_groups.ip_warning_message_1')}}</strong>
+                <ul>
+                  <li>{{$t('users_groups.ip_warning_message_2')}} {{ greenSubnetAddress }}</li>
+                  <li>{{$t('users_groups.ip_warning_message_3')}}</li>
+                </ul>
+              </div>
+              <div
+                :class="['form-group', newProvider.errors.IpAddress.hasError ? 'has-error' : '']"
+              >
+                <label
+                  class="col-sm-6 control-label"
+                  for="ns6upgrade_dc_ipaddress"
+                >{{$t('users_groups.ns6upgrade_dc_ipaddress_label')}}</label>
+                <div class="col-sm-6">
+                  <input
+                    type="text"
+                    id="ns6upgrade_dc_ipaddress"
+                    :disabled="ns6upgradeModalValidating"
+                    v-model="dcIpAddress"
+                    class="form-control"
+                    required
+                  />
+                  <span
+                    v-if="newProvider.errors.IpAddress.hasError"
+                    class="help-block"
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.' + newProvider.errors.IpAddress.message)}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div v-if="ns6upgradeModalValidating" class="spinner spinner-sm form-spinner-loader"></div>
+              <button class="btn btn-default" type="button" data-dismiss="modal" :disabled="ns6upgradeModalValidating">{{$t('cancel')}}</button>
+              <button class="btn btn-danger" type="submit" :disabled="ns6upgradeModalValidating">{{$t('users_groups.ns6upgradeModal_submit_label')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
     <div class="modal" id="editProviderModal" tabindex="-1" role="dialog" data-backdrop="static">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -1780,6 +1898,9 @@ export default {
     this.initGraphics();
     this.getInfo();
     this.getPasswordPolicy();
+    this.getHints(hints => {
+      this.$parent.hints.users_groups.count = hints.count
+    });
   },
   computed: {
     filteredUserList() {
@@ -1805,6 +1926,12 @@ export default {
   },
   data() {
     return {
+      ns6upgradeModalValidating: false,
+      canChangeWorkgroup: false,
+      realm: "",
+      workgroup: "",
+      dcIpAddress: "",
+      hints: {"count":0, "message": null, "details": {}, "link": null},
       ShellOverride: false,
       view: {
         isLoaded: false,
@@ -1861,6 +1988,117 @@ export default {
     };
   },
   methods: {
+    openNs6upgradeModal() {
+      var context = this;
+      context.newProvider.errors.Workgroup.hasError = false;
+      context.newProvider.errors.Realm.hasError = false;
+      context.newProvider.errors.IpAddress.hasError = false;
+      context.ns6upgradeModalValidating = true;
+      $("#ns6upgradeModal").modal("show");
+      context.getNs6UpgradeInfo(() => {
+        context.ns6upgradeModalValidating = false;
+      });
+    },
+    ns6upgradeProvider() {
+      var context = this;
+      var vobj = {
+          action: "local-ad",
+          Workgroup: context.workgroup,
+          Realm: context.realm,
+          IpAddress: context.dcIpAddress,
+      };
+    
+      context.ns6upgradeModalValidating = true;
+
+      context.exec(
+        ["system-accounts-provider/validate"],
+        vobj,
+        null,
+        function(success) {
+            $("#ns6upgradeModal").modal("hide");
+            context.ns6upgradeModalValidating = false;
+
+            var uobj = {
+               action: "ns6upgrade",
+               Workgroup: context.workgroup,
+               Realm: context.realm,
+               IpAddress: context.dcIpAddress,
+            };
+            context.exec(
+              ["system-accounts-provider/update"],
+              uobj,
+              function(stream) {
+                console.info("ns6upgrade", stream);
+              },
+              function(success) {
+                context.$parent.notifications.success.message = context.$i18n.t("users_groups.ns6upgrade_event_ok");
+                context.getInfo();
+                context.getHints(hints => {
+                  context.$parent.hints.users_groups.count = hints.count
+                });
+              },
+              function(error, data) {
+                context.$parent.notifications.error.message = context.$i18n.t("users_groups.ns6upgrade_event_error");
+              }
+            );
+        },
+        function(error, data) {
+          context.ns6upgradeModalValidating = false;
+          try {
+            var errorData = JSON.parse(data);
+            for (var e in errorData.attributes) {
+              var attr = errorData.attributes[e];
+              context.newProvider.errors[attr.parameter].hasError = true;
+              context.newProvider.errors[attr.parameter].message = attr.error;
+            }
+          } catch (e) {
+            console.error(e);
+          }
+          context.$forceUpdate();
+        }
+      );
+    },
+    getNs6UpgradeInfo(callback) {
+      var context = this;
+      context.loadGreenIpAddress();
+      context.exec(
+        ["system-accounts-provider/read"],
+        {
+          action: "ns6upgrade"
+        },
+        null,
+        function(success) {
+          try {
+            var data = JSON.parse(success);
+            context.canChangeWorkgroup = data.canChangeWorkgroup;
+            context.realm = data.realm;
+            context.workgroup = data.workgroup;
+            context.dcIpAddress = "";
+            if(callback) { 
+              callback.apply(context, [data]);
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
+    getHints(callback) {
+      var context = this;
+      context.execHints(
+        "system-users",
+        function(success) {
+          context.hints = success;
+          callback ? callback(Object.assign({}, success)) : null;
+        },
+        function(error) {
+          console.error(error);
+        }
+      );
+    },
     initProvidersErrors() {
       return {
         IpAddress: {
@@ -3654,5 +3892,9 @@ export default {
 }
 .adjust-warning {
   font-size: 16px !important;
+}
+.align-normal {
+    margin-top: -3px;
+    margin-right: -15px;
 }
 </style>
