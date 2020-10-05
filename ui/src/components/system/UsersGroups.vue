@@ -35,6 +35,7 @@
             class="btn btn-primary"
           >{{$t('users_groups.change_provider')}}</button>
           <button
+            v-if="!users.providerInfo.IsLocal"
             id="edit-provider-btn"
             data-toggle="modal"
             data-target="#editProviderModal"
