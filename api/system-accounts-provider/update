@@ -136,8 +136,8 @@ if ($cmd eq 'local-ldap') {
 } elsif ($cmd eq 'local-ad') {
 
     my $db = esmith::ConfigDB->open();
-    $db->set_prop('sssd', 'Realm', $input->{'Realm'});
-    $db->set_prop('sssd', 'Workgroup', $input->{'Workgroup'});
+    $db->set_prop('sssd', 'Realm', uc($input->{'Realm'}));
+    $db->set_prop('sssd', 'Workgroup', uc($input->{'Workgroup'}));
     my $nsdc = $db->get('nsdc') || undef;
     if (!$nsdc) {
         $db->set_value('nsdc','service');
