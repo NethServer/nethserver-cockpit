@@ -1993,8 +1993,10 @@ export default {
       context.newProvider.errors.Workgroup.hasError = false;
       context.newProvider.errors.Realm.hasError = false;
       context.newProvider.errors.IpAddress.hasError = false;
+      context.ns6upgradeModalValidating = true;
+      $("#ns6upgradeModal").modal("show");
       context.getNs6UpgradeInfo(() => {
-        $("#ns6upgradeModal").modal("show");
+        context.ns6upgradeModalValidating = false;
       });
     },
     ns6upgradeProvider() {
