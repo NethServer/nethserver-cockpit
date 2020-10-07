@@ -2524,6 +2524,13 @@ export default {
             context.ShellOverride =  success.ShellOverride;
             context.getUsers();
             context.getGroups();
+          } else if(context.$parent.taskInProgress) {
+            var unwatch = context.$parent.$watch('taskInProgress', (oldVal, newVal) => {
+              if(oldVal == false && newVal == true) {
+                unwatch();
+                context.getInfo();
+              }
+            });
           } else {
             $("#accountProviderWizard").modal("show");
           }
