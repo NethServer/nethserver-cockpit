@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.7.8
+Version: 1.7.9
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Wed Oct 07 2020 Davide Principi <davide.principi@nethesis.it> - 1.7.9-1
+- Upgrade NS6 to Active Directory Cockpit procedure - NethServer/dev#6290
+
 * Tue Sep 29 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.8-1
 - Cockpit: network alias creation failed - Bug NethServer/dev#6288
 
