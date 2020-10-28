@@ -83,6 +83,7 @@ Cmnd_Alias NSAPI_SYSTEM_BACKUP = \
 
 Cmnd_Alias NSAPI_SYSTEM_SERVICES = \
     /usr/libexec/nethserver/api/system-services/read, \
+    /usr/libexec/nethserver/api/system-services/validate, \
     /usr/libexec/nethserver/api/system-services/update
 
 
