@@ -26,6 +26,7 @@ use strict;
 use warnings;
 
 use esmith::ConfigDB;
+use esmith::NetworksDB;
 use NethServer::Service;
 use JSON;
 
@@ -46,6 +47,44 @@ sub ports_to_array
     }
     return $ret;
 }
+
+sub list_roles
+{
+    my %roles;
+    my $ndb = esmith::NetworksDB->open_ro();
+    my $cdb = esmith::ConfigDB->open_ro();
+    foreach ($ndb->get_all()) {
+        my $role = $_->prop('role') || next;
+        next if ($role =~ m/bridged|alias|slave|hotsp/);
+        $roles{$role} = 1;
+    }
+    if ($cdb->get_prop('openvpn@host-to-net','status')) {
+        $roles{'ovpn'} = 1;
+        $roles{'vpn'} = 1;
+    }
+    if ($cdb->get_prop('ipsec','status')) {
+        $roles{'ivpn'} = 1;
+        $roles{'vpn'} = 1;
+    }
+
+    my @tmp = keys %roles;
+    return \@tmp;
+}
+
+sub list_zones
+{
+    my $ndb = esmith::NetworksDB->open_ro();
+    my @objects;
+    foreach ($ndb->get_all_by_prop('type' => 'zone')) {
+        my %props = $_->props;
+        $props{'name'} = $_->key;
+        delete($props{'type'});
+        push(@objects, \%props);
+    }
+
+    return \@objects;
+}
+
 
 my @status;
 my @configuration;
@@ -102,6 +141,10 @@ if($cmd eq 'list') {
     # LANG=C make sure output contains readable characters
     my $status = `LANG=C /usr/bin/systemctl status --full --no-pager $unit`;
     print encode_json({'data' => $status});
+} elsif ($cmd  eq 'roles') {
+    print encode_json({"roles" => list_roles()});
+} elsif ($cmd eq 'zones') {
+    print encode_json({"zones" => list_zones()});
 }
 exit(0);
 

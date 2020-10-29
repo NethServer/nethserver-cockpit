@@ -632,7 +632,7 @@ export default {
       var context = this;
 
       nethserver.exec(
-        ["nethserver-firewall-base/rules/read"],
+        ["system-services/read"],
         {
           action: "roles"
         },
@@ -646,7 +646,7 @@ export default {
           var roles = success.roles;
 
           nethserver.exec(
-            ["nethserver-firewall-base/objects/read"],
+            ["system-services/read"],
             {
               action: "zones"
             },
