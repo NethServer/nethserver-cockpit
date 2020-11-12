@@ -1535,7 +1535,7 @@
                           </div>
                         </div>-->
                         <div
-                          v-if="newProvider.isChecked && k!='action' && k != 'NsdcIp' && k!='DiscoverDcType' && k!='port' && k!='IsLocal' && k!='isAD' && k!='isLdap' && k!='host' && k!='Provider' && !((newProvider.info.BindType == 'anonymous' && k=='BindPassword') || (newProvider.info.BindType == 'anonymous' && k=='BindDN'))"
+                          v-if="newProvider.isChecked && k!='action' && k != 'LdapUriDn' && k != 'NsdcIp' && k!='DiscoverDcType' && k!='port' && k!='IsLocal' && k!='isAD' && k!='isLdap' && k!='host' && k!='Provider' && !((newProvider.info.BindType == 'anonymous' && k=='BindPassword') || (newProvider.info.BindType == 'anonymous' && k=='BindDN'))"
                           v-for="(v,k) in newProvider.info"
                           v-bind:key="k"
                           class="form-group"
@@ -1543,7 +1543,7 @@
                           <label
                             class="col-sm-3 control-label"
                             for="textInput-modal-markup"
-                          >{{k | camelToSentence}}</label>
+                          >{{ $t('users_groups.' + k) }}</label>
                           <div class="col-sm-9">
                             <input
                               v-if="!(k == 'StartTls' || k == 'BindType')"
@@ -3450,9 +3450,6 @@ export default {
             console.error(e);
           }
           context.newProvider.info = success;
-          context.newProvider.info.LdapUriDn = unescape(
-            context.newProvider.info.LdapUriDn
-          );
           context.newProvider.info.BindType = "anonymous";
           context.newProvider.probeError = false;
           context.newProvider.isChecking = false;

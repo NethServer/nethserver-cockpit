@@ -107,7 +107,6 @@ sub getDefaults
     my $o = NethServer::SSSD->new(@_);
     my $db = esmith::ConfigDB->open_ro();
     my $ip = $db->get_prop('nsdc','IpAddress') || '';
-    my $ShellOverrideStatus = ($db->get_prop('sssd','ShellOverrideStatus') || 'disabled') eq 'enabled' ? JSON::true : JSON::false;
 
     my $dump = {
         @_,
@@ -129,7 +128,6 @@ sub getDefaults
         'DiscoverDcType' => $o->{'DiscoverDcType'},
         'NsdcIp' => $ip,
         'IsLocal' => $o->isLocalProvider(),
-        'ShellOverride' => $ShellOverrideStatus,
     };
 
     return $dump;
@@ -271,6 +269,7 @@ if($cmd eq 'probe-ldap') {
            $dump->{'AuthRequired'} = JSON::true;
        }
     }
+    $dump->{'ShellOverride'} = ($db->get_prop('sssd','ShellOverrideStatus') || 'disabled') eq 'enabled' ? JSON::true : JSON::false;
     print JSON->new()->encode($dump);
     exit(0);
 } elsif($cmd eq 'ns6upgrade') {
