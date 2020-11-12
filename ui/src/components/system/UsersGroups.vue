@@ -1543,7 +1543,7 @@
                           <label
                             class="col-sm-3 control-label"
                             for="textInput-modal-markup"
-                          >{{k | camelToSentence}}</label>
+                          >{{ $t('users_groups.' + k) }}</label>
                           <div class="col-sm-9">
                             <input
                               v-if="!(k == 'StartTls' || k == 'BindType')"
