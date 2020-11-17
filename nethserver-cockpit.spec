@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.7.10
+Version: 1.7.11
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Nov 17 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.11-1
+- Bogus Shell Override in account provider bind procedure - Bug NethServer/dev#6327
+
 * Fri Oct 30 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.10-1
 - Cockpit: can't edit system services with delegates user - Bug NethServer/dev#6316
 
