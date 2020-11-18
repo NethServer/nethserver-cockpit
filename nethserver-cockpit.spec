@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.7.11
+Version: 1.7.12
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,10 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Wed Nov 18 2020 Davide Principi <davide.principi@nethesis.it> - 1.7.12-1
+- New NethServer 7.9.2009 defaults - NethServer/dev#6320
+- Fix undefined references (NethServer/nethserver-cockpit#298)
+
 * Tue Nov 17 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.11-1
 - Bogus Shell Override in account provider bind procedure - Bug NethServer/dev#6327
 
