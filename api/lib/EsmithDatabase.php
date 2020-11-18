@@ -219,7 +219,7 @@ class EsmithDatabase {
             $socketPath = '/var/run/smwingsd.sock';
             $errno = 0;
             $errstr = '';
-            self::$socket = fsockopen('unix://' . $socketPath, -1, $errno, $errstr);
+            self::$socket = @fsockopen('unix://' . $socketPath, -1, $errno, $errstr);
         }
          
         if ( ! is_resource(self::$socket)) {
