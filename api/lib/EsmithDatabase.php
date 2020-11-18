@@ -219,10 +219,7 @@ class EsmithDatabase {
             $socketPath = '/var/run/smwingsd.sock';
             $errno = 0;
             $errstr = '';
-            self::$socket = fsockopen('unix://' . $socketPath, -1, $errno, $errstr);
-            if( ! is_resource(self::$socket)) {
-                $this->getLog()->warning(sprintf("Invalid socket (%d): %s. Fall back to exec().", $errno, $errstr));
-            }
+            self::$socket = @fsockopen('unix://' . $socketPath, -1, $errno, $errstr);
         }
          
         if ( ! is_resource(self::$socket)) {
@@ -240,7 +237,6 @@ class EsmithDatabase {
                 $output = json_decode($this->recvMessage(self::$socket), TRUE);
             }
         } catch (\Exception $ex) {
-            $this->log->exception($ex);
             return 1;
         }
 
