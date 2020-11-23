@@ -209,6 +209,12 @@
                     {{$t('backup.edit_backup')}}
                   </a>
                 </li>
+                <li v-if="b.props.type==='restic'">
+                  <a @click="openViewPasswordEncryption(b)">
+                    <span class="pficon pficon-key span-right-margin"></span>
+                    {{$t('backup.ShowPasswordEncrypt')}}
+                  </a>
+                </li>
                 <li>
                   <a @click="toggleStatus(b)">
                     <span
@@ -1918,6 +1924,30 @@
                             </select>
                           </div>
                         </div>
+                        <div class="form-group">
+                          <label
+                            class="col-sm-3 control-label"
+                            for="textInput-modal-markup"
+                          >{{$t('backup.PasswordEncrypt')}}
+                            <doc-info
+                              :placement="'top'"
+                              :title="$t('backup.PasswordEncrypt')"
+                              :chapter="'PasswordEncrypt'"
+                              :inline="true"
+                            ></doc-info>
+                          </label>
+                          <div v-if="wizard.isEdit" class="col-sm-9">
+                            <input
+                              :disabled="wizard.isEdit"
+                              type="text"
+                              v-model="wizard.review.PasswordEncrypt"
+                              class="form-control"
+                            />
+                          </div>
+                          <div v-else class="col-sm-9">
+                            <span>{{$t('backup.PasswordEncryptCreatedAfterSaved')}}</span>
+                          </div>
+                        </div>
                       </div>
                       <!-- -->
                       <!-- RSYNC -->
@@ -2100,6 +2130,49 @@
               ></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button class="btn btn-danger" type="submit">{{$t('delete')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="openViewPasswordEncryptionModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              {{$t('backup.DisplayTheResticPasswordEncryption')}} {{currentDataBackup.name}}
+            </h4>
+          </div>
+          <form class="form-horizontal">
+            <div class="modal-body">
+              <div class="form-group">
+                <label
+                  class="col-sm-5 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('backup.PasswordEncrypt')}}
+                <doc-info
+                  :placement="'left'"
+                  :title="$t('backup.PasswordEncrypt')"
+                  :chapter="'PasswordEncrypt'"
+                  :inline="true"
+                  ></doc-info>
+                </label>
+                <div class="col-sm-5">
+                  <input
+                    disabled
+                    type="text"
+                    v-model="currentDataBackup.PasswordEncrypt"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div
+                v-if="currentDataBackup.isLoading"
+                class="spinner spinner-sm form-spinner-loader"
+              ></div>
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('Close')}}</button>
             </div>
           </form>
         </div>
@@ -2490,6 +2563,7 @@ export default {
         },
         review: {
           Name: b && b.name ? b.name : "",
+          PasswordEncrypt: b && b.PasswordEncrypt  ? b.PasswordEncrypt : "",
           Notify: b && b.props.Notify ? b.props.Notify : "error",
           NotifyTo:
             b && b.props.NotifyTo
@@ -3378,6 +3452,11 @@ export default {
       this.currentDataBackup = this.initBackupData();
       this.currentDataBackup.name = b.name;
       $("#deleteDataModal").modal("show");
+    },
+    openViewPasswordEncryption(b) {
+      this.currentDataBackup.name = b.name;
+      this.currentDataBackup.PasswordEncrypt = b.PasswordEncrypt;
+      $("#openViewPasswordEncryptionModal").modal("show");
     },
     executeDataBackup(b) {
       var context = this;
