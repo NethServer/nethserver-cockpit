@@ -323,7 +323,11 @@
     "restore_network": "Restore network configuration",
     "skip_network_info": "Current network configuration will be preserved, but some applications may be disabled at the end of the process. After restoring, review the system configuration to re-enable all required applications.",
     "format_disk": "Format disk",
-    "format_disk_message": "Formatting will erase all data on this disk"
+    "format_disk_message": "Formatting will erase all data on this disk",
+    "DisplayTheResticPasswordEncryption": "Restic encryption password of",
+    "PasswordEncrypt": "Encryption password",
+    "ShowPasswordEncrypt": "Show password",
+    "PasswordEncryptCreatedAfterSaved": "The password of the encryption will be generated at the end of the wizard. To show it access the 'show password' button and keep it safe"
   },
   "disk_usage": {
     "title": "Disk usage",
@@ -1244,6 +1248,7 @@
     "disaster_recovery": "Disaster recovery",
     "user_settings_page": "Allow users to change their password and other settings on a web page outside Cockpit (on port 443). This feature can be enabled only if 'Override the shell of users' is enabled as well.",
     "OtpR2WOath_Auth": "The VPN policy requires the usage of OTP to access the network.",
-    "older_ssh_client_might_not_connect": "Hardening SSH could prevent old clients to connect to the server. Big files transfer can be slower with strong ciphers. The host key will change after restart and clients will have to accept it again."
+    "older_ssh_client_might_not_connect": "Hardening SSH could prevent old clients to connect to the server. Big files transfer can be slower with strong ciphers. The host key will change after restart and clients will have to accept it again.",
+    "PasswordEncrypt":"The data saved inside the destination storage is encrypted by this password, you have to keep it safe else your data will not be ever recoverable"
   }
 }
