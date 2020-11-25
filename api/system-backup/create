@@ -25,6 +25,7 @@ use warnings;
 use esmith::ConfigDB;
 use File::Temp;
 use JSON;
+use NethServer::Password;
 
 require '/usr/libexec/nethserver/api/lib/backup_functions.pl';
 
@@ -34,6 +35,11 @@ my $cmd = $input->{'action'};
 delete($input->{'action'});
 
 if($cmd eq 'create-backup-data') {
+
+    if ($input->{'engine'} eq 'restic') {
+        my $name = $input->{'name'};
+        NethServer::Password::store("restic_$name");
+    }
     set_backup($input);
 } else {
     error();

@@ -24,6 +24,7 @@ use strict;
 use warnings;
 use esmith::ConfigDB;
 use NethServer::BackupData;
+use NethServer::Password;
 use JSON;
 use File::stat;
 use URI;
@@ -244,6 +245,10 @@ if($cmd eq 'backup-info') {
         my $record = {'type' => 'backup', 'name' => $backup->key, 'props' => \%props, 'ready' => defined($props{'VFSType'}) ? 1 : 0 };
         $record->{'custom-includes'} = get_custom_includes($backup->key);
         $record->{'custom-excludes'} = get_custom_excludes($backup->key);
+        if ($backup->prop('type') eq 'restic') {
+            my $name = $backup->key;
+            $record->{'PasswordEncrypt'} = NethServer::Password::store("restic_$name");
+        }
         push(@backups,$record);
         my %stats = get_latest_stats($backup->key);
         push(@backups_status, \%stats);
