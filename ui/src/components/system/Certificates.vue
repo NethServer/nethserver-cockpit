@@ -483,7 +483,15 @@
                 <strong>{{$t('certificates.error')}}.</strong>
                 {{letsEncryptCertificate.errorMessage}}
               </div>
-
+              <div class="form-group">
+                <div class="col-sm-3 control-label"></div>
+                <div class="col-sm-9">
+                  <button @click="addKnownDomains()" class="btn btn-default" type="button">
+                    <span class="fa fa-plus card-icon-def"></span>
+                    {{$t('certificates.add_Knowndomain')}}
+                  </button>
+                </div>
+              </div>
               <div
                 v-for="(a, i) in letsEncryptCertificate.LetsEncryptDomains"
                 v-bind:key="i"
@@ -868,6 +876,11 @@ export default {
           ).map(function(i) {
             return { name: i };
           });
+          context.letsEncryptCertificate.KnownDomains = success.KnownDomains.split(
+            ","
+          ).map(function(i) {
+            return { name: i,hasError: false,message: ""}
+          });
           context.letsEncryptCertificate.LetsEncryptRenewDays =
             success.configuration.pki.props.LetsEncryptRenewDays;
 
@@ -1183,6 +1196,19 @@ export default {
           }
         }
       );
+    },
+    addKnownDomains() {
+
+      const existingDomain = 
+        this.letsEncryptCertificate.LetsEncryptDomains.filter(function( obj ) {
+          return obj.name !== '';
+        });;
+      const knownDomain = this.letsEncryptCertificate.KnownDomains;
+      this.letsEncryptCertificate.LetsEncryptDomains = 
+        Array.from(new Set(existingDomain.concat(knownDomain).map(a => a.name))).map(name => {
+          return existingDomain.concat(knownDomain).find(a => a.name === name)
+        });
+
     },
     addDomains(alias) {
       this.letsEncryptCertificate.LetsEncryptDomains.push({
