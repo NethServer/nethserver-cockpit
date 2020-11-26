@@ -108,7 +108,8 @@
     "nethserver-sogo": "SOGo",
     "nethserver-hotsync": "HotSync",
     "nethserver-blacklist": "Threat shield",
-    "nethserver-mssql": "Microsoft SQL Server"
+    "nethserver-mssql": "Microsoft SQL Server",
+    "nethserver-business": "Business Cube"
   },
   "dashboard": {
     "title": "Dashboard",
