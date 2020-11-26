@@ -390,7 +390,8 @@
     "cert_encrypt_ok": "Let's encrypt requested successfully!",
     "cert_encrypt_error": "Let's encrypt not requested.",
     "cert_self_ok": "Self-signed certificate edited successfully!",
-    "cert_self_error": "Self-signed certificate not edited."
+    "cert_self_error": "Self-signed certificate not edited.",
+    "add_Knowndomain": "Add all known FQDN"
   },
   "dns": {
     "title": "DNS",
