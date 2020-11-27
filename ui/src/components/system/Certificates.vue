@@ -871,7 +871,7 @@ export default {
 
           context.letsEncryptCertificate.LetsEncryptMail =
             success.configuration.pki.props.LetsEncryptMail;
-          context.letsEncryptCertificate.LetsEncryptDomains = success.configuration.pki.props.LetsEncryptDomains.split(
+          context.letsEncryptCertificate.LetsEncryptDomainsStatic = success.configuration.pki.props.LetsEncryptDomains.split(
             ","
           ).map(function(i) {
             return { name: i };
@@ -1109,6 +1109,7 @@ export default {
       this.letsEncryptCertificate.errors.LetsEncryptMail.hasError = false;
       this.letsEncryptCertificate.errors.LetsEncryptRenewDays.hasError = false;
       this.letsEncryptCertificate.errors.LetsEncryptDomains.hasError = false;
+      this.letsEncryptCertificate.LetsEncryptDomains = this.letsEncryptCertificate.LetsEncryptDomainsStatic;
       $("#requestLetsEncryptModal").modal("show");
     },
     requestLetsEncrypt(certificate) {
