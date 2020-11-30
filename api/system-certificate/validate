@@ -73,13 +73,13 @@ function validate_letsencrypt($props)
                     array_push($FailedDomain, $matches[1]);
                 }
             }
-           $v->addValidationError('LetsEncryptDomains', "letencrypt_domain_failed", implode(",",$FailedDomain));
+           $v->addValidationError('LetsEncryptDomains', "letsencrypt_domain_failed", implode(",",$FailedDomain));
            error($v);
        } elseif (preg_grep('/too many registrations/',$output)){
-           $v->addValidationError('LetsEncryptDomains', "letencrypt_registration_failed_rate_limit_reached");
+           $v->addValidationError('LetsEncryptDomains', "letsencrypt_registration_failed_rate_limit_reached");
            error($v);
         } else {
-           $v->addValidationError('LetsEncryptDomains', "letencrypt_unknow_error", implode(" ",$output));
+           $v->addValidationError('LetsEncryptDomains', "letsencrypt_unknow_error", implode(" ",$output));
            error($v);
        }
     }

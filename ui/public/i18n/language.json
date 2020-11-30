@@ -1128,7 +1128,6 @@
     "valid_ipV4Address": "Invalid address",
     "valid_ipV4Netmask": "Invalid IPv4 network mask: it should be something like '255.255.255.0'",
     "all_domains_must_be_fqdn": "All domains must be valid FQDN (Fully Qualified Domain Name)",
-    "letencrypt_domain_failed": "Challenge failed for this domain(s)",
     "invalid_x509_ceritficate": "X.509 certificate (PEM encoding)",
     "invalid_x509_key": "RSA or EC private key (PEM encoding)",
     "cert_safetyguard": "The selected ECC certificate is not compatible with the current TLS policy",
@@ -1218,7 +1217,10 @@
     "TokenValidationError": "Verification code is not valid.",
     "TokenValidationOK": "Verification code is valid!",
     "valid_hostname_0_9223372036854775807":"Invalid domain name, it must be something like 'domain.org'",
-    "Host_already_in_use_by_another_smarthost_relay": "This smart host is already used for another smart host relay, you cannot use it as default for the server"
+    "Host_already_in_use_by_another_smarthost_relay": "This smart host is already used for another smart host relay, you cannot use it as default for the server",
+    "letsencrypt_registration_failed_rate_limit_reached": "you made more requests than allowed, you must wait 3 hours before to request a certificate again or change your external IP",
+    "letsencrypt_unknow_error":"Challenge failed, please read the error message",
+    "letsencrypt_domain_failed": "Challenge failed for this domain(s)"
   },
   "docs": {
     "more_info_about": "More info about",
