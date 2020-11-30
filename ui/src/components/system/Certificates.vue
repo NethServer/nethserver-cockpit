@@ -506,7 +506,7 @@
                   <span
                     v-if="letsEncryptCertificate.errors.LetsEncryptDomains.hasError"
                     class="help-block"
-                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+letsEncryptCertificate.errors.LetsEncryptDomains.message)}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+letsEncryptCertificate.errors.LetsEncryptDomains.message)}} {{letsEncryptCertificate.errors.LetsEncryptDomains.value}}</span>
                 </div>
                 <div class="col-xs-5 col-sm-2">
                   <button
@@ -807,7 +807,8 @@ export default {
           },
           LetsEncryptDomains: {
             hasError: false,
-            message: ""
+            message: "",
+            value: ""
           }
         },
         LetsEncryptDomains: [
@@ -1191,6 +1192,8 @@ export default {
               ].hasError = true;
               context.letsEncryptCertificate.errors[attr.parameter].message =
                 attr.error;
+              context.letsEncryptCertificate.errors[attr.parameter].value =
+                attr.value;
             }
           } catch (e) {
             console.error(e);
