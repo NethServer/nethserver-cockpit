@@ -62,11 +62,26 @@ function validate_letsencrypt($props)
         error($v);
     }
 
-    $cmd = "/usr/libexec/nethserver/letsencrypt-certs -e '".escapeshellarg($props['LetsEncryptMail'])."' -t -d ". escapeshellarg(join(",",$domains))." 2>&1";
+    $cmd = "LC_ALL=C /usr/libexec/nethserver/letsencrypt-certs -e '".escapeshellarg($props['LetsEncryptMail'])."' -t -d ". escapeshellarg(join(",",$domains))." 2>&1";
     exec($cmd, $output, $ret);
+
     if ($ret!=0) {
-        $v->addValidationError('LetsEncryptDomains', "letencrypt_domain_failed");
-        error($v);
+        $FailedDomain = array();
+        if (preg_grep('/Challenge failed/',$output)) {
+            foreach ($output as $line) {
+                if (preg_match('/Challenge failed for domain\s+(.*)$/',$line, $matches)) {
+                    array_push($FailedDomain, $matches[1]);
+                }
+            }
+           $v->addValidationError('LetsEncryptDomains', "letencrypt_domain_failed", implode(",",$FailedDomain));
+           error($v);
+       } elseif (preg_grep('/too many registrations/',$output)){
+           $v->addValidationError('LetsEncryptDomains', "letencrypt_registration_failed_rate_limit_reached");
+           error($v);
+        } else {
+           $v->addValidationError('LetsEncryptDomains', "letencrypt_unknow_error", implode(" ",$output));
+           error($v);
+       }
     }
     if ($v->validate()) {
         success();
