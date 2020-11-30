@@ -31,7 +31,6 @@ use esmith::ConfigDB;
 
 my $db = esmith::db->open("configuration");
 my $dbh = esmith::ConfigDB->open("hosts")   || esmith::ConfigDB->create('hosts');
-my $dbd = esmith::ConfigDB->open("domains") || esmith::ConfigDB->create('domains');
 
 our $out;
 
@@ -69,10 +68,6 @@ if ($cmd eq 'list') {
     # Output all know  domains/FQDN of the server
     my @domains = ();
 
-    foreach my $d ($dbd->get_all()) {
-        my $domain = $d->key;
-        push @domains, $domain;
-    }
     foreach my $h ($dbh->get_all_by_prop('type'=>'self')) {
         my $domain = $h->key;
         push @domains, $domain;
