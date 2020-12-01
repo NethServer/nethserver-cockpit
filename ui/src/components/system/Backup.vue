@@ -1928,14 +1928,7 @@
                           <label
                             class="col-sm-3 control-label"
                             for="textInput-modal-markup"
-                          >{{$t('backup.PasswordEncrypt')}}
-                            <doc-info
-                              :placement="'top'"
-                              :title="$t('backup.PasswordEncrypt')"
-                              :chapter="'PasswordEncrypt'"
-                              :inline="true"
-                            ></doc-info>
-                          </label>
+                          >{{$t('backup.PasswordEncrypt')}}</label>
                           <div v-if="wizard.isEdit" class="col-sm-9">
                             <input
                               :disabled="wizard.isEdit"
@@ -1947,6 +1940,11 @@
                           <div v-else class="col-sm-9">
                             <span>{{$t('backup.PasswordEncryptCreatedAfterSaved')}}</span>
                           </div>
+                        </div>
+                        <div class="alert alert-info alert-dismissable col-sm-12">
+                          <span class="pficon pficon-info"></span>
+                          <strong>{{$t('info')}}:</strong>
+                          {{$t('backup.PasswordEncryptWarning')}}.
                         </div>
                       </div>
                       <!-- -->
