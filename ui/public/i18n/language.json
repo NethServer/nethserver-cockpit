@@ -391,7 +391,7 @@
     "cert_encrypt_error": "Let's encrypt not requested.",
     "cert_self_ok": "Self-signed certificate edited successfully!",
     "cert_self_error": "Self-signed certificate not edited.",
-    "add_Knowndomain": "Add all known FQDN"
+    "add_Knowndomain": "Add all known FQDNs"
   },
   "dns": {
     "title": "DNS",
@@ -1218,8 +1218,8 @@
     "TokenValidationOK": "Verification code is valid!",
     "valid_hostname_0_9223372036854775807":"Invalid domain name, it must be something like 'domain.org'",
     "Host_already_in_use_by_another_smarthost_relay": "This smart host is already used for another smart host relay, you cannot use it as default for the server",
-    "letsencrypt_registration_failed_rate_limit_reached": "you made more requests than allowed, you must wait 3 hours before to request a certificate again or change your external IP",
-    "letsencrypt_unknow_error":"Challenge failed, please read the error message",
+    "letsencrypt_registration_failed_rate_limit_reached": "Rate limit reached. Please wait at least 3 hours before performing a new request or make sure to change your public IP address",
+    "letsencrypt_unknow_error":"Challenge failed, please see the error message below.",
     "letsencrypt_domain_failed": "Challenge failed for this domain(s)"
   },
   "docs": {
