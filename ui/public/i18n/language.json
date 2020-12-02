@@ -326,10 +326,10 @@
     "format_disk": "Format disk",
     "format_disk_message": "Formatting will erase all data on this disk",
     "DisplayTheResticPasswordEncryption": "Restic encryption secret for",
-    "PasswordEncrypt": "Encryption password",
-    "ShowPasswordEncrypt": "Show restic password",
+    "PasswordEncrypt": "Encryption secret",
+    "ShowPasswordEncrypt": "Show restic secret",
     "PasswordEncryptCreatedAfterSaved": "Encryption secret will be generated at the end of the wizard. To show it, click on the 'Show restic secret' button.",
-    "PasswordEncryptWarning":"The data saved inside the destination storage are encrypted using this secret. Please store the secret on a safe place. Without this secret, you will not be able restore the data backup."
+    "PasswordEncryptWarning":"The data saved inside the destination storage are encrypted using the 'Encryption secret' above. Please store the secret on a safe place. Without this secret, you will not be able restore the data backup."
   },
   "disk_usage": {
     "title": "Disk usage",
