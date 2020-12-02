@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.7.12
+Version: 1.7.13
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,10 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Wed Dec 02 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.13-1
+- Display the restic backup secret - NethServer/dev#6346
+- Business Cube: improve Cockpit interface - Bug NethServer/dev#6349
+
 * Wed Nov 18 2020 Davide Principi <davide.principi@nethesis.it> - 1.7.12-1
 - New NethServer 7.9.2009 defaults - NethServer/dev#6320
 - Fix undefined references (NethServer/nethserver-cockpit#298)
