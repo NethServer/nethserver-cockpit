@@ -483,15 +483,6 @@
                 <strong>{{$t('certificates.error')}}.</strong>
                 {{letsEncryptCertificate.errorMessage}}
               </div>
-              <div class="form-group">
-                <div class="col-sm-3 control-label"></div>
-                <div class="col-sm-9">
-                  <button @click="addKnownDomains()" class="btn btn-default" type="button">
-                    <span class="fa fa-plus card-icon-def"></span>
-                    {{$t('certificates.add_Knowndomain')}}
-                  </button>
-                </div>
-              </div>
               <div
                 v-for="(a, i) in letsEncryptCertificate.LetsEncryptDomains"
                 v-bind:key="i"
@@ -525,6 +516,10 @@
                   <button @click="addDomains()" class="btn btn-default" type="button">
                     <span class="fa fa-plus card-icon-def"></span>
                     {{$t('certificates.add_domain')}}
+                  </button>
+                  <button @click="addKnownDomains()" class="mg-left-5 btn btn-default" type="button">
+                    <span class="fa fa-plus card-icon-def"></span>
+                    {{$t('certificates.add_Knowndomain')}}
                   </button>
                 </div>
               </div>
@@ -1293,4 +1288,7 @@ export default {
 </script>
 
 <style>
+.mg-left-5 {
+  margin-left: 5px;
+}
 </style>
