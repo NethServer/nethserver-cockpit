@@ -27,8 +27,11 @@ require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
 
 use JSON;
 use esmith::db;
+use esmith::ConfigDB;
 
 my $db = esmith::db->open("configuration");
+my $dbh = esmith::ConfigDB->open("hosts")   || esmith::ConfigDB->create('hosts');
+
 our $out;
 
 sub set_default {
@@ -61,6 +64,20 @@ if ($cmd eq 'list') {
     set_default('CommonName','NethServer');
     set_default('EmailAddress',"");
     set_default('SubjectAltName',$db->get_type('DomainName'));
+
+    # Output all know  domains/FQDN of the server
+    my @domains = ();
+
+    foreach my $h ($dbh->get_all_by_prop('type'=>'self')) {
+        my $domain = $h->key;
+        push @domains, $domain;
+    }
+
+    push @domains, $db->get('SystemName').'.'.$db->get('DomainName'),$db->get('DomainName');
+    my $domains = join (',',do { my %seen; grep { !$seen{$_}++ } @domains });
+
+    $out->{'KnownDomains'} = $domains;
+
 } elsif ($cmd eq 'info') {
     my $name = $input->{'name'};
     $out->{'certificate'} = `/usr/libexec/nethserver/pki-info -s $name | base64 -w 0`;

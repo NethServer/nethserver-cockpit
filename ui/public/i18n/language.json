@@ -392,7 +392,8 @@
     "cert_encrypt_ok": "Let's encrypt requested successfully!",
     "cert_encrypt_error": "Let's encrypt not requested.",
     "cert_self_ok": "Self-signed certificate edited successfully!",
-    "cert_self_error": "Self-signed certificate not edited."
+    "cert_self_error": "Self-signed certificate not edited.",
+    "add_Knowndomain": "Add all known FQDNs"
   },
   "dns": {
     "title": "DNS",
@@ -1129,7 +1130,6 @@
     "valid_ipV4Address": "Invalid address",
     "valid_ipV4Netmask": "Invalid IPv4 network mask: it should be something like '255.255.255.0'",
     "all_domains_must_be_fqdn": "All domains must be valid FQDN (Fully Qualified Domain Name)",
-    "letencrypt_domain_failed": "Challenge failed for this domain(s)",
     "invalid_x509_ceritficate": "X.509 certificate (PEM encoding)",
     "invalid_x509_key": "RSA or EC private key (PEM encoding)",
     "cert_safetyguard": "The selected ECC certificate is not compatible with the current TLS policy",
@@ -1219,7 +1219,10 @@
     "TokenValidationError": "Verification code is not valid.",
     "TokenValidationOK": "Verification code is valid!",
     "valid_hostname_0_9223372036854775807":"Invalid domain name, it must be something like 'domain.org'",
-    "Host_already_in_use_by_another_smarthost_relay": "This smart host is already used for another smart host relay, you cannot use it as default for the server"
+    "Host_already_in_use_by_another_smarthost_relay": "This smart host is already used for another smart host relay, you cannot use it as default for the server",
+    "letsencrypt_registration_failed_rate_limit_reached": "Rate limit reached. Please wait at least 3 hours before performing a new request or make sure to change your public IP address",
+    "letsencrypt_unknow_error":"Challenge failed, please see the error message below.",
+    "letsencrypt_domain_failed": "Challenge failed for this domain(s)"
   },
   "docs": {
     "more_info_about": "More info about",

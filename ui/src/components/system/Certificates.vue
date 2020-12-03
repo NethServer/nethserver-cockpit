@@ -483,7 +483,6 @@
                 <strong>{{$t('certificates.error')}}.</strong>
                 {{letsEncryptCertificate.errorMessage}}
               </div>
-
               <div
                 v-for="(a, i) in letsEncryptCertificate.LetsEncryptDomains"
                 v-bind:key="i"
@@ -498,7 +497,7 @@
                   <span
                     v-if="letsEncryptCertificate.errors.LetsEncryptDomains.hasError"
                     class="help-block"
-                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+letsEncryptCertificate.errors.LetsEncryptDomains.message)}}</span>
+                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+letsEncryptCertificate.errors.LetsEncryptDomains.message)}} {{letsEncryptCertificate.errors.LetsEncryptDomains.value}}</span>
                 </div>
                 <div class="col-xs-5 col-sm-2">
                   <button
@@ -517,6 +516,10 @@
                   <button @click="addDomains()" class="btn btn-default" type="button">
                     <span class="fa fa-plus card-icon-def"></span>
                     {{$t('certificates.add_domain')}}
+                  </button>
+                  <button @click="addKnownDomains()" class="mg-left-5 btn btn-default" type="button">
+                    <span class="fa fa-plus card-icon-def"></span>
+                    {{$t('certificates.add_Knowndomain')}}
                   </button>
                 </div>
               </div>
@@ -799,7 +802,8 @@ export default {
           },
           LetsEncryptDomains: {
             hasError: false,
-            message: ""
+            message: "",
+            value: ""
           }
         },
         LetsEncryptDomains: [
@@ -863,10 +867,15 @@ export default {
 
           context.letsEncryptCertificate.LetsEncryptMail =
             success.configuration.pki.props.LetsEncryptMail;
-          context.letsEncryptCertificate.LetsEncryptDomains = success.configuration.pki.props.LetsEncryptDomains.split(
+          context.letsEncryptCertificate.LetsEncryptDomainsStatic = success.configuration.pki.props.LetsEncryptDomains.split(
             ","
           ).map(function(i) {
             return { name: i };
+          });
+          context.letsEncryptCertificate.KnownDomains = success.KnownDomains.split(
+            ","
+          ).map(function(i) {
+            return { name: i,hasError: false,message: ""}
           });
           context.letsEncryptCertificate.LetsEncryptRenewDays =
             success.configuration.pki.props.LetsEncryptRenewDays;
@@ -1096,6 +1105,7 @@ export default {
       this.letsEncryptCertificate.errors.LetsEncryptMail.hasError = false;
       this.letsEncryptCertificate.errors.LetsEncryptRenewDays.hasError = false;
       this.letsEncryptCertificate.errors.LetsEncryptDomains.hasError = false;
+      this.letsEncryptCertificate.LetsEncryptDomains = this.letsEncryptCertificate.LetsEncryptDomainsStatic;
       $("#requestLetsEncryptModal").modal("show");
     },
     requestLetsEncrypt(certificate) {
@@ -1177,12 +1187,27 @@ export default {
               ].hasError = true;
               context.letsEncryptCertificate.errors[attr.parameter].message =
                 attr.error;
+              context.letsEncryptCertificate.errors[attr.parameter].value =
+                attr.value;
             }
           } catch (e) {
             console.error(e);
           }
         }
       );
+    },
+    addKnownDomains() {
+
+      const existingDomain = 
+        this.letsEncryptCertificate.LetsEncryptDomains.filter(function( obj ) {
+          return obj.name !== '';
+        });;
+      const knownDomain = this.letsEncryptCertificate.KnownDomains;
+      this.letsEncryptCertificate.LetsEncryptDomains = 
+        Array.from(new Set(existingDomain.concat(knownDomain).map(a => a.name))).map(name => {
+          return existingDomain.concat(knownDomain).find(a => a.name === name)
+        });
+
     },
     addDomains(alias) {
       this.letsEncryptCertificate.LetsEncryptDomains.push({
@@ -1263,4 +1288,7 @@ export default {
 </script>
 
 <style>
+.mg-left-5 {
+  margin-left: 5px;
+}
 </style>
