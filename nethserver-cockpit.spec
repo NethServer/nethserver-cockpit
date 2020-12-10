@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.7.13
+Version: 1.7.14
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Thu Dec 10 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.14-1
+- LetsEncrypt: Create a certificate with all known FQDN - NethServer/dev#6353
+
 * Wed Dec 02 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.13-1
 - Display the restic backup secret - NethServer/dev#6346
 - Business Cube: improve Cockpit interface - Bug NethServer/dev#6349
