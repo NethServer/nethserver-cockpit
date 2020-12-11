@@ -113,8 +113,8 @@
                   {{$t('certificates.set_as_default')}}
                 </a>
               </li>
-              <li v-if="!props.row.default && props.row.file !== '/etc/pki/tls/certs/NSRV.crt'" role="presentation" class="divider"></li>
-              <li v-if="!props.row.default && props.row.file !== '/etc/pki/tls/certs/NSRV.crt'">
+              <li v-if="!props.row.default && !props.row.builtin" role="presentation" class="divider"></li>
+              <li v-if="!props.row.default && !props.row.builtin">
                 <a @click="openDeleteModal(props.row)">
                   <span class="fa fa-times span-right-margin"></span>
                   {{$t('certificates.delete')}}
