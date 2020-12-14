@@ -113,6 +113,13 @@
                   {{$t('certificates.set_as_default')}}
                 </a>
               </li>
+              <li v-if="!props.row.default && !props.row.builtin" role="presentation" class="divider"></li>
+              <li v-if="!props.row.default && !props.row.builtin">
+                <a @click="openDeleteModal(props.row)">
+                  <span class="fa fa-times span-right-margin"></span>
+                  {{$t('certificates.delete')}}
+                </a>
+              </li>
             </ul>
           </div>
         </span>
@@ -635,6 +642,29 @@
         </div>
       </div>
     </div>
+    <div class="modal" id="OpenDeleteModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{$t('certificates.delete_certificate')}}  <code>{{selectedCertificate.file}}</code></h4>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="deleteCertificate(selectedCertificate)">
+            <div class="modal-body">
+              <div class="form-group">
+                <label
+                  class="col-sm-3 control-label"
+                  for="textInput-modal-markup"
+                >{{$t('are_you_sure')}}?</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
+              <button class="btn btn-danger" type="submit">{{$t('delete')}}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -892,6 +922,43 @@ export default {
         console.debug(certificate);
         this.selectedCertificate = certificate;
         $("#setDefaultModal").modal("show");
+    },
+    openDeleteModal(certificate) {
+        console.debug(certificate);
+        this.selectedCertificate = certificate;
+        $("#OpenDeleteModal").modal("show");
+    },
+    deleteCertificate(selectedCertificate) {
+      var context = this;
+
+      $("#OpenDeleteModal").modal("hide");
+      context.exec(
+        ["system-certificate/update"],
+        {
+          action: "delete",
+          file: selectedCertificate.file,
+          key: selectedCertificate.key,
+          chain: selectedCertificate.chain
+        },
+        function(stream) {
+          console.info("certificate-delete", stream);
+        },
+        function(success) {
+          // notification
+          context.$parent.notifications.success.message = context.$i18n.t(
+            "certificates.deletion_ok"
+          );
+
+          // get certificate info
+          context.getCertificates()
+        },
+        function(error, data) {
+          // notification
+          context.$parent.notifications.error.message = context.$i18n.t(
+            "certificates.deletion_error"
+          );
+        }
+      );
     },
     openUploadCertificate() {
       this.newCertificate = {

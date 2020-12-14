@@ -63,4 +63,17 @@ case $action in
         /sbin/e-smith/signal-event -j certificate-update
        ;;
 
+    "delete")
+
+        file=$(echo $data | jq -r '.file')
+        key=$(echo $data | jq -r '.key')
+        chain=$(echo $data | jq -r '.chain')
+
+        /usr/bin/rm -f "$file"
+        /usr/bin/rm -f "$key"
+        /usr/bin/rm -f "$chain"
+
+        ;;
+
+
 esac

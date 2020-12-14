@@ -393,7 +393,11 @@
     "cert_encrypt_error": "Let's encrypt not requested.",
     "cert_self_ok": "Self-signed certificate edited successfully!",
     "cert_self_error": "Self-signed certificate not edited.",
-    "add_Knowndomain": "Add all known FQDNs"
+    "add_Knowndomain": "Add all known FQDNs",
+    "delete": "Delete",
+    "delete_certificate": "Delete the certificate",
+    "deletion_ok": "The certificate has been deleted",
+    "deletion_error": "The certificate has not been deleted"
   },
   "dns": {
     "title": "DNS",

@@ -51,6 +51,7 @@ if ($cmd eq 'list') {
     $out->{'status'} = '';
     my @certs;
     foreach my $crt (values decode_json(`/usr/libexec/nethserver/cert-list`)) {
+        $crt->{'builtin'} = ($crt->{'file'} eq '/etc/pki/tls/certs/NSRV.crt') ? 1 : 0 ;
         push(@certs, $crt);
     }
     $out->{'configuration'}{'certificates'} = \@certs;
