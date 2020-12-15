@@ -127,7 +127,7 @@ class Validator implements MandatoryValidatorInterface
             $setToShow = $set;
         }
 
-        $messageTemplate = array('valid_memberOf', array(implode(', ', $setToShow)));
+        $messageTemplate = array('valid_memberOf', array(implode(',', $setToShow)));
 
         return $this->addToChain(__FUNCTION__, $messageTemplate, $set);
     }
