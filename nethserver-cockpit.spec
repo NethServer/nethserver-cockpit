@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.7.15
+Version: 1.7.16
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,10 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Wed Dec 16 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.16-1
+- Cockpit validator of memberOf uses space in the message - Bug NethServer/dev#6365
+- Google Chrome 87 prevents access to WebTop - Bug NethServer/dev#6364
+
 * Wed Dec 16 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.15-1
 - Cockpit: delete a certificate from the UI - NethServer/dev#6362
 
