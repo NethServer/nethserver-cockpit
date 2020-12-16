@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.7.14
+Version: 1.7.15
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Wed Dec 16 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.15-1
+- Cockpit: delete a certificate from the UI - NethServer/dev#6362
+
 * Thu Dec 10 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.14-1
 - LetsEncrypt: Create a certificate with all known FQDN - NethServer/dev#6353
 
