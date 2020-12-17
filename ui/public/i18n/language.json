@@ -1091,6 +1091,7 @@
     "subscription": "Subscription",
     "support_active": "A remote support session is active",
     "hostname_should_not_contain_localdomain": "The hostname should not contain 'localdomain'",
+    "hostname_should_be_third_level_domain": "The hostname must have a second level domain suffix, like \"host.example.com\"",
     "first_hostname_part_maximum_length_15": "First hostname part must be maximum 15 characters lenght",
     "unmapped_interface_from_restore": "This interface has not been activated after the restore. Assign the role to a new interface or remove it",
     "network_recovery_mode": "The system is configured with a temporary IP address by the network-recovery tool: any change to this page will restore the network configuration as set below."
