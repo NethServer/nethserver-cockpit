@@ -79,7 +79,7 @@
           </a>
         </span>
         <span v-if="props.column.field == 'issuer'">
-          {{ props.row.issuer}}
+          {{ props.row.issuer | textOverflow }}
         </span>
         <span v-if="props.column.field == 'expires'">
           <span :class="['fa', props.row.expired ? 'fa-clock-o red' : '']"></span>
