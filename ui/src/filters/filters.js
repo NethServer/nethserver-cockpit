@@ -141,6 +141,13 @@ var Filters = {
   },
   sanitize: function (value) {
     return value.replace(/^[^a-z]+|[^\w-]+/gi, "");
+  },
+  textOverflow: function (value) {
+    if (value.length > 50) {
+        return value.substring(0,50) + '...';
+    } else {
+        return value;
+    }
   }
 };
 
