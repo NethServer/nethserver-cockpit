@@ -71,7 +71,10 @@
             {{props.row.external ? $t('applications.open') : $t('applications.settings')}}
           </a>
           <div
-            v-if="props.row.editable == 1 && !props.row.legacy  && (view.isRoot || ( view.isAdmin && props.row.id !== 'nethserver-httpd' && hideUninstall === 'disabled'))"
+            v-if="!props.row.legacy && (
+              props.row.editable == 1 && !props.row.external && view.isRoot ||
+              (view.isRoot || (view.isAdmin && props.row.id !== 'nethserver-httpd')) && hideUninstall === 'disabled'
+            )"
             class="dropup pull-right dropdown-kebab-pf"
           >
             <button
@@ -103,11 +106,12 @@
                 </a>
               </li>
               <li
-                v-if="props.row.editable == 1 && !props.row.external && view.isRoot && hideUninstall === 'disabled'"
+                v-if="props.row.editable == 1 && !props.row.external && view.isRoot &&
+                  (view.isRoot || (view.isAdmin && props.row.id !== 'nethserver-httpd')) && hideUninstall === 'disabled'"
                 role="presentation"
                 class="divider"
               ></li>
-              <li v-if="(view.isRoot || view.isAdmin) && hideUninstall === 'disabled'">
+              <li v-if="(view.isRoot || (view.isAdmin && props.row.id !== 'nethserver-httpd')) && hideUninstall === 'disabled'">
                 <a @click="openRemoveApp(props.row)">
                   <span class="fa fa-times action-icon-menu"></span>
                   {{$t('applications.remove')}}
