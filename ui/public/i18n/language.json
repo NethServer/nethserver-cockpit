@@ -87,7 +87,7 @@
     "nethserver-dedalo": "Hotspot unit",
     "nethserver-ejabberd": "Ejabberd",
     "nethserver-fail2ban": "Fail2Ban",
-    "nethserver-firewall-base-ui": "Firewall",
+    "nethserver-firewall-base": "Firewall",
     "nethserver-freepbx": "FreePBX",
     "nethserver-httpd": "Web server",
     "nethserver-hylafax": "HylaFax",
