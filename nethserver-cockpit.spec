@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.7.18
+Version: 1.7.19
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Fri Jan 08 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.19-1
+- Firewall: application name change breaks delegation - Bug NethServer/dev#6388
+
 * Wed Dec 23 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.18-1
 - Applications page: empty kebab menu for external applications - Bug NethServer/dev#6374
 
