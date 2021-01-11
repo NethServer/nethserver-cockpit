@@ -2753,6 +2753,12 @@ export default {
 
     openCreateUser() {
       this.newUser = this.initUser();
+
+      // propose global PassExpires value as default value for user exipres attribute
+      if (this.passwordPolicy.PassExpires == true || this.passwordPolicy.PassExpires == 'yes') {
+          this.newUser.expires = true;
+      }
+
       $("#createUserModal").modal("show");
     },
 
