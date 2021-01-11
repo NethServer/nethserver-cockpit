@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.7.19
+Version: 1.7.20
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon Jan 11 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.20-1
+- UI issue on tables using vue-good-table - Bug NethServer/dev#6390
+
 * Fri Jan 08 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.19-1
 - Firewall: application name change breaks delegation - Bug NethServer/dev#6388
 
