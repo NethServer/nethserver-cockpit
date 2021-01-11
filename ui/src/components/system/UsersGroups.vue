@@ -2834,6 +2834,12 @@ export default {
       this.newUser.loadGroups = true;
       this.newUser.expires =
         this.newUser.expires == true || user.expires == "yes" ? true : false;
+
+      // override local value with global prop
+      if (this.passwordPolicy.PassExpires == false || this.passwordPolicy.PassExpires == 'no') {
+          this.newUser.expires = false;
+      }
+
       this.newUser.shell =
         this.newUser.shell == true || user.shell == "/bin/bash" ? true : false;
 
