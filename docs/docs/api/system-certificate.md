@@ -66,7 +66,6 @@ Example:
         "Locality": "",
         "LetsEncryptDomains": "",
         "CommonName": "",
-        "LetsEncryptRenewDays": "30",
         "LetsEncrypt": "disabled",
         "CountryCode": "",
         "OrganizationalUnitName": ""
@@ -132,7 +131,6 @@ Constraints for `lets-encrypt`:
 
 - LetsEncryptMail: empty or valid mail address
 - LetsEncryptDomains: comma-separated list of FQDNs
-- LetsEncryptRenewDays: and integer greater than 10 and lower than 90
 - Check all Let's Encrypt conditions are met
 
 Constraints for `upload`:
@@ -178,15 +176,13 @@ Manfatory fields:
 - `action` must be set to `lets-encrypt`
 - `LetsEncryptMail`
 - `LetsEncryptDomains`
-- `LetsEncryptRenewDays`
 
 Example:
 ```json
 {
   "props": {
     "LetsEncryptMail": "",
-    "LetsEncryptDomains": "test.local.net",
-    "LetsEncryptRenewDays": "30",
+    "LetsEncryptDomains": "test.local.net"
   },
   "action": "lets-encrypt"
 }

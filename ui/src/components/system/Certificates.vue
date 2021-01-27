@@ -554,26 +554,6 @@
                   >
                 </div>
               </div>
-              <div
-                v-show="letsEncryptCertificate.advanced"
-                :class="['form-group', letsEncryptCertificate.errors.LetsEncryptRenewDays.hasError ? 'has-error' : '']"
-              >
-                <label
-                  class="col-sm-3 control-label"
-                  for="textInput-modal-markup"
-                >{{$t('certificates.renew_days')}}</label>
-                <div class="col-sm-9">
-                  <input
-                    type="number"
-                    v-model="letsEncryptCertificate.LetsEncryptRenewDays"
-                    class="form-control"
-                  >
-                  <span
-                    v-if="letsEncryptCertificate.errors.LetsEncryptRenewDays.hasError"
-                    class="help-block"
-                  >{{$t('validation.validation_failed')}}: {{$t('validation.'+letsEncryptCertificate.errors.LetsEncryptRenewDays.message)}}</span>
-                </div>
-              </div>
 
               <div v-if="letsEncryptCertificate.testLetsEncrypt" class="form-group">
                 <div class="col-sm-12">
@@ -826,10 +806,6 @@ export default {
             hasError: false,
             message: ""
           },
-          LetsEncryptRenewDays: {
-            hasError: false,
-            message: ""
-          },
           LetsEncryptDomains: {
             hasError: false,
             message: "",
@@ -844,7 +820,6 @@ export default {
           }
         ],
         LetsEncryptMail: "",
-        LetsEncryptRenewDays: 0,
         advanced: false
       }
     };
@@ -907,8 +882,6 @@ export default {
           ).map(function(i) {
             return { name: i,hasError: false,message: ""}
           });
-          context.letsEncryptCertificate.LetsEncryptRenewDays =
-            success.configuration.pki.props.LetsEncryptRenewDays;
 
           context.view.isLoaded = true;
         },
@@ -1170,7 +1143,6 @@ export default {
 
     openRequestLetsEncrypt() {
       this.letsEncryptCertificate.errors.LetsEncryptMail.hasError = false;
-      this.letsEncryptCertificate.errors.LetsEncryptRenewDays.hasError = false;
       this.letsEncryptCertificate.errors.LetsEncryptDomains.hasError = false;
       this.letsEncryptCertificate.LetsEncryptDomains = this.letsEncryptCertificate.LetsEncryptDomainsStatic;
       $("#requestLetsEncryptModal").modal("show");
@@ -1188,14 +1160,12 @@ export default {
         props: {
           LetsEncryptMail: certificate.LetsEncryptMail,
           LetsEncryptDomains: domainsPlain.join(","),
-          LetsEncryptRenewDays: certificate.LetsEncryptRenewDays
         },
         action: "lets-encrypt"
       };
 
       context.letsEncryptCertificate.errors.isLoading = true;
       context.letsEncryptCertificate.errors.LetsEncryptMail.hasError = false;
-      context.letsEncryptCertificate.errors.LetsEncryptRenewDays.hasError = false;
       context.letsEncryptCertificate.errors.LetsEncryptDomains.hasError = false;
 
       context.exec(
@@ -1240,7 +1210,6 @@ export default {
           var errorData = {};
           context.letsEncryptCertificate.errors.isLoading = false;
           context.letsEncryptCertificate.errors.LetsEncryptMail.hasError = false;
-          context.letsEncryptCertificate.errors.LetsEncryptRenewDays.hasError = false;
           context.letsEncryptCertificate.errors.LetsEncryptDomains.hasError = false;
 
           try {

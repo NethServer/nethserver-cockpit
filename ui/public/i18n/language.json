@@ -377,7 +377,6 @@
     "domain": "Domain",
     "domains": "Domains",
     "add_domain": "Add domain",
-    "renew_days": "Renew days",
     "request": "Request",
     "cockpit_reload_warning_title": "Notice.",
     "cockpit_reload_warning_message": "The new certificate is applied to the Cockpit Server Manager 90 seconds after the last user disconnects.",
