@@ -58,7 +58,7 @@ case $action in
        ;;
 
     "lets-encrypt")
-        /sbin/e-smith/config setprop pki LetsEncryptMail "$(_get LetsEncryptMail)" LetsEncryptDomains "$(_get LetsEncryptDomains)" LetsEncryptRenewDays "$(_get LetsEncryptRenewDays)"
+        /sbin/e-smith/config setprop pki LetsEncryptMail "$(_get LetsEncryptMail)" LetsEncryptDomains "$(_get LetsEncryptDomains)"
         /usr/libexec/nethserver/letsencrypt-certs -f
         /sbin/e-smith/signal-event -j certificate-update
        ;;

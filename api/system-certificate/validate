@@ -46,7 +46,6 @@ function validate_letsencrypt($props)
     $v = new LegacyValidator($props);
     $mailValidator = $v->createValidator()->orValidator($v->createValidator(Validate::EMAIL), $v->createValidator(Validate::EMPTYSTRING));
     $v->declareParameter('LetsEncryptMail', $mailValidator);
-    $v->declareParameter('LetsEncryptRenewDays', $v->createValidator()->greatThan(10)->lessThan(90));
 
     $hostnameValidator = $v->createValidator(Validate::HOSTNAME_FQDN);
     $domains = array_filter(preg_split('/[,\s]+/', $props['LetsEncryptDomains']));
