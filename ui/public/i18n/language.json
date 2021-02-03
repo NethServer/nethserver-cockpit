@@ -349,7 +349,7 @@
     "title": "Certificates",
     "upload_certificates": "Upload certificate",
     "edit_self_signed": "Edit self-signed certificate",
-    "request_lets_encrypt": "Request Let's Encrypt certificate",
+    "request_lets_encrypt": "Let's Encrypt certificate",
     "name": "Name",
     "file": "File",
     "issuer": "Issuer",
