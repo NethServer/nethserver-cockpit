@@ -12,11 +12,11 @@
     <h3>{{$t('actions')}}</h3>
     <div class="btn-group">
       <button
-        @click="openUploadCertificate()"
+        @click="openRequestLetsEncrypt()"
         class="btn btn-primary btn-lg shutdown-privileged"
         data-action="restart"
         data-container="body"
-      >{{$t('certificates.upload_certificates')}}</button>
+      >{{$t('certificates.request_lets_encrypt')}}</button>
       <button
         data-toggle="dropdown"
         class="btn btn-primary btn-lg dropdown-toggle shutdown-privileged"
@@ -26,10 +26,10 @@
       <ul role="menu" class="dropdown-menu">
         <li class="presentation">
           <a
-            @click="openUploadCertificate()"
+            @click="openRequestLetsEncrypt()"
             role="menuitem"
             data-action="restart"
-          >{{$t('certificates.upload_certificates')}}</a>
+          >{{$t('certificates.request_lets_encrypt')}}</a>
         </li>
         <li class="presentation">
           <a
@@ -40,10 +40,10 @@
         </li>
         <li class="presentation">
           <a
-            @click="openRequestLetsEncrypt()"
+            @click="openUploadCertificate()"
             role="menuitem"
             data-action="restart"
-          >{{$t('certificates.request_lets_encrypt')}}</a>
+          >{{$t('certificates.upload_certificates')}}</a>
         </li>
       </ul>
     </div>
