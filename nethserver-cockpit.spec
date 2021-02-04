@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.7.21
+Version: 1.7.22
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,10 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Thu Feb 04 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.22-1
+- Cockpit UI. Move Let's Encrypt certificate action to primary.  - NethServer/dev#6417
+- Let's Encrypt renewal does not fire certificate-update event - Bug NethServer/dev#6403
+
 * Tue Jan 12 2021 Davide Principi <davide.principi@nethesis.it> - 1.7.21-1
 - Password age changes are not applied - Bug NethServer/dev#6387
 
