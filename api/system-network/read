@@ -168,7 +168,16 @@ if($cmd eq 'list') {
         if ((exists($props{'bootproto'}) && $props{'bootproto'} eq 'dhcp') || $n->key eq 'ppp0' ) {
             $cidr =~ /^(.*)\/(.*)$/;
             $status{$iname}{'ipaddr'} = $1;
-            my $gw = `ip -o route list dev $iname  | tail -n 1 | awk '{print \$1}'`;
+            my $gw;
+
+            if ($props{'bootproto'} eq 'dhcp') {
+                # DHCP
+                $gw = `/sbin/ip -4 route show dev $iname default | /usr/bin/awk '{print \$3}'`;
+            } else {
+                # PPPoE
+                $gw = `/sbin/ip -4 route show dev ppp0 | /usr/bin/grep src | /usr/bin/awk '{print \$1}'`;
+            }
+
             chomp $gw;
             $status{$iname}{'gateway'} = $gw;
         }
