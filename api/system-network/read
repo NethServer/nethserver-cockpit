@@ -163,24 +163,20 @@ if($cmd eq 'list') {
         my $cidr = `/sbin/ip -o -4 address show $iname primary 2>/dev/null| head -1 | awk '{print \$4}'`;
         chomp $cidr;
         $props{'cidr'} = $cidr;
+        $cidr =~ /^(.*)\/(.*)$/;
+        my $dynamic_ip = $1;
+        my $gw;
 
         # Retrieve IP address of DHCP interfaces and PPPoE
-        if ((exists($props{'bootproto'}) && $props{'bootproto'} eq 'dhcp') || $n->key eq 'ppp0' ) {
-            $cidr =~ /^(.*)\/(.*)$/;
-            $status{$iname}{'ipaddr'} = $1;
-            my $gw;
-
-            if ($props{'bootproto'} eq 'dhcp') {
-                # DHCP
-                $gw = `/sbin/ip -4 route show dev $iname default | /usr/bin/awk '{print \$3}'`;
-            } else {
-                # PPPoE
-                $gw = `/sbin/ip -4 route show dev ppp0 | /usr/bin/grep src | /usr/bin/awk '{print \$1}'`;
-            }
-
-            chomp $gw;
-            $status{$iname}{'gateway'} = $gw;
+        if ($n->key eq 'ppp0' ) {
+            $gw = `/sbin/ip -4 route show dev ppp0 | /usr/bin/grep src | /usr/bin/awk '{print \$1}'`;
+            $status{$iname}{'ipaddr'} = $dynamic_ip;
+        } elsif ((exists($props{'bootproto'}) && $props{'bootproto'} eq 'dhcp') {
+            $gw = `/sbin/ip -4 route show dev $iname default | /usr/bin/awk '{print \$3}'`;
+            $status{$iname}{'ipaddr'} = $dynamic_ip;
         }
+        chomp $gw;
+        $status{$iname}{'gateway'} = $gw;
         $ret->{'status'} = \%status;
     }
 
