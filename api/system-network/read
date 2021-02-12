@@ -170,13 +170,15 @@ if($cmd eq 'list') {
         # Retrieve IP address of DHCP interfaces and PPPoE
         if ($n->key eq 'ppp0' ) {
             $gw = `/sbin/ip -4 route show dev ppp0 | /usr/bin/grep src | /usr/bin/awk '{print \$1}'`;
+            chomp $gw;
+            $status{$iname}{'gateway'} = $gw;
             $status{$iname}{'ipaddr'} = $dynamic_ip;
         } elsif ((exists($props{'bootproto'}) && $props{'bootproto'} eq 'dhcp') {
             $gw = `/sbin/ip -4 route show dev $iname default | /usr/bin/awk '{print \$3}'`;
+            chomp $gw;
+            $status{$iname}{'gateway'} = $gw;
             $status{$iname}{'ipaddr'} = $dynamic_ip;
         }
-        chomp $gw;
-        $status{$iname}{'gateway'} = $gw;
         $ret->{'status'} = \%status;
     }
 
