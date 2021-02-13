@@ -144,7 +144,7 @@ if($cmd eq 'list') {
         if (exists($info{$n->key})) {
             my $i = $info{$n->key};
             foreach my $k (keys(%$i)) {
-                 $status{$n->key}{$k} = $i->{$k}
+                 $status{$n->key}{$k} = $i->{$k};
             }
         } else {
             # retrieve carrier for virtual interfaces
@@ -173,7 +173,7 @@ if($cmd eq 'list') {
             chomp $gw;
             $status{$iname}{'gateway'} = $gw;
             $status{$iname}{'ipaddr'} = $dynamic_ip;
-        } elsif ((exists($props{'bootproto'}) && $props{'bootproto'} eq 'dhcp') {
+        } elsif (exists($props{'bootproto'}) && $props{'bootproto'} eq 'dhcp') {
             $gw = `/sbin/ip -4 route show dev $iname default | /usr/bin/awk '{print \$3}'`;
             chomp $gw;
             $status{$iname}{'gateway'} = $gw;
