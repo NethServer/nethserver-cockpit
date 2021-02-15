@@ -3137,16 +3137,18 @@ export default {
           provider: context.wizardPhysical.review.provider
         };
       } else {
+        const isDHCP = context.wizardPhysical.review.bootproto === "dhcp";
+
         physicalObj = {
           action: "change-properties",
           role: context.wizardPhysical.role.choice,
           bootproto: context.wizardPhysical.review.bootproto,
           interface: context.wizardPhysical.currentInterface.name,
-          ipaddr: context.wizardPhysical.review.ipaddr,
-          netmask: context.wizardPhysical.review.netmask,
+          ipaddr: isDHCP ? "" : context.wizardPhysical.review.ipaddr,
+          netmask: isDHCP ? "" : context.wizardPhysical.review.netmask,
           gateway:
-            context.wizardPhysical.role.choice == "green" ||
-            context.wizardPhysical.role.choice == "red"
+            (context.wizardPhysical.role.choice == "green" ||
+            context.wizardPhysical.role.choice == "red") && !isDHCP
               ? context.wizardPhysical.review.gateway
               : "",
           nslabel: context.wizardPhysical.review.nslabel
