@@ -174,7 +174,7 @@ if($cmd eq 'list') {
             $status{$iname}{'gateway'} = $gw;
             $status{$iname}{'ipaddr'} = $dynamic_ip;
         } elsif (exists($props{'bootproto'}) && $props{'bootproto'} eq 'dhcp') {
-            $gw = `/sbin/ip -4 route show dev $iname default | /usr/bin/awk '{print \$3}'`;
+            $gw = `/usr/bin/grep routers /var/lib/dhclient/dhclient--$iname.lease | /usr/bin/tail -n 1 | /usr/bin/awk '{print \$3}' | /usr/bin/cut -d ';' -f 1`;
             chomp $gw;
             $status{$iname}{'gateway'} = $gw;
             $status{$iname}{'ipaddr'} = $dynamic_ip;
