@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.7.22
+Version: 1.7.23
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Feb 16 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.23-1
+- Firewall WAN: wrong gateway IP - Bug NethServer/dev#6425
+
 * Thu Feb 04 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.7.22-1
 - Cockpit UI. Move Let's Encrypt certificate action to primary.  - NethServer/dev#6417
 - Let's Encrypt renewal does not fire certificate-update event - Bug NethServer/dev#6403
