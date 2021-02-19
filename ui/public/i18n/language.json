@@ -896,6 +896,8 @@
     "user_settings_page_urls_explain": "These URLs are obtained by server aliases and IP addresses on green and red interfaces.",
     "password_updated_error_1": "Password not changed. Ensure that",
     "password_updated_error_2": "old password",
+    "smarthost_test_configuration": "Test smarthost",
+    "smarthost_send_an_email": "Test mail",
     "password_updated_error_3": "is correct"
   },
   "logs": {
@@ -1257,6 +1259,7 @@
     "disaster_recovery": "Disaster recovery",
     "user_settings_page": "Allow users to change their password and other settings on a web page outside Cockpit (on port 443). This feature can be enabled only if 'Override the shell of users' is enabled as well.",
     "OtpR2WOath_Auth": "The VPN policy requires the usage of OTP to access the network.",
+    "smarthost_encrypt": "The Encryption over smtps (default port 465) is not supported, only smartTls (default port 587) is supported",
     "older_ssh_client_might_not_connect": "Hardening SSH could prevent old clients to connect to the server. Big files transfer can be slower with strong ciphers. The host key will change after restart and clients will have to accept it again."
   }
 }

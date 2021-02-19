@@ -457,7 +457,14 @@
           <label
             class="col-sm-2 control-label"
             for="SmartHostTlsStatus"
-          >{{$t('settings.smarthost_encrypt')}}</label>
+          >{{$t('settings.smarthost_encrypt')}}
+          <doc-info
+            :placement="'top'"
+            :title="$t('settings.smarthost_encrypt')"
+            :chapter="'smarthost_encrypt'"
+            :inline="true"
+          ></doc-info>
+          </label>
           <div class="col-sm-5">
             <input
               type="checkbox"
@@ -471,6 +478,21 @@
             >{{errors.SmartHostTlsStatus.message}}</span>
           </div>
         </div>
+        <div v-if="settings.smarthost.SmartHostStatus" class="form-group">
+          <form v-on:submit.prevent="testSmarthost()">
+            <label
+                class="col-sm-2 control-label"
+                for="textInput-modal-markup"
+                >{{$t('settings.smarthost_test_configuration')}}
+            </label>
+            <div class="col-sm-5">
+              <button class="btn btn-primary" type="submit">{{$t('settings.smarthost_send_an_email')}}</button>
+              <div v-if="!view.authentication && view.isWaitingAuth" class="spinner spinner-sm form-spinner"></div>
+              <span v-if="view.authentication && view.credential && !view.isWaitingAuth" class="fa fa-check green check-ok"></span>
+              <span v-if="view.authentication && !view.credential && !view.isWaitingAuth" class="fa fa-remove red check-ok"></span>
+            </div>
+          </form>
+        </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="textInput-modal-markup">
             <div
@@ -479,7 +501,7 @@
             ></div>
           </label>
           <div class="col-sm-5">
-            <button class="btn btn-primary" type="submit">{{$t('save')}}</button>
+            <button :disabled="!view.credential" class="btn btn-primary" type="submit">{{$t('save')}}</button>
           </div>
         </div>
       </form>
@@ -936,7 +958,10 @@ export default {
         isLoaded: false,
         isRoot: false,
         isAdmin: false,
-        otpIsLoaded: false
+        otpIsLoaded: false,
+        credential: false,
+        authentication: false,
+        isWaitingAuth: false
       },
       otp:{
         username: "",
@@ -1107,6 +1132,36 @@ export default {
           message: ""
         }
       };
+    },
+    testSmarthost() {
+      var context = this;
+
+      context.view.authentication =  false;
+      context.view.credential = false;
+      context.view.isWaitingAuth = true;
+
+      nethserver.exec(
+        ["system-settings/execute"],
+        {
+          action: "test-smarthost",
+          SmartHostName: context.settings.smarthost.SmartHostName,
+          SmartHostPort: context.settings.smarthost.SmartHostPort,
+          SmartHostUsername: context.settings.smarthost.SmartHostUsername,
+          SmartHostPassword: context.settings.smarthost.SmartHostPassword,
+          SmartHostTlsStatus: context.settings.smarthost.SmartHostTlsStatus,
+        },
+        null,
+        function(success) {
+          context.view.authentication =  true;
+          context.view.credential =  true;
+          context.view.isWaitingAuth = false;
+        },
+        function(error, data) {
+          context.view.authentication =  true;
+          context.view.credential =  false;
+          context.view.isWaitingAuth = false;
+        }
+      );
     },
     addEmail() {
       this.settings.root.EmailAddress.push({
@@ -1502,6 +1557,9 @@ export default {
               context.otp.TokenValidation = "";
               context.otp.testTokenDone = false;
 
+              // reset test smarthost
+              context.view.credential = false;
+              context.view.authentication =  false;
 
               // reset passwords
               context.newUser.newPassword = "";
@@ -1578,5 +1636,8 @@ input[type=number].noArrows::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number].noArrows {
   -moz-appearance: textfield;
+}
+.check-ok {
+  margin-left: 10px;
 }
 </style>

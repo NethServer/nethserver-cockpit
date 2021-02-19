@@ -24,21 +24,38 @@
 
 data=$(cat /dev/stdin)
 action=$(echo $data | jq -r '.action')
-email=$(echo $data | jq -r '.email')
-
-if [[ -z "$email" || "$email" == "null" ]]; then
-    error "InvalidMail" "invalid_mail_address"
-fi
-
-from=$(/sbin/e-smith/config getprop root SenderAddress)
-if [ -z "$from" ];then
-    from="root@"$(hostname -d)
-fi
 case $action in
 
     "test-mail")
+        email=$(echo $data | jq -r '.email')
+
+        if [[ -z "$email" || "$email" == "null" ]]; then
+            error "InvalidMail" "invalid_mail_address"
+        fi
+
+        from=$(/sbin/e-smith/config getprop root SenderAddress)
+        if [ -z "$from" ];then
+            from="root@"$(hostname -d)
+        fi
         hostname=$(hostname)
         text="Subject: Test mail from $hostname\n\nThis is a test mail from your NethServer $hostname.\n\nHappy hacking!\n"
         echo -e $text | /usr/lib/sendmail -F $hostname -f $from $email 2>&1
         ;;
+    "test-smarthost")
+        hostname=$(echo $data | jq -r '.SmartHostName')
+        username=$(echo $data | jq -r '.SmartHostUsername')
+        password=$(echo $data | jq -r '.SmartHostPassword')
+        port=$(echo $data | jq -r '.SmartHostPort')
+        tls=$(echo $data | jq -r '.SmartHostTlsStatus')
+        [[ $tls = 'true' ]] && tls='--ssl' || tls=''
+        /usr/bin/curl smtp://$hostname:$port -v  --connect-timeout 10 --mail-from $username --mail-rcpt $username --user "$username:$password" $tls <<EOF
+Subject: Test smarthost credentials: just ignore
+Date: $(date -R)
+Message-ID: testEmail.$(date +%s)@$(hostname -d)
+From: no-reply@$(hostname -d)
+To: $username
+
+We are testing the smarthost credentials
+EOF
+        exit $?
 esac
