@@ -438,9 +438,9 @@
             class="col-sm-2 control-label"
             for="textInput-modal-markup"
           >{{$t('settings.smarthost_password')}}</label>
-          <div class="col-sm-5">
+          <div class="col-sm-3">
             <input
-              type="password"
+              :type="togglePass ? 'password' : 'text'"
               v-model="settings.smarthost.SmartHostPassword"
               class="form-control"
             >
@@ -448,6 +448,11 @@
               v-if="errors.SmartHostPassword.hasError"
               class="help-block"
             >{{errors.SmartHostPassword.message}}</span>
+          </div>
+          <div class="col-sm-2">
+            <button class="btn btn-primary" type="button" @click="togglePassHidden()">
+              <span :class="['fa', togglePass ? 'fa-eye-slash' : 'fa-eye']"></span>
+            </button>
           </div>
         </div>
         <div
@@ -954,6 +959,7 @@ export default {
   },
   data() {
     return {
+      togglePass: true,
       view: {
         isLoaded: false,
         isRoot: false,
@@ -1132,6 +1138,10 @@ export default {
           message: ""
         }
       };
+    },
+    togglePassHidden() {
+      this.togglePass = !this.togglePass;
+      this.$forceUpdate();
     },
     testSmarthost() {
       var context = this;

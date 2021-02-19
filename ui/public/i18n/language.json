@@ -896,7 +896,7 @@
     "user_settings_page_urls_explain": "These URLs are obtained by server aliases and IP addresses on green and red interfaces.",
     "password_updated_error_1": "Password not changed. Ensure that",
     "password_updated_error_2": "old password",
-    "smarthost_test_configuration": "Test smarthost",
+    "smarthost_test_configuration": "Configuration",
     "smarthost_send_an_email": "Test mail",
     "password_updated_error_3": "is correct"
   },
