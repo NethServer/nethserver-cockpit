@@ -2549,7 +2549,7 @@ export default {
           restic: {
             Prune:
               b && b.props.Prune
-                ? b.props.Prune == "always" ? 0 : parseInt(b.props.Prune) + 1
+                ? (b.props.Prune == "always" ? 0 : parseInt(b.props.Prune) + 1)
                 : 1,
             prunes: ["always"].concat(this.weekdays()),
             CleanupOlderThan:
