@@ -2547,7 +2547,10 @@ export default {
             advanced: false
           },
           restic: {
-            Prune: b && b.props.Prune ? parseInt(b.props.Prune) + 1 : 1,
+            Prune:
+              b && b.props.Prune
+                ? (b.props.Prune == "always" ? 0 : parseInt(b.props.Prune) + 1)
+                : 1,
             prunes: ["always"].concat(this.weekdays()),
             CleanupOlderThan:
               b && b.props.CleanupOlderThan
@@ -3630,7 +3633,7 @@ export default {
         FullDay: context.wizard.how.duplicity.FullDay,
         VolSize: context.wizard.how.duplicity.VolSize,
         Prune:
-          context.wizard.how.restic.Prune == "always"
+          context.wizard.how.restic.Prune == 0
             ? "always"
             : context.wizard.how.restic.Prune - 1
       };
