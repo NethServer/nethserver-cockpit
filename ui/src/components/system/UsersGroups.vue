@@ -164,6 +164,9 @@
           </li>
         </ul>
       </div>
+      <span class="users-count">
+        {{ $t('users_groups.users') }}: {{ Object.keys(users.list).length }} | {{ $t('users_groups.groups') }}: {{ Object.keys(groups.list).length }}
+      </span>
     </div>
 
     <div v-if="view.isLoaded && users.provider !== null">
@@ -3911,7 +3914,12 @@ export default {
   font-size: 16px !important;
 }
 .align-normal {
-    margin-top: -3px;
-    margin-right: -15px;
+  margin-top: -3px;
+  margin-right: -15px;
+}
+.users-count {
+  margin-left: 15px;
+  font-size: 16px;
+  vertical-align: middle;
 }
 </style>
