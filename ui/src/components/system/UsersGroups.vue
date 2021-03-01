@@ -164,51 +164,55 @@
           </li>
         </ul>
       </div>
-      <span class="users-count">
-        {{ $t('users_groups.users') }}: {{ Object.keys(users.list).length }} | {{ $t('users_groups.groups') }}: {{ Object.keys(groups.list).length }}
-      </span>
     </div>
 
     <div v-if="view.isLoaded && users.provider !== null">
       <h3>{{$t('list')}}</h3>
-      <form role="form" class="search-pf has-button search">
-        <div class="form-group has-clear toolbar-pf-filter">
-          <label class="sr-only" for="filter">{{availableSearchFilter[currentSearchFilter]}}</label>
-          <div class="input-group full-width">
-            <div class="input-group-btn">
-              <button
-                type="button"
-                class="btn btn-default btn-lg dropdown-toggle adjust-filter-search"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                {{$t('users_groups.'+availableSearchFilter[currentSearchFilter].toLowerCase())}}
-                <span
-                  class="caret"
-                ></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li
-                  v-for="(f, kf) in availableSearchFilter"
-                  v-bind:key="kf"
-                  :class="[currentSearchFilter == kf ? 'selected' : '']"
+      <div class="row mg-bottom-15">
+        <form role="form" class="col-md-6 search-pf has-button search">
+          <div class="form-group has-clear toolbar-pf-filter">
+            <label class="sr-only" for="filter">{{availableSearchFilter[currentSearchFilter]}}</label>
+            <div class="input-group full-width">
+              <div class="input-group-btn">
+                <button
+                  type="button"
+                  class="btn btn-default btn-lg dropdown-toggle adjust-filter-search"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
                 >
-                  <a @click="switchFilterSearch(kf)">{{f}}</a>
-                </li>
-              </ul>
+                  {{$t('users_groups.'+availableSearchFilter[currentSearchFilter].toLowerCase())}}
+                  <span
+                    class="caret"
+                  ></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li
+                    v-for="(f, kf) in availableSearchFilter"
+                    v-bind:key="kf"
+                    :class="[currentSearchFilter == kf ? 'selected' : '']"
+                  >
+                    <a @click="switchFilterSearch(kf)">{{f}}</a>
+                  </li>
+                </ul>
+              </div>
+              <input
+                v-focus
+                v-model="searchString"
+                type="text"
+                class="form-control input-lg"
+                id="filter"
+                :placeholder="$t('users_groups.filter_by') +' '+ $t('users_groups.'+availableSearchFilter[currentSearchFilter].toLowerCase()) +'...'"
+              />
             </div>
-            <input
-              v-focus
-              v-model="searchString"
-              type="text"
-              class="form-control input-lg"
-              id="filter"
-              :placeholder="$t('users_groups.filter_by') +' '+ $t('users_groups.'+availableSearchFilter[currentSearchFilter].toLowerCase()) +'...'"
-            />
           </div>
+        </form>
+        <div class="col-md-6">
+          <span class="users-count pull-right">
+            {{ $t('users_groups.' + availableSearchFilter[currentSearchFilter].toLowerCase()) }}: {{ availableSearchFilter[currentSearchFilter] == 'Users' ? Object.keys(users.list).length : Object.keys(groups.list).length }}
+          </span>
         </div>
-      </form>
+      </div>
 
       <div class="list-group list-view-pf">
         <div
@@ -3918,8 +3922,9 @@ export default {
   margin-right: -15px;
 }
 .users-count {
-  margin-left: 15px;
   font-size: 16px;
-  vertical-align: middle;
+}
+.mg-bottom-15 {
+  margin-bottom: 15px;
 }
 </style>
