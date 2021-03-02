@@ -209,7 +209,7 @@
         </form>
         <div class="col-md-6">
           <span class="users-count pull-right">
-            {{ $t('users_groups.' + availableSearchFilter[currentSearchFilter].toLowerCase()) }}: {{ availableSearchFilter[currentSearchFilter] == 'Users' ? Object.keys(users.list).length : Object.keys(groups.list).length }}
+            {{ $t('users_groups.total') }}: {{ availableSearchFilter[currentSearchFilter] == 'Users' ? Object.keys(users.list).length : Object.keys(groups.list).length }}
           </span>
         </div>
       </div>

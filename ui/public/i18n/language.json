@@ -667,7 +667,8 @@
     "GroupDN": "Group DN",
     "StartTls": "STARTTLS",
     "BindType": "Bind type",
-    "edit_delegation": "Edit delegations of {name}"
+    "edit_delegation": "Edit delegations of {name}",
+    "total": "Total"
   },
   "network": {
     "title": "Network",
