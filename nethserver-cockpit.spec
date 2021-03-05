@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.8.24
+Version: 1.9.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,10 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Fri Mar 05 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.9.0-1
+- Cockpit: Validate smarthost settings - NethServer/dev#6445
+- Cockpit: show total of users and groups - NethServer/dev#6443
+
 * Tue Mar 02 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.8.24-1
 - restic backup prune every day - Bug NethServer/dev#6438
 
