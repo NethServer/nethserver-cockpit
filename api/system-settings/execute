@@ -48,7 +48,7 @@ case $action in
         port=$(echo $data | jq -r '.SmartHostPort')
         tls=$(echo $data | jq -r '.SmartHostTlsStatus')
         [[ $tls = 'true' ]] && tls='--ssl' || tls=''
-        /usr/bin/curl smtp://$hostname:$port -v  --connect-timeout 10 --mail-from $username --mail-rcpt $username --user "$username:$password" $tls <<EOF
+        /usr/bin/curl smtp://$hostname:$port -v  --connect-timeout 10 --max-time 10 --mail-from $username --mail-rcpt $username --user "$username:$password" $tls <<EOF
 Subject: Test smarthost credentials
 Date: $(date -R)
 Message-ID: testEmail.$(date +%s)@$(hostname -d)
