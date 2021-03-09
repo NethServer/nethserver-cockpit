@@ -506,7 +506,7 @@
             ></div>
           </label>
           <div class="col-sm-5">
-            <button :disabled="!view.credential" class="btn btn-primary" type="submit">{{$t('save')}}</button>
+            <button :disabled="!view.credential && settings.smarthost.SmartHostStatus" class="btn btn-primary" type="submit">{{$t('save')}}</button>
           </div>
         </div>
       </form>
