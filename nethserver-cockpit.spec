@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.9.0
+Version: 1.9.1
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Mar 09 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.9.1-1
+- With failed test mail it is not possible to disable the smart host - Bug NethServer/dev#6450
+
 * Fri Mar 05 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.9.0-1
 - Cockpit: Validate smarthost settings - NethServer/dev#6445
 - Cockpit: show total of users and groups - NethServer/dev#6443
