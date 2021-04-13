@@ -77,13 +77,8 @@ case $action in
             fi
         fi
 
-        if [ -n "$access" ]; then
-            /sbin/e-smith/config setprop $service access $access
-            check_exit_status
-        else
-            /sbin/e-smith/config delprop $service access
-            check_exit_status
-        fi
+        /sbin/e-smith/config setprop $service access "$access"
+        check_exit_status
 
         /sbin/e-smith/signal-event -j firewall-adjust
         check_exit_status
