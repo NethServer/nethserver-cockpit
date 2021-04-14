@@ -57,7 +57,7 @@ textarea {
 }
 
 #navbar-left {
-    width: 55px;
+    width: auto;
     -webkit-transition: width 0.25s ease-in-out;
     -moz-transition: width 0.25s ease-in-out;
     -o-transition: width 0.25s ease-in-out;
