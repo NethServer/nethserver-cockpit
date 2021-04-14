@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.9.1
+Version: 1.9.2
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Wed Apr 14 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.9.2-1
+- LocalRules: The access property is removed when allowed to localhost - Bug NethServer/dev#6482
+
 * Tue Mar 09 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.9.1-1
 - With failed test mail it is not possible to disable the smart host - Bug NethServer/dev#6450
 
