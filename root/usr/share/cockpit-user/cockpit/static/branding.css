@@ -101,7 +101,7 @@ li.credential-lock>a:first-child {
 }
 
 .navbar-brand {
-    line-height: 30px;
+    line-height: 15px;
     font-size: 20px;
     margin-left: 20px !important;
 }
@@ -111,7 +111,7 @@ li.credential-lock>a:first-child {
 }
 
 .navbar-pf .navbar-header {
-    height: 58px !important;
+    height: 48px !important;
     background: #171717;
 }
 
