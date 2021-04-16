@@ -440,7 +440,7 @@
           >{{$t('settings.smarthost_password')}}</label>
           <div class="col-sm-3">
             <input
-              :type="togglePass ? 'password' : 'text'"
+              :type="togglePassSH ? 'password' : 'text'"
               v-model="settings.smarthost.SmartHostPassword"
               class="form-control"
             >
@@ -451,7 +451,7 @@
           </div>
           <div class="col-sm-2">
             <button class="btn btn-primary" type="button" @click="togglePassHidden()">
-              <span :class="['fa', togglePass ? 'fa-eye-slash' : 'fa-eye']"></span>
+              <span :class="['fa', togglePassSH ? 'fa-eye-slash' : 'fa-eye']"></span>
             </button>
           </div>
         </div>
@@ -959,7 +959,7 @@ export default {
   },
   data() {
     return {
-      togglePass: true,
+      togglePassSH: true,
       view: {
         isLoaded: false,
         isRoot: false,
@@ -1140,7 +1140,7 @@ export default {
       };
     },
     togglePassHidden() {
-      this.togglePass = !this.togglePass;
+      this.togglePassSH = !this.togglePassSH;
       this.$forceUpdate();
     },
     testSmarthost() {
