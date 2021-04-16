@@ -451,7 +451,7 @@
           </div>
           <div class="col-sm-2">
             <button class="btn btn-primary" type="button" @click="togglePassHidden()">
-              <span :class="['fa', togglePassSH ? 'fa-eye-slash' : 'fa-eye']"></span>
+              <span :class="['fa', togglePassSH ? 'fa-eye' : 'fa-eye-slash']"></span>
             </button>
           </div>
         </div>
