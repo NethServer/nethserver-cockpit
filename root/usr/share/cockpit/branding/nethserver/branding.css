@@ -220,3 +220,23 @@ input[type="checkbox"].form-control {
         grid-row: 3/4 !important;
     }
 }
+
+@media (min-width: 768px){
+.login-pf .container .login-area {
+    border-right: 1px solid #474747;
+    position: relative;
+    min-height: 1px;
+    padding-left: 0px;
+    padding-right: 14px;
+}
+}
+
+input[type="text"].form-control { 
+width: 90%;
+margin-left: auto;
+}
+input[type="password"].form-control {
+width: 90%;
+margin-left: auto;
+}
+
