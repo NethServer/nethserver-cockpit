@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.9.2
+Version: 1.9.3
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon Apr 19 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.9.3-1
+- Cockpit settings: unable to show root password - Bug NethServer/dev#6483
+
 * Wed Apr 14 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.9.2-1
 - LocalRules: The access property is removed when allowed to localhost - Bug NethServer/dev#6482
 
