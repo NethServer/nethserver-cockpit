@@ -35,9 +35,15 @@ switch ($data['action']) {
         $v->declareParameter('SmartHostPassword', Validate::ANYTHING);
         $v->declareParameter('SmartHostTlsStatus', Validate::SERVICESTATUS);
         $db = new EsmithDatabase('smarthosts');
-        foreach ($db->getAll() as $i => $n) {
-            if (isset($n['Host']) && ($n['Host'] === $data['SmartHostName']) && ($data['SmartHostStatus'] === 'enabled')) {
-                $v->addValidationError('SmartHostName', 'Host_already_in_use_by_another_smarthost_relay');
+        if($data['SmartHostStatus'] == 'enabled') {
+            foreach ($db->getAll('recipient') as $record) {
+                if (isset($record['Host'], $record['Username'], $record['Password'], $record['Port'])
+                    && $record['Host'] == $data['SmartHostName']
+                    && $record['Port'] == $data['SmartHostPort']
+                    && ($record['Username'] != $data['SmartHostUsername'] || $record['Password'] != $data['SmartHostPassword'])
+                ) {
+                    $v->addValidationError('SmartHostName', 'Host_already_in_use_by_another_smarthost_relay', $record['Username']);
+                }
             }
         }
         break;
