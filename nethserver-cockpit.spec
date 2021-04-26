@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.9.3
+Version: 1.9.4
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon Apr 26 2021 Davide Principi <davide.principi@nethesis.it> - 1.9.4-1
+- Relax sender-based relay host rules validator - NethServer/dev#6495
+
 * Mon Apr 19 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.9.3-1
 - Cockpit settings: unable to show root password - Bug NethServer/dev#6483
 
