@@ -512,7 +512,15 @@
       </form>
 
       <div v-if="view.isAdmin && !accessUserSettings" class="divider"></div>
-      <h3 v-if="view.isAdmin && !accessUserSettings">{{$t('settings.notifications')}}</h3>
+      <h3 v-if="view.isAdmin && !accessUserSettings">
+        {{$t('settings.notifications')}}
+        <doc-info
+          :placement="'top'"
+          :title="$t('settings.notifications')"
+          :chapter="'root_email_is_used_for_notifications'"
+          :inline="true"
+        ></doc-info>
+      </h3>
       <form
         v-if="view.isAdmin && !accessUserSettings"
         class="form-horizontal"
