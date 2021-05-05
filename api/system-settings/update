@@ -38,6 +38,10 @@ case $action in
         mail=$(echo $data | jq -rc '.EmailAddress | map(tostring) | join(",")')
         /sbin/e-smith/config setprop root SenderAddress "$(_get SenderAddress)" KeepMessageCopy "$(_get KeepMessageCopy)" EmailAddress "$mail"
         /sbin/e-smith/signal-event -j notifications-save
+        # update older notification email used by NethGui
+        # notify wan is down in Firewall WAN panel
+        /sbin/e-smith/config setprop firewall NotifyWanFrom "$(_get SenderAddress)" NotifyWanTo "$mail"
+
         ;;
 
     "hints")
