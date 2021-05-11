@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.9.4
+Version: 1.9.5
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue May 11 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.9.5-1
+- WAN: notification of wan down not sent - Bug NethServer/dev#6497
+
 * Mon Apr 26 2021 Davide Principi <davide.principi@nethesis.it> - 1.9.4-1
 - Relax sender-based relay host rules validator - NethServer/dev#6495
 
