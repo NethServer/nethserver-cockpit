@@ -23,12 +23,18 @@
 
 require_once("/usr/libexec/nethserver/api/lib/Helpers.php");
 
-define("LINK_BASE_URL","https://docs.nethserver.org");
-define("VERSION","latest");
+define("CONFIG_FILE", "/etc/nethserver/cockpit-doc.ini");
 
 function get_link($chapter, $lang, $section)
 {
-    return LINK_BASE_URL."/$lang/".VERSION."/$chapter.html#$section";
+    $default_conf = array("base_url" => "https://docs.nethserver.org", "version" => "latest");
+    if (file_exists(CONFIG_FILE)) {
+        $conf = @parse_ini_file(CONFIG_FILE);
+    }
+    if (!isset($conf) || !$conf) {
+        $conf = $default_conf;
+    }
+    return $conf['base_url']."/$lang/".$conf['version']."/$chapter.html#$section";
 }
 
 

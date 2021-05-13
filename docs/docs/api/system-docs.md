@@ -1,6 +1,22 @@
 # system-docs
 
-Retrive online documentation and prepare it for the UI.
+Retrieve online documentation and prepare it for the UI.
+
+The API assumes the documentation is generated from https://github.com/NethServer/docs repository and it's
+available on a public URL.
+
+The complete URL is calculated using two variables:
+- `base_url`: default is `https://docs.nethserver.org`
+- `version`: default is `latest`
+
+To customize the URL, just create a ini file named `/etc/nethserver/cockpit-doc.ini`.
+The ini file must contain both `base_url` and `version` options.
+
+Example of a custom `/etc/nethserver/cockpit-doc.ini` file:
+```
+base_url = "https://mydocs.mydomain.org"
+version = "latest"
+```
 
 ## read
 
@@ -30,7 +46,7 @@ Output fields:
 
 ```json
 {
-  "link": "https://nethserver-docs-cockpit.readthedocs.io/en/latest/backup.html#nfs"
+  "link": "https://docs.nethserver.org/en/latest/backup.html#nfs"
 }
 ```
 
