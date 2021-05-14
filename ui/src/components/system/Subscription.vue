@@ -6,7 +6,7 @@
       <h3>{{SubscriptionConfig.enterprise ? $t('subscription.registration_ent') : $t('subscription.registration')}}</h3>
       <div
         v-if="!SubscriptionConfig.status && !SubscriptionConfig.missingToken"
-        class="alert alert-info alert-dismissable"
+        class="alert alert-info alert-dismissable subscription-description"
       >
         <span class="pficon pficon-info"></span>
         {{SubscriptionConfig.enterprise ? $t('subscription.registration_description_ent') : $t('subscription.registration_description')}}.
