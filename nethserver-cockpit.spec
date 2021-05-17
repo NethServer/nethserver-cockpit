@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.9.5
+Version: 1.10.0
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon May 17 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.10.0-1
+- Cockpit: custom documentation URL - NethServer/dev#6511
+
 * Tue May 11 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.9.5-1
 - WAN: notification of wan down not sent - Bug NethServer/dev#6497
 
