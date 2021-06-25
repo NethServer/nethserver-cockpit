@@ -152,7 +152,10 @@ function validate_credentials($data) {
     $v->declareParameter('StartTls', Validate::SERVICESTATUS);
 
     if ($data['BindDN']) {
-        $cmd = "/sbin/e-smith/validate ldap-credentials {$data['BaseDN']} {$data['LdapURI']} ".($data['StartTls'] === 'enabled' ? '1' : '""')." {$data['BindDN']} {$data['BindPassword']} 2>/dev/null";
+        $cmd = "/sbin/e-smith/validate ldap-credentials" . ' ' . escapeshellarg($data['BaseDN']). ' ' . 
+            escapeshellarg($data['LdapURI']) . ' ' . ($data['StartTls'] === 'enabled' ? '1' : '""'). ' ' . 
+            escapeshellarg($data['BindDN']) . ' ' . escapeshellarg($data['BindPassword']) . " 2>/dev/null";
+
         exec($cmd, $out, $ret);
         if ($ret > 0) {
             $v->addValidationError('BindDN', implode("",$out));
