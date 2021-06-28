@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.10.1
+Version: 1.10.2
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon Jun 28 2021 Stephane de Labrusse <stephdl@de-labrusse.fr> - 1.10.2-1
+- Account provider Bind DN validation error - Bug NethServer/dev#6534
+
 * Mon Jun 07 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.10.1-1
 - Smarthost validation: curl must not verify certificates - Bug NethServer/dev#6516
 - Update info box translation for range and port list - NethServer/nethserver-cockpit#338
