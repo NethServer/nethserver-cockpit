@@ -106,12 +106,11 @@
                 </a>
               </li>
               <li
-                v-if="props.row.editable == 1 && !props.row.external && view.isRoot &&
-                  (view.isRoot || (view.isAdmin && props.row.id !== 'nethserver-httpd')) && hideUninstall === 'disabled'"
+                v-if="props.row.editable == 1 && !props.row.external && view.isRoot && props.row.id !== 'nethserver-httpd' && hideUninstall === 'disabled'"
                 role="presentation"
                 class="divider"
               ></li>
-              <li v-if="(view.isRoot || (view.isAdmin && props.row.id !== 'nethserver-httpd')) && hideUninstall === 'disabled'">
+              <li v-if="props.row.id !== 'nethserver-httpd' && hideUninstall === 'disabled'">
                 <a @click="openRemoveApp(props.row)">
                   <span class="fa fa-times action-icon-menu"></span>
                   {{$t('applications.remove')}}
