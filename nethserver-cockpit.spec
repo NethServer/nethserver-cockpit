@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.10.2
+Version: 1.10.3
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon Jul 05 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.10.3-1
+- Cockpit: httpd application must not be removable - Bug NethServer/dev#6540
+
 * Mon Jun 28 2021 Stephane de Labrusse <stephdl@de-labrusse.fr> - 1.10.2-1
 - Account provider Bind DN validation error - Bug NethServer/dev#6534
 
