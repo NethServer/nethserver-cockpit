@@ -221,7 +221,6 @@
                           @click="getMoreInfo(i)"
                           :id="'popover-'+i.name | sanitize"
                           class="alert-link"
-                          data-trigger="focus"
                           data-placement="top"
                           data-toggle="popover"
                           data-html="true"
