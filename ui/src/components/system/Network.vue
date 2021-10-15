@@ -159,14 +159,14 @@
                           {{$t('network.create_route')}}
                         </a>
                       </li>
-                      <li v-if="roleKey != 'missing'" role="separator" class="divider"></li>
-                      <li v-if="i.virtual == 0 && roleKey != 'missing'">
+                      <li v-if="roleKey != 'missing' && i.aliases.length == 0 && !routes[i.name]" role="separator" class="divider"></li>
+                      <li v-if="i.virtual == 0 && i.aliases.length == 0 && !routes[i.name] && roleKey != 'missing'">
                         <a @click="openReleaseRole(i)">
                           <span class="pficon pficon-unlocked span-right-margin"></span>
                           {{$t('network.release_role')}}
                         </a>
                       </li>
-                      <li v-if="i.virtual == 1 || roleKey == 'missing'">
+                      <li v-if="i.virtual == 1 && i.aliases.length == 0 && !routes[i.name] || roleKey == 'missing'">
                         <a @click="openDeleteInterface(i)">
                           <span class="fa fa-times span-right-margin"></span>
                           {{$t('delete')}}
