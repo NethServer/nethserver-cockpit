@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.10.3
+Version: 1.10.4
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon Oct 18 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.10.4-1
+- Cockpit Network: Delete or release role should not be possible when aliases or routes exist - Bug NethServer/dev#6580
+
 * Mon Jul 05 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.10.3-1
 - Cockpit: httpd application must not be removable - Bug NethServer/dev#6540
 
