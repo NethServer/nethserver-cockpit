@@ -36,6 +36,7 @@ HOST=${4:-s3.amazonaws.com}
 date=$(TZ=UTC date -R)
 # Prepare file to upload
 tmp_file=$(mktemp)
+trap "rm ${tmp_file}" EXIT
 echo $RANMDOM > $tmp_file
 file_to_upload=$(basename $tmp_file)
 
@@ -43,19 +44,16 @@ path="/$BUCKET/$file_to_upload"
 content_type="application/octet-stream"
 put_challenge="PUT\n\n${content_type}\n${date}\n${path}"
 put_signature=`echo -en ${put_challenge} | openssl sha1 -hmac ${SECRET_KEY} -binary | base64`
-curl -s -X PUT -T "${tmp_file}" -H "Host: ${BUCKET}.${HOST}" -H "Date: ${date}" -H "Content-Type: ${content_type}" -H "Authorization: AWS ${ACCESS_KEY}:${put_signature}" "https://${BUCKET}.${HOST}/${file_to_upload}"
-if [ $? -gt 0 ]; then
-    rm -f $tmp_file
-    exit 1
-fi
 delete_challenge="DELETE\n\n\n${date}\n${path}"
-delete_signature=`echo -en ${delete_challenge} | openssl sha1 -hmac ${SECRET_KEY} -binary | base64`
-curl -s --fail -X DELETE -H "Host: ${BUCKET}.${HOST}" -H "Date: ${date}" -H "Authorization: AWS ${ACCESS_KEY}:${delete_signature}" "https://${BUCKET}.${HOST}/${file_to_upload}"
-if [ $? -gt 0 ]; then
-    rm -f $tmp_file
-    exit 1
+
+if [[ ${BUCKET} == *"/"* ]]; then
+    # path style URL
+    curl -s -X PUT -T "${tmp_file}" -H "Host: ${HOST}" -H "Date: ${date}" -H "Content-Type: ${content_type}" -H "Authorization: AWS ${ACCESS_KEY}:${put_signature}" "https://${HOST}/${BUCKET}/${file_to_upload}"
+    delete_signature=`echo -en ${delete_challenge} | openssl sha1 -hmac ${SECRET_KEY} -binary | base64`
+    curl -s --fail -X DELETE -H "Host: ${HOST}" -H "Date: ${date}" -H "Authorization: AWS ${ACCESS_KEY}:${delete_signature}" "https://${HOST}/${BUCKET}/${file_to_upload}"
+else
+    # host style URL
+    curl -s -X PUT -T "${tmp_file}" -H "Host: ${BUCKET}.${HOST}" -H "Date: ${date}" -H "Content-Type: ${content_type}" -H "Authorization: AWS ${ACCESS_KEY}:${put_signature}" "https://${BUCKET}.${HOST}/${file_to_upload}"
+    delete_signature=`echo -en ${delete_challenge} | openssl sha1 -hmac ${SECRET_KEY} -binary | base64`
+    curl -s --fail -X DELETE -H "Host: ${BUCKET}.${HOST}" -H "Date: ${date}" -H "Authorization: AWS ${ACCESS_KEY}:${delete_signature}" "https://${BUCKET}.${HOST}/${file_to_upload}"
 fi
-
-rm -f $tmp_file
-
-exit 0
