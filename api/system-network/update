@@ -139,6 +139,11 @@ if($cmd eq 'release-role') {
     $ppp->set_prop('user', $input->{'user'});
     $ppp->set_prop('provider', $input->{'provider'});
 
+    # cleanup parent record before converting it to pppoe
+    my $parent = $ndb->get($input->{'parent'});
+    foreach (qw(slave master bridge bootproto ipaddr netmask gateway nslabel)) {
+        $parent->delete_prop($_);
+    }
     $ndb->set_prop($input->{'parent'}, 'role', 'pppoe');
     create_provider('ppp0', $ndb);
 
