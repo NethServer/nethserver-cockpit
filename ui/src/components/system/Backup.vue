@@ -1615,7 +1615,7 @@
                             {{'S3Bucket' |
                             camelToSentence}}
                             <doc-info
-                            :placement="'left'"
+                            :placement="'top'"
                             :title="$t('backup.S3BucketFormat')"
                             :chapter="'s3_bucket'"
                             :inline="true"
@@ -1635,7 +1635,7 @@
                             {{'S3Host' |
                             camelToSentence}}
                             <doc-info
-                            :placement="'left'"
+                            :placement="'top'"
                             :title="$t('backup.S3HostFormat')"
                             :chapter="'s3_host'"
                             :inline="true"
