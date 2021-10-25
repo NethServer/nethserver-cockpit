@@ -1614,6 +1614,12 @@
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">
                             {{'S3Bucket' |
                             camelToSentence}}
+                            <doc-info
+                            :placement="'top'"
+                            :title="$t('backup.S3BucketFormat')"
+                            :chapter="'s3_bucket'"
+                            :inline="true"
+                            ></doc-info>
                           </label>
                           <div class="col-sm-9">
                             <input
@@ -1628,6 +1634,12 @@
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">
                             {{'S3Host' |
                             camelToSentence}}
+                            <doc-info
+                            :placement="'top'"
+                            :title="$t('backup.S3HostFormat')"
+                            :chapter="'s3_host'"
+                            :inline="true"
+                            ></doc-info>
                           </label>
                           <div class="col-sm-9">
                             <input
@@ -1691,7 +1703,7 @@
                         <label class="col-sm-3 control-label" for="textInput-modal-markup"></label>
                         <div class="col-sm-2">
                           <button
-                            v-if="!wizard.where.usb.isRefreshingUSB"
+                            v-if="!wizard.where.usb.isRefreshingUSB && wizard.where.choice != 's3'"
                             :disabled="wizard.where.isChecking || (wizard.where.choice == 'usb' && (wizard.where.usb.USBDevice && wizard.where.usb.USBDevice.formatted == 1) && wizard.where.usb.USBLabel.length == 0)"
                             type="submit"
                             :class="['btn', wizard.where.choice == 'usb' && wizard.where.usb.USBDevice &&
@@ -1700,7 +1712,7 @@
                             {{wizard.where.choice == 'usb' && wizard.where.usb.USBDevice &&
                             !wizard.where.usb.USBDevice.formatted ? $t('backup.format') : $t('backup.check')}}
                           </button>
-                          <span v-if="wizard.where.isValid" class="fa fa-check green copy-ok"></span>
+                          <span v-if="wizard.where.isValid && wizard.where.choice != 's3'" class="fa fa-check green copy-ok"></span>
                         </div>
                         <div v-if="wizard.where.isChecking" class="col-sm-1">
                           <div class="spinner"></div>
@@ -2516,7 +2528,7 @@ export default {
             B2Bucket: b && b.props.B2Bucket ? b.props.B2Bucket : null
           },
           s3: {
-            S3Host: b && b.props.S3Host ? b.props.S3Host : "s3.amazonaws.com",
+            S3Host: b && b.props.S3Host ? b.props.S3Host : null,
             S3AccessKey: b && b.props.S3AccessKey ? b.props.S3AccessKey : null,
             S3Bucket: b && b.props.S3Bucket ? b.props.S3Bucket : null,
             S3SecretKey: b && b.props.S3SecretKey ? b.props.S3SecretKey : null
@@ -2637,6 +2649,17 @@ export default {
           break;
         case 2:
           disabled = !this.wizard.where.isValid;
+
+          if(this.wizard.where.choice == 's3') {
+            if(
+              this.wizard.where.s3.S3AccessKey && this.wizard.where.s3.S3AccessKey.length > 0 &&
+              this.wizard.where.s3.S3Bucket && this.wizard.where.s3.S3Bucket.length > 0 &&
+              this.wizard.where.s3.S3SecretKey && this.wizard.where.s3.S3SecretKey.length > 0 &&
+              this.wizard.where.s3.S3Host && this.wizard.where.s3.S3Host.length > 0
+            ) {
+              disabled = false;
+            }
+          }
           break;
       }
 

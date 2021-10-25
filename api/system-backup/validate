@@ -174,14 +174,6 @@ if ($action == 'create-backup-data' || $action == 'update-backup-data') {
         success();
     }
 
-} else if ($action == 's3-credentials') {
-    exec("/usr/libexec/nethserver/api/system-backup/check-s3 {$data['S3AccessKey']} {$data['S3SecretKey']} {$data['S3Bucket']} {$data['S3Host']}", $output, $ret);
-    if ($ret > 0) {
-        fail("S3Bucket","s3_unauthorized");
-    } else {
-        success();
-    }
-
 } else if ($action == 'nfs-credentials') {
     exec("/usr/libexec/nethserver/api/system-backup/check-nfs {$data['NFSHost']} {$data['NFSShare']}", $output, $ret);
     if ($ret > 0) {
