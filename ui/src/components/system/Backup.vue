@@ -1614,6 +1614,12 @@
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">
                             {{'S3Bucket' |
                             camelToSentence}}
+                            <doc-info
+                            :placement="'left'"
+                            :title="$t('backup.S3BucketFormat')"
+                            :chapter="'s3_bucket'"
+                            :inline="true"
+                            ></doc-info>
                           </label>
                           <div class="col-sm-9">
                             <input
@@ -1628,6 +1634,12 @@
                           <label class="col-sm-3 control-label" for="textInput-modal-markup">
                             {{'S3Host' |
                             camelToSentence}}
+                            <doc-info
+                            :placement="'left'"
+                            :title="$t('backup.S3HostFormat')"
+                            :chapter="'s3_host'"
+                            :inline="true"
+                            ></doc-info>
                           </label>
                           <div class="col-sm-9">
                             <input
@@ -2516,7 +2528,7 @@ export default {
             B2Bucket: b && b.props.B2Bucket ? b.props.B2Bucket : null
           },
           s3: {
-            S3Host: b && b.props.S3Host ? b.props.S3Host : "s3.amazonaws.com",
+            S3Host: b && b.props.S3Host ? b.props.S3Host : null,
             S3AccessKey: b && b.props.S3AccessKey ? b.props.S3AccessKey : null,
             S3Bucket: b && b.props.S3Bucket ? b.props.S3Bucket : null,
             S3SecretKey: b && b.props.S3SecretKey ? b.props.S3SecretKey : null
