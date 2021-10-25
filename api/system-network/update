@@ -139,7 +139,10 @@ if($cmd eq 'release-role') {
     $ppp->set_prop('user', $input->{'user'});
     $ppp->set_prop('provider', $input->{'provider'});
 
-    $ndb->set_prop($input->{'parent'}, 'role', 'pppoe');
+    # cleanup parent record before converting it to pppoe
+    my $parent = $ndb->get($input->{'parent'});
+    $parent->delete();
+    $ndb->new_record($input->{'parent'}, {'role' => 'pppoe', 'type' => 'ethernet'});
     create_provider('ppp0', $ndb);
 
     system("/sbin/e-smith/signal-event -j interface-update");
