@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.10.5
+Version: 1.10.6
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -71,6 +71,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Tue Oct 26 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.10.6-1
+- Cockpit backup: support path-style S3 buckets - NethServer/dev#6586
+
 * Mon Oct 25 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.10.5-1
 - Change network role from DHCP to PPPoE doesn't stop dhclient - Bug NethServer/dev#6587
 
