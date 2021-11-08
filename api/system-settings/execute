@@ -42,11 +42,11 @@ case $action in
         echo -e $text | /usr/lib/sendmail -F $hostname -f $from $email 2>&1
         ;;
     "test-smarthost")
-        hostname=$(echo $data | jq -r '.SmartHostName')
-        username=$(echo $data | jq -r '.SmartHostUsername')
-        password=$(echo $data | jq -r '.SmartHostPassword')
-        port=$(echo $data | jq -r '.SmartHostPort')
-        tls=$(echo $data | jq -r '.SmartHostTlsStatus')
+        hostname=$(echo "$data" | jq -r '.SmartHostName')
+        username=$(echo "$data" | jq -r '.SmartHostUsername')
+        password=$(echo "$data" | jq -r '.SmartHostPassword')
+        port=$(echo "$data" | jq -r '.SmartHostPort')
+        tls=$(echo "$data" | jq -r '.SmartHostTlsStatus')
         [[ $tls = 'true' ]] && tls='--tls' || tls='--tls-optional-strict'
         /usr/bin/swaks -a -q AUTH -au "$username" -ap "$password" --server "$hostname" --port "$port" "$tls"
 esac
