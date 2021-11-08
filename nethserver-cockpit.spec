@@ -18,6 +18,7 @@ Requires:       nethserver-subscription
 Requires:       arp-scan
 Requires:       nethserver-lang-cockpit 
 Requires:       pam_oath liboath perl-Convert-Base32 oathtool
+Requires:       swaks
 Obsoletes:      cockpit-packagekit, PackageKit, PackageKit-yum
 
 %description
