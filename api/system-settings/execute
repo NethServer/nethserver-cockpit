@@ -48,5 +48,5 @@ case $action in
         port=$(echo $data | jq -r '.SmartHostPort')
         tls=$(echo $data | jq -r '.SmartHostTlsStatus')
         [[ $tls = 'true' ]] && tls='--tls' || tls='--tls-optional-strict'
-        /usr/bin/swaks -a -q AUTH -au $username -ap $password --server $hostname --port $port $tls
+        /usr/bin/swaks -a -q AUTH -au "$username" -ap "$password" --server "$hostname" --port "$port" "$tls"
 esac
