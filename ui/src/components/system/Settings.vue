@@ -491,7 +491,7 @@
                 >{{$t('settings.smarthost_test_configuration')}}
             </label>
             <div class="col-sm-5">
-              <button class="btn btn-primary" type="submit">{{$t('settings.smarthost_send_an_email')}}</button>
+              <button class="btn btn-primary" type="submit">{{$t('settings.smarthost_test_credentials')}}</button>
               <div v-if="!view.authentication && view.isWaitingAuth" class="spinner spinner-sm form-spinner"></div>
               <span v-if="view.authentication && view.credential && !view.isWaitingAuth" class="fa fa-check green check-ok"></span>
               <span v-if="view.authentication && !view.credential && !view.isWaitingAuth" class="fa fa-remove red check-ok"></span>
