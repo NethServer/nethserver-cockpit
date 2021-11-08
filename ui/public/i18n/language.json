@@ -901,6 +901,7 @@
     "password_updated_error_2": "old password",
     "smarthost_test_configuration": "Configuration",
     "smarthost_send_an_email": "Send test mail",
+    "smarthost_test_credentials":"Test settings",
     "password_updated_error_3": "is correct"
   },
   "logs": {

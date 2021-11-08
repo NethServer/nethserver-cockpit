@@ -42,20 +42,11 @@ case $action in
         echo -e $text | /usr/lib/sendmail -F $hostname -f $from $email 2>&1
         ;;
     "test-smarthost")
-        hostname=$(echo $data | jq -r '.SmartHostName')
-        username=$(echo $data | jq -r '.SmartHostUsername')
-        password=$(echo $data | jq -r '.SmartHostPassword')
-        port=$(echo $data | jq -r '.SmartHostPort')
-        tls=$(echo $data | jq -r '.SmartHostTlsStatus')
-        [[ $tls = 'true' ]] && tls='--ssl' || tls=''
-        /usr/bin/curl smtp://$hostname:$port -v -k --connect-timeout 10 --max-time 10 --mail-from $username --mail-rcpt $username --user "$username:$password" $tls <<EOF
-Subject: Test smarthost credentials
-Date: $(date -R)
-Message-ID: testEmail.$(date +%s)@$(hostname -d)
-From: no-reply@$(hostname -d)
-To: $username
-
-Test mail for smarthost credentials.
-EOF
-        exit $?
+        hostname=$(echo "$data" | jq -r '.SmartHostName')
+        username=$(echo "$data" | jq -r '.SmartHostUsername')
+        password=$(echo "$data" | jq -r '.SmartHostPassword')
+        port=$(echo "$data" | jq -r '.SmartHostPort')
+        tls=$(echo "$data" | jq -r '.SmartHostTlsStatus')
+        [[ $tls = 'true' ]] && tls='--tls' || tls='--tls-optional-strict'
+        /usr/bin/swaks -a -q AUTH -au "$username" -ap "$password" --server "$hostname" --port "$port" "$tls"
 esac
