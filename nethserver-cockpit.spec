@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.10.6
+Version: 1.10.7
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -72,6 +72,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Thu Nov 18 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.10.7-1
+- Cannot use short username in SMTP smarthost settings - Bug NethServer/dev#6594
+
 * Tue Oct 26 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.10.6-1
 - Cockpit backup: support path-style S3 buckets - NethServer/dev#6586
 
