@@ -119,7 +119,7 @@
           </label>
           <div class="col-sm-5">
             <button
-              :disabled="(!newUser.equal && passwordPolicy.Users == 'no' || !newUser.equal && !newUser.passwordStrength && passwordPolicy.Users == 'yes') || !newUser.canChangePassword"
+              :disabled="(!newUser.equal && passwordPolicy.Users == 'no' || !newUser.passwordStrength && passwordPolicy.Users == 'yes') || !newUser.canChangePassword"
               class="btn btn-primary"
               type="submit"
             >{{$t('save')}}</button>

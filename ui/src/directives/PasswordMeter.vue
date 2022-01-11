@@ -73,7 +73,8 @@ export default {
         this.uppercase &&
         this.number &&
         this.symbol &&
-        this.length;
+        this.length &&
+        this.equal;
 
       if ($("#pass-meter-input").val().length > 0) {
         this.$parent.newUser.confirmNewPassword = this.confirmPassword;
