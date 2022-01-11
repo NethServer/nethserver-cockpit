@@ -119,7 +119,7 @@
           </label>
           <div class="col-sm-5">
             <button
-              :disabled="!newUser.passwordStrength || !newUser.canChangePassword"
+              :disabled="(!newUser.passwordStrength && passwordPolicy.Users == 'yes') || !newUser.canChangePassword"
               class="btn btn-primary"
               type="submit"
             >{{$t('save')}}</button>
@@ -962,11 +962,13 @@ export default {
     this.initGraphics();
     this.getLoggedUser();
     this.getSettings();
+    this.getPasswordPolicy();
     this.getHints();
     this.getAuthorizations();
   },
   data() {
     return {
+      passwordPolicy: {},
       togglePassSH: true,
       view: {
         isLoaded: false,
@@ -1284,6 +1286,25 @@ export default {
           console.error(error);
         },
         false
+      );
+    },
+    getPasswordPolicy() {
+      var context = this;
+      context.exec(
+        ["system-password-policy/read"],
+        null,
+        null,
+        function(success) {
+          try {
+            success = JSON.parse(success);
+          } catch (e) {
+            console.error(e);
+          }
+          context.passwordPolicy = success.configuration.props;
+        },
+        function(error) {
+          console.error(error);
+        }
       );
     },
     getSettings() {
