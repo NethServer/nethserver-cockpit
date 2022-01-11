@@ -592,7 +592,7 @@
               <div v-if="newUser.isLoading" class="spinner spinner-sm form-spinner-loader"></div>
               <button class="btn btn-default" type="button" data-dismiss="modal">{{$t('cancel')}}</button>
               <button
-                :disabled="(!newUser.isEdit || newUser.isPassEdit) && (!newUser.passwordStrength && passwordPolicy.Users == 'yes')"
+                :disabled="(!newUser.isEdit || newUser.isPassEdit) && (!newUser.equal && passwordPolicy.Users == 'no' || !newUser.equal && !newUser.passwordStrength && passwordPolicy.Users == 'yes')"
                 class="btn btn-primary"
                 type="submit"
               >
@@ -2402,6 +2402,7 @@ export default {
         groups: [],
         newPassword: "",
         confirmNewPassword: "",
+        equal: false,
         passwordStrength: false,
         togglePass: false,
         errorProps: {

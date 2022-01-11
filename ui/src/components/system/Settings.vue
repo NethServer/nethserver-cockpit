@@ -119,7 +119,7 @@
           </label>
           <div class="col-sm-5">
             <button
-              :disabled="(!newUser.passwordStrength && passwordPolicy.Users == 'yes') || !newUser.canChangePassword"
+              :disabled="(!newUser.equal && passwordPolicy.Users == 'no' || !newUser.equal && !newUser.passwordStrength && passwordPolicy.Users == 'yes') || !newUser.canChangePassword"
               class="btn btn-primary"
               type="submit"
             >{{$t('save')}}</button>
@@ -1044,6 +1044,7 @@ export default {
         oldPassword: "",
         confirmNewPassword: "",
         passwordStrength: false,
+        equal: false,
         togglePass: false,
         canChangePassword: false
       },
@@ -1605,6 +1606,7 @@ export default {
               context.newUser.oldPassword = "";
               context.newUser.confirmNewPassword = "";
               context.newUser.passwordStrength = false;
+              context.newUser.equal = false;
               context.newUser.togglePass = false;
               $("#pass-meter-input").val("");
             },
