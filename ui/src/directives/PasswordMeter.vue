@@ -66,6 +66,8 @@ export default {
         this.$parent.newUser.newPassword.length > 0 &&
         this.confirmPassword.length > 0;
 
+      this.$parent.newUser.equal = this.equal &&
+        this.length;
       this.$parent.newUser.passwordStrength =
         this.lowercase &&
         this.uppercase &&
