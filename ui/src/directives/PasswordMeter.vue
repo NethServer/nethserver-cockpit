@@ -61,6 +61,7 @@ export default {
       this.number = /\d/.test(this.$parent.newUser.newPassword);
       this.symbol = /\W|_/.test(this.$parent.newUser.newPassword);
       this.length = this.$parent.newUser.newPassword.length > 7;
+      this.password = this.$parent.newUser.newPassword;
       this.equal =
         this.confirmPassword == this.$parent.newUser.newPassword &&
         this.$parent.newUser.newPassword.length > 0 &&
