@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.10.7
+Version: 1.10.8
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -72,6 +72,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Fri Jan 14 2022 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.10.8-1
+- User password: validate and honor the weak password strength - Bug NethServer/dev#6621
+
 * Thu Nov 18 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.10.7-1
 - Cannot use short username in SMTP smarthost settings - Bug NethServer/dev#6594
 
