@@ -16,6 +16,11 @@ if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
   exit 0
 fi
 
+echo "We push the translations to transifex"
+
+# set python3 and upgrade pip (default pip 10.0)
+pyenv global 3.7.1
+pip3 install --upgrade pip
 
 pip install virtualenv
 virtualenv ~/env
