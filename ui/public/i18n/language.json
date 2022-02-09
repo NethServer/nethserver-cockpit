@@ -109,7 +109,8 @@
     "nethserver-hotsync": "HotSync",
     "nethserver-blacklist": "Threat shield",
     "nethserver-mssql": "Microsoft SQL Server",
-    "nethserver-business": "Business Cube"
+    "nethserver-business": "Business Cube",
+    "nethserver-lmagent": "Cloud Log Manager agent"
   },
   "dashboard": {
     "title": "Dashboard",
