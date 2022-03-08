@@ -314,7 +314,7 @@ export default {
         ["system-packages/read"],
         {
           action: "list-removed",
-          packages: [app.id]
+          packages: app.provides
         },
         null,
         function(success) {
