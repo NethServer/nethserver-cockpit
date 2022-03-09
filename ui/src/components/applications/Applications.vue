@@ -323,6 +323,7 @@ export default {
           } catch (e) {
             console.error(e);
           }
+          context.currentApp.listRemovePath = app.id
           context.currentApp.listRemove = success.packages;
           context.currentApp.listRemoveRead = success.packages.join("\n");
           context.$forceUpdate();
@@ -351,12 +352,8 @@ export default {
             "applications.remove_ok"
           );
 
-          context.currentApp.listRemove.forEach((Pin) => {
-            context.removePin(Pin);
-          });
-          context.currentApp.listRemove.forEach((Shortcut) => {
-            context.removeShortcut(Shortcut);
-          });
+          context.removePin(context.currentApp.listRemovePath);
+          context.removeShortcut(context.currentApp.listRemovePath);
           context.getApps();
         },
         function(error) {

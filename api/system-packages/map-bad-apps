@@ -1,0 +1,49 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+# Remap bad application names to correct packages
+# NethServer/dev#6645
+#
+# Take a list of packages as an argument, print back the remapped packages
+#
+
+use strict;
+use warnings;
+
+my %bad_apps = (
+    # Avoid nethserver-firewall-base removal: NethServer/dev#6645
+    "nethserver-firewall-base" => "nethserver-firewall-base-ui",
+    # Remove all mail stack: NethServer/dev#6645
+    "nethserver-mail" => "nethserver-mail-common"
+);
+
+my @packages;
+foreach my $argnum (0 .. $#ARGV) {
+    my $p = $ARGV[$argnum];
+    if (exists($bad_apps{$p})) {
+         push(@packages, $bad_apps{$p});
+     } else {
+         push(@packages, $p);
+     }
+}
+
+print(join(" ", @packages));
