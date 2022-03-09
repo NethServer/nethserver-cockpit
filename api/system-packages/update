@@ -62,6 +62,7 @@ case $action in
         if [ -z "$packages" ]; then
             error "EventFailed" "no_packages_given"
         fi
+        packages=$(/usr/libexec/nethserver/api/system-packages/map-bad-apps $packages)
         /usr/libexec/nethserver/pkgaction --json $action $packages
         ;;
 

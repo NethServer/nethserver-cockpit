@@ -75,9 +75,9 @@ if($cmd eq 'list-updates') {
 
 } elsif ($cmd eq 'list-removed') {
 
-    my $packages = $input->{'packages'};
-    $packages = join(" ", @$packages);
-    my @data = `/usr/libexec/nethserver/yum-packages-to-remove $packages`;
+    my $packages = join(" ", @{$input->{'packages'}});
+    my $packages_str = `/usr/libexec/nethserver/api/system-packages/map-bad-apps $packages`;
+    my @data = `/usr/libexec/nethserver/yum-packages-to-remove $packages_str`;
     @data = map { $_ =~ s/\s$//; $_; } @data; # right trim each element
     print encode_json({"packages" => \@data});
 
