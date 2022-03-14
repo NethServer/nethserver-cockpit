@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.10.8
+Version: 1.10.9
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -72,6 +72,10 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon Mar 14 2022 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.10.9-1
+- Cockpit: application removal could be broken - Bug NethServer/dev#6645
+- Log manager agent - nethesis/dev#6108
+
 * Fri Jan 14 2022 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.10.8-1
 - User password: validate and honor the weak password strength - Bug NethServer/dev#6621
 
