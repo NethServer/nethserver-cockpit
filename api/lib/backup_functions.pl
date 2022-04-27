@@ -56,11 +56,6 @@ sub set_backup
     }
     system("/sbin/e-smith/signal-event -j nethserver-backup-data-save $args");
     if ($? > 0) {
-        # rollback: delete backup record and clean expanded templates
-        my $b = $db->get($name);
-        $b->delete();
-        system("/sbin/e-smith/signal-event nethserver-backup-data-save $name");
-
         error();
     } else {
         success();
