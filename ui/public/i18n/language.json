@@ -111,7 +111,8 @@
     "nethserver-mssql": "Microsoft SQL Server",
     "nethserver-business": "Business Cube",
     "nethserver-lmagent": "Cloud Log Manager agent",
-    "nethserver-ns8-migration": "NS8 migration"
+    "nethserver-ns8-migration": "NS8 migration",
+    "nethserver-firewall-migration": "Firewall migration"
   },
   "dashboard": {
     "title": "Dashboard",
