@@ -1,0 +1,57 @@
+name: Make RPMs
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+jobs:
+  make-rpm:
+    runs-on: ubuntu-22.04
+    env:
+      dest_id: core
+      docker_image: ghcr.io/nethserver/makerpms:7
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+      - name: Generate .env file
+        run: |
+          cat > .env <<EOF
+            DEST_ID=${{ env.dest_id }}
+            NSVER=7
+            DOCKER_IMAGE=${{ env.docker_image }}
+            GITHUB_ACTIONS=1
+            GITHUB_HEAD_REF=${{ github.head_ref }}
+            GITHUB_REF=${{ github.ref }}
+            GITHUB_REPOSITORY=${{ github.repository }}
+            GITHUB_RUN_ID=${{ github.run_id }}
+            ENDPOINTS_PACK=${{ secrets.endpoints_pack }}
+            SECRET=${{ secrets.secret }}
+            SECRET_URL=${{ secrets.secret_url }}
+            AUTOBUILD_SECRET=${{ secrets.autobuild_secret }}
+            AUTOBUILD_SECRET_URL=${{ secrets.autobuild_secret_url }}
+          EOF
+      - name: Run prep-sources if present.
+        run: if test -f "prep-sources"; then ./prep-sources; fi
+      - name: Build RPM and publish
+        run: |
+          echo "Starting build..."
+          docker run --name makerpms \
+            --env-file .env \
+            --hostname $GITHUB_RUN_ID-$GITHUB_RUN_NUMBER.nethserver.org \
+            --volume $PWD:/srv/makerpms/src:ro \
+            ${{ env.docker_image }} \
+            makerpms-github -s *.spec
+          echo "Build succesful."
+          if [[ "${{ secrets.endpoints_pack }}" && "${{ secrets.secret }}" ]]; then
+            echo "Publish configuration exists, pushing package to repo."
+            docker commit makerpms nethserver/build
+            docker run \
+              --env-file .env \
+              nethserver/build \
+              uploadrpms-github
+            echo "Publish complete."
+          fi
+          rm .env
