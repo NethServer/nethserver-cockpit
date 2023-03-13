@@ -18,6 +18,6 @@ rm -f *.tar.gz
 rm -f *.rpm
 rm -f *.log
 
-
 # Install dependecies and build UI and API
+export NODE_OPTIONS=--openssl-legacy-provider
 npm install && npm run build
