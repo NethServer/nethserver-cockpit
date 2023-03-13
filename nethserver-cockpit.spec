@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.10.10
+Version: 1.10.11
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -72,6 +72,10 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Mon Mar 13 2023 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.10.11-1
+- ui: add page title for firewall migration module (#358)
+- ui: add page title for NS8 migration module (#357)
+
 * Thu Apr 28 2022 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.10.10-1
 - SFTP backup deleted when target is unreachable - Bug NethServer/dev#6658
 
