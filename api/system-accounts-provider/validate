@@ -120,7 +120,7 @@ function validate_adcredentials($data) {
         $cmd .= " -ZZ ";
     }
     $host = parse_url($probe['LdapURI'], PHP_URL_HOST);
-    $addr = trim(shell_exec("dig -t A +short $host ".escapeshellarg($data['AdDns'])." | head -n 1")); # grab only the first result
+    $addr = trim(shell_exec("dig -t A +short $host @".escapeshellarg($data['AdDns'])." | head -n 1")); # grab only the first result
     $uri = str_replace($host, $addr, $probe['LdapURI']);
     $cmd .= "-H ".escapeshellarg($uri)." -x -D ".escapeshellarg($data['AdUsername'])." -w ".escapeshellarg($data['AdPassword'])." -s base -b ".escapeshellarg($probe['BaseDN'])." '(objectClass=*)' 2>&1";
     exec($cmd, $output, $ret);
