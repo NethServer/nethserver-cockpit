@@ -1,5 +1,5 @@
 Name:           nethserver-cockpit
-Version: 1.10.11
+Version: 1.10.12
 Release: 1%{?dist}
 Summary:        NethServer Server Manager Web UI
 
@@ -72,6 +72,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/nethserver/2fa
 %{perl_vendorlib}/NethServer
 
 %changelog
+* Thu Apr 13 2023 Davide Principi <davide.principi@nethesis.it> - 1.10.12-1
+- Remote AD credentials check fails in some scenarios - Bug NethServer/dev#6742
+
 * Mon Mar 13 2023 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.10.11-1
 - ui: add page title for firewall migration module (#358)
 - ui: add page title for NS8 migration module (#357)
